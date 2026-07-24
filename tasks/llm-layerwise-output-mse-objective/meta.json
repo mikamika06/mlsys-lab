@@ -1,0 +1,22 @@
+{
+  "id": "llm-layerwise-output-mse-objective",
+  "title": "Layerwise output-MSE objective",
+  "track": "05 ML Systems",
+  "tier": "II",
+  "module": "M2ptq",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "layerwise_output_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

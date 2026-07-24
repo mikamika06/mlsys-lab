@@ -1,0 +1,27 @@
+{
+  "id": "sys-copy-on-write-prefix-sharing",
+  "title": "Copy-on-write prefix sharing in a paged KV cache",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cow_kv_branches"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-05
+    },
+    {
+      "metric": "block_count_exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "alg-pca-via-svd-center-decompose-project",
+  "title": "PCA via SVD (center, decompose, project)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M3ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pca_svd"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "channel_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

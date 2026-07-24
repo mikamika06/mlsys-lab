@@ -1,0 +1,27 @@
+{
+  "id": "rwc-fold-diag-1-s-into-x-diag-s-into-w-prove-equivalence",
+  "title": "Fold diagonal scale into activations and weights",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fold_diag_scales"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "range_reduction_ratio",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

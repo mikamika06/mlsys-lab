@@ -1,0 +1,22 @@
+{
+  "id": "llm-weight-absorbed-rmsnorm-fold-gamma-into-next-matmul",
+  "title": "Weight-absorbed RMSNorm fold gamma into next matmul",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fold_rmsnorm_gamma"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

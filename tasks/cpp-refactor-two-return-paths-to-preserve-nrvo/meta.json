@@ -1,0 +1,13 @@
+{
+  "id": "cpp-refactor-two-return-paths-to-preserve-nrvo",
+  "title": "Refactor two return paths to preserve NRVO (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": []
+}

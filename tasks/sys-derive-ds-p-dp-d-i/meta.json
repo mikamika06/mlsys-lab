@@ -1,0 +1,22 @@
+{
+  "id": "sys-derive-ds-p-dp-d-i",
+  "title": "Derive FlashAttention dS from softmax Jacobian",
+  "track": "Systems ML",
+  "tier": "II",
+  "module": "M4attention",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "derive_ds"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

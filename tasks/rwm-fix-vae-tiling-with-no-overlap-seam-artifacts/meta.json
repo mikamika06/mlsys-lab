@@ -1,0 +1,22 @@
+{
+  "id": "rwm-fix-vae-tiling-with-no-overlap-seam-artifacts",
+  "title": "Fix VAE Tiling With No Overlap (Seam Artifacts)",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "tiled_decode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

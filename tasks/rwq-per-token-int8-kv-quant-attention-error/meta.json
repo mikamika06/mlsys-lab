@@ -1,0 +1,27 @@
+{
+  "id": "rwq-per-token-int8-kv-quant-attention-error",
+  "title": "Per-token INT8 KV Quantized Attention",
+  "track": "04 Machine Learning",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "int8_kv_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-05
+    },
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

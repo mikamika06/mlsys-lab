@@ -1,0 +1,22 @@
+{
+  "id": "llm-compare-penalty-before-vs-after-temperature-kl",
+  "title": "Compare penalty-before vs after temperature (KL)",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_penalty_temperature"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwa-implement-scaled-dot-product-attention-semantics",
+  "title": "Scaled Dot‑Product Attention Semantics",
+  "track": "Deep Learning",
+  "tier": "I",
+  "module": "M2nn",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "scaled_dot_product_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "output_error",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "weight_error",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

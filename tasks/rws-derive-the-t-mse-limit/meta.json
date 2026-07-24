@@ -1,0 +1,27 @@
+{
+  "id": "rws-derive-the-t-mse-limit",
+  "title": "Derive the T to infinity MSE limit for distillation KL",
+  "track": "03 Machine Learning Numerics",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "t_mse_limit"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "scaled_kl_rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "limit_rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

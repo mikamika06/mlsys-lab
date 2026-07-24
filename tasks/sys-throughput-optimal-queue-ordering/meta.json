@@ -1,0 +1,22 @@
+{
+  "id": "sys-throughput-optimal-queue-ordering",
+  "title": "Throughput-optimal queue ordering",
+  "track": "04 Systems Python",
+  "tier": "III",
+  "module": "M4sys",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "schedule_queue"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 1.05
+    }
+  ],
+  "info": []
+}

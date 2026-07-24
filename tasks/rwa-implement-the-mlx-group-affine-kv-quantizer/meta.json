@@ -1,0 +1,27 @@
+{
+  "id": "rwa-implement-the-mlx-group-affine-kv-quantizer",
+  "title": "Implement MLX-style group affine KV quantizer",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_kv_group_affine"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-8
+    },
+    {
+      "metric": "attention_mse",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "num-warp-shuffle-block-reduction-modeled",
+  "title": "Warp-shuffle block reduction (modeled)",
+  "track": "03 CUDA Concepts",
+  "tier": "II",
+  "module": "M2cuda",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "block_reduce"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "modeled_access_count",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

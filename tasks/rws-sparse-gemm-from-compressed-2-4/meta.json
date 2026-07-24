@@ -1,0 +1,22 @@
+{
+  "id": "rws-sparse-gemm-from-compressed-2-4",
+  "title": "Sparse GEMM from Compressed 2:4 Layout",
+  "track": "05 Real-World Model Compression",
+  "tier": "I",
+  "module": "M5rwm",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compressed_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

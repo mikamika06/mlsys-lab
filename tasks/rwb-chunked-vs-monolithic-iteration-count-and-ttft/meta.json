@@ -1,0 +1,25 @@
+{
+  "id": "rwb-chunked-vs-monolithic-iteration-count-and-ttft",
+  "title": "Chunked vs monolithic prefill: iteration count and TTFT",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_chunked_vs_monolithic"
+  ],
+  "fixtures": [
+    "prompt_lens.npy",
+    "budget.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "gpu-persistent-kernel-vs-relaunch-tradeoff",
+  "title": "Persistent kernel vs repeated relaunch tradeoff (real CUDA-C)",
+  "track": "11 GPU kernels",
+  "tier": "IV",
+  "module": "M11",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "relaunch_slower", "op": "==", "threshold": 1},
+    {"metric": "model_correct", "op": "<=", "threshold": 1e-9}
+  ],
+  "info": []
+}

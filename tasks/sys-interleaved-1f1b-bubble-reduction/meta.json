@@ -1,0 +1,22 @@
+{
+  "id": "sys-interleaved-1f1b-bubble-reduction",
+  "title": "Interleaved 1F1B bubble fraction",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "Msys",
+  "difficulty": 5,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "interleaved_1f1b_bubble_fraction"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-09
+    }
+  ],
+  "info": []
+}

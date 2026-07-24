@@ -1,0 +1,27 @@
+{
+  "id": "rwc-compute-8da4w-linear-size-bits-per-param",
+  "title": "Compute effective bits per parameter for an 8da4w linear layer",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compute_8da4w_efficiency"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "bits_per_param_rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "size_ratio_rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "num-im2col-patch-extraction-via-as-strided",
+  "title": "im2col patch extraction via as_strided",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M3num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "im2col_patches"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "is_view",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

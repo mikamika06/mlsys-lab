@@ -1,0 +1,22 @@
+{
+  "id": "rwm-streamed-layer-forward-equals-full-resident-forward",
+  "title": "Streamed layer forward equals full resident forward",
+  "track": "04 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "streamed_mlp_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

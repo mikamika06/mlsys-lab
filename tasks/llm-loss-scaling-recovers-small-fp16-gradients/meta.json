@@ -1,0 +1,36 @@
+{
+  "id": "llm-loss-scaling-recovers-small-fp16-gradients",
+  "title": "Loss scaling recovers small fp16 gradients",
+  "track": "03 LLM Systems",
+  "tier": "II",
+  "module": "M3llm",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pick_loss_scale",
+    "to_fp16_grads",
+    "unscale_grads"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.001
+    },
+    {
+      "metric": "scale_ok",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "dtype_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "naive_rel_err"
+  ]
+}

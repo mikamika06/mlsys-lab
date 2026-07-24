@@ -1,0 +1,23 @@
+{
+  "id": "num-stochastic-rounding-accumulation-bias",
+  "title": "Stochastic-Rounding Accumulation Bias",
+  "track": "num",
+  "tier": 1,
+  "module": "rounding-modes",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "python",
+  "provides": [
+    "accumulate_rne",
+    "accumulate_stochastic"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

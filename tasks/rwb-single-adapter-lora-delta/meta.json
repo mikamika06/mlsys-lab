@@ -1,0 +1,27 @@
+{
+  "id": "rwb-single-adapter-lora-delta",
+  "title": "Single-adapter LoRA delta",
+  "track": "03 Deep Learning",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "lora_delta_forward"
+  ],
+  "fixtures": [
+    "x.npy",
+    "base.npy",
+    "a.npy",
+    "b.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

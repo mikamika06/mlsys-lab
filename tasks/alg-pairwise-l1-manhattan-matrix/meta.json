@@ -1,0 +1,22 @@
+{
+  "id": "alg-pairwise-l1-manhattan-matrix",
+  "title": "Pairwise L1 (Manhattan) distance matrix",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pairwise_l1_matrix"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

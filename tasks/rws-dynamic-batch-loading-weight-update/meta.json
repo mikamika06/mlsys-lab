@@ -1,0 +1,27 @@
+{
+  "id": "rws-dynamic-batch-loading-weight-update",
+  "title": "Dynamic Batch-Loading Weight Update",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "update_weights"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "sum_close",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

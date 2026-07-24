@@ -1,0 +1,22 @@
+{
+  "id": "llm-predict-compute-vs-memory-bound-regime",
+  "title": "Predict Compute‑vs Memory‑Bound Regime for LLM Configurations",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "predict_regime"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

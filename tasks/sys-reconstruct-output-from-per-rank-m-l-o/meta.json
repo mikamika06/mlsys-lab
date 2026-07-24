@@ -1,0 +1,22 @@
+{
+  "id": "sys-reconstruct-output-from-per-rank-m-l-o",
+  "title": "Reconstruct attention output from per-rank m l o states",
+  "track": "04 Systems and ML Infrastructure",
+  "tier": "II",
+  "module": "M2attn",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_output"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwq-debug-smoothing-folded-the-same-way-into-both-sides",
+  "title": "Debug smoothing folded into both matrix sides",
+  "track": "03 Numerical Python",
+  "tier": "I",
+  "module": "M3np",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "fold_smoothing"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

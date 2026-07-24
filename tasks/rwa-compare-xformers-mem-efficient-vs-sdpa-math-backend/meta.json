@@ -1,0 +1,22 @@
+{
+  "id": "rwa-compare-xformers-mem-efficient-vs-sdpa-math-backend",
+  "title": "Compare xformers mem-efficient and SDPA math attention",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2attn",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_sdpa_backends"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-05
+    }
+  ],
+  "info": []
+}

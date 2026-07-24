@@ -1,0 +1,22 @@
+{
+  "id": "rwc-map-pytorch-ops-to-native-onnx-ops-vs-decompositions",
+  "title": "Map PyTorch ops to native ONNX ops vs decompositions",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "map_ops"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "alg-random-init-vs-k-means-final-inertia",
+  "title": "Random init vs k‑means++ final inertia comparison",
+  "track": "02 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_inertia"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

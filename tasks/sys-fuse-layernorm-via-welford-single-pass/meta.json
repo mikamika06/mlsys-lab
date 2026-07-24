@@ -1,0 +1,27 @@
+{
+  "id": "sys-fuse-layernorm-via-welford-single-pass",
+  "title": "Fuse LayerNorm via Welford Single Pass",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "layer_norm_welford"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "line_events",
+      "op": ">=",
+      "threshold": 200
+    }
+  ],
+  "info": []
+}

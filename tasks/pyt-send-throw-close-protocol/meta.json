@@ -1,0 +1,22 @@
+{
+  "id": "pyt-send-throw-close-protocol",
+  "title": "Generator send throw close protocol",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "run_protocol"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

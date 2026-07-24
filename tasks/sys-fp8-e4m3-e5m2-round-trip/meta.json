@@ -1,0 +1,22 @@
+{
+  "id": "sys-fp8-e4m3-e5m2-round-trip",
+  "title": "FP8 E4M3/E5M2 Quantize-Dequantize Round-Trip",
+  "track": "04 Systems ML",
+  "tier": "II",
+  "module": "M4quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp8_round_trip"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

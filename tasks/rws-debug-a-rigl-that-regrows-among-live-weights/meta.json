@@ -1,0 +1,22 @@
+{
+  "id": "rws-debug-a-rigl-that-regrows-among-live-weights",
+  "title": "Fix RigL regrowth selection",
+  "track": "04 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "rigl_grow"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

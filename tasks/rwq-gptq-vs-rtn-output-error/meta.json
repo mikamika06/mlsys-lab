@@ -1,0 +1,32 @@
+{
+  "id": "rwq-gptq-vs-rtn-output-error",
+  "title": "GPTQ versus RTN output error",
+  "track": "04 Quantization & Low-Precision",
+  "tier": "II",
+  "module": "M4q",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "gptq_vs_rtn_output_error"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rtn_mse_error",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "gptq_mse_error",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "gptq_beats_rtn",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "rwc-nvfp4-two-level-scaling-block-16-e4m3-block-scale-fp32-global",
+  "title": "NVFP4 two-level scaling with block-16 e4m3 scales",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M3np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_nvfp4"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "code_exact",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "scale_max_abs_err",
+      "op": "<=",
+      "threshold": 0.001
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.25
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,15 @@
+{
+ "id": "cpp-arithmetic-intensity-flops-byte-of-a-kernel",
+ "title": "Arithmetic intensity (FLOPs/byte) of a kernel",
+ "track": "02 Deep C++",
+ "tier": "III",
+ "module": "M2",
+ "difficulty": 3,
+ "genre": "implement",
+ "platform": "cross-platform",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: struct_bytes/field_bytes come from real sizeof() on real structs, compiled by clang++ -- not a re-implemented ABI model."
+ ],
+ "native": "cpp"
+}

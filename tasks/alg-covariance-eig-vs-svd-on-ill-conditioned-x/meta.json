@@ -1,0 +1,22 @@
+{
+  "id": "alg-covariance-eig-vs-svd-on-ill-conditioned-x",
+  "title": "Covariance vs SVD PCA on ill‑conditioned data",
+  "track": "02 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cov_eig_vs_svd_pca"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

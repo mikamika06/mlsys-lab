@@ -1,0 +1,27 @@
+{
+  "id": "sys-streaming-logsumexp-equals-full-logsumexp",
+  "title": "Streaming LogSumExp Equals Full LogSumExp",
+  "track": "04 Systems",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "streaming_logsumexp"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "streamed",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

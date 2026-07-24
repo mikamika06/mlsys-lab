@@ -1,0 +1,27 @@
+{
+  "id": "alg-expansion-trick-pairwise-forced-vectorized",
+  "title": "Expansion trick pairwise distances (forced vectorized)",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pairwise_sq_dists"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-08
+    },
+    {
+      "metric": "op_count",
+      "op": "<=",
+      "threshold": 60
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,2 @@
+{"id":"cpp-strict-aliasing-divergence-o0-vs-o2","title":"Strict-aliasing-safe mantissa truncation (real C++)","native":"cpp","difficulty":5,
+ "gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-6}]}

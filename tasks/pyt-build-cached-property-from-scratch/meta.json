@@ -1,0 +1,27 @@
+{
+  "id": "pyt-build-cached-property-from-scratch",
+  "title": "Build cached_property From Scratch",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cached_property"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "op_count",
+      "op": "==",
+      "threshold": 0.0
+    },
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

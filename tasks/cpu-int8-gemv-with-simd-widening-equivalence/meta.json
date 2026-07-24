@@ -1,0 +1,27 @@
+{
+  "id": "cpu-int8-gemv-with-simd-widening-equivalence",
+  "title": "INT8 GEMV with SIMD widening equivalence",
+  "track": "02 Systems and Performance",
+  "tier": "II",
+  "module": "M2cpu",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "int8_gemv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "==",
+      "threshold": 0.0
+    },
+    {
+      "metric": "miss_rate_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

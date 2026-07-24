@@ -1,0 +1,22 @@
+{
+  "id": "llm-model-materialized-elements-naive-vs-streaming",
+  "title": "Softmax Streaming vs Naïve Implementation",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "softmax_streaming"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

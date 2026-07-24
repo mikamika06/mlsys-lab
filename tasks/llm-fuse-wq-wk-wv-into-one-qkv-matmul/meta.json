@@ -1,0 +1,27 @@
+{
+  "id": "llm-fuse-wq-wk-wv-into-one-qkv-matmul",
+  "title": "Fuse Wq Wk Wv into one QKV matmul",
+  "track": "02 Machine Learning Systems",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_qkv_projection"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "matmul_calls",
+      "op": "==",
+      "threshold": 1
+    }
+  ],
+  "info": []
+}

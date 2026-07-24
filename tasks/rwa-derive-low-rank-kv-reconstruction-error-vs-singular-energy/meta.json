@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-low-rank-kv-reconstruction-error-vs-singular-energy",
+  "title": "Low-rank KV reconstruction error vs singular energy",
+  "track": "03 Retrieval & Attention",
+  "tier": "II",
+  "module": "M3rwa",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_reconstruction_error_and_energy"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

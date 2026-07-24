@@ -1,0 +1,22 @@
+{
+  "id": "sys-model-all-to-all-comm-volume-for-ep",
+  "title": "Model all-to-all communication volume for expert parallelism",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "MoeEP",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "moe_ep_comm_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

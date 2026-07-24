@@ -1,0 +1,27 @@
+{
+  "id": "rwa-compare-block-sparse-vs-dense-identical-output-fewer-pairs",
+  "title": "Block-sparse attention skips empty blocks with identical output",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M3np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "block_sparse_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "attended_pairs",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

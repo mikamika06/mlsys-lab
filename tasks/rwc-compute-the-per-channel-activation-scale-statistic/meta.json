@@ -1,0 +1,22 @@
+{
+  "id": "rwc-compute-the-per-channel-activation-scale-statistic",
+  "title": "Per‑Channel Activation Scale Statistic",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compute_activation_scale"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "gpu-warps-needed-to-fully-hide-memory-latency",
+  "title": "Warps needed to fully hide memory latency",
+  "track": "11 GPU kernels",
+  "tier": "III",
+  "module": "M11",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": ["min_warps_to_hide_latency"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "exact_match", "op": ">=", "threshold": 1.0}
+  ],
+  "info": []
+}

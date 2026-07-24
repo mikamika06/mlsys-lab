@@ -1,0 +1,27 @@
+{
+  "id": "llm-fuse-normalize-affine-no-python-inner-loop",
+  "title": "Fuse LayerNorm normalize + affine (no Python inner loop)",
+  "track": "04 AI Systems",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 2,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "layernorm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "op_count",
+      "op": "<=",
+      "threshold": 50
+    }
+  ],
+  "info": []
+}

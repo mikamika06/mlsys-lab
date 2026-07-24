@@ -1,0 +1,15 @@
+{
+  "id": "cpp-classify-12-returns-nrvo-move-copy",
+  "title": "Classify 12 returns: NRVO / move / copy",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": []
+}

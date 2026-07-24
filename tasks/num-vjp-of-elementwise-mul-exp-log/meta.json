@@ -1,0 +1,22 @@
+{
+  "id": "num-vjp-of-elementwise-mul-exp-log",
+  "title": "Vector-Jacobian Product of Elementwise Mul-Exp-Log",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "vjp_mul_exp_log"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

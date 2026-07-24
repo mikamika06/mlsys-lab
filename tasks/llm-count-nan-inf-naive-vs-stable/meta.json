@@ -1,0 +1,22 @@
+{
+  "id": "llm-count-nan-inf-naive-vs-stable",
+  "title": "Count NaN/Inf in naive softmax vs stable",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "count_nonfinite_in_naive_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

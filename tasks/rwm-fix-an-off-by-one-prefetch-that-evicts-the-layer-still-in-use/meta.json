@@ -1,0 +1,22 @@
+{
+  "id": "rwm-fix-an-off-by-one-prefetch-that-evicts-the-layer-still-in-use",
+  "title": "Fix double-buffer prefetch eviction ordering",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "scheduled_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "llm-temperature-scaling-distribution",
+  "title": "Temperature scaling of logits",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "temperature_scale"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

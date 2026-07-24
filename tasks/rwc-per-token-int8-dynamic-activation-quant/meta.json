@@ -1,0 +1,22 @@
+{
+  "id": "rwc-per-token-int8-dynamic-activation-quant",
+  "title": "Per‑token symmetric int8 dynamic activation quantization",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "per_token_int8_quant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

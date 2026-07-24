@@ -1,0 +1,22 @@
+{
+  "id": "rwa-reconstruct-full-prefill-by-merging-per-chunk-partials",
+  "title": "Reconstruct full prefill output by merging chunk partials",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "Attention Reconstruction",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "merge_chunk_partials"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

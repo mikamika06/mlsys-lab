@@ -1,0 +1,22 @@
+{
+  "id": "sys-compensated-kahan-summation-in-low-precision",
+  "title": "Compensated Kahan summation in low precision",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kahan_sum_fp16"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,1 @@
+{"id":"gpu-fix-vectorized-kernel-oob-on-non-multiple-of-4-tail","title":"Fix vectorized kernel OOB on non-multiple-of-4 tail","track":"11 GPU kernels","tier":"III","module":"M11","difficulty":3,"genre":"fix","platform":"cross-platform","native":"cuda","gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-12}],"info":[]}

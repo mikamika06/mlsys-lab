@@ -1,0 +1,22 @@
+{
+  "id": "num-tight-ulp-error-bound-for-a-dot-product",
+  "title": "Tight ULP error bound for a dot product",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M3num",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "dot_error_bound"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

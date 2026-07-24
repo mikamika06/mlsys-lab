@@ -1,0 +1,1 @@
+"""No static fixtures"""

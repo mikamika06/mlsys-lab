@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-catastrophic-fp16-accumulation",
+  "title": "Fix catastrophic fp16 accumulation",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "sum_rows_fp32"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

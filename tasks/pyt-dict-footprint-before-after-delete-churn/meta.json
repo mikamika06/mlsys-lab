@@ -1,0 +1,22 @@
+{
+  "id": "pyt-dict-footprint-before-after-delete-churn",
+  "title": "Measure dict footprint after delete churn",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "dict_footprint_churn"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

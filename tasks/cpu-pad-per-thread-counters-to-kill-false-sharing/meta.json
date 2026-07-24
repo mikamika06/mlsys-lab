@@ -1,0 +1,17 @@
+{
+  "id": "cpu-pad-per-thread-counters-to-kill-false-sharing",
+  "title": "Pad per-thread counters to kill false sharing (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "the invalidation count comes from a deterministic line-ownership model over a real 8-thread, 5-round round-robin write schedule, not a hardcoded number"
+  ]
+}

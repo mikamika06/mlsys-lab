@@ -1,0 +1,27 @@
+{
+  "id": "num-welford-one-pass-mean-variance",
+  "title": "Welford One-Pass Mean + Variance",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "welford_mean_var"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "line_events",
+      "op": ">=",
+      "threshold": 1000
+    }
+  ],
+  "info": []
+}

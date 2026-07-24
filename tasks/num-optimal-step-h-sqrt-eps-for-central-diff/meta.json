@@ -1,0 +1,22 @@
+{
+  "id": "num-optimal-step-h-sqrt-eps-for-central-diff",
+  "title": "Optimal Step Size for Central Differences",
+  "track": "num",
+  "tier": 1,
+  "module": "gradient-checking",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "python",
+  "provides": [
+    "best_h_central_diff"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.05
+    }
+  ],
+  "info": []
+}

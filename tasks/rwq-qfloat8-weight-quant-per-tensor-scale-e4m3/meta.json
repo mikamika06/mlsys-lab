@@ -1,0 +1,27 @@
+{
+  "id": "rwq-qfloat8-weight-quant-per-tensor-scale-e4m3",
+  "title": "qfloat8 Weight Quant: Per-Tensor Scale + E4M3 Cast",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "qfloat8_weight_quant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "scale_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "dequant_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

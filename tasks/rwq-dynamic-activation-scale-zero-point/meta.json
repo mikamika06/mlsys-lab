@@ -1,0 +1,27 @@
+{
+  "id": "rwq-dynamic-activation-scale-zero-point",
+  "title": "Dynamic Activation Scale and Zero Point",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "dynamic_activation_scale_zero_point"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "scale_rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    },
+    {
+      "metric": "zero_point_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "cpu-elements-per-register-for-fp32-fp16-int8",
+  "title": "SIMD Lanes per Register for fp32/fp16/int8",
+  "track": "02 CPU SIMD",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "lanes_per_register"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "pyt-cap-peak-live-large-object-count",
+  "title": "Cap peak live large-object count",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "process"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "peak_ratio",
+      "op": "<=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "total_rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "sys-fix-ref-count-use-after-free-on-shared-prefix",
+  "title": "Fix ref-count use-after-free on shared prefix",
+  "track": "06 Systems Python",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "replay_kv_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "PagedAttention-style KV cache block ownership"
+  ]
+}

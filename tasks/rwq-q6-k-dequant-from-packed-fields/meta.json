@@ -1,0 +1,27 @@
+{
+  "id": "rwq-q6-k-dequant-from-packed-fields",
+  "title": "Q6_K Dequant from Packed Fields",
+  "track": "04 Quantization",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "dequant_q6_k_superblock"
+  ],
+  "fixtures": [
+    "q6k_ql.npy",
+    "q6k_qh.npy",
+    "q6k_scales.npy",
+    "q6k_d.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-3
+    }
+  ],
+  "info": []
+}

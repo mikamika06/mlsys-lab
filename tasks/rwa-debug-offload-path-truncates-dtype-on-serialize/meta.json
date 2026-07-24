@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-offload-path-truncates-dtype-on-serialize",
+  "title": "Fix KV offload serialization dtype truncation",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "serialize_kv_roundtrip"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

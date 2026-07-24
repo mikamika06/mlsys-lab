@@ -1,0 +1,22 @@
+{
+  "id": "sys-fp32-master-weight-update-equivalence",
+  "title": "FP32 master weight update equivalence",
+  "track": "04 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mixed_precision_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

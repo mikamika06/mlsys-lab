@@ -1,0 +1,27 @@
+{
+  "id": "rws-serving-format-memory-footprint",
+  "title": "2:4 Sparse Serving-Format Memory Footprint",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2sparse",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "sparse_2_4_footprint"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "bytes_exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "ratio_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,28 @@
+{
+  "id": "rwq-q4-k-super-block-structure",
+  "title": "Q4_K Super-block Two-level Scale Structure",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "q4k_quantize_superblock",
+    "q4k_dequantize_superblock"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.001
+    },
+    {
+      "metric": "codes_exact",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

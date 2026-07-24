@@ -1,0 +1,25 @@
+{
+  "id": "rws-implement-the-wanda-score-per-output-row-mask",
+  "title": "Implement the Wanda score and per-output-row mask",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "wanda_score_mask"
+  ],
+  "fixtures": [
+    "ww.npy",
+    "wx.npy"
+  ],
+  "gates": [
+    {
+      "metric": "iou",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

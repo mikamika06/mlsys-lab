@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-a-mask-that-leaks-across-boundaries",
+  "title": "Debug: a mask that leaks across packed-sequence boundaries",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "packed_attention_with_reset_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

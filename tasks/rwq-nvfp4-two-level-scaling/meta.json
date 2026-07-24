@@ -1,0 +1,39 @@
+{
+  "id": "rwq-nvfp4-two-level-scaling",
+  "title": "NVFP4 two-level scaling",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M1quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "nvfp4_two_level_quantize"
+  ],
+  "fixtures": [
+    "nv_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "global_scale_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "block_scale_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "codes_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

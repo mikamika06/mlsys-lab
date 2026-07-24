@@ -1,0 +1,27 @@
+{
+  "id": "sys-selective-checkpointing-attention-only",
+  "title": "Selective checkpointing for attention-only backward",
+  "track": "Systems Python",
+  "tier": "II",
+  "module": "Msys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "attention_checkpoint"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "memory_reduction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

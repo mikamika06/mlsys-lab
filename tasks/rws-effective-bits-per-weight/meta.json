@@ -1,0 +1,22 @@
+{
+  "id": "rws-effective-bits-per-weight",
+  "title": "Effective Bits per Weight (N:M Sparsity + Quantization + Metadata)",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M4prune",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "effective_bits_per_weight"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

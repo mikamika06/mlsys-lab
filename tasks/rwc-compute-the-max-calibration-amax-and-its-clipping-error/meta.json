@@ -1,0 +1,22 @@
+{
+  "id": "rwc-compute-the-max-calibration-amax-and-its-clipping-error",
+  "title": "Compute Max Calibration amax and Clipping Error",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "calibrate_max_and_error"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

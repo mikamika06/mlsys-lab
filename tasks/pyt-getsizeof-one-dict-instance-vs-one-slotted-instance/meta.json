@@ -1,0 +1,22 @@
+{
+  "id": "pyt-getsizeof-one-dict-instance-vs-one-slotted-instance",
+  "title": "Measure dict instance versus slotted instance size",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "CPython",
+  "provides": [
+    "dict_vs_slots_size_ratio"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": ">=",
+      "threshold": 0.99
+    }
+  ],
+  "info": []
+}

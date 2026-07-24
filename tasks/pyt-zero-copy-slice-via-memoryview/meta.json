@@ -1,0 +1,25 @@
+{
+  "id": "pyt-zero-copy-slice-via-memoryview",
+  "title": "Zero-copy slice via memoryview",
+  "track": "01 Deep Python",
+  "tier": "III",
+  "module": "M3py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "mac",
+  "provides": [
+    "zero_copy_slice"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "Returns a memoryview that shares the original buffer (no copy).",
+    "Gate checks byte-exactness AND that .obj is the original buffer."
+  ]
+}

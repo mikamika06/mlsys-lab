@@ -1,0 +1,15 @@
+{
+ "id": "cpp-predict-which-loops-autovectorize",
+ "title": "Predict which loops autovectorize",
+ "track": "02 Deep C++",
+ "tier": "II",
+ "module": "M2",
+ "difficulty": 4,
+ "genre": "implement",
+ "platform": "mac",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: ground truth comes from disassembling this executable's OWN compiled code (otool -tV) and looking for real NEON vector instructions -- not a rule-based prediction table."
+ ],
+ "native": "cpp"
+}

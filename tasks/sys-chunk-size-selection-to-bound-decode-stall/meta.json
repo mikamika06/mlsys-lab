@@ -1,0 +1,22 @@
+{
+  "id": "sys-chunk-size-selection-to-bound-decode-stall",
+  "title": "Chunk-size selection to bound decode stall",
+  "track": "04 Systems Optimization",
+  "tier": "II",
+  "module": "Msys",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "select_chunk_size"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 1.05
+    }
+  ],
+  "info": []
+}

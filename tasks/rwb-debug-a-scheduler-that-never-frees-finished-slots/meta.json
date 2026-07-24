@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-a-scheduler-that-never-frees-finished-slots",
+  "title": "Retire finished scheduler slots",
+  "track": "02 Systems Algorithms",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "schedule_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

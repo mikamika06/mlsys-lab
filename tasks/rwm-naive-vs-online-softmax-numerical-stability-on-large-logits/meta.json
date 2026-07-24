@@ -1,0 +1,22 @@
+{
+  "id": "rwm-naive-vs-online-softmax-numerical-stability-on-large-logits",
+  "title": "Numerically stable softmax for large logits",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rws-lazy-batch-blocked-update-equals-full-update",
+  "title": "Lazy-batch blocked update equals full update",
+  "track": "03 Machine Learning Systems",
+  "tier": "III",
+  "module": "M3ml",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "lazy_batch_update"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

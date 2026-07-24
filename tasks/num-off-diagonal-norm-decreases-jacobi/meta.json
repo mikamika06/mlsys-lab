@@ -1,0 +1,24 @@
+{
+  "id": "num-off-diagonal-norm-decreases-jacobi",
+  "title": "Jacobi Eigenvalue Sweeps: Off-Diagonal Norm Decreases",
+  "track": "02 Numerical Computing",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "jacobi_offdiag_norms"
+  ],
+  "fixtures": [
+    "A.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

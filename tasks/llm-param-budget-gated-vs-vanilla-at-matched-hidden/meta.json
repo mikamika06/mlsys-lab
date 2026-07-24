@@ -1,0 +1,22 @@
+{
+  "id": "llm-param-budget-gated-vs-vanilla-at-matched-hidden",
+  "title": "Param budget comparison: gated vs vanilla FFN at matched hidden size",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "param_counts"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "param_ratio",
+      "op": "<=",
+      "threshold": 1.68
+    }
+  ],
+  "info": []
+}

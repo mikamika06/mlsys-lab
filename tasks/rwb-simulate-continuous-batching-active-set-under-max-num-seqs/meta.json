@@ -1,0 +1,27 @@
+{
+  "id": "rwb-simulate-continuous-batching-active-set-under-max-num-seqs",
+  "title": "Simulate Continuous-batching Active Set Under max_num_seqs",
+  "track": "03 Runtime ML Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "simulate_active_set"
+  ],
+  "fixtures": [
+    "arrival_iters.npy",
+    "gen_lens.npy",
+    "run_id.npy",
+    "max_num_seqs.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

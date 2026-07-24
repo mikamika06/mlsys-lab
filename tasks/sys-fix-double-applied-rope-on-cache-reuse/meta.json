@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-double-applied-rope-on-cache-reuse",
+  "title": "Fix Double-Applied RoPE on KV-Cache Reuse",
+  "track": "04 Systems ML",
+  "tier": "I",
+  "module": "M2attn",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "decode_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

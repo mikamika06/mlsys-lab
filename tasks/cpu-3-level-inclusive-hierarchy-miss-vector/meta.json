@@ -1,0 +1,2 @@
+{"id":"cpu-3-level-inclusive-hierarchy-miss-vector","title":"3-level inclusive cache hierarchy: per-level miss vector (real C++)","native":"cpp","difficulty":3,
+ "gates":[{"metric":"exact_match","op":"==","threshold":1.0}]}

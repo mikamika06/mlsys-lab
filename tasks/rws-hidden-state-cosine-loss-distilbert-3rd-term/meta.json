@@ -1,0 +1,27 @@
+{
+  "id": "rws-hidden-state-cosine-loss-distilbert-3rd-term",
+  "title": "Hidden-State Cosine Loss (DistilBERT's 3rd Distillation Term)",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4prune",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cosine_embedding_loss_and_grad"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "loss_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "grad_fd_rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

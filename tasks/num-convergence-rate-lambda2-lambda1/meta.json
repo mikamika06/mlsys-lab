@@ -1,0 +1,22 @@
+{
+  "id": "num-convergence-rate-lambda2-lambda1",
+  "title": "Measure power iteration convergence rate",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M3num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "estimate_convergence_rate"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.05
+    }
+  ],
+  "info": []
+}

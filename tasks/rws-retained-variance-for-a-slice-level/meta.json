@@ -1,0 +1,27 @@
+{
+  "id": "rws-retained-variance-for-a-slice-level",
+  "title": "Retained variance for a slice level",
+  "track": "02 Scientific Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "retained_variance_for_slice"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "k_accuracy",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "ratio_pass",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

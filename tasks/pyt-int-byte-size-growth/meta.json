@@ -1,0 +1,24 @@
+{
+  "id": "pyt-int-byte-size-growth",
+  "title": "Predict CPython int byte-size growth",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cpython-3.12",
+  "provides": [
+    "int_size_growth"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "Uses the pinned CPython 3.12 object layout as the oracle."
+  ]
+}

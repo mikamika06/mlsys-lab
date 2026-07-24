@@ -1,0 +1,22 @@
+{
+  "id": "rwa-compare-recompute-vs-load-from-cpu-crossover",
+  "title": "Recompute vs CPU KV load crossover",
+  "track": "03 ML Systems",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "crossover_seq_len"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "rwb-throughput-vs-delay-cap-curve",
+  "title": "Throughput vs delay-cap curve for a dynamic batcher",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "throughput_vs_cap_curve"
+  ],
+  "fixtures": [
+    "arrivals.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

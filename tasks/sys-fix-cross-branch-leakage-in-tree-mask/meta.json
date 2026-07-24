@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-cross-branch-leakage-in-tree-mask",
+  "title": "Fix cross-branch leakage in tree attention mask",
+  "track": "04 Systems for ML",
+  "tier": "II",
+  "module": "M4spec",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "build_tree_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwb-modified-rejection-sampling-accept-step",
+  "title": "Modified rejection-sampling accept step",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "modified_rejection_sample"
+  ],
+  "fixtures": [
+    "p.npy",
+    "q.npy",
+    "draft_token_ids.npy",
+    "u_stream.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

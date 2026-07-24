@@ -1,0 +1,22 @@
+{
+  "id": "llm-classify-checkpoint-mha-gqa-mqa-from-shapes",
+  "title": "Classify checkpoint MHA/GQA/MQA from shapes",
+  "track": "02 Deep Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

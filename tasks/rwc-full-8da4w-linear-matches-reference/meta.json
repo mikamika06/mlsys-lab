@@ -1,0 +1,22 @@
+{
+  "id": "rwc-full-8da4w-linear-matches-reference",
+  "title": "Full 8da4w linear matches reference",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M2q",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": [
+    "linear_8da4w"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

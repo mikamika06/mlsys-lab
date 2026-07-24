@@ -1,0 +1,27 @@
+{
+  "id": "num-one-level-strassen",
+  "title": "One-level Strassen matrix multiplication",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M1np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "one_level_strassen"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "matmul_count",
+      "op": "==",
+      "threshold": 7
+    }
+  ],
+  "info": []
+}

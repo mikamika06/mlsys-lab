@@ -1,0 +1,22 @@
+{
+  "id": "rwa-classify-which-of-k-v-should-get-higher-bits",
+  "title": "Which of K or V should get higher precision bits?",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_high_bits"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

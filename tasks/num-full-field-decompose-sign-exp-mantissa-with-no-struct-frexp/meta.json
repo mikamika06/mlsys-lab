@@ -1,0 +1,22 @@
+{
+  "id": "num-full-field-decompose-sign-exp-mantissa-with-no-struct-frexp",
+  "title": "Full IEEE‑754 field decomposition without struct or frexp",
+  "track": "01 NumPy",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "decompose_floats"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

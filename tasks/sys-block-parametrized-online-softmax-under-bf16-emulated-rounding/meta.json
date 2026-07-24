@@ -1,0 +1,22 @@
+{
+  "id": "sys-block-parametrized-online-softmax-under-bf16-emulated-rounding",
+  "title": "Block-parametrized online softmax under bf16-emulated rounding",
+  "track": "04 Systems ML",
+  "tier": "III",
+  "module": "M4sys",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "tiled_online_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

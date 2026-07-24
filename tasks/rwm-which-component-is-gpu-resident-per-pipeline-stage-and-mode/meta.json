@@ -1,0 +1,22 @@
+{
+  "id": "rwm-which-component-is-gpu-resident-per-pipeline-stage-and-mode",
+  "title": "Which component is GPU resident per pipeline stage and mode",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "residency"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

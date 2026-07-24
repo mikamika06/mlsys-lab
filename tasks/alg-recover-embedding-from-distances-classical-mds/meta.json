@@ -1,0 +1,22 @@
+{
+  "id": "alg-recover-embedding-from-distances-classical-mds",
+  "title": "Recover embedding from squared distances (classical MDS)",
+  "track": "03 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mds_from_distances"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

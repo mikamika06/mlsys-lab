@@ -1,0 +1,22 @@
+{
+  "id": "rwm-pick-the-minimal-knob-set-that-fits-the-memory-budget",
+  "title": "Pick the minimal knob set that fits the memory budget",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pick_knobs"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

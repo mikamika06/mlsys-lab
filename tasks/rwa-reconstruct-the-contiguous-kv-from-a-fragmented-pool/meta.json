@@ -1,0 +1,22 @@
+{
+  "id": "rwa-reconstruct-the-contiguous-kv-from-a-fragmented-pool",
+  "title": "Reconstruct a contiguous KV tensor from a fragmented paged pool",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_contiguous_kv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

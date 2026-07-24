@@ -1,0 +1,27 @@
+{
+  "id": "rwq-migrated-quantization-difficulty",
+  "title": "Migrated Quantization Difficulty",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "channel_peakiness_before_after"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "peak_drop_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

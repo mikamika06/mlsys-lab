@@ -1,0 +1,2 @@
+{"id":"cpp-multiple-accumulators-to-break-fp-dep-chain","title":"Multiple accumulators to break the FP dependency chain","native":"cpp","difficulty":4,
+ "gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-6}]}

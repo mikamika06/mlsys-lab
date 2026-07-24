@@ -1,0 +1,22 @@
+{
+  "id": "num-jacobian-by-finite-differences",
+  "title": "Jacobian by central finite differences",
+  "track": "03 Numerical Python",
+  "tier": "I",
+  "module": "M3np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "jacobian_fd"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

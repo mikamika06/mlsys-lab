@@ -1,0 +1,27 @@
+{
+  "id": "num-prove-kahan-sum-is-a-real-per-element-loop",
+  "title": "Prove Kahan Sum Is a Real Per-Element Loop",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "kahan_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "line_count",
+      "op": ">=",
+      "threshold": 1000
+    },
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "cpp-neon-horizontal-sum-dot-product",
+  "title": "NEON-style horizontal-sum dot product",
+  "track": "02 Deep C++", "tier": "II", "module": "M5", "difficulty": 3,
+  "genre": "implement", "platform": "arm64-macos",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 0.01}],
+  "info": []
+}

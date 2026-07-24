@@ -1,0 +1,22 @@
+{
+  "id": "alg-logsumexp-with-max-shift",
+  "title": "LogSumExp with Max Shift",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "logsumexp"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

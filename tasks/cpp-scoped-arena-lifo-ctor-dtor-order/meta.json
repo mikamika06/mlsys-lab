@@ -1,0 +1,1 @@
+{"id":"cpp-scoped-arena-lifo-ctor-dtor-order","title":"Scoped arena: LIFO ctor/dtor order (real C++)","native":"cpp","difficulty":3,"gates":[{"metric":"exact_match","op":"==","threshold":1.0}]}

@@ -1,0 +1,24 @@
+{
+  "id": "rwc-build-the-damped-inverse-hessian-and-its-cholesky",
+  "title": "GPTQ: damped inverse Hessian and its upper Cholesky factor",
+  "track": "05 Model Compression",
+  "tier": "II",
+  "module": "M5quant",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "damped_inv_hessian_cholesky"
+  ],
+  "fixtures": [
+    "X.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

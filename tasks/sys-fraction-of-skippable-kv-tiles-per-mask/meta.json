@@ -1,0 +1,22 @@
+{
+  "id": "sys-fraction-of-skippable-kv-tiles-per-mask",
+  "title": "Fraction of skippable KV tiles per mask",
+  "track": "04 Systems and ML Kernels",
+  "tier": "II",
+  "module": "M1attn",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "skippable_kv_tile_fraction"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

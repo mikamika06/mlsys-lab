@@ -1,0 +1,27 @@
+{
+  "id": "llm-fp32-vs-fp16-score-accumulation-divergence",
+  "title": "FP16 score accumulation divergence in scaled dot-product attention",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "attention_fp16_scores"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.0001
+    },
+    {
+      "metric": "fp16_fp32_divergence",
+      "op": ">=",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

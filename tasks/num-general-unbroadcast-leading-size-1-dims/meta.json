@@ -1,0 +1,22 @@
+{
+  "id": "num-general-unbroadcast-leading-size-1-dims",
+  "title": "General unbroadcast (leading + size-1 dims)",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "unbroadcast"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-09
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-derive-decode-arithmetic-intensity-vs-group-factor",
+  "title": "Derive decode arithmetic intensity vs group factor",
+  "track": "Systems",
+  "tier": "II",
+  "module": "Attention Performance",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "decode_arithmetic_intensity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_arith_intensity",
+      "op": ">=",
+      "threshold": 0.999999
+    }
+  ],
+  "info": []
+}

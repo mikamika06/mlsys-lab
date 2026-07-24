@@ -1,0 +1,22 @@
+{
+  "id": "sys-model-tp-comm-volume-per-layer",
+  "title": "Tensor parallel communication volume per layer",
+  "track": "03 Systems Modeling",
+  "tier": "I",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "tp_comm_volume_per_layer"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

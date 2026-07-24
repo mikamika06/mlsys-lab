@@ -1,0 +1,22 @@
+{
+  "id": "rws-rotate-and-slice-on-a-two-layer-stub",
+  "title": "Rotate and slice a two-layer linear network",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rotate_and_slice"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

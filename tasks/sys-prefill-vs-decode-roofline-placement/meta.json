@@ -1,0 +1,27 @@
+{
+  "id": "sys-prefill-vs-decode-roofline-placement",
+  "title": "Prefill vs Decode: Roofline Placement",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "prefill_decode_roofline"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_arith_intensity",
+      "op": "<=",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "classification_exact",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

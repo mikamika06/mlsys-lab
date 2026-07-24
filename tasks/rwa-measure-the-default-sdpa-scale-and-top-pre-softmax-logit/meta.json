@@ -1,0 +1,27 @@
+{
+  "id": "rwa-measure-the-default-sdpa-scale-and-top-pre-softmax-logit",
+  "title": "Measure default SDPA scale and top pre‑softmax logit",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1dl",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "measure_sdpa_scale_and_top_logit"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "scale_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "logit_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

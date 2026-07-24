@@ -1,0 +1,22 @@
+{
+  "id": "rwc-propagate-symbolic-shapes-and-emit-dim-guards",
+  "title": "Propagate symbolic shapes and emit dimension guards",
+  "track": "04 Runtime Compiler",
+  "tier": "II",
+  "module": "M2shapes",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "propagate_shapes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

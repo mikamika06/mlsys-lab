@@ -1,0 +1,13 @@
+{
+  "id": "cpu-fit-a-roofline-from-modeled-throughput-points",
+  "title": "Fit a roofline from modeled throughput points",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-3}],
+  "info": []
+}

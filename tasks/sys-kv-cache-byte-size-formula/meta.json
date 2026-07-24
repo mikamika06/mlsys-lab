@@ -1,0 +1,27 @@
+{
+  "id": "sys-kv-cache-byte-size-formula",
+  "title": "KV-Cache Byte-Size Formula",
+  "track": "03 Systems and Compilers",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 1,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_cache_size"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

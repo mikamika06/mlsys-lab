@@ -1,0 +1,22 @@
+{
+  "id": "pyt-set-vs-dict-footprint",
+  "title": "Set vs Dict Memory Footprint Comparison",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "set_dict_size_ratio"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

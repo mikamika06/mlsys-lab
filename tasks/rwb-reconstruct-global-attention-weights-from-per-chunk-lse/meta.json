@@ -1,0 +1,26 @@
+{
+  "id": "rwb-reconstruct-global-attention-weights-from-per-chunk-lse",
+  "title": "Reconstruct Global Attention Weights from Per-Chunk LSE",
+  "track": "03 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_global_weights"
+  ],
+  "fixtures": [
+    "chunk_scores.npy",
+    "chunk_lse.npy",
+    "chunk_partial_out.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

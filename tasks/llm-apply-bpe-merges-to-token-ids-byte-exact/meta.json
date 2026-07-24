@@ -1,0 +1,22 @@
+{
+  "id": "llm-apply-bpe-merges-to-token-ids-byte-exact",
+  "title": "Apply BPE merges to token ids (byte‑exact)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "apply_bpe_merges"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

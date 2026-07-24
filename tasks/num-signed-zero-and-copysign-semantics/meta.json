@@ -1,0 +1,22 @@
+{
+  "id": "num-signed-zero-and-copysign-semantics",
+  "title": "Signed zero and copysign semantics",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "signed_zero_profile"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

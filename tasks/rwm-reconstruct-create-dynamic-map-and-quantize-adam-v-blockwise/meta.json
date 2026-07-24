@@ -1,0 +1,22 @@
+{
+  "id": "rwm-reconstruct-create-dynamic-map-and-quantize-adam-v-blockwise",
+  "title": "Reconstruct create_dynamic_map and Quantize Adam v Blockwise",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_dequantize_v_blockwise"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

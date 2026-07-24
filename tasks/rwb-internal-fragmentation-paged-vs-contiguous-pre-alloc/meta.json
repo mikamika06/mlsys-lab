@@ -1,0 +1,27 @@
+{
+  "id": "rwb-internal-fragmentation-paged-vs-contiguous-pre-alloc",
+  "title": "Internal fragmentation: paged vs contiguous pre-alloc",
+  "track": "03 Runtime Warmup",
+  "tier": "II",
+  "module": "M3mem",
+  "difficulty": 2,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "internal_fragmentation"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "paged_rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "contig_rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

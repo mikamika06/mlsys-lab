@@ -1,0 +1,22 @@
+{
+  "id": "num-nan-safe-masked-reduction-kill-0-inf",
+  "title": "Masked sum: kill the 0×inf NaN leak",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "masked_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwc-2-4-magnitude-prune-reconstruction-mse",
+  "title": "2:4 Magnitude Pruning Reconstruction MSE",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "magnitude_prune_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

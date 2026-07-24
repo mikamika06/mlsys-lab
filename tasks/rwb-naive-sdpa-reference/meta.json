@@ -1,0 +1,22 @@
+{
+  "id": "rwb-naive-sdpa-reference",
+  "title": "Naïve Scaled Dot-Product Attention Reference Implementation",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sdpa"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

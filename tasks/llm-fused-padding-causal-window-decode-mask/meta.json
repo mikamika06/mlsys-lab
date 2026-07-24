@@ -1,0 +1,22 @@
+{
+  "id": "llm-fused-padding-causal-window-decode-mask",
+  "title": "Fused padding + causal + sliding‑window decode mask",
+  "track": "01 Deep Python",
+  "tier": "III",
+  "module": "M2ml",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_decode_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

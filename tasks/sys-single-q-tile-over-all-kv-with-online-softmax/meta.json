@@ -1,0 +1,27 @@
+{
+  "id": "sys-single-q-tile-over-all-kv-with-online-softmax",
+  "title": "Single Q-Tile Over All KV With Online Softmax",
+  "track": "03 Systems and Compilers",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_forward_single_q_tile"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "loop_ratio",
+      "op": ">=",
+      "threshold": 2.0
+    }
+  ],
+  "info": []
+}

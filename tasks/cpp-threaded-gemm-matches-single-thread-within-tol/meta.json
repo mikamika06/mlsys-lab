@@ -1,0 +1,2 @@
+{"id":"cpp-threaded-gemm-matches-single-thread-within-tol","title":"Threaded GEMM matches single-thread within tolerance","native":"cpp","difficulty":4,
+ "gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-6}]}

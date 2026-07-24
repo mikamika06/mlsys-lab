@@ -1,0 +1,22 @@
+{
+  "id": "cpu-working-set-size-of-a-loop-window",
+  "title": "Maximum Working Set Size of a Sliding Window",
+  "track": "01 Low-level systems",
+  "tier": "II",
+  "module": "M1c",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "max_working_set"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

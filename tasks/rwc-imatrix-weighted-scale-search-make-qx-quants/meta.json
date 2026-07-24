@@ -1,0 +1,22 @@
+{
+  "id": "rwc-imatrix-weighted-scale-search-make-qx-quants",
+  "title": "Importance-Matrix-Weighted Scale Search (make_qx_quants)",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "make_qx_quants"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwq-quantizelinear-dequantizelinear-round-trip",
+  "title": "QuantizeLinear / DequantizeLinear Round-Trip",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "qdq_round_trip"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "codes_exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "dequant_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwc-mxfp4-blk32-vs-nvfp4-blk16-reconstruction-error",
+  "title": "MXFP4 (blk32) vs NVFP4 (blk16) reconstruction error",
+  "track": "03 Compression",
+  "tier": "II",
+  "module": "M3q",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_mxfp4_nvfp4"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

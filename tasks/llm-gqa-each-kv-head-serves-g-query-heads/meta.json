@@ -1,0 +1,22 @@
+{
+  "id": "llm-gqa-each-kv-head-serves-g-query-heads",
+  "title": "Grouped‑Query Attention: each KV head serves g query heads",
+  "track": "03 Machine Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gqa_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-fusion-improves-ai-modeled-traffic",
+  "title": "Model memory traffic reduction from elementwise fusion",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "model_access_count"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_access_count",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

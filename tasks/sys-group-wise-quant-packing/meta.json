@@ -1,0 +1,22 @@
+{
+  "id": "sys-group-wise-quant-packing",
+  "title": "Group-wise quant packing (GPTQ-style blob)",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4q",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pack_groupwise_int4"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

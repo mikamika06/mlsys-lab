@@ -1,0 +1,22 @@
+{
+  "id": "rwm-per-gpu-bytes-for-params-grads-optimizer-given-phi-n-stage",
+  "title": "Per-GPU memory bytes for ZeRO stages",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "per_gpu_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

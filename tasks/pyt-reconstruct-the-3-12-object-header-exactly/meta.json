@@ -1,0 +1,22 @@
+{
+  "id": "pyt-reconstruct-the-3-12-object-header-exactly",
+  "title": "Reconstruct the 3.12 object header exactly",
+  "track": "01 Deep Python",
+  "tier": "III",
+  "module": "M3py",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pack_object_header"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

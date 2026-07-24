@@ -1,0 +1,27 @@
+{
+  "id": "rws-sparsegpt-layer-wise-obs-reconstruction",
+  "title": "SparseGPT layer-wise OBS reconstruction",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": [
+    "sparsegpt_layerwise"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "oracle_rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    },
+    {
+      "metric": "beats_magnitude",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

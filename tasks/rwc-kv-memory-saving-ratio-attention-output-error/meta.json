@@ -1,0 +1,27 @@
+{
+  "id": "rwc-kv-memory-saving-ratio-attention-output-error",
+  "title": "KV Memory Saving Ratio & Attention Output Error",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_memory_saving_ratio_and_attention_error"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "attention_output_error_rel",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

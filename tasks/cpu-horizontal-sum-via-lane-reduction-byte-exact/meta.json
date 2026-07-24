@@ -1,0 +1,22 @@
+{
+  "id": "cpu-horizontal-sum-via-lane-reduction-byte-exact",
+  "title": "CPU horizontal sum via lane reduction (byte exact)",
+  "track": "07 Advanced CPU",
+  "tier": "I",
+  "module": "M2cpp",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "lane_reduce_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

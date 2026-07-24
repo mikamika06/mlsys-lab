@@ -1,0 +1,22 @@
+{
+  "id": "rwm-why-expandable-segments-avoids-a-fragmentation-oom",
+  "title": "Why expandable_segments Avoids a Fragmentation OOM",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "replay_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

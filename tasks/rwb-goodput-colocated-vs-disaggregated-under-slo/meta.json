@@ -1,0 +1,22 @@
+{
+  "id": "rwb-goodput-colocated-vs-disaggregated-under-slo",
+  "title": "Goodput: colocated vs disaggregated under SLO",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "goodput_colocated_vs_disaggregated"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

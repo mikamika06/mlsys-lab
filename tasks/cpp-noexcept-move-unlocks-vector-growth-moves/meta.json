@@ -1,0 +1,19 @@
+{
+  "id": "cpp-noexcept-move-unlocks-vector-growth-moves",
+  "title": "noexcept move unlocks vector-growth moves",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

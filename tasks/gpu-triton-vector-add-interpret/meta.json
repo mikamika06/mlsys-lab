@@ -1,0 +1,1 @@
+{"id":"gpu-triton-vector-add-interpret","title":"Vector add (real CUDA-C)","native":"cuda","difficulty":1,"gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-9},{"metric":"transactions","op":"<=","threshold":300}]}

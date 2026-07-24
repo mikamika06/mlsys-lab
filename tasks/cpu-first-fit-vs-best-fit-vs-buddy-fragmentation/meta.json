@@ -1,0 +1,15 @@
+{
+  "id": "cpu-first-fit-vs-best-fit-vs-buddy-fragmentation",
+  "title": "First-fit vs best-fit vs buddy fragmentation (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "II",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "Real C++: the same fixed alloc/free trace is replayed through three independent 256-byte-arena allocators (address-ordered first-fit, address-ordered best-fit, power-of-two buddy) and their resulting external fragmentation is compared, compiled by clang++."
+  ]
+}

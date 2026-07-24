@@ -1,0 +1,27 @@
+{
+  "id": "gpu-naive-matmul-from-scratch-forced-loop",
+  "title": "Naïve matrix multiplication with explicit loops",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "matmul_loops"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "line_count",
+      "op": ">=",
+      "threshold": 5.0
+    }
+  ],
+  "info": []
+}

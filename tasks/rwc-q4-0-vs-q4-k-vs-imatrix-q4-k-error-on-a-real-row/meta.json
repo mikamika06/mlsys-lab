@@ -1,0 +1,27 @@
+{
+  "id": "rwc-q4-0-vs-q4-k-vs-imatrix-q4-k-error-on-a-real-row",
+  "title": "Q4_0 vs Q4_K vs Imatrix-Q4_K Error on a Real Row",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_q4_variants"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "argmin_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

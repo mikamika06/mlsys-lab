@@ -1,0 +1,22 @@
+{
+  "id": "llm-mqa-is-the-gqa-limit-n-kv-1",
+  "title": "Multi‑Query Attention as GQA limit n_kv=1",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gqa_limit_nkv_1"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

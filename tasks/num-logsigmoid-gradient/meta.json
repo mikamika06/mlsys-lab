@@ -1,0 +1,27 @@
+{
+  "id": "num-logsigmoid-gradient",
+  "title": "Stable log-sigmoid and gradient",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M3num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "logsigmoid_with_grad"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "value_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "grad_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

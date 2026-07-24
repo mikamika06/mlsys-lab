@@ -1,0 +1,27 @@
+{
+  "id": "pyt-reimplement-getattribute-resolution-order",
+  "title": "Reimplement __getattribute__ Resolution Order",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "resolve"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "no_shortcut",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

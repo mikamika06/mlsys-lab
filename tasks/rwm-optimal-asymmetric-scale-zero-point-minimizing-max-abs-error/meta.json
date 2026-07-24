@@ -1,0 +1,22 @@
+{
+  "id": "rwm-optimal-asymmetric-scale-zero-point-minimizing-max-abs-error",
+  "title": "Optimal Asymmetric Scale/Zero-Point Minimizing Max-Abs Error",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "derive_affine_qparams"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

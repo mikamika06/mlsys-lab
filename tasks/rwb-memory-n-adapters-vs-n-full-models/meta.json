@@ -1,0 +1,22 @@
+{
+  "id": "rwb-memory-n-adapters-vs-n-full-models",
+  "title": "Memory: N adapters vs N full model copies",
+  "track": "04 Reasoning with Bytes",
+  "tier": "II",
+  "module": "M2mem",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "memory_comparison"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

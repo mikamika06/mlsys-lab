@@ -1,0 +1,27 @@
+{
+  "id": "alg-randomized-svd-halko-from-scratch",
+  "title": "Randomized SVD (Halko) from scratch",
+  "track": "03 Numerical Algorithms",
+  "tier": "II",
+  "module": "M3np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "randomized_svd"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.05
+    },
+    {
+      "metric": "subspace_angle",
+      "op": "<=",
+      "threshold": 0.2
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "pyt-model-the-gen-0-reclaim-set",
+  "title": "Model the gen-0 reclaim set",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M4gc",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reclaim_set"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "Models the trial-deletion idea behind cyclic garbage collection."
+  ]
+}

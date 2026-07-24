@@ -1,0 +1,22 @@
+{
+  "id": "llm-fp32-upcast-vs-fp16-in-place-rmsnorm",
+  "title": "FP32 Upcast vs FP16 In-Place RMSNorm",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rmsnorm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

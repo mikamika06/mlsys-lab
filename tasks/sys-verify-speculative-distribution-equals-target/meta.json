@@ -1,0 +1,22 @@
+{
+  "id": "sys-verify-speculative-distribution-equals-target",
+  "title": "Verify speculative distribution equals target",
+  "track": "06 Systems and ML",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "speculative_distribution"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<",
+      "threshold": 0.005
+    }
+  ],
+  "info": []
+}

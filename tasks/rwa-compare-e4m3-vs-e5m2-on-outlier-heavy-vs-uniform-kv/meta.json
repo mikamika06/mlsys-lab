@@ -1,0 +1,37 @@
+{
+  "id": "rwa-compare-e4m3-vs-e5m2-on-outlier-heavy-vs-uniform-kv",
+  "title": "E4M3 vs E5M2 on outlier-heavy vs uniform KV",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "fp8_format_errors"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "uniform_err_diff",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "outlier_err_diff",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "order_uniform",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "order_outlier",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

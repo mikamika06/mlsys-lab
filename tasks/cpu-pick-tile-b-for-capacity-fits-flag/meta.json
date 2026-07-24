@@ -1,0 +1,18 @@
+{
+  "id": "cpu-pick-tile-b-for-capacity-fits-flag",
+  "title": "Derive tile edge B so three tiles fit in cache, verify residency (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "the cache is a deterministic fully-associative 64-line/64-byte-line LRU model, not hardware",
+    "fits is verified independently by re-touching all three tiles a second time and checking for zero additional misses"
+  ]
+}

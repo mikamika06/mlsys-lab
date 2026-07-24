@@ -1,0 +1,22 @@
+{
+  "id": "rws-reconstruct-the-pruned-shell-forward-pre-distill",
+  "title": "Reconstruct pruned shell forward pre-distill",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3numpy",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pruned_shell_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

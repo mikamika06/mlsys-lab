@@ -1,0 +1,22 @@
+{
+  "id": "alg-power-iteration-vs-numpy-svd-components",
+  "title": "Power Iteration vs NumPy SVD for PCA Components",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pca_power_iteration"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "channel_rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

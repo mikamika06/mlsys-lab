@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-batch-kv-memory-paged-vs-max-length-pre-allocation",
+  "title": "Measure batch KV memory waste: paged vs max-length allocation",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M2kv",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_memory_waste_ratio"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

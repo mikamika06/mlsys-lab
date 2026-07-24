@@ -1,0 +1,22 @@
+{
+  "id": "rwb-max-prefill-tokens-in-any-step-itl-proxy",
+  "title": "Max prefill tokens in any step (ITL proxy)",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "prefill_chunking_max_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

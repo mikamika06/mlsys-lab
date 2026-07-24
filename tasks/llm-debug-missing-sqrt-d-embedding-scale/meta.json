@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-missing-sqrt-d-embedding-scale",
+  "title": "Debug missing sqrt(d) embedding scale",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "normalize_embeddings"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

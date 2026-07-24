@@ -1,0 +1,27 @@
+{
+  "id": "rwq-damped-hessian-from-calibration-activations",
+  "title": "Damped Hessian from calibration activations",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M1hess",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "damped_hessian"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err_h",
+      "op": "<=",
+      "threshold": 1e-8
+    },
+    {
+      "metric": "rel_err_damp",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

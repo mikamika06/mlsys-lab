@@ -1,0 +1,15 @@
+{
+  "id": "cpp-zero-copy-numpy-view-via-buffer-protocol",
+  "title": "Zero-copy numpy view via buffer protocol (real C++)",
+  "track": "02 Deep C++",
+  "tier": "II",
+  "module": "M4",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwm-dynamic-map-vs-linear-int8-error-on-log-normal-v-states",
+  "title": "Dynamic map vs. linear int8 error on heavy-tailed states",
+  "track": "03 Compression",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "dynamic_vs_linear_int8_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "dynamic_wins",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

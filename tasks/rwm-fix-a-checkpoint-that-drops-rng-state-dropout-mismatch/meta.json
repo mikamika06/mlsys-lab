@@ -1,0 +1,22 @@
+{
+  "id": "rwm-fix-a-checkpoint-that-drops-rng-state-dropout-mismatch",
+  "title": "Fix a Checkpoint that Drops RNG State (Dropout Mismatch)",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "checkpointed_layer"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

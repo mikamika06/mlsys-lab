@@ -1,0 +1,9 @@
+{
+  "id": "cpu-loop-interchange-to-a-traffic-gate",
+  "title": "Loop interchange to a traffic gate",
+  "track": "01 CPU Perf", "tier": "I", "module": "M1", "difficulty": 2,
+  "genre": "optimize", "platform": "cross-platform", "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ], "info": []
+}

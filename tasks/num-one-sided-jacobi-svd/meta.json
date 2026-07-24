@@ -1,0 +1,22 @@
+{
+  "id": "num-one-sided-jacobi-svd",
+  "title": "One-sided Jacobi SVD",
+  "track": "02 Numerical Computing",
+  "tier": "III",
+  "module": "Mlin",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "one_sided_jacobi_svd"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-08
+    }
+  ],
+  "info": []
+}

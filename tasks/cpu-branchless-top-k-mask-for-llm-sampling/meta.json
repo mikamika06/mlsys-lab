@@ -1,0 +1,27 @@
+{
+  "id": "cpu-branchless-top-k-mask-for-llm-sampling",
+  "title": "Branchless top‑k mask for LLM sampling",
+  "track": "03 CPU Systems",
+  "tier": "II",
+  "module": "M2cpu",
+  "difficulty": 5,
+  "genre": "reconstruct",
+  "platform": "mac",
+  "provides": [
+    "branchless_topk_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmax_agreement",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

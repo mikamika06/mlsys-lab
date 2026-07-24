@@ -1,0 +1,22 @@
+{
+  "id": "llm-reconstruct-applied-penalty-factor-from-before-after-logits",
+  "title": "Reconstruct applied penalty factor from before-after logits",
+  "track": "03 Applied ML",
+  "tier": "I",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_penalty_factor"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

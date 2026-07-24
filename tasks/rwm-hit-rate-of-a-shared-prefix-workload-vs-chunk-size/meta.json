@@ -1,0 +1,22 @@
+{
+  "id": "rwm-hit-rate-of-a-shared-prefix-workload-vs-chunk-size",
+  "title": "Shared-prefix workload chunk reuse hit rate",
+  "track": "06 ML Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "prefix_chunk_hit_rate"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

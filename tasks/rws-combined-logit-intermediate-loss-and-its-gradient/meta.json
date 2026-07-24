@@ -1,0 +1,27 @@
+{
+  "id": "rws-combined-logit-intermediate-loss-and-its-gradient",
+  "title": "Combined logit and intermediate distillation loss with gradient",
+  "track": "04 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "combined_logit_intermediate_loss"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "loss_max_abs_err",
+      "op": "<",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "grad_max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwc-decompose-sdpa-into-onnx-primitives-and-match-fused-attention",
+  "title": "Decompose SDPA into ONNX primitives",
+  "track": "03 ML Compilation",
+  "tier": "II",
+  "module": "M2onnx",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "decompose_sdpa"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

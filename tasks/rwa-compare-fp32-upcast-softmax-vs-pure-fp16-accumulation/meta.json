@@ -1,0 +1,27 @@
+{
+  "id": "rwa-compare-fp32-upcast-softmax-vs-pure-fp16-accumulation",
+  "title": "Upcast softmax accumulation for stable attention",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "softmax_fp32"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.001
+    },
+    {
+      "metric": "fp16_is_worse",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

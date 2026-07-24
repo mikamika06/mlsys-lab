@@ -1,0 +1,22 @@
+{
+  "id": "num-construct-a-non-associativity-triple",
+  "title": "Construct a non-associativity triple",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M1num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "construct_nonassoc_triple"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

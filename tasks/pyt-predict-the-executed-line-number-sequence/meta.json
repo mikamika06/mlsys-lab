@@ -1,0 +1,24 @@
+{
+  "id": "pyt-predict-the-executed-line-number-sequence",
+  "title": "Predict the executed line-number sequence",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "CPython 3.12",
+  "provides": [
+    "predict_line_sequence"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "Tests Python frame tracing and the sys.settrace call protocol."
+  ]
+}

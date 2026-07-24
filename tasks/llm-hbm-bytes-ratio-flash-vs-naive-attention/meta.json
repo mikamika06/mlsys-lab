@@ -1,0 +1,22 @@
+{
+  "id": "llm-hbm-bytes-ratio-flash-vs-naive-attention",
+  "title": "HBM Bytes Ratio: Flash vs Naïve Attention",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "hbm_bytes_ratio"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

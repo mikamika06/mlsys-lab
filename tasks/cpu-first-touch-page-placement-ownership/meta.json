@@ -1,0 +1,22 @@
+{
+  "id": "cpu-first-touch-page-placement-ownership",
+  "title": "First-touch page placement ownership (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "the access trace and thread-to-node map are modeled and fixed by the driver (no real NUMA hardware, no libnuma)",
+    "a page that is never accessed must be reported with owner -1, not 0"
+  ]
+}

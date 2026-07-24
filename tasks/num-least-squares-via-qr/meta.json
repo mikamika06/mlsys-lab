@@ -1,0 +1,22 @@
+{
+  "id": "num-least-squares-via-qr",
+  "title": "Least squares solve via QR decomposition",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "least_squares_qr"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-08
+    }
+  ],
+  "info": []
+}

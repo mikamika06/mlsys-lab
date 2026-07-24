@@ -1,0 +1,36 @@
+{
+  "id": "llm-gptq-vs-rtn-output-error-on-same-fixture",
+  "title": "GPTQ vs RTN Output Error on the Same Fixture",
+  "track": "llm",
+  "tier": 2,
+  "module": "ptq",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "python",
+  "provides": [
+    "quantize_rtn",
+    "quantize_gptq"
+  ],
+  "fixtures": [
+    "W.npy",
+    "X.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rtn_rel_err",
+      "op": "<=",
+      "threshold": 1e-09
+    },
+    {
+      "metric": "gptq_rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "gptq_over_rtn_output_error",
+      "op": "<=",
+      "threshold": 0.9
+    }
+  ],
+  "info": {}
+}

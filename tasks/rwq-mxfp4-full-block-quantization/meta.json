@@ -1,0 +1,34 @@
+{
+  "id": "rwq-mxfp4-full-block-quantization",
+  "title": "MXFP4 full block quantization",
+  "track": "03 Deep Learning",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mxfp4_full_block_quantize"
+  ],
+  "fixtures": [
+    "mx_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "scale_err",
+      "op": "<",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "code_err",
+      "op": "<",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "dequant_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rws-debug-a-broken-obs-update",
+  "title": "Debug broken OBS update scaling",
+  "track": "03 Numerical ML",
+  "tier": "II",
+  "module": "M3numpy",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "obs_update"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

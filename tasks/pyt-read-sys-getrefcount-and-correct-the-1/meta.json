@@ -1,0 +1,22 @@
+{
+  "id": "pyt-read-sys-getrefcount-and-correct-the-1",
+  "title": "Correct sys.getrefcount's temporary reference",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "macOS CPython",
+  "provides": [
+    "true_refcount"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

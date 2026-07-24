@@ -1,0 +1,40 @@
+{
+  "id": "alg-subspace-block-iteration-for-top-k",
+  "title": "Subspace (Block) Iteration for the Top-k Eigenpairs",
+  "track": "02 Numerical Algorithms",
+  "tier": "II",
+  "module": "M3la",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "block_power_topk"
+  ],
+  "fixtures": [
+    "A.npy",
+    "Q0.npy"
+  ],
+  "gates": [
+    {
+      "metric": "eigval_rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    },
+    {
+      "metric": "component_rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    },
+    {
+      "metric": "subspace_rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    },
+    {
+      "metric": "line_events",
+      "op": "<=",
+      "threshold": 16000
+    }
+  ],
+  "info": []
+}

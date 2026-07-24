@@ -1,0 +1,27 @@
+{
+  "id": "rwa-compare-prefix-block-sharing-copy-on-write-memory-vs-duplication",
+  "title": "Compare Copy-on-Write Prefix Block Sharing vs Duplicated KV Memory",
+  "track": "03 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "cow_prefix_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "ratio_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

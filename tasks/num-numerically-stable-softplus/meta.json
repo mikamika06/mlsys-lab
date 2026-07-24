@@ -1,0 +1,22 @@
+{
+  "id": "num-numerically-stable-softplus",
+  "title": "Numerically stable softplus",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M1np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_softplus"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

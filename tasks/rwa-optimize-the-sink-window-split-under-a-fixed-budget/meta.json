@@ -1,0 +1,22 @@
+{
+  "id": "rwa-optimize-the-sink-window-split-under-a-fixed-budget",
+  "title": "Optimize the sink/window split under a fixed budget",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2attn",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "optimize_sink_window_split"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

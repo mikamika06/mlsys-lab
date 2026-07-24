@@ -1,0 +1,13 @@
+{
+  "id": "cpu-blocked-transpose-byte-exact",
+  "title": "Blocked transpose, byte-exact (real C++)",
+  "track": "13 CPU-perf",
+  "tier": "I",
+  "module": "M13",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

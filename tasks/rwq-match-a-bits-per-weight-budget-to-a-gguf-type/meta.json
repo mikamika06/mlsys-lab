@@ -1,0 +1,22 @@
+{
+  "id": "rwq-match-a-bits-per-weight-budget-to-a-gguf-type",
+  "title": "Match bits‑per‑weight budget to a GGUF type",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "match_bpw"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

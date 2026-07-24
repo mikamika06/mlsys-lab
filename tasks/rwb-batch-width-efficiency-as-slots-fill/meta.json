@@ -1,0 +1,22 @@
+{
+  "id": "rwb-batch-width-efficiency-as-slots-fill",
+  "title": "Batch-width Efficiency as Slots Fill",
+  "track": "03 Runtime ML Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "batch_width_utilization"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-09
+    }
+  ],
+  "info": []
+}

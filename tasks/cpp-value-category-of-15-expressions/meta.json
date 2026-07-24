@@ -1,0 +1,8 @@
+{
+  "id": "cpp-value-category-of-15-expressions",
+  "title": "Classify the value category of 15 C++ expressions",
+  "track": "02 Deep C++", "tier": "I", "module": "M2", "difficulty": 3,
+  "genre": "classify", "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}], "info": []
+}

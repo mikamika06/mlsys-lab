@@ -1,0 +1,22 @@
+{
+  "id": "rws-full-column-block-prune-obs-compensation",
+  "title": "Full column-block prune with OBS compensation",
+  "track": "03 Model Compression",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sparsegpt_prune"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

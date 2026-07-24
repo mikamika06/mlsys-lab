@@ -1,0 +1,22 @@
+{
+  "id": "num-classical-gram-schmidt-qr",
+  "title": "Classical Gram-Schmidt QR",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M1num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classical_gram_schmidt_qr"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-09
+    }
+  ],
+  "info": []
+}

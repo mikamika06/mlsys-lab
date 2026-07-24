@@ -1,0 +1,22 @@
+{
+  "id": "sys-peak-memory-timeline-reconstruction",
+  "title": "Peak memory timeline reconstruction",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "peak_memory_timeline"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

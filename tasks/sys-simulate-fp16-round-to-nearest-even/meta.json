@@ -1,0 +1,22 @@
+{
+  "id": "sys-simulate-fp16-round-to-nearest-even",
+  "title": "Simulate fp16 round-to-nearest-even",
+  "track": "03 Systems Numerics",
+  "tier": "I",
+  "module": "M2fp",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp32_to_fp16_rne"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "==",
+      "threshold": 0.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rws-classify-apply-on-policy-vs-off-policy-target",
+  "title": "Route tokens to on‑policy or off‑policy targets",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "route_and_apply"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

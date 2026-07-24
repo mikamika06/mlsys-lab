@@ -1,0 +1,22 @@
+{
+  "id": "sys-build-a-minimal-op-dag-tracer",
+  "title": "Build a minimal op-DAG tracer",
+  "track": "04 Systems Python",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "trace_function"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

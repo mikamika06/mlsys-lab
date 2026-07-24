@@ -1,0 +1,22 @@
+{
+  "id": "alg-predict-converge-vs-diverge-from-learning-rate",
+  "title": "Predict gradient descent convergence from learning rate",
+  "track": "03 Algorithms and Optimization",
+  "tier": "I",
+  "module": "M1alg",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_learning_rates"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

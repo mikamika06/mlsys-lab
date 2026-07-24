@@ -1,0 +1,22 @@
+{
+  "id": "rwm-allocate-a-kv-bit-budget-across-nbits-k-nbits-v-window",
+  "title": "Allocate a KV Bit Budget Across nbits_K, nbits_V, Window",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "choose_kv_budget"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

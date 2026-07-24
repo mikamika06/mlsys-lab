@@ -1,0 +1,22 @@
+{
+  "id": "cpu-fp16-vs-fp32-accumulation-error-growth",
+  "title": "FP16 vs FP32 accumulation error growth",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 5,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "accum_error_growth"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

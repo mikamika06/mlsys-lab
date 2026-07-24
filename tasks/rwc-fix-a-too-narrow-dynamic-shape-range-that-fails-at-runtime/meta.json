@@ -1,0 +1,22 @@
+{
+  "id": "rwc-fix-a-too-narrow-dynamic-shape-range-that-fails-at-runtime",
+  "title": "Fix dynamic shape range guard",
+  "track": "03 Runtime Systems",
+  "tier": "II",
+  "module": "M2rt",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "fix_shape_range_and_run"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

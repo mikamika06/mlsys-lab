@@ -1,0 +1,34 @@
+{
+  "id": "num-per-format-reconstruction-error-fp16-bf16-fp8",
+  "title": "Per-format reconstruction error (fp16/bf16/fp8)",
+  "track": "04 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp16_roundtrip",
+    "bf16_roundtrip",
+    "fp8_e4m3_roundtrip"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "fp16_max_abs_err",
+      "op": "==",
+      "threshold": 0.0
+    },
+    {
+      "metric": "bf16_max_abs_err",
+      "op": "==",
+      "threshold": 0.0
+    },
+    {
+      "metric": "fp8_max_abs_err",
+      "op": "==",
+      "threshold": 0.0
+    }
+  ],
+  "info": []
+}

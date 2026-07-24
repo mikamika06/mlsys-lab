@@ -1,0 +1,22 @@
+{
+  "id": "num-rank-1-cholesky-update",
+  "title": "Rank-1 Cholesky update",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rank1_cholesky_update"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

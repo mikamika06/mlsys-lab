@@ -1,0 +1,27 @@
+{
+  "id": "sys-expert-parallel-all-to-all-dispatch",
+  "title": "Expert-parallel all-to-all dispatch",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M5attn",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "moe_all_to_all_dispatch"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "counts_exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

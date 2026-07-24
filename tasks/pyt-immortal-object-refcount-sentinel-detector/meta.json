@@ -1,0 +1,24 @@
+{
+  "id": "pyt-immortal-object-refcount-sentinel-detector",
+  "title": "Immortal-object refcount sentinel detector",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M3py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "CPython 3.12+",
+  "provides": [
+    "immortal_refcount_sentinel_detector"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "Requires CPython object header access"
+  ]
+}

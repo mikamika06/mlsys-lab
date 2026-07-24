@@ -1,0 +1,22 @@
+{
+  "id": "alg-nesterov-accelerated-gradient",
+  "title": "Nesterov Accelerated Gradient for Quadratic Minimization",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2opt",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "nesterov_minimize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-quantify-sum-order-discrepancy",
+  "title": "Quantify Sum Order Discrepancy",
+  "track": "02 Numerical Methods",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sum_order_discrepancy"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

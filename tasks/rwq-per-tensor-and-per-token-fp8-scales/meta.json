@@ -1,0 +1,22 @@
+{
+  "id": "rwq-per-tensor-and-per-token-fp8-scales",
+  "title": "Per‑tensor and per‑token FP8 scales",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp8_scales"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

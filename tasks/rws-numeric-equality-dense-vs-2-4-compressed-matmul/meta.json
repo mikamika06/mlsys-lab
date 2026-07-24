@@ -1,0 +1,25 @@
+{
+  "id": "rws-numeric-equality-dense-vs-2-4-compressed-matmul",
+  "title": "Numeric equality: dense vs 2:4-compressed matmul",
+  "track": "03 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "dense_vs_compressed24_matmul_error"
+  ],
+  "fixtures": [
+    "w24.npy",
+    "x.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

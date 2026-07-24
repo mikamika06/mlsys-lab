@@ -1,0 +1,27 @@
+{
+  "id": "rwc-fuse-the-layernorm-subgraph-into-one-layernormalization-op",
+  "title": "Fuse LayerNorm subgraph into one LayerNormalization op",
+  "track": "04 Runtime Compilers",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fuse_layernorm_subgraph"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "span_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

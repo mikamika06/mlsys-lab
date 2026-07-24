@@ -1,0 +1,22 @@
+{
+  "id": "llm-round-to-nearest-weight-quant-baseline-error",
+  "title": "Round‑to‑Nearest Weight Quantization Baseline Error",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "round_to_nearest"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.05
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwq-entropy-kl-calibration-threshold",
+  "title": "Entropy KL calibration threshold",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "calibrate_threshold_index"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "kl_error",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rws-uld-gradient-through-the-sort-permutation",
+  "title": "ULD Gradient through the Sort Permutation",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M3b",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "uld_gradient"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

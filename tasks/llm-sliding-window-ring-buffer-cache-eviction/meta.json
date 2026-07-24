@@ -1,0 +1,27 @@
+{
+  "id": "llm-sliding-window-ring-buffer-cache-eviction",
+  "title": "Sliding-window ring-buffer KV-cache eviction",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4attn",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "windowed_ring_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "buffer_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

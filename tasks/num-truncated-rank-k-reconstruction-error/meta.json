@@ -1,0 +1,22 @@
+{
+  "id": "num-truncated-rank-k-reconstruction-error",
+  "title": "Truncated rank-k reconstruction error",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "truncated_rank_k_error"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

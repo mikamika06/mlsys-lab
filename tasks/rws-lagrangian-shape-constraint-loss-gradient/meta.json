@@ -1,0 +1,22 @@
+{
+  "id": "rws-lagrangian-shape-constraint-loss-gradient",
+  "title": "Lagrangian shape-constraint loss gradient",
+  "track": "04 Research Workflows",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "shape_constraint_loss"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

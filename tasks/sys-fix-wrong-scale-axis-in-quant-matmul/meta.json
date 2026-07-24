@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-wrong-scale-axis-in-quant-matmul",
+  "title": "Fix wrong scale axis in quant matmul",
+  "track": "03 Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "quant_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

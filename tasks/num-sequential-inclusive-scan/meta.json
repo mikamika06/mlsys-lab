@@ -1,0 +1,22 @@
+{
+  "id": "num-sequential-inclusive-scan",
+  "title": "Sequential inclusive scan",
+  "track": "02 Numerical Computing",
+  "tier": "I",
+  "module": "M1np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "inclusive_scan"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

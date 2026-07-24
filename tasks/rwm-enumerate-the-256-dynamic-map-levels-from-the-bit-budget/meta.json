@@ -1,0 +1,27 @@
+{
+  "id": "rwm-enumerate-the-256-dynamic-map-levels-from-the-bit-budget",
+  "title": "Enumerate the 256 Dynamic-Map Levels from the Bit Budget",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "create_dynamic_map"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-4
+    },
+    {
+      "metric": "size_ok",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

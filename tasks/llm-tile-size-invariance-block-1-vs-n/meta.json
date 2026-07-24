@@ -1,0 +1,22 @@
+{
+  "id": "llm-tile-size-invariance-block-1-vs-n",
+  "title": "Streaming softmax tile-size invariance",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3llm",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "streaming_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-7
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,25 @@
+{
+  "id": "rwq-vector-wise-int8-matmul-reconstruction",
+  "title": "Vector-wise int8 matmul reconstruction",
+  "track": "04 Quantization & Low-Precision",
+  "tier": "II",
+  "module": "M4q",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "vector_wise_int8_matmul"
+  ],
+  "fixtures": [
+    "int8_x.npy",
+    "int8_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-3
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-an-off-by-one-in-slot-mapping",
+  "title": "Debug slot mapping in paged attention",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "slot_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

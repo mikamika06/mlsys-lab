@@ -1,0 +1,27 @@
+{
+  "id": "rws-pca-slice-vs-naive-magnitude-column-drop",
+  "title": "PCA Reduction vs Naive Magnitude Column Drop",
+  "track": "05 Real-World Model Compression",
+  "tier": "I",
+  "module": "M5rwm",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "pca_vs_naive_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "ordering_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

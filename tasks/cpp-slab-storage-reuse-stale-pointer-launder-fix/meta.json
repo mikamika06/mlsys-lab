@@ -1,0 +1,13 @@
+{
+  "id": "cpp-slab-storage-reuse-stale-pointer-launder-fix",
+  "title": "Slab storage reuse: stale pointer + std::launder fix (real C++)",
+  "track": "03 C++ Systems",
+  "tier": "III",
+  "module": "M3cpp",
+  "difficulty": 5,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

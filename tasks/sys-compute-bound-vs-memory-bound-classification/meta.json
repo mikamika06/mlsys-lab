@@ -1,0 +1,22 @@
+{
+  "id": "sys-compute-bound-vs-memory-bound-classification",
+  "title": "Compute‑bound vs Memory‑bound Classification",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_bound"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

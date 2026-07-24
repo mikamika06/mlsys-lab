@@ -1,0 +1,32 @@
+{
+  "id": "rwq-awq-scaling-vs-plain-group-int4",
+  "title": "AWQ scaling vs plain group int4",
+  "track": "04 Numerical ML",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "awq_vs_plain_group_int4_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "awq_mse_error",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "plain_mse_error",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "awq_beats_plain",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

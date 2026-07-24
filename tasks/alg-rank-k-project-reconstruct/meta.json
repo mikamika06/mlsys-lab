@@ -1,0 +1,22 @@
+{
+  "id": "alg-rank-k-project-reconstruct",
+  "title": "Rank‑k PCA projection and reconstruction",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rank_k_project_reconstruct"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

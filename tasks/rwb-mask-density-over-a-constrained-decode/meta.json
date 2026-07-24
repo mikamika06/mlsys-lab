@@ -1,0 +1,22 @@
+{
+  "id": "rwb-mask-density-over-a-constrained-decode",
+  "title": "Mask density over a constrained decode",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mask_density_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-int8-quantized-matmul-error",
+  "title": "INT8 quantized matmul with symmetric scales",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M2quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantized_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.02
+    }
+  ],
+  "info": []
+}

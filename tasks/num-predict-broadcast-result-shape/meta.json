@@ -1,0 +1,22 @@
+{
+  "id": "num-predict-broadcast-result-shape",
+  "title": "Predict broadcast result shape",
+  "track": "01 NumPy",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "broadcast_shape"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

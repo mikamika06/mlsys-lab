@@ -1,0 +1,22 @@
+{
+  "id": "alg-full-adamw-wd-warmup-clip-single-step",
+  "title": "Full AdamW single step with warmup and gradient clipping",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M2opt",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "adamw_single_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

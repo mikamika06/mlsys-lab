@@ -1,0 +1,22 @@
+{
+  "id": "sys-activation-bytes-saved-by-recompute-vs-store-p",
+  "title": "Activation bytes saved by recompute vs store-P",
+  "track": "06 Systems ML",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "activation_bytes_saved"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

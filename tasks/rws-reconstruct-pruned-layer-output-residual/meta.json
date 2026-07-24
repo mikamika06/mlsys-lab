@@ -1,0 +1,31 @@
+{
+  "id": "rws-reconstruct-pruned-layer-output-residual",
+  "title": "Reconstruct Pruned-Layer Output & Residual",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M2sparse",
+  "difficulty": 2,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "apply_wanda_mask"
+  ],
+  "fixtures": [
+    "wanda_w.npy",
+    "wanda_x.npy",
+    "wanda_m.npy"
+  ],
+  "gates": [
+    {
+      "metric": "y_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "r_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

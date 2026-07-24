@@ -1,0 +1,22 @@
+{
+  "id": "rwc-reconstruct-dense-weight-from-affinequantizedtensor-fields",
+  "title": "Reconstruct Dense Weight from AffineQuantizedTensor Fields",
+  "track": "04 Machine Learning Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_dense_from_affine_quantized"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-08
+    }
+  ],
+  "info": []
+}

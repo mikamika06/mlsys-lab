@@ -1,0 +1,19 @@
+{
+  "id": "cpp-dtype-shape-mismatch-error-handling",
+  "title": "pybind11 buffer protocol dtype/shape validation (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

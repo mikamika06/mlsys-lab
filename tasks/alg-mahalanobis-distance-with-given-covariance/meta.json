@@ -1,0 +1,22 @@
+{
+  "id": "alg-mahalanobis-distance-with-given-covariance",
+  "title": "Mahalanobis Distance with Given Covariance",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": [
+    "pairwise_mahalanobis"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-7
+    }
+  ],
+  "info": []
+}

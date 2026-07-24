@@ -1,0 +1,22 @@
+{
+  "id": "rwc-nf4-vs-fp4-vs-int4-rtn-on-a-normal-weight",
+  "title": "NF4 vs FP4 vs int4-RTN on a normal weight",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M2quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "nf4_fp4_int4_best"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

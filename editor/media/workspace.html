@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src {{cspSource}} data:; style-src {{cspSource}} 'unsafe-inline'; font-src {{cspSource}}; script-src 'nonce-{{nonce}}';">
+
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="{{katexBase}}katex.min.css">
+<script defer nonce="{{nonce}}" src="{{katexBase}}katex.min.js"></script>
+<script defer nonce="{{nonce}}" src="{{katexBase}}contrib/auto-render.min.js"></script>
+<style>
+  :root{
+    --canvas:#101216; --canvas-2:#0B0D10; --editor-bg:#0C0E12; --panel:#171A20; --panel-2:#1E222A; --panel-3:#252A33;
+    --line:#282D37; --line-2:#353C48; --tick:#3B4350;
+    --ink:#ECEEF1; --ink-dim:#B2B8C2; --ink-mut:#838B98; --ink-faint:#5A616E;
+    --amber:#F4B94E; --amber-2:#FFD277; --amber-dim:#8C6B2E; --amber-glow:rgba(244,185,78,.16);
+    --pass:#4BD6A0; --pass-2:#86ECC3; --pass-dim:#235444; --fail:#F2694F; --fail-dim:#5A2418; --steel:#86ABCC;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono","SFMono-Regular",Menlo,"JetBrains Mono",monospace;
+    --ease:cubic-bezier(.16,1,.3,1);
+    --lw:300px; --rw:360px;
+  }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;height:100%;width:100%;}
+  body{background:var(--canvas-2);color:var(--ink);font-family:var(--sans);font-size:13px;-webkit-font-smoothing:antialiased;overflow:hidden;}
+  .app{position:fixed;inset:0;display:flex;flex-direction:column;}
+
+  /* ---- topbar ---- */
+  .top{flex:0 0 auto;height:44px;display:flex;align-items:center;gap:12px;padding:0 14px;background:var(--panel);border-bottom:1px solid var(--line);}
+  .mark{display:inline-grid;grid-template-columns:repeat(3,3px);gap:2.5px;align-items:end;height:16px;flex:0 0 auto;}
+  .mark span{width:3px;background:var(--amber);display:block;border-radius:1px;}
+  .mark span:nth-child(1){height:6px;} .mark span:nth-child(2){height:16px;} .mark span:nth-child(3){height:10px;}
+  .wm{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;flex:0 0 auto;}
+  .back{display:none;align-items:center;gap:6px;font-family:var(--mono);font-size:11.5px;color:var(--amber-2);cursor:pointer;padding:3px 8px;border-radius:6px;flex:0 0 auto;}
+  .back:hover{background:var(--panel-2);}
+  .crumb{font-family:var(--mono);font-size:11.5px;color:var(--ink-mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} .crumb b{color:var(--ink-dim);}
+  .top .spc{flex:1;}
+  .prog{font-family:var(--mono);font-size:11px;color:var(--ink-mut);flex:0 0 auto;} .prog b{color:var(--amber);}
+  .lang{flex:0 0 auto;display:flex;align-items:center;gap:6px;}
+  .lang svg{width:14px;height:14px;fill:none;stroke:var(--ink-mut);stroke-width:1.5;}
+  select{font-family:var(--mono);font-size:11px;color:var(--ink-dim);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:3px 6px;cursor:pointer;outline:none;}
+  .grade{display:none;align-items:center;gap:9px;cursor:pointer;font-weight:600;font-size:12.5px;color:#17130a;flex:0 0 auto;
+    border:1px solid #b8862f;border-radius:8px;padding:7px 15px;background:linear-gradient(180deg,var(--amber-2),var(--amber));box-shadow:0 1px 0 rgba(255,255,255,.25) inset;}
+  .grade:hover{filter:brightness(1.05);} .grade[disabled]{opacity:.5;pointer-events:none;}
+  .grade kbd{font-family:var(--mono);font-size:10px;color:#4b3a12;background:rgba(255,255,255,.28);border:1px solid rgba(0,0,0,.15);border-radius:4px;padding:1px 5px;}
+  .grade .spin{width:12px;height:12px;border-radius:50%;border:2px solid rgba(23,19,10,.35);border-top-color:#17130a;animation:spin .7s linear infinite;display:none;}
+  .grade.running .spin{display:inline-block;} .grade.running .gl{display:none;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .app.is-work .back{display:flex;} .app.is-work .grade{display:flex;} .app.is-work .roadmapTitle{display:none;}
+  .app.is-home .crumb{display:none;}
+
+  /* ================= HOME / ROADMAP ================= */
+  .home{flex:1 1 auto;min-height:0;overflow-y:auto;display:none;}
+  .app.is-home .home{display:block;}
+  .home-in{max-width:1100px;margin:0 auto;padding:26px 30px 60px;}
+  .home-head{display:flex;align-items:flex-end;gap:16px;margin-bottom:22px;}
+  .home-head h1{font-size:22px;font-weight:600;margin:0;} .home-head .sub{font-family:var(--mono);font-size:11.5px;color:var(--ink-mut);margin-top:5px;} .home-head .sub b{color:var(--amber);}
+  .home-head .legend{margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:10.5px;color:var(--ink-mut);}
+  .legend i{display:inline-flex;align-items:center;gap:6px;} .legend .sw{width:9px;height:9px;border-radius:3px;}
+  .sw.mast{background:var(--pass);} .sw.act{background:var(--amber);} .sw.lock{background:var(--line-2);}
+  /* ---- roadmap: a honeycomb you drill into ----
+     Hexes cannot nest, so the three levels are three views of the same comb:
+     areas -> tracks -> tasks, with a crumb trail back up. One cell is one thing
+     you can click; its fill is how much of it you have finished. */
+  .comb-head{display:flex;align-items:center;gap:10px;margin:0 0 18px;min-height:28px;}
+  .crumbs{display:flex;align-items:center;gap:6px;font-size:12.5px;flex-wrap:wrap;}
+  .crumb-b{background:none;border:0;padding:2px 4px;color:var(--ink-mut);font:inherit;cursor:pointer;border-radius:5px;}
+  .crumb-b:hover{color:var(--ink);background:var(--panel);}
+  .crumb-b:focus-visible{outline:2px solid var(--amber);outline-offset:1px;}
+  .crumb-cur{color:var(--ink);font-weight:600;padding:2px 4px;}
+  .crumb-sep{color:var(--ink-faint);}
+  .comb-note{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--ink-mut);}
+  .about-btn{border:1px solid var(--line-2);background:none;color:var(--ink-mut);font:600 10px var(--sans);
+    height:24px;padding:0 10px;border-radius:12px;cursor:pointer;}
+  .about-btn:hover{border-color:var(--amber-dim);color:var(--amber-2);}
+  .about-btn[aria-expanded="true"]{border-color:var(--amber-dim);color:var(--amber-2);background:var(--amber-glow);}
+
+  .about{display:none;max-width:70ch;margin:0 0 20px;}
+  .about.on{display:block;}
+  .about p{margin:0 0 10px;font-size:12.5px;line-height:1.65;color:var(--ink-dim);text-wrap:pretty;}
+  .about .lbl{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mut);margin:14px 0 6px;}
+  .about ul{margin:0;padding-left:16px;} .about li{font-size:12.5px;line-height:1.6;color:var(--ink-dim);margin:4px 0;}
+  .about .how{font-family:var(--mono);font-size:10.5px;color:var(--ink-mut);line-height:1.55;
+    margin-top:14px;padding-top:10px;border-top:1px solid var(--line);}
+
+  /* the comb itself: cells are absolutely placed on an axial grid by JS */
+  .comb{position:relative;}
+  .cell{position:absolute;border:0;padding:0;background:none;cursor:pointer;color:inherit;font:inherit;
+    -webkit-clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+    clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+    display:grid;place-items:center;text-align:center;
+    transition:filter .15s ease-out,transform .15s ease-out;}
+  .cell:hover{filter:brightness(1.28);transform:scale(1.035);z-index:2;}
+  .cell:focus-visible{outline:none;filter:brightness(1.4);transform:scale(1.05);z-index:3;}
+  .cell.empty{cursor:default;} .cell.empty:hover{filter:none;transform:none;}
+  .cell .in{padding:6px 10%;pointer-events:none;}
+  .cell .nm{display:block;font-size:11.5px;font-weight:600;line-height:1.25;color:var(--ink);
+    overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+  .cell .ct{display:block;font-family:var(--mono);font-size:10px;margin-top:4px;color:var(--ink-mut);}
+  .cell .lg{display:inline-block;font-family:var(--mono);font-size:8.5px;margin-top:3px;
+    padding:1px 4px;border-radius:3px;border:1px solid var(--line-2);color:var(--ink-mut);}
+  .cell.locked .nm{color:var(--ink-mut);} .cell.locked{opacity:.6;}
+  /* task cells are small: difficulty is the label, the id lives in the tooltip */
+  .cell.task .nm{font-family:var(--mono);font-size:13px;font-weight:500;}
+  .cell.task .ct{font-size:8.5px;margin-top:2px;}
+  .comb-empty{font-family:var(--mono);font-size:11px;color:var(--ink-faint);padding:20px 0;}
+  @media (prefers-reduced-motion:reduce){.cell{transition:none;} .cell:hover,.cell:focus-visible{transform:none;}}
+
+  .bar{height:5px;border-radius:3px;background:var(--panel-3);overflow:hidden;position:relative;background-image:repeating-linear-gradient(90deg,var(--tick) 0,var(--tick) 1px,transparent 1px,transparent 7px);}
+  .bar .f{position:absolute;left:0;top:0;bottom:0;background:var(--amber);border-radius:3px;} .node.done .bar .f{background:var(--pass);}
+
+  /* ================= WORK (3 resizable cols) ================= */
+  .work{flex:1 1 auto;min-height:0;display:none;grid-template-columns:var(--lw) 6px minmax(0,1fr) 6px var(--rw);}
+  .app.is-work .work{display:grid;}
+  .col{min-height:0;display:flex;flex-direction:column;overflow:hidden;}
+  .left{border-right:1px solid var(--line);background:var(--canvas);}
+  .center{background:var(--editor-bg);}
+  .right{border-left:1px solid var(--line);background:var(--panel);}
+  .rz{background:var(--line);cursor:col-resize;position:relative;} .rz:hover,.rz.drag{background:var(--amber-dim);}
+  .rz::after{content:"";position:absolute;inset:0 -3px;}
+  .col-h{flex:0 0 auto;height:32px;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mut);}
+  .col-h .gd{width:4px;height:4px;background:var(--amber);border-radius:50%;} .col-h .sp{flex:1;} .col-h .st{font-family:var(--mono);font-size:10px;text-transform:none;color:var(--ink-faint);}
+  .scroll{flex:1 1 auto;overflow:auto;}
+
+  /* left = brief only */
+  .brief{padding:16px;}
+  .b-id{font-family:var(--mono);font-size:11px;color:var(--amber);} .b-title{font-size:16px;font-weight:600;margin:6px 0 10px;line-height:1.3;}
+  .b-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
+  .b-tag{font-family:var(--mono);font-size:10px;padding:3px 7px;border-radius:6px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink-dim);}
+  .md{font-size:12.5px;line-height:1.62;color:var(--ink-dim);}
+  .md h1,.md h2,.md h3{color:var(--ink);font-weight:600;margin:15px 0 7px;} .md h1{font-size:14px;} .md h2{font-size:13px;} .md h3{font-size:12px;}
+  .md p{margin:8px 0;} .md strong{color:var(--ink);}
+  .md code{font-family:var(--mono);font-size:12px;background:var(--panel-2);border-radius:4px;padding:1px 5px;color:var(--ink);}
+  .md pre{background:var(--canvas-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;margin:9px 0;} .md pre code{background:none;border:0;padding:0;color:var(--ink-dim);}
+  .md ul{margin:8px 0;padding-left:18px;} .md li{margin:2px 0;}
+  .md blockquote{border-left:2px solid var(--amber-dim);margin:9px 0;padding:2px 0 2px 12px;color:var(--ink-mut);}
+  .md table{border-collapse:collapse;width:100%;margin:11px 0;font-size:12px;} .md th,.md td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top;} .md th{background:var(--panel-2);color:var(--ink);font-weight:600;font-size:11.5px;}
+
+  /* center = editor */
+  .tabbar{flex:0 0 auto;height:32px;display:flex;align-items:center;background:var(--canvas-2);border-bottom:1px solid var(--line);}
+  .ftab{display:flex;align-items:center;gap:8px;padding:0 14px;height:32px;font-size:12px;border-right:1px solid var(--line);background:var(--editor-bg);position:relative;}
+  .ftab::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--amber);} .ftab .ic{font-family:var(--mono);font-size:10px;color:var(--steel);}
+  .ed{position:relative;flex:1 1 auto;min-height:0;display:flex;background:var(--editor-bg);font-family:var(--mono);font-size:13px;line-height:20px;overflow:hidden;}
+  .gutter{flex:0 0 52px;padding:12px 10px 12px 0;text-align:right;color:var(--ink-faint);user-select:none;overflow:hidden;background:var(--editor-bg);}
+  .gutter .ln{display:block;height:20px;} .gutter .ln.cur{color:var(--amber);}
+  .cwrap{position:relative;flex:1 1 auto;overflow:auto;} .cinner{position:relative;min-width:100%;width:max-content;min-height:100%;}
+  .hl,.ta{margin:0;padding:12px 20px 40px 12px;font:inherit;letter-spacing:0;tab-size:4;white-space:pre;word-wrap:normal;}
+  .hl{position:relative;color:var(--ink-dim);pointer-events:none;min-width:100%;}
+  .ta{position:absolute;inset:0;width:100%;height:100%;color:transparent;background:transparent;caret-color:var(--amber);border:0;outline:none;resize:none;overflow:hidden;-webkit-text-fill-color:transparent;}
+  .ta::selection{background:rgba(244,185,78,.22);}
+  .aline{position:absolute;left:0;right:0;height:20px;top:12px;background:rgba(255,255,255,.028);pointer-events:none;}
+  .aline::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--amber);opacity:.5;}
+  .tk-kw{color:#E0836B;} .tk-def{color:var(--amber-2);} .tk-fn{color:#9DC7E8;} .tk-str{color:#7FD8A6;} .tk-num{color:#E8C583;} .tk-com{color:#5A616E;font-style:italic;} .tk-dec{color:#C89BE0;} .tk-op{color:var(--ink-mut);} .tk-todo{color:var(--fail);}
+
+  /* right = instrument */
+  .verdict{position:relative;margin:14px 14px 0;padding:17px 16px 14px;border:1px solid var(--line-2);border-radius:12px;background:var(--panel-2);overflow:hidden;}
+  .reticle{position:absolute;width:12px;height:12px;pointer-events:none;opacity:.85;}
+  .reticle::before,.reticle::after{content:"";position:absolute;background:var(--amber);} .reticle::before{width:12px;height:1.5px;} .reticle::after{width:1.5px;height:12px;}
+  .reticle.tl{top:8px;left:8px;} .reticle.tr{top:8px;right:8px;} .reticle.tr::before,.reticle.tr::after{right:0;} .reticle.bl{bottom:8px;left:8px;} .reticle.bl::before,.reticle.bl::after{bottom:0;} .reticle.br{bottom:8px;right:8px;} .reticle.br::before,.reticle.br::after{right:0;bottom:0;}
+  .sweep{position:absolute;top:0;bottom:0;width:2px;left:-2px;background:linear-gradient(var(--amber),transparent);box-shadow:0 0 14px 2px var(--amber-glow);opacity:0;}
+  .verdict.measuring .sweep{animation:sweep 1.1s var(--ease) infinite;opacity:1;} @keyframes sweep{0%{left:-2px;}100%{left:100%;}}
+  .vst{font-family:var(--mono);font-size:23px;font-weight:600;letter-spacing:.04em;display:flex;align-items:center;gap:12px;justify-content:center;color:var(--ink-mut);}
+  .vst .bdg{width:23px;height:23px;border-radius:7px;display:grid;place-items:center;border:1.5px solid currentColor;font-size:13px;}
+  .verdict.pass .vst{color:var(--pass);} .verdict.fail .vst{color:var(--fail);} .verdict.measuring .vst{color:var(--amber);} .verdict.error .vst{color:var(--fail);}
+  .vsub{text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink-mut);margin-top:8px;} .vsub .ok{color:var(--pass);}
+  .metrics{padding:12px 14px 6px;display:flex;flex-direction:column;gap:9px;}
+  .metric{border:1px solid var(--line);border-radius:10px;background:var(--canvas);padding:10px 12px;}
+  .metric.green{border-color:var(--pass-dim);} .metric.red{border-color:var(--fail-dim);}
+  .m-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;} .m-name{font-family:var(--mono);font-size:10.5px;color:var(--ink-dim);display:flex;align-items:center;gap:7px;}
+  .m-name .kind{font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);border:1px solid var(--line);border-radius:4px;padding:1px 4px;}
+  .m-v{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);} .metric.green .m-v{color:var(--pass);} .metric.red .m-v{color:var(--fail);}
+  .m-val{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:23px;font-weight:600;color:var(--ink);margin:6px 0 3px;} .metric.green .m-val{color:var(--pass-2);}
+  .m-gate{font-family:var(--mono);font-size:10px;color:var(--ink-mut);} .m-gate .thr{color:var(--ink-dim);}
+  .console{border-top:1px solid var(--line);margin-top:8px;} .console .ch{padding:7px 14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mut);border-bottom:1px solid var(--line-2);}
+  .console .cb{padding:8px 14px 14px;font-family:var(--mono);font-size:11px;line-height:1.65;color:var(--ink-dim);white-space:pre-wrap;word-break:break-word;min-height:50px;}
+  .console .ok{color:var(--pass);} .console .bad{color:var(--fail);}
+
+  @media (max-width:960px){ .work{grid-template-columns:var(--lw) 6px 1fr;} .right,.work .rz+.rz{display:none;} }
+</style>
+</head>
+<body>
+  <div class="app is-home" id="app">
+    <div class="top">
+      <span class="mark"><span></span><span></span><span></span></span>
+      <span class="wm">Arena</span>
+      <span class="back" id="back">‹ <span data-t="roadmap">Roadmap</span></span>
+      <span class="crumb" id="crumb"></span>
+      <span class="spc"></span>
+      <span class="prog" id="prog"></span>
+      <span class="lang"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
+        <select id="langSel"></select></span>
+      <div class="grade" id="gradeBtn" disabled><span class="spin"></span><span class="gl">▷</span> <span data-t="grade">Grade</span> <kbd>⌘↵</kbd></div>
+    </div>
+
+    <!-- HOME / ROADMAP -->
+    <div class="home" id="home">
+      <div class="home-in">
+        <div class="home-head">
+          <div><h1 class="roadmapTitle" data-t="roadmap">Roadmap</h1><div class="sub" id="hsub"></div></div>
+          <div class="legend">
+            <i><span class="sw mast"></span><span data-t="solved">solved</span></i>
+            <i><span class="sw act"></span><span data-t="available">available</span></i>
+            <i><span class="sw lock"></span><span data-t="planned">planned</span></i>
+          </div>
+        </div>
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <!-- WORK -->
+    <div class="work" id="work">
+      <div class="col left"><div class="col-h"><span class="gd"></span><span data-t="task">Task</span></div><div class="scroll"><div class="brief" id="brief"></div></div></div>
+      <div class="rz" id="rzL"></div>
+      <div class="col center">
+        <div class="tabbar"><div class="ftab"><span class="ic" id="ficon">py</span><span id="fname">solve.py</span></div></div>
+        <div class="ed">
+          <div class="gutter" id="gutter"></div>
+          <div class="cwrap" id="cwrap"><div class="cinner"><div class="aline" id="aline"></div><pre class="hl" id="hl" aria-hidden="true"></pre><textarea class="ta" id="ta" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off"></textarea></div></div>
+        </div>
+      </div>
+      <div class="rz" id="rzR"></div>
+      <div class="col right"><div class="col-h"><span class="gd"></span><span data-t="instrument">Instrument</span><span class="sp"></span><span class="st" id="instSt">—</span></div>
+        <div class="scroll">
+          <div class="verdict" id="verdict"><span class="reticle tl"></span><span class="reticle tr"></span><span class="reticle bl"></span><span class="reticle br"></span><span class="sweep"></span>
+            <div class="vst"><span class="bdg" id="vbadge">·</span><span id="vlabel">AWAITING</span></div><div class="vsub" id="vsub"></div></div>
+          <div class="metrics" id="metrics"></div>
+          <div class="console"><div class="ch">[ <span data-t="output">output</span> ] arena grade</div><div class="cb" id="cons">—</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script nonce="{{nonce}}">
+  const vscode=acquireVsCodeApi();
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  let mapData=null,curId=null,busy=false;
+  // The comb shows one level at a time, so there is no expand/collapse state —
+  // only which level we are on (see `view`) and whether the block description is open.
+  let aboutOn=false;
+
+  /* ---------- i18n ---------- */
+  const LANG={
+    en:{name:'English',roadmap:'Roadmap',grade:'Grade',solved:'solved',available:'available',planned:'planned',task:'Task',instrument:'Instrument',output:'output',awaiting:'AWAITING',measuring:'MEASURING…',vsub:'deterministic · same-machine · local',running:'running locally',consIdle:'— press Grade (⌘↵)',pass:'PASS',fail:'FAIL',error:'ERROR',gatesGreen:'gates green',begin:'Choose a task on the roadmap →'},
+    uk:{name:'Українська',roadmap:'Дорожня карта',grade:'Перевірити',solved:'освоєно',available:'доступно',planned:'заплановано',task:'Задача',instrument:'Інструмент',output:'вивід',awaiting:'ОЧІКУЄ',measuring:'ВИМІРЮЮ…',vsub:'детерміновано · те саме залізо · локально',running:'працює локально',consIdle:'— натисни Перевірити (⌘↵)',pass:'PASS',fail:'FAIL',error:'ПОМИЛКА',gatesGreen:'гейти зелені',begin:'Обери задачу на карті →'},
+    de:{name:'Deutsch',roadmap:'Roadmap',grade:'Prüfen',solved:'gelöst',available:'verfügbar',planned:'geplant',task:'Aufgabe',instrument:'Instrument',output:'Ausgabe',awaiting:'BEREIT',measuring:'MESSE…',vsub:'deterministisch · gleiche Maschine · lokal',running:'läuft lokal',consIdle:'— Prüfen drücken (⌘↵)',pass:'PASS',fail:'FAIL',error:'FEHLER',gatesGreen:'Tore grün',begin:'Wähle eine Aufgabe →'},
+    es:{name:'Español',roadmap:'Ruta',grade:'Evaluar',solved:'resuelto',available:'disponible',planned:'planeado',task:'Tarea',instrument:'Instrumento',output:'salida',awaiting:'EN ESPERA',measuring:'MIDIENDO…',vsub:'determinista · misma máquina · local',running:'ejecutando local',consIdle:'— pulsa Evaluar (⌘↵)',pass:'PASS',fail:'FAIL',error:'ERROR',gatesGreen:'puertas verdes',begin:'Elige una tarea →'},
+    fr:{name:'Français',roadmap:'Feuille de route',grade:'Évaluer',solved:'résolu',available:'disponible',planned:'prévu',task:'Tâche',instrument:'Instrument',output:'sortie',awaiting:'EN ATTENTE',measuring:'MESURE…',vsub:'déterministe · même machine · local',running:'exécution locale',consIdle:'— appuie sur Évaluer (⌘↵)',pass:'PASS',fail:'FAIL',error:'ERREUR',gatesGreen:'portes vertes',begin:'Choisis une tâche →'},
+    pl:{name:'Polski',roadmap:'Mapa',grade:'Sprawdź',solved:'ukończone',available:'dostępne',planned:'planowane',task:'Zadanie',instrument:'Instrument',output:'wyjście',awaiting:'OCZEKUJE',measuring:'MIERZĘ…',vsub:'deterministycznie · ta sama maszyna · lokalnie',running:'działa lokalnie',consIdle:'— naciśnij Sprawdź (⌘↵)',pass:'PASS',fail:'FAIL',error:'BŁĄD',gatesGreen:'bramki zielone',begin:'Wybierz zadanie →'},
+    zh:{name:'中文',roadmap:'路线图',grade:'评测',solved:'已完成',available:'可用',planned:'计划',task:'任务',instrument:'仪表',output:'输出',awaiting:'等待',measuring:'测量中…',vsub:'确定性 · 同机 · 本地',running:'本地运行',consIdle:'— 按 评测 (⌘↵)',pass:'PASS',fail:'FAIL',error:'错误',gatesGreen:'门通过',begin:'在路线图选择任务 →'},
+  };
+  let lang=(vscode.getState()&&vscode.getState().lang)||'en';
+  function t(k){return (LANG[lang]&&LANG[lang][k])||LANG.en[k]||k;}
+  function applyLang(){
+    document.querySelectorAll('[data-t]').forEach(el=>{el.textContent=t(el.getAttribute('data-t'));});
+    if(mapData)renderMap(mapData);
+    renderBrief();
+    if(!curId){$('vsub').textContent=t('vsub');}
+    const st=vscode.getState()||{}; st.lang=lang; vscode.setState(st);
+  }
+  function initLang(){
+    $('langSel').innerHTML=Object.keys(LANG).map(k=>`<option value="${k}" ${k===lang?'selected':''}>${LANG[k].name}</option>`).join('');
+    $('langSel').addEventListener('change',e=>{lang=e.target.value;applyLang();});
+    applyLang();
+  }
+
+  /* ---------- roadmap ---------- */
+  const CHEV='<svg viewBox="0 0 16 16"><path d="M6 4l4 4-4 4"/></svg>';
+
+  /* What each block of the course actually is. Without this the roadmap is a
+     list of folder names — the learner cannot tell why a block exists or what
+     they will be able to do after it. Keyed by the area slug the backend sends. */
+  const AREA_INFO={
+    'python-core':{
+      tag:{en:'The interpreter as a machine you can measure.',uk:'Інтерпретатор як машина, яку можна виміряти.'},
+      body:{en:'CPython is not magic: objects have layouts, attribute lookup follows a fixed protocol, and every abstraction has a cost you can count. This block replaces folklore ("comprehensions are faster") with measurements.',
+            uk:'CPython не магія: об’єкти мають розкладку в пам’яті, пошук атрибута йде фіксованим протоколом, і кожна абстракція має ціну, яку можна порахувати. Цей блок міняє фольклор («генератори швидші») на вимір.'},
+      you:{en:['read the data model — descriptors, MRO, slots, the GIL','predict allocation and copy counts before running anything','tell a real optimisation from a superstition'],
+           uk:['читати модель даних — дескриптори, MRO, slots, GIL','передбачати кількість алокацій і копій до запуску','відрізняти справжню оптимізацію від забобону']},
+      how:{en:'graded in python: metrics come from a deterministic probe, never from wall-clock time',
+           uk:'грейдиться пайтоном: метрики з детермінованого зонда, ніколи з таймера'}},
+    'cpp-core':{
+      tag:{en:'Real C++, compiled by the real clang++.',uk:'Справжній C++, компільований справжнім clang++.'},
+      body:{en:'You write solve.cpp against a header contract; the grader compiles it with clang++ -O2 -std=c++20, runs it and diffs the numbers against a reference implementation. Ownership, lifetime and ABI stop being trivia and become things that either compile or crash.',
+            uk:'Ти пишеш solve.cpp за контрактом у заголовку; грейдер компілює його clang++ -O2 -std=c++20, запускає і звіряє числа з еталоном. Володіння, час життя й ABI перестають бути теорією — воно або збирається, або падає.'},
+      you:{en:['write move/copy semantics that do not double-free','reason about layout, alignment, vtables and name mangling','fix undefined behaviour you can actually observe'],
+           uk:['писати move/copy семантику без подвійного звільнення','міркувати про розкладку, вирівнювання, vtable і мангл імен','лагодити UB, яке справді видно у виводі']},
+      how:{en:'graded in C++: clang++ compile + run, output diffed against ref.cpp',
+           uk:'грейдиться C++: компіляція clang++ + запуск, вивід звіряється з ref.cpp'}},
+    'cpu-perf':{
+      tag:{en:'Where the cycles actually go on a CPU.',uk:'Куди насправді йдуть такти процесора.'},
+      body:{en:'Caches, branch prediction, SIMD and memory layout decide throughput far more than instruction count does. Timings are not reproducible, so the gates count deterministic proxies — cache misses under a modelled hierarchy, lines touched, comparisons made.',
+            uk:'Кеші, передбачення переходів, SIMD і розкладка пам’яті вирішують більше, ніж кількість інструкцій. Час невідтворюваний, тому гейти рахують детерміновані проксі — промахи в модельованому кеші, торкнуті лінії, порівняння.'},
+      you:{en:['restructure loops and layouts for locality (AoS vs SoA, blocking)','predict miss counts before measuring them','recognise false sharing, aliasing and the cost of a branch'],
+           uk:['перебудовувати цикли й розкладку під локальність (AoS/SoA, блокування)','передбачати промахи до заміру','бачити false sharing, аліасинг і ціну гілки']},
+      how:{en:'graded in C++ plus a deterministic cache model — same numbers on every machine',
+           uk:'грейдиться C++ плюс детермінована модель кешу — однакові числа на будь-якій машині'}},
+    'numeric-tensors':{
+      tag:{en:'Floating point, shapes and strides — from scratch.',uk:'Плаваюча кома, форми і кроки — з нуля.'},
+      body:{en:'Every numerical bug downstream starts here: catastrophic cancellation, denormals, an accumulation order that changes the answer, a broadcast that silently allocates. You reimplement the primitives instead of trusting them.',
+            uk:'Усі числові баги нижче по стеку починаються тут: катастрофічне скорочення, денормалі, порядок накопичення, що змінює відповідь, бродкаст, який тихо алокує. Ти переписуєш примітиви замість вірити їм.'},
+      you:{en:['implement stable softmax, logsumexp, Welford, Kahan summation','read a tensor as (shape, strides, offset) and see the copies','bound and explain fp16/bf16/fp8 error instead of guessing'],
+           uk:['реалізувати стабільні softmax, logsumexp, Welford, суму Кагана','читати тензор як (форма, кроки, зсув) і бачити копії','оцінювати похибку fp16/bf16/fp8, а не вгадувати']},
+      how:{en:'graded in python against a numpy oracle the grader computes itself',
+           uk:'грейдиться пайтоном проти numpy-оракула, який грейдер рахує сам'}},
+    'algorithms-scratch':{
+      tag:{en:'The ML building blocks, written by hand.',uk:'Будівельні блоки ML, написані руками.'},
+      body:{en:'kNN, k-means, PCA, gradient descent — small enough to write in an afternoon, deep enough that the numerical details decide whether they work. This is where the maths becomes code you own.',
+            uk:'kNN, k-means, PCA, градієнтний спуск — малі настільки, щоб написати за вечір, і глибокі настільки, що числові деталі вирішують, чи це працює. Тут математика стає твоїм кодом.'},
+      you:{en:['derive and implement the core estimators without a library','choose distance metrics and initialisations on evidence','see why power iteration and SVD give the same subspace'],
+           uk:['вивести й реалізувати базові алгоритми без бібліотек','обирати метрики і ініціалізацію за доказами','бачити, чому степеневий метод і SVD дають той самий підпростір']},
+      how:{en:'graded in python: seeded data, reference computed in the grader',
+           uk:'грейдиться пайтоном: дані з фіксованим сідом, еталон рахує грейдер'}},
+    'llm-internals':{
+      tag:{en:'A transformer, part by part.',uk:'Трансформер по деталях.'},
+      body:{en:'Attention, RoPE, GQA, normalisation, the KV cache, sampling — each rebuilt from the definition until the shapes and the masks stop being mysterious. This is the block that makes the systems work later make sense.',
+            uk:'Увага, RoPE, GQA, нормалізація, KV-кеш, семплінг — кожне зібране з визначення, доки форми й маски не перестануть бути загадкою. Саме цей блок робить осмисленою системну частину далі.'},
+      you:{en:['implement attention with causal masks and cache reuse correctly','convert MHA to GQA/MQA and know what it costs','explain a decoding artefact by pointing at the tensor that caused it'],
+           uk:['коректно реалізувати увагу з причинними масками й кешем','конвертувати MHA у GQA/MQA і знати ціну','пояснити артефакт декодування, вказавши на конкретний тензор']},
+      how:{en:'graded in python against an oracle implementation of the same maths',
+           uk:'грейдиться пайтоном проти оракульної реалізації тієї ж математики'}},
+    'gpu-cuda':{
+      tag:{en:'Real CUDA-C on a software GPU that measures like hardware.',uk:'Справжній CUDA-C на програмному GPU, який міряє як залізо.'},
+      body:{en:'You write an actual .cu kernel — __global__, threadIdx, __shared__, __syncthreads, warp shuffles. It runs on a simulator that models 32-lane warps, 128-byte coalescing transactions, 32 shared-memory banks and warp divergence, so the lesson is a measured number, not a claim. No NVIDIA GPU required.',
+            uk:'Ти пишеш справжнє .cu ядро — __global__, threadIdx, __shared__, __syncthreads, warp-shuffle. Воно виконується на симуляторі, який моделює 32-лейнові варпи, 128-байтові транзакції коалесингу, 32 банки shared memory і дивергенцію, тому урок — це виміряне число, а не твердження. GPU від NVIDIA не потрібна.'},
+      you:{en:['write coalesced kernels and prove it by transaction count','kill shared-memory bank conflicts (and see the 16x)','use barriers and warp shuffles with correct semantics'],
+           uk:['писати коалесовані ядра й доводити це числом транзакцій','прибирати банк-конфлікти shared memory (і бачити 16x)','користуватись бар’єрами і warp-shuffle з правильною семантикою']},
+      how:{en:'graded in CUDA-C: your .cu is parsed and executed thread by thread; gates read transactions, bank waves, divergence',
+           uk:'грейдиться CUDA-C: твій .cu парситься і виконується потік за потоком; гейти читають транзакції, хвилі банків, дивергенцію'}},
+    'llm-systems':{
+      tag:{en:'Serving an LLM: batching, memory, parallelism.',uk:'Обслуговування LLM: батчинг, пам’ять, паралелізм.'},
+      body:{en:'One model on one GPU is easy. The hard part is many requests at once: paged KV blocks, continuous batching, preemption, prefix reuse, tensor and pipeline parallelism, speculative decoding. Here you build the mechanisms a serving engine is made of.',
+            uk:'Одна модель на одній GPU — просто. Складне починається з багатьох запитів: сторінковий KV, безперервний батчинг, витіснення, повторне використання префіксів, тензорний і конвеєрний паралелізм, спекулятивне декодування. Тут ти будуєш механізми, з яких зроблений сервінг-рушій.'},
+      you:{en:['implement a paged KV allocator with copy-on-write','simulate a scheduler and read its throughput/latency tradeoff','size memory and traffic for a parallelism plan before deploying'],
+           uk:['реалізувати сторінковий KV-алокатор з copy-on-write','симулювати планувальник і бачити компроміс пропускної/затримки','рахувати пам’ять і трафік плану паралелізму до деплою']},
+      how:{en:'graded in python: deterministic traces, reference computed by the grader',
+           uk:'грейдиться пайтоном: детерміновані траси, еталон рахує грейдер'}},
+    'rw-applied-quantization':{
+      tag:{en:'Making weights smaller without breaking them.',uk:'Зменшити ваги, не зламавши модель.'},
+      body:{en:'Scales, zero points, group sizes, outliers. RTN, GPTQ, AWQ, SmoothQuant, fp8 and int4 formats — reimplemented so the error budget is something you compute rather than hope for.',
+            uk:'Масштаби, нульові точки, розміри груп, викиди. RTN, GPTQ, AWQ, SmoothQuant, формати fp8 та int4 — перезібрані так, щоб бюджет похибки рахувався, а не сподівався.'},
+      you:{en:['implement symmetric/asymmetric quant-dequant round trips','derive calibration thresholds (min-max, percentile, entropy)','predict which layers will break and why'],
+           uk:['реалізувати симетричні/асиметричні цикли quant-dequant','виводити пороги калібрування (min-max, перцентиль, ентропія)','передбачати, які шари зламаються і чому']},
+      how:{en:'graded in python: error metrics against a full-precision oracle',
+           uk:'грейдиться пайтоном: метрики похибки проти оракула у повній точності'}},
+    'rw-attention-and-kv':{
+      tag:{en:'Attention at production scale.',uk:'Увага в продакшн-масштабі.'},
+      body:{en:'FlashAttention-style tiling, online softmax, causal masking, sliding windows, KV quantization and cache reuse — the techniques that decide whether long context is affordable.',
+            uk:'Тайлінг у стилі FlashAttention, онлайн-softmax, причинні маски, ковзні вікна, квантизація KV і повторне використання кешу — те, що вирішує, чи довгий контекст взагалі по кишені.'},
+      you:{en:['implement a tiled attention step with running max and denominator','compute HBM traffic saved by tiling before writing a kernel','reuse a KV cache and prove the result is unchanged'],
+           uk:['реалізувати тайловий крок уваги з поточним максимумом і знаменником','рахувати зекономлений трафік HBM до написання ядра','перевикористати KV-кеш і довести незмінність результату']},
+      how:{en:'graded in python against a dense-attention oracle',
+           uk:'грейдиться пайтоном проти оракула щільної уваги'}},
+    'rw-compilation-and-export':{
+      tag:{en:'From a model object to a deployable artifact.',uk:'Від об’єкта моделі до артефакту для деплою.'},
+      body:{en:'Graph capture, operator semantics, fusion boundaries, shape specialisation and the export formats (ONNX, TensorRT engines, CoreML, GGUF). Compilers help only if you know what they may and may not change.',
+            uk:'Захоплення графа, семантика операторів, межі злиття, спеціалізація за формами і формати експорту (ONNX, движки TensorRT, CoreML, GGUF). Компілятор допомагає лише якщо знаєш, що йому можна міняти, а що ні.'},
+      you:{en:['decide fusion boundaries from traffic and recompute cost','reproduce operator semantics an exporter must preserve','read a graph and find the specialisation that broke it'],
+           uk:['вирішувати межі злиття за трафіком і вартістю перерахунку','відтворювати семантику операторів, яку експортер має зберегти','читати граф і знаходити спеціалізацію, що його зламала']},
+      how:{en:'graded in python: exact structural or numeric match against the reference',
+           uk:'грейдиться пайтоном: точний структурний або числовий збіг з еталоном'}},
+    'rw-batching-and-serving':{
+      tag:{en:'Throughput, latency and the queue between them.',uk:'Пропускна здатність, затримка і черга між ними.'},
+      body:{en:'Continuous batching, chunked prefill, admission control, SLO-aware goodput. The interesting work is scheduling policy, and it is measurable without a cluster.',
+            uk:'Безперервний батчинг, порційний prefill, контроль допуску, goodput під SLO. Найцікавіше тут — політика планування, і її можна виміряти без кластера.'},
+      you:{en:['simulate arrivals against slots and reproduce completion order','separate prefill from decode and report each honestly','pick a batch policy that meets a p95 target'],
+           uk:['симулювати надходження проти слотів і відтворити порядок завершення','розділяти prefill і decode та звітувати чесно','обрати політику батчингу під ціль p95']},
+      how:{en:'graded in python: discrete-event simulation with a deterministic trace',
+           uk:'грейдиться пайтоном: дискретно-подієва симуляція на детермінованій трасі'}},
+    'rw-memory-and-offload':{
+      tag:{en:'Fitting a model into memory you do not have.',uk:'Вмістити модель у пам’ять, якої нема.'},
+      body:{en:'Activation checkpointing, ZeRO stages, offload to host and disk, paging and residency planning. Memory is the binding constraint far more often than compute.',
+            uk:'Чекпоінтинг активацій, стадії ZeRO, вивантаження в хост і диск, пейджинг і планування резидентності. Пам’ять обмежує значно частіше, ніж обчислення.'},
+      you:{en:['compute per-layer activation and optimizer-state footprints','choose a ZeRO stage from a budget, not from a blog post','model the bandwidth cost of an offload decision'],
+           uk:['рахувати пам’ять активацій і станів оптимізатора по шарах','обирати стадію ZeRO з бюджету, а не з блогопосту','моделювати вартість вивантаження за пропускною здатністю']},
+      how:{en:'graded in python: formulas checked against a simulated allocator',
+           uk:'грейдиться пайтоном: формули звіряються з симульованим алокатором'}},
+    'rw-sparsity-pruning-distillation':{
+      tag:{en:'Removing capacity you were not using.',uk:'Прибрати потужність, якою ти не користувався.'},
+      body:{en:'Magnitude and structured pruning, 2:4 semi-structured sparsity, distillation objectives, and the recipes that combine them with quantization without compounding the damage.',
+            uk:'Прунінг за величиною і структурний, напівструктурована розрідженість 2:4, цілі дистиляції та рецепти, що поєднують це з квантизацією без накопичення шкоди.'},
+      you:{en:['implement pruning masks that respect a hardware pattern','write a distillation loss and see what it actually transfers','order a compression pipeline so errors do not multiply'],
+           uk:['реалізувати маски прунінгу під апаратний патерн','написати лосс дистиляції і побачити, що він переносить','упорядкувати пайплайн стиснення, щоб похибки не множились']},
+      how:{en:'graded in python against a dense reference and a sparsity-pattern check',
+           uk:'грейдиться пайтоном проти щільного еталона плюс перевірка патерну розрідженості'}},
+  };
+  function areaInfo(k){return AREA_INFO[k]||null;}
+  function L(o){return o?(o[lang]||o.en):'';}
+
+  /* view state: which level of the comb we are looking at */
+  let view={lvl:'areas',ai:0,ti:0};
+
+  function hexPos(i,cols,W){
+    // pointy-top honeycomb: odd rows shift half a cell, rows overlap by a quarter
+    const H=W*1.1547, row=Math.floor(i/cols), col=i%cols;
+    return {x:col*W+(row%2?W/2:0), y:row*H*0.75, W, H};
+  }
+  function fill(pct,active){
+    // the cell IS the progress bar: filled from the bottom
+    const base=active?'var(--panel-3)':'var(--panel)';
+    return pct>0?`background:linear-gradient(0deg,var(--pass-dim) 0 ${pct}%,${base} ${pct}% 100%);`
+                :`background:${base};`;
+  }
+  function colsFor(W){
+    // the comb must fit the panel, not a fixed column count: the last column
+    // needs half a cell of slack for the odd-row offset
+    const avail=($('map')&&$('map').clientWidth||900)-8;
+    return Math.max(2,Math.floor((avail-W/2)/W));
+  }
+  function combHTML(cells,W){
+    const cols=colsFor(W);
+    // cells: {nm,ct,cls,pct,title,data,badge}
+    let h='',maxY=0;
+    cells.forEach((c,i)=>{
+      const p=hexPos(i,cols,W);
+      maxY=Math.max(maxY,p.y+p.H);
+      h+=`<button class="cell ${c.cls||''}" ${c.data||''} title="${esc(c.title||c.nm)}"
+        style="left:${p.x}px;top:${p.y}px;width:${W-4}px;height:${p.H-4}px;${fill(c.pct||0,!c.locked)}">
+        <span class="in"><span class="nm">${esc(c.nm)}</span>${c.ct?`<span class="ct">${esc(c.ct)}</span>`:''}${c.badge||''}</span></button>`;
+    });
+    return `<div class="comb" style="height:${Math.round(maxY)}px">${h}</div>`;
+  }
+
+  function renderMap(d){
+    mapData=d;
+    $('prog').innerHTML=`<b>${d.totals.solved}</b>/${d.totals.built} · ${d.totals.planned} ${t('planned')}`;
+    $('hsub').innerHTML=`${d.tiers.length} · <b>${d.totals.built}</b> ${t('available')} · ${d.totals.planned} ${t('planned')}`;
+    const T=d.tiers[view.ai]||d.tiers[0], TR=T&&(T.tracks[view.ti]||T.tracks[0]);
+    const LGN={py:'PY',cpp:'C++',cuda:'CUDA'};
+    const cnt=(tracks)=>{const all=tracks.reduce((a,x)=>a.concat(x.tasks),[]);
+      return {b:all.length,s:all.filter(x=>x.solved).length,all};};
+
+    // ---- crumb trail
+    let cr=`<button class="crumb-b" data-lvl="areas">${t('roadmap')}</button>`;
+    if(view.lvl!=='areas')cr+=`<span class="crumb-sep">›</span>`+
+      (view.lvl==='tasks'?`<button class="crumb-b" data-lvl="tracks">${esc(T.name)}</button>`
+                         :`<span class="crumb-cur">${esc(T.name)}</span>`);
+    if(view.lvl==='tasks')cr+=`<span class="crumb-sep">›</span><span class="crumb-cur">${esc(TR.name)}</span>`;
+    const info=view.lvl!=='areas'?areaInfo(T.key||''):null;
+    let head=`<div class="comb-head"><div class="crumbs">${cr}</div>`;
+    if(info)head+=`<button class="about-btn" data-about="1" aria-expanded="${aboutOn}">${lang==='uk'?'про блок':'about'}</button>`;
+    head+=`</div>`;
+    if(info)head+=`<div class="about ${aboutOn?'on':''}"><p>${esc(L(info.body))}</p>
+      <div class="lbl">${lang==='uk'?'Після блоку ти зможеш':'After this block you can'}</div>
+      <ul>${(info.you[lang]||info.you.en).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <div class="how">${esc(L(info.how))}</div></div>`;
+
+    let body='';
+    if(view.lvl==='areas'){
+      const cells=d.tiers.map((A,i)=>{
+        const c=cnt(A.tracks), mix={};
+        c.all.forEach(x=>{const k=x.native||'py';mix[k]=(mix[k]||0)+1;});
+        const top=Object.keys(mix).sort((x,y)=>mix[y]-mix[x])[0];
+        const ai=areaInfo(A.key||'');
+        return {nm:A.name, ct:c.b?`${c.s}/${c.b}`:t('planned'),
+          badge:top&&top!=='py'?`<span class="lg">${LGN[top]} ${mix[top]}</span>`:'',
+          pct:c.b?Math.round(100*c.s/c.b):0, cls:'area'+(c.b?'':' locked empty'),
+          locked:!c.b, data:`data-area="${i}"`, title:ai?A.name+' — '+L(ai.tag):A.name};
+      });
+      body=combHTML(cells,150);
+    } else if(view.lvl==='tracks'){
+      const cells=T.tracks.map((tr,i)=>{
+        const b=tr.tasks.length,sv=tr.tasks.filter(x=>x.solved).length;
+        return {nm:tr.name, ct:b?`${sv}/${b}`:`${tr.planned} ${t('planned')}`,
+          pct:b?Math.round(100*sv/b):0, cls:'track'+(b?'':' locked empty'),
+          locked:!b, data:b?`data-track="${i}"`:'', title:tr.name};
+      });
+      body=cells.length?combHTML(cells,132):`<div class="comb-empty">${t('planned')}</div>`;
+    } else {
+      const cells=(TR?TR.tasks:[]).map(x=>({
+        nm:'d'+(x.difficulty??'?'),
+        ct:x.native==='cuda'?'cu':x.native==='cpp'?'c++':'py',
+        pct:x.solved?100:0, cls:'task'+(x.solved?' solved':''),
+        data:`data-open="${esc(x.id)}"`, title:x.id}));
+      body=cells.length?combHTML(cells,78):`<div class="comb-empty">—</div>`;
+    }
+    $('map').innerHTML=head+body;
+  }
+  function goHome(){$('app').className='app is-home'; curId=null;}
+  function goWork(){$('app').className='app is-work';}
+
+  /* ---------- markdown ---------- */
+  function inl(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');}
+  function md(src){
+    const L=(src||'').split('\n');let h='',i=0;
+    while(i<L.length){let ln=L[i];
+      if(/^```/.test(ln)){let b=[];i++;while(i<L.length&&!/^```/.test(L[i])){b.push(esc(L[i]));i++;}i++;h+=`<pre><code>${b.join('\n')}</code></pre>`;continue;}
+      let m;if((m=ln.match(/^(#{1,3})\s+(.*)/))){h+=`<h${m[1].length}>${inl(m[2])}</h${m[1].length}>`;i++;continue;}
+      if(/^\s*>\s?/.test(ln)){let b=[];while(i<L.length&&/^\s*>\s?/.test(L[i])){b.push(L[i].replace(/^\s*>\s?/,''));i++;}h+=`<blockquote>${inl(b.join(' '))}</blockquote>`;continue;}
+      if(/^\s*\|.*\|/.test(ln)&&i+1<L.length&&/^\s*\|[\s:|-]+\|/.test(L[i+1])){const row=s=>s.trim().replace(/^\||\|$/g,'').split('|').map(c=>c.trim());const hd=row(ln);i+=2;let bd='';while(i<L.length&&/^\s*\|.*\|/.test(L[i])){bd+='<tr>'+row(L[i]).map(c=>`<td>${inl(c)}</td>`).join('')+'</tr>';i++;}h+=`<table><thead><tr>${hd.map(c=>`<th>${inl(c)}</th>`).join('')}</tr></thead><tbody>${bd}</tbody></table>`;continue;}
+      if(/^\s*[-*]\s+/.test(ln)){let b=[];while(i<L.length&&/^\s*[-*]\s+/.test(L[i])){b.push(L[i].replace(/^\s*[-*]\s+/,''));i++;}h+=`<ul>${b.map(x=>`<li>${inl(x)}</li>`).join('')}</ul>`;continue;}
+      if(ln.trim()===''){i++;continue;}
+      let b=[];while(i<L.length&&L[i].trim()!==''&&!/^(#{1,3}\s|```|\s*>\s|\s*[-*]\s|\s*\|)/.test(L[i])){b.push(L[i]);i++;}
+      if(b.length===0){if(i<L.length)b.push(L[i]);i++;}
+      h+=`<p>${inl(b.join(' '))}</p>`;
+    }
+    return h;
+  }
+
+  /* ---------- editor ---------- */
+  const ta=$('ta'),hl=$('hl'),gutter=$('gutter'),aline=$('aline'),cwrap=$('cwrap');
+  /* Language-aware highlighting. The bank has three real languages: python,
+     real C++ (compiled by clang++) and real CUDA-C (run on the software GPU).
+     Showing a .cu file with python keywords was the old lie; pick by extension. */
+  const LEX={
+    py:/(#.*$)|("""[\s\S]*?"""|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(@[A-Za-z_][\w.]*)|(\b\d[\w.]*\b)|(\b(?:def|class|return|import|from|as|if|elif|else|for|while|in|and|or|not|is|with|assert|raise|None|True|False|lambda|yield|try|except|finally|break|continue|global|nonlocal|pass|del|async|await)\b)/gm,
+    cpp:/(\/\/.*$|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(^\s*#\s*\w+)|(\b(?:0[xX][0-9a-fA-F]+|\d[\w.]*)\b)|(\b(?:auto|bool|break|case|catch|char|class|const|constexpr|continue|decltype|default|delete|do|double|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|nullptr|operator|override|private|protected|public|return|short|signed|sizeof|static|static_cast|struct|switch|template|this|throw|true|try|typedef|typename|union|unsigned|using|virtual|void|volatile|while|std|size_t|uint32_t|int64_t)\b)/gm,
+    cu:/(\/\/.*$|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b(?:__global__|__device__|__shared__|__host__|__restrict__|__syncthreads|__shfl_up_sync|__shfl_down_sync|__shfl_xor_sync|threadIdx|blockIdx|blockDim|gridDim)\b)|(\b(?:0[xX][0-9a-fA-F]+|\d[\w.]*)\b)|(\b(?:bool|break|case|char|const|continue|default|do|double|else|extern|false|float|for|if|inline|int|long|return|short|signed|sizeof|static|struct|switch|true|unsigned|void|while|min|max|fminf|fmaxf|sqrtf|expf|logf|fabsf|floorf|ceilf|powf)\b)/gm,
+  };
+  const EXT_LANG={py:'py',cpp:'cpp',hpp:'cpp',cc:'cpp',cu:'cu',cuh:'cu'};
+  let curFile='solve.py', curLang='py';
+  function langOf(f){return EXT_LANG[(f||'').split('.').pop()]||'py';}
+  let MASTER=LEX.py;
+  function paint(){
+    const code=ta.value;
+    hl.innerHTML=esc(code).replace(MASTER,(m,com,str,dec,num,kw)=>{
+      if(com)return '<span class="tk-com'+(/TODO|NotImplementedError|your code here|BUG/.test(com)?' tk-todo':'')+'">'+esc(com)+'</span>';
+      if(str)return '<span class="tk-str">'+esc(str)+'</span>';
+      if(dec)return '<span class="tk-dec">'+esc(dec)+'</span>';
+      if(num)return '<span class="tk-num">'+esc(num)+'</span>';
+      if(kw)return '<span class="tk-kw">'+kw+'</span>';
+      return m;})+'\n';
+    const n=code.split('\n').length,cur=code.slice(0,ta.selectionStart).split('\n').length;let g='';
+    for(let i=1;i<=n;i++)g+='<span class="ln'+(i===cur?' cur':'')+'">'+i+'</span>';
+    gutter.innerHTML=g; aline.style.top=(12+(cur-1)*20-cwrap.scrollTop)+'px'; aline.style.left=cwrap.scrollLeft+'px';
+  }
+  ta.addEventListener('input',()=>{paint();});
+  ta.addEventListener('keyup',paint); ta.addEventListener('click',paint);
+  ta.addEventListener('scroll',()=>{hl.scrollTop=ta.scrollTop;hl.scrollLeft=ta.scrollLeft;gutter.scrollTop=ta.scrollTop;cwrap.scrollTop=ta.scrollTop;cwrap.scrollLeft=ta.scrollLeft;});
+  ta.addEventListener('keydown',e=>{
+    if(e.key==='Tab'){e.preventDefault();const s=ta.selectionStart,en=ta.selectionEnd;ta.value=ta.value.slice(0,s)+'    '+ta.value.slice(en);ta.selectionStart=ta.selectionEnd=s+4;paint();}
+    if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();doGrade();}
+  });
+
+  /* ---------- open task (-> work mode) ---------- */
+  function fmt(v){if(v==null||(typeof v==='number'&&isNaN(v)))return '—';const a=Math.abs(v);if(a!==0&&(a<1e-3||a>=1e5))return v.toExponential(3);return String(Math.round(v*10000)/10000);}
+  function setVerdict(state,label,sub){const v=$('verdict');v.className='verdict'+(state?' '+state:'');$('vbadge').textContent={pass:'✓',fail:'✗',measuring:'◌',error:'!'}[state]||'·';$('vlabel').textContent=label;if(sub!==undefined)$('vsub').innerHTML=sub;$('instSt').textContent=state||'awaiting';}
+  let curTask=null, curTags=[], curMd={};
+  function renderBrief(){
+    if(!curTask)return;
+    const t2=curTask;
+    const have=curMd[lang]!=null, body=curMd[lang]||curMd.en||'';
+    // Be honest: the statement is authored in English and only some tasks are
+    // translated. Silently showing English under a "Українська" selector reads
+    // like the switch is broken.
+    const note=have?'':`<div class="md-note">${lang==='uk'
+      ? 'Умова англійською — перекладу для цієї мови ще немає.'
+      : 'Statement shown in English — no translation for the selected language yet.'}</div>`;
+    $('brief').innerHTML=`<div class="b-id">${esc(t2.id)}</div><div class="b-title">${esc(t2.title)}</div>`
+      +`<div class="b-tags">${curTags.map(x=>`<span class="b-tag">${esc(x)}</span>`).join('')}</div>`
+      +note+`<div class="md">${md(body)}</div>`;
+    try{if(window.renderMathInElement)renderMathInElement($('brief'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});}catch(e){}
+  }
+  function openTask(m){
+    curId=m.task.id;
+    const t2=m.task,tags=[];tags.push({cpp:'C++',cuda:'CUDA'}[t2.native]||'Python');if(t2.difficulty!=null)tags.push('d'+t2.difficulty);if(t2.genre)tags.push(t2.genre);if(t2.platform)tags.push(t2.platform);if(t2.track)tags.push(t2.track);
+    curTask=t2; curTags=tags; curMd=m.md_langs||{en:m.md||''};
+    renderBrief();
+    try{if(window.renderMathInElement)renderMathInElement($('brief'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});}catch(e){}
+    $('crumb').innerHTML=`<b>${esc(t2.track||'')}</b> › ${esc(t2.id)}`;
+    curFile=m.file||'solve.py'; curLang=langOf(curFile); MASTER=LEX[curLang];
+    $('fname').textContent=curFile; $('ficon').textContent={py:'py',cpp:'C++',cu:'CUDA'}[curLang];
+    ta.value=m.code||''; paint();
+    setVerdict('',t('awaiting'),t('vsub'));
+    $('metrics').innerHTML=(t2.gates||[]).map(g=>`<div class="metric"><div class="m-top"><div class="m-name">${g.metric}<span class="kind">gate</span></div><div class="m-v">idle</div></div><div class="m-val">—</div><div class="m-gate">gate <span class="thr">${g.op} ${fmt(g.threshold)}</span></div></div>`).join('');
+    $('cons').textContent=t('consIdle');
+    $('gradeBtn').removeAttribute('disabled');
+    goWork(); ta.focus();
+  }
+  function renderResult(d){
+    const names=new Set((d.gates||[]).map(g=>g.metric));
+    let h=(d.gates||[]).map(g=>`<div class="metric ${g.ok?'green':'red'}"><div class="m-top"><div class="m-name">${g.metric}<span class="kind">gate</span></div><div class="m-v">${g.ok?'pass':'fail'}</div></div><div class="m-val">${fmt(g.value)}</div><div class="m-gate">gate <span class="thr">${g.op} ${fmt(g.threshold)}</span></div></div>`).join('');
+    Object.keys(d.metrics||{}).forEach(k=>{if(names.has(k))return;h+=`<div class="metric"><div class="m-top"><div class="m-name">${k}<span class="kind">info</span></div></div><div class="m-val" style="color:var(--steel)">${fmt(d.metrics[k])}</div></div>`;});
+    $('metrics').innerHTML=h;
+    const n=(d.gates||[]).filter(g=>g.ok).length,tot=(d.gates||[]).length;
+    if(d.passed)setVerdict('pass',t('pass'),`<span class="ok">${n}/${tot} ${t('gatesGreen')}</span>`); else setVerdict('fail',t('fail'),`${n}/${tot} gates`);
+    let log=`> arena grade ${curId}\n`;(d.gates||[]).forEach(g=>log+=`  ${g.ok?'✓':'✗'} ${g.metric} = ${fmt(g.value)}   gate ${g.op} ${g.threshold}\n`);log+=`  ${d.verdict}`;
+    $('cons').innerHTML=esc(log).replace(/✓/g,'<span class="ok">✓</span>').replace(/✗/g,'<span class="bad">✗</span>');
+  }
+  function doGrade(){if(busy||!curId)return;busy=true;$('gradeBtn').classList.add('running');$('gradeBtn').setAttribute('disabled','');setVerdict('measuring',t('measuring'),t('running'));$('cons').textContent='> spawning grader …';vscode.postMessage({type:'grade',id:curId,file:curFile,code:ta.value});}
+  $('gradeBtn').addEventListener('click',doGrade);
+
+  /* ---------- resizers ---------- */
+  function initResizers(){
+    const st=vscode.getState()||{}; if(st.lw)document.documentElement.style.setProperty('--lw',st.lw); if(st.rw)document.documentElement.style.setProperty('--rw',st.rw);
+    function drag(handle,side){
+      handle.addEventListener('mousedown',e=>{e.preventDefault();handle.classList.add('drag');
+        const work=$('work'),rect=work.getBoundingClientRect();
+        function mv(ev){
+          if(side==='L'){let w=Math.min(560,Math.max(180,ev.clientX-rect.left));document.documentElement.style.setProperty('--lw',w+'px');}
+          else{let w=Math.min(620,Math.max(220,rect.right-ev.clientX));document.documentElement.style.setProperty('--rw',w+'px');}
+        }
+        function up(){document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);handle.classList.remove('drag');
+          const s=vscode.getState()||{};s.lw=getComputedStyle(document.documentElement).getPropertyValue('--lw').trim();s.rw=getComputedStyle(document.documentElement).getPropertyValue('--rw').trim();vscode.setState(s);}
+        document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
+      });
+    }
+    drag($('rzL'),'L'); drag($('rzR'),'R');
+  }
+
+  /* ---------- nav / messages ---------- */
+  document.addEventListener('click',e=>{
+    const ab=e.target.closest('[data-about]');
+    if(ab){aboutOn=!aboutOn;renderMap(mapData);return;}
+    const o=e.target.closest('[data-open]');
+    if(o){vscode.postMessage({type:'open',id:o.getAttribute('data-open')});return;}
+    const ar=e.target.closest('[data-area]');
+    if(ar){view={lvl:'tracks',ai:+ar.getAttribute('data-area'),ti:0};aboutOn=false;renderMap(mapData);$('map').scrollIntoView({block:'start'});return;}
+    const tr=e.target.closest('[data-track]');
+    if(tr){view={lvl:'tasks',ai:view.ai,ti:+tr.getAttribute('data-track')};renderMap(mapData);return;}
+    const cb=e.target.closest('[data-lvl]');
+    if(cb){const l=cb.getAttribute('data-lvl');
+      view={lvl:l,ai:view.ai,ti:view.ti}; if(l==='areas')aboutOn=false;
+      renderMap(mapData);return;}
+  });
+  let rzT=null;
+  window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(mapData)renderMap(mapData);},120);});
+  $('back').addEventListener('click',goHome);
+  window.addEventListener('message',e=>{
+    const m=e.data||{};
+    if(m.type==='map'){renderMap(m.payload);goHome();}
+    else if(m.type==='mapdata'){mapData=m.payload;if($('app').classList.contains('is-home'))renderMap(m.payload);}
+    else if(m.type==='task'){openTask(m);}
+    else if(m.type==='measuring'){setVerdict('measuring',t('measuring'),t('running'));}
+    else if(m.type==='result'){busy=false;$('gradeBtn').classList.remove('running');$('gradeBtn').removeAttribute('disabled');renderResult(m.data);}
+    else if(m.type==='error'){busy=false;$('gradeBtn').classList.remove('running');$('gradeBtn').removeAttribute('disabled');setVerdict('error',t('error'),'grader failed');$('cons').textContent=(m.message||'').slice(0,2000);}
+  });
+
+  initLang(); initResizers();
+  vscode.postMessage({type:'ready'});
+  setTimeout(()=>{ try{
+    const a=document.getElementById('app'), cs=getComputedStyle(a);
+    vscode.postMessage({type:'diag', msg:`appDisp=${cs.display} appOff=${a.offsetWidth}x${a.offsetHeight} mode=${a.className} win=${window.innerWidth}x${window.innerHeight}`});
+  }catch(e){ vscode.postMessage({type:'diag', msg:'diag-error '+e.message}); } }, 300);
+</script>
+</body>
+</html>

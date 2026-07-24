@@ -1,0 +1,27 @@
+{
+  "id": "rws-block-influence-layer-ranking",
+  "title": "Block Influence Layer Ranking",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "block_influence_ranking"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "spearman",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

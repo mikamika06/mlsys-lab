@@ -1,0 +1,22 @@
+{
+  "id": "rwm-peak-gpu-bytes-total-h2d-transfer-for-a-k-layer-window",
+  "title": "Peak GPU bytes + total H2D transfer for a K‑layer window",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gpu_transfer_stats"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

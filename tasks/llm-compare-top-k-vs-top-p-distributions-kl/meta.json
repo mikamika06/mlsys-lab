@@ -1,0 +1,22 @@
+{
+  "id": "llm-compare-top-k-vs-top-p-distributions-kl",
+  "title": "Compare top-k vs top-p distributions with KL divergence",
+  "track": "03 Machine Learning Python",
+  "tier": "I",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "top_k_top_p_kl"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

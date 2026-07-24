@@ -1,0 +1,22 @@
+{
+  "id": "sys-zero-memory-formula-stages-1-2-3",
+  "title": "ZeRO per-device memory formula, stages 1/2/3",
+  "track": "04 Systems and ML Kernels",
+  "tier": "II",
+  "module": "M2parallel",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "zero_stage_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

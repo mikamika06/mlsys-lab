@@ -1,0 +1,20 @@
+{
+  "id": "rwq-reconstruct-the-dynamic-linear-output",
+  "title": "Reconstruct dynamic int8 linear output",
+  "track": "04 Real-World Quant",
+  "tier": "I",
+  "module": "M4rwq",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": ["dequant_linear_output"],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

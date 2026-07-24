@@ -1,0 +1,27 @@
+{
+  "id": "cpu-stable-vs-naive-softmax-kl-to-reference",
+  "title": "Stable softmax with deterministic cache trace",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M2fp",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_softmax_kernel"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "cache_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

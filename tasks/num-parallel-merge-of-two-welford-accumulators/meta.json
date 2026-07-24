@@ -1,0 +1,22 @@
+{
+  "id": "num-parallel-merge-of-two-welford-accumulators",
+  "title": "Parallel merge of two Welford accumulators",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M3numpy",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "merge_welford"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-11
+    }
+  ],
+  "info": []
+}

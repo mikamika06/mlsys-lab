@@ -1,0 +1,22 @@
+{
+  "id": "pyt-reinterpret-cast-with-cast",
+  "title": "Reinterpret bytes with memoryview.cast",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reinterpret_roundtrip"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

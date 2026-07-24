@@ -1,0 +1,16 @@
+{
+  "id": "cpu-4kb-vs-2mb-huge-page-tlb-miss-comparison",
+  "title": "4 KB vs. 2 MB Huge Page TLB Miss Comparison",
+  "track": "13 CPU-perf",
+  "tier": "IV",
+  "module": "M13",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": ["tlb_miss_count"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": []
+}

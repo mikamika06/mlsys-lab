@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-bias-scaled-with-qk-instead-of-added-unscaled",
+  "title": "Debug: additive bias scaled with QK instead of added unscaled",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "sdpa_with_additive_bias"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

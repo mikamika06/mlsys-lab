@@ -1,0 +1,22 @@
+{
+  "id": "rwb-e5m2-vs-e4m3-dynamic-range",
+  "title": "Dynamic range of E5M2 vs E4M3 floating‑point formats",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "dynamic_range"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

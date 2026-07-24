@@ -1,0 +1,22 @@
+{
+  "id": "rws-prune-then-quantize-a-layer",
+  "title": "Prune‑then‑Quantize a Layer (2:4 mask + per‑group int4)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "prune_then_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

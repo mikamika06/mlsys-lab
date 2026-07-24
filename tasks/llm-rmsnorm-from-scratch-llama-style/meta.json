@@ -1,0 +1,27 @@
+{
+  "id": "llm-rmsnorm-from-scratch-llama-style",
+  "title": "RMSNorm from Scratch (Llama style)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rmsnorm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "jacobian_error",
+      "op": "<=",
+      "threshold": 5e-5
+    }
+  ],
+  "info": []
+}

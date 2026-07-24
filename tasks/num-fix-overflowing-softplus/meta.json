@@ -1,0 +1,22 @@
+{
+  "id": "num-fix-overflowing-softplus",
+  "title": "Fix overflowing softplus",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "softplus"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

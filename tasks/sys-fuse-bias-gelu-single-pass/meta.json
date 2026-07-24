@@ -1,0 +1,27 @@
+{
+  "id": "sys-fuse-bias-gelu-single-pass",
+  "title": "Fuse bias + GELU in a single pass",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fuse_bias_gelu"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "op_count",
+      "op": "<=",
+      "threshold": 50
+    }
+  ],
+  "info": []
+}

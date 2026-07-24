@@ -1,0 +1,22 @@
+{
+  "id": "sys-model-speedup-from-acceptance-draft-cost",
+  "title": "Speculative decoding speedup from acceptance rate and draft cost",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "speculative_speedup"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": ">=",
+      "threshold": 0.999999999
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,28 @@
+{
+  "id": "llm-manual-index-head-split-merge-no-reshape",
+  "title": "Manual-Index Head Split/Merge (No Reshape)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "split_heads",
+    "merge_heads"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "op_count",
+      "op": ">=",
+      "threshold": 500
+    }
+  ],
+  "info": []
+}

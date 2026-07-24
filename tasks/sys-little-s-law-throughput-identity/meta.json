@@ -1,0 +1,22 @@
+{
+  "id": "sys-little-s-law-throughput-identity",
+  "title": "Little's Law Throughput Identity",
+  "track": "02 Systems",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compute_throughput"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

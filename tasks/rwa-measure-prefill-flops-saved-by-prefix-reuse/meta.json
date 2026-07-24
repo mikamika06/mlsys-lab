@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-prefill-flops-saved-by-prefix-reuse",
+  "title": "Measure prefill FLOPs saved by prefix reuse",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M4mlsys",
+  "difficulty": 2,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "prefill_flops_saved_fraction"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

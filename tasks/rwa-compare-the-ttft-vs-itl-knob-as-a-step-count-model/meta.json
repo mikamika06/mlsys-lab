@@ -1,0 +1,22 @@
+{
+  "id": "rwa-compare-the-ttft-vs-itl-knob-as-a-step-count-model",
+  "title": "Compare the TTFT vs ITL knob as a step count model",
+  "track": "04 Systems Algorithms",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_chunk_knob"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

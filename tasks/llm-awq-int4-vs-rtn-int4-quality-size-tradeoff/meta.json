@@ -1,0 +1,27 @@
+{
+  "id": "llm-awq-int4-vs-rtn-int4-quality-size-tradeoff",
+  "title": "AWQ vs RTN int4 quantization quality comparison",
+  "track": "02 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "awq_vs_rtn_quality"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err_awq",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "rel_err_rtn",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

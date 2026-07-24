@@ -1,0 +1,34 @@
+{
+  "id": "rwq-int4-weight-only-tinygemm-quant",
+  "title": "Int4 weight-only tinygemm quantization",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M1quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "tinygemm_int4_quantize"
+  ],
+  "fixtures": [
+    "tao_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "codes_exact_match",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "params_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

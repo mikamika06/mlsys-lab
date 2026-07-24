@@ -1,0 +1,24 @@
+{
+  "id": "rwq-per-64-block-absmax-scales",
+  "title": "Per-64 block absmax scales",
+  "track": "03 Deep Learning",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 2,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "nf4_block_absmax_scales"
+  ],
+  "fixtures": [
+    "nf4_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

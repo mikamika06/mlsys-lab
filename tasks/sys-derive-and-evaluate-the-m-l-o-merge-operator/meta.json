@@ -1,0 +1,22 @@
+{
+  "id": "sys-derive-and-evaluate-the-m-l-o-merge-operator",
+  "title": "Derive and evaluate the (m,l,o) merge operator",
+  "track": "03 Systems ML",
+  "tier": "II",
+  "module": "MLOps",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "merge_mlo"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

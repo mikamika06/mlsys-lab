@@ -1,0 +1,22 @@
+{
+  "id": "num-flat-index-gather-from-shape-strides-offset",
+  "title": "Flat-Index Gather from Shape/Strides/Offset",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flat_gather"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwc-fix-a-per-tensor-activation-scale-that-should-be-per-token",
+  "title": "Fix activation quantization from per-tensor to per-token scaling",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "per_token_int8_dequant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

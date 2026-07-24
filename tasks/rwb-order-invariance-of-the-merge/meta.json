@@ -1,0 +1,27 @@
+{
+  "id": "rwb-order-invariance-of-the-merge",
+  "title": "Order-invariance of the merge",
+  "track": "04 Numerical Computing",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "merge_partials"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "order_max_abs_err",
+      "op": "<",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

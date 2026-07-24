@@ -1,0 +1,27 @@
+{
+  "id": "num-fully-fused-forward-backward-log-softmax-nll",
+  "title": "Fully fused forward+backward log-softmax + NLL",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_log_softmax_nll"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err_loss",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "max_abs_err_grad",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwq-full-hqq-optimization-loop",
+  "title": "Full HQQ Zero-Point Optimization Loop",
+  "track": "04 Real-World Quant",
+  "tier": "I",
+  "module": "M4rwq",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "hqq_optimize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

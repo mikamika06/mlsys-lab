@@ -1,0 +1,22 @@
+{
+  "id": "llm-layout-cost-b-h-s-d-vs-b-s-h-d",
+  "title": "Compare memory‑access costs of two tensor layouts",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "layout_cost"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

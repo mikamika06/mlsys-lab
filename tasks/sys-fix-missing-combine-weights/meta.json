@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-missing-combine-weights",
+  "title": "Fix missing combine weights in MoE routing",
+  "track": "03 Systems",
+  "tier": "II",
+  "module": "M1sys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "moe_combine"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

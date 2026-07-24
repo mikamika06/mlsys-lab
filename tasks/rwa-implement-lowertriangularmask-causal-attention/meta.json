@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-lowertriangularmask-causal-attention",
+  "title": "Implement Lower‑Triangular Causal Mask for Attention",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "causal_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

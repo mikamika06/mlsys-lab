@@ -1,0 +1,22 @@
+{
+  "id": "llm-frequency-presence-penalty-openai-formula",
+  "title": "Frequency + Presence Penalty (OpenAI formula)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "apply_frequency_presence_penalty"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

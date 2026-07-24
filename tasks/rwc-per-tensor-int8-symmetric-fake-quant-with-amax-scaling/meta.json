@@ -1,0 +1,27 @@
+{
+  "id": "rwc-per-tensor-int8-symmetric-fake-quant-with-amax-scaling",
+  "title": "Per‑tensor INT8 symmetric fake quantization with amax scaling",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "per_tensor_int8_symmetric_fake_quant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_codes",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

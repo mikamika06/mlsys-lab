@@ -1,0 +1,27 @@
+{
+  "id": "rwc-e4m3-vs-e5m2-vs-int8-error-on-an-outlier-weight",
+  "title": "FP8 format tradeoff on an outlier weight",
+  "track": "04 Numerical Computing",
+  "tier": "II",
+  "module": "M4ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_quant_formats"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "best_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

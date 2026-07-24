@@ -1,0 +1,22 @@
+{
+  "id": "sys-classify-roofline-region-of-a-phase",
+  "title": "Classify roofline region of a phase",
+  "track": "Systems Performance",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_roofline_region"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mlsys-lab"
+version = "0.1.0"
+description = "Auto-graded exercises in low-level ML systems: real C++, real CUDA-C on a software GPU, deterministic metrics"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Oleksandr Savkov" }]
+keywords = ["cuda", "gpu", "performance", "quantization", "llm-inference",
+            "systems-programming", "exercises", "cpp"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: C++",
+  "Topic :: Education",
+  "Topic :: Software Development :: Testing",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://github.com/mikamika06/mlsys-lab"
+Issues = "https://github.com/mikamika06/mlsys-lab/issues"
+
+[project.scripts]
+mlsys = "mlsys.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mlsys"]

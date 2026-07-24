@@ -1,0 +1,22 @@
+{
+  "id": "rws-debug-a-wrong-order-eigenvector-slice",
+  "title": "Debug: Wrong-Order Eigenvector Slice",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "pca_reconstruct"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "recon_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

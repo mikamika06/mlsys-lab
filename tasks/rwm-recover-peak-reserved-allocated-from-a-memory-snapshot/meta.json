@@ -1,0 +1,22 @@
+{
+  "id": "rwm-recover-peak-reserved-allocated-from-a-memory-snapshot",
+  "title": "Recover peak reserved and allocated memory from a snapshot",
+  "track": "04 Runtime Systems",
+  "tier": "I",
+  "module": "M2mem",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "recover_memory_peaks"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

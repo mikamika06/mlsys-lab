@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-batched-paged-decode",
+  "title": "Implement batched paged decode",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "batched_paged_decode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-05
+    }
+  ],
+  "info": []
+}

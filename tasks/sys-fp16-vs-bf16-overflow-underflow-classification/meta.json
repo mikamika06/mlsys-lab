@@ -1,0 +1,22 @@
+{
+  "id": "sys-fp16-vs-bf16-overflow-underflow-classification",
+  "title": "fp16 vs bf16 overflow/underflow classification",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_fp_value"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwq-reduce-range-accumulator-safety",
+  "title": "Reduce Range Accumulator Safety",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reduce_range_accumulator_safety"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.001
+    },
+    {
+      "metric": "peak_ok",
+      "op": "==",
+      "threshold": true
+    }
+  ],
+  "info": []
+}

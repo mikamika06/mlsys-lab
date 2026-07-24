@@ -1,0 +1,27 @@
+{
+  "id": "rws-hard-concrete-gate-value-expected-l0",
+  "title": "Hard-Concrete Gate Value & Expected L0",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2sparse",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "hard_concrete_gate"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "gate_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "l0_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

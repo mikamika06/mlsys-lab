@@ -1,0 +1,22 @@
+{
+  "id": "llm-operational-intensity-crossover-batch-size",
+  "title": "Operational‑Intensity Crossover Batch Size",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "crossover_batch_size"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

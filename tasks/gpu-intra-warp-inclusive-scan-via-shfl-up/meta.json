@@ -1,0 +1,29 @@
+{
+  "id": "gpu-intra-warp-inclusive-scan-via-shfl-up",
+  "title": "Intra-warp inclusive scan via __shfl_up_sync",
+  "track": "GPU Programming",
+  "tier": "II",
+  "module": "Mgpu",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "inclusive_scan_warp"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "smem_waves",
+      "op": "<=",
+      "threshold": 0.0
+    }
+  ],
+  "info": [
+    "Runs on arena.cuda_sim.GPU. A warp shuffle is warp-synchronous, so the kernel must be a generator: `got = yield t.shfl_up(v, delta)`."
+  ]
+}

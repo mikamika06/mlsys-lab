@@ -1,0 +1,22 @@
+{
+  "id": "pyt-bignum-30-bit-limb-layout",
+  "title": "Bignum 30-bit limb layout",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "CPython",
+  "provides": [
+    "pack_bignum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

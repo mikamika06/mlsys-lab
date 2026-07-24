@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-effective-bits-per-value-and-the-compression-ratio",
+  "title": "Derive effective bits per value and compression ratio",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M2quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "effective_bits_per_value"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

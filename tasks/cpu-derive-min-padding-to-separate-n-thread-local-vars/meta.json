@@ -1,0 +1,13 @@
+{
+  "id": "cpu-derive-min-padding-to-separate-n-thread-local-vars",
+  "title": "Derive min padding to separate N thread-local vars (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

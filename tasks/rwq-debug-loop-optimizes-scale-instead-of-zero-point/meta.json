@@ -1,0 +1,22 @@
+{
+  "id": "rwq-debug-loop-optimizes-scale-instead-of-zero-point",
+  "title": "Debug HQQ loop: optimize zero-point with fixed scale",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "numpy",
+  "provides": [
+    "optimize_zero_point"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

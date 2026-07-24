@@ -1,0 +1,43 @@
+{
+  "id": "num-bf16-memory-footprint-ratio-with-bounded-error",
+  "title": "bf16 Memory Footprint Ratio with Bounded Error",
+  "track": "03 Low-Precision Formats",
+  "tier": "I",
+  "module": "M3fmt",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pack_bf16",
+    "unpack_bf16"
+  ],
+  "fixtures": [
+    "W.npy"
+  ],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": ">=",
+      "threshold": 2.0
+    },
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 2.0
+    },
+    {
+      "metric": "code_exact_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "max_rel_err",
+      "op": "<=",
+      "threshold": 0.00390625
+    }
+  ],
+  "info": [
+    "max_abs_err",
+    "decode_max_abs_err"
+  ]
+}

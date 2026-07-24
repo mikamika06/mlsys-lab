@@ -1,0 +1,15 @@
+{
+ "id": "cpp-handle-strided-non-contiguous-input",
+ "title": "Handle Strided Non-Contiguous Input in C++ Buffer Access",
+ "track": "02 Deep C++",
+ "tier": "I",
+ "module": "M2",
+ "difficulty": 4,
+ "genre": "implement",
+ "platform": "cross-platform",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: real structs, real offsetof(), memcpy'd out of a raw byte buffer at real strided addresses -- exactly the pybind11 buffer-protocol idiom, no simulated memory."
+ ],
+ "native": "cpp"
+}

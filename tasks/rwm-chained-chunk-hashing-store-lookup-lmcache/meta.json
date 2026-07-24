@@ -1,0 +1,24 @@
+{
+  "id": "rwm-chained-chunk-hashing-store-lookup-lmcache",
+  "title": "Chained chunk hashing store lookup (LMCache)",
+  "track": "02 Systems Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "lookup_reused_chunks"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "Implements position-aware cumulative chunk hashing used for chunk reuse lookup."
+  ]
+}

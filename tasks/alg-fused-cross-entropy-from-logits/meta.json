@@ -1,0 +1,22 @@
+{
+  "id": "alg-fused-cross-entropy-from-logits",
+  "title": "Fused Cross‑Entropy from Logits",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_cross_entropy"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

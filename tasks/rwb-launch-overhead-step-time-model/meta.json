@@ -1,0 +1,22 @@
+{
+  "id": "rwb-launch-overhead-step-time-model",
+  "title": "Launch-overhead step-time model (eager vs CUDA graph)",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "graph_launch_step_time"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

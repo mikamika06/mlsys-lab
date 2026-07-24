@@ -1,0 +1,27 @@
+{
+  "id": "llm-fused-temperature-stable-softmax-single-pass",
+  "title": "Fused temperature + stable softmax in a single pass",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4ml",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "line_events",
+      "op": "<=",
+      "threshold": 1700
+    }
+  ],
+  "info": []
+}

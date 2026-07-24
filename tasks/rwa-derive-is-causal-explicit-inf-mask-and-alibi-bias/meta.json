@@ -1,0 +1,27 @@
+{
+  "id": "rwa-derive-is-causal-explicit-inf-mask-and-alibi-bias",
+  "title": "Derive causal attention mask and ALiBi bias",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2attn",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "apply_attention_bias"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "alibi_max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-optimal-tile-size-under-cache-constraint",
+  "title": "Optimal tile size under cache constraint",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2matmul",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "optimal_tile_size"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_access_count",
+      "op": "<=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "pyt-boxed-int-list-vs-numpy-int64-footprint-ratio",
+  "title": "Boxed-int list vs NumPy int64 footprint ratio",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "list_footprint_ratio"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

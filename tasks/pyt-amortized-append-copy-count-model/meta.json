@@ -1,0 +1,22 @@
+{
+  "id": "pyt-amortized-append-copy-count-model",
+  "title": "Amortized append copy-count model",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "CPython",
+  "provides": [
+    "append_copy_count"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

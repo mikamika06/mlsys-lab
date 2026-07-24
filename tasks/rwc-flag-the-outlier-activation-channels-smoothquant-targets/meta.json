@@ -1,0 +1,22 @@
+{
+  "id": "rwc-flag-the-outlier-activation-channels-smoothquant-targets",
+  "title": "Flag outlier activation channels for SmoothQuant targets",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flag_outliers"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

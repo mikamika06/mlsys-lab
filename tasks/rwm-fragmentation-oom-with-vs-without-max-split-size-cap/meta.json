@@ -1,0 +1,22 @@
+{
+  "id": "rwm-fragmentation-oom-with-vs-without-max-split-size-cap",
+  "title": "Fragmentation OOM With vs. Without a max_split_size Cap",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "replay_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

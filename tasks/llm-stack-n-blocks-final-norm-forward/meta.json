@@ -1,0 +1,22 @@
+{
+  "id": "llm-stack-n-blocks-final-norm-forward",
+  "title": "Stack N blocks + final norm forward",
+  "track": "03 ML Systems",
+  "tier": "I",
+  "module": "M1trans",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stack_blocks_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

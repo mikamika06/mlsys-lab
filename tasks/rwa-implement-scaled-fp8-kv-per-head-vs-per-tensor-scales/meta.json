@@ -1,0 +1,27 @@
+{
+  "id": "rwa-implement-scaled-fp8-kv-per-head-vs-per-tensor-scales",
+  "title": "Scaled FP8 KV attention with per-head scales",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "scaled_fp8_kv_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.001
+    },
+    {
+      "metric": "per_head_advantage",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

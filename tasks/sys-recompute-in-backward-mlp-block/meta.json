@@ -1,0 +1,28 @@
+{
+  "id": "sys-recompute-in-backward-mlp-block",
+  "title": "Recompute in Backward for a 2‑Layer MLP",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "checkpoint_forward",
+    "checkpoint_backward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "output_error",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "grad_error",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

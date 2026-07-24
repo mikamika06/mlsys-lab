@@ -1,0 +1,25 @@
+{
+  "id": "rwb-per-tensor-kv-reconstruction-mse",
+  "title": "Per-tensor absmax FP8 (E4M3) KV reconstruction MSE",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_fp8_reconstruction_mse"
+  ],
+  "fixtures": [
+    "k.npy",
+    "v.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

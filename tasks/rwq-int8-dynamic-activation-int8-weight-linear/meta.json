@@ -1,0 +1,22 @@
+{
+  "id": "rwq-int8-dynamic-activation-int8-weight-linear",
+  "title": "INT8 dynamic-activation INT8-weight linear",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M1quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "int8_linear"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

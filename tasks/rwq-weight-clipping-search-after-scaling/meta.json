@@ -1,0 +1,29 @@
+{
+  "id": "rwq-weight-clipping-search-after-scaling",
+  "title": "Weight-clipping search after scaling",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M2awq",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "awq_clip_search"
+  ],
+  "fixtures": [
+    "clip_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "idx_exact_match",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "mse_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

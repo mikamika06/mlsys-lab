@@ -1,0 +1,31 @@
+{
+  "id": "rwb-rank-r-lora-vs-full-delta-approximation",
+  "title": "Rank-r LoRA vs full delta: the Eckart-Young optimal factorization",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "lora_rank_r_approx"
+  ],
+  "fixtures": [
+    "W.npy",
+    "A0.npy",
+    "B0.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "not_below_bound",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

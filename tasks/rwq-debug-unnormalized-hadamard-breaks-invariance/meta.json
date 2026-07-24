@@ -1,0 +1,22 @@
+{
+  "id": "rwq-debug-unnormalized-hadamard-breaks-invariance",
+  "title": "Normalize Hadamard rotation for invariance",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "hadamard_rotate"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-emulated-triton-tiled-matmul",
+  "title": "Emulated Triton tiled matmul",
+  "track": "03 Systems and Performance",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "tiled_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

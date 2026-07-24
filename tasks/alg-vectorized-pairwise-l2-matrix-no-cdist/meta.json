@@ -1,0 +1,22 @@
+{
+  "id": "alg-vectorized-pairwise-l2-matrix-no-cdist",
+  "title": "Vectorized Pairwise L² Distance Matrix (no cdist)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pairwise_l2_matrix"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

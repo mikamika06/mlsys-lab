@@ -1,0 +1,32 @@
+{
+  "id": "rwq-learned-rounding-vs-nearest-rounding",
+  "title": "Learned Rounding vs Nearest Rounding",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "rounding_output_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "learned_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "rtn_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "learned_le_rtn",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

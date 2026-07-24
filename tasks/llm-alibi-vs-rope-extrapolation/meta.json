@@ -1,0 +1,22 @@
+{
+  "id": "llm-alibi-vs-rope-extrapolation",
+  "title": "ALiBi extrapolation locality metric",
+  "track": "04 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "alibi_extrapolation_metric"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.01
+    }
+  ],
+  "info": []
+}

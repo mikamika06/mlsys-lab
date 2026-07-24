@@ -1,0 +1,22 @@
+{
+  "id": "rws-gumbel-softmax-relaxed-pattern-sample",
+  "title": "Gumbel-Softmax Relaxed Sparsity-Pattern Sample",
+  "track": "05 Real-World Model Compression",
+  "tier": "I",
+  "module": "M5rwm",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gumbel_softmax_relaxed"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

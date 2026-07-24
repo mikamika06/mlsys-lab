@@ -1,0 +1,28 @@
+{
+  "id": "rwb-sgmv-per-row-adapter-selection",
+  "title": "SGMV: per-row LoRA adapter selection over a mixed-adapter batch",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sgmv_apply"
+  ],
+  "fixtures": [
+    "x.npy",
+    "adapter_id.npy",
+    "A_bank.npy",
+    "B_bank.npy",
+    "scale.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

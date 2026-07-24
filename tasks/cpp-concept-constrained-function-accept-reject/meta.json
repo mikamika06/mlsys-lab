@@ -1,0 +1,21 @@
+{
+  "id": "cpp-concept-constrained-function-accept-reject",
+  "title": "Concept-constrained function accept/reject classifier",
+  "track": "02 C++",
+  "tier": "II",
+  "module": "M3cpp",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "macos-cpp20",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "C++20 concepts, requires-expressions, SFINAE and overload viability"
+  ]
+}

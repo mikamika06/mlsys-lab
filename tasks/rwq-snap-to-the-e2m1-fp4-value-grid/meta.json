@@ -1,0 +1,22 @@
+{
+  "id": "rwq-snap-to-the-e2m1-fp4-value-grid",
+  "title": "Snap to E2M1 FP4 value grid",
+  "track": "02 ML Quantization",
+  "tier": "II",
+  "module": "Mqnt",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "snap_to_e2m1"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

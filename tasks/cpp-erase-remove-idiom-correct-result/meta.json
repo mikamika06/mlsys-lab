@@ -1,0 +1,15 @@
+{
+ "id": "cpp-erase-remove-idiom-correct-result",
+ "title": "Erase-Remove Idiom Result on a real std::vector",
+ "track": "02 Deep C++",
+ "tier": "I",
+ "module": "M2",
+ "difficulty": 3,
+ "genre": "debug",
+ "platform": "cross-platform",
+ "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+ "info": [
+  "Real C++: a real std::vector<Record>, real std::remove_if/erase, compiled by clang++ -- the classic erase-while-iterating bug is demonstrated by actually skipping elements, not simulated."
+ ],
+ "native": "cpp"
+}

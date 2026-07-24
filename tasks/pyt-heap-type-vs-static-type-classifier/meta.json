@@ -1,0 +1,22 @@
+{
+  "id": "pyt-heap-type-vs-static-type-classifier",
+  "title": "Heap type vs static type classifier",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "CPython",
+  "provides": [
+    "classify_heap_types"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

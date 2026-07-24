@@ -1,0 +1,22 @@
+{
+  "id": "num-build-wengert-list-topo-order",
+  "title": "Build Wengert list and topological order",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M2autograd",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "build_wengert_list"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwa-derive-expected-attention-scores-under-a-query-gaussian",
+  "title": "Expected attention scores under a query Gaussian",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "expected_attention_scores"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.0001
+    },
+    {
+      "metric": "selected_exact",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

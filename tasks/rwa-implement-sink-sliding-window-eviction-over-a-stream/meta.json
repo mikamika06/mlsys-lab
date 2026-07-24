@@ -1,0 +1,27 @@
+{
+  "id": "rwa-implement-sink-sliding-window-eviction-over-a-stream",
+  "title": "Sink + sliding-window attention cache eviction",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M3attn",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sink_attention_stream"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "cache_bound",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

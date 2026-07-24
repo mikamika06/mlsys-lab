@@ -1,0 +1,20 @@
+{
+  "id": "alg-softmax-temperature-scaling-range",
+  "title": "Softmax Temperature Scaling Range",
+  "track": "alg",
+  "tier": 1,
+  "module": "numerical_stability",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "python",
+  "provides": [],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": {}
+}

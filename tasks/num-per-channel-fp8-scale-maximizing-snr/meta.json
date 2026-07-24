@@ -1,0 +1,22 @@
+{
+  "id": "num-per-channel-fp8-scale-maximizing-snr",
+  "title": "Per-channel FP8 E4M3 scale maximizing SNR",
+  "track": "03 Numerical Computing",
+  "tier": "III",
+  "module": "M3quant",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp8_channel_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "channel_rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

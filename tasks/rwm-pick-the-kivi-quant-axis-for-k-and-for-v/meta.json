@@ -1,0 +1,22 @@
+{
+  "id": "rwm-pick-the-kivi-quant-axis-for-k-and-for-v",
+  "title": "Pick KIVI quantization axis for K and V",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pick_kivi_quant_axis"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

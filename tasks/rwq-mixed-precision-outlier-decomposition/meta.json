@@ -1,0 +1,27 @@
+{
+  "id": "rwq-mixed-precision-outlier-decomposition",
+  "title": "Mixed-precision outlier decomposition",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M3np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mixed_precision_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.0001
+    },
+    {
+      "metric": "beats_int8",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

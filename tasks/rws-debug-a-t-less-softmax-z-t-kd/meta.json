@@ -1,0 +1,22 @@
+{
+  "id": "rws-debug-a-t-less-softmax-z-t-kd",
+  "title": "Debug temperature-scaled knowledge distillation loss",
+  "track": "04 Machine Learning",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "kd_loss_and_grad"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

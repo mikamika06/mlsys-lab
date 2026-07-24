@@ -1,0 +1,27 @@
+{
+  "id": "sys-kv-cache-int8-quant-kl",
+  "title": "KV-Cache int8 Quantization: Attention-Distribution Drift",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_cache_int8_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-2
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 5e-2
+    }
+  ],
+  "info": []
+}

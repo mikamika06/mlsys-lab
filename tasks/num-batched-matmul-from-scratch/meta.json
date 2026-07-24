@@ -1,0 +1,22 @@
+{
+  "id": "num-batched-matmul-from-scratch",
+  "title": "Batched matrix multiplication from scratch",
+  "track": "03 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "batched_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

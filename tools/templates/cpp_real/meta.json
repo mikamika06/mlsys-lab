@@ -1,0 +1,2 @@
+{"id":"cpp-real-ex-relu","title":"ReLU in place (real C++)","native":"cpp","difficulty":1,
+ "gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-6}]}

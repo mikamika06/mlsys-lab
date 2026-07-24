@@ -1,0 +1,22 @@
+{
+  "id": "llm-rope-relative-position-invariance",
+  "title": "RoPE relative position invariance test",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rope_relative_dot"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

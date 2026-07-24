@@ -1,0 +1,22 @@
+{
+  "id": "rwb-speedup-vs-acceptance-rate-model",
+  "title": "Speedup vs acceptance-rate model",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2mlsys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "draft_speedup_model"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

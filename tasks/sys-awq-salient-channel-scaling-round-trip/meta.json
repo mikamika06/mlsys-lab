@@ -1,0 +1,22 @@
+{
+  "id": "sys-awq-salient-channel-scaling-round-trip",
+  "title": "AWQ salient-channel scaling round-trip",
+  "track": "06 Systems ML",
+  "tier": "II",
+  "module": "M4q",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "awq_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.15
+    }
+  ],
+  "info": []
+}

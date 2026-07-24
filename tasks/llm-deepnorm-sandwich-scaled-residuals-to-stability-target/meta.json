@@ -1,0 +1,22 @@
+{
+  "id": "llm-deepnorm-sandwich-scaled-residuals-to-stability-target",
+  "title": "DeepNorm scaled residual norms for stability target",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "deepnorm_scaled_residuals"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.01
+    }
+  ],
+  "info": []
+}

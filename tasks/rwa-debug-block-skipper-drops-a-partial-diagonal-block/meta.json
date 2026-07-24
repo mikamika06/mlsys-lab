@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-block-skipper-drops-a-partial-diagonal-block",
+  "title": "Debug: Block-Skipper Drops a Partial Diagonal Block",
+  "track": "03 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "block_sparse_causal_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

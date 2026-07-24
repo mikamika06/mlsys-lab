@@ -1,0 +1,22 @@
+{
+  "id": "pyt-implement-a-utf-8-encoder-from-scratch",
+  "title": "Implement a UTF-8 encoder from scratch",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "utf8_encode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

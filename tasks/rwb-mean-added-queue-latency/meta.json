@@ -1,0 +1,24 @@
+{
+  "id": "rwb-mean-added-queue-latency",
+  "title": "Mean Added Queue Latency Under a Dynamic Batcher",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 2,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "mean_added_queue_latency"
+  ],
+  "fixtures": [
+    "arrivals.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "num-broadcasting-via-0-stride-as-strided",
+  "title": "Broadcasting via 0-Stride as_strided",
+  "track": "num",
+  "tier": 2,
+  "module": "views",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "python",
+  "provides": [
+    "broadcast_to_strided"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "zero_copy_view_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "raises_on_bad_shape_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": {}
+}

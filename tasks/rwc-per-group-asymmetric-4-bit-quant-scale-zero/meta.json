@@ -1,0 +1,27 @@
+{
+  "id": "rwc-per-group-asymmetric-4-bit-quant-scale-zero",
+  "title": "Per-Group Asymmetric 4-bit Quant (Scale + Zero)",
+  "track": "04 Machine Learning Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_group_affine_uint4"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-08
+    }
+  ],
+  "info": []
+}

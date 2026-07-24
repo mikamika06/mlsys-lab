@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-causal-mask-applied-after-softmax-instead-of-before",
+  "title": "Debug: causal mask applied after softmax instead of before",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "causal_self_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

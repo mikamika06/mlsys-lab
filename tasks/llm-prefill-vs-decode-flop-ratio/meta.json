@@ -1,0 +1,27 @@
+{
+  "id": "llm-prefill-vs-decode-flop-ratio",
+  "title": "Prefill vs Decode FLOP Ratio",
+  "track": "03 Systems Performance",
+  "tier": "II",
+  "module": "M3perf",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "prefill_vs_decode_flops"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "ratio_rel_err",
+      "op": "<=",
+      "threshold": 1e-09
+    }
+  ],
+  "info": []
+}

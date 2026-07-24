@@ -1,0 +1,22 @@
+{
+  "id": "rwm-prove-offloaded-cache-decode-is-bit-lossless-vs-full-cache",
+  "title": "Prove Offloaded-cache Decode is Bit-lossless vs Full Cache",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "offloaded_decode_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

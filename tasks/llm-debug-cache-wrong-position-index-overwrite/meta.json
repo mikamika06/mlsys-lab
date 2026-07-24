@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-cache-wrong-position-index-overwrite",
+  "title": "Debug KV-cache position overwrite",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "write_kv_cache"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwq-nvfp4-second-level-scale-factorization",
+  "title": "NVFP4: Second-Level (E4M3) Block Scale Factorization",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "nvfp4_block_scales"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

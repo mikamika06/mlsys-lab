@@ -1,0 +1,22 @@
+{
+  "id": "sys-predict-padding-effect-on-bank-conflicts",
+  "title": "Predict Padding's Effect on Bank Conflicts",
+  "track": "03 Systems and Compilers",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "choose_padding"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

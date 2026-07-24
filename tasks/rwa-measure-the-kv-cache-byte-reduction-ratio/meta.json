@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-the-kv-cache-byte-reduction-ratio",
+  "title": "KV‑Cache Byte Reduction Ratio",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_cache_stats"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

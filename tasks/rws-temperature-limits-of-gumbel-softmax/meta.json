@@ -1,0 +1,27 @@
+{
+  "id": "rws-temperature-limits-of-gumbel-softmax",
+  "title": "Temperature limits of Gumbel-Softmax",
+  "track": "03 Machine Learning",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gumbel_temperature_limits"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmax_index",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

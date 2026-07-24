@@ -1,0 +1,37 @@
+{
+  "id": "num-construct-a-double-rounding-counterexample",
+  "title": "Construct a double-rounding counterexample",
+  "track": "02 Numerics",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 4,
+  "genre": "prove",
+  "platform": "cross-platform",
+  "provides": [
+    "double_rounding_counterexample"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "valid_input",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "paths_differ",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "direct_match",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "double_match",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

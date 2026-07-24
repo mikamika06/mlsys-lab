@@ -1,0 +1,24 @@
+{
+  "id": "rwq-importance-matrix-from-calibration",
+  "title": "Importance Matrix from Calibration Activations",
+  "track": "04 Quantization",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "imatrix_from_calibration"
+  ],
+  "fixtures": [
+    "gguf_x.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

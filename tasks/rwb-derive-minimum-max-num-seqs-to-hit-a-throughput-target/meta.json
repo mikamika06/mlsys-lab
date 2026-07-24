@@ -1,0 +1,22 @@
+{
+  "id": "rwb-derive-minimum-max-num-seqs-to-hit-a-throughput-target",
+  "title": "Derive minimum max_num_seqs for a throughput target",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2serve",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "minimum_max_num_seqs"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

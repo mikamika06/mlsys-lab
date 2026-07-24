@@ -1,0 +1,22 @@
+{
+  "id": "rws-gradient-of-jsd-w-r-t-student-logits",
+  "title": "Gradient of JSD(β) w.r.t. student logits",
+  "track": "03 Numerical ML",
+  "tier": "II",
+  "module": "M3numpy",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "jsd_grad_wrt_student_logits"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

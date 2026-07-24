@@ -1,0 +1,22 @@
+{
+  "id": "rwm-activation-memory-with-without-checkpoint-offload",
+  "title": "Activation memory with checkpointing and offload",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "activation_memory"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

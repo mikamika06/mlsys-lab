@@ -1,0 +1,27 @@
+{
+  "id": "rwc-search-the-fp8-scale-to-minimize-mse-clip-vs-round",
+  "title": "Search the FP8 scale to minimize MSE (clip vs round)",
+  "track": "04 Numerical Python",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "search_fp8_scale"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "mse_curve_error",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

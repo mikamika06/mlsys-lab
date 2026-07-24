@@ -1,0 +1,27 @@
+{
+  "id": "rwq-weight-only-vs-dynamic-activation-error",
+  "title": "Weight-Only vs Dynamic-Activation Quantization Error",
+  "track": "04 Real-World Quant",
+  "tier": "I",
+  "module": "M4rwq",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "weight_only_vs_dynamic_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "ordering_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

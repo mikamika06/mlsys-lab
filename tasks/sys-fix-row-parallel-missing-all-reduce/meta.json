@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-row-parallel-missing-all-reduce",
+  "title": "Fix row-parallel linear missing all-reduce",
+  "track": "04 Systems ML",
+  "tier": "I",
+  "module": "M1tp",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "row_parallel_linear"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

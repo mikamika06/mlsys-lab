@@ -1,0 +1,22 @@
+{
+  "id": "rwc-int8-dynamic-act-per-token-x-int8-weight-per-channel-w8a8",
+  "title": "Int8 Dynamic Activation per Token × Int8 Weight per Channel (W8A8)",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1dl",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "int8_dynamic_act_per_token_x_int8_weight_per_channel"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

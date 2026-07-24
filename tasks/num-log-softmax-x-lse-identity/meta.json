@@ -1,0 +1,22 @@
+{
+  "id": "num-log-softmax-x-lse-identity",
+  "title": "Log-softmax via the x − LSE identity",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M3np",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "log_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-07
+    }
+  ],
+  "info": []
+}

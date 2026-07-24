@@ -1,0 +1,22 @@
+{
+  "id": "num-fix-nan-cross-entropy-via-fusion",
+  "title": "Fix NaN cross-entropy via fusion",
+  "track": "02 Numerical",
+  "tier": "I",
+  "module": "M4",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "cross_entropy"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

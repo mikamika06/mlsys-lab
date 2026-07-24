@@ -1,0 +1,22 @@
+{
+  "id": "num-fix-missing-axis-sum-after-broadcast",
+  "title": "Fix missing axis-sum after broadcast",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "broadcast_add"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-05
+    }
+  ],
+  "info": []
+}

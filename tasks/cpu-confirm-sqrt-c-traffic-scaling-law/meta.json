@@ -1,0 +1,13 @@
+{
+  "id": "cpu-confirm-sqrt-c-traffic-scaling-law",
+  "title": "Confirm the sqrt(C) DRAM-traffic scaling law",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 5,
+  "genre": "prove",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": []
+}

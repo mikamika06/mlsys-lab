@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-per-tensor-scale-instead-of-ggml-per-32-block-scale",
+  "title": "Debug Q4_0 per-tensor scaling bug",
+  "track": "03 Real World Algorithms",
+  "tier": "II",
+  "module": "M2quant",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "q4_0_dequantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 3.2
+    }
+  ],
+  "info": []
+}

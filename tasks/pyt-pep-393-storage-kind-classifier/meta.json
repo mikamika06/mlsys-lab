@@ -1,0 +1,22 @@
+{
+  "id": "pyt-pep-393-storage-kind-classifier",
+  "title": "PEP 393 storage-kind classifier",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_storage_kind"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

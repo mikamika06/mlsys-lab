@@ -1,0 +1,1 @@
+{"id":"cpp-standard-layout-trivially-copyable-flags-12-structs","title":"Standard-layout & trivially-copyable flags (12 structs)","native":"cpp","difficulty":3,"gates":[{"metric":"exact_match","op":"==","threshold":1.0}]}

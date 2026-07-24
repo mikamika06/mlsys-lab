@@ -1,0 +1,22 @@
+{
+  "id": "sys-fragmentation-waste-fraction-paged-vs-preallocated",
+  "title": "Fragmentation waste fraction: paged cache vs preallocated cache",
+  "track": "04 Systems Python",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fragmentation_waste_fraction"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 1e-09
+    }
+  ],
+  "info": []
+}

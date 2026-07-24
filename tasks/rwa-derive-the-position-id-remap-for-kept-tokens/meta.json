@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-the-position-id-remap-for-kept-tokens",
+  "title": "Derive StreamingLLM RoPE cache-slot positions",
+  "track": "03 ML Systems",
+  "tier": "I",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "streaming_rope_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

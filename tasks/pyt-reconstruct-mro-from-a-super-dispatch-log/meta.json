@@ -1,0 +1,22 @@
+{
+  "id": "pyt-reconstruct-mro-from-a-super-dispatch-log",
+  "title": "Reconstruct MRO from a super dispatch log",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_mro"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

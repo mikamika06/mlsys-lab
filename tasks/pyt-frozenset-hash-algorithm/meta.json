@@ -1,0 +1,22 @@
+{
+  "id": "pyt-frozenset-hash-algorithm",
+  "title": "Implement CPython frozenset hash algorithm",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M4py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cpython",
+  "provides": [
+    "frozenset_hash"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

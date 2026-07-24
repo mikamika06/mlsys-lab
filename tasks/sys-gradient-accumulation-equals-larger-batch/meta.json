@@ -1,0 +1,22 @@
+{
+  "id": "sys-gradient-accumulation-equals-larger-batch",
+  "title": "Gradient accumulation equals one larger batch",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 2,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "accumulate_grad"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "llm-fp32-vs-fp16-accumulation-of-long-dot-product",
+  "title": "FP32 accumulation for long dot products",
+  "track": "03 Numerical ML",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp32_dot_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.001
+    },
+    {
+      "metric": "fp16_gap",
+      "op": ">=",
+      "threshold": 1.1
+    }
+  ],
+  "info": []
+}

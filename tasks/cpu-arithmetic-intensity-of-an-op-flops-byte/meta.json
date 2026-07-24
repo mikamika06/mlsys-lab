@@ -1,0 +1,22 @@
+{
+  "id": "cpu-arithmetic-intensity-of-an-op-flops-byte",
+  "title": "Arithmetic Intensity of an Operation (FLOPs per Byte)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "arithmetic_intensity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

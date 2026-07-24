@@ -1,0 +1,18 @@
+{
+  "id": "cpp-compute-lda-ldb-ldc-for-a-submatrix-gemm",
+  "title": "Compute lda/ldb/ldc for a submatrix GEMM (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "GemmDescriptor's sizeof comes from the real compiler, not a modeled ABI",
+    "the driver performs the actual submatrix GEMM in place using only the returned lda/ldb/ldc + offsets"
+  ]
+}

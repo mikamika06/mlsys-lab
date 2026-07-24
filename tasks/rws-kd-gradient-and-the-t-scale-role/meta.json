@@ -1,0 +1,27 @@
+{
+  "id": "rws-kd-gradient-and-the-t-scale-role",
+  "title": "KD gradient and the T squared scale role",
+  "track": "03 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kd_gradient"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "t2_scale_ratio",
+      "op": ">",
+      "threshold": 0.8
+    }
+  ],
+  "info": []
+}

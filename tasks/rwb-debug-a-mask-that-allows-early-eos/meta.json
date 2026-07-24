@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-a-mask-that-allows-early-eos",
+  "title": "Debug an FSM mask that allows early EOS",
+  "track": "04 Structured Generation",
+  "tier": "II",
+  "module": "M2fsm",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "allowed_tokens"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

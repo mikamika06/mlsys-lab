@@ -1,0 +1,27 @@
+{
+  "id": "rwc-constant-fold-frozen-weights-into-a-baked-constant",
+  "title": "Constant-fold frozen weights into a baked constant",
+  "track": "04 Runtime Compiler",
+  "tier": "II",
+  "module": "M3opt",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fold_constants"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "folded_nodes",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "alg-prove-expansion-identity-is-exact",
+  "title": "Prove the expansion identity for Euclidean distance",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sq_dist_expansion"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

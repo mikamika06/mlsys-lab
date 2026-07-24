@@ -1,0 +1,2 @@
+{"id":"cpp-multiple-inheritance-this-pointer-adjustment","title":"Multiple-inheritance this-pointer adjustment (real C++)","native":"cpp","difficulty":5,
+ "gates":[{"metric":"exact_match","op":"==","threshold":1.0}]}

@@ -1,0 +1,22 @@
+{
+  "id": "rwb-pack-a-llama-batch-tokens-pos-seq-id",
+  "title": "Pack llama_batch decode tokens, positions, and sequence ids",
+  "track": "03 LLM Systems",
+  "tier": "I",
+  "module": "M2llm",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pack_llama_batch"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

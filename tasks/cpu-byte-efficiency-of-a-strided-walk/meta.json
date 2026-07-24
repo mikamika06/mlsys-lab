@@ -1,0 +1,19 @@
+{
+  "id": "cpu-byte-efficiency-of-a-strided-walk",
+  "title": "Byte-efficiency of a strided walk",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

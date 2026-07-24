@@ -1,0 +1,22 @@
+{
+  "id": "pyt-coroutine-async-gen-generator-classifier",
+  "title": "Coroutine / Async Generator / Generator Classifier",
+  "track": "02 Python Internals",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

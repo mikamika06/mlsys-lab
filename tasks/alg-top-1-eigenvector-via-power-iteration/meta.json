@@ -1,0 +1,20 @@
+{
+  "id": "alg-top-1-eigenvector-via-power-iteration",
+  "title": "Top-1 Eigenvector via Power Iteration",
+  "track": "alg",
+  "tier": 1,
+  "module": "pca",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "python",
+  "provides": [],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": {}
+}

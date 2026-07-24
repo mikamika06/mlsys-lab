@@ -1,0 +1,22 @@
+{
+  "id": "pyt-list-vs-array-vs-numpy-footprint",
+  "title": "List vs array vs NumPy footprint ratios",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "footprint_ratios"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

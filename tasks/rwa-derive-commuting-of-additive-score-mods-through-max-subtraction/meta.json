@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-commuting-of-additive-score-mods-through-max-subtraction",
+  "title": "Fuse additive score modifiers through max-subtracted softmax",
+  "track": "03 Numerical ML",
+  "tier": "II",
+  "module": "M2numpy",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_attention_scores"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

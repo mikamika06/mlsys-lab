@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-an-alibi-score-mod-attention",
+  "title": "Implement an ALiBi score_mod attention",
+  "track": "03 Deep Learning",
+  "tier": "II",
+  "module": "M3attention",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "alibi_score_mod_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

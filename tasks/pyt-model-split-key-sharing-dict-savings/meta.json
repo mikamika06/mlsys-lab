@@ -1,0 +1,22 @@
+{
+  "id": "pyt-model-split-key-sharing-dict-savings",
+  "title": "Measure split-dict key sharing savings",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cpython-3.12",
+  "provides": [
+    "model_split_dict_savings"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

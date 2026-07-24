@@ -1,0 +1,22 @@
+{
+  "id": "rwm-fsdp-cpu-offload-vs-zero-3-cpu-offload-per-rank-gpu-bytes",
+  "title": "FSDP CPU offload vs ZeRO-3 per-rank GPU bytes",
+  "track": "03 Distributed Systems",
+  "tier": "II",
+  "module": "M3dist",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_offload_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

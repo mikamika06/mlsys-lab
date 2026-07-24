@@ -1,0 +1,22 @@
+{
+  "id": "rwc-combine-two-block-softmax-stats-online-softmax-lemma",
+  "title": "Combine two block softmax statistics (online softmax lemma)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "combine_softmax_stats"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

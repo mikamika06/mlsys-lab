@@ -1,0 +1,24 @@
+{
+  "id": "rwb-preferred-batch-size-a-vs-b",
+  "title": "preferred_batch_size A vs B",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_preferred_batch_sizes"
+  ],
+  "fixtures": [
+    "arrivals.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

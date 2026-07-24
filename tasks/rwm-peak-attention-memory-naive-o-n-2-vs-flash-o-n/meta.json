@@ -1,0 +1,22 @@
+{
+  "id": "rwm-peak-attention-memory-naive-o-n-2-vs-flash-o-n",
+  "title": "Peak Attention Memory: Naïve vs Flash",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "peak_attention_memory"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

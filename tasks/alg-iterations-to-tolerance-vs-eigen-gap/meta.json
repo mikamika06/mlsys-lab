@@ -1,0 +1,22 @@
+{
+  "id": "alg-iterations-to-tolerance-vs-eigen-gap",
+  "title": "Power Iteration Convergence Count",
+  "track": "02 Algorithms",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "iterations_to_tolerance"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

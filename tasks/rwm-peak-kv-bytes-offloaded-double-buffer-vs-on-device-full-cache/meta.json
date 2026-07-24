@@ -1,0 +1,22 @@
+{
+  "id": "rwm-peak-kv-bytes-offloaded-double-buffer-vs-on-device-full-cache",
+  "title": "Peak KV Bytes: Offloaded Double Buffer vs On‑Device Full Cache",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_peak_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

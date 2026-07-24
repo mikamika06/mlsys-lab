@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-per-channel-k-vs-per-token-k-reconstruction-mse",
+  "title": "Measure per-channel-K vs per-token-K reconstruction MSE",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M4mlsys",
+  "difficulty": 2,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "per_channel_vs_per_token_k_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

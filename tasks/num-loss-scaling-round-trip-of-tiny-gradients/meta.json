@@ -1,0 +1,27 @@
+{
+  "id": "num-loss-scaling-round-trip-of-tiny-gradients",
+  "title": "Loss-scaling round trip of tiny gradients",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M3num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "loss_scale_round_trip"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.001
+    },
+    {
+      "metric": "beats_unscaled",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

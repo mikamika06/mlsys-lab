@@ -1,0 +1,32 @@
+{
+  "id": "num-attainable-flop-s-from-roofline",
+  "title": "Attainable FLOP/s from the roofline",
+  "track": "02 Numerics",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "roofline_attainable"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "ai_rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "attainable_rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "ridge_rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

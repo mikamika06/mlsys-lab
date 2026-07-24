@@ -1,0 +1,22 @@
+{
+  "id": "alg-debug-off-by-one-k-wrong-tie-break",
+  "title": "Debug off‑by‑one k and wrong tie‑break in kNN",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "predict_knn"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmax_agreement",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

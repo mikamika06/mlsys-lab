@@ -1,0 +1,25 @@
+{
+  "id": "rwc-awq-vs-plain-rtn-4-bit-on-a-salient-heavy-weight",
+  "title": "AWQ vs Plain RTN 4-bit on a Salient-Heavy Weight",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_awq_rtn_error"
+  ],
+  "fixtures": [
+    "W.npy",
+    "X.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

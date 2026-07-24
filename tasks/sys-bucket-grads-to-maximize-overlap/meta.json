@@ -1,0 +1,22 @@
+{
+  "id": "sys-bucket-grads-to-maximize-overlap",
+  "title": "Bucket gradients to maximize compute communication overlap",
+  "track": "06 Systems Python",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "bucket_grads"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 1.05
+    }
+  ],
+  "info": []
+}

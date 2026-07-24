@@ -1,0 +1,27 @@
+{
+  "id": "rwa-compare-the-bit-width-x-group-size-error-frontier",
+  "title": "Compare the Bit-Width x Group-Size Quantization Error Frontier",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "bitwidth_group_mse_frontier"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "monotone",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

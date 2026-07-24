@@ -1,0 +1,27 @@
+{
+  "id": "rwa-measure-mla-cached-bytes-token-vs-gqa",
+  "title": "Measure MLA cached bytes per token vs GQA",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cached_bytes_per_token"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

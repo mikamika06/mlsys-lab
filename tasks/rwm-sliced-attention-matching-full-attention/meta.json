@@ -1,0 +1,32 @@
+{
+  "id": "rwm-sliced-attention-matching-full-attention",
+  "title": "Sliced attention matching full attention",
+  "track": "04 Deep Learning",
+  "tier": "I",
+  "module": "M1dl",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "chunked_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1.0e-6
+    },
+    {
+      "metric": "peak_bytes_acc",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "attention",
+    "memory",
+    "chunking",
+    "softmax"
+  ]
+}

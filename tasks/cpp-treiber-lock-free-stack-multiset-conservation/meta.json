@@ -1,0 +1,2 @@
+{"id":"cpp-treiber-lock-free-stack-multiset-conservation","title":"Treiber lock-free stack: multiset conservation (real C++)","native":"cpp","difficulty":5,
+ "gates":[{"metric":"exact_match","op":"==","threshold":1.0}]}

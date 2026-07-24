@@ -1,0 +1,27 @@
+{
+  "id": "cpu-rolled-vs-unrolled-critical-path-with-accumulators",
+  "title": "CPU rolled vs unrolled critical path with accumulators",
+  "track": "04 Systems Performance",
+  "tier": "II",
+  "module": "M2cpu",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "model_kernel"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "miss_count",
+      "op": "==",
+      "threshold": 0.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwq-per-token-fp8-e4m3-kv-quant-attention-error",
+  "title": "Per-token FP8 E4M3 KV quantized attention",
+  "track": "04 Machine Learning",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp8_kv_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.0001
+    },
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rws-excess-loss-signal-for-dynamic-batch-loading",
+  "title": "Excess Loss Signal for Dynamic Batch Loading",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "excess_loss_signal"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwm-nf4-vs-fp4-vs-int4-affine-reconstruction-error",
+  "title": "NF4 vs FP4 vs int4 affine reconstruction error",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantization_mse_triplet"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

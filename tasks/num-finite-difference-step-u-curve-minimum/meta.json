@@ -1,0 +1,22 @@
+{
+  "id": "num-finite-difference-step-u-curve-minimum",
+  "title": "Finite-difference step U-curve minimum",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M3num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "optimal_fd_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.05
+    }
+  ],
+  "info": []
+}

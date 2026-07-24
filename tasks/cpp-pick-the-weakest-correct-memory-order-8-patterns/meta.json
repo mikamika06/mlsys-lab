@@ -1,0 +1,15 @@
+{
+ "id": "cpp-pick-the-weakest-correct-memory-order-8-patterns",
+ "title": "Pick the weakest correct memory_order (8 patterns)",
+ "track": "02 Deep C++",
+ "tier": "I",
+ "module": "M2",
+ "difficulty": 5,
+ "genre": "debug",
+ "platform": "cross-platform",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: std::memory_order is the actual enum from <atomic>, not a re-implemented string label."
+ ],
+ "native": "cpp"
+}

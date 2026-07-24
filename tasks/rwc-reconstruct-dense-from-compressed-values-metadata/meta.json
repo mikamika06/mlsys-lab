@@ -1,0 +1,27 @@
+{
+  "id": "rwc-reconstruct-dense-from-compressed-values-metadata",
+  "title": "Reconstruct dense from 2:4 compressed values and metadata",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2numpy",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_dense"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.0
+    },
+    {
+      "metric": "positions_exact",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

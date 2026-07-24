@@ -1,0 +1,22 @@
+{
+  "id": "sys-ring-all-gather-correctness",
+  "title": "Ring all‑gather correctness simulation",
+  "track": "02 System Programming",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "ring_all_gather"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

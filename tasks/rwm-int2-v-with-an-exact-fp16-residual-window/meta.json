@@ -1,0 +1,27 @@
+{
+  "id": "rwm-int2-v-with-an-exact-fp16-residual-window",
+  "title": "int2 V-cache with an exact fp16 residual window",
+  "track": "05 Real-World Model Compression",
+  "tier": "II",
+  "module": "M5rwm",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_int2_residual_window"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "residual_max_abs_err",
+      "op": "==",
+      "threshold": 0.0
+    },
+    {
+      "metric": "quant_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

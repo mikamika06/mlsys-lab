@@ -1,0 +1,22 @@
+{
+  "id": "rws-debug-a-half-coupled-head-prune",
+  "title": "Fix half-coupled attention head pruning",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "pruned_attention_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "rwc-e5m2-encode-decode-with-inf-nan",
+  "title": "E5M2 Encode/Decode with Inf/NaN",
+  "track": "rwc",
+  "tier": 1,
+  "module": "fp8",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": ["encode_e5m2", "decode_e5m2"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "exact_match", "op": ">=", "threshold": 1.0}
+  ],
+  "info": "Implement the E5M2 FP8 codec: 1-5-2 bit layout, round-to-nearest-even, supports inf/nan."
+}

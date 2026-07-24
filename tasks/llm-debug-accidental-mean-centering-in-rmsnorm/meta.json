@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-accidental-mean-centering-in-rmsnorm",
+  "title": "Debug Accidental Mean-Centering in RMSNorm",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "rms_norm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

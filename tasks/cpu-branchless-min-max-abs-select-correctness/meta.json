@@ -1,0 +1,22 @@
+{
+  "id": "cpu-branchless-min-max-abs-select-correctness",
+  "title": "Branch‑free minimum/maximum/absolute/value selection correctness",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "branchless_ops"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "pyt-reconstruct-a-traceback-structurally",
+  "title": "Reconstruct a traceback structurally",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "CPython",
+  "provides": [
+    "reconstruct_traceback"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

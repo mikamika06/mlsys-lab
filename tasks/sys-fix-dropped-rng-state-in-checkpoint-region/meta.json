@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-dropped-rng-state-in-checkpoint-region",
+  "title": "Fix dropped RNG state in a checkpoint region",
+  "track": "04 Systems and ML Kernels",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "checkpointed_dropout_block"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

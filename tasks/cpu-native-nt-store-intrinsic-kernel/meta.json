@@ -1,0 +1,18 @@
+{
+  "id": "cpu-native-nt-store-intrinsic-kernel",
+  "title": "Non-temporal streaming-store kernel: copy without cache pollution (real C++)",
+  "track": "01 CPU Microarch",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "store_temporal/store_nontemporal are a fixed, deterministic model of a real cache line's residency, not hardware performance counters",
+    "a correct copy that uses store_temporal instead of store_nontemporal still fails: dst_lines_touched will be nonzero instead of 0"
+  ]
+}

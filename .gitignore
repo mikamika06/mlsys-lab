@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# Learner state. Every task ships a starter (starter.py / starter.cpp /
+# starter.cu); the editor seeds solve.* from it on first open. solve.* is the
+# learner's own attempt and is never part of the bank.
+tasks/*/solve.py
+tasks/*/solve.cpp
+tasks/*/solve.cu
+
+# local build artefacts
+a.out
+*.o
+.preview/
+
+# generation queues, archives and one-off scripts stay out of the published repo
+.internal/

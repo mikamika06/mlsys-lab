@@ -1,0 +1,22 @@
+{
+  "id": "num-log-softmax-via-lse",
+  "title": "Log-softmax via log-sum-exp",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "log_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-7
+    }
+  ],
+  "info": []
+}

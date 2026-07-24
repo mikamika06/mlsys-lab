@@ -1,0 +1,22 @@
+{
+  "id": "sys-chunked-prefill-reproduces-kv-tokens",
+  "title": "Chunked prefill reproduces KV + tokens",
+  "track": "04 Systems Python",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "chunked_prefill_decode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

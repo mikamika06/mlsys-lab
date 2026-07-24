@@ -1,0 +1,22 @@
+{
+  "id": "num-rank-via-singular-value-threshold",
+  "title": "Rank via singular-value threshold",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "svd_rank"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

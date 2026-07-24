@@ -1,0 +1,27 @@
+{
+  "id": "rws-learned-soft-mask-vs-one-shot-magnitude-2-4",
+  "title": "Learned soft mask vs one-shot magnitude 2:4 pruning",
+  "track": "03 Machine Learning Systems",
+  "tier": "III",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_2_4_masks"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "better_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

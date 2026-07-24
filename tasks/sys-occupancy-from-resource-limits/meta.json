@@ -1,0 +1,22 @@
+{
+  "id": "sys-occupancy-from-resource-limits",
+  "title": "GPU SM occupancy from resource limits",
+  "track": "02 Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "max_active_warps"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

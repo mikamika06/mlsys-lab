@@ -1,0 +1,28 @@
+{
+  "id": "alg-log1p-expm1-for-small-x",
+  "title": "Numerically stable log1p / expm1 for small x",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_log1p",
+    "stable_expm1"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "log_rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "expm1_rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

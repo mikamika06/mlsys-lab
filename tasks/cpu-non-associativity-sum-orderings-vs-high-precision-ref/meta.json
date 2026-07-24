@@ -1,0 +1,22 @@
+{
+  "id": "cpu-non-associativity-sum-orderings-vs-high-precision-ref",
+  "title": "Non-associativity: sum orderings vs high-precision ref (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": [
+    "the fixture is fixed by the driver (no rand()/time()): one large value followed by 100000 copies of 1.0f, chosen so float32 addition provably drops every one of them in forward order",
+    "every accumulator in the 4 orderings must stay float32 -- only the separate high-precision reference sum may use double"
+  ]
+}

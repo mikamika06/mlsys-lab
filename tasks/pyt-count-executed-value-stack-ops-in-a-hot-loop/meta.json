@@ -1,0 +1,27 @@
+{
+  "id": "pyt-count-executed-value-stack-ops-in-a-hot-loop",
+  "title": "Count executed value-stack ops in a hot loop (Horner vs naive)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "horner_eval"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "op_ratio",
+      "op": "<=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

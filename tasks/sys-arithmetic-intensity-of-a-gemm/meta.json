@@ -1,0 +1,22 @@
+{
+  "id": "sys-arithmetic-intensity-of-a-gemm",
+  "title": "Arithmetic Intensity of a GEMM",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "arithmetic_intensity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

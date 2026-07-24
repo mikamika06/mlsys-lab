@@ -1,0 +1,22 @@
+{
+  "id": "rwm-fix-a-hasher-that-hashes-chunks-independently-false-hits",
+  "title": "Fix a chunk hasher that creates false reuse hits",
+  "track": "04 Algorithms",
+  "tier": "II",
+  "module": "M2alg",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "find_reusable_chunks"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

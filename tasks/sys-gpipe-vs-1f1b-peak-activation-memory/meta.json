@@ -1,0 +1,22 @@
+{
+  "id": "sys-gpipe-vs-1f1b-peak-activation-memory",
+  "title": "GPipe vs 1F1B peak activation memory",
+  "track": "03 Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "mac",
+  "provides": [
+    "compute_peak_activation_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio_pipe",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

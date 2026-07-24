@@ -1,0 +1,22 @@
+{
+  "id": "sys-repair-un-rescaled-o-accumulator-across-kv-tiles",
+  "title": "Repair un-rescaled O accumulator across KV tiles",
+  "track": "04 Systems and ML Kernels",
+  "tier": "II",
+  "module": "FlashAttention",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_attention_tiled"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

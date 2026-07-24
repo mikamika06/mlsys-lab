@@ -1,0 +1,22 @@
+{
+  "id": "rwq-debug-static-activation-scale-on-shifted-input",
+  "title": "Dynamic activation scale on shifted inputs",
+  "track": "04 Quantization",
+  "tier": "II",
+  "module": "M2q",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "quantized_linear_dynamic"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

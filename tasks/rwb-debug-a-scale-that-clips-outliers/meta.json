@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-a-scale-that-clips-outliers",
+  "title": "Debug an int8 scale that clips outliers",
+  "track": "03 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_absmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

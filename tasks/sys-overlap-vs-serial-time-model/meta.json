@@ -1,0 +1,27 @@
+{
+  "id": "sys-overlap-vs-serial-time-model",
+  "title": "Compute/Communication Overlap vs Serial Time Model",
+  "track": "02 Systems",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "overlap_time"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "op_count",
+      "op": "<=",
+      "threshold": 50
+    }
+  ],
+  "info": []
+}

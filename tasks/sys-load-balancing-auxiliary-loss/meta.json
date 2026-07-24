@@ -1,0 +1,22 @@
+{
+  "id": "sys-load-balancing-auxiliary-loss",
+  "title": "Switch Transformer load-balancing auxiliary loss",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "MoE",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "load_balancing_aux_loss"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,25 @@
+{
+  "id": "rwc-int8-quant-error-with-vs-without-smoothquant",
+  "title": "SmoothQuant: W8A8 error with vs without activation-outlier migration",
+  "track": "05 Model Compression",
+  "tier": "II",
+  "module": "M5quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "smoothquant_w8a8_comparison"
+  ],
+  "fixtures": [
+    "X.npy",
+    "W.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

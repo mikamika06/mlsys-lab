@@ -1,0 +1,13 @@
+{
+  "id": "cpu-cache-oblivious-miss-rate-across-4-cache-sizes",
+  "title": "Cache-oblivious transpose: miss rate across 4 cache sizes (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

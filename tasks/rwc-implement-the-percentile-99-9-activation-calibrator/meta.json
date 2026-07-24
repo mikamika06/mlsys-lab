@@ -1,0 +1,27 @@
+{
+  "id": "rwc-implement-the-percentile-99-9-activation-calibrator",
+  "title": "Percentile 99.9 activation calibrator",
+  "track": "04 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "python-numpy",
+  "provides": [
+    "percentile_amax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "quant_mse",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

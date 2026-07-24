@@ -1,0 +1,22 @@
+{
+  "id": "alg-l2-vs-cosine-neighbor-set-divergence",
+  "title": "L2 vs Cosine Neighbor Set Divergence",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "l2_vs_cosine_neighbor_set_divergence"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

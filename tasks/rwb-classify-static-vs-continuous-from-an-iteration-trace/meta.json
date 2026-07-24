@@ -1,0 +1,25 @@
+{
+  "id": "rwb-classify-static-vs-continuous-from-an-iteration-trace",
+  "title": "Classify Static vs Continuous from an Iteration Trace",
+  "track": "03 Runtime ML Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 1,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_scheduling"
+  ],
+  "fixtures": [
+    "active.npy",
+    "run_len.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-block-size-choice-minimizing-modeled-hbm",
+  "title": "Choose FlashAttention block sizes minimizing modeled HBM",
+  "track": "03 Systems ML",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "choose_block_size"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "<=",
+      "threshold": 1.05
+    }
+  ],
+  "info": []
+}

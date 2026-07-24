@@ -1,0 +1,24 @@
+{
+  "id": "rwq-mxfp4-e8m0-power-of-two-block-scale",
+  "title": "MXFP4 E8M0 power-of-two block scale",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M1quant",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "mxfp4_block_exponent"
+  ],
+  "fixtures": [
+    "mx_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "rws-wanda-vs-magnitude-reconstruction-error",
+  "title": "Wanda vs Magnitude Pruning: Reconstruction Error",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2sparse",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "wanda_vs_magnitude_error"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "wanda_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "magnitude_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "wanda_le_magnitude",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

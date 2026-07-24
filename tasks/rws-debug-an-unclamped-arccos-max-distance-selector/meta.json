@@ -1,0 +1,22 @@
+{
+  "id": "rws-debug-an-unclamped-arccos-max-distance-selector",
+  "title": "Debug an unclamped-arccos / max-distance selector",
+  "track": "03 Numerical ML",
+  "tier": "II",
+  "module": "M3numpy",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "select_min_angle_block"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

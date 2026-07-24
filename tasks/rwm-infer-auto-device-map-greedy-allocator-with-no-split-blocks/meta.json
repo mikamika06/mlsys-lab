@@ -1,0 +1,22 @@
+{
+  "id": "rwm-infer-auto-device-map-greedy-allocator-with-no-split-blocks",
+  "title": "Greedy device map allocator with no-split blocks",
+  "track": "06 Systems Python",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "infer_auto_device_map"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-pick-optimal-collective-by-message-size",
+  "title": "Pick optimal collective by message size",
+  "track": "04 Systems Python",
+  "tier": "I",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pick_collective"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

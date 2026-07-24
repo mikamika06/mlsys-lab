@@ -1,0 +1,22 @@
+{
+  "id": "num-derive-eps-for-fp32-fp16-bf16-by-bit-stepping-from-1-0",
+  "title": "Derive machine epsilon for FP32, FP16 and BF16 by bit stepping from 1.0",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "derive_eps"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

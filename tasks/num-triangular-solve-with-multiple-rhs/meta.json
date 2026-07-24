@@ -1,0 +1,22 @@
+{
+  "id": "num-triangular-solve-with-multiple-rhs",
+  "title": "Triangular solve with multiple right-hand sides",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "solve_lower_multi_rhs"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

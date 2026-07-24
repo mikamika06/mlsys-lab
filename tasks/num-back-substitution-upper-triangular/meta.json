@@ -1,0 +1,22 @@
+{
+  "id": "num-back-substitution-upper-triangular",
+  "title": "Back Substitution for Upper Triangular Systems",
+  "track": "01 NumPy",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "back_substitution"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

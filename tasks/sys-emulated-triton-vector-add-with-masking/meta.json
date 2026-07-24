@@ -1,0 +1,22 @@
+{
+  "id": "sys-emulated-triton-vector-add-with-masking",
+  "title": "Emulated Triton vector-add with masking",
+  "track": "03 Systems",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "emulated_triton_add"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.0
+    }
+  ],
+  "info": []
+}

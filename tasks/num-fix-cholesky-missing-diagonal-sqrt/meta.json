@@ -1,0 +1,27 @@
+{
+  "id": "num-fix-cholesky-missing-diagonal-sqrt",
+  "title": "Debug: Cholesky factorisation missing the diagonal square root",
+  "track": "02 Numerics",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "cholesky"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "oracle_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

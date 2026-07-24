@@ -1,0 +1,35 @@
+{
+  "id": "num-exact-rational-value-of-each-float",
+  "title": "Exact Rational Value of Each Float",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "float_fields",
+    "exact_ratio"
+  ],
+  "fixtures": [
+    "values.npy"
+  ],
+  "gates": [
+    {
+      "metric": "fields_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "ratio_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "max_rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

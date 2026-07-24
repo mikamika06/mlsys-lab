@@ -1,0 +1,22 @@
+{
+  "id": "rwm-best-fit-caching-allocator-with-split-free-list-reuse",
+  "title": "Best-fit Caching Allocator with Split + Free-list Reuse",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "CachingAllocator"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

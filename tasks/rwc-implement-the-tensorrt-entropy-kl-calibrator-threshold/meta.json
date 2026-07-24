@@ -1,0 +1,27 @@
+{
+  "id": "rwc-implement-the-tensorrt-entropy-kl-calibrator-threshold",
+  "title": "Implement TensorRT entropy KL calibrator threshold",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "entropy_calibration_threshold"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "kl_curve_rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

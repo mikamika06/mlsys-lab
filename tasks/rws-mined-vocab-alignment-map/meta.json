@@ -1,0 +1,22 @@
+{
+  "id": "rws-mined-vocab-alignment-map",
+  "title": "MinED Teacher-Student Vocabulary Alignment",
+  "track": "05 Real-World Model Compression",
+  "tier": "I",
+  "module": "M5rwm",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mined_vocab_align"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

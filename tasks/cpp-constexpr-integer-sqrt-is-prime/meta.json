@@ -1,0 +1,19 @@
+{
+  "id": "cpp-constexpr-integer-sqrt-is-prime",
+  "title": "Constexpr integer sqrt and primality table",
+  "track": "06 C++ Systems",
+  "tier": "I",
+  "module": "M3cpp",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "Mac",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

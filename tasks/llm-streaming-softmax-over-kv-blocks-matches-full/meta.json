@@ -1,0 +1,22 @@
+{
+  "id": "llm-streaming-softmax-over-kv-blocks-matches-full",
+  "title": "Streaming softmax over KV blocks matches full attention",
+  "track": "03 Deep Learning Systems",
+  "tier": "II",
+  "module": "M4attention",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "streaming_softmax_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

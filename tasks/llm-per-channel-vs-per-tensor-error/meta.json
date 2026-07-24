@@ -1,0 +1,22 @@
+{
+  "id": "llm-per-channel-vs-per-tensor-error",
+  "title": "Per-Channel vs Per-Tensor Quantization Error",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_quantization"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "channel_rel_err",
+      "op": "<=",
+      "threshold": 0.05
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "llm-kv-cache-append-decode-step-matches-full-recompute",
+  "title": "KV-cache append decode step matches full recompute",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "decode_steps"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

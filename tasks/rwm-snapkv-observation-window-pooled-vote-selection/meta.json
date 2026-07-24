@@ -1,0 +1,22 @@
+{
+  "id": "rwm-snapkv-observation-window-pooled-vote-selection",
+  "title": "SnapKV Observation-window Pooled-vote Selection",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "snapkv_select"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

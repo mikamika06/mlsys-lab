@@ -1,0 +1,22 @@
+{
+  "id": "rws-general-n-m-mask-4-8-1-4",
+  "title": "General N:M structured pruning mask",
+  "track": "03 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "nm_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

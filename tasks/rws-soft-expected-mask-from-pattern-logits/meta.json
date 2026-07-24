@@ -1,0 +1,22 @@
+{
+  "id": "rws-soft-expected-mask-from-pattern-logits",
+  "title": "Soft Expected Mask from Pattern Logits",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "soft_expected_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

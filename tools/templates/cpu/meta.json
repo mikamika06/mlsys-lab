@@ -1,0 +1,11 @@
+{
+  "id": "cpu-ex-row-major-traversal",
+  "title": "Cache-friendly matrix traversal order",
+  "track": "13 CPU-perf", "tier": "IV", "module": "M13", "difficulty": 2,
+  "genre": "implement", "platform": "cross-platform",
+  "provides": ["traverse"], "fixtures": [],
+  "gates": [
+    {"metric": "covers_all", "op": "==", "threshold": 1.0},
+    {"metric": "misses", "op": "<=", "threshold": 512}
+  ], "info": []
+}

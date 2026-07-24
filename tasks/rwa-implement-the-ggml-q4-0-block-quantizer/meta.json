@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-the-ggml-q4-0-block-quantizer",
+  "title": "Implement the ggml Q4_0 block quantizer",
+  "track": "04 Real World Algorithms",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "q4_0_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

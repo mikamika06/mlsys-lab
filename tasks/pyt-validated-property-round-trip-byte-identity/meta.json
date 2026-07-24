@@ -1,0 +1,22 @@
+{
+  "id": "pyt-validated-property-round-trip-byte-identity",
+  "title": "Validated property round-trip byte-identity",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "ValidatedArray"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

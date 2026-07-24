@@ -1,0 +1,27 @@
+{
+  "id": "rwc-full-alpha-grid-search-picks-the-best-scale",
+  "title": "AWQ alpha grid search picks the best scale",
+  "track": "04 Quantization",
+  "tier": "II",
+  "module": "M2awq",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "search_awq_alpha"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "loss_curve_rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

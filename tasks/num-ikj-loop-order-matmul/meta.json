@@ -1,0 +1,27 @@
+{
+  "id": "num-ikj-loop-order-matmul",
+  "title": "ikj loop-order matmul",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "matmul_ikj"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "op_count",
+      "op": ">=",
+      "threshold": 200
+    }
+  ],
+  "info": []
+}

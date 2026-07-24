@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-wrong-kv-head-interleave-repeat-vs-tile",
+  "title": "Fix KV head interleave mapping in GQA",
+  "track": "06 Systems ML",
+  "tier": "I",
+  "module": "M3attn",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "expand_kv_heads"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

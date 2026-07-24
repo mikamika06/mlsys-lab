@@ -1,0 +1,22 @@
+{
+  "id": "llm-quantized-int8-kv-cache-error-bound",
+  "title": "Quantized KV‑Cache Error Bound (int8)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_cache_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 0.03
+    }
+  ],
+  "info": []
+}

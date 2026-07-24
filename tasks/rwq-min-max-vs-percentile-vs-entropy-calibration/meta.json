@@ -1,0 +1,27 @@
+{
+  "id": "rwq-min-max-vs-percentile-vs-entropy-calibration",
+  "title": "min/max vs Percentile vs Entropy Calibration",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "calibrate_and_score"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "argmin_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

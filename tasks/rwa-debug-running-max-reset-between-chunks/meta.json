@@ -1,0 +1,24 @@
+{
+  "id": "rwa-debug-running-max-reset-between-chunks",
+  "title": "Carry running max across attention chunks",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M3attention",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "chunked_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": [
+    "Tests numerically stable online softmax state carried across chunks"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-label-smoothed-fused-ce",
+  "title": "Label-smoothed fused cross-entropy",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2n",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "label_smoothed_fused_ce"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

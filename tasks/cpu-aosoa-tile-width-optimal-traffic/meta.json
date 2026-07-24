@@ -1,0 +1,15 @@
+{
+ "id": "cpu-aosoa-tile-width-optimal-traffic",
+ "title": "AoSoA tile-width memory traffic",
+ "track": "13 CPU-perf",
+ "tier": "III",
+ "module": "M13",
+ "difficulty": 4,
+ "genre": "implement",
+ "platform": "cross-platform",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "cpu-perf: a deterministic direct-mapped cache model in main.cpp (never real hardware counters) counts misses on the byte-address trace your code reports through cacheTouch()."
+ ],
+ "native": "cpp"
+}

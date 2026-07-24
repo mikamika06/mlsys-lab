@@ -1,0 +1,22 @@
+{
+  "id": "sys-tiled-vs-materialized-divergence-vs-block-size",
+  "title": "Tiled vs Dense Attention Divergence across Block Sizes",
+  "track": "02 Systems",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "attention_divergence"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

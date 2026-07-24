@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-the-attention-sink-probability-mass-on-first-tokens",
+  "title": "Measure attention sink probability mass on first tokens",
+  "track": "04 ML Numerics",
+  "tier": "I",
+  "module": "M3np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "attention_sink_mass"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

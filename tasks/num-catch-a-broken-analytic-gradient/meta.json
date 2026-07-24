@@ -1,0 +1,22 @@
+{
+  "id": "num-catch-a-broken-analytic-gradient",
+  "title": "Catch a broken analytic gradient",
+  "track": "02 Numerical Computing",
+  "tier": "I",
+  "module": "M1num",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "fixed_gradient"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

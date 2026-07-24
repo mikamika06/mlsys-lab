@@ -1,0 +1,22 @@
+{
+  "id": "rwc-reference-sdpa-scaled-causal-mask",
+  "title": "Scaled Dot‑Product Attention with Causal Mask (Reference)",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "scaled_dot_product_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

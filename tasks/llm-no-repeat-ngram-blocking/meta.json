@@ -1,0 +1,22 @@
+{
+  "id": "llm-no-repeat-ngram-blocking",
+  "title": "No‑Repeat N‑gram Blocking for LLM Decoding",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "no_repeat_ngram_blocking"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

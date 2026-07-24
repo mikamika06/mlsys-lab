@@ -1,0 +1,22 @@
+{
+  "id": "rwc-q6-k-super-block-reconstruction",
+  "title": "Reconstruct a Q6_K super-block (ggml)",
+  "track": "03 Compression",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "q6_k_dequantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-rayleigh-quotient-iteration",
+  "title": "Rayleigh quotient iteration",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rayleigh_quotient_iteration"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

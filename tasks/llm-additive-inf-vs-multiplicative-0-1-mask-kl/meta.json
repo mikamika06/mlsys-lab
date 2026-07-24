@@ -1,0 +1,22 @@
+{
+  "id": "llm-additive-inf-vs-multiplicative-0-1-mask-kl",
+  "title": "Additive -inf vs Multiplicative 0/1 Mask (KL)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "masked_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

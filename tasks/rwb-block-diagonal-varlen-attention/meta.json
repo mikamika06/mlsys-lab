@@ -1,0 +1,27 @@
+{
+  "id": "rwb-block-diagonal-varlen-attention",
+  "title": "Block-diagonal varlen attention from cu_seqlens",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "varlen_block_diagonal_attention"
+  ],
+  "fixtures": [
+    "q.npy",
+    "k.npy",
+    "v.npy",
+    "cu_seqlens.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

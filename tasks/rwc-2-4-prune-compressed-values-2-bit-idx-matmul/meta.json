@@ -1,0 +1,27 @@
+{
+  "id": "rwc-2-4-prune-compressed-values-2-bit-idx-matmul",
+  "title": "2:4 prune, compressed (values + 2-bit idx), reconstruct matmul",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "prune24_compress_and_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mask_exact",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwc-fold-conv-linear-batchnorm-into-one-layer",
+  "title": "Fold Linear + BatchNorm into One Layer",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M4compile",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fold_bn_into_linear"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

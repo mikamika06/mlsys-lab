@@ -1,0 +1,22 @@
+{
+  "id": "num-scan-work-hillis-steele-vs-blelloch",
+  "title": "Prefix scan work: Hillis-Steele vs Blelloch",
+  "track": "03 Parallel Algorithms",
+  "tier": "II",
+  "module": "M2parallel",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "scan_work"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_access_count",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

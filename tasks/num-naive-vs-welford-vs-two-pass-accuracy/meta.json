@@ -1,0 +1,24 @@
+{
+  "id": "num-naive-vs-welford-vs-two-pass-accuracy",
+  "title": "Naive vs Welford vs two-pass variance accuracy",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "welford_variance"
+  ],
+  "fixtures": [
+    "x.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "pyt-fixed-vs-variable-size-classifier",
+  "title": "Fixed vs Variable-Size PyObject Classifier",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_objects"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

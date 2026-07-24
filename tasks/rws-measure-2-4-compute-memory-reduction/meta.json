@@ -1,0 +1,27 @@
+{
+  "id": "rws-measure-2-4-compute-memory-reduction",
+  "title": "Measure 2:4 sparse weight storage reduction",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2sparse",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "measure_24_reduction"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": ">=",
+      "threshold": 0.999999
+    },
+    {
+      "metric": "density",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "llm-gptq-column-update-with-error-compensation",
+  "title": "GPTQ Column Update with Error Compensation",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gptq_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

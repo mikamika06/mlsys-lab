@@ -1,0 +1,22 @@
+{
+  "id": "pyt-yield-from-delegation-order",
+  "title": "yield from delegation order",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2gen",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "collect_yield_from"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

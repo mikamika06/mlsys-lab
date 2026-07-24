@@ -1,0 +1,27 @@
+{
+  "id": "rwm-emit-the-async-prefetch-evict-resident-set-per-step",
+  "title": "Emit async prefetch/evict resident set per step",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "emit_resident_set_per_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "peak_resident",
+      "op": "<=",
+      "threshold": 2
+    }
+  ],
+  "info": []
+}

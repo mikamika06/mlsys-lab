@@ -1,0 +1,22 @@
+{
+  "id": "num-fix-nan-producing-naive-softmax",
+  "title": "Fix NaN‑producing naive softmax",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

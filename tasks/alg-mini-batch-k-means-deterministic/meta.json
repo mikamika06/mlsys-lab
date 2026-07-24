@@ -1,0 +1,22 @@
+{
+  "id": "alg-mini-batch-k-means-deterministic",
+  "title": "Mini‑Batch K‑Means (Deterministic)",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mini_batch_kmeans"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

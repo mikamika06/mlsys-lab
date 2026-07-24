@@ -1,0 +1,15 @@
+{
+ "id": "cpp-commit-or-rollback-transaction-basic-strong",
+ "title": "Commit-or-rollback Transaction (Basic to Strong)",
+ "track": "02 Deep C++",
+ "tier": "I",
+ "module": "M2",
+ "difficulty": 5,
+ "genre": "debug",
+ "platform": "cross-platform",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: a real thrown exception unwinds through a real function; the strong guarantee is checked by reading real struct fields afterwards, not a simulated memory image."
+ ],
+ "native": "cpp"
+}

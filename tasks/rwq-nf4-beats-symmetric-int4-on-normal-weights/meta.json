@@ -1,0 +1,27 @@
+{
+  "id": "rwq-nf4-beats-symmetric-int4-on-normal-weights",
+  "title": "NF4 Beats Symmetric INT4 on Normal Weights",
+  "track": "04 Real-World Quant",
+  "tier": "I",
+  "module": "M4rwq",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "nf4_vs_int4_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "ordering_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

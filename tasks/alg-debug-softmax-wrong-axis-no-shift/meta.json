@@ -1,0 +1,24 @@
+{
+  "id": "alg-debug-softmax-wrong-axis-no-shift",
+  "title": "Debug Softmax: Wrong Axis and No Shift",
+  "track": "alg",
+  "tier": 3,
+  "module": "numerical_stability",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "numpy",
+  "provides": [
+    "softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": {
+    "desc": "Debug a softmax function that fails due to a missing max-shift and wrong axis parameter."
+  }
+}

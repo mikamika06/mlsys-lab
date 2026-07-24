@@ -1,0 +1,44 @@
+{
+  "id": "num-cholesky-lower-factor-reconstruct-a-ll-t",
+  "title": "Cholesky Lower Factor: Reconstruct A = L Lᵀ",
+  "track": "02 Numerical Algorithms",
+  "tier": "II",
+  "module": "M3la",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cholesky_lower"
+  ],
+  "fixtures": [
+    "A.npy"
+  ],
+  "gates": [
+    {
+      "metric": "recon_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "factor_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "upper_violation",
+      "op": "<=",
+      "threshold": 1e-15
+    },
+    {
+      "metric": "min_diag",
+      "op": ">",
+      "threshold": 0.0
+    },
+    {
+      "metric": "builtin_used",
+      "op": "<=",
+      "threshold": 0.0
+    }
+  ],
+  "info": []
+}

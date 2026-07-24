@@ -1,0 +1,27 @@
+{
+  "id": "num-matrix-vector-from-scratch",
+  "title": "Matrix-vector product from scratch",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "matvec_from_scratch"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "op_count",
+      "op": ">=",
+      "threshold": 100
+    }
+  ],
+  "info": []
+}

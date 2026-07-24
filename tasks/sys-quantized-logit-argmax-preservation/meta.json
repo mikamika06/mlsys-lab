@@ -1,0 +1,27 @@
+{
+  "id": "sys-quantized-logit-argmax-preservation",
+  "title": "Quantized-Logit Argmax Preservation",
+  "track": "04 Systems ML",
+  "tier": "I",
+  "module": "M4quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_classifier_head"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmax_agreement",
+      "op": ">=",
+      "threshold": 0.98
+    },
+    {
+      "metric": "quant_valid",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

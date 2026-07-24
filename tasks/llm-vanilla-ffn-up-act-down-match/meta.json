@@ -1,0 +1,22 @@
+{
+  "id": "llm-vanilla-ffn-up-act-down-match",
+  "title": "Vanilla FFN (up, act, down) forward pass",
+  "track": "02 ML Internals",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "ffn_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-05
+    }
+  ],
+  "info": []
+}

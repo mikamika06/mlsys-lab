@@ -1,0 +1,22 @@
+{
+  "id": "sys-general-gqa-broadcast",
+  "title": "General GQA Broadcast",
+  "track": "03 Systems and Compilers",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gqa_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

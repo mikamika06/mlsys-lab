@@ -1,0 +1,22 @@
+{
+  "id": "llm-pack-two-int4-values-per-byte-byte-exact",
+  "title": "Pack two int4 values per byte (byte-exact)",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M2quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pack_int4"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-ring-all-reduce-bytes-moved-model",
+  "title": "Ring all-reduce: bytes-moved model",
+  "track": "03 Systems",
+  "tier": "II",
+  "module": "M3dist",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "ring_allreduce_bytes_moved"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

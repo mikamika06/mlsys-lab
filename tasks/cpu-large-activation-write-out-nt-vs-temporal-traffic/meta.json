@@ -1,0 +1,22 @@
+{
+  "id": "cpu-large-activation-write-out-nt-vs-temporal-traffic",
+  "title": "Large activation write-out: NT vs temporal traffic",
+  "track": "04 Systems Performance",
+  "tier": "III",
+  "module": "M3mem",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "simulate_activation_write"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_cache_misses",
+      "op": "<=",
+      "threshold": 1.05
+    }
+  ],
+  "info": []
+}

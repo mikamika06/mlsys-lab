@@ -1,0 +1,27 @@
+{
+  "id": "num-inverse-iteration-for-smallest-eigenpair",
+  "title": "Inverse Iteration for the Smallest Eigenpair",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": [
+    "inverse_iteration"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "vec_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

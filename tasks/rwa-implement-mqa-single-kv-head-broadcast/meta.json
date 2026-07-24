@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-mqa-single-kv-head-broadcast",
+  "title": "MQA Single KV Head Broadcast",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mqa_single_kv_broadcast"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "alg-uniform-vs-distance-weighted-vote-divergence",
+  "title": "Uniform vs Distance-Weighted Vote Divergence in kNN",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "knn_vote_divergence"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "uniform_agreement",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "weighted_agreement",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

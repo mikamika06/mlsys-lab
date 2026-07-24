@@ -1,0 +1,15 @@
+{
+ "id": "cpp-demangle-12-mangled-names",
+ "title": "Demangle 12 mangled names",
+ "track": "02 Deep C++",
+ "tier": "I",
+ "module": "M2",
+ "difficulty": 3,
+ "genre": "implement",
+ "platform": "mac",
+ "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+ "info": [
+  "Real C++: ref.cpp forwards to abi::__cxa_demangle -- the actual production Itanium demangler shipped in libc++abi -- so the expected output is never hand-typed."
+ ],
+ "native": "cpp"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "cpu-classify-latency-plateaus-to-cache-levels",
+  "title": "Classify latency plateaus to cache levels (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "latency samples come from a fixed, seeded LCG in main.cpp (no rand()/time()), never real hardware timing",
+    "level thresholds are the geometric midpoints between each pair of neighbouring true latencies"
+  ]
+}

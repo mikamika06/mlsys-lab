@@ -1,0 +1,22 @@
+{
+  "id": "llm-block-diagonal-mask-for-packed-sequences",
+  "title": "Block‑diagonal mask for packed sequences",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "packed_block_diagonal_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

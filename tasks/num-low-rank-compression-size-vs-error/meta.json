@@ -1,0 +1,28 @@
+{
+  "id": "num-low-rank-compression-size-vs-error",
+  "title": "Low-rank SVD compression size vs error",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compress_svd",
+    "reconstruct_svd"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": ">=",
+      "threshold": 3.0
+    },
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 0.000001
+    }
+  ],
+  "info": []
+}

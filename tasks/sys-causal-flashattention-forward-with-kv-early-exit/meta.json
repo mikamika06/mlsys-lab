@@ -1,0 +1,27 @@
+{
+  "id": "sys-causal-flashattention-forward-with-kv-early-exit",
+  "title": "Causal FlashAttention forward with KV early exit",
+  "track": "04 Systems Python",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "causal_flash_attention_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 0.00001
+    },
+    {
+      "metric": "skipped_kv_tiles",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

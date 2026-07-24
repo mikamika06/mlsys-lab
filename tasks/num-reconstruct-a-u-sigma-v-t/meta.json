@@ -1,0 +1,22 @@
+{
+  "id": "num-reconstruct-a-u-sigma-v-t",
+  "title": "Reconstruct A = U Sigma V^T",
+  "track": "01 Numerics",
+  "tier": "I",
+  "module": "M1np",
+  "difficulty": 4,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_from_svd"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

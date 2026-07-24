@@ -1,0 +1,27 @@
+{
+  "id": "rwm-fixed-budget-kv-memory-and-compression-ratio",
+  "title": "Fixed‑Budget Key–Value Memory and Compression Ratio",
+  "track": "02 NumPy",
+  "tier": "II",
+  "module": "M3np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fixed_budget_kv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio_err",
+      "op": "<=",
+      "threshold": 0.01
+    },
+    {
+      "metric": "exact_keys",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

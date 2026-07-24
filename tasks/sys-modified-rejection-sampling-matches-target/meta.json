@@ -1,0 +1,22 @@
+{
+  "id": "sys-modified-rejection-sampling-matches-target",
+  "title": "Modified Rejection Sampling Matches the Target Distribution",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rejection_sample_block"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-2
+    }
+  ],
+  "info": []
+}

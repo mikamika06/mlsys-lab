@@ -1,0 +1,22 @@
+{
+  "id": "rwm-max-concurrent-sequences-that-fit-in-the-block-pool",
+  "title": "Max concurrent sequences in block pool",
+  "track": "03 Algorithms",
+  "tier": "II",
+  "module": "M3gre",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "max_concurrent_sequences"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

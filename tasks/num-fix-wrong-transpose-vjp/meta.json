@@ -1,0 +1,22 @@
+{
+  "id": "num-fix-wrong-transpose-vjp",
+  "title": "Fix wrong-transpose VJP",
+  "track": "03 Numerical Python",
+  "tier": "I",
+  "module": "M3num",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "matmul_vjp"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

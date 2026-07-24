@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-fused-kernel-broadcasting-bug",
+  "title": "Fix fused kernel broadcasting bug",
+  "track": "04 Systems for ML",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_affine"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

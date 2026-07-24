@@ -1,0 +1,15 @@
+{
+ "id": "cpp-scalar-vs-simd-equivalence-classifier",
+ "title": "Scalar vs SIMD Floating-Point Bit-Equivalence",
+ "track": "02 Deep C++",
+ "tier": "I",
+ "module": "M2",
+ "difficulty": 4,
+ "genre": "debug",
+ "platform": "mac",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: bit-exactness is measured with a real memcmp on real float32 results from real arithmetic (real 4-lane reduction reassociation, real std::fma) -- not predicted from a lookup table."
+ ],
+ "native": "cpp"
+}

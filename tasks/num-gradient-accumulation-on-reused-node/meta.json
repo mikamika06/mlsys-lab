@@ -1,0 +1,22 @@
+{
+  "id": "num-gradient-accumulation-on-reused-node",
+  "title": "Reverse-Mode Autograd: Accumulate Gradients on a Reused Node",
+  "track": "01 Deep Learning",
+  "tier": "II",
+  "module": "M2autograd",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "tape_grad"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

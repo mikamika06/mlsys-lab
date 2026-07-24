@@ -1,0 +1,22 @@
+{
+  "id": "alg-derive-verify-convergence-rate-l2-l1-t",
+  "title": "Power Iteration Convergence Rate Prediction",
+  "track": "02 Algorithms",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "predict_error_curve"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.05
+    }
+  ],
+  "info": []
+}

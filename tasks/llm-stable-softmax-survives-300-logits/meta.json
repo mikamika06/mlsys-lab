@@ -1,0 +1,22 @@
+{
+  "id": "llm-stable-softmax-survives-300-logits",
+  "title": "Stable softmax survives extreme logits",
+  "track": "04 ML Numerics",
+  "tier": "I",
+  "module": "M1num",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-7
+    }
+  ],
+  "info": []
+}

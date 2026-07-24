@@ -1,0 +1,22 @@
+{
+  "id": "rwq-debug-scale-applied-in-the-wrong-direction",
+  "title": "Debug: AWQ migration scale applied in the wrong direction",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M2awq",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "apply_migration_scale"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

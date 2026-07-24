@@ -1,0 +1,16 @@
+{
+  "id": "llm-debug-missing-unscale-before-optimizer-step",
+  "title": "Debug: missing unscale before optimizer step",
+  "track": "12 LLM math",
+  "tier": "III",
+  "module": "M12",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": ["optimizer_step"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+  ],
+  "info": []
+}

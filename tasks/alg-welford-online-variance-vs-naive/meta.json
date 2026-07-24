@@ -1,0 +1,20 @@
+{
+  "id": "alg-welford-online-variance-vs-naive",
+  "title": "Welford Online Variance vs Naive",
+  "track": "alg",
+  "tier": 1,
+  "module": "numerical_stability",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "python",
+  "provides": [],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": {}
+}

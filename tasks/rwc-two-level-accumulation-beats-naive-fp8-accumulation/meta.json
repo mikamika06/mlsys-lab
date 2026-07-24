@@ -1,0 +1,22 @@
+{
+  "id": "rwc-two-level-accumulation-beats-naive-fp8-accumulation",
+  "title": "Two-Level Accumulation Beats Naive Low-Precision Accumulation",
+  "track": "04 Numerical ML",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "two_level_accumulate"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.00025
+    }
+  ],
+  "info": []
+}

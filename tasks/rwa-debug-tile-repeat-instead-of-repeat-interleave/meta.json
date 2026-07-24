@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-tile-repeat-instead-of-repeat-interleave",
+  "title": "Debug GQA KV head expansion: repeat_interleave vs tile",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "expand_kv_heads"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

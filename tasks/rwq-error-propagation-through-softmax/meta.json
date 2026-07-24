@@ -1,0 +1,22 @@
+{
+  "id": "rwq-error-propagation-through-softmax",
+  "title": "Error propagation through softmax",
+  "track": "03 Quantization & Efficiency",
+  "tier": "II",
+  "module": "M1quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_quant_error_propagation"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

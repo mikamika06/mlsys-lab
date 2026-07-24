@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-post-softmax-masking-ordering-bug",
+  "title": "Fix post‑softmax masking ordering bug",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "masked_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

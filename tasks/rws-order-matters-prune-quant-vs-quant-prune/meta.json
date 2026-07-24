@@ -1,0 +1,35 @@
+{
+  "id": "rws-order-matters-prune-quant-vs-quant-prune",
+  "title": "Order matters: prune-then-quant vs quant-then-prune",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_prune_quant_order"
+  ],
+  "fixtures": [
+    "opw_w.npy",
+    "opw_x.npy"
+  ],
+  "gates": [
+    {
+      "metric": "mse_prune_then_quant_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "mse_quant_then_prune_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "order_correct",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

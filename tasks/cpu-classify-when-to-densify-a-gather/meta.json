@@ -1,0 +1,15 @@
+{
+  "id": "cpu-classify-when-to-densify-a-gather",
+  "title": "Classify when to densify a gather (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "Real C++: a deterministic set-associative cache model owned by main.cpp; the learner simulates both a direct gather and a compact-then-reuse (densify) strategy against it and returns whichever measures fewer misses, compiled by clang++."
+  ]
+}

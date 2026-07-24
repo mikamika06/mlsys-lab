@@ -1,0 +1,22 @@
+{
+  "id": "alg-brute-force-knn-majority-vote",
+  "title": "Brute-Force kNN Majority Vote Classifier",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2alg",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "knn_majority_vote"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmax_agreement",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

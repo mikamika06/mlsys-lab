@@ -1,0 +1,20 @@
+{
+  "id": "rwq-reconstruct-from-tinygemm-codes",
+  "title": "Reconstruct from TinyGEMM uint4 codes",
+  "track": "04 Real-World Quant",
+  "tier": "I",
+  "module": "M4rwq",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": ["dequantize_uint4"],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

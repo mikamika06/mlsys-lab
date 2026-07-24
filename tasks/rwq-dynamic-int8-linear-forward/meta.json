@@ -1,0 +1,22 @@
+{
+  "id": "rwq-dynamic-int8-linear-forward",
+  "title": "Dynamic int8 linear forward (per-channel weight, per-tensor activation)",
+  "track": "03 Quantization",
+  "tier": "I",
+  "module": "M1qw",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "int8_linear_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-3
+    }
+  ],
+  "info": []
+}

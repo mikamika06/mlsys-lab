@@ -1,0 +1,22 @@
+{
+  "id": "rws-cosine-annealed-update-fraction",
+  "title": "Cosine-annealed update fraction",
+  "track": "02 Real-world systems",
+  "tier": "II",
+  "module": "M2rws",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cosine_annealed_update_fraction"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

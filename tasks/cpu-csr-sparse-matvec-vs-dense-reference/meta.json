@@ -1,0 +1,22 @@
+{
+  "id": "cpu-csr-sparse-matvec-vs-dense-reference",
+  "title": "CSR Sparse Matrix‑Vector Multiplication vs Dense Reference",
+  "track": "02 Algorithmic Efficiency",
+  "tier": "I",
+  "module": "M3np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "csr_matvec"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

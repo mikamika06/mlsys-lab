@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-rope-applied-inside-the-absorbed-latent-path",
+  "title": "Debug RoPE placement in absorbed latent path",
+  "track": "03 Applied ML Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "mla_kv_features"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

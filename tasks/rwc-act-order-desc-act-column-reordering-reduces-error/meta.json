@@ -1,0 +1,27 @@
+{
+  "id": "rwc-act-order-desc-act-column-reordering-reduces-error",
+  "title": "Activation-order column reordering for GPTQ quantization",
+  "track": "04 Numerical ML",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gptq_act_order"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_perm",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "cpu-knee-detection-in-a-working-set-sweep",
+  "title": "Knee detection in a working-set latency sweep (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

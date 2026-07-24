@@ -1,0 +1,22 @@
+{
+  "id": "sys-mha-gqa-head-pooling-conversion",
+  "title": "MHA -> GQA Head-Pooling Conversion",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4attn",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "mha_to_gqa_pool"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "channel_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

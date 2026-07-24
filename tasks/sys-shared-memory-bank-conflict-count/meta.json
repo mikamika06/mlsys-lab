@@ -1,0 +1,22 @@
+{
+  "id": "sys-shared-memory-bank-conflict-count",
+  "title": "Shared-memory bank conflict count",
+  "track": "03 Systems",
+  "tier": "I",
+  "module": "M2gpu",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "bank_conflict_degree"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

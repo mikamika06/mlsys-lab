@@ -1,0 +1,22 @@
+{
+  "id": "rws-combined-served-size",
+  "title": "Combined served size for 2:4 int4 weights",
+  "track": "04 Numerical Computing",
+  "tier": "I",
+  "module": "M4ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "combined_served_size"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

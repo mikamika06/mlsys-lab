@@ -1,0 +1,21 @@
+{
+ "id": "cpp-move-ctor-forgets-to-null-double-free-fix",
+ "title": "Fix a buggy move constructor that forgets to null the source pointer",
+ "track": "02 Deep C++",
+ "tier": "II",
+ "module": "M2",
+ "difficulty": 3,
+ "genre": "debug",
+ "platform": "mac",
+ "gates": [
+  {
+   "metric": "max_abs_err",
+   "op": "<=",
+   "threshold": 1e-09
+  }
+ ],
+ "info": [
+  "Real C++: compiled with clang++ -O2 -std=c++20 and diffed against ref.cpp."
+ ],
+ "native": "cpp"
+}

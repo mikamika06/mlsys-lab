@@ -1,0 +1,27 @@
+{
+  "id": "rwa-measure-per-row-online-softmax-statistics-m-l",
+  "title": "Online softmax statistics (m, l) per row",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "online_softmax_stats"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "shape_ok",
+      "op": "==",
+      "threshold": 1
+    }
+  ],
+  "info": []
+}

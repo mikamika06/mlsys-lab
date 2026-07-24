@@ -1,0 +1,22 @@
+{
+  "id": "num-fix-wrong-topo-order-breaking-grads",
+  "title": "Fix Wrong Topo Order Breaking Grads",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "Value"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

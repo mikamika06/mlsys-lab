@@ -1,0 +1,27 @@
+{
+  "id": "num-kahan-summation-beats-naive-fp32",
+  "title": "Kahan summation beats naive fp32",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compensated_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "improvement_ratio",
+      "op": ">=",
+      "threshold": 100.0
+    },
+    {
+      "metric": "loop_events",
+      "op": ">=",
+      "threshold": 3000.0
+    }
+  ],
+  "info": []
+}

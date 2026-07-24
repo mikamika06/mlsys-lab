@@ -1,0 +1,22 @@
+{
+  "id": "llm-fix-all-masked-row-nan-fully-padded-query",
+  "title": "Fix all-masked-row NaN (fully padded query)",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "masked_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

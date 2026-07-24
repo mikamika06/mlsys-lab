@@ -1,0 +1,27 @@
+{
+  "id": "num-streaming-lse-over-blocks",
+  "title": "Streaming LogSumExp over blocks",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "streaming_lse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "op_count",
+      "op": ">=",
+      "threshold": 1000
+    }
+  ],
+  "info": []
+}

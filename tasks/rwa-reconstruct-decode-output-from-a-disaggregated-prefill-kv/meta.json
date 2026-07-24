@@ -1,0 +1,23 @@
+{
+  "id": "rwa-reconstruct-decode-output-from-a-disaggregated-prefill-kv",
+  "title": "Reconstruct decode output from a disaggregated prefill KV",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "serialize_kv",
+    "decode_from_kv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

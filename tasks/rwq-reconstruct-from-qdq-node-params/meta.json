@@ -1,0 +1,26 @@
+{
+  "id": "rwq-reconstruct-from-qdq-node-params",
+  "title": "Reconstruct from QDQ node params",
+  "track": "03 Quantization",
+  "tier": "I",
+  "module": "M1quant",
+  "difficulty": 2,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "dequantize_linear"
+  ],
+  "fixtures": [
+    "qdq_q.npy",
+    "qdq_scale.npy",
+    "qdq_zp.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

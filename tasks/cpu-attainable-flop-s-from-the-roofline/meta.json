@@ -1,0 +1,13 @@
+{
+  "id": "cpu-attainable-flop-s-from-the-roofline",
+  "title": "Attainable FLOP/s from the roofline model (real C++)",
+  "track": "13 CPU-perf",
+  "tier": "I",
+  "module": "M13",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": []
+}

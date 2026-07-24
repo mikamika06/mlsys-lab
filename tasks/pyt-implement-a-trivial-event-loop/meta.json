@@ -1,0 +1,25 @@
+{
+  "id": "pyt-implement-a-trivial-event-loop",
+  "title": "Implement a trivial event loop",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M3async",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "Future",
+    "run_event_loop"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "Implements a small generator-based coroutine scheduler without asyncio."
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwm-fix-tiled-attention-that-skips-accumulator-rescaling",
+  "title": "Fix tiled attention that skips accumulator rescaling",
+  "track": "04 Numerical Computing",
+  "tier": "II",
+  "module": "M4attn",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "tiled_attention_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

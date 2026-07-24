@@ -1,0 +1,2 @@
+{"id":"gpu-fuse-elementwise-chain-add-mul-relu","title":"Fuse elementwise add -> mul -> ReLU (CUDA)","native":"cuda","difficulty":2,
+ "gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-9},{"metric":"transactions","op":"<=","threshold":40}]}

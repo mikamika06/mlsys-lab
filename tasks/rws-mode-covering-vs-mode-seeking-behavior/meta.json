@@ -1,0 +1,32 @@
+{
+  "id": "rws-mode-covering-vs-mode-seeking-behavior",
+  "title": "Mode-Covering vs Mode-Seeking: Forward-KL vs Reverse-KL vs JSD",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "kd_divergence_family"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "argmin_exact",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "pattern_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

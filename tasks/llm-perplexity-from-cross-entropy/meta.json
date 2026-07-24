@@ -1,0 +1,22 @@
+{
+  "id": "llm-perplexity-from-cross-entropy",
+  "title": "Perplexity from Cross‑Entropy",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "perplexity_from_cross_entropy"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

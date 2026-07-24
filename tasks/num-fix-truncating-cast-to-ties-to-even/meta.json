@@ -1,0 +1,22 @@
+{
+  "id": "num-fix-truncating-cast-to-ties-to-even",
+  "title": "Fix truncating float cast to ties-to-even",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provid": [
+    "cast_f32_rne"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

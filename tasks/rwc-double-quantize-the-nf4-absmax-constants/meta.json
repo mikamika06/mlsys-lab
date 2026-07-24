@@ -1,0 +1,22 @@
+{
+  "id": "rwc-double-quantize-the-nf4-absmax-constants",
+  "title": "Double-quantize the NF4 absmax constants",
+  "track": "03 Compression",
+  "tier": "II",
+  "module": "M3q",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "nf4_double_quant_dequant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

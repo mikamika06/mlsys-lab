@@ -1,0 +1,22 @@
+{
+  "id": "alg-debug-u-v-transpose-or-component-ordering",
+  "title": "Debug PCA SVD component ordering",
+  "track": "03 Numerical Algorithms",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "pca_projection"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "channel_rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

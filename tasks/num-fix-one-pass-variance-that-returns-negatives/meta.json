@@ -1,0 +1,22 @@
+{
+  "id": "num-fix-one-pass-variance-that-returns-negatives",
+  "title": "Fix One-Pass Variance That Returns Negatives",
+  "track": "num",
+  "tier": 1,
+  "module": "stable-elementary",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "python",
+  "provides": [
+    "stable_variance"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

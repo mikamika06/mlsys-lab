@@ -1,0 +1,15 @@
+{
+ "id": "cpu-buddy-allocator-split-merge-correctness",
+ "title": "Buddy allocator split/merge correctness",
+ "track": "02 Deep C++",
+ "tier": "II",
+ "module": "M2",
+ "difficulty": 4,
+ "genre": "debug",
+ "platform": "cross-platform",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: a genuine power-of-two buddy allocator over a fixed byte arena, compiled by clang++ -- correctness (and fragmentation from a missing merge) is observed from real returned offsets, not a simulated free list."
+ ],
+ "native": "cpp"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "llm-reconstruct-rotation-angle-from-rotated-vs-original",
+  "title": "Reconstruct Rotation Angle from Rotated vs Original Vectors",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "recover_angles"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

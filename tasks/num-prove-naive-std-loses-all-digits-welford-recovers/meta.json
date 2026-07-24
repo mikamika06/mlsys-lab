@@ -1,0 +1,32 @@
+{
+  "id": "num-prove-naive-std-loses-all-digits-welford-recovers",
+  "title": "Prove naive variance loses all its digits; Welford recovers",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 4,
+  "genre": "prove",
+  "platform": "cross-platform",
+  "provides": [
+    "pathological_variance_input"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "valid_input",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "naive_breaks",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "stable_holds",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

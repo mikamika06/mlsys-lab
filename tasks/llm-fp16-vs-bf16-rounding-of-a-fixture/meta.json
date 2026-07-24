@@ -1,0 +1,27 @@
+{
+  "id": "llm-fp16-vs-bf16-rounding-of-a-fixture",
+  "title": "FP16 vs BF16 rounding of a fixture",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_rounding"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_fp16_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "max_bf16_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

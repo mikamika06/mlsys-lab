@@ -1,0 +1,22 @@
+{
+  "id": "sys-search-tile-sizes-minimizing-cache-misses",
+  "title": "Search tile sizes minimizing modeled cache misses",
+  "track": "04 Systems Optimization",
+  "tier": "II",
+  "module": "M3sched",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "choose_tile_sizes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "<=",
+      "threshold": 1.05
+    }
+  ],
+  "info": []
+}

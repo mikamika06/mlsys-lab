@@ -1,0 +1,27 @@
+{
+  "id": "rwm-build-the-flatparameter-flatten-pad-chunk-into-n-shards",
+  "title": "Build the FlatParameter: Flatten, Pad, Chunk into N Shards",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flatten_pad_shard"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ok",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "byte_exact_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

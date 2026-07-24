@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-an-sgmv-segment-off-by-one",
+  "title": "Fix SGMV segment adapter offsets",
+  "track": "03 Applied ML",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "sgmv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

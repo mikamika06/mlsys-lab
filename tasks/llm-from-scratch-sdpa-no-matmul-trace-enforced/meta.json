@@ -1,0 +1,32 @@
+{
+  "id": "llm-from-scratch-sdpa-no-matmul-trace-enforced",
+  "title": "SDPA from scratch — no matmul, trace-enforced loops",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sdpa"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-05
+    },
+    {
+      "metric": "op_ratio",
+      "op": ">=",
+      "threshold": 0.5
+    },
+    {
+      "metric": "op_ratio",
+      "op": "<=",
+      "threshold": 2.0
+    }
+  ],
+  "info": []
+}

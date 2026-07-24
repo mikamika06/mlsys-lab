@@ -1,0 +1,22 @@
+{
+  "id": "rwb-classify-slot-free-busy-at-each-step",
+  "title": "Classify slot free/busy at each step from sparse events",
+  "track": "03 ML Infra",
+  "tier": "II",
+  "module": "M1sched",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_slots"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

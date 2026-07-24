@@ -1,0 +1,22 @@
+{
+  "id": "rws-compressed-sparse-storage-size-vs-dense",
+  "title": "Compressed-sparse storage size vs dense",
+  "track": "RWS",
+  "tier": "II",
+  "module": "sparse",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compressed_sparse_footprint"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

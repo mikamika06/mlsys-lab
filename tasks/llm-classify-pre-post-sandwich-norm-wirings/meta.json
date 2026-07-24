@@ -1,0 +1,22 @@
+{
+  "id": "llm-classify-pre-post-sandwich-norm-wirings",
+  "title": "Classify Pre/Post/Sandwich Norm Wirings",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1dl",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_norm_wiring"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

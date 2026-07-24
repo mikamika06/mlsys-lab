@@ -1,0 +1,22 @@
+{
+  "id": "rwq-q8-0-block-quantization-32-elem-int8",
+  "title": "Q8_0 Block Quantization (32‑element, int8)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "q8_0_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.02
+    }
+  ],
+  "info": []
+}

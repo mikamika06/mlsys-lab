@@ -1,0 +1,23 @@
+{
+  "id": "sys-all-reduce-reduce-scatter-all-gather",
+  "title": "All-reduce = reduce-scatter + all-gather",
+  "track": "06 Systems",
+  "tier": "II",
+  "module": "Msys",
+  "difficulty": 3,
+  "genre": "prove",
+  "platform": "cross-platform",
+  "provides": [
+    "reduce_scatter",
+    "all_gather"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

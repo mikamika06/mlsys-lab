@@ -1,0 +1,27 @@
+{
+  "id": "sys-smoothquant-scale-migration-equivalence",
+  "title": "SmoothQuant scale migration equivalence",
+  "track": "04 Inference Optimization",
+  "tier": "II",
+  "module": "M4quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "smoothquant_migrate"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "quant_error_ratio",
+      "op": "<",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

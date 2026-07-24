@@ -1,0 +1,22 @@
+{
+  "id": "rwa-compare-sink-window-vs-pure-sliding-window-stability",
+  "title": "Compare sink+window vs pure sliding-window attention stability",
+  "track": "04 Applied NumPy",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_sink_window"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

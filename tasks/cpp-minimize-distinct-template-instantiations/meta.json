@@ -1,0 +1,15 @@
+{
+ "id": "cpp-minimize-distinct-template-instantiations",
+ "title": "Minimize distinct template instantiations",
+ "track": "03 C++ Systems",
+ "tier": "II",
+ "module": "M2templates",
+ "difficulty": 5,
+ "genre": "debug",
+ "platform": "mac",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: the executable counts its OWN real template-instantiation symbols via `nm` -- not a simulated instantiation-set model."
+ ],
+ "native": "cpp"
+}

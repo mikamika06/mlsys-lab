@@ -1,0 +1,9 @@
+{
+  "id": "cpu-pool-allocator-vs-malloc-per-object-footprint",
+  "title": "Pool allocator vs malloc-per-object footprint",
+  "track": "01 CPU Perf", "tier": "I", "module": "M1", "difficulty": 2,
+  "genre": "compare", "platform": "cross-platform", "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ], "info": []
+}

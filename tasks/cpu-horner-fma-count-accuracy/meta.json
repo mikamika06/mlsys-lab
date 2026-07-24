@@ -1,0 +1,13 @@
+{
+  "id": "cpu-horner-fma-count-accuracy",
+  "title": "Horner's method with FMA: count and value",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

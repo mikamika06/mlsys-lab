@@ -1,0 +1,22 @@
+{
+  "id": "num-solution-sensitivity-to-b-perturbation",
+  "title": "Solution sensitivity to b perturbation",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M3num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "solution_sensitivity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.05
+    }
+  ],
+  "info": []
+}

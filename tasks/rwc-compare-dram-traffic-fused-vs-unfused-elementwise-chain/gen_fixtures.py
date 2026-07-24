@@ -1,0 +1,3 @@
+```python
+# No fixtures needed
+```

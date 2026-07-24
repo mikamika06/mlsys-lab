@@ -1,0 +1,22 @@
+{
+  "id": "sys-capacity-factor-token-dropping",
+  "title": "MoE capacity-factor token dropping",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M2syst",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "token_drop_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

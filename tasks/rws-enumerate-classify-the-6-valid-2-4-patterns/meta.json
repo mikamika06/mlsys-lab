@@ -1,0 +1,22 @@
+{
+  "id": "rws-enumerate-classify-the-6-valid-2-4-patterns",
+  "title": "Enumerate & classify the 6 valid 2‑out‑of‑4 patterns",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_patterns"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

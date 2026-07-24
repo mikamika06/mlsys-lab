@@ -1,0 +1,22 @@
+{
+  "id": "num-tree-pairwise-reduction-structure",
+  "title": "Tree pairwise reduction structure",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "tree_reduce"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

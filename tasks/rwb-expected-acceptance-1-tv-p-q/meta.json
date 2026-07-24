@@ -1,0 +1,25 @@
+{
+  "id": "rwb-expected-acceptance-1-tv-p-q",
+  "title": "Expected Acceptance = 1 - TV(p, q)",
+  "track": "03 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "expected_acceptance"
+  ],
+  "fixtures": [
+    "p.npy",
+    "q.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

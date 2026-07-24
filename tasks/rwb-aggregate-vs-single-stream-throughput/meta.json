@@ -1,0 +1,22 @@
+{
+  "id": "rwb-aggregate-vs-single-stream-throughput",
+  "title": "Aggregate vs Single‑Stream Throughput Analysis",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "throughput"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

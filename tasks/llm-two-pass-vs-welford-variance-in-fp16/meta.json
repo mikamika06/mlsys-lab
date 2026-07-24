@@ -1,0 +1,33 @@
+{
+  "id": "llm-two-pass-vs-welford-variance-in-fp16",
+  "title": "Two-pass vs Welford variance in fp16",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "layernorm_fp16_welford",
+    "layernorm_fp16_two_pass"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "welford_match_err",
+      "op": "<=",
+      "threshold": 1e-3
+    },
+    {
+      "metric": "two_pass_match_err",
+      "op": "<=",
+      "threshold": 1e-3
+    },
+    {
+      "metric": "err_ratio",
+      "op": "<=",
+      "threshold": 0.5
+    }
+  ],
+  "info": []
+}

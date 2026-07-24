@@ -1,0 +1,22 @@
+{
+  "id": "sys-recompute-s-from-stored-logsumexp",
+  "title": "Recompute S from stored logsumexp",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "recompute_probs_from_lse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

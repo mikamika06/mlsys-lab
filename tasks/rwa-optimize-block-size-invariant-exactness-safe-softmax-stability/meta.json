@@ -1,0 +1,28 @@
+{
+  "id": "rwa-optimize-block-size-invariant-exactness-safe-softmax-stability",
+  "title": "Block-Size-Invariant Exactness and Safe-Softmax Stability",
+  "track": "03 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "tiled_attention",
+    "softmax_stability_probe"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-4
+    },
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

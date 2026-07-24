@@ -1,0 +1,34 @@
+{
+  "id": "rwq-qint4-per-axis-vs-per-group-scales",
+  "title": "qint4 per-axis vs per-group scales",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M1quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "qint4_granularity_mse"
+  ],
+  "fixtures": [
+    "qnt_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "mse_per_axis_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "mse_per_group_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "finer_grain_wins",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

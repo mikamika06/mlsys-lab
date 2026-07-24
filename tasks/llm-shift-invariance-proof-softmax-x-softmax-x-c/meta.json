@@ -1,0 +1,27 @@
+{
+  "id": "llm-shift-invariance-proof-softmax-x-softmax-x-c",
+  "title": "Softmax shift-invariance proof",
+  "track": "04 Numerics",
+  "tier": "I",
+  "module": "M1softmax",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "accuracy",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "shift_invariance",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

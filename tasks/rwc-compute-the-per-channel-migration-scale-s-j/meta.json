@@ -1,0 +1,22 @@
+{
+  "id": "rwc-compute-the-per-channel-migration-scale-s-j",
+  "title": "Compute per‑channel migration scale s_j",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M2nn",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compute_migration_scales"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

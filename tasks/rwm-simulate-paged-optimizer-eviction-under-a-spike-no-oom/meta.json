@@ -1,0 +1,27 @@
+{
+  "id": "rwm-simulate-paged-optimizer-eviction-under-a-spike-no-oom",
+  "title": "Simulate Paged-Optimizer Eviction Under a Memory Spike",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "simulate_paged_eviction"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "fault_count_match",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "evicted_pages_match",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rws-uld-wasserstein-1-loss-on-sorted-logits",
+  "title": "Wasserstein‑1 loss on sorted logits",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "wasserstein_1_loss_on_sorted_logits"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

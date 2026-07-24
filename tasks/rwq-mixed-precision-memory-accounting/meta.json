@@ -1,0 +1,22 @@
+{
+  "id": "rwq-mixed-precision-memory-accounting",
+  "title": "Mixed‑Precision Memory Accounting",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mixed_precision_memory_accounting"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

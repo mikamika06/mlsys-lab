@@ -1,0 +1,22 @@
+{
+  "id": "llm-grid-search-optimal-awq-scale-min-output-mse",
+  "title": "Grid-search optimal AWQ scale for minimum output MSE",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "awq_grid_scale"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwm-fix-a-kivi-cache-quantizing-k-per-token-and-dropping-the-residual",
+  "title": "Fix KIVI cache quantization axes and residual window",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_dequant_kv_cache"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "residual_exact",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

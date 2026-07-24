@@ -1,0 +1,22 @@
+{
+  "id": "sys-join-on-finish-continuous-batching",
+  "title": "Join-on-finish continuous batching scheduler",
+  "track": "06 Systems",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "schedule_decode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

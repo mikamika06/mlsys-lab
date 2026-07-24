@@ -1,0 +1,22 @@
+{
+  "id": "num-stable-softmax-on-logits-up-to-1e4",
+  "title": "Numerically Stable Softmax for Large Logits",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

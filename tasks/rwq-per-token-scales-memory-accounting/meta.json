@@ -1,0 +1,27 @@
+{
+  "id": "rwq-per-token-scales-memory-accounting",
+  "title": "Per‑token scales and KV memory accounting",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compute_scales_and_size"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err_scales",
+      "op": "<=",
+      "threshold": 1e-8
+    },
+    {
+      "metric": "size_ratio_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

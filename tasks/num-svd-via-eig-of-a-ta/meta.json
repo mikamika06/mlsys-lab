@@ -1,0 +1,22 @@
+{
+  "id": "num-svd-via-eig-of-a-ta",
+  "title": "SVD via eig of A^T A",
+  "track": "01 Numerics",
+  "tier": "I",
+  "module": "M1np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "svd_singular_values"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

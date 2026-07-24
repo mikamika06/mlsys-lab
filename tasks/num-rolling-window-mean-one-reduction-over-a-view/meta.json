@@ -1,0 +1,22 @@
+{
+  "id": "num-rolling-window-mean-one-reduction-over-a-view",
+  "title": "Rolling-window mean with a strided view reduction",
+  "track": "02 NumPy",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rolling_window_mean"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

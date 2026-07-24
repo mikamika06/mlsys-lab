@@ -1,0 +1,22 @@
+{
+  "id": "rwb-longest-match-length-of-a-query-against-the-tree",
+  "title": "Longest match length of a query against the tree",
+  "track": "RWB",
+  "tier": "II",
+  "module": "M1trie",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "longest_match"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

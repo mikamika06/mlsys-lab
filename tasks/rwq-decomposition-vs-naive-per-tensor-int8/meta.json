@@ -1,0 +1,27 @@
+{
+  "id": "rwq-decomposition-vs-naive-per-tensor-int8",
+  "title": "LLM.int8() decomposition vs naive per-tensor int8 quantization",
+  "track": "04 Quantization & Low-Precision",
+  "tier": "II",
+  "module": "M4q",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_quantization"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse_within_tol",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "decomp_wins",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

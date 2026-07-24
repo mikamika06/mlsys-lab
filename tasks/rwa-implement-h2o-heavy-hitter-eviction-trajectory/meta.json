@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-h2o-heavy-hitter-eviction-trajectory",
+  "title": "H2O heavy-hitter eviction trajectory",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "h2o_eviction_trajectory"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

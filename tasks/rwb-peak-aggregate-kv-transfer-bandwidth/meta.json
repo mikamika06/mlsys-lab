@@ -1,0 +1,22 @@
+{
+  "id": "rwb-peak-aggregate-kv-transfer-bandwidth",
+  "title": "Peak aggregate KV transfer bandwidth",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "peak_kv_transfer_bandwidth"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

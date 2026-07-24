@@ -1,0 +1,22 @@
+{
+  "id": "rws-map-a-learned-mask-to-a-target-architecture",
+  "title": "Map learned gates to target architecture",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "map_mask_to_arch"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

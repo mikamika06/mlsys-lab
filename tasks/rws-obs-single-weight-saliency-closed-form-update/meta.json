@@ -1,0 +1,32 @@
+{
+  "id": "rws-obs-single-weight-saliency-closed-form-update",
+  "title": "OBS Single-Weight Saliency & Closed-Form Update",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2sparse",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "obs_prune_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "deltaw_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-8
+    },
+    {
+      "metric": "deltaL_rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

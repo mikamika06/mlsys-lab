@@ -1,0 +1,22 @@
+{
+  "id": "sys-model-zero-3-comm-vs-dp",
+  "title": "Model ZeRO-3 communication vs data parallel",
+  "track": "06 Systems and ML Infrastructure",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_zero3_dp_comm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

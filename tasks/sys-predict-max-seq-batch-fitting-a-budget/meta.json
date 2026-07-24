@@ -1,0 +1,22 @@
+{
+  "id": "sys-predict-max-seq-batch-fitting-a-budget",
+  "title": "Predict max KV-cache batch and sequence under a memory budget",
+  "track": "04 Systems for ML",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "predict_max_seq_batch"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwm-per-channel-k-beats-per-token-k-on-outlier-channels",
+  "title": "Per-channel-K beats per-token-K on outlier channels",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_k_quant_granularity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

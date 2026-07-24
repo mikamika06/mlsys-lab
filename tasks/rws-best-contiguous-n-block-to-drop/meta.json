@@ -1,0 +1,27 @@
+{
+  "id": "rws-best-contiguous-n-block-to-drop",
+  "title": "Best contiguous n-block to drop",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M3np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "best_contiguous_n_block_to_drop"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "distance_error",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "cpu-naive-vs-1-level-vs-2-level-miss-triple",
+  "title": "Naive vs 1-level vs 2-level tiled matmul: miss triple (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

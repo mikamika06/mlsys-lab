@@ -1,0 +1,27 @@
+{
+  "id": "rwq-build-a-normalized-sylvester-hadamard-matrix",
+  "title": "Build a normalized Sylvester-Hadamard matrix",
+  "track": "03 Numerical Python",
+  "tier": "I",
+  "module": "M1np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "normalized_hadamard"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "orthogonality_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

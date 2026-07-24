@@ -1,0 +1,27 @@
+{
+  "id": "rwm-torchao-4-bit-adamw-state-one-step",
+  "title": "torchao 4-bit AdamW state + one step",
+  "track": "05 Real-World Model Compression",
+  "tier": "II",
+  "module": "M5rwm",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "adamw_4bit_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "param_rel_err",
+      "op": "<=",
+      "threshold": 0.02
+    },
+    {
+      "metric": "state_rel_err",
+      "op": "<=",
+      "threshold": 0.02
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-accumulator-not-rescaled-when-running-max-grows",
+  "title": "Debug: O-accumulator not rescaled when the running max grows",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "tiled_online_softmax_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

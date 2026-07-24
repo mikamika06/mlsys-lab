@@ -1,0 +1,27 @@
+{
+  "id": "num-error-growth-naive-vs-kahan-vs-pairwise",
+  "title": "Summation error growth: naive vs Kahan vs pairwise",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "summation_error_growth"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "slope_behavior",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "final_error_quality",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

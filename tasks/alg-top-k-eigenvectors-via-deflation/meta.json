@@ -1,0 +1,32 @@
+{
+  "id": "alg-top-k-eigenvectors-via-deflation",
+  "title": "Top‑k eigenvectors via deflation",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "topk_deflation"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err_eig",
+      "op": "<=",
+      "threshold": 1e-4
+    },
+    {
+      "metric": "vec_align_err",
+      "op": "<=",
+      "threshold": 1e-4
+    },
+    {
+      "metric": "orthogonality_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

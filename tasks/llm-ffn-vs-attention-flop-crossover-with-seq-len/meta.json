@@ -1,0 +1,27 @@
+{
+  "id": "llm-ffn-vs-attention-flop-crossover-with-seq-len",
+  "title": "FLOP Crossover between Feed‑Forward Network and Self‑Attention",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "crossover_seq_len"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "is_int",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

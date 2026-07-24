@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-a-missing-1-sqrt-d-scale",
+  "title": "Debug missing 1/sqrt(d) attention scale",
+  "track": "02 Deep Learning",
+  "tier": "I",
+  "module": "M2attn",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "scaled_dot_product_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

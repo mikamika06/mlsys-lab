@@ -1,0 +1,27 @@
+{
+  "id": "rwm-fp8-e4m3-layerwise-casting-store-bf16-compute",
+  "title": "fp8 (E4M3) Layerwise-Casting Storage + bf16 Compute",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cast_and_matmul_fp8e4m3"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "size_ratio",
+      "op": ">=",
+      "threshold": 3.99
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwm-cpu-offload-vs-disk-offload-byte-traffic-per-forward",
+  "title": "Offload byte traffic: CPU vs disk",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "offload_byte_traffic"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

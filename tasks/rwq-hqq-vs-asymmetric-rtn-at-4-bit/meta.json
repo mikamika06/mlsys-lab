@@ -1,0 +1,32 @@
+{
+  "id": "rwq-hqq-vs-asymmetric-rtn-at-4-bit",
+  "title": "HQQ versus asymmetric RTN at 4-bit",
+  "track": "03 Numerical Python",
+  "tier": "I",
+  "module": "M4quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_4bit_quantizers"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "hqq_mse_error",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "rtn_mse_error",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "hqq_not_worse",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

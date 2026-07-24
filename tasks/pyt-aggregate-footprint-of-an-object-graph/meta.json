@@ -1,0 +1,22 @@
+{
+  "id": "pyt-aggregate-footprint-of-an-object-graph",
+  "title": "Aggregate footprint of an object graph",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M3py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "aggregate_footprint"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": ">=",
+      "threshold": 0.999
+    }
+  ],
+  "info": []
+}

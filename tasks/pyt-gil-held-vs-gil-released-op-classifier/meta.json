@@ -1,0 +1,24 @@
+{
+  "id": "pyt-gil-held-vs-gil-released-op-classifier",
+  "title": "GIL-held vs GIL-released operation classifier",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_gil_release"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "Uses a runtime concurrency probe as the oracle because the GIL release state is a behavior of the running interpreter."
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "cpu-n-way-set-associative-lru-simulator",
+  "title": "N-way set-associative LRU simulator (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "every trace and cache geometry is hand-built by the fixed driver (no rand()/time()), never real hardware counters",
+    "a hit and a miss both update LRU recency for their line -- only a miss can trigger an eviction"
+  ]
+}

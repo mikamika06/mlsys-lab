@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-bits-per-weight-and-kv-size-for-q8-0-q4-0",
+  "title": "Measure bits per weight and KV size for Q8_0 / Q4_0",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "measure_qkv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

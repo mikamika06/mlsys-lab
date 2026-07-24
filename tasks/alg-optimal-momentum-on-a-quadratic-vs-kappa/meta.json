@@ -1,0 +1,22 @@
+{
+  "id": "alg-optimal-momentum-on-a-quadratic-vs-kappa",
+  "title": "Optimal Momentum for a Quadratic Function in Terms of Condition Number",
+  "track": "02 Numerical Optimization",
+  "tier": "I",
+  "module": "M2opt",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "optimal_momentum_beta"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

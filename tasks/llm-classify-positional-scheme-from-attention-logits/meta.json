@@ -1,0 +1,22 @@
+{
+  "id": "llm-classify-positional-scheme-from-attention-logits",
+  "title": "Classify positional scheme from attention logits",
+  "track": "02 Deep Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_positional_scheme"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

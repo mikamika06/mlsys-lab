@@ -1,0 +1,24 @@
+{
+  "id": "num-fix-bad-pivot-selection",
+  "title": "Fix Bad Pivot Selection in LU Decomposition",
+  "track": "02 Numerical Computing",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "lu_partial_pivot"
+  ],
+  "fixtures": [
+    "A.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "sys-static-batch-step-count-baseline",
+  "title": "Static Batch Step Count Baseline",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "static_batch_steps"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwc-per-tensor-fp8-e4m3-kv-quant-attention",
+  "title": "Per‑Tensor FP8 e4m3 KV Quantized Attention",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantized_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.02
+    }
+  ],
+  "info": []
+}

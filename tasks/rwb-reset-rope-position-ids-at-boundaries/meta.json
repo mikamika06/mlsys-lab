@@ -1,0 +1,22 @@
+{
+  "id": "rwb-reset-rope-position-ids-at-boundaries",
+  "title": "Reset RoPE position ids at packed sequence boundaries",
+  "track": "04 Deep Learning Systems",
+  "tier": "I",
+  "module": "M4ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "packed_rope_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

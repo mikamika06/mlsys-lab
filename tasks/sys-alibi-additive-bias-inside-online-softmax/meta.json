@@ -1,0 +1,22 @@
+{
+  "id": "sys-alibi-additive-bias-inside-online-softmax",
+  "title": "ALiBi additive bias inside online softmax",
+  "track": "02 Systems",
+  "tier": "II",
+  "module": "M2attn",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "alibi_online_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

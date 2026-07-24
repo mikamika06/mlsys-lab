@@ -1,0 +1,22 @@
+{
+  "id": "pyt-reimplement-importlib-reload-semantics",
+  "title": "Reimplement importlib.reload semantics",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reload_module_semantics"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

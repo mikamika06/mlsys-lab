@@ -1,0 +1,26 @@
+{
+  "id": "gpu-causal-masked-flash-step-predicated",
+  "title": "Causal-masked online-softmax attention step, predicated",
+  "track": "GPU Programming",
+  "tier": "II",
+  "module": "Mgpu",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-09
+    },
+    {
+      "metric": "divergences",
+      "op": "<=",
+      "threshold": 0.0
+    }
+  ],
+  "info": [
+    "Real CUDA-C kernel run on arena.cuda_sim.GPU via arena.cuda_c.CudaProgram. The causal mask must be applied by predication (a multiplicative 0/1 weight), not by an early return, so every lane issues the same number of memory accesses and the warp never diverges."
+  ]
+}

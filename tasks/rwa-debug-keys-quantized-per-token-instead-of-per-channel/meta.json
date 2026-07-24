@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-keys-quantized-per-token-instead-of-per-channel",
+  "title": "Debug key quantization axis",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M2quant",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_keys_per_channel"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

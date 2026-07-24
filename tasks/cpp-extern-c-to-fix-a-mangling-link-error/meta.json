@@ -1,0 +1,15 @@
+{
+  "id": "cpp-extern-c-to-fix-a-mangling-link-error",
+  "title": "Fix a C++ name mangling link error with extern C",
+  "track": "03 C++ Systems",
+  "tier": "I",
+  "module": "M2cpp",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "macOS",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": ["Real clang++ compile + link"]
+}

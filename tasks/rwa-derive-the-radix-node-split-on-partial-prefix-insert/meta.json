@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-the-radix-node-split-on-partial-prefix-insert",
+  "title": "Derive radix node split on partial-prefix insert",
+  "track": "03 Algorithms and Data Structures",
+  "tier": "I",
+  "module": "M2algo",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "derive_split"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

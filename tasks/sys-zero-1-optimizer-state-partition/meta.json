@@ -1,0 +1,22 @@
+{
+  "id": "sys-zero-1-optimizer-state-partition",
+  "title": "ZeRO-1 optimizer state partition (Adam)",
+  "track": "02 Systems",
+  "tier": "II",
+  "module": "M1dist",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "zero_one_adam"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

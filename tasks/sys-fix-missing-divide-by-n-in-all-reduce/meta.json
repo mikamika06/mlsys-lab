@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-missing-divide-by-n-in-all-reduce",
+  "title": "Fix a missing divide-by-N in gradient all-reduce",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "all_reduce_mean_grads"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

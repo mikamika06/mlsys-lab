@@ -1,0 +1,22 @@
+{
+  "id": "rws-distilbert-kd-loss",
+  "title": "DistilBERT Knowledge Distillation Loss",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kd_loss"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

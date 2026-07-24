@@ -1,0 +1,22 @@
+{
+  "id": "num-power-iteration-dominant-eigenpair",
+  "title": "Power iteration dominant eigenpair",
+  "track": "02 Numerical Methods",
+  "tier": "I",
+  "module": "M1num",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "power_iteration"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

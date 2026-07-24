@@ -1,0 +1,18 @@
+{
+  "id": "num-cross-entropy-gradient-softmax-onehot",
+  "title": "Cross-Entropy Gradient = Softmax minus One-Hot",
+  "track": "02 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": ["cross_entropy_backward"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-09},
+    {"metric": "fd_max_abs_err", "op": "<=", "threshold": 1e-05},
+    {"metric": "sum_zero_err", "op": "<=", "threshold": 1e-12}
+  ],
+  "info": []
+}

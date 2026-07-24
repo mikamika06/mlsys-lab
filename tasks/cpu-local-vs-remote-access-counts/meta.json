@@ -1,0 +1,22 @@
+{
+  "id": "cpu-local-vs-remote-access-counts",
+  "title": "Cache-friendly access trace generation",
+  "track": "03 Systems",
+  "tier": "II",
+  "module": "M2cpu",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "blocked_access_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

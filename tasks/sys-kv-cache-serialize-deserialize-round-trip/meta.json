@@ -1,0 +1,23 @@
+{
+  "id": "sys-kv-cache-serialize-deserialize-round-trip",
+  "title": "KV-cache serialize/deserialize round-trip",
+  "track": "04 Systems",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 2,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "pack_kv_cache",
+    "unpack_kv_cache"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

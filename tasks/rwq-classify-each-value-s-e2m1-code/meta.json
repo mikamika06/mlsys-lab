@@ -1,0 +1,24 @@
+{
+  "id": "rwq-classify-each-value-s-e2m1-code",
+  "title": "Classify Each Value's E2M1 Code",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 2,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "e2m1_classify"
+  ],
+  "fixtures": [
+    "fp4_x.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

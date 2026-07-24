@@ -1,0 +1,22 @@
+{
+  "id": "alg-decision-boundary-labels-on-a-grid",
+  "title": "Decision Boundary Labels on a Grid using kNN",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "knn_grid_labels"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "label_agreement",
+      "op": ">=",
+      "threshold": 0.999
+    }
+  ],
+  "info": []
+}

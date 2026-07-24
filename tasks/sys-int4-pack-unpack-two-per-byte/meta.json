@@ -1,0 +1,28 @@
+{
+  "id": "sys-int4-pack-unpack-two-per-byte",
+  "title": "Int‑4 Packing and Unpacking (Two per Byte)",
+  "track": "02 System Programming",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pack_int4",
+    "unpack_int4"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

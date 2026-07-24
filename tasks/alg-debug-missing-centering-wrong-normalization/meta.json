@@ -1,0 +1,22 @@
+{
+  "id": "alg-debug-missing-centering-wrong-normalization",
+  "title": "Debug PCA Power Iteration: Missing Centering & Wrong Normalization",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "leading_eigenvector"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

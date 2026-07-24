@@ -1,0 +1,22 @@
+{
+  "id": "sys-megatron-attention-head-sharding",
+  "title": "Megatron attention head sharding",
+  "track": "04 Systems for ML",
+  "tier": "II",
+  "module": "M2tp",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sharded_attention_heads"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

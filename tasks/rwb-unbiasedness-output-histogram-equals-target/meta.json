@@ -1,0 +1,22 @@
+{
+  "id": "rwb-unbiasedness-output-histogram-equals-target",
+  "title": "Speculative sampling unbiased output histogram",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "speculative_histogram"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.12
+    }
+  ],
+  "info": []
+}

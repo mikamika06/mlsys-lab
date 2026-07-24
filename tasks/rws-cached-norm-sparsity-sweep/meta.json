@@ -1,0 +1,22 @@
+{
+  "id": "rws-cached-norm-sparsity-sweep",
+  "title": "Cached-Norm Wanda Sparsity Sweep",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4prune",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "wanda_masks_for_sparsities"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

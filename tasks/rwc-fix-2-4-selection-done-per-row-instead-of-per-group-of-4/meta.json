@@ -1,0 +1,22 @@
+{
+  "id": "rwc-fix-2-4-selection-done-per-row-instead-of-per-group-of-4",
+  "title": "Fix 2:4 selection per row group",
+  "track": "03 Deep Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "select_2_4_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

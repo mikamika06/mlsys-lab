@@ -1,0 +1,22 @@
+{
+  "id": "rwa-flashattention-backward-recompute-ds-p-dp-rowsum-dp-p",
+  "title": "FlashAttention backward recompute dS from saved softmax statistics",
+  "track": "04 Numerical ML",
+  "tier": "II",
+  "module": "M3attention",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_attention_backward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

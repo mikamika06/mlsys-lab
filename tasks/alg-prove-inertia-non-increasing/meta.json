@@ -1,0 +1,27 @@
+{
+  "id": "alg-prove-inertia-non-increasing",
+  "title": "Prove k-means inertia is non‑increasing",
+  "track": "02 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "inertia_sequence"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-8
+    },
+    {
+      "metric": "monotonic",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-missing-error-propagation",
+  "title": "Debug missing error propagation in GPTQ quantization",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "gptq_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

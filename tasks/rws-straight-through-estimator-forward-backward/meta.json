@@ -1,0 +1,27 @@
+{
+  "id": "rws-straight-through-estimator-forward-backward",
+  "title": "Straight-Through Estimator: Hard Forward, Soft Backward",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "ste_argmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "forward_exact",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "grad_rel_err",
+      "op": "<=",
+      "threshold": 1e-05
+    }
+  ],
+  "info": []
+}

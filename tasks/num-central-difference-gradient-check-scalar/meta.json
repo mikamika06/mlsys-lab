@@ -1,0 +1,33 @@
+{
+  "id": "num-central-difference-gradient-check-scalar",
+  "title": "Central-difference gradient check (scalar)",
+  "track": "04 Numerics",
+  "tier": "I",
+  "module": "M4num",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "central_diff",
+    "grad_check"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "check_err",
+      "op": "<=",
+      "threshold": 1e-09
+    },
+    {
+      "metric": "detect_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

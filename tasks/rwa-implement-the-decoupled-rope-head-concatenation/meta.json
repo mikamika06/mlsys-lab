@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-the-decoupled-rope-head-concatenation",
+  "title": "Decoupled RoPE head concatenation",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "decoupled_rope_score"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

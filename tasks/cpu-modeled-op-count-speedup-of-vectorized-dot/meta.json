@@ -1,0 +1,22 @@
+{
+  "id": "cpu-modeled-op-count-speedup-of-vectorized-dot",
+  "title": "Modeled op-count speedup of vectorized dot (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": [
+    "a pure instruction-count model (no real NEON/AVX intrinsics, no timing) -- every (n, width) pair is fixed by the driver",
+    "the tail is modeled as n % width leftover scalar instructions, not a masked/padded vector instruction"
+  ]
+}

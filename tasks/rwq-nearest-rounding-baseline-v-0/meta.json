@@ -1,0 +1,29 @@
+{
+  "id": "rwq-nearest-rounding-baseline-v-0",
+  "title": "Nearest-Rounding Baseline (V=0)",
+  "track": "04 Quantization",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_dequant_rtn_v0"
+  ],
+  "fixtures": [
+    "ar_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

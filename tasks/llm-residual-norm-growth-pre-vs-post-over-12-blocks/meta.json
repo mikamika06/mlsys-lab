@@ -1,0 +1,22 @@
+{
+  "id": "llm-residual-norm-growth-pre-vs-post-over-12-blocks",
+  "title": "Residual Norm Growth Through 12 Transformer Blocks",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "residual_norm_growth"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-3
+    }
+  ],
+  "info": []
+}

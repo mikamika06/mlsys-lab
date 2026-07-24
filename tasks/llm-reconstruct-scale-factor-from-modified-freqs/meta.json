@@ -1,0 +1,22 @@
+{
+  "id": "llm-reconstruct-scale-factor-from-modified-freqs",
+  "title": "Reconstruct RoPE Scale Factor from Modified Frequencies",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "recover_scale_factor"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

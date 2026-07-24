@@ -1,0 +1,22 @@
+{
+  "id": "rwm-memory-of-int4-kv-fp16-residual-window-vs-full-fp16-cache",
+  "title": "Memory of int4 KV + fp16 residual window vs full fp16 cache",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_memory_usage"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

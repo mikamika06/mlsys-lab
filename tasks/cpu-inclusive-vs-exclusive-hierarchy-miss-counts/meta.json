@@ -1,0 +1,18 @@
+{
+  "id": "cpu-inclusive-vs-exclusive-hierarchy-miss-counts",
+  "title": "Inclusive back-invalidation vs exclusive victim fill: miss counts (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "L1/L2 are both fully-associative LRU (L1_WAYS/L2_WAYS lines), not a modeled hardware set-index",
+    "a miss is an access found in NEITHER L1 NOR L2"
+  ]
+}

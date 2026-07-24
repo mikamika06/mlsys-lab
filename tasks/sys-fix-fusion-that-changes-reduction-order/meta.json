@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-fusion-that-changes-reduction-order",
+  "title": "Fix a Fusion Pass That Changes Reduction Order",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_dot_reduce"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "pyt-fix-a-non-restartable-iterator",
+  "title": "Fix a non-restartable iterator",
+  "track": "05 Python Internals",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "Squares"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

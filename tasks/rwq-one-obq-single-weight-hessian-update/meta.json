@@ -1,0 +1,22 @@
+{
+  "id": "rwq-one-obq-single-weight-hessian-update",
+  "title": "One OBQ single-weight Hessian update",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M2quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "obq_single_weight_update"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwq-random-hadamard-vs-learned-orthogonal-rotation",
+  "title": "Random Hadamard vs learned orthogonal rotation for W4A4",
+  "track": "04 Quantization and ML Systems",
+  "tier": "II",
+  "module": "M4quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "w4a4_rotation_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

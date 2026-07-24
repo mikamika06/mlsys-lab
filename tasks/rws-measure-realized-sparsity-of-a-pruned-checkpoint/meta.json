@@ -1,0 +1,22 @@
+{
+  "id": "rws-measure-realized-sparsity-of-a-pruned-checkpoint",
+  "title": "Measure Realized Sparsity of a Pruned Checkpoint",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "count_zeros_and_sparsity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

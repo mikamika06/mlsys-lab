@@ -1,0 +1,22 @@
+{
+  "id": "sys-recursive-halving-doubling-all-reduce",
+  "title": "Recursive halving-doubling all-reduce",
+  "track": "04 Systems and Parallelism",
+  "tier": "II",
+  "module": "Msys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "recursive_halving_doubling_all_reduce"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

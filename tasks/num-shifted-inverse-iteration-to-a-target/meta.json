@@ -1,0 +1,22 @@
+{
+  "id": "num-shifted-inverse-iteration-to-a-target",
+  "title": "Shifted inverse iteration to a target eigenvalue",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "shifted_inverse_iteration"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

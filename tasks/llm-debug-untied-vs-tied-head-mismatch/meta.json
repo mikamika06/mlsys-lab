@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-untied-vs-tied-head-mismatch",
+  "title": "Debug untied vs tied head mismatch",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "tied_head_logits"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

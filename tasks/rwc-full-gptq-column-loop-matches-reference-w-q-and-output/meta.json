@@ -1,0 +1,27 @@
+{
+  "id": "rwc-full-gptq-column-loop-matches-reference-w-q-and-output",
+  "title": "Full GPTQ column loop matches reference W_q and output",
+  "track": "04 Machine Learning Systems",
+  "tier": "III",
+  "module": "M4quant",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gptq_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "wq_rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "output_rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

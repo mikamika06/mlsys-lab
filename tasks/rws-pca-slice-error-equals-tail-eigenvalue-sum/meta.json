@@ -1,0 +1,25 @@
+{
+  "id": "rws-pca-slice-error-equals-tail-eigenvalue-sum",
+  "title": "PCA Slice Error Equals Tail Eigenvalue Sum",
+  "track": "02 Numerical Algorithms",
+  "tier": "II",
+  "module": "M3la",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pca_slice_error"
+  ],
+  "fixtures": [
+    "pca_x.npy",
+    "pca_k.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-08
+    }
+  ],
+  "info": []
+}

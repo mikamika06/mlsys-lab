@@ -1,0 +1,27 @@
+{
+  "id": "num-expm1-for-tiny-x",
+  "title": "expm1 for Tiny x",
+  "track": "num",
+  "tier": 1,
+  "module": "stable-elementary",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "python",
+  "provides": [
+    "exp_minus_one"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-14
+    },
+    {
+      "metric": "exact_zero_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": {}
+}

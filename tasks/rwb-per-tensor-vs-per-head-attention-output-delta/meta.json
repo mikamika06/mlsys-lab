@@ -1,0 +1,26 @@
+{
+  "id": "rwb-per-tensor-vs-per-head-attention-output-delta",
+  "title": "Per-tensor vs per-head attention-output delta",
+  "track": "03 Deep Learning",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_scale_granularity_delta"
+  ],
+  "fixtures": [
+    "q.npy",
+    "k.npy",
+    "v.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

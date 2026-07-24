@@ -1,0 +1,22 @@
+{
+  "id": "rwc-flash-backward-dq-dk-dv-with-recomputation",
+  "title": "Flash backward dQ dK dV with recomputation",
+  "track": "04 Deep Learning Kernels",
+  "tier": "II",
+  "module": "M4attn",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_backward_dq_dk_dv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

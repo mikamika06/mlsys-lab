@@ -1,0 +1,22 @@
+{
+  "id": "num-complex-step-differentiation",
+  "title": "Complex-step differentiation",
+  "track": "02 Numerical Methods",
+  "tier": "II",
+  "module": "M1num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "complex_step_diff"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "gpu-which-pointers-may-legally-vectorize-to-float4",
+  "title": "Which pointers may legally vectorize to float4?",
+  "track": "11 GPU kernels",
+  "tier": "IV",
+  "module": "M11",
+  "difficulty": 2,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": ["vectorizable_pointers"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "exact_match", "op": ">=", "threshold": 1.0}
+  ],
+  "info": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "rwa-classify-causal-tiles-as-full-diagonal-masked",
+  "title": "Classify Causal Tiles as Full / Diagonal / Masked",
+  "track": "rwa",
+  "tier": 1,
+  "module": "attention",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": ["classify_causal_tiles"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "exact_match", "op": ">=", "threshold": 1.0}
+  ],
+  "info": "Classify each (q_block, kv_block) tile in a causal attention pattern as full, diagonal, or masked."
+}

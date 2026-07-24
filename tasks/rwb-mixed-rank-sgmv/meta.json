@@ -1,0 +1,22 @@
+{
+  "id": "rwb-mixed-rank-sgmv",
+  "title": "Mixed-rank segmented matrix-vector generation",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mixed_rank_sgmv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

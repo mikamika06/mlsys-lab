@@ -1,0 +1,27 @@
+{
+  "id": "num-broadcasted-elementwise-op-from-scratch",
+  "title": "Broadcasted elementwise operation from scratch",
+  "track": "03 NumPy Internals",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "broadcast_add_mul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "line_events",
+      "op": ">=",
+      "threshold": 20
+    }
+  ],
+  "info": []
+}

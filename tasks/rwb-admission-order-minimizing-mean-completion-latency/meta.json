@@ -1,0 +1,22 @@
+{
+  "id": "rwb-admission-order-minimizing-mean-completion-latency",
+  "title": "Admission Order Minimizing Mean Completion Latency",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2serving",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "admission_order"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rws-mean-activation-vs-l2-vs-taylor-importance",
+  "title": "Mean Activation vs L2 vs Taylor Importance Ranking",
+  "track": "Deep Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "importance_scores"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

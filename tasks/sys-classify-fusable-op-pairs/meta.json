@@ -1,0 +1,22 @@
+{
+  "id": "sys-classify-fusable-op-pairs",
+  "title": "Classify Fusable Op Pairs",
+  "track": "03 Systems and Compilers",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 3,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_fusable"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

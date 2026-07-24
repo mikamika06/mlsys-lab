@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-an-insert-that-never-splits-nodes",
+  "title": "Debug radix insert that never splits nodes",
+  "track": "03 Algorithms",
+  "tier": "II",
+  "module": "M2alg",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "total_saved_tokens"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

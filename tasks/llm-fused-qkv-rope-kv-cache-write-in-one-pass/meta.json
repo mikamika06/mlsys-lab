@@ -1,0 +1,22 @@
+{
+  "id": "llm-fused-qkv-rope-kv-cache-write-in-one-pass",
+  "title": "Fused QKV + RoPE + KV cache write in one pass",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_qkv_rope_kv_cache_write"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

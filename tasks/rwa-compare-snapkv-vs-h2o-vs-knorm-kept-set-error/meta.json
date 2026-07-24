@@ -1,0 +1,27 @@
+{
+  "id": "rwa-compare-snapkv-vs-h2o-vs-knorm-kept-set-error",
+  "title": "Compare SnapKV, H2O and Knorm kept-set selection error",
+  "track": "03 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_eviction_methods"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "overlap_exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

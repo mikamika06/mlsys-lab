@@ -1,0 +1,22 @@
+{
+  "id": "rwm-which-of-params-grads-optimizer-are-sharded-at-each-zero-stage",
+  "title": "Which ZeRO components are sharded at each stage",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "zero_stage_sharding"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

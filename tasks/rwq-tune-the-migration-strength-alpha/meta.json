@@ -1,0 +1,27 @@
+{
+  "id": "rwq-tune-the-migration-strength-alpha",
+  "title": "Tune the SmoothQuant Migration Strength Alpha",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "sweep_alpha"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "mse_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

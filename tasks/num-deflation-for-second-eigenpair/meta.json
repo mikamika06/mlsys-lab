@@ -1,0 +1,24 @@
+{
+  "id": "num-deflation-for-second-eigenpair",
+  "title": "Deflation for second eigenpair",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "second_eigenvalue"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-05
+    }
+  ],
+  "info": [
+    "Uses deflation followed by power iteration"
+  ]
+}

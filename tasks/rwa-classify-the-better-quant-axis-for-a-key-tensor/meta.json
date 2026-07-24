@@ -1,0 +1,22 @@
+{
+  "id": "rwa-classify-the-better-quant-axis-for-a-key-tensor",
+  "title": "Classify the better quantization axis for a key tensor",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_quant_axis"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

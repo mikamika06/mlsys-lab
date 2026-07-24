@@ -1,0 +1,27 @@
+{
+  "id": "sys-prefix-cache-resume-equality",
+  "title": "Prefix-cache Resume Equality",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M5attn",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "run_with_cache"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-05
+    },
+    {
+      "metric": "bookkeeping_exact",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

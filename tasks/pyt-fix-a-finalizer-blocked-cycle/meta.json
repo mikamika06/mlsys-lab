@@ -1,0 +1,22 @@
+{
+  "id": "pyt-fix-a-finalizer-blocked-cycle",
+  "title": "Fix a finalizer-blocked cycle",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M3py",
+  "difficulty": 5,
+  "genre": "debug",
+  "platform": "CPython",
+  "provides": [
+    "collect_cycle_with_finalizer"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

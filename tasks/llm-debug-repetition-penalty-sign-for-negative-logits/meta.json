@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-repetition-penalty-sign-for-negative-logits",
+  "title": "Fix repetition penalty sign for negative logits",
+  "track": "04 Machine Learning Systems",
+  "tier": "I",
+  "module": "M4llm",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "apply_repetition_penalty"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

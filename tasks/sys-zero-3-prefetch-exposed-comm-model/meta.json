@@ -1,0 +1,22 @@
+{
+  "id": "sys-zero-3-prefetch-exposed-comm-model",
+  "title": "ZeRO-3 prefetch exposed communication model",
+  "track": "04 Systems Python",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "exposed_comm_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

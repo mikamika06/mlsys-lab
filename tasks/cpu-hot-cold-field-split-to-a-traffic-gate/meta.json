@@ -1,0 +1,22 @@
+{
+  "id": "cpu-hot-cold-field-split-to-a-traffic-gate",
+  "title": "Hot/cold field split to a traffic gate",
+  "track": "02 Systems Performance",
+  "tier": "II",
+  "module": "M2mem",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "hot_cold_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_cache_misses",
+      "op": "<=",
+      "threshold": 80.0
+    }
+  ],
+  "info": []
+}

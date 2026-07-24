@@ -1,0 +1,22 @@
+{
+  "id": "pyt-c-contiguous-vs-non-contiguous-classifier",
+  "title": "C-contiguous vs non-contiguous classifier",
+  "track": "02 NumPy Internals",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "predict_c_contiguous"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwq-straight-through-gradient-of-block-mse-wrt-v",
+  "title": "Straight-Through Gradient of Block MSE wrt V",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "ste_block_mse_grad_wrt_v"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

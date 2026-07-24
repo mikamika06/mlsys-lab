@@ -1,0 +1,29 @@
+{
+  "id": "rwm-nf4-blockwise-codec-levels-from-n-0-1-quantiles",
+  "title": "NF4 Blockwise Codec: Levels From N(0,1) Quantiles",
+  "track": "04 Numerical ML",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "nf4_levels",
+    "quantize_4bit",
+    "dequantize_4bit"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "levels_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.15
+    }
+  ],
+  "info": []
+}

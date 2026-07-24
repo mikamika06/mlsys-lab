@@ -1,0 +1,24 @@
+{
+  "id": "rwb-debug-a-batcher-that-ignores-the-delay-cap",
+  "title": "Debug: a dynamic batcher that ignores the delay cap",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "batch_formation_times"
+  ],
+  "fixtures": [
+    "arrivals.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

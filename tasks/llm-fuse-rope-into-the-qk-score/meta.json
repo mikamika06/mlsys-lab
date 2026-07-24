@@ -1,0 +1,22 @@
+{
+  "id": "llm-fuse-rope-into-the-qk-score",
+  "title": "Fuse RoPE into QK score computation",
+  "track": "01 Deep Learning",
+  "tier": "III",
+  "module": "M2dl",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_rope_qk"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,25 @@
+{
+  "id": "rwc-magnitude-2-4-vs-sparsegpt-2-4-error",
+  "title": "Magnitude 2:4 vs SparseGPT 2:4 Layer-Output Error",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_magnitude_vs_sparsegpt_2_4"
+  ],
+  "fixtures": [
+    "W.npy",
+    "X.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

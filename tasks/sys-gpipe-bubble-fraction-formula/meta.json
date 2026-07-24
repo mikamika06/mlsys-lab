@@ -1,0 +1,22 @@
+{
+  "id": "sys-gpipe-bubble-fraction-formula",
+  "title": "GPipe bubble-fraction formula",
+  "track": "04 Systems",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "gpipe_bubble_fraction"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-09
+    }
+  ],
+  "info": []
+}

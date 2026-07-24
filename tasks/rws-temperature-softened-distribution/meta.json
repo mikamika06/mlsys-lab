@@ -1,0 +1,22 @@
+{
+  "id": "rws-temperature-softened-distribution",
+  "title": "Temperature‑softened softmax",
+  "track": "Deep Learning",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "softmax_temperature"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "llm-hessian-based-column-ordering",
+  "title": "Hessian‑based column salience for GPTQ ordering",
+  "track": "01 Deep Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "hessian_saliency"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

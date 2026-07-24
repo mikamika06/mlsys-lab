@@ -1,0 +1,22 @@
+{
+  "id": "num-fp8-e5m2-encode-decode-round-trip",
+  "title": "FP8 E5M2 Encode/Decode Round-Trip",
+  "track": "num",
+  "tier": 1,
+  "module": "low-precision-formats",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": [
+    "encode_e5m2"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

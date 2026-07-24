@@ -1,0 +1,22 @@
+{
+  "id": "num-transpose-as-stride-permutation-no-copy",
+  "title": "Transpose as stride permutation without a copy",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M1np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "transpose_view"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

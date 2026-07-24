@@ -1,0 +1,22 @@
+{
+  "id": "sys-peak-intermediate-buffer-element-count",
+  "title": "Peak intermediate-buffer element count for online softmax",
+  "track": "02 Systems Python",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "online_softmax_stream"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

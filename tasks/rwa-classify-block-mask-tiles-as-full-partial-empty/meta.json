@@ -1,0 +1,16 @@
+{
+  "id": "rwa-classify-block-mask-tiles-as-full-partial-empty",
+  "title": "Classify Block-Mask Tiles as Full / Partial / Empty",
+  "track": "rwa",
+  "tier": 1,
+  "module": "attention",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": ["classify_block_mask_tiles"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "exact_match", "op": ">=", "threshold": 1.0}
+  ],
+  "info": "Classify each (q_block, kv_block) tile as full/partial/empty given a mask_mod function and block dimensions."
+}

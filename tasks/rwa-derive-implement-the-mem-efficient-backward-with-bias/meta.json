@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-implement-the-mem-efficient-backward-with-bias",
+  "title": "Memory-efficient attention backward with an additive bias",
+  "track": "04 Research Workloads",
+  "tier": "III",
+  "module": "M4ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "biased_flash_backward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

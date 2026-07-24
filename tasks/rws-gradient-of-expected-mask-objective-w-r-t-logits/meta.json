@@ -1,0 +1,22 @@
+{
+  "id": "rws-gradient-of-expected-mask-objective-w-r-t-logits",
+  "title": "Gradient of expected-mask objective with respect to logits",
+  "track": "03 Machine Learning Numerics",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "expected_mask_grad"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-05
+    }
+  ],
+  "info": []
+}

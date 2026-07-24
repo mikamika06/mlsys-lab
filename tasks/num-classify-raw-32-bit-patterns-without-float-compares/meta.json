@@ -1,0 +1,22 @@
+{
+  "id": "num-classify-raw-32-bit-patterns-without-float-compares",
+  "title": "Classify 32‑bit IEEE‑754 patterns without floating‑point comparisons",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_uint32_patterns"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-a-scheduler-that-overflows-np-slots",
+  "title": "Debug: scheduler admits more than N concurrent slots",
+  "track": "02 Systems Algorithms",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "bounded_slot_schedule"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

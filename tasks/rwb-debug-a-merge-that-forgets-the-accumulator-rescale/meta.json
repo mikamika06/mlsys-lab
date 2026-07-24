@@ -1,0 +1,22 @@
+{
+  "id": "rwb-debug-a-merge-that-forgets-the-accumulator-rescale",
+  "title": "Debug a merge that forgets the accumulator rescale",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4attn",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "merge_split_kv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

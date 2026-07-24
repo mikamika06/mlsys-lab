@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-sinks-dropped-keeping-only-the-recent-window",
+  "title": "Debug: Sinks dropped, keeping only the recent window",
+  "track": "06 Deep Learning",
+  "tier": "I",
+  "module": "M6dl",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "streaming_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

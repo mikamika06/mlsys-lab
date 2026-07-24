@@ -1,0 +1,22 @@
+{
+  "id": "pyt-encode-decode-round-trip-byte-exact",
+  "title": "Encode/decode round-trip byte exact",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "encode_decode_round_trip"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

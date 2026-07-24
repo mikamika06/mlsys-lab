@@ -1,0 +1,22 @@
+{
+  "id": "alg-shifted-inverse-iteration-for-interior-eigenvalue",
+  "title": "Shifted inverse iteration for an interior eigenvalue",
+  "track": "02 Numerical Algorithms",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "shifted_inverse_iteration"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwq-the-two-torchao-scale-granularities",
+  "title": "TorchAO Scale Granularities (Weights & Activations)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "torchao_scale_granularities"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

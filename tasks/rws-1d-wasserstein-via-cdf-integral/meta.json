@@ -1,0 +1,25 @@
+{
+  "id": "rws-1d-wasserstein-via-cdf-integral",
+  "title": "1D Wasserstein Distance via the CDF Integral",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "wasserstein1_cdf_integral"
+  ],
+  "fixtures": [
+    "w1_u.npy",
+    "w1_v.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwb-dp-optimal-bucket-selection-k-buckets",
+  "title": "DP-Optimal Bucket Selection (K Capture Sizes)",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2serving",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "select_buckets"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

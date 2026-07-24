@@ -1,0 +1,15 @@
+{
+ "id": "cpp-integer-promotion-conversion-result-prediction",
+ "title": "C++ Integer Promotion and Usual Arithmetic Conversion Prediction",
+ "track": "02 Deep C++",
+ "tier": "I",
+ "module": "M2",
+ "difficulty": 3,
+ "genre": "implement",
+ "platform": "mac",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: ref.cpp evaluates each expression with the ACTUAL native types and reads the result's real sizeof()/std::is_signed via decltype -- the real compiler's promotion/conversion rules are the oracle, never hand-simulated."
+ ],
+ "native": "cpp"
+}

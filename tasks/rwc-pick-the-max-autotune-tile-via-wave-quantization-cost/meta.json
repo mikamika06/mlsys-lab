@@ -1,0 +1,27 @@
+{
+  "id": "rwc-pick-the-max-autotune-tile-via-wave-quantization-cost",
+  "title": "Pick the Max-Autotune Tile via Wave-Quantization Cost",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4perf",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "select_autotune_tile"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_agreement",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "cost_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

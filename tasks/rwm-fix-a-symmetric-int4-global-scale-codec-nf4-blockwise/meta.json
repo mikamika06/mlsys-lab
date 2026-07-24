@@ -1,0 +1,27 @@
+{
+  "id": "rwm-fix-a-symmetric-int4-global-scale-codec-nf4-blockwise",
+  "title": "Fix a symmetric-int4 global-scale codec -> NF4 blockwise",
+  "track": "05 Real-World Model Compression",
+  "tier": "II",
+  "module": "M5rwm",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "nf4_blockwise_dequant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.05
+    },
+    {
+      "metric": "beats_naive",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

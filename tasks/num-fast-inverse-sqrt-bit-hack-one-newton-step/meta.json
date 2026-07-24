@@ -1,0 +1,36 @@
+{
+  "id": "num-fast-inverse-sqrt-bit-hack-one-newton-step",
+  "title": "Fast inverse square root: bit-hack + one Newton step",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M3num",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "rsqrt_raw",
+    "rsqrt_newton"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "raw_bit_exact",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "newton_rel_err",
+      "op": "<=",
+      "threshold": 0.005
+    },
+    {
+      "metric": "newton_dtype_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "newton_max_rel_err",
+    "raw_max_rel_err"
+  ]
+}

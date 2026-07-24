@@ -1,0 +1,22 @@
+{
+  "id": "pyt-model-arena-occupancy-over-an-alloc-free-trace",
+  "title": "Model arena occupancy over an alloc/free trace",
+  "track": "02 Python Internals",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "arena_occupancy"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

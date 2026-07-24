@@ -1,0 +1,22 @@
+{
+  "id": "rwb-transfer-vs-recompute-break-even-length",
+  "title": "Transfer-vs-recompute break-even sequence length",
+  "track": "RWB Real-World Benchmarks",
+  "tier": "II",
+  "module": "serving",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "break_even_length"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

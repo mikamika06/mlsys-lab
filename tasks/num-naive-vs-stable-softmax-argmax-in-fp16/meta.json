@@ -1,0 +1,22 @@
+{
+  "id": "num-naive-vs-stable-softmax-argmax-in-fp16",
+  "title": "Stable softmax argmax in emulated fp16",
+  "track": "02 Numerical Computing",
+  "tier": "I",
+  "module": "M1np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_softmax_argmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmax_agreement",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

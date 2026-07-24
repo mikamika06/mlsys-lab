@@ -1,0 +1,22 @@
+{
+  "id": "rws-intermediate-state-hidden-distillation-loss",
+  "title": "Intermediate-state hidden distillation loss",
+  "track": "03 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "hidden_distillation_loss"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

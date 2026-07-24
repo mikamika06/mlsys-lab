@@ -1,0 +1,22 @@
+{
+  "id": "llm-yarn-ramp-attention-temperature",
+  "title": "YaRN ramp and attention temperature",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M2llm",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "yarn_ramp_temperature"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 0.00001
+    }
+  ],
+  "info": []
+}

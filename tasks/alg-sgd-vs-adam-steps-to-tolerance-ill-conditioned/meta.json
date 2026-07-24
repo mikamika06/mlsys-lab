@@ -1,0 +1,22 @@
+{
+  "id": "alg-sgd-vs-adam-steps-to-tolerance-ill-conditioned",
+  "title": "SGD vs Adam steps to tolerance on ill‑conditioned quadratic",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sgd_vs_adam_steps"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

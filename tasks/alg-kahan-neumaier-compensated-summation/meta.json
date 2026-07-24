@@ -1,0 +1,22 @@
+{
+  "id": "alg-kahan-neumaier-compensated-summation",
+  "title": "Kahan-Neumaier Compensated Summation",
+  "track": "Algorithms",
+  "tier": "Advanced",
+  "module": "Numerical stability primitives",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": [
+    "compensated_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

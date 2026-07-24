@@ -1,0 +1,22 @@
+{
+  "id": "llm-cross-entropy-from-logits-match",
+  "title": "Cross‑Entropy from Logits (Numerically Stable)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cross_entropy_from_logits"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

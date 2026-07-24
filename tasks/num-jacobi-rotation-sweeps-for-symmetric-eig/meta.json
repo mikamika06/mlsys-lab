@@ -1,0 +1,22 @@
+{
+  "id": "num-jacobi-rotation-sweeps-for-symmetric-eig",
+  "title": "Jacobi Rotation Sweeps for Symmetric Eigenvalues",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "jacobi_eigenvalues"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

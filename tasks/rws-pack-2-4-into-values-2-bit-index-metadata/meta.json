@@ -1,0 +1,22 @@
+{
+  "id": "rws-pack-2-4-into-values-2-bit-index-metadata",
+  "title": "Pack 2:4 into values + 2‑bit index metadata",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pack_2_of_4"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

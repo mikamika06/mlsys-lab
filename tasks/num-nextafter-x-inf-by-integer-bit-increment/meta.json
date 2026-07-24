@@ -1,0 +1,22 @@
+{
+  "id": "num-nextafter-x-inf-by-integer-bit-increment",
+  "title": "nextafter(x, +inf) by Integer Bit Increment",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": [
+    "next_up"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

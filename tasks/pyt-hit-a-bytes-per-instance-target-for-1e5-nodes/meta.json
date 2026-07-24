@@ -1,0 +1,23 @@
+{
+  "id": "pyt-hit-a-bytes-per-instance-target-for-1e5-nodes",
+  "title": "Hit a bytes-per-instance target for 100k nodes",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "CPython",
+  "provides": [
+    "Node",
+    "node_size_ratio"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

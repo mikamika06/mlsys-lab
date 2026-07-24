@@ -1,0 +1,24 @@
+{
+  "id": "rwb-n-gram-prompt-lookup-proposer",
+  "title": "N-gram / Prompt-lookup Proposer",
+  "track": "03 Runtime ML Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "propose_tokens"
+  ],
+  "fixtures": [
+    "sequence.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "rwq-nvfp4-vs-mxfp4-accuracy",
+  "title": "NVFP4 vs MXFP4 quantization accuracy",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M2quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": [
+    "fp4_accuracy_comparison"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "nvfp4_rmse_error",
+      "op": "<=",
+      "threshold": 0.000001
+    },
+    {
+      "metric": "mxfp4_rmse_error",
+      "op": "<=",
+      "threshold": 0.000001
+    },
+    {
+      "metric": "nvfp4_better",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,2 @@
+{"id":"cpp-ub-oracle-15-placement-new-union-launder-snippets","title":"UB oracle: placement-new / storage-reuse / launder traces (real C++)","native":"cpp","difficulty":4,
+ "gates":[{"metric":"exact_match","op":"==","threshold":1.0}]}

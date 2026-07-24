@@ -1,0 +1,15 @@
+{
+ "id": "cpp-break-a-shared-ptr-cycle-with-weak-ptr",
+ "title": "Break a shared_ptr cycle with weak_ptr",
+ "track": "02 Deep C++",
+ "tier": "I",
+ "module": "M2",
+ "difficulty": 4,
+ "genre": "debug",
+ "platform": "cross-platform",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: real std::shared_ptr/std::weak_ptr refcounting, compiled by clang++ -- leaks (or their absence) come from the real destructor, not a simulated heap."
+ ],
+ "native": "cpp"
+}

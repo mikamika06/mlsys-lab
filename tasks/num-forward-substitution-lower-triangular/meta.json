@@ -1,0 +1,27 @@
+{
+  "id": "num-forward-substitution-lower-triangular",
+  "title": "Forward substitution (lower triangular)",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "forward_sub"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "no_solver_shortcut",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

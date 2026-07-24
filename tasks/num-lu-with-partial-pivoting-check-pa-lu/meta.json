@@ -1,0 +1,22 @@
+{
+  "id": "num-lu-with-partial-pivoting-check-pa-lu",
+  "title": "LU decomposition with partial pivoting",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "lu_partial_pivot"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

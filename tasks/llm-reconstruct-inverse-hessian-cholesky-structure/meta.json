@@ -1,0 +1,22 @@
+{
+  "id": "llm-reconstruct-inverse-hessian-cholesky-structure",
+  "title": "Reconstruct Inverse Hessian via Cholesky",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_inverse_hessian"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

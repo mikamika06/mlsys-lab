@@ -1,0 +1,22 @@
+{
+  "id": "sys-acceptance-rate-computation",
+  "title": "Acceptance Rate Computation for Speculative Decoding",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "acceptance_rate"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

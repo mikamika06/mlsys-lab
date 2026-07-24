@@ -1,0 +1,22 @@
+{
+  "id": "rws-cosine-similarity-of-one-layer-s-in-out-states",
+  "title": "Cosine similarity of a layer's in/out states",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mean_cosine_similarity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

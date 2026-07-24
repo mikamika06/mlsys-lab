@@ -1,0 +1,22 @@
+{
+  "id": "rwc-fp4-e2m1-blockwise-quant-dequant",
+  "title": "FP4 e2m1 Blockwise Quantization and Dequantization",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M3py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp4_quant_dequant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

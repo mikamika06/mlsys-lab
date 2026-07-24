@@ -1,0 +1,32 @@
+{
+  "id": "rws-uniform-vs-reweighted-expected-loss",
+  "title": "Uniform vs reweighted expected loss",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_sampling"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "uniform_rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "reweighted_rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "reduction_rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

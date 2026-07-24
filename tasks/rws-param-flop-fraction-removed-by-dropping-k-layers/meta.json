@@ -1,0 +1,22 @@
+{
+  "id": "rws-param-flop-fraction-removed-by-dropping-k-layers",
+  "title": "Param/FLOP fraction removed by dropping k layers",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "removed_and_remaining"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

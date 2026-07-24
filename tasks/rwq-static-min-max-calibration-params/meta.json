@@ -1,0 +1,27 @@
+{
+  "id": "rwq-static-min-max-calibration-params",
+  "title": "Static min/max calibration params",
+  "track": "02 Quantization",
+  "tier": "I",
+  "module": "M2q",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "calibration_params"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "scale_ok",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "zp_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

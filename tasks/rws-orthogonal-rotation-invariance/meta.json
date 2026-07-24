@@ -1,0 +1,22 @@
+{
+  "id": "rws-orthogonal-rotation-invariance",
+  "title": "Orthogonal Rotation Invariance of a Linear Layer",
+  "track": "04 Real-World Quant",
+  "tier": "I",
+  "module": "M4rwq",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "rotate_and_matvec"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

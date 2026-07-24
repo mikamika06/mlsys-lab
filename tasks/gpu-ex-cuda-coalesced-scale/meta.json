@@ -1,0 +1,1 @@
+{"id":"gpu-ex-cuda-coalesced-scale","title":"Coalesced scale kernel (CUDA)","native":"cuda","difficulty":2,"gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-9},{"metric":"transactions","op":"<=","threshold":20}]}

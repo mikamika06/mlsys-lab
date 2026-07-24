@@ -1,0 +1,22 @@
+{
+  "id": "sys-feasible-batch-sizes-under-ttft-itl-sla",
+  "title": "Feasible batch sizes under TTFT and ITL SLA",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "feasible_batch_sizes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

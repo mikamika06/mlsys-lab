@@ -1,0 +1,8 @@
+{
+  "id": "cpp-pick-the-right-smart-pointer-12-scenarios",
+  "title": "Choose the correct smart pointer type for 12 C++ ownership scenarios",
+  "track": "02 Deep C++", "tier": "I", "module": "M2", "difficulty": 2,
+  "genre": "classify", "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}], "info": []
+}

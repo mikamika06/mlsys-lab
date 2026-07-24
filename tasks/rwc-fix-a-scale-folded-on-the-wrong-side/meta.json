@@ -1,0 +1,22 @@
+{
+  "id": "rwc-fix-a-scale-folded-on-the-wrong-side",
+  "title": "Fix AWQ scale folded on the wrong side",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "fix_awq_scale"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

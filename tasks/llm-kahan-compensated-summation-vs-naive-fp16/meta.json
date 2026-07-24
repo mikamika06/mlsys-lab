@@ -1,0 +1,22 @@
+{
+  "id": "llm-kahan-compensated-summation-vs-naive-fp16",
+  "title": "Kahan compensated summation for fp16 accumulation",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kahan_sum_fp16"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

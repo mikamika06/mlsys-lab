@@ -1,0 +1,22 @@
+{
+  "id": "sys-expert-choice-vs-token-choice-routing",
+  "title": "Expert-choice vs token-choice routing",
+  "track": "04 Systems ML",
+  "tier": "II",
+  "module": "MoE Routing",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "expert_choice_routing"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

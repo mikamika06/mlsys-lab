@@ -1,0 +1,27 @@
+{
+  "id": "sys-softmax-jacobian-identity-vectorized-explicit",
+  "title": "Softmax Jacobian identity without materializing Jacobians",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "softmax_jacobian_vjp"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "no_full_jacobian",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

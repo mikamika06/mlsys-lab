@@ -1,0 +1,22 @@
+{
+  "id": "num-ai-breakdown-of-attention-qk-t-softmax-pv",
+  "title": "Attention arithmetic intensity breakdown (QK, softmax, PV)",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M3np",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "attention_ai"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

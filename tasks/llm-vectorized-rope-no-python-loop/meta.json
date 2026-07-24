@@ -1,0 +1,17 @@
+{
+  "id": "llm-vectorized-rope-no-python-loop",
+  "title": "Vectorized RoPE (no Python loops)",
+  "track": "04 AI Systems",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 2,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": ["apply_rope"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "line_count", "op": "<=", "threshold": 40}
+  ],
+  "info": []
+}

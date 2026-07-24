@@ -1,0 +1,20 @@
+{
+  "id": "rwq-smoothed-vs-raw-w8a8-output-error",
+  "title": "Smoothed vs raw W8A8 output error",
+  "track": "04 Real-World Quant",
+  "tier": "I",
+  "module": "M4rwq",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": ["w8a8_output_errors"],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse_check",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

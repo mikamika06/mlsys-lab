@@ -1,0 +1,15 @@
+{
+  "id": "cpp-replace-shared-ptr-with-unique-ptr-where-sole-owned",
+  "title": "Smart Pointer Refactoring: Replacing std::shared_ptr with std::unique_ptr for Sole Ownership",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": []
+}

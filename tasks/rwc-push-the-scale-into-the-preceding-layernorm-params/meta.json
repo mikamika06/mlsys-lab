@@ -1,0 +1,27 @@
+{
+  "id": "rwc-push-the-scale-into-the-preceding-layernorm-params",
+  "title": "Push the scale into the preceding LayerNorm params",
+  "track": "04 ML Compiler / Optimization",
+  "tier": "II",
+  "module": "M2fusion",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fuse_scale_into_layernorm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "ln_param_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "output_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

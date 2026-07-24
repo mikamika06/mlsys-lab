@@ -1,0 +1,22 @@
+{
+  "id": "sys-tiled-matmul-global-traffic-vs-tile-size",
+  "title": "Tiled matmul global traffic vs tile size",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "tiled_matmul_traffic"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

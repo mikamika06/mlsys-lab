@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-scaling-weights-without-inverse-on-activations",
+  "title": "Debug AWQ scaling by restoring activation compensation",
+  "track": "04 Machine Learning Systems",
+  "tier": "I",
+  "module": "M2quant",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "restore_awq_equivalence"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

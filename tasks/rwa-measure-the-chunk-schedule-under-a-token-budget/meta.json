@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-the-chunk-schedule-under-a-token-budget",
+  "title": "Measure the chunk schedule under a token budget",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "chunk_schedule"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

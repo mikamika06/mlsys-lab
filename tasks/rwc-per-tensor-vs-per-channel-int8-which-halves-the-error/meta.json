@@ -1,0 +1,27 @@
+{
+  "id": "rwc-per-tensor-vs-per-channel-int8-which-halves-the-error",
+  "title": "Per-Tensor vs Per-Channel INT8: Which Halves the Error?",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "quant_granularity_errors"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "winner_correct",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwc-one-obq-column-update-with-error-propagation",
+  "title": "One OBQ Column Update with Error Propagation (GPTQ Step)",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "obq_column_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

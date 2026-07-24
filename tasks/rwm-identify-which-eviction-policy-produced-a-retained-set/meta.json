@@ -1,0 +1,22 @@
+{
+  "id": "rwm-identify-which-eviction-policy-produced-a-retained-set",
+  "title": "Identify Eviction Policy from Retained Set",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "identify_policy"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

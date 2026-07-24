@@ -1,0 +1,19 @@
+{
+  "id": "llm-debug-scale-computed-over-wrong-axis",
+  "title": "Debug: Per-Channel Scale Reduced Over the Wrong Axis",
+  "track": "02 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": ["quantize_per_channel"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "channel_rel_err", "op": "<=", "threshold": 0.01},
+    {"metric": "channel_rel_err_int4", "op": "<=", "threshold": 0.2},
+    {"metric": "codes_valid", "op": "==", "threshold": 1.0},
+    {"metric": "size_ratio", "op": ">=", "threshold": 3.5}
+  ],
+  "info": ["ref_channel_rel_err"]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "alg-leave-one-out-knn-accuracy-without-leakage",
+  "title": "Leave-one-out kNN accuracy without leakage",
+  "track": "03 Algorithms",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "loo_knn_predict"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmax_agreement",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

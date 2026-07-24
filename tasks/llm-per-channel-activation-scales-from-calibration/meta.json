@@ -1,0 +1,22 @@
+{
+  "id": "llm-per-channel-activation-scales-from-calibration",
+  "title": "Per‑channel activation scales from calibration data",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "per_channel_scales"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "channel_rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

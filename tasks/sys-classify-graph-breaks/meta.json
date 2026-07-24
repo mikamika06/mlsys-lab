@@ -1,0 +1,22 @@
+{
+  "id": "sys-classify-graph-breaks",
+  "title": "Classify Graph Breaks in Python Code Snippets",
+  "track": "02 Systems",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_breaks"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

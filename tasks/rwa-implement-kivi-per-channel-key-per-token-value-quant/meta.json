@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-kivi-per-channel-key-per-token-value-quant",
+  "title": "Implement KIVI: per-channel key + per-token value quant",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kivi_quant_errors"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

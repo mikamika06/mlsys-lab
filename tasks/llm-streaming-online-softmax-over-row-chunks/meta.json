@@ -1,0 +1,22 @@
+{
+  "id": "llm-streaming-online-softmax-over-row-chunks",
+  "title": "Streaming online softmax over row chunks",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stream_softmax_row_chunks"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "num-naive-matmul-forbidding-blas",
+  "title": "Naïve Matrix Multiplication without BLAS",
+  "track": "01 NumPy",
+  "tier": "I",
+  "module": "M1np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "blas_used",
+      "op": "==",
+      "threshold": 0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwq-grid-search-the-per-channel-scale-exponent",
+  "title": "Grid-Search the AWQ Per-Channel Scale Exponent",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "awq_ratio_search"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_exact",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "mse_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

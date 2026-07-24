@@ -1,0 +1,27 @@
+{
+  "id": "rws-magnitude-vs-taylor-head-importance",
+  "title": "Magnitude vs Taylor head importance ranking",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rank_heads_by_importance"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "rankings_differ",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

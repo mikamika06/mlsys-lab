@@ -1,0 +1,22 @@
+{
+  "id": "llm-reconstruct-weights-from-packed-int4-scales",
+  "title": "Reconstruct weights from packed int4 scales",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "dequantize_int4"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

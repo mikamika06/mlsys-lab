@@ -1,0 +1,27 @@
+{
+  "id": "sys-asymmetric-zero-point-round-trip",
+  "title": "Asymmetric Zero-Point Quantize/Dequantize Round-Trip",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M4quant",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "affine_quant_dequant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "max_step_ratio",
+      "op": "<=",
+      "threshold": 0.500001
+    }
+  ],
+  "info": []
+}

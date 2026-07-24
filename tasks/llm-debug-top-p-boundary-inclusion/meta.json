@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-top-p-boundary-inclusion",
+  "title": "Debug top-p boundary inclusion",
+  "track": "04 Machine Learning",
+  "tier": "I",
+  "module": "M2sampling",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "top_p_keep"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

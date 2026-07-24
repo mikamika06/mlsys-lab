@@ -1,0 +1,22 @@
+{
+  "id": "num-cancellation-free-quadratic-formula",
+  "title": "Cancellation-free quadratic formula",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "solve_quadratic"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

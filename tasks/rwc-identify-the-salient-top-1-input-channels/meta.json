@@ -1,0 +1,22 @@
+{
+  "id": "rwc-identify-the-salient-top-1-input-channels",
+  "title": "Identify the Salient Top‑1% Input Channels",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "identify_salient_channels"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,7 @@
+{"id":"gpu-rank-access-patterns-coalesced-scattered","title":"Rank access patterns: coalesced vs reversed vs strided (CUDA)","native":"cuda","difficulty":2,
+ "gates":[
+   {"metric":"max_abs_err","op":"<=","threshold":1e-9},
+   {"metric":"transactions_unit","op":"<=","threshold":8},
+   {"metric":"transactions_reversed","op":"<=","threshold":8},
+   {"metric":"transactions_stride4","op":">=","threshold":12}
+ ]}

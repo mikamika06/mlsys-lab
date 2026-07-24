@@ -1,0 +1,22 @@
+{
+  "id": "sys-adam-optimizer-state-bytes",
+  "title": "Adam Optimizer State Bytes",
+  "track": "04 Systems",
+  "tier": "I",
+  "module": "M4sys",
+  "difficulty": 1,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "adam_optimizer_state_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

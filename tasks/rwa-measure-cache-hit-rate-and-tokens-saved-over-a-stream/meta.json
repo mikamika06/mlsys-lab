@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-cache-hit-rate-and-tokens-saved-over-a-stream",
+  "title": "Measure cache hit rate and reused tokens over a request stream",
+  "track": "03 Retrieval Systems",
+  "tier": "I",
+  "module": "M2rwa",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "measure_cache_stats"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

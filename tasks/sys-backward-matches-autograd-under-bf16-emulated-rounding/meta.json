@@ -1,0 +1,22 @@
+{
+  "id": "sys-backward-matches-autograd-under-bf16-emulated-rounding",
+  "title": "FlashAttention backward with bf16-emulated recomputation",
+  "track": "07 Systems ML",
+  "tier": "III",
+  "module": "M3sys",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_bwd_bf16"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 0.005
+    }
+  ],
+  "info": []
+}

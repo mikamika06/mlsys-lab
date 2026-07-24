@@ -1,0 +1,22 @@
+{
+  "id": "rwm-smallest-stage-offload-target-that-fits-a-target-model",
+  "title": "Smallest ZeRO stage and offload target that fits model memory",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "choose_stage_offload"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

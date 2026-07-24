@@ -1,0 +1,20 @@
+{
+  "id": "gpu-choose-tile-size-to-minimize-modeled-dram-traffic",
+  "title": "Tile a matmul to cut measured DRAM transactions (real CUDA-C)",
+  "track": "GPU Programming",
+  "tier": "II",
+  "module": "Mgpu",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "transaction_ratio", "op": "<=", "threshold": 0.55}
+  ],
+  "info": [
+    "Real CUDA-C kernel parsed by arena.cuda_c and executed on arena.cuda_sim.GPU.",
+    "The simulator is 1D-launch only, so a 2x2 grid of 16x16 blocks is flattened into grid=4, block=256 and the kernel recovers 2D tile coordinates from threadIdx.x/blockIdx.x itself.",
+    "transaction_ratio is the measured global-memory transaction count divided by an untiled baseline the grader measures with its own internal (non-learner) 2D kernel on the same simulator."
+  ]
+}

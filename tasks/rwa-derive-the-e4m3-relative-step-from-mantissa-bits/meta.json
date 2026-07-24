@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-the-e4m3-relative-step-from-mantissa-bits",
+  "title": "Derive the E4M3 Relative Rounding Step from Mantissa Bits",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "relative_rounding_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.1
+    }
+  ],
+  "info": []
+}

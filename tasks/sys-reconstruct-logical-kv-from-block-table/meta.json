@@ -1,0 +1,22 @@
+{
+  "id": "sys-reconstruct-logical-kv-from-block-table",
+  "title": "Reconstruct logical KV from block table",
+  "track": "03 Systems & Infrastructure",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_logical_kv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

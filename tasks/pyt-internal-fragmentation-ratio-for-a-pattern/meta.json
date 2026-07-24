@@ -1,0 +1,22 @@
+{
+  "id": "pyt-internal-fragmentation-ratio-for-a-pattern",
+  "title": "Internal fragmentation ratio from real CPython object sizes",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "CPython",
+  "provides": [
+    "internal_fragmentation_ratio"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

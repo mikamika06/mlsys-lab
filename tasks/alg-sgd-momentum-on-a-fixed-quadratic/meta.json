@@ -1,0 +1,22 @@
+{
+  "id": "alg-sgd-momentum-on-a-fixed-quadratic",
+  "title": "SGD with Momentum on a Fixed Quadratic",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sgd_momentum_quadratic"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

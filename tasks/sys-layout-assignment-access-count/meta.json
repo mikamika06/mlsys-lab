@@ -1,0 +1,22 @@
+{
+  "id": "sys-layout-assignment-access-count",
+  "title": "Layout-assignment access count",
+  "track": "05 Systems",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "modeled_access_count"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

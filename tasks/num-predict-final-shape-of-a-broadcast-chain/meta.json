@@ -1,0 +1,22 @@
+{
+  "id": "num-predict-final-shape-of-a-broadcast-chain",
+  "title": "Predict final shape of a broadcast chain",
+  "track": "03 NumPy",
+  "tier": "II",
+  "module": "M1np",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "predict_broadcast_shape"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

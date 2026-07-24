@@ -1,0 +1,15 @@
+{
+  "id": "cpp-leak-free-half-built-object-on-throw",
+  "title": "Fix RAII class layout — missing tail padding (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "the driver cross-checks the learner's manually computed layout against sizeof/offsetof of real, equivalently-declared structs"
+  ]
+}

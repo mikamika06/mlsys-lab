@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-off-by-one-causal-mask-future-leak",
+  "title": "Debug off‑by‑one causal mask leakage",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1dl",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "create_causal_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

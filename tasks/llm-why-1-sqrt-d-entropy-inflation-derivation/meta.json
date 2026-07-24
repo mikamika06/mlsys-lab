@@ -1,0 +1,22 @@
+{
+  "id": "llm-why-1-sqrt-d-entropy-inflation-derivation",
+  "title": "Attention scaling entropy inflation ratio",
+  "track": "03 Machine Learning Foundations",
+  "tier": "I",
+  "module": "M3attn",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "entropy_inflation_ratio"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

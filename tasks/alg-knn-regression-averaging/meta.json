@@ -1,0 +1,22 @@
+{
+  "id": "alg-knn-regression-averaging",
+  "title": "k‑Nearest‑Neighbors Regression (Averaging)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "knn_regression_average"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

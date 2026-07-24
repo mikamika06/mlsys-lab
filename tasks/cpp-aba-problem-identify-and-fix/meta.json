@@ -1,0 +1,19 @@
+{
+  "id": "cpp-aba-problem-identify-and-fix",
+  "title": "ABA problem: identify and fix",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 5,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

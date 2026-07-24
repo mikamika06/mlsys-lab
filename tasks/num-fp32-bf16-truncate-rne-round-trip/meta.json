@@ -1,0 +1,22 @@
+{
+  "id": "num-fp32-bf16-truncate-rne-round-trip",
+  "title": "FP32 to bfloat16 round-to-nearest-even encoding",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp32_to_bf16_codes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "cpp-detection-idiom-has-member-type-trait",
+  "title": "Detection-idiom has_serialize type trait (real C++)",
+  "track": "02 Deep C++",
+  "tier": "III",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": []
+}

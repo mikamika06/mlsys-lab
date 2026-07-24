@@ -1,0 +1,32 @@
+{
+  "id": "num-compute-arithmetic-intensity-of-saxpy-gemm",
+  "title": "Compute arithmetic intensity of SAXPY / GEMM",
+  "track": "02 Numerics",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "compute_roofline_metrics"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "flops_rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "bytes_rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "ai_rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

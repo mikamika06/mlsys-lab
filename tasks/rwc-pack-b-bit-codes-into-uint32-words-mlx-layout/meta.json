@@ -1,0 +1,23 @@
+{
+  "id": "rwc-pack-b-bit-codes-into-uint32-words-mlx-layout",
+  "title": "Pack 4-bit codes into MLX uint32 layout",
+  "track": "03 ML Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pack_4bit_codes",
+    "unpack_4bit_codes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

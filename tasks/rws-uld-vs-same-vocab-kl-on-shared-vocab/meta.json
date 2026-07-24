@@ -1,0 +1,35 @@
+{
+  "id": "rws-uld-vs-same-vocab-kl-on-shared-vocab",
+  "title": "ULD vs same-vocab KL on a shared vocabulary",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "uld_and_kl_along_sweep"
+  ],
+  "fixtures": [
+    "uld_p_teacher.npy",
+    "uld_p_students.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "nonneg_ok",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "minimized_at_match",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

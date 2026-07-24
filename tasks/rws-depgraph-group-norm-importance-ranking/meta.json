@@ -1,0 +1,22 @@
+{
+  "id": "rws-depgraph-group-norm-importance-ranking",
+  "title": "DepGraph group norm importance ranking",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "rank_groups_by_importance"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "spearman",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

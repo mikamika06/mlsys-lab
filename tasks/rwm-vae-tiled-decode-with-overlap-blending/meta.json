@@ -1,0 +1,22 @@
+{
+  "id": "rwm-vae-tiled-decode-with-overlap-blending",
+  "title": "VAE Tiled Decode With Overlap Blending",
+  "track": "05 Systems & Memory",
+  "tier": "II",
+  "module": "M4mem",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "tiled_vae_decode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

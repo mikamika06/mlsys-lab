@@ -1,0 +1,22 @@
+{
+  "id": "rwb-break-even-acceptance-for-a-cost-ratio",
+  "title": "Break-even acceptance rate for a speculative decoding cost ratio",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2mlsys",
+  "difficulty": 5,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "break_even_alpha"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

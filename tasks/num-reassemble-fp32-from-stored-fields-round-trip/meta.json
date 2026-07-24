@@ -1,0 +1,22 @@
+{
+  "id": "num-reassemble-fp32-from-stored-fields-round-trip",
+  "title": "Reassemble FP32 from stored fields (round-trip)",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reassemble_fp32"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-determinant-from-lu",
+  "title": "Determinant from LU decomposition",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "det_from_lu"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-08
+    }
+  ],
+  "info": []
+}

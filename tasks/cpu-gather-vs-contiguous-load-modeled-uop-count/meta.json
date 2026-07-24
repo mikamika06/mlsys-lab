@@ -1,0 +1,15 @@
+{
+  "id": "cpu-gather-vs-contiguous-load-modeled-uop-count",
+  "title": "Modeled uop count: gather vs contiguous SIMD load",
+  "track": "13 CPU-perf", "tier": "IV", "module": "M13", "difficulty": 3,
+  "genre": "implement", "platform": "cross-platform",
+  "provides": ["modeled_load_uops"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "contiguous_uops", "op": "==", "threshold": 1},
+    {"metric": "gather_uops", "op": "==", "threshold": 1},
+    {"metric": "contiguous_misses", "op": "==", "threshold": 1},
+    {"metric": "gather_misses", "op": "==", "threshold": 1}
+  ],
+  "info": []
+}

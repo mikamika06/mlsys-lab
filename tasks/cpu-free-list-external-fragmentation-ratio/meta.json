@@ -1,0 +1,17 @@
+{
+  "id": "cpu-free-list-external-fragmentation-ratio",
+  "title": "Free-list external fragmentation ratio (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "ground truth comes from actually running a first-fit-with-splitting, two-sided-coalescing free-list simulation over two fixed op sequences, not a hardcoded ratio"
+  ]
+}

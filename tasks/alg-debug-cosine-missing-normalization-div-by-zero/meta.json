@@ -1,0 +1,22 @@
+{
+  "id": "alg-debug-cosine-missing-normalization-div-by-zero",
+  "title": "Debug Cosine Similarity – Missing Normalization and Division‑by‑Zero",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "cosine_similarity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmax_agreement",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

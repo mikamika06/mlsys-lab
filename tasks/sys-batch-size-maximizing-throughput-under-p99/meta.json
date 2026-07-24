@@ -1,0 +1,22 @@
+{
+  "id": "sys-batch-size-maximizing-throughput-under-p99",
+  "title": "Maximize batch throughput under a p99 latency SLO",
+  "track": "04 Systems",
+  "tier": "III",
+  "module": "M3sys",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "max_throughput_batch_size"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 1.02
+    }
+  ],
+  "info": []
+}

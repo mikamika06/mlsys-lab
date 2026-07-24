@@ -1,0 +1,22 @@
+{
+  "id": "alg-global-norm-gradient-clipping",
+  "title": "Global-norm gradient clipping",
+  "track": "alg",
+  "tier": 1,
+  "module": "optimization",
+  "difficulty": 2,
+  "genre": "algo",
+  "platform": "numpy",
+  "provides": [
+    "clip_global_norm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

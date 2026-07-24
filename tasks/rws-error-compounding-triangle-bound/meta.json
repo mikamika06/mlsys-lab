@@ -1,0 +1,27 @@
+{
+  "id": "rws-error-compounding-triangle-bound",
+  "title": "Error-Compounding Triangle Bound",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "compound_error_bound"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "errs_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "bound_holds",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

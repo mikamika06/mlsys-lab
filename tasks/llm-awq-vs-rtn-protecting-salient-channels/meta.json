@@ -1,0 +1,27 @@
+{
+  "id": "llm-awq-vs-rtn-protecting-salient-channels",
+  "title": "AWQ vs RTN protecting salient channels",
+  "track": "02 Deep Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_awq_rtn"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "awq_better",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

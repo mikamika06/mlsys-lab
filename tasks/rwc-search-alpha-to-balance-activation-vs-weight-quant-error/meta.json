@@ -1,0 +1,27 @@
+{
+  "id": "rwc-search-alpha-to-balance-activation-vs-weight-quant-error",
+  "title": "Search alpha to balance activation vs weight INT8 quant error",
+  "track": "01 Deep Learning",
+  "tier": "II",
+  "module": "M2nn",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "search_best_alpha"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "idx_ok",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "curve_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

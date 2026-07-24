@@ -1,0 +1,22 @@
+{
+  "id": "sys-greedy-speculative-argmax-equivalence",
+  "title": "Greedy Speculative Decoding Argmax Equivalence",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "greedy_speculative"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "spec_agreement",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

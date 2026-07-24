@@ -1,0 +1,22 @@
+{
+  "id": "pyt-metaclass-vs-init-subclass-registry-equivalence",
+  "title": "Metaclass and __init_subclass__ registry equivalence",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "build_registry"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

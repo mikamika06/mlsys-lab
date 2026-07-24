@@ -1,0 +1,22 @@
+{
+  "id": "rws-derive-greedy-top-2-optimality-over-the-6-patterns",
+  "title": "Derive greedy top-2 optimality over the 6 patterns",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3compression",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "greedy_24_prune"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

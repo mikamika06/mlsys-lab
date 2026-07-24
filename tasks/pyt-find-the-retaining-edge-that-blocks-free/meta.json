@@ -1,0 +1,22 @@
+{
+  "id": "pyt-find-the-retaining-edge-that-blocks-free",
+  "title": "Find the retaining edge that blocks free",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "find_retaining_edge"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

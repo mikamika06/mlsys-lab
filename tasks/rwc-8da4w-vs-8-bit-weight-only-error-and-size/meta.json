@@ -1,0 +1,42 @@
+{
+  "id": "rwc-8da4w-vs-8-bit-weight-only-error-and-size",
+  "title": "Compare 8da4w and 8-bit weight-only quantization tradeoffs",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_linear_quantization"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "error_8da4w",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "error_wo8",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "size_8da4w",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "size_wo8",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "tradeoff",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

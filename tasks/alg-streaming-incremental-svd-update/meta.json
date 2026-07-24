@@ -1,0 +1,22 @@
+{
+  "id": "alg-streaming-incremental-svd-update",
+  "title": "Streaming incremental SVD update",
+  "track": "04 Algorithms",
+  "tier": "II",
+  "module": "M3alg",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "python",
+  "provides": [
+    "incremental_svd_update"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

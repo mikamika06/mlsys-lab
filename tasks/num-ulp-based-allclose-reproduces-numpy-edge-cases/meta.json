@@ -1,0 +1,22 @@
+{
+  "id": "num-ulp-based-allclose-reproduces-numpy-edge-cases",
+  "title": "ULP-based allclose reproduces NumPy edge cases",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "ulp_allclose_report"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

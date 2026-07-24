@@ -1,0 +1,32 @@
+{
+  "id": "rws-per-tensor-vs-global-per-layer-sparsity-drift",
+  "title": "Per-tensor vs global: per-layer sparsity drift",
+  "track": "03 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "global_threshold_layer_sparsity"
+  ],
+  "fixtures": [
+    "layer0.npy",
+    "layer1.npy",
+    "layer2.npy",
+    "layer3.npy"
+  ],
+  "gates": [
+    {
+      "metric": "sparsity_exact",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "most_pruned_layer_exact",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

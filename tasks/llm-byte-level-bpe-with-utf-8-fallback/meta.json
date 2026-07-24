@@ -1,0 +1,22 @@
+{
+  "id": "llm-byte-level-bpe-with-utf-8-fallback",
+  "title": "Byte-level BPE with UTF-8 fallback",
+  "track": "04 LLM Systems",
+  "tier": "I",
+  "module": "M2nlp",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "byte_bpe_encode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwc-fix-a-wrong-transpose-perm-that-corrupts-the-export",
+  "title": "Recover a corrupted export Transpose permutation",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2export",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "fix_transpose_perm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "perm_exact",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

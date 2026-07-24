@@ -1,0 +1,22 @@
+{
+  "id": "pyt-str-footprint-by-kind-and-length",
+  "title": "Predict str footprint by kind and length",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "CPython 3.12",
+  "provides": [
+    "str_footprint"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

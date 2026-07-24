@@ -1,0 +1,27 @@
+{
+  "id": "llm-asymmetric-zero-point-int8-round-trip",
+  "title": "Asymmetric int8 quantization round‑trip",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "asymmetric_quant_round_trip"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.01
+    },
+    {
+      "metric": "zero_point_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

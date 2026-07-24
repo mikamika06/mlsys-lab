@@ -1,0 +1,22 @@
+{
+  "id": "pyt-hand-assemble-bytecode-for-a-small-function",
+  "title": "Hand-assemble bytecode for a small function",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "CPython 3.12",
+  "provides": [
+    "assemble_add_two_bytecode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "pyt-reduce-instruction-count-while-preserving-output",
+  "title": "Reduce Instruction Count While Preserving Output",
+  "track": "02 Python Performance",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "clamp"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "instr_budget_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

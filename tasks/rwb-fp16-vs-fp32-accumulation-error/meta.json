@@ -1,0 +1,26 @@
+{
+  "id": "rwb-fp16-vs-fp32-accumulation-error",
+  "title": "fp16 vs fp32 attention accumulation error",
+  "track": "03 Deep Learning",
+  "tier": "II",
+  "module": "M3attention",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "fp16_vs_fp32_attention_error"
+  ],
+  "fixtures": [
+    "q.npy",
+    "k.npy",
+    "v.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

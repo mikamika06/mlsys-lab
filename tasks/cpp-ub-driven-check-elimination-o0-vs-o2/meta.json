@@ -1,0 +1,1 @@
+{"id":"cpp-ub-driven-check-elimination-o0-vs-o2","title":"UB-driven check elimination at -O0 vs -O2","track":"03 Native Systems","tier":"II","module":"M4ub","difficulty":5,"genre":"debug","platform":"mac","native":"cpp","gates":[{"metric":"exact_match","op":"==","threshold":1.0}],"info":[]}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-reconstruct-output-from-per-block-m-l-o-logs",
+  "title": "Reconstruct output from per-block (m, l, o) logs",
+  "track": "04 Systems and ML Kernels",
+  "tier": "II",
+  "module": "M1attn",
+  "difficulty": 2,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_attention_from_block_logs"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-emit-and-verify-logsumexp-for-backward",
+  "title": "Emit row logsumexp for attention backward verification",
+  "track": "06 Systems ML",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "emit_lse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

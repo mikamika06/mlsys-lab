@@ -1,0 +1,22 @@
+{
+  "id": "cpu-reassociate-a-reduction-to-shorten-critical-path",
+  "title": "Reassociate a reduction to shorten critical path",
+  "track": "04 Performance Engineering",
+  "tier": "II",
+  "module": "M2cpu",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "reassociated_sum_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

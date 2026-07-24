@@ -1,0 +1,40 @@
+{
+  "id": "rws-sparsegpt-vs-wanda-vs-magnitude-at-equal-s",
+  "title": "SparseGPT vs Wanda vs magnitude at equal sparsity",
+  "track": "03 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_prune_methods_mse"
+  ],
+  "fixtures": [
+    "layer_w.npy",
+    "layer_x.npy"
+  ],
+  "gates": [
+    {
+      "metric": "magnitude_err",
+      "op": "<",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "wanda_err",
+      "op": "<",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "sparsegpt_err",
+      "op": "<",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "ordering_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

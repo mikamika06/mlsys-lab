@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-wrong-alibi-slope-geometric-ratio",
+  "title": "Debug ALiBi geometric slope ratio",
+  "track": "04 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "alibi_slopes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

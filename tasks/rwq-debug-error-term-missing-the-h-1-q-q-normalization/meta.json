@@ -1,0 +1,27 @@
+{
+  "id": "rwq-debug-error-term-missing-the-h-1-q-q-normalization",
+  "title": "Debug: GPTQ error term missing the H^-1[q,q] normalization",
+  "track": "05 Real-World Model Compression",
+  "tier": "II",
+  "module": "M5rwm",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "gptq_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "codes_max_abs_err",
+      "op": "==",
+      "threshold": 0.0
+    },
+    {
+      "metric": "mse_abs_diff",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

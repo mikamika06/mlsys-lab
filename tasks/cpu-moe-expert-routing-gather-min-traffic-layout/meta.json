@@ -1,0 +1,13 @@
+{
+  "id": "cpu-moe-expert-routing-gather-min-traffic-layout",
+  "title": "MoE expert-routing gather: minimum-traffic layout",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

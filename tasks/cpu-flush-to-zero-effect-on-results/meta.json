@@ -1,0 +1,27 @@
+{
+  "id": "cpu-flush-to-zero-effect-on-results",
+  "title": "Flush-to-zero effect on floating-point results",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M2fp",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "dot_ftz_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.0
+    },
+    {
+      "metric": "miss_count",
+      "op": "==",
+      "threshold": 2
+    }
+  ],
+  "info": []
+}

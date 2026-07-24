@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-hbm-saved-by-layer-wise-offload-scheduling",
+  "title": "Measure HBM saved by layer-wise KV offload scheduling",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "measure_hbm_saved"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

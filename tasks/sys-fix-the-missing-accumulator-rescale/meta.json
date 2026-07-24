@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-the-missing-accumulator-rescale",
+  "title": "Fix the Missing Accumulator Rescale in Streaming Softmax",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "streaming_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

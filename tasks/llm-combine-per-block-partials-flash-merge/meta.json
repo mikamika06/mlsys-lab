@@ -1,0 +1,22 @@
+{
+  "id": "llm-combine-per-block-partials-flash-merge",
+  "title": "Combine per-block partials (flash merge)",
+  "track": "02 Deep Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "merge_attention_blocks"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

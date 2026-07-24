@@ -1,0 +1,22 @@
+{
+  "id": "num-nan-aware-max-argmax-matching-nanmax",
+  "title": "NaN-aware max/argmax matching nanmax",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "nanmax_argmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmax_agreement",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

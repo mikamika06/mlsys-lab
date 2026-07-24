@@ -1,0 +1,22 @@
+{
+  "id": "alg-recover-centroids-from-assignments-data",
+  "title": "Recover Centroids from Assignments and Data",
+  "track": "ML",
+  "tier": 4,
+  "module": "Clustering",
+  "difficulty": 4,
+  "genre": "algorithm",
+  "platform": "numpy",
+  "provides": [
+    "recover_centroids"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": {}
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-mixed-precision-compensated-accumulator",
+  "title": "Mixed-precision compensated accumulator",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compensated_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

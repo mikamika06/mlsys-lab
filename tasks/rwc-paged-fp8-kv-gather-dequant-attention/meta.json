@@ -1,0 +1,22 @@
+{
+  "id": "rwc-paged-fp8-kv-gather-dequant-attention",
+  "title": "Paged FP8 KV: Gather + Dequant + Attention",
+  "track": "03 Runtime ML Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "paged_fp8_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

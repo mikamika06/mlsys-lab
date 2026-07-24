@@ -1,0 +1,18 @@
+{
+  "id": "cpu-force-vectorization-via-settrace",
+  "title": "Vectorized access pattern via settrace",
+  "track": "13 CPU-perf",
+  "tier": "IV",
+  "module": "M13",
+  "difficulty": 1,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": ["access_pattern"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "covers_all", "op": "==", "threshold": 1.0},
+    {"metric": "line_count", "op": "<=", "threshold": 10},
+    {"metric": "misses", "op": "<=", "threshold": 512}
+  ],
+  "info": []
+}

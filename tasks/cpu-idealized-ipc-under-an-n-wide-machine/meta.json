@@ -1,0 +1,22 @@
+{
+  "id": "cpu-idealized-ipc-under-an-n-wide-machine",
+  "title": "Idealized IPC under an N-wide machine (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": [
+    "every DAG is hand-built by the fixed driver (no rand()/time()), so the expected IPC values are hand-verifiable",
+    "ignores structural hazards, port contention, and branch mispredicts by design -- only data dependencies and issue width bound the idealized IPC"
+  ]
+}

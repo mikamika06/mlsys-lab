@@ -1,0 +1,27 @@
+{
+  "id": "gpu-footprint-compare-fp16-vs-int8-vs-int4-weights",
+  "title": "GPU Footprint Comparison: FP16 vs INT8 vs INT4 Weights",
+  "track": "07 GPU Programming",
+  "tier": "I",
+  "module": "M2gpu",
+  "difficulty": 2,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "size_ratio_fp16_quantized"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "int8_size_ratio",
+      "op": ">=",
+      "threshold": 0.5
+    },
+    {
+      "metric": "int4_size_ratio",
+      "op": ">=",
+      "threshold": 0.25
+    }
+  ],
+  "info": []
+}

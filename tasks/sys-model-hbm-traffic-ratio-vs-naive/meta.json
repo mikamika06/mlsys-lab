@@ -1,0 +1,27 @@
+{
+  "id": "sys-model-hbm-traffic-ratio-vs-naive",
+  "title": "Model HBM Traffic Ratio: Tiled vs Naive Attention",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M5attn",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "hbm_traffic"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-09
+    },
+    {
+      "metric": "size_ratio",
+      "op": "<",
+      "threshold": 0.1
+    }
+  ],
+  "info": []
+}

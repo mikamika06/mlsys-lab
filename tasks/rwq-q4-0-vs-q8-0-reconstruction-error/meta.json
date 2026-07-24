@@ -1,0 +1,34 @@
+{
+  "id": "rwq-q4-0-vs-q8-0-reconstruction-error",
+  "title": "Q4_0 vs Q8_0 Reconstruction Error",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "q4_q8_reconstruction_mse"
+  ],
+  "fixtures": [
+    "gguf_w.npy"
+  ],
+  "gates": [
+    {
+      "metric": "q4_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "q8_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "q8_beats_q4",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-optimal-sqrt-n-checkpoint-placement",
+  "title": "Optimal sqrt(n) checkpoint placement",
+  "track": "03 Systems Optimization",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "optimal_checkpoints"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "<=",
+      "threshold": 1.05
+    }
+  ],
+  "info": []
+}

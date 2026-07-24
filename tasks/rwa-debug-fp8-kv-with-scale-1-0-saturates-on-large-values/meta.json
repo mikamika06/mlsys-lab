@@ -1,0 +1,22 @@
+{
+  "id": "rwa-debug-fp8-kv-with-scale-1-0-saturates-on-large-values",
+  "title": "Debug FP8 KV cache scaling saturation",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "fp8_attention_output"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.01
+    }
+  ],
+  "info": []
+}

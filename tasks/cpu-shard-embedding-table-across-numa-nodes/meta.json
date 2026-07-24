@@ -1,0 +1,22 @@
+{
+  "id": "cpu-shard-embedding-table-across-numa-nodes",
+  "title": "Shard embedding table across NUMA nodes",
+  "track": "04 Systems & Performance",
+  "tier": "III",
+  "module": "M3perf",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "shard_embedding_table"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

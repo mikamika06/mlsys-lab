@@ -1,0 +1,22 @@
+{
+  "id": "pyt-prove-non-linearizability-and-emit-the-conflicting-pair",
+  "title": "Prove non-linearizability and emit the conflicting pair",
+  "track": "01 Deep Python",
+  "tier": "III",
+  "module": "MRO",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "CPython",
+  "provides": [
+    "conflicting_pair"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-vjp-of-softmax",
+  "title": "Softmax VJP (chain rule)",
+  "track": "03 Numerical Python",
+  "tier": "I",
+  "module": "M3np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "softmax_vjp"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

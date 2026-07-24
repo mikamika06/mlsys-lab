@@ -1,0 +1,22 @@
+{
+  "id": "rws-gkd-mixed-on-off-policy-objective",
+  "title": "GKD mixed on/off-policy objective",
+  "track": "03 Machine Learning",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gkd_mixed_loss"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

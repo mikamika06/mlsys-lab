@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-the-split-kv-partial-output-merge-log-sum-exp-combine",
+  "title": "Split-KV attention partial output merge with log-sum-exp",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4attn",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "merge_split_kv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

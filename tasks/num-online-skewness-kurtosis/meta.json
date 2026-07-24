@@ -1,0 +1,22 @@
+{
+  "id": "num-online-skewness-kurtosis",
+  "title": "Online skewness and kurtosis with running moments",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M3num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "online_moments"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

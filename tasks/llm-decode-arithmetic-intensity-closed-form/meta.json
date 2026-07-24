@@ -1,0 +1,27 @@
+{
+  "id": "llm-decode-arithmetic-intensity-closed-form",
+  "title": "Arithmetic Intensity of a Single‑Token Decode (Closed Form)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "arithmetic_intensity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "type_ok",
+      "op": "==",
+      "threshold": true
+    }
+  ],
+  "info": []
+}

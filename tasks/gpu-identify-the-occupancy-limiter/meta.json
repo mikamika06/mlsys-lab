@@ -1,0 +1,22 @@
+{
+  "id": "gpu-identify-the-occupancy-limiter",
+  "title": "Identify the Occupancy Limiting Resource on a GPU Kernel",
+  "track": "07 GPU",
+  "tier": "I",
+  "module": "M2gpu",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "identify_limiter"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

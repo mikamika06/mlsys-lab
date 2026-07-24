@@ -1,0 +1,26 @@
+{
+  "id": "rwq-reconstruct-from-nvfp4-storage",
+  "title": "Reconstruct from NVFP4 storage",
+  "track": "04 Quantization & Low-Precision",
+  "tier": "II",
+  "module": "M4q",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "nvfp4_reconstruct"
+  ],
+  "fixtures": [
+    "e4m3_block_codes.npy",
+    "e2m1_codes.npy",
+    "global_scale.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,20 @@
+{
+  "id": "num-prove-constant-shift-invariance",
+  "title": "Prove constant-shift invariance of softmax",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M1num",
+  "difficulty": 2,
+  "genre": "prove",
+  "platform": "cross-platform",
+  "provides": ["softmax_shift_invariant"],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-7
+    }
+  ],
+  "info": []
+}

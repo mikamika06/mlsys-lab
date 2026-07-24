@@ -1,0 +1,28 @@
+{
+  "id": "llm-bpe-encode-decode-byte-round-trip",
+  "title": "Byte-Pair Encoding: Encode and Decode Round Trip",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "bpe_encode",
+    "bpe_decode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "token_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

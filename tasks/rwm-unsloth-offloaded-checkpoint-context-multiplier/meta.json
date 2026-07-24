@@ -1,0 +1,22 @@
+{
+  "id": "rwm-unsloth-offloaded-checkpoint-context-multiplier",
+  "title": "Unsloth offloaded-checkpoint context multiplier",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3mlsys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "context_multiplier"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

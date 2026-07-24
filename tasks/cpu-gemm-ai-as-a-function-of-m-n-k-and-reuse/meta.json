@@ -1,0 +1,15 @@
+{
+  "id": "cpu-gemm-ai-as-a-function-of-m-n-k-and-reuse",
+  "title": "GEMM arithmetic intensity as a function of M,N,K and tile reuse (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "II",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real C++: derives a closed-form roofline arithmetic-intensity formula for a T x T tile-blocked GEMM, parameterized by M,N,K, tile size and element size, printed as doubles and compared numerically, compiled by clang++."
+  ]
+}

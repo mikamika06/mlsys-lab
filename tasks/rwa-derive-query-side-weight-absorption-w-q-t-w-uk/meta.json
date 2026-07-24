@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-query-side-weight-absorption-w-q-t-w-uk",
+  "title": "Derive query-side weight absorption W_Q^T W_UK",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "absorb_query_weight"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

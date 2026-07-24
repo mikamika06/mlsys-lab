@@ -1,0 +1,22 @@
+{
+  "id": "alg-stable-softmax-on-large-logits",
+  "title": "Stable Softmax on Large Logits",
+  "track": "ML",
+  "tier": 2,
+  "module": "Numerical Stability",
+  "difficulty": 2,
+  "genre": "algorithm",
+  "platform": "numpy",
+  "provides": [
+    "stable_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": {}
+}

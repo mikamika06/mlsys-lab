@@ -1,0 +1,25 @@
+{
+  "id": "rws-derive-per-row-scale-invariance-of-the-wanda-mask",
+  "title": "Derive per-row scale invariance of the Wanda mask",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "wanda_mask"
+  ],
+  "fixtures": [
+    "wanda_w.npy",
+    "wanda_norms.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

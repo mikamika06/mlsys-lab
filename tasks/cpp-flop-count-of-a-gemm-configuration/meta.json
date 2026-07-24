@@ -1,0 +1,15 @@
+{
+ "id": "cpp-flop-count-of-a-gemm-configuration",
+ "title": "FLOP count of a GEMM configuration",
+ "track": "02 Deep C++",
+ "tier": "I",
+ "module": "M2",
+ "difficulty": 3,
+ "genre": "implement",
+ "platform": "cross-platform",
+ "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+ "info": [
+  "Real C++: a real GemmConfig struct, real sizeof(), compiled by clang++."
+ ],
+ "native": "cpp"
+}

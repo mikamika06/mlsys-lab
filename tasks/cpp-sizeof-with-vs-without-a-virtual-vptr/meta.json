@@ -1,0 +1,8 @@
+{
+  "id": "cpp-sizeof-with-vs-without-a-virtual-vptr",
+  "title": "Predict sizeof with vs without a virtual vptr",
+  "track": "02 Deep C++", "tier": "I", "module": "M3", "difficulty": 2,
+  "genre": "implement", "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}], "info": []
+}

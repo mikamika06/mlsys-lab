@@ -1,0 +1,22 @@
+{
+  "id": "rwa-optimize-which-prefixes-stay-in-hbm-vs-tier-out",
+  "title": "Optimize HBM prefix residency by reuse density",
+  "track": "04 Systems Optimization",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "optimize_hbm_prefixes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

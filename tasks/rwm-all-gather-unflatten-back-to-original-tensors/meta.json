@@ -1,0 +1,22 @@
+{
+  "id": "rwm-all-gather-unflatten-back-to-original-tensors",
+  "title": "Reconstruct parameters after all-gather from shards",
+  "track": "03 Distributed ML Systems",
+  "tier": "II",
+  "module": "M2dist",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "unflatten_all_gathered"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

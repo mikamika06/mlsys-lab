@@ -1,0 +1,27 @@
+{
+  "id": "rwq-full-fp8-w8a8-dynamic-matmul",
+  "title": "Full FP8 W8A8 Dynamic Matmul",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp8_dynamic_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.06
+    },
+    {
+      "metric": "oracle_rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    }
+  ],
+  "info": []
+}

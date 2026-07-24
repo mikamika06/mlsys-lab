@@ -1,0 +1,20 @@
+import numpy as np
+
+
+def is_valid_l1_mask(w: np.ndarray, mask: np.ndarray, amount: float) -> bool:
+    """
+    True iff `mask` is exactly PyTorch's L1Unstructured pruning mask for
+    `w` at sparsity `amount`: prune the k = round(amount * n) smallest-
+    |w| entries (mask False there), keep the rest (mask True).
+    """
+    w = np.asarray(w, dtype=np.float64)
+    mask = np.asarray(mask, dtype=bool)
+    n = w.size
+
+    k = int(round(amount * n))
+    true_mask = np.ones(n, dtype=bool)
+    if k > 0:
+        idx = np.argsort(np.abs(w))
+        true_mask[idx[:k]] = False
+
+    return bool(np.array_equal(mask, true_mask))

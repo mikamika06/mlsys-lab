@@ -1,0 +1,27 @@
+{
+  "id": "llm-compare-pi-vs-ntk-within-trained-range-kl",
+  "title": "Compare PI vs NTK attention KL within trained range",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_pi_ntk"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl_pi",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "mean_kl_ntk",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

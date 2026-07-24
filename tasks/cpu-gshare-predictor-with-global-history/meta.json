@@ -1,0 +1,20 @@
+{
+  "id": "cpu-gshare-predictor-with-global-history",
+  "title": "Gshare predictor with global history",
+  "track": "13 CPU-perf",
+  "tier": "IV",
+  "module": "M13",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": ["simulate_branch"],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

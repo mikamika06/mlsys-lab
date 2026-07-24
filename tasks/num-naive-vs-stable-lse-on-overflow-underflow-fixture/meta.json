@@ -1,0 +1,25 @@
+{
+  "id": "num-naive-vs-stable-lse-on-overflow-underflow-fixture",
+  "title": "Naive vs Stable LogSumExp on an Overflow/Underflow Fixture",
+  "track": "02 Numerical Computing",
+  "tier": "I",
+  "module": "M1num",
+  "difficulty": 1,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "logsumexp_stable"
+  ],
+  "fixtures": [
+    "x_overflow.npy",
+    "x_underflow.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-13
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwb-per-head-absmax-scaling",
+  "title": "Per-Head Absmax Scaling to E4M3",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "per_head_absmax_e4m3"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

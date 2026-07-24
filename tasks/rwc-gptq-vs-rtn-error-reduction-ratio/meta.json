@@ -1,0 +1,25 @@
+{
+  "id": "rwc-gptq-vs-rtn-error-reduction-ratio",
+  "title": "GPTQ vs RTN error-reduction ratio",
+  "track": "03 Deep Learning",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "gptq_vs_rtn_error_ratio"
+  ],
+  "fixtures": [
+    "w.npy",
+    "x.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

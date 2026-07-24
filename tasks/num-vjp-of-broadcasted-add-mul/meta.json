@@ -1,0 +1,23 @@
+{
+  "id": "num-vjp-of-broadcasted-add-mul",
+  "title": "VJP of Broadcasted Add / Mul",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": [
+    "add_vjp",
+    "mul_vjp"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

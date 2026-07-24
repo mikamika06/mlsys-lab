@@ -1,0 +1,33 @@
+{
+  "id": "num-kahan-vs-neumaier-when-running-sum-addend",
+  "title": "Kahan vs Neumaier when the running sum is smaller than the next addend",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "kahan_sum",
+    "neumaier_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "neumaier_rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "kahan_match_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "neumaier_advantage",
+      "op": ">=",
+      "threshold": 0.1
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-ai-of-mxkxn-matmul-with-without-reuse",
+  "title": "Arithmetic intensity of M×K×N matmul with/without reuse",
+  "track": "05 Performance",
+  "tier": "I",
+  "module": "M5perf",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "ai_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

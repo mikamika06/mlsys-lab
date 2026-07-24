@@ -1,0 +1,22 @@
+{
+  "id": "rwq-hard-activation-channels-needing-migration",
+  "title": "Hard activation channels needing migration",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M1qw",
+  "difficulty": 2,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "migration_channels"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

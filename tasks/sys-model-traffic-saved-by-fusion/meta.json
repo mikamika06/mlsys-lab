@@ -1,0 +1,27 @@
+{
+  "id": "sys-model-traffic-saved-by-fusion",
+  "title": "Model Traffic Saved by Fusion",
+  "track": "03 Systems and Compilers",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 2,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "fusion_traffic"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

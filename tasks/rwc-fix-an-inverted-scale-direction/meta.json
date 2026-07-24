@@ -1,0 +1,27 @@
+{
+  "id": "rwc-fix-an-inverted-scale-direction",
+  "title": "Fix an inverted scale direction",
+  "track": "03 ML Systems",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "migrate_scale"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "range_reduction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

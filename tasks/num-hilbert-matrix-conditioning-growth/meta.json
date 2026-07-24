@@ -1,0 +1,22 @@
+{
+  "id": "num-hilbert-matrix-conditioning-growth",
+  "title": "Hilbert matrix conditioning growth",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "python",
+  "provides": [
+    "hilbert_condition_numbers"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.05
+    }
+  ],
+  "info": []
+}

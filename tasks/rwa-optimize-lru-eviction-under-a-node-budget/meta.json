@@ -1,0 +1,22 @@
+{
+  "id": "rwa-optimize-lru-eviction-under-a-node-budget",
+  "title": "Optimize LRU eviction under a node budget",
+  "track": "03 Algorithms",
+  "tier": "II",
+  "module": "M3alg",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "optimize_lru_cache"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

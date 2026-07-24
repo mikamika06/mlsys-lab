@@ -1,0 +1,22 @@
+{
+  "id": "num-sequential-vs-tree-reduction-accuracy",
+  "title": "Sequential vs tree reduction accuracy",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "tree_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.5
+    }
+  ],
+  "info": []
+}

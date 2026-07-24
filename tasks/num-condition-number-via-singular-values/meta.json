@@ -1,0 +1,22 @@
+{
+  "id": "num-condition-number-via-singular-values",
+  "title": "Condition number via singular values",
+  "track": "02 Numerics",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "condition_number_via_svd"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "gpu-welford-one-pass-mean-variance",
+  "title": "Welford one-pass mean/variance kernel",
+  "track": "11 GPU kernels",
+  "tier": "III",
+  "module": "M11",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": []
+}

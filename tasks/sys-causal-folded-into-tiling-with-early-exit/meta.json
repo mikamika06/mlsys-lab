@@ -1,0 +1,27 @@
+{
+  "id": "sys-causal-folded-into-tiling-with-early-exit",
+  "title": "Causal Attention Folded into Tiling, with Early Exit",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M5attn",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "tiled_causal_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "tile_visit_exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

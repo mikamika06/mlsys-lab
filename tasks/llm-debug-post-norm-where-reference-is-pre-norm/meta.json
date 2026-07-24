@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-post-norm-where-reference-is-pre-norm",
+  "title": "Debug transformer block norm placement",
+  "track": "03 Machine Learning",
+  "tier": "II",
+  "module": "M2nn",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "transformer_block"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

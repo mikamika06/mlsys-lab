@@ -1,0 +1,27 @@
+{
+  "id": "rwq-debug-per-tensor-scale-instead-of-per-token",
+  "title": "Restore per-token KV cache quantization scales",
+  "track": "03 NumPy ML",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "quantized_kv_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "mse_ratio_vs_buggy",
+      "op": "<",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

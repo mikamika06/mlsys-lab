@@ -1,0 +1,18 @@
+{
+  "id": "cpp-cache-lines-touched-aos-vs-padded-record",
+  "title": "Cache lines touched: compact record vs padded record (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "record sizes/offsets come from the real compiler (sizeof/offsetof), not a modeled ABI",
+    "cache-line counts come from a deterministic line-tracker over real, 64-byte-aligned addresses, not hardware performance counters"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwm-torchao-8-bit-adamw-state-blockwise-one-step",
+  "title": "Blockwise 8-bit AdamW state update",
+  "track": "03 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3opt",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "adamw_8bit_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "rwc-fix-the-off-by-one-scale-denominator",
+  "title": "Fix the Off-by-One Scale Denominator",
+  "track": "rwc",
+  "tier": 1,
+  "module": "quantization",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "numpy",
+  "provides": ["affine_quant_dequant"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": "Fix a buggy affine quantizer that uses (max-min)/2^b instead of the correct (max-min)/(2^b-1)."
+}

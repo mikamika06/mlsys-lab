@@ -1,0 +1,27 @@
+{
+  "id": "alg-rank-k-factors-without-forming-full-product",
+  "title": "Rank-k factors without forming full product",
+  "track": "02 Numerical Algorithms",
+  "tier": "II",
+  "module": "M2numpy",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "rank_k_factors"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "factor_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "extra_alloc_bytes",
+      "op": "<",
+      "threshold": 5000000
+    }
+  ],
+  "info": []
+}

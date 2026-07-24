@@ -1,0 +1,22 @@
+{
+  "id": "sys-model-ring-attention-comm-volume",
+  "title": "Model ring-attention communication volume",
+  "track": "04 Systems Modeling",
+  "tier": "II",
+  "module": "M4sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "ring_attention_comm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-column-row-parallel-mlp-equivalence",
+  "title": "Column+Row Parallel MLP Equivalence",
+  "track": "04 Systems ML",
+  "tier": "I",
+  "module": "M1tp",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mlp_tensor_parallel"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

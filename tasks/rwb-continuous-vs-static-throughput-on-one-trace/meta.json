@@ -1,0 +1,22 @@
+{
+  "id": "rwb-continuous-vs-static-throughput-on-one-trace",
+  "title": "Continuous vs Static Batching Throughput on One Trace",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2serving",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_batching_throughput"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

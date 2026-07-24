@@ -1,0 +1,22 @@
+{
+  "id": "rwa-compare-asymmetric-k-q8-0-v-q4-0-vs-symmetric-configs",
+  "title": "Asymmetric KV cache quantization comparison",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_config_attention_errors"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

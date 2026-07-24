@@ -1,0 +1,27 @@
+{
+  "id": "rwc-mlx-affine-asymmetric-vs-symmetric-absmax-int4",
+  "title": "MLX int4 affine vs symmetric absmax quantization",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_int4_quantizers"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "scheme_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "cpu-kahan-pairwise-summation-accuracy",
+  "title": "Kahan compensated summation accuracy (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-3}],
+  "info": [
+    "Real C++: Kahan compensated summation over float32 arrays, evaluated on two adversarial fixtures (a large-magnitude accumulator that swallows small increments, and a million-term sum with representation-error drift), compiled by clang++."
+  ]
+}

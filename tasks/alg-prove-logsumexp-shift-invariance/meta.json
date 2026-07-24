@@ -1,0 +1,22 @@
+{
+  "id": "alg-prove-logsumexp-shift-invariance",
+  "title": "LogSumExp Shift Invariance Proof",
+  "track": "02 Algorithms",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "logsumexp"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

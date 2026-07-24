@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-mixed-batch-paged-read-count-and-gather-indices",
+  "title": "Measure Mixed‑Batch Paged Read Count and Gather Indices",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "measure_mixed_batch"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

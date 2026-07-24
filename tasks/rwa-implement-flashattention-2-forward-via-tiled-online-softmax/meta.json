@@ -1,0 +1,27 @@
+{
+  "id": "rwa-implement-flashattention-2-forward-via-tiled-online-softmax",
+  "title": "Implement FlashAttention-2 Forward via Tiled Online Softmax",
+  "track": "03 Runtime ML Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_attention_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-4
+    },
+    {
+      "metric": "peak_alloc_ratio",
+      "op": "<=",
+      "threshold": 0.5
+    }
+  ],
+  "info": []
+}

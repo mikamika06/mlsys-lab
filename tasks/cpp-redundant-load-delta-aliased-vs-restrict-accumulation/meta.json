@@ -1,0 +1,19 @@
+{
+  "id": "cpp-redundant-load-delta-aliased-vs-restrict-accumulation",
+  "title": "Redundant-load delta: aliased vs restrict accumulation",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

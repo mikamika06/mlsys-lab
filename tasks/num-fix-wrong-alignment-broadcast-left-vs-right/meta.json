@@ -1,0 +1,22 @@
+{
+  "id": "num-fix-wrong-alignment-broadcast-left-vs-right",
+  "title": "Fix wrong-alignment broadcasting",
+  "track": "02 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "broadcast_add_right"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,33 @@
+{
+  "id": "num-debug-decompose-that-mishandles-subnormals-bias-sign",
+  "title": "Debug: float32 decompose that mishandles subnormals and the bias sign",
+  "track": "02 Numerics",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "decompose",
+    "recompose"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "field_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "recompose_byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

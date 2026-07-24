@@ -1,0 +1,20 @@
+{
+  "id": "num-online-blockwise-softmax-flash-recurrence",
+  "title": "Online Blockwise Softmax (Flash Recurrence)",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M3num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": ["blockwise_softmax"],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

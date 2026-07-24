@@ -1,0 +1,29 @@
+{
+  "id": "num-cgs-vs-mgs-loss-of-orthogonality",
+  "title": "CGS vs MGS loss of orthogonality",
+  "track": "02 Numerical Python",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gram_schmidt_orthogonality"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "mgs_orthogonality",
+      "op": "<",
+      "threshold": 1e-8
+    }
+  ],
+  "info": [
+    "The CGS result is informational; the MGS orthogonality value is the quality gate."
+  ]
+}

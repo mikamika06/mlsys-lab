@@ -1,0 +1,27 @@
+{
+  "id": "llm-weight-tying-identity-check",
+  "title": "Weight-tying identity check",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "tied_identity_logits"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "identity_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

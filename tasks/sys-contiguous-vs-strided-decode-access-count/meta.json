@@ -1,0 +1,22 @@
+{
+  "id": "sys-contiguous-vs-strided-decode-access-count",
+  "title": "KV-cache decode memory access count",
+  "track": "04 Systems Python",
+  "tier": "II",
+  "module": "M4sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "decode_access_count"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-predict-overflow-pattern-of-three-softmaxes",
+  "title": "Predict the overflow pattern of three softmax implementations",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 4,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_softmax_overflow"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

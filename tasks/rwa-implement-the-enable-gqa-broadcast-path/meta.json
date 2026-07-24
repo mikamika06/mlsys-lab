@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-the-enable-gqa-broadcast-path",
+  "title": "Implement the enable_gqa broadcast path",
+  "track": "03 Deep Learning",
+  "tier": "II",
+  "module": "M3attention",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "enable_gqa_broadcast_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

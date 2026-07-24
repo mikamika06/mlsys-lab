@@ -1,0 +1,33 @@
+{
+  "id": "rwq-symmetric-vs-asymmetric-int8-quantize-dequantize",
+  "title": "Symmetric vs Asymmetric INT8 Quantization and Dequantization",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sym_quant_dequant",
+    "asym_quant_dequant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "sym_mse_diff",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "asym_mse_diff",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

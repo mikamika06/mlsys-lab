@@ -1,0 +1,22 @@
+{
+  "id": "rws-sequence-level-kd-hard-target",
+  "title": "Sequence-level KD (hard targets)",
+  "track": "02 ML Fundamentals",
+  "tier": "II",
+  "module": "M2kd",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "seq_level_kd_hard"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

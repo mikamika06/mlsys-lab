@@ -1,0 +1,22 @@
+{
+  "id": "alg-k-means-seeding-from-given-random-stream",
+  "title": "K-Means++ seeding from a given random stream",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kmeans_pp_seed"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

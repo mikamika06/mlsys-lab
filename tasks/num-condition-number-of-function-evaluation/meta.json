@@ -1,0 +1,22 @@
+{
+  "id": "num-condition-number-of-function-evaluation",
+  "title": "Condition number of function evaluation",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "log_condition_number"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwa-derive-the-disaggregation-kv-transfer-byte-count",
+  "title": "Derive the disaggregation KV transfer byte count",
+  "track": "03 Systems ML",
+  "tier": "II",
+  "module": "M2mlsys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_transfer_analysis"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwc-fix-a-max-calibration-scale-wrecked-by-one-outlier",
+  "title": "Fix max calibration scale wrecked by one outlier",
+  "track": "03 Numerical Python",
+  "tier": "I",
+  "module": "M3np",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "calibrate_scale_and_dequantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "reconstruction_rel_err",
+      "op": "<=",
+      "threshold": 0.15
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-mini-softfloat-add-with-guard-round-sticky",
+  "title": "Mini softfloat fp32 add with GRS rounding",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp32_add_bits"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

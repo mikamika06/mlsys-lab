@@ -1,0 +1,27 @@
+{
+  "id": "rws-erk-per-layer-density-budget",
+  "title": "ERK Per-Layer Density Budget Allocation",
+  "track": "05 Real-World Model Compression",
+  "tier": "I",
+  "module": "M5rwm",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "erk_layer_densities"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "budget_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

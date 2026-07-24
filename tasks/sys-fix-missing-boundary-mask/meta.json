@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-missing-boundary-mask",
+  "title": "Fix missing boundary mask in block reduction",
+  "track": "03 Triton Kernel Programming",
+  "tier": "II",
+  "module": "M2triton",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "masked_block_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

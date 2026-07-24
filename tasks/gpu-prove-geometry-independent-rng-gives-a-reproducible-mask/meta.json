@@ -1,0 +1,18 @@
+{
+  "id": "gpu-prove-geometry-independent-rng-gives-a-reproducible-mask",
+  "title": "Prove geometry-independent RNG gives a reproducible mask (real CUDA-C)",
+  "track": "11 GPU kernels",
+  "tier": "IV",
+  "module": "M11",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "ref_match", "op": ">=", "threshold": 1.0},
+    {"metric": "geom_match", "op": ">=", "threshold": 1.0}
+  ],
+  "info": [
+    "This CUDA-C frontend has no bitwise operators, so the per-element hash uses only +, -, *, /, % (an explicit % 2**32 stands in for 32-bit unsigned wraparound, and integer division/modulo stand in for a byte extraction that would normally be >> and &)."
+  ]
+}

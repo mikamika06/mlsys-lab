@@ -1,0 +1,22 @@
+{
+  "id": "sys-reduce-scatter-correctness",
+  "title": "Reduce-scatter correctness",
+  "track": "03 Systems Python",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reduce_scatter_sum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

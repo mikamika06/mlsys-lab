@@ -1,0 +1,22 @@
+{
+  "id": "sys-apply-causal-mask-to-dense-scores",
+  "title": "Apply causal mask to dense attention scores",
+  "track": "03 Systems & ML",
+  "tier": "I",
+  "module": "M1attn",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "apply_causal_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

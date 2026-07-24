@@ -1,0 +1,22 @@
+{
+  "id": "rwa-measure-blocks-slot-mapping-and-internal-fragmentation",
+  "title": "Measure blocks, slot mapping and internal fragmentation",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "measure_blocks"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

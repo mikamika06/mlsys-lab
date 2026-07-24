@@ -1,0 +1,27 @@
+{
+  "id": "rwa-compare-mqa-vs-gqa-vs-mha-output-reconstruction",
+  "title": "Compare MQA vs GQA vs MHA Output Reconstruction",
+  "track": "03 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "mha_gqa_mqa_reconstruct"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

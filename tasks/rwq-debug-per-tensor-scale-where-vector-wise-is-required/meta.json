@@ -1,0 +1,22 @@
+{
+  "id": "rwq-debug-per-tensor-scale-where-vector-wise-is-required",
+  "title": "Debug int8 matmul per-tensor scale where vector-wise is required",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "int8_matmul_per_channel"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.001
+    }
+  ],
+  "info": []
+}

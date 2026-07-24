@@ -1,0 +1,22 @@
+{
+  "id": "rwc-fix-a-flash-accumulator-missing-the-max-update-rescale",
+  "title": "Fix flash accumulator max-update rescale",
+  "track": "04 Numerical Computing",
+  "tier": "II",
+  "module": "M4attn",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_attention_accumulate"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

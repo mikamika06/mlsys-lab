@@ -1,0 +1,22 @@
+{
+  "id": "rwq-undo-rotation-on-stored-weights",
+  "title": "Undo rotation on stored weights",
+  "track": "02 AI/ML",
+  "tier": "II",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "reconstruct_weights"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

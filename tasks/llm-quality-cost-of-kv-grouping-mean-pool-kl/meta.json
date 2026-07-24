@@ -1,0 +1,22 @@
+{
+  "id": "llm-quality-cost-of-kv-grouping-mean-pool-kl",
+  "title": "KV grouping quality cost with mean-pooled KL",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_grouping_mean_pool_kl"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

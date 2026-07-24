@@ -1,0 +1,29 @@
+{
+  "id": "cpu-neon-intrinsic-elementwise-kernel",
+  "title": "NEON-style elementwise kernel access trace",
+  "track": "07 Native SIMD",
+  "tier": "II",
+  "module": "M2simd",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "apple-silicon-native",
+  "provides": [
+    "elementwise_kernel"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "cache_miss_count",
+      "op": "<=",
+      "threshold": 16
+    }
+  ],
+  "info": [
+    "Native-SIMD track: learners normally implement the contract with C/NEON and expose the result through the harness."
+  ]
+}

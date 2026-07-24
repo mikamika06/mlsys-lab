@@ -1,0 +1,32 @@
+{
+  "id": "rws-global-unstructured-across-layers-with-one-shared-threshold",
+  "title": "Global unstructured pruning across layers with one shared threshold",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "global_unstructured_masks"
+  ],
+  "fixtures": [
+    "layer0.npy",
+    "layer1.npy",
+    "layer2.npy",
+    "layer3.npy"
+  ],
+  "gates": [
+    {
+      "metric": "masks_exact_match",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "sparsity_off_by",
+      "op": "<=",
+      "threshold": 1
+    }
+  ],
+  "info": []
+}

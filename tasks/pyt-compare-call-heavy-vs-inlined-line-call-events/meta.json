@@ -1,0 +1,33 @@
+{
+  "id": "pyt-compare-call-heavy-vs-inlined-line-call-events",
+  "title": "Compare call-heavy vs inlined: call/line events",
+  "track": "02 Core Python",
+  "tier": "II",
+  "module": "M6frames",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "provides": [
+    "sum_squares_call_heavy",
+    "sum_squares_inlined"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "call_heavy_events",
+      "op": ">=",
+      "threshold": 150
+    },
+    {
+      "metric": "call_inline_events",
+      "op": "<=",
+      "threshold": 10
+    }
+  ],
+  "info": []
+}

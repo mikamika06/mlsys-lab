@@ -1,0 +1,22 @@
+{
+  "id": "sys-recompute-vs-swap-preemption-cost",
+  "title": "Recompute vs swap preemption cost",
+  "track": "04 Systems and Serving",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "modeled_mem_access"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwq-full-autoround-loop",
+  "title": "Full AutoRound loop for block quantization",
+  "track": "04 Numerical Python",
+  "tier": "II",
+  "module": "M4np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "autoround_block"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 0.000001
+    },
+    {
+      "metric": "not_worse_than_rtn",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-blockdiagonalmask-for-packed-sequences",
+  "title": "Block-diagonal attention mask for packed sequences",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "block_diagonal_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

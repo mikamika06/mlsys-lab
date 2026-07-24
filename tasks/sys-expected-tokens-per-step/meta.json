@@ -1,0 +1,22 @@
+{
+  "id": "sys-expected-tokens-per-step",
+  "title": "Expected Tokens per Step (Speculative Decoding)",
+  "track": "04 Systems ML",
+  "tier": "I",
+  "module": "M4sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "expected_tokens_per_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

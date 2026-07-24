@@ -1,0 +1,22 @@
+{
+  "id": "sys-model-alpha-beta-cost-per-collective",
+  "title": "Alpha-beta cost model per collective",
+  "track": "04 Systems and ML Kernels",
+  "tier": "II",
+  "module": "M2parallel",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "collective_cost"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

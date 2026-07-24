@@ -1,0 +1,28 @@
+{
+  "id": "rwc-q4-k-super-block-256-two-level-k-quant",
+  "title": "Q4_K super-block 256 two-level k-quant",
+  "track": "04 Real World Compute",
+  "tier": "II",
+  "module": "M4ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "q4k_quantize_row",
+    "q4k_dequantize_row"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 0.02
+    },
+    {
+      "metric": "packed_exact",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

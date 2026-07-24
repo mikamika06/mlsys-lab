@@ -1,0 +1,51 @@
+{
+  "name": "mlsys-lab",
+  "displayName": "mlsys-lab",
+  "description": "Auto-graded exercises in low-level ML systems: real C++, real CUDA-C, deterministic metrics",
+  "version": "0.1.0",
+  "publisher": "mikamika06",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Education",
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mlsys.open",
+        "title": "mlsys-lab: Open Workspace",
+        "icon": "$(window)"
+      }
+    ],
+    "configuration": {
+      "title": "mlsys-lab",
+      "properties": {
+        "mlsys.pythonPath": {
+          "type": "string",
+          "default": "python3",
+          "description": "Python interpreter used to run the grader."
+        }
+      }
+    }
+  },
+  "keywords": [
+    "cuda",
+    "gpu",
+    "performance",
+    "c++",
+    "quantization",
+    "llm",
+    "exercises"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikamika06/mlsys-lab.git"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "cpu-multi-level-page-walk-cost-model",
+  "title": "Multi-level page-walk cost model with a page-walk cache (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "ground truth comes from actually simulating 4 independent per-level LRU page-walk caches over a fixed 120-address sequence, not a hardcoded cycle count"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-predict-occupancy-from-regs-smem",
+  "title": "Predict occupancy from registers and shared memory",
+  "track": "04 Triton Kernel Programming",
+  "tier": "II",
+  "module": "M3triton",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "predict_occupancy"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

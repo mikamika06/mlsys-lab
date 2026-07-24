@@ -1,0 +1,15 @@
+{
+ "id": "cpp-const-overload-abi-distinctness-via-mangling",
+ "title": "Const overload ABI distinctness via mangling",
+ "track": "02 C++ Systems",
+ "tier": "II",
+ "module": "M2cpp",
+ "difficulty": 3,
+ "genre": "debug",
+ "platform": "mac",
+ "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+ "info": [
+  "Real C++: the executable inspects its OWN linker symbol table with `nm` at runtime -- the mangled names it checks for are whatever clang++'s real Itanium ABI mangler actually emitted, not a hand-computed string."
+ ],
+ "native": "cpp"
+}

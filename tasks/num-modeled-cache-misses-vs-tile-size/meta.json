@@ -1,0 +1,22 @@
+{
+  "id": "num-modeled-cache-misses-vs-tile-size",
+  "title": "Modeled cache misses vs tile size",
+  "track": "04 Numerical Computing",
+  "tier": "I",
+  "module": "M1numpy",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "modeled_access_count"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_access_count",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

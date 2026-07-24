@@ -1,0 +1,27 @@
+{
+  "id": "num-shared-memory-tiled-cuda-matmul",
+  "title": "Shared-memory tiled CUDA matmul",
+  "track": "03 GPU Computing",
+  "tier": "II",
+  "module": "M3cuda",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "CUDA",
+  "provides": [
+    "tiled_cuda_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "modeled_access_count",
+      "op": "<=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

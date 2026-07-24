@@ -1,0 +1,22 @@
+{
+  "id": "num-reconstruct-a-stable-equivalent-expression",
+  "title": "Reconstruct a stable equivalent expression",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_one_minus_cos_over_x2"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-13
+    }
+  ],
+  "info": []
+}

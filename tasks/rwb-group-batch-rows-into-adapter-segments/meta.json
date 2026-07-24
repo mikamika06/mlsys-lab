@@ -1,0 +1,22 @@
+{
+  "id": "rwb-group-batch-rows-into-adapter-segments",
+  "title": "Group batch rows into adapter segments",
+  "track": "02 NumPy",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "group_rows_by_adapter"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

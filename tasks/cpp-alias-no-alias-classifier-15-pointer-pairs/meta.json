@@ -1,0 +1,19 @@
+{
+  "id": "cpp-alias-no-alias-classifier-15-pointer-pairs",
+  "title": "Alias / no-alias classifier (15 pointer pairs)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwm-cpu-offloaded-adam-step-equals-single-device-step",
+  "title": "CPU-offloaded AdamW step matches single-device update",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2opt",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "offloaded_adamw_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

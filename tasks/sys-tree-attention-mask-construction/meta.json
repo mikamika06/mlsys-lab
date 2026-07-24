@@ -1,0 +1,22 @@
+{
+  "id": "sys-tree-attention-mask-construction",
+  "title": "Tree attention mask construction",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "build_tree_attention_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

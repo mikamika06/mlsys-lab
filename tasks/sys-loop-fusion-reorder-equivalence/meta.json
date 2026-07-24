@@ -1,0 +1,22 @@
+{
+  "id": "sys-loop-fusion-reorder-equivalence",
+  "title": "Loop fusion / tiling equivalence for an elementwise pipeline",
+  "track": "04 Systems",
+  "tier": "II",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_tile_pipeline"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rws-sparsegpt-2-4-then-gptq-w4a16-mini-recipe",
+  "title": "SparseGPT 2:4 then GPTQ W4A16 mini-recipe",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sparsegpt_then_gptq"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "w_rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwq-one-half-quadratic-iteration",
+  "title": "One Half-Quadratic (HQQ) Iteration",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "hqq_half_quadratic_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "z_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-8
+    },
+    {
+      "metric": "wq_exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

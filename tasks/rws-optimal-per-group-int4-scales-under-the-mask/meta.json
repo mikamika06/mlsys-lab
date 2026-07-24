@@ -1,0 +1,27 @@
+{
+  "id": "rws-optimal-per-group-int4-scales-under-the-mask",
+  "title": "Optimal Per-Group INT4 Scales Under a Pruning Mask",
+  "track": "04 ML Systems",
+  "tier": "III",
+  "module": "M4prune",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "optimal_group_scales_under_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "mse_vs_naive_margin",
+      "op": ">=",
+      "threshold": -1e-9
+    }
+  ],
+  "info": []
+}

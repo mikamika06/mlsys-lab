@@ -1,0 +1,26 @@
+{
+  "id": "rwb-two-chunk-split-kv-log-sum-exp-merge",
+  "title": "Two-chunk split-KV log-sum-exp merge",
+  "track": "03 Deep Learning",
+  "tier": "II",
+  "module": "M3attention",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "two_chunk_split_kv_merge"
+  ],
+  "fixtures": [
+    "q.npy",
+    "k.npy",
+    "v.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

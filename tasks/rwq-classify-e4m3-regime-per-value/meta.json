@@ -1,0 +1,24 @@
+{
+  "id": "rwq-classify-e4m3-regime-per-value",
+  "title": "Classify E4M3 regime per value",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_e4m3_regime"
+  ],
+  "fixtures": [
+    "fp8_x.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

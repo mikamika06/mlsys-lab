@@ -1,0 +1,22 @@
+{
+  "id": "rwc-baseline-rtn-4-bit-layer-output-mse",
+  "title": "Baseline RTN 4‑bit layer‑output MSE",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1dl",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_layer_output_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

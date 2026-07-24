@@ -1,0 +1,30 @@
+{
+  "id": "sys-symmetric-int8-round-trip",
+  "title": "Symmetric int8 Quantization Round-Trip",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M4mlsys",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_symmetric_int8",
+    "dequantize_symmetric_int8"
+  ],
+  "fixtures": [
+    "weights.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1.001
+    },
+    {
+      "metric": "code_exact_fraction",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

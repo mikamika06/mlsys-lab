@@ -1,0 +1,22 @@
+{
+  "id": "rwm-peak-vram-full-resident-vs-model-vs-sequential-offload",
+  "title": "Peak VRAM for Diffusion Model Strategies",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compute_peak_vram"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

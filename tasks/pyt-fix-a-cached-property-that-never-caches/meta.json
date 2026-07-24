@@ -1,0 +1,27 @@
+{
+  "id": "pyt-fix-a-cached-property-that-never-caches",
+  "title": "Fix a cached_property that never caches",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M2py",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "cached_property"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "compute_calls",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "line_events",
+      "op": "<=",
+      "threshold": 80.0
+    }
+  ],
+  "info": []
+}

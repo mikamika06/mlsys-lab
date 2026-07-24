@@ -1,0 +1,27 @@
+{
+  "id": "rwc-per-tensor-vs-per-head-fp8-kv-on-an-outlier-head",
+  "title": "Per-tensor vs per-head FP8 KV scale selection",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "choose_kv_fp8_scheme"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "scheme_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

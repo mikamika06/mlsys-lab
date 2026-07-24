@@ -1,0 +1,29 @@
+{
+  "id": "rwq-double-quantization-of-the-block-scales",
+  "title": "Double Quantization of the Block Scales",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "double_quantize_absmax"
+  ],
+  "fixtures": [
+    "nf4_absmax.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "bits_abs_err",
+      "op": "<=",
+      "threshold": 0.01
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sys-oom-feasibility-classification",
+  "title": "OOM feasibility classification from training memory accounting",
+  "track": "03 Systems",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_feasibility"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

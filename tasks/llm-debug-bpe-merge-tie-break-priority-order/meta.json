@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-bpe-merge-tie-break-priority-order",
+  "title": "Debug BPE merge tie-break priority order",
+  "track": "02 NLP Systems",
+  "tier": "I",
+  "module": "M2nlp",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "bpe_merge"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

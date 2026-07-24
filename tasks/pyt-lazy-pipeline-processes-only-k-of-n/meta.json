@@ -1,0 +1,27 @@
+{
+  "id": "pyt-lazy-pipeline-processes-only-k-of-n",
+  "title": "Lazy pipeline processes only K of N",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "take_k_squares"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "lazy_line_budget",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

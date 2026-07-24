@@ -1,0 +1,27 @@
+{
+  "id": "llm-fuse-gate-up-into-one-matmul-then-split",
+  "title": "Fuse gate+up into one matmul then split",
+  "track": "01 Deep Learning",
+  "tier": "I",
+  "module": "M1dl",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_swiglu"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "op_count",
+      "op": "<=",
+      "threshold": 50
+    }
+  ],
+  "info": []
+}

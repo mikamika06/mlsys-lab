@@ -1,0 +1,27 @@
+{
+  "id": "rwc-epilogue-fuse-bias-add-activation-into-a-matmul",
+  "title": "Fuse bias add and activation into a matmul epilogue",
+  "track": "04 Real World Computing",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_matmul_epilogue"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "out_reuse",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

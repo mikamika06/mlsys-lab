@@ -1,0 +1,22 @@
+{
+  "id": "rwc-gqa-mqa-attention-with-kv-head-broadcast",
+  "title": "Grouped-query attention with KV-head broadcast",
+  "track": "03 RWC",
+  "tier": "II",
+  "module": "M3attention",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gqa_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-06
+    }
+  ],
+  "info": []
+}

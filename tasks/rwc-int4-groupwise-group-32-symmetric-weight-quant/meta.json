@@ -1,0 +1,22 @@
+{
+  "id": "rwc-int4-groupwise-group-32-symmetric-weight-quant",
+  "title": "int4 group-wise (group=32) symmetric weight quant",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M2quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "int4_groupwise_quant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "llm-uptrain-mha-gqa-by-kv-mean-pool-bounded-kl",
+  "title": "Uptrain MHA to GQA by KV mean pooling with bounded KL",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4attn",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "uptrain_mha_to_gqa"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}

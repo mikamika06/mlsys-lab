@@ -1,0 +1,22 @@
+{
+  "id": "llm-kv-bytes-moved-per-decode-step",
+  "title": "KV bytes moved per decode step",
+  "track": "LLM Systems",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 2,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_bytes_per_decode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "bytes_formula_correct",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

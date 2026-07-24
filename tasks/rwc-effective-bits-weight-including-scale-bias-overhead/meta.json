@@ -1,0 +1,22 @@
+{
+  "id": "rwc-effective-bits-weight-including-scale-bias-overhead",
+  "title": "Effective Bits per Weight Including Scale and Bias Overhead",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "effective_bits_per_weight"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-output-side-absorption-of-w-uv-into-w-o",
+  "title": "Absorb value up-projection into output projection",
+  "track": "03 Neural Network Optimization",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "absorb_w_uv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

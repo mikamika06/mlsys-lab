@@ -1,0 +1,32 @@
+{
+  "id": "sys-per-tensor-vs-per-channel-error",
+  "title": "Per-tensor vs per-channel quantization error",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_quant_errors"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "channel_rel_err",
+      "op": "<=",
+      "threshold": 0.004
+    },
+    {
+      "metric": "improvement_margin",
+      "op": ">=",
+      "threshold": 0.1
+    },
+    {
+      "metric": "oracle_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

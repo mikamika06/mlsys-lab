@@ -1,0 +1,22 @@
+{
+  "id": "rwm-per-rank-flat-partition-of-phi-across-n-ranks",
+  "title": "Per-rank flat partition of Phi across N ranks",
+  "track": "02 Distributed Systems",
+  "tier": "I",
+  "module": "M2dist",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "partition_phi"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

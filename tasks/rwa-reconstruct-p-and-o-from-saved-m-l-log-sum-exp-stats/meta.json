@@ -1,0 +1,22 @@
+{
+  "id": "rwa-reconstruct-p-and-o-from-saved-m-l-log-sum-exp-stats",
+  "title": "Reconstruct P and O from saved (m, l) log-sum-exp stats",
+  "track": "03 Deep Learning",
+  "tier": "II",
+  "module": "M3attention",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_forward_reconstruct"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

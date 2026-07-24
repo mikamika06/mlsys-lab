@@ -1,0 +1,27 @@
+{
+  "id": "llm-debug-naive-log-softmax-underflow",
+  "title": "Debug naive log-softmax underflow",
+  "track": "04 Numerics",
+  "tier": "II",
+  "module": "M1num",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "log_softmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "all_finite",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

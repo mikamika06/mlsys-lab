@@ -1,0 +1,27 @@
+{
+  "id": "rws-activation-weighted-2-4-mask",
+  "title": "Activation-weighted 2:4 pruning mask",
+  "track": "04 Neural Network Optimization",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "activation_weighted_2_4_mask"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-10
+    },
+    {
+      "metric": "weighted_not_worse",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

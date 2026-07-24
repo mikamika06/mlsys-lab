@@ -1,0 +1,22 @@
+{
+  "id": "rwm-fix-a-global-absmax-8-bit-optimizer-quantizer-blockwise",
+  "title": "Fix global absmax optimizer quantizer with blockwise scaling",
+  "track": "04 Machine Learning Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "blockwise_quantize_dequantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

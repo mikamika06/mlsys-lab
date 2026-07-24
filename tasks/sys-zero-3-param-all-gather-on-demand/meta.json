@@ -1,0 +1,22 @@
+{
+  "id": "sys-zero-3-param-all-gather-on-demand",
+  "title": "ZeRO-3 parameter all-gather on demand",
+  "track": "04 Systems ML",
+  "tier": "II",
+  "module": "M3sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "zero3_linear_backward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-05
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "rwq-rotation-preserves-the-matmul-spreads-outliers",
+  "title": "Rotation Preserves the Matmul, Spreads the Outliers",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "rotate_and_quantize_matmul"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "invariance_rel_err",
+      "op": "<=",
+      "threshold": 1e-05
+    },
+    {
+      "metric": "mse_rel_err",
+      "op": "<=",
+      "threshold": 1e-06
+    },
+    {
+      "metric": "rotation_helps",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

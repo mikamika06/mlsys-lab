@@ -1,0 +1,22 @@
+{
+  "id": "rws-jsd-limits-recover-forward-reverse-kl",
+  "title": "Jensen-Shannon beta limits recover KL divergences",
+  "track": "03 Numerical Python",
+  "tier": "I",
+  "module": "M2np",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "jsd_beta"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

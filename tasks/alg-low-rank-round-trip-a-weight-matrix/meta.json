@@ -1,0 +1,33 @@
+{
+  "id": "alg-low-rank-round-trip-a-weight-matrix",
+  "title": "Low-rank round trip of a weight matrix",
+  "track": "02 Machine Learning",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "low_rank_factors",
+    "low_rank_reconstruct"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-08
+    },
+    {
+      "metric": "factor_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-08
+    },
+    {
+      "metric": "shape_ok",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rwm-prefix-cache-block-hashing-and-cross-sequence-sharing",
+  "title": "Prefix-cache block hashing and cross-sequence sharing",
+  "track": "05 Real-World Model Compression",
+  "tier": "II",
+  "module": "M5rwm",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "prefix_block_share"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

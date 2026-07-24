@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-gemma2-tanh-soft-capping-score-mod",
+  "title": "Gemma2 tanh soft-capping score modification",
+  "track": "03 Deep Learning",
+  "tier": "II",
+  "module": "M3attention",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "attention_with_score_mod"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

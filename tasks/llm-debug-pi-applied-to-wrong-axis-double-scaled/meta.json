@@ -1,0 +1,16 @@
+{
+  "id": "llm-debug-pi-applied-to-wrong-axis-double-scaled",
+  "title": "Debug: PI applied to wrong axis / double-scaled in RoPE",
+  "track": "12 LLM math",
+  "tier": "III",
+  "module": "M12",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": ["rope_pi"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": []
+}

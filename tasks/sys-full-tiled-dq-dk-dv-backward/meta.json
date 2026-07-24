@@ -1,0 +1,22 @@
+{
+  "id": "sys-full-tiled-dq-dk-dv-backward",
+  "title": "Full tiled dQ/dK/dV backward",
+  "track": "04 GPU Systems",
+  "tier": "II",
+  "module": "FlashAttention",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_backward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

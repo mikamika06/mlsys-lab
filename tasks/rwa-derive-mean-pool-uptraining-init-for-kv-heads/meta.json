@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-mean-pool-uptraining-init-for-kv-heads",
+  "title": "Derive: mean-pool uptraining init for KV heads",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "mean_pool_gqa_logit_mse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

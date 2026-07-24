@@ -1,0 +1,22 @@
+{
+  "id": "sys-prove-block-merge-associativity-across-bracketings",
+  "title": "Prove block-merge associativity across bracketings",
+  "track": "02 Systems ML",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 3,
+  "genre": "prove",
+  "platform": "cross-platform",
+  "provides": [
+    "check_block_merge_associativity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

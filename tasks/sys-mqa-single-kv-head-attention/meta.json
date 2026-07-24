@@ -1,0 +1,22 @@
+{
+  "id": "sys-mqa-single-kv-head-attention",
+  "title": "MQA single-KV-head attention",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4attn",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mha_single_kv_head"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

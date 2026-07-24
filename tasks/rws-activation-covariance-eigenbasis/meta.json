@@ -1,0 +1,27 @@
+{
+  "id": "rws-activation-covariance-eigenbasis",
+  "title": "Activation covariance & eigenbasis",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "cov_and_eig"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "eigvec_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

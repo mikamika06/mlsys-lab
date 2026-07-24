@@ -1,0 +1,22 @@
+{
+  "id": "sys-bf16-matmul-with-fp32-accumulation-error-bound",
+  "title": "BF16 matmul with FP32 accumulation error bound",
+  "track": "03 Numerical Python",
+  "tier": "II",
+  "module": "M3np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "bf16_matmul_fp32_accum"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.02
+    }
+  ],
+  "info": []
+}

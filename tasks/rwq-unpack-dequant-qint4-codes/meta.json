@@ -1,0 +1,22 @@
+{
+  "id": "rwq-unpack-dequant-qint4-codes",
+  "title": "Unpack and dequantize qint4 codes",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "unpack_dequant_qint4"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

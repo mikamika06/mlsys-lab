@@ -1,0 +1,22 @@
+{
+  "id": "rwq-pick-the-kv-scale-granularity",
+  "title": "Pick the KV scale granularity",
+  "track": "03 ML Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "choose_kv_scale_granularity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

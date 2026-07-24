@@ -1,0 +1,22 @@
+{
+  "id": "sys-expected-accepted-length-vs-tree-size",
+  "title": "Expected accepted length in speculative decoding trees",
+  "track": "04 Advanced Inference",
+  "tier": "II",
+  "module": "M4sys",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "expected_accepted_length"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

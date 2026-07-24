@@ -1,0 +1,22 @@
+{
+  "id": "llm-gqa-effect-on-decode-arithmetic-intensity",
+  "title": "GQA effect on decode arithmetic intensity",
+  "track": "02 LLM Systems",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "decode_arithmetic_intensity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

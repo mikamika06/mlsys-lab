@@ -1,0 +1,22 @@
+{
+  "id": "rwb-kv-memory-for-n-contiguous-slots",
+  "title": "KV Memory Size for N Contiguous Slots",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_memory_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

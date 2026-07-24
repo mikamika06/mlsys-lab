@@ -1,0 +1,17 @@
+{
+  "id": "cpu-detect-fragmentation-induced-oom",
+  "title": "Detect fragmentation-induced allocation failure (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "ground truth is computed by simulating a fixed 17-op alloc/free scenario over 6 blocks, not hardcoded"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "pyt-pymalloc-size-class-mapping",
+  "title": "pymalloc size-class mapping",
+  "track": "05 Python Internals",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "pymalloc_size_class"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

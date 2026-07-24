@@ -1,0 +1,22 @@
+{
+  "id": "llm-pre-norm-block-wiring-match",
+  "title": "Pre-norm transformer block wiring (match)",
+  "track": "03 ML Systems",
+  "tier": "I",
+  "module": "M1trans",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "pre_norm_block"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

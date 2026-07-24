@@ -1,0 +1,27 @@
+{
+  "id": "llm-kv-cache-bytes-mha-vs-gqa-vs-mqa",
+  "title": "KV Cache Bytes for MHA vs GQA vs MQA",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_cache_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "gqa_mha_ratio",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "mqa_mha_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

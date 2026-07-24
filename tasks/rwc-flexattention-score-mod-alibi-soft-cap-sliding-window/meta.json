@@ -1,0 +1,16 @@
+{
+  "id": "rwc-flexattention-score-mod-alibi-soft-cap-sliding-window",
+  "title": "FlexAttention score_mod: ALiBi, Soft-Cap, Sliding-Window",
+  "track": "rwc",
+  "tier": 1,
+  "module": "attention",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": ["flex_attention"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}
+  ],
+  "info": "Implement FlexAttention with configurable score_mod functions (ALiBi, tanh soft-cap, sliding-window mask)."
+}

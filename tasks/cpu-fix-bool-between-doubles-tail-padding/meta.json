@@ -1,0 +1,18 @@
+{
+  "id": "cpu-fix-bool-between-doubles-tail-padding",
+  "title": "Fix a bool wedged between doubles: collapse mid-struct padding (real C++)",
+  "track": "01 CPU Microarch",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "record size/offsets come from the real compiler (sizeof/offsetof), not a modeled ABI",
+    "size_ratio is your record_size() divided by the broken layout's fixed 32-byte size"
+  ]
+}

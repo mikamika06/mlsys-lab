@@ -1,0 +1,22 @@
+{
+  "id": "rwm-per-rank-peak-memory-of-full-shard-with-without-cpu-offload",
+  "title": "Per‑Rank Peak Memory of Full‑Shard with/without CPU Offload",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "peak_memory_per_rank"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

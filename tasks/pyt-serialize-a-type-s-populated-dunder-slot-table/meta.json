@@ -1,0 +1,22 @@
+{
+  "id": "pyt-serialize-a-type-s-populated-dunder-slot-table",
+  "title": "Serialize a type's populated dunder slot table",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M3py",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cpython",
+  "provides": [
+    "serialize_dunder_slots"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

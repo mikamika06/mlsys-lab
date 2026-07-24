@@ -1,0 +1,22 @@
+{
+  "id": "rws-full-1d-optimal-transport-with-a-ground-metric",
+  "title": "Full 1-D Optimal Transport with a Ground Metric",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4prune",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "ot_cost_1d"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

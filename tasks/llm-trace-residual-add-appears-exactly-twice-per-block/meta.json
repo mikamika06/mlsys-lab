@@ -1,0 +1,27 @@
+{
+  "id": "llm-trace-residual-add-appears-exactly-twice-per-block",
+  "title": "Residual addition appears exactly twice per block",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "transformer_block"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "residual_add_count",
+      "op": "==",
+      "threshold": 2
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

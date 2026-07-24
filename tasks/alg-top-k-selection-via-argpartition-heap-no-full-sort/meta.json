@@ -1,0 +1,25 @@
+{
+  "id": "alg-top-k-selection-via-argpartition-heap-no-full-sort",
+  "title": "Top-k Selection without Full Sort",
+  "track": "alg",
+  "tier": 1,
+  "module": "knn",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "python",
+  "provides": [],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "correct",
+      "op": "==",
+      "threshold": 1
+    },
+    {
+      "metric": "used_sort",
+      "op": "==",
+      "threshold": 0
+    }
+  ],
+  "info": {}
+}

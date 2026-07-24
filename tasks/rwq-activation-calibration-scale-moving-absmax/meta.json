@@ -1,0 +1,22 @@
+{
+  "id": "rwq-activation-calibration-scale-moving-absmax",
+  "title": "Moving Absmax Activation Scale Calibration",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "moving_absmax"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

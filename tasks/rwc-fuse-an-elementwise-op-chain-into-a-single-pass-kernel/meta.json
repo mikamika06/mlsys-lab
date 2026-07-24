@@ -1,0 +1,22 @@
+{
+  "id": "rwc-fuse-an-elementwise-op-chain-into-a-single-pass-kernel",
+  "title": "Fuse an elementwise op chain into a single-pass kernel",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M4mlsys",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_elementwise_chain"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

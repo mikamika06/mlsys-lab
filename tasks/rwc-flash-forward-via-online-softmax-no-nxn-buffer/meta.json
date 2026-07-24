@@ -1,0 +1,16 @@
+{
+  "id": "rwc-flash-forward-via-online-softmax-no-nxn-buffer",
+  "title": "Flash Forward via Online Softmax (No NxN Buffer)",
+  "track": "rwc",
+  "tier": 1,
+  "module": "attention",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "numpy",
+  "provides": ["flash_attention_forward"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}
+  ],
+  "info": "Implement tiled flash attention forward pass using online softmax without materializing the full NxN score matrix."
+}

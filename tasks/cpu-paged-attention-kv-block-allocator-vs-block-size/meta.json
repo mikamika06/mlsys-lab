@@ -1,0 +1,22 @@
+{
+  "id": "cpu-paged-attention-kv-block-allocator-vs-block-size",
+  "title": "Paged-Attention KV block allocator vs block size",
+  "track": "04 Systems Performance",
+  "tier": "II",
+  "module": "M4alloc",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cpu",
+  "provides": [
+    "choose_kv_block_size"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": ">=",
+      "threshold": 0.9
+    }
+  ],
+  "info": []
+}

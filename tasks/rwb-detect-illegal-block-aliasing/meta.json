@@ -1,0 +1,22 @@
+{
+  "id": "rwb-detect-illegal-block-aliasing",
+  "title": "Detect illegal physical-block aliasing across sequences",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 2,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "is_block_mapping_legal"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

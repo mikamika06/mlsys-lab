@@ -1,0 +1,20 @@
+{
+  "id": "rwq-simulate-e4m3-round-to-nearest-even-cast",
+  "title": "Simulate E4M3 round-to-nearest-even cast",
+  "track": "04 Real-World Quant",
+  "tier": "I",
+  "module": "M4rwq",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": ["cast_to_e4m3"],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

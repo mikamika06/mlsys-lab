@@ -1,0 +1,15 @@
+{
+  "id": "cpu-miss-rate-curve-from-a-reuse-histogram",
+  "title": "Miss-rate curve from a reuse-distance histogram (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": [
+    "Real C++: a reuse-distance histogram is built from a real fixed access trace by an O(n^2) driver-owned scan; the learner derives the miss-rate-vs-cache-size curve as the histogram's tail sum and reads off 5 queried cache sizes, compiled by clang++."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "num-fused-cross-entropy-from-logits",
+  "title": "Fused Cross-Entropy from Logits",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fused_cross_entropy"
+  ],
+  "fixtures": [
+    "logits.npy",
+    "targets.npy"
+  ],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-10
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "pyt-hand-compute-a-diamond-merge",
+  "title": "Hand-compute a diamond merge",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "MRO",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "diamond_merge"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

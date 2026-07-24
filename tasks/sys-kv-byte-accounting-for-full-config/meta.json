@@ -1,0 +1,22 @@
+{
+  "id": "sys-kv-byte-accounting-for-full-config",
+  "title": "KV Cache Byte Accounting (Full Config)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_cache_bytes"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

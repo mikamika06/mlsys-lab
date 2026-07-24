@@ -1,0 +1,22 @@
+{
+  "id": "sys-predict-admitted-preempted-vector-per-step",
+  "title": "Predict the admitted/preempted vector per scheduling step",
+  "track": "04 Systems and ML Kernels",
+  "tier": "II",
+  "module": "M4serve",
+  "difficulty": 4,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "provides": [
+    "schedule_admit_preempt"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

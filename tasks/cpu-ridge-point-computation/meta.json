@@ -1,0 +1,14 @@
+{
+  "id": "cpu-ridge-point-computation",
+  "title": "Ridge-point computation with cache-friendly dot product",
+  "track": "13 CPU-perf", "tier": "II", "module": "M13", "difficulty": 2,
+  "genre": "implement", "platform": "cross-platform",
+  "provides": ["ridge_point", "dot_trace"],
+  "fixtures": [],
+  "gates": [
+    {"metric": "rel_err", "op": "<=", "threshold": 1e-12},
+    {"metric": "covers_all", "op": "==", "threshold": 1.0},
+    {"metric": "misses", "op": "<=", "threshold": 512}
+  ],
+  "info": []
+}

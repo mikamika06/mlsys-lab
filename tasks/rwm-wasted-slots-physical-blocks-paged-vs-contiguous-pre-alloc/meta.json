@@ -1,0 +1,22 @@
+{
+  "id": "rwm-wasted-slots-physical-blocks-paged-vs-contiguous-pre-alloc",
+  "title": "Wasted Slots in Paged vs Contiguous Pre‑Allocation",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "wasted_slots"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

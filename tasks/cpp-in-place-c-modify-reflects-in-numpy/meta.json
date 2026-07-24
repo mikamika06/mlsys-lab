@@ -1,0 +1,13 @@
+{
+  "id": "cpp-in-place-c-modify-reflects-in-numpy",
+  "title": "In-place C++ struct-array mutation (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": []
+}

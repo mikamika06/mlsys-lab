@@ -1,0 +1,22 @@
+{
+  "id": "rwm-qlora-forward-dequant-nf4-base-lora-delta",
+  "title": "QLoRA forward pass: dequantize NF4 base + add the LoRA delta",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M2quant",
+  "difficulty": 4,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "provides": [
+    "qlora_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

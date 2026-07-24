@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-the-prefix-tree-reuse-length-recompute-count",
+  "title": "Prefix Tree Reuse Length and Recompute Count",
+  "track": "02 Data Structures",
+  "tier": "I",
+  "module": "M2ds",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "process_ops"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

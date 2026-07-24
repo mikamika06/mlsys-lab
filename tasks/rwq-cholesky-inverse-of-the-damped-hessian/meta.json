@@ -1,0 +1,22 @@
+{
+  "id": "rwq-cholesky-inverse-of-the-damped-hessian",
+  "title": "Cholesky inverse of the damped Hessian",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M1hess",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "cholesky_inverse"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

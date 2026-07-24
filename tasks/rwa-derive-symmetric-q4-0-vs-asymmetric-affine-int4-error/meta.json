@@ -1,0 +1,22 @@
+{
+  "id": "rwa-derive-symmetric-q4-0-vs-asymmetric-affine-int4-error",
+  "title": "Derive symmetric Q4_0 vs asymmetric affine INT4 error",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compare_q4_errors"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 0.0001
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-fp64-fp32-cast-by-hand-with-grs-matching-astype",
+  "title": "FP64 -> FP32 cast by hand: guard/round/sticky rounding",
+  "track": "03 Numerical Computing",
+  "tier": "II",
+  "module": "M3num",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "fp64_to_fp32_bits"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "byte_exact_fraction",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

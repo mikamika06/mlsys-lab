@@ -1,0 +1,27 @@
+{
+  "id": "rwc-int4-weight-only-groupwise-group-32-asymmetric",
+  "title": "INT4 weight-only groupwise (group=32) asymmetric quant",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "int4_groupwise_asymmetric"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "codes_exact",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

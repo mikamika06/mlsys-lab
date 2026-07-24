@@ -1,0 +1,32 @@
+{
+  "id": "num-branchless-stable-sigmoid",
+  "title": "Branchless stable sigmoid",
+  "track": "02 Numerics",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "stable_sigmoid"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-12
+    },
+    {
+      "metric": "overflow_free",
+      "op": ">=",
+      "threshold": 1.0
+    },
+    {
+      "metric": "range_ok",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

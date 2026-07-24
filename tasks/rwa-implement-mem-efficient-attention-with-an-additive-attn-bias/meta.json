@@ -1,0 +1,27 @@
+{
+  "id": "rwa-implement-mem-efficient-attention-with-an-additive-attn-bias",
+  "title": "Memory-efficient attention with additive bias",
+  "track": "04 Research Workloads",
+  "tier": "II",
+  "module": "M3ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "mem_efficient_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "no_n2_materialization",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

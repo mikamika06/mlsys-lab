@@ -1,0 +1,22 @@
+{
+  "id": "rwm-group-offload-peak-vram-with-prefetch",
+  "title": "Group Offload Peak VRAM With Prefetch",
+  "track": "05 Systems & Memory",
+  "tier": "II",
+  "module": "M4mem",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "offload_peak_vram"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

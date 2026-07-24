@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-unbiased-n-1-vs-biased-n-variance",
+  "title": "Debug LayerNorm Unbiased vs Biased Variance",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M3nn",
+  "difficulty": 2,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "layernorm"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

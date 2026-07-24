@@ -1,0 +1,22 @@
+{
+  "id": "sys-count-hbm-round-trips-of-matmul-bias-act",
+  "title": "Count HBM round-trips of fused matmul-bias-activation",
+  "track": "04 Systems",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "count_hbm_round_trips"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "modeled_mem_access",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

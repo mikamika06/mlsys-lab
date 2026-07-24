@@ -1,0 +1,27 @@
+{
+  "id": "rwm-asymmetric-int4-group-quant-dequant-of-k-channel-and-v-token",
+  "title": "Asymmetric int4 Group Quant of K (per-channel) and V (per-token)",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "quantize_dequantize_kv"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

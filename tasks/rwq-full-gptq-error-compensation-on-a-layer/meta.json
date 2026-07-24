@@ -1,0 +1,35 @@
+{
+  "id": "rwq-full-gptq-error-compensation-on-a-layer",
+  "title": "Full GPTQ Error Compensation on a Layer",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gptq_quantize_layer"
+  ],
+  "fixtures": [
+    "gptq_w.npy",
+    "gptq_x.npy"
+  ],
+  "gates": [
+    {
+      "metric": "wq_max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "mse_rel_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "beats_rtn",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

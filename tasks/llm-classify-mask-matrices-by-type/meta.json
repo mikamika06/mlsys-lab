@@ -1,0 +1,22 @@
+{
+  "id": "llm-classify-mask-matrices-by-type",
+  "title": "Classify mask matrices by type",
+  "track": "02 Deep Learning",
+  "tier": "I",
+  "module": "M2dl",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "classify_masks"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

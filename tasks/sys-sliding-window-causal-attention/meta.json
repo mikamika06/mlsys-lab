@@ -1,0 +1,24 @@
+{
+  "id": "sys-sliding-window-causal-attention",
+  "title": "Sliding-Window Causal Attention via Query Tiling",
+  "track": "04 Machine Learning Systems",
+  "tier": "I",
+  "module": "M2sys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "sliding_window_attention_tiled"
+  ],
+  "fixtures": [
+    "mask.npy"
+  ],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

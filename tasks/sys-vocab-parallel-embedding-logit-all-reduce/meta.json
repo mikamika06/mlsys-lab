@@ -1,0 +1,22 @@
+{
+  "id": "sys-vocab-parallel-embedding-logit-all-reduce",
+  "title": "Vocab-parallel embedding and logit all-reduce",
+  "track": "06 Systems ML",
+  "tier": "II",
+  "module": "M2tp",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "vocab_parallel_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

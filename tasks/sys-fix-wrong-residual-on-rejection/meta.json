@@ -1,0 +1,22 @@
+{
+  "id": "sys-fix-wrong-residual-on-rejection",
+  "title": "Fix Wrong Residual on Rejection",
+  "track": "03 Systems and Compilers",
+  "tier": "I",
+  "module": "M1sys",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "residual_distribution"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mean_kl",
+      "op": "<=",
+      "threshold": 5e-3
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "alg-eckart-young-error-sum-of-dropped-sigma-2",
+  "title": "Eckart-Young error from dropped singular values",
+  "track": "02 Numerical Algorithms",
+  "tier": "II",
+  "module": "M3la",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "eckart_young_errors"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-08
+    }
+  ],
+  "info": []
+}

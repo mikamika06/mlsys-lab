@@ -1,0 +1,24 @@
+{
+  "id": "pyt-hit-a-reallocation-count-budget",
+  "title": "Hit a list reallocation-count budget",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "CPython",
+  "provides": [
+    "build_list_realloc_count"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "Uses CPython sys.getsizeof as the oracle for list storage changes."
+  ]
+}

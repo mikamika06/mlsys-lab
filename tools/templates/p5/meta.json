@@ -1,0 +1,27 @@
+{
+  "id": "p5-vectorize-pairwise",
+  "title": "Vectorize pairwise squared distances",
+  "track": "13 CPU-perf",
+  "tier": "IV",
+  "module": "M4",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "pairwise_sq_dists"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "op_count",
+      "op": "<=",
+      "threshold": 50
+    },
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-09
+    }
+  ],
+  "info": []
+}

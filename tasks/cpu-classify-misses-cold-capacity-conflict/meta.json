@@ -1,0 +1,22 @@
+{
+  "id": "cpu-classify-misses-cold-capacity-conflict",
+  "title": "Classify misses: cold / capacity / conflict (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "the reference and fully-associative caches are both simulated by real LRU list+hashmap logic, never hardcoded counts",
+    "cache geometry (line_bytes=64, sets=4, ways=2) is pinned by the fixed driver, not measured on real hardware"
+  ]
+}

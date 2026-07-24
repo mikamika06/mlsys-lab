@@ -1,0 +1,28 @@
+{
+  "id": "rwb-naive-exp-sum-merge-vs-lse-merge-stability",
+  "title": "Naive exp-sum merge vs LSE merge stability",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4mlsys",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "naive_merge",
+    "lse_merge"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "lse_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "naive_check",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

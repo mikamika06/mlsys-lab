@@ -1,0 +1,27 @@
+{
+  "id": "pyt-cut-attribute-lookup-events-under-a-budget",
+  "title": "Cut attribute lookup events under a budget",
+  "track": "02 Python Performance",
+  "tier": "I",
+  "module": "M2py",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "accumulate_metric"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "load_attr_events",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

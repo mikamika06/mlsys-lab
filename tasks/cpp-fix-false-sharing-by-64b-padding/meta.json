@@ -1,0 +1,15 @@
+{
+  "id": "cpp-fix-false-sharing-by-64b-padding",
+  "title": "Fix false sharing by 64B padding (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "ThreadData's sizeof comes from the real compiler; the coherence check is a deterministic line-ownership model, not real threads or timing"
+  ]
+}

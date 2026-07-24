@@ -1,0 +1,22 @@
+{
+  "id": "rwa-implement-the-ggml-q8-0-block-quantizer",
+  "title": "Implement the ggml Q8_0 block quantizer",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "q8_0_quantize"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "mse",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "num-forward-vs-central-difference-error-order",
+  "title": "Forward vs central difference error order",
+  "track": "03 Numerical Computing",
+  "tier": "I",
+  "module": "M2num",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "finite_difference_error_orders"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-8
+    }
+  ],
+  "info": []
+}

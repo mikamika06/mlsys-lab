@@ -1,0 +1,27 @@
+{
+  "id": "rwq-learned-clipping-range",
+  "title": "Learned Clipping Range via Sign-Gradient Search",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M3quant",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "learned_clip_range"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "alpha_rel_err",
+      "op": "<=",
+      "threshold": 1e-4
+    },
+    {
+      "metric": "mse_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

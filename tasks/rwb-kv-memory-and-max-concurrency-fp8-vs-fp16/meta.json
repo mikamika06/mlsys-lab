@@ -1,0 +1,22 @@
+{
+  "id": "rwb-kv-memory-and-max-concurrency-fp8-vs-fp16",
+  "title": "KV Memory and Max Concurrency: fp8 vs fp16",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M2serving",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "kv_capacity"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

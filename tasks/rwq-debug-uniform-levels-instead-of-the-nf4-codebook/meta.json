@@ -1,0 +1,22 @@
+{
+  "id": "rwq-debug-uniform-levels-instead-of-the-nf4-codebook",
+  "title": "Debug: Uniform Levels Instead of the NF4 Codebook",
+  "track": "04 ML Systems",
+  "tier": "I",
+  "module": "M3quant",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "nf4_quantize_indices"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "index_match_frac",
+      "op": ">=",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

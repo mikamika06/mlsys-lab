@@ -1,0 +1,22 @@
+{
+  "id": "llm-scale-invariance-weights-s-activations-s",
+  "title": "Scale Invariance Check for AWQ",
+  "track": "01 Deep Python",
+  "tier": "I",
+  "module": "M1py",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "scale_invariant_product"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "llm-debug-missing-output-rescale-exp-m-old-m-new",
+  "title": "Fix missing output rescale in online softmax",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M4ml",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "provides": [
+    "online_softmax_update"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    }
+  ],
+  "info": []
+}

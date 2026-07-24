@@ -1,0 +1,27 @@
+{
+  "id": "rwa-implement-gqa-head-expansion-sdpa",
+  "title": "GQA head expansion + scaled dot-product attention",
+  "track": "03 Deep Learning",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "gqa_head_expansion_attention"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "size_ratio",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

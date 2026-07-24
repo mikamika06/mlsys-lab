@@ -1,0 +1,32 @@
+{
+  "id": "rwq-float-vs-integer-zero-point-domains-are-equivalent",
+  "title": "Float vs. integer zero-point domains are equivalent",
+  "track": "03 Quantization",
+  "tier": "II",
+  "module": "M1quant",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "dual_zero_point_dequant"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "domain_agreement_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "zp_int_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": "rwc-search-the-per-channel-weight-clip-ratio",
+  "title": "Search the per-channel weight clip ratio",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M4quant",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "search_clip_ratio"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "argmin_index",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "mse_curve",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "cpu-numa-amat-with-local-remote-latencies",
+  "title": "NUMA-aware Average Memory Access Time",
+  "track": "13 CPU-perf", "tier": "IV", "module": "M13", "difficulty": 3,
+  "genre": "derive", "platform": "cross-platform",
+  "provides": ["compute_numa_amat"], "fixtures": [],
+  "gates": [
+    {"metric": "rel_err", "op": "<=", "threshold": 1e-9}
+  ], "info": []
+}

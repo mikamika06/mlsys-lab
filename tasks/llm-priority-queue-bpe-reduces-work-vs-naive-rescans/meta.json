@@ -1,0 +1,27 @@
+{
+  "id": "llm-priority-queue-bpe-reduces-work-vs-naive-rescans",
+  "title": "Priority-queue BPE encoding (fewer rescans)",
+  "track": "03 NLP Foundations",
+  "tier": "II",
+  "module": "M1nlp",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "provides": [
+    "bpe_encode"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "op_count",
+      "op": "<=",
+      "threshold": 25000
+    }
+  ],
+  "info": []
+}

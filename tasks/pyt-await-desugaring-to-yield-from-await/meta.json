@@ -1,0 +1,22 @@
+{
+  "id": "pyt-await-desugaring-to-yield-from-await",
+  "title": "Await desugaring to yield from __await__",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M5py",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "await_desugar_trace"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

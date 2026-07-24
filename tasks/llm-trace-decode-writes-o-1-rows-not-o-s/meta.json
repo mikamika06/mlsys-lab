@@ -1,0 +1,27 @@
+{
+  "id": "llm-trace-decode-writes-o-1-rows-not-o-s",
+  "title": "Trace that decode writes O(1) rows, not O(S)",
+  "track": "04 Machine Learning Systems",
+  "tier": "II",
+  "module": "M2ml",
+  "difficulty": 3,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "provides": [
+    "decode_step"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-09
+    },
+    {
+      "metric": "op_count",
+      "op": "<=",
+      "threshold": 200
+    }
+  ],
+  "info": []
+}

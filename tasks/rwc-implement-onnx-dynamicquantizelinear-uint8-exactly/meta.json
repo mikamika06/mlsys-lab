@@ -1,0 +1,25 @@
+{
+  "id": "rwc-implement-onnx-dynamicquantizelinear-uint8-exactly",
+  "title": "Implement ONNX DynamicQuantizeLinear (uint8) Exactly",
+  "track": "03 Runtime ML Systems",
+  "tier": "I",
+  "module": "M1ml",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "dynamic_quantize_linear"
+  ],
+  "fixtures": [
+    "x.npy",
+    "lengths.npy"
+  ],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

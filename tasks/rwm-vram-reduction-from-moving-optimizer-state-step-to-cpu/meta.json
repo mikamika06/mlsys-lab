@@ -1,0 +1,22 @@
+{
+  "id": "rwm-vram-reduction-from-moving-optimizer-state-step-to-cpu",
+  "title": "VRAM reduction from offloading optimizer state to CPU",
+  "track": "04 ML Systems",
+  "tier": "II",
+  "module": "M2mlsys",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "provides": [
+    "vram_reduction_from_offload"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-9
+    }
+  ],
+  "info": []
+}

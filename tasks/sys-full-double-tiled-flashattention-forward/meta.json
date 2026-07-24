@@ -1,0 +1,32 @@
+{
+  "id": "sys-full-double-tiled-flashattention-forward",
+  "title": "Full double-tiled FlashAttention forward",
+  "track": "08 Systems ML",
+  "tier": "II",
+  "module": "M3mlsys",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "flash_attention_forward"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-5
+    },
+    {
+      "metric": "tiled_execution",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "no_full_score_buffer",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

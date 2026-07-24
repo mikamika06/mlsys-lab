@@ -1,0 +1,22 @@
+{
+  "id": "num-unshifted-qr-algorithm-eigenvalues",
+  "title": "Unshifted QR algorithm eigenvalues",
+  "track": "02 Numerical Computing",
+  "tier": "II",
+  "module": "M2np",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "qr_eigenvalues"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<",
+      "threshold": 1e-6
+    }
+  ],
+  "info": []
+}

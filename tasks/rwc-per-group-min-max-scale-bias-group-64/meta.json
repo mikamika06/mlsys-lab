@@ -1,0 +1,22 @@
+{
+  "id": "rwc-per-group-min-max-scale-bias-group-64",
+  "title": "Per‑Group Min/Max Scale/Bias (group size 64)",
+  "track": "02 Machine Learning",
+  "tier": "I",
+  "module": "M2ml",
+  "difficulty": 1,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "provides": [
+    "compute_group_params"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-12
+    }
+  ],
+  "info": []
+}
