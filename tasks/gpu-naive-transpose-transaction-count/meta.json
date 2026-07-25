@@ -1,0 +1,18 @@
+{
+  "id": "gpu-naive-transpose-transaction-count",
+  "title": "Naive transpose: count the coalesced-read, scattered-write transactions (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "transactions", "op": "==", "threshold": 72}
+  ],
+  "info": [
+    "8x32 matrix, one warp per block (block=32), so each warp's read is one full coalesced row and its write scatters across the output"
+  ]
+}

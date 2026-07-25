@@ -1,0 +1,20 @@
+{
+  "id": "gpu-classify-conflict-free-broadcast-n-way",
+  "title": "Realize conflict-free, broadcast, and n-way shared-memory access patterns (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "waves_exact", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "one warp (32 threads), one __shared__ buffer per launch; each of the 3 cases relaunches the same kernel with a different case_id",
+    "smem_waves counts a write step and a read-back step, so a conflict-free/broadcast case reads 2, a 4-way conflict reads 8",
+    "the simulator executes a block's threads in tid order within each phase, so a broadcast write's surviving value is deterministically thread 31's (the last writer), not thread 0's"
+  ]
+}

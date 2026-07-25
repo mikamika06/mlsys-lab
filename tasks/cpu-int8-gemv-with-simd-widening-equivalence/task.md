@@ -1,80 +1,59 @@
 ## Context
 
-Single‑Instruction‑Multiple‑Data (SIMD) units in modern CPUs can multiply and
-accumulate several 8‑bit elements in parallel while widening to 32‑bit integer
-lanes before summation. In mathematical form, for a matrix
-$A \in \mathbb{Z}_8^{m \times n}$ and a vector $x \in \mathbb{Z}_8^n$ the
-widening GEMV computes
+Quantized inference kernels store weights and activations as `int8` to save
+memory bandwidth, but they never accumulate in `int8`. SIMD dot-product
+instructions that operate on 8-bit lanes -- NEON's `vmull_s8`/`vmlal_s8`, x86's
+`VPMADDWD` -- widen every product, and the running sum they feed, to a 32-bit
+lane before adding anything. For a matrix $A \in \mathbb{Z}_8^{m \times n}$ and
+vector $x \in \mathbb{Z}_8^n$, the widening GEMV computes
 
 $$
-y_i = \sum_{j=1}^{n} A_{ij} \, x_j , \quad i = 1,\dots,m,
+y_i = \sum_{j=0}^{n-1} A_{ij} \, x_j , \quad i = 0,\dots,m-1,
 $$
 
-with each product $A_{ij} x_j$ promoted to a 32‑bit integer before accumulation.
-This mirrors the SIMD *dot‑product widening* primitive in NEON/AVX. The final
-result $y \in \mathbb{Z}_{32}^m$ must be identical to the mathematical 32‑bit
-sum over 8‑bit inputs — not affected by wraparound or float rounding.
+with every product $A_{ij} x_j$ and every partial sum carried in 32 bits. Get
+the widening point wrong -- keep the accumulator (or the product) in a
+narrower type -- and the sum silently wraps around long before the row is
+finished, with no warning at compile time or runtime.
 
 ## Task
 
-Implement `int8_gemv(A, x)`:
+Implement
 
-```python
-import numpy as np
-
-def int8_gemv(A: np.ndarray, x: np.ndarray) -> tuple[np.ndarray, list[int]]:
-    ...
+```cpp
+void gemv_i8(const int8_t* A, const int8_t* x, int32_t* y, int rows, int cols);
 ```
 
-It receives
-
-* `A`: a 2‑D NumPy array of shape $(m, n)$ with dtype `int8`
-* `x`: a 1‑D NumPy array of length $n$ with dtype `int8`
-
-Return a tuple `(y, access)` where
-
-* `y` is an `int32` vector of shape $(m,)` containing the correctly widened GEMV
-  result;
-* `access` is a **list of integer byte addresses** the kernel would have touched
-  when scanning `A` and `x` in linear memory order. Assume that both arrays are
-  contiguous in row‑major order and use `itemsize=1` for each `int8` element.
-
-The logical byte address of element `[i, j]` in `A` is
-$$
-\mathrm{addr}_A(i,j) = \mathrm{base}_A + i n + j,
-$$
-and of element `[j]` in `x` is
-$$
-\mathrm{addr}_x(j) = \mathrm{base}_x + j + m n,
-$$
-where `base_A = 0`. The separation of bases guarantees unique addresses across
-`A` and `x`.
-
-You must record every load access in this deterministic model in sequence,
-reflecting the traversal order of your algorithm.
+which computes `y[r] = sum_c A[r*cols+c] * x[c]` for each row `r`. Both the
+product `A[r*cols+c] * x[c]` and the accumulator you sum it into must be
+32-bit (`int32_t`) at every step -- never `int8_t`, never `int16_t`, not even
+as an intermediate you immediately assign away.
 
 ## Example
 
-```python
-import numpy as np
-A = np.array([[1, 2, 3],
-              [4, 5, 6]], dtype=np.int8)
-x = np.array([1, -1, 2], dtype=np.int8)
-
-y, acc = int8_gemv(A, x)
-print(y)
-# [1*1 + 2*(-1) + 3*2, 4*1 + 5*(-1) + 6*2] -> [5, 11]
-print(acc[:10])  # first few byte addresses touched
-```
+With `cols = 4`, row `[100, 100, 100, 100]` and `x = [100, 100, 100, 100]`:
+each product is `100*100 = 10000`, well within `int16_t` range on its own,
+but the row sum is `4*10000 = 40000` -- past `int16_t`'s max of `32767`. An
+accumulator kept in `int16_t` wraps to `40000 - 65536 = -25536`; the correct
+`int32_t` accumulator reports `40000`. Individually-safe products, unsafe
+running sum: that gap is exactly what widening the accumulator (not just the
+product) is for.
 
 ## What the gate checks
 
-Two gates:
+The driver (`main.cpp`) fills an 8x32 `int8_t` matrix and a 32-element
+`int8_t` vector from a fixed seeded generator (full `int8_t` range, so
+products up to `128*128` in magnitude appear, and 32 of them get summed per
+row), calls `gemv_i8`, and prints the resulting `y` vector. `verify_native.sh`
+compiles `solve.cpp` and `ref.cpp` against the same `main.cpp` with
+`clang++ -O2 -std=c++20` and requires
 
-1. **Value correctness** — the 32‑bit output must be byte‑identical to the
-   mathematical reference. The gate measures $\max |y_{\mathrm{your}} - y_{\mathrm{ref}}|$ ,
-   which must be exactly $0$.
-2. **Cache friendliness** — the access trace is fed to the deterministic cache simulator
-   (`arena.cachesim`), pinned to a $4$‑way set associative L1 with 64‑byte lines and 64 sets.
-   The resulting *miss rate* must not exceed the reference rate produced by a cache‑friendly
-   row‑major traversal. Passing this gate means `miss_rate_ok == 1.0`.
+$$
+\mathrm{exact\_match} = 1 \iff \text{every printed } y_r \text{ matches the reference}
+$$
+
+An implementation that narrows the product or the accumulator to `int16_t`
+computes the right answer for short rows or small values, then silently
+disagrees with the reference the moment a row's running sum crosses 32767 in
+magnitude -- which happens well before this task's 32-element rows are done,
+by design.

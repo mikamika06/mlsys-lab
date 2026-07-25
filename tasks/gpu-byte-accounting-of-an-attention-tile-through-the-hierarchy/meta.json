@@ -1,0 +1,11 @@
+{
+  "id": "gpu-byte-accounting-of-an-attention-tile-through-the-hierarchy",
+  "title": "Byte-accounting of an attention tile through the memory hierarchy",
+  "track": "05 GPU", "tier": "III", "module": "M5", "difficulty": 5,
+  "genre": "derive", "platform": "cross-platform", "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "transactions", "op": "<=", "threshold": 20},
+    {"metric": "cycles", "op": "<=", "threshold": 5000}
+  ], "info": []
+}

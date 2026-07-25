@@ -21,20 +21,14 @@ $f$ is the fraction of DRAM accesses served by the local NUMA node.
 
 ## Task
 
-Implement `compute_numa_amat` which returns the modeled AMAT (in nanoseconds)
-for a given NUMA configuration.
+Implement `compute_numa_amat` (declared in `sol.hpp`) which returns the
+modeled AMAT (in nanoseconds) for a given NUMA configuration:
 
-```python
-def compute_numa_amat(
-    l3_hit_time_ns: float,
-    l3_miss_rate: float,
-    local_dram_latency_ns: float,
-    remote_base_latency_ns: float,
-    num_remote_hops: int,
-    per_hop_latency_ns: float,
-    local_dram_fraction: float,
-) -> float:
-    ...
+```cpp
+double compute_numa_amat(double l3_hit_time_ns, double l3_miss_rate,
+                          double local_dram_latency_ns, double remote_base_latency_ns,
+                          int num_remote_hops, double per_hop_latency_ns,
+                          double local_dram_fraction);
 ```
 
 | Parameter | Meaning |
@@ -49,29 +43,28 @@ def compute_numa_amat(
 
 ## Example
 
-```python
+```
 compute_numa_amat(
-    l3_hit_time_ns=10,
-    l3_miss_rate=0.05,
-    local_dram_latency_ns=80,
-    remote_base_latency_ns=100,
-    num_remote_hops=2,
-    per_hop_latency_ns=25,
-    local_dram_fraction=0.7,
-)
-# -> 14.675
-#
-# remote_latency = 100 + (2-1)*25 = 125 ns
-# dram_latency   = 0.7*80 + 0.3*125 = 93.5 ns
-# AMAT           = 10 + 0.05*93.5 = 14.675 ns
+    l3_hit_time_ns=10, l3_miss_rate=0.05,
+    local_dram_latency_ns=80, remote_base_latency_ns=100,
+    num_remote_hops=2, per_hop_latency_ns=25,
+    local_dram_fraction=0.7)
+// -> 14.675
+//
+// remote_latency = 100 + (2-1)*25 = 125 ns
+// dram_latency   = 0.7*80 + 0.3*125 = 93.5 ns
+// AMAT           = 10 + 0.05*93.5 = 14.675 ns
 ```
 
 ## What the gate checks
 
-The grader evaluates your function on several parameter sets and computes the
-reference AMAT using the same closed-form formula.  The gate passes when the
-maximum **relative error** across all test cases satisfies:
-
-$$\frac{|\text{AMAT}_{\text{yours}} - \text{AMAT}_{\text{ref}}|}{|\text{AMAT}_{\text{ref}}|} \;\le\; 10^{-9}$$
-
-Any correct algebraic implementation of the formulas above will pass.
+`main.cpp` is a fixed driver that evaluates `compute_numa_amat` on seven
+deterministic configurations (including the zero-miss-rate, all-local and
+all-remote edge cases) and prints each resulting AMAT with 9 decimal
+digits. The gate is `max_abs_err`: it compiles your code against the same
+driver, byte-for-byte extracts the printed numbers from your binary and
+from the reference binary, and requires every AMAT to match to within
+$10^{-6}$ ns. Any correct algebraic implementation of the formulas above
+will pass; skipping the per-hop term, swapping `local_dram_fraction` and
+`1 - local_dram_fraction`, or applying `l3_miss_rate` to the wrong term
+will all fail at least one of the seven cases.

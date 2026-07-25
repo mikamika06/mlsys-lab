@@ -1,0 +1,19 @@
+{
+  "id": "gpu-compare-fp32-vs-tf32-vs-bf16-matmul-accuracy",
+  "title": "Compare fp32 vs tf32 vs bf16 matmul accuracy (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [
+    {"metric": "fp32_rel_err", "op": "<=", "threshold": 1e-5},
+    {"metric": "tf32_rel_err", "op": "<=", "threshold": 2e-3},
+    {"metric": "tf32_rel_err", "op": ">=", "threshold": 5e-5},
+    {"metric": "bf16_rel_err", "op": "<=", "threshold": 1e-2},
+    {"metric": "bf16_rel_err", "op": ">=", "threshold": 5e-4}
+  ],
+  "info": []
+}

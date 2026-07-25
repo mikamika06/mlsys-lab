@@ -1,0 +1,16 @@
+{
+  "id": "gpu-fp16-accumulation-overflow-demonstration",
+  "title": "fp16 accumulation overflow demonstration (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [
+    {"metric": "fp32_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "fp16_err", "op": ">=", "threshold": 1000.0}
+  ],
+  "info": []
+}

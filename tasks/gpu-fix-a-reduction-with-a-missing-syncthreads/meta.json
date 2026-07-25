@@ -1,0 +1,9 @@
+{
+  "id": "gpu-fix-a-reduction-with-a-missing-syncthreads",
+  "title": "Fix a reduction with a missing __syncthreads",
+  "track": "05 GPU", "tier": "II", "module": "M5", "difficulty": 3,
+  "genre": "debug", "platform": "cross-platform", "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}
+  ], "info": []
+}

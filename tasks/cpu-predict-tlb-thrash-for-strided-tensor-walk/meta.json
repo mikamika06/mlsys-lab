@@ -1,0 +1,22 @@
+{
+  "id": "cpu-predict-tlb-thrash-for-strided-tensor-walk",
+  "title": "Predict TLB thrash for a strided tensor walk (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "page size (16 KiB) and TLB entry count are pinned by the driver, matching Apple Silicon's real page size but not read from real hardware",
+    "distinct pages are computed by an exact set over every element's starting address, never approximated by a span/page_bytes formula"
+  ]
+}

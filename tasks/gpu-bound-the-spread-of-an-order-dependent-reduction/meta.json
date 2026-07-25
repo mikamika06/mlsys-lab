@@ -1,0 +1,1 @@
+{"id":"gpu-bound-the-spread-of-an-order-dependent-reduction","title":"Bound the spread of an order-dependent reduction (CUDA)","native":"cuda","difficulty":3,"gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-6},{"metric":"smem_waves","op":"<=","threshold":40}]}

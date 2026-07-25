@@ -1,16 +1,13 @@
 {
   "id": "cpu-rank-ijk-ikj-jki-matmul-by-misses",
-  "title": "Rank matrix multiply loop orders by cache misses",
-  "track": "03 Systems Python",
+  "title": "Rank ijk/ikj/jki matmul loop orders by cache misses (real C++)",
+  "track": "01 CPU Perf",
   "tier": "II",
-  "module": "M2cache",
+  "module": "M2cpu",
   "difficulty": 3,
-  "genre": "implement",
+  "genre": "compare",
   "platform": "cross-platform",
-  "provides": [
-    "rank_matmul_orders"
-  ],
-  "fixtures": [],
+  "native": "cpp",
   "gates": [
     {
       "metric": "exact_match",
@@ -18,5 +15,8 @@
       "threshold": 1.0
     }
   ],
-  "info": []
+  "info": [
+    "Real C++: runs all three ijk/ikj/jki loop nests of a 24x24 row-major matmul over a fixed set-associative LRU cache model and ranks them by measured misses, compiled by clang++.",
+    "reference measured misses: ijk=1097, ikj=1120, jki=3613 -- jki's column-major-style B access thrashes the cache far worse than the other two."
+  ]
 }

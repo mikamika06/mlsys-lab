@@ -1,0 +1,15 @@
+{
+  "id": "gpu-predict-achievable-flops-from-the-roofline",
+  "title": "Predict achievable FLOP/s from the roofline (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-3}],
+  "info": [
+    "Real CUDA-C: computes attainable FLOP/s = min(peak_flops, arithmetic_intensity * peak_bw) for 5 fixed device/kernel combos spanning memory-bound, compute-bound, and the exact ridge point, executed on the software SIMT GPU."
+  ]
+}

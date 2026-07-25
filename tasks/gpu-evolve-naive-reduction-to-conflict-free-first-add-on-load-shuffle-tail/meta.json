@@ -1,0 +1,20 @@
+{
+  "id": "gpu-evolve-naive-reduction-to-conflict-free-first-add-on-load-shuffle-tail",
+  "title": "Evolve a naive reduction: conflict-free + first-add-on-load + shuffle tail (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "smem_waves", "op": "<=", "threshold": 20},
+    {"metric": "cycles", "op": "<=", "threshold": 4500}
+  ],
+  "info": [
+    "256 elements, single block of 256 threads, block/grid launch config fixed for both the naive starter and the optimized reference",
+    "reference measured smem_waves=14, cycles=3704; the naive starter measures smem_waves=150, cycles=6686"
+  ]
+}

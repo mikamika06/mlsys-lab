@@ -1,0 +1,1 @@
+{"id":"gpu-seeded-dropout-mask-matches-reference","title":"Seeded dropout mask matches reference (CUDA)","native":"cuda","difficulty":3,"gates":[{"metric":"max_abs_err","op":"==","threshold":0.0}]}

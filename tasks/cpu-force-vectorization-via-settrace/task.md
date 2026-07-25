@@ -1,47 +1,50 @@
 ## Context
 
-Modern processors use vector units (SIMD) to perform multiple operations per instruction.
-Accessing memory with unit stride (consecutive elements) allows the hardware to stream data
-into vector registers efficiently. On the software side, Python’s bytecode interpreter
-executes every source line as an event. Using explicit `for` loops over array elements
-generates many line events, wasting CPU time. Vectorized operations through libraries like
-NumPy avoid per-element loops and drastically reduce line events.
+SIMD hardware (NEON on Apple Silicon, AVX on x86) does not execute one
+float at a time: a single vector instruction loads `width` contiguous
+lanes into one register and operates on all of them at once. A
+"vectorized" loop issues $n/\text{width}$ instructions for $n$ elements;
+a loop that is only vectorized in name -- e.g. still looping one scalar
+at a time and just calling itself "SIMD" -- issues $n$ instructions and
+gets none of the speedup, even though it can still produce the exact
+right numbers.
 
-In this task you generate the order in which to visit every element of a row-major
-$n \times n$ `float64` matrix. A sequential row-by-row order is both vector-friendly
-(unit stride) and cache-friendly (one miss per 64‑byte cache line). The grader counts
-Python line events during your function call; a low count indicates a vectorized
-implementation. It also replays your order through a cache simulator to confirm the
-access pattern is cache-efficient.
+Because you can't read a hardware instruction counter from portable
+C++, this task uses an instrumented hook (`op_tick`, declared in
+`sol.hpp`, defined in `main.cpp`) that stands in for "one vector
+instruction was issued". Your kernel must call it exactly once per
+`width`-wide chunk it processes -- not once per element.
 
 ## Task
 
 Implement
 
-```python
-def access_pattern(n: int) -> list[int]:
-    """Return a permutation of 0..n^2-1 that visits every matrix element once,
-       row by row, without Python loops."""
+```cpp
+void fma_vectorized(const float* a, const float* b, const float* c,
+                     float* out, int n, int width);
 ```
 
-Your implementation **must not** contain explicit `for`/`while` loops or list comprehensions
-that iterate over the elements; use NumPy’s `arange` or plain `range` outside a loop.
-The grader uses `sys.settrace` to count Python line events; if the count exceeds 10 your
-solution is rejected.
+Compute `out[i] = a[i]*b[i] + c[i]` for every `i` in `[0, n)`. `n` is a
+multiple of `width`. Process the arrays in contiguous chunks of `width`
+elements, and call `op_tick()` **exactly once per chunk** (so
+`n/width` calls total) -- never once per element and never zero times.
 
 ## Example
 
-```python
-access_pattern(2)  # -> [0, 1, 2, 3]
-```
+With `n=8`, `width=4`: process lanes `0..3` as one chunk (call
+`op_tick()` once), then lanes `4..7` as a second chunk (call
+`op_tick()` again). Total: 2 calls, not 8.
 
 ## What the gate checks
 
-The cache simulator runs with a 64‑byte line, 64 sets, 8 ways. With $n=64$ a sequential
-order produces $\frac{64^2}{8}=512$ compulsory misses. The gates are:
+`main.cpp` runs with `n=16`, `width=4`, prints the checksum of `out[]`
+and the value of `g_vector_ops` (the number of `op_tick()` calls). The
+gate is `max_abs_err <= 1e-9` over every printed number, so it catches
+two different failures at once:
 
-- `covers_all` = 1.0 iff the list contains every index $0\ldots n^2-1$ once.
-- `line_count` ≤ 10  (Python line events executed inside `access_pattern`).
-- `misses` ≤ 512  (cache simulator result).
-
-All three must pass.
+- Wrong arithmetic changes the checksum.
+- Calling `op_tick()` once per element instead of once per chunk prints
+  `vector_ops=16` instead of the reference's `vector_ops=4` -- a
+  difference of 12, far above the tolerance -- even if the checksum
+  itself is perfectly correct. Correct numbers computed the slow,
+  unvectorized way still fail the gate.

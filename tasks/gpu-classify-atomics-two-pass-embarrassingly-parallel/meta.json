@@ -1,0 +1,22 @@
+{
+  "id": "gpu-classify-atomics-two-pass-embarrassingly-parallel",
+  "title": "Classify: atomics / two-pass / embarrassingly parallel (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 2,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "0.0 = embarrassingly parallel, 1.0 = atomics, 2.0 = two-pass; shared_target_unknown takes priority over cross_block."
+  ]
+}

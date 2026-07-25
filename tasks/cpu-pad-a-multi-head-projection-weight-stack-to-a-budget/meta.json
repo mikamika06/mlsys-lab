@@ -1,0 +1,13 @@
+{
+  "id": "cpu-pad-a-multi-head-projection-weight-stack-to-a-budget",
+  "title": "Pad a multi-head projection weight stack to a conflict-miss budget (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

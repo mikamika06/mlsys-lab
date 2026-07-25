@@ -17,11 +17,13 @@ Three languages, three runners:
 Task-facing API (what a task's `check.py` imports):
 
     from mlsys import scorers, probe
+    from mlsys import cachesim, cppabi   # the deterministic cache and ABI models
     from mlsys.sim import GPU, CudaProgram
-    from mlsys.sim import cache          # deterministic cache model
 """
 
 from . import probe, scorers
+from .sim import abi as cppabi          # historical names a task may still use
+from .sim import cache as cachesim
 
 __version__ = "0.1.0"
-__all__ = ["scorers", "probe", "__version__"]
+__all__ = ["scorers", "probe", "cachesim", "cppabi", "__version__"]

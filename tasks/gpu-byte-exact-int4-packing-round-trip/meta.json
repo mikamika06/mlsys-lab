@@ -1,0 +1,15 @@
+{
+  "id": "gpu-byte-exact-int4-packing-round-trip",
+  "title": "Byte-exact int4 packing round-trip (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": [
+    "Real CUDA-C: packs two int4 codes per slot (lo + hi*16) and unpacks them back out in the same kernel, executed on the software SIMT GPU; every code must survive the round trip exactly."
+  ]
+}

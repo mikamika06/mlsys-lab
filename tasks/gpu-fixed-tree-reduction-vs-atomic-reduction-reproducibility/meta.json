@@ -1,0 +1,15 @@
+{
+  "id": "gpu-fixed-tree-reduction-vs-atomic-reduction-reproducibility",
+  "title": "Fixed-tree reduction vs atomic-order reduction reproducibility (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "compare",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: a fixed-structure tree reduction and a single-threaded order-dependent accumulation over the same 32 values (one huge value plus the integers 1..31), executed on the software SIMT GPU; three different accumulation orders on the identical input measure a real, bounded, nonzero spread (20.0) purely from float non-associativity."
+  ]
+}

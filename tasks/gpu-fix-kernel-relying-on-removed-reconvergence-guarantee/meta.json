@@ -1,0 +1,9 @@
+{
+  "id": "gpu-fix-kernel-relying-on-removed-reconvergence-guarantee",
+  "title": "Fix a kernel relying on a removed reconvergence guarantee",
+  "track": "05 GPU", "tier": "II", "module": "M5", "difficulty": 4,
+  "genre": "debug", "platform": "cross-platform", "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}
+  ], "info": []
+}

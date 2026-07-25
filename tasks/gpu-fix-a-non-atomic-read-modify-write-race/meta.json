@@ -1,0 +1,23 @@
+{
+  "id": "gpu-fix-a-non-atomic-read-modify-write-race",
+  "title": "Fix a non-atomic read-modify-write race (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "256 threads, single block, each meant to contribute 1.0 to a running count.",
+    "This simulator (like the CUDA-C subset it models) has no atomicAdd; the fix must restructure the algorithm (privatize per-thread, then reduce), not add more synchronization around the shared read-modify-write."
+  ]
+}

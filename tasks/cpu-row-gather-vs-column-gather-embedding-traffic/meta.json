@@ -1,0 +1,15 @@
+{
+  "id": "cpu-row-gather-vs-column-gather-embedding-traffic",
+  "title": "Row-gather vs column-gather embedding traffic (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "Real C++: counts distinct 64-byte cache lines touched when gathering K full embedding vectors out of a V x D table stored row-major vs column-major, compiled by clang++."
+  ]
+}

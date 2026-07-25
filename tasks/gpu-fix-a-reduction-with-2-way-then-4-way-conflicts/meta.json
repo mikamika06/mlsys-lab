@@ -1,0 +1,18 @@
+{
+  "id": "gpu-fix-a-reduction-with-2-way-then-4-way-conflicts",
+  "title": "Fix a reduction with 2-way then 4-way bank conflicts (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "smem_waves", "op": "<=", "threshold": 50}
+  ],
+  "info": [
+    "Real CUDA-C: a single-block 256-element tree reduction. The shipped kernel computes the exact right sum but uses interleaved addressing (index = 2*stride*tid) whose bank-conflict degree doubles every step (2-way, 4-way, 8-way, ...), measuring 150 smem_waves; sequential addressing (stride halves, tid < stride active) on the same input measures 45."
+  ]
+}

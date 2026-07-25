@@ -1,0 +1,11 @@
+{
+  "id": "gpu-dequant-fused-kernel-load-int8-dequant-in-register-accumulate",
+  "title": "Dequant-fused kernel: load int8, dequant in-register, accumulate",
+  "track": "05 GPU", "tier": "III", "module": "M5", "difficulty": 4,
+  "genre": "implement", "platform": "cross-platform", "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "transactions", "op": "<=", "threshold": 22},
+    {"metric": "cycles", "op": "<=", "threshold": 4500}
+  ], "info": []
+}

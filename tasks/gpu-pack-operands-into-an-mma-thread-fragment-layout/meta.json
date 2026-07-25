@@ -1,0 +1,1 @@
+{"id":"gpu-pack-operands-into-an-mma-thread-fragment-layout","title":"Pack operands into an MMA thread-fragment layout (CUDA)","native":"cuda","difficulty":4,"gates":[{"metric":"max_abs_err","op":"==","threshold":0.0}]}

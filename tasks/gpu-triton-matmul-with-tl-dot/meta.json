@@ -1,0 +1,15 @@
+{
+  "id": "gpu-triton-matmul-with-tl-dot",
+  "title": "Block-programmed matmul with boundary masking (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: block-level matmul (the Triton tl.dot programming model) for a 5x5x5 problem against a 4x4 thread tile that overhangs the matrix on both edges, requiring correct boundary masking, executed on the software SIMT GPU."
+  ]
+}

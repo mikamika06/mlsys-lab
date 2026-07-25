@@ -1,0 +1,15 @@
+{
+  "id": "gpu-find-the-ridge-point-of-a-device",
+  "title": "Find the ridge point of a device (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: computes the roofline ridge point (peak_flops / peak_bw) for 5 fixed device specs, executed on the software SIMT GPU."
+  ]
+}

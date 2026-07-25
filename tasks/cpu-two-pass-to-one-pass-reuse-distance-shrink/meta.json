@@ -1,0 +1,18 @@
+{
+  "id": "cpu-two-pass-to-one-pass-reuse-distance-shrink",
+  "title": "Fuse a two-pass statistics sweep into one pass (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-3}
+  ],
+  "info": [
+    "misses come from a deterministic 64-line/64-byte-line fully-associative LRU model over real addresses, not hardware performance counters",
+    "the array (128 lines) is twice the modeled cache's capacity (64 lines), so a second full read cannot reuse anything from the first"
+  ]
+}

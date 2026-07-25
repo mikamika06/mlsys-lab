@@ -1,0 +1,9 @@
+{
+  "id": "cpu-reassign-threads-to-nodes-to-min-remote-accesses",
+  "title": "Reassign threads to NUMA nodes to minimize remote accesses",
+  "track": "13 CPU-perf", "tier": "IV", "module": "M13", "difficulty": 4,
+  "genre": "optimize", "platform": "cross-platform", "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ], "info": []
+}

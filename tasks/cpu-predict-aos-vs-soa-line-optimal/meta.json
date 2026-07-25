@@ -1,0 +1,17 @@
+{
+  "id": "cpu-predict-aos-vs-soa-line-optimal",
+  "title": "Predict AoS- vs SoA-optimal for 5 access patterns (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 2,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "line counts come from modelling the real byte addresses each layout produces for the pattern, not a hardcoded rule of thumb"
+  ]
+}

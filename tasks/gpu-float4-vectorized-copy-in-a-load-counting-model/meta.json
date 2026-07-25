@@ -1,0 +1,1 @@
+{"id":"gpu-float4-vectorized-copy-in-a-load-counting-model","title":"float4 vectorized copy in a load-counting model (CUDA)","native":"cuda","difficulty":2,"gates":[{"metric":"max_abs_err","op":"==","threshold":0.0},{"metric":"load_count_err","op":"==","threshold":0.0}]}

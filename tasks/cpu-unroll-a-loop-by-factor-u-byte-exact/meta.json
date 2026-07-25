@@ -1,0 +1,9 @@
+{
+  "id": "cpu-unroll-a-loop-by-factor-u-byte-exact",
+  "title": "Unroll a loop by factor U (byte-exact)",
+  "track": "01 CPU Perf", "tier": "I", "module": "M1", "difficulty": 1,
+  "genre": "implement", "platform": "cross-platform", "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ], "info": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "gpu-int4-nibble-unpack-dequant-matmul",
+  "title": "int4 nibble-unpack + group-wise dequant matvec (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: fuses int4 nibble unpacking (two codes per packed byte), per-group dequant scaling, and a matvec dot product into one kernel, executed on the software SIMT GPU."
+  ]
+}

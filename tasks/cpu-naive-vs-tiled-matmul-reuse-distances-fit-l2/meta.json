@@ -1,0 +1,13 @@
+{
+  "id": "cpu-naive-vs-tiled-matmul-reuse-distances-fit-l2",
+  "title": "Naive vs tiled matmul reuse distances fit L2 (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

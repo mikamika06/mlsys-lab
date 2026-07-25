@@ -1,0 +1,16 @@
+{
+  "id": "gpu-mixed-precision-matmul-fp16-inputs-fp32-accumulate",
+  "title": "Mixed-precision matmul: fp16 inputs, fp32 accumulate (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [
+    {"metric": "fp32_acc_err", "op": "<=", "threshold": 0.001},
+    {"metric": "improvement", "op": ">=", "threshold": 0.0002}
+  ],
+  "info": []
+}

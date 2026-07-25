@@ -1,0 +1,23 @@
+{
+  "id": "gpu-segmented-scan",
+  "title": "Segmented scan via warp shuffle (CUDA)",
+  "track": "GPU Programming",
+  "tier": "II",
+  "module": "Mgpu",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "32 elements (one warp), 8 segments marked by head_flag (element 0 is always a head).",
+    "__shfl_up_sync must be the whole right-hand side of its own assignment -- read val_up/flag_up into their own variables each step."
+  ]
+}

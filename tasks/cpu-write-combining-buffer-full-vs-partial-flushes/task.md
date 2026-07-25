@@ -1,52 +1,66 @@
 ## Context
 
-A write-combining (WC) buffer collects stores to memory before committing them as a burst. A simplified WC buffer has a fixed number of cache-line slots. When a slot becomes full, the buffer can issue a full flush containing all bytes in that line. When another line must replace a partially filled slot, the remaining bytes are written by a partial flush.
+A write-combining (WC) buffer collects stores to memory before committing
+them as a burst. A simplified WC buffer has a fixed number of cache-line
+slots. When a slot's line becomes fully written, the buffer issues a **full
+flush** containing every byte of that line. When a line is evicted to make
+room for another before it was fully written, the buffer issues a **partial
+flush** of whatever bytes it did collect.
 
 For a store trace of byte addresses, each address maps to a cache line:
 
-$$\mathrm{line}(a) = \left\lfloor \frac{a}{B} \right\rfloor$$
+$$\mathrm{line}(a) = \left\lfloor \frac{a}{B} \right\rfloor, \qquad
+\mathrm{offset}(a) = a \bmod B$$
 
-where $B$ is the cache-line size in bytes. A line is full when every byte offset in the range $[0, B-1]$ has been stored.
+where $B$ is `line_bytes`. A line's WC entry is **full** once every offset in
+$[0, B-1]$ has been stored to it.
 
-This task models the difference between contiguous streaming stores and scattered stores. The model also sends the store trace through a deterministic cache simulator. The cache has fixed parameters, so the result depends only on the generated access sequence.
+This models the real difference between contiguous streaming stores (which
+fill lines completely and flush efficiently) and scattered stores across
+more lines than the buffer has slots (which evict half-written lines and
+waste bandwidth on partial flushes).
 
 ## Task
 
-Implement `wc_flush_stats(addrs, line_bytes, slots)`:
+Implement `wc_flush_stats` (declared in `sol.hpp`):
 
-```python
-def wc_flush_stats(addrs: list[int], line_bytes: int, slots: int) -> tuple[int, int]:
-    ...
+```cpp
+void wc_flush_stats(const long* addrs, int n, int line_bytes, int slots, long* out);
 ```
 
-The function receives a byte-address store trace. Simulate a WC buffer with `slots` active cache-line entries.
+Simulate a WC buffer with `slots` active line entries over the `n`-address
+store trace `addrs`:
 
-For each store:
-- Add the byte offset `addr % line_bytes` to the WC entry for that line.
-- If the line is already full after the store, count one `full_flush` and remove the entry.
-- If a new line needs a WC entry while all slots are occupied, evict the oldest entry. Count a `full_flush` if the evicted entry is complete, otherwise count a `partial_flush`.
-- At the end of the trace, flush all remaining entries. Complete entries count as `full_flush`; incomplete entries count as `partial_flush`.
+- For each store, if its line has no active entry: if all `slots` entries are
+  occupied, evict the OLDEST entry (FIFO, by the order lines were first
+  touched) -- count a `full_flush` if that evicted entry was complete
+  (every offset recorded), else a `partial_flush`. Then start a fresh entry
+  for the new line.
+- Record the store's offset into its line's entry. If the entry now has
+  every offset in $[0, B-1]$ recorded, flush it immediately (`full_flush`)
+  and free the slot.
+- After the trace ends, flush every entry still resident, oldest first,
+  using the same full/partial rule.
 
-Return `(full_flush, partial_flush)`.
+Write `full_flush` into `out[0]` and `partial_flush` into `out[1]`.
 
 ## Example
 
-```python
-trace = [0, 1, 2, 3, 4, 5, 6, 7]
-wc_flush_stats(trace, 4, 2)
-# (2, 0)
+```
+addrs = [0, 1, 2, 3, 4, 5, 6, 7], line_bytes = 4, slots = 2
+wc_flush_stats(...) -> out[0] = 2, out[1] = 0
 ```
 
-The first four stores fill line $0$, causing one full flush. The next four stores fill line $1$, causing another full flush.
+The first four stores fill line 0 (offsets 0-3), causing one full flush. The
+next four stores fill line 1, causing another full flush.
 
 ## What the gate checks
 
-The gate runs several deterministic store traces through both the candidate implementation and an internal WC reference model. It also runs the traces through a fixed cache simulator with `line_bytes=64`, `sets=8`, and `ways=2` to ensure the generated access behavior is evaluated deterministically.
-
-The returned tuple must exactly match the reference result:
-
-$$
-(\mathrm{full\_flush}, \mathrm{partial\_flush})
-$$
-
-Any mismatch fails the gate.
+`main.cpp` runs 5 fixed store traces (contiguous fills, strided stores that
+never complete a line, and scattered addresses spread over more lines than
+there are slots) through your `wc_flush_stats` and prints `(full, partial)`
+for each. The gate is `exact_match` on that full printed output against the
+reference. Forgetting to flush a line the instant it becomes full (instead
+of only at eviction/end-of-trace), evicting the newest entry instead of the
+oldest, or mislabeling an evicted complete entry as a partial flush will all
+change at least one scenario's counts and fail the gate.

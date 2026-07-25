@@ -1,0 +1,18 @@
+{
+  "id": "gpu-compute-shared-memory-bank-conflict-degree",
+  "title": "Compute a shared-memory bank-conflict degree (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "smem_waves", "op": "==", "threshold": 8}
+  ],
+  "info": [
+    "Real CUDA-C: a warp cooperatively fills a 128-word shared buffer, then each lane reads back one word at a fixed, given per-lane offset -- some lanes share a bank via a true conflict, some via an exempt broadcast -- executed on the software SIMT GPU, whose smem_waves metric is the real measured conflict degree."
+  ]
+}

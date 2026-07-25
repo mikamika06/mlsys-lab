@@ -1,0 +1,15 @@
+{
+  "id": "cpu-prefetch-kv-cache-reads-for-decode",
+  "title": "Prefetch KV-cache reads for decode: pick the distance (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "II",
+  "module": "M1",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "Real C++: a single decode step's full re-scan over a growing KV cache, run through a deterministic set-associative LRU cache model with a software next-K prefetcher whose lookahead distance the learner must search for and pick, compiled by clang++."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "gpu-fix-boundary-handling-for-non-multiple-of-tile-dims",
+  "title": "Fix boundary handling for non-multiple-of-tile GEMM dims (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "6x6 x 6x6 GEMM tiled 4x4 -- every dimension is ragged (not a multiple of the tile size).",
+    "Scratch memory just past A/B/C's real extent is poisoned with a large nonzero constant, so an unguarded out-of-bounds load fails visibly instead of getting lucky with a zero."
+  ]
+}

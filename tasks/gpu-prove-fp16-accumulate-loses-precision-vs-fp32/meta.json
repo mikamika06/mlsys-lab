@@ -1,0 +1,15 @@
+{
+  "id": "gpu-prove-fp16-accumulate-loses-precision-vs-fp32",
+  "title": "Prove fp16 accumulation loses precision vs fp32 (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "prove",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: accumulates 64 small increments (each below fp16's exact 1.0 ULP at magnitude 1024-2048) two ways -- a plain running sum vs one rounded to the nearest integer after every addition (modeling fp16's mantissa) -- executed on the software SIMT GPU; fp32-style ends at 1025.32, fp16-style is stuck at 1024."
+  ]
+}

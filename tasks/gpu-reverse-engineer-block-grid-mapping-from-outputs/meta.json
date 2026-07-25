@@ -1,0 +1,13 @@
+{
+  "id": "gpu-reverse-engineer-block-grid-mapping-from-outputs",
+  "title": "Reverse-engineer the block/grid mapping from outputs (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

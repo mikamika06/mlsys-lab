@@ -1,0 +1,23 @@
+{
+  "id": "gpu-prove-naive-exp-overflows-safe-does-not",
+  "title": "Prove naive exp overflows, safe softmax does not (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "4 rows of 6 logits, one thread per row; the first and third rows use logits around +-1000, where a naive expf(logit) overflows.",
+    "The grader rejects any non-finite output as well as any mismatch, so a naive (max-not-subtracted) implementation fails outright, not just inaccurately."
+  ]
+}

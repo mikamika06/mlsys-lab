@@ -1,0 +1,15 @@
+{
+  "id": "gpu-rmsnorm-forward",
+  "title": "RMSNorm forward (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: RMSNorm forward over one 32-element row, mean-square computed by a shared-memory tree reduction, executed on the software SIMT GPU."
+  ]
+}

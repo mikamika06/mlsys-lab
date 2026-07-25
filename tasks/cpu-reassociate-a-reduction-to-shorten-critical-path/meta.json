@@ -1,16 +1,13 @@
 {
   "id": "cpu-reassociate-a-reduction-to-shorten-critical-path",
-  "title": "Reassociate a reduction to shorten critical path",
+  "title": "Reassociate a reduction to shorten critical path (real C++)",
   "track": "04 Performance Engineering",
   "tier": "II",
   "module": "M2cpu",
   "difficulty": 3,
   "genre": "optimize",
   "platform": "cross-platform",
-  "provides": [
-    "reassociated_sum_trace"
-  ],
-  "fixtures": [],
+  "native": "cpp",
   "gates": [
     {
       "metric": "exact_match",
@@ -18,5 +15,7 @@
       "threshold": 1.0
     }
   ],
-  "info": []
+  "info": [
+    "dependency depth is tracked by a real Tracked{value,depth} type whose operator+ computes depth = 1 + max(a.depth, b.depth); not a timing measurement"
+  ]
 }

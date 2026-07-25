@@ -1,0 +1,18 @@
+{
+  "id": "gpu-sequential-vs-pairwise-vs-kahan-summation-error",
+  "title": "Prove Kahan summation beats naive sequential on an ill-conditioned sum (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "prove",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "rel_err", "op": "<=", "threshold": 1e-9}
+  ],
+  "info": [
+    "single thread; fixture is [1e16, 1.0 x1000, -1e16] -- true sum is exactly 1000.0",
+    "this simulator's arithmetic runs at double precision (no real fp32 truncation), so the fixture uses a magnitude ratio (1e16) extreme enough to trigger the same catastrophic-cancellation failure at double precision that a naive fp32 sum shows on real hardware"
+  ]
+}

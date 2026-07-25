@@ -9,45 +9,57 @@ not part of the useful body. On a typical scalar pipeline these are:
 That gives $K = 2$ overhead operations per iteration. For a loop that executes
 $N$ iterations the total overhead is $K \cdot N = 2N$ operations.
 
-**Loop unrolling** by a factor $U$ (where $U$ divides $N$) places $U$ copies of
-the body inside each iteration, shrinking the iteration count from $N$ to
-$N/U$. The overhead drops to $2 \cdot N/U$, and the number of overhead
-operations *eliminated* is
+**Loop unrolling** by a factor $U$ places $U$ copies of the body inside each
+iteration, shrinking the iteration count from $N$ down to $\lfloor N/U \rfloor$
+(integer division — any leftover elements would need a separate remainder
+loop, whose own overhead this model ignores). The overhead drops to
+$2 \lfloor N/U \rfloor$, and the number of overhead operations *eliminated* is
 
-$$\Delta = 2 \!\left(N - \frac{N}{U}\right)$$
+$$\Delta = 2 \!\left(N - \left\lfloor\frac{N}{U}\right\rfloor\right)$$
 
-The data-element accesses of the body remain exactly $N$; only the
-bookkeeping shrinks.
+The data-element accesses of the body remain exactly $N$ either way; only the
+per-iteration bookkeeping shrinks. Note $U = 1$ (no unrolling) must give
+$\Delta = 0$.
 
 ## Task
 
-Implement `unroll_overhead(N: int, U: int) -> tuple[int, list[int]]`.
+Implement
 
-- `N` — original iteration count ($U$ divides $N$, both positive).
-- `U` — unroll factor ($U \ge 1$).
+```cpp
+long long unroll_overhead_saved(long long N, long long U);
+```
 
-Return `(saved_ops, trace)`:
+Return the exact number of overhead operations eliminated by unrolling an
+`N`-iteration loop by factor `U`, using the $K = 2$ model above and
+truncating (C++ `/`) integer division:
 
-1. **`saved_ops`** (`int`): the exact number of overhead operations eliminated,
-   using the $K = 2$ model above.
-2. **`trace`** (`list[int]`): exactly `N` byte addresses representing the
-   unrolled loop body's data accesses. Element $i$ (for
-   $i \in 0 \ldots N{-}1$) should reside at byte address $8\,i$ (sequential
-   `float64` layout). The access order inside each group of $U$ consecutive
-   elements is flexible, but every address must appear exactly once.
+$$\Delta = 2 \left(N - N / U\right)$$
 
 ## Example
 
-```python
-unroll_overhead(8, 2)
-# saved_ops = 2 * (8 - 4) = 8
-# trace = [0, 8, 16, 24, 32, 40, 48, 56]   # one valid ordering
+```
+unroll_overhead_saved(8, 2)
+# = 2 * (8 - 8/2) = 2 * (8 - 4) = 8
+
+unroll_overhead_saved(50, 1)
+# = 2 * (50 - 50/1) = 0        -- no unrolling, nothing eliminated
+
+unroll_overhead_saved(17, 5)
+# = 2 * (17 - 17/5) = 2 * (17 - 3) = 28
 ```
 
 ## What the gate checks
 
-| Gate | Condition |
-|------|-----------|
-| `exact_match` | `saved_ops` equals $2(N - N/U)$ **exactly** ($N{=}1024$, $U{=}4$, so the answer is $1536$) |
-| `covers_all` | `trace` is a permutation of $\{0, 8, 16, \ldots, 8184\}$ |
-| `misses` | Cache simulator replays `trace` through a 64-set, 8-way, 64-B-line cache; miss count $\le 200$ (sequential access triggers only compulsory misses) |
+`main.cpp` calls your function on five fixed `(N, U)` pairs — including
+`U == 1` (must yield `0`), `U == N` (fully unrolled), and pairs where `U`
+does not evenly divide `N` (exercises truncating division) — and prints one
+result per line. The grader compiles your `.cpp` with the real local
+`clang++`, runs it, and requires
+
+$$
+\mathrm{exact\_match} = 1 \iff \text{every printed value matches the reference's exactly}
+$$
+
+A starter that ignores unrolling entirely (e.g. always reporting the
+un-unrolled overhead $2N$) fails on every case, including the trivial
+`U == 1` one, where the correct answer is $0$.

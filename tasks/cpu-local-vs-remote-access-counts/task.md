@@ -1,73 +1,51 @@
 ## Context
 
-Memory systems are affected by how programs traverse data. A cache stores data in
-fixed-size lines, so nearby byte addresses can be reused efficiently when an
-algorithm accesses data with good locality.
+On a NUMA (Non-Uniform Memory Access) machine, physical memory is split
+into fixed-size *pages*, and each page is pinned to one *NUMA node* (a
+CPU socket with its own directly-attached memory controller). A thread
+running on a given node can read a page pinned to that same node quickly
+(a **local** access); reading a page pinned to a *different* node has to
+travel over the inter-socket interconnect, which costs noticeably more
+latency (a **remote** access).
 
-For a matrix with $n$ rows and $n$ columns stored in row-major order, the byte
-address of an element is
+Given a fixed page size $\mathrm{page\_bytes}$, the page a byte address
+$a$ falls in is
 
 $$
-\mathrm{addr}(i,j) = \mathrm{base} + (i n + j)\cdot s,
+\mathrm{page}(a) = \left\lfloor \frac{a}{\mathrm{page\_bytes}} \right\rfloor,
 $$
 
-where $s$ is the element size in bytes.
-
-A tiled traversal processes a matrix in smaller blocks. For a tile size $t$, the
-access order visits blocks of rows and columns and then visits the elements
-inside each block. This improves temporal and spatial locality because addresses
-within a tile are reused before the cache must evict them.
-
-The cache simulator models deterministic hardware behavior. A cache line holds
-multiple nearby bytes, and the simulator tracks hits and misses based only on the
-access address sequence.
+and every page has one owning node, `node_of_page[page]`. A thread
+pinned to `home_node` classifies each of its accesses as local or remote
+purely by comparing that page's node against its own.
 
 ## Task
 
-Implement `blocked_access_trace(n, tile)`:
+Implement
 
-```python
-def blocked_access_trace(n: int, tile: int) -> list[int]:
-    ...
+```cpp
+void count_local_remote(const long* addrs, int n, long page_bytes,
+                         const int* node_of_page, int num_pages,
+                         int home_node, long* out);
 ```
 
-Return a list of byte addresses representing a traversal of an $n \times n$
-matrix of 8-byte values. The traversal must cover every matrix element exactly
-once.
-
-The required traversal is a tiled row-major traversal:
-
-1. Iterate tile rows from top to bottom.
-2. Iterate tile columns from left to right.
-3. Inside each tile, iterate rows first and columns second.
-4. Convert each element coordinate $(i,j)$ into its byte address using
-   $\mathrm{addr}(i,j) = (i n + j)\cdot 8$.
-
-The final tiles at the edges may be smaller when $n$ is not divisible by `tile`.
+For each of the `n` addresses in `addrs`, compute its page
+($\mathrm{page}(a)$ above) and look up that page's node in
+`node_of_page`. If the node equals `home_node`, count it as local
+(`out[0]`); otherwise count it as remote (`out[1]`). Every address
+satisfies `0 <= addrs[i] < num_pages * page_bytes`, so every page lookup
+is in range. `out[0] + out[1]` must equal `n`.
 
 ## Example
 
-```python
-trace = blocked_access_trace(3, 2)
-
-# The first tile contains:
-# (0,0), (0,1), (1,0), (1,1)
-# and addresses are:
-# [0, 8, 24, 32, ...]
-```
+`page_bytes = 4096`, `node_of_page = {0, 1}`, `home_node = 0`. An access
+to byte address `100` falls on page `0` (node `0`, local); an access to
+byte address `5000` falls on page `1` (node `1`, remote).
 
 ## What the gate checks
 
-The gate runs the returned address trace through a deterministic cache simulator
-with fixed parameters:
-
-$$
-\mathrm{line\_bytes}=64,\quad \mathrm{sets}=8,\quad \mathrm{ways}=2.
-$$
-
-The simulator computes the miss count from the trace. The returned trace must
-match the reference tiled traversal exactly, so the cache behavior is also
-deterministic.
-
-A cache simulator is used instead of wall-clock timing so the result does not
-depend on the machine running the task.
+`exact_match` on the printed `(local, remote)` pair for a fixed 40-access
+trace over an 8-page, 2-node placement. Swapping the local/remote
+comparison, mixing up which output slot gets which count, or letting
+`out[0] + out[1] != n` (e.g. an off-by-one page computation that indexes
+`node_of_page` out of its intended range) all change the printed numbers.

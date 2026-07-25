@@ -1,0 +1,16 @@
+{
+  "id": "gpu-diagnose-and-eliminate-a-register-spill",
+  "title": "Diagnose and eliminate a register spill (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "transactions", "op": "<=", "threshold": 16}
+  ],
+  "info": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "cpu-verify-tiled-matmul-equals-naive",
+  "title": "Verify a tiled matmul equals the naive one",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 2,
+  "genre": "reconstruct",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-4}],
+  "info": []
+}

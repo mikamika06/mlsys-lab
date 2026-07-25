@@ -1,0 +1,23 @@
+{
+  "id": "gpu-multi-block-scan-with-block-sum-carry",
+  "title": "Multi-block scan with block-sum carry (CUDA)",
+  "track": "GPU Programming",
+  "tier": "II",
+  "module": "Mgpu",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "128 elements = 4 blocks of 32 (one warp each); the same kernel is launched 3 times (phase 0, 1, 2), since no single launch can globally synchronize across blocks.",
+    "block_sums must hold each block's EXCLUSIVE carry (sum of every block strictly before it) after phase 1, not an inclusive scan of the block totals."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "gpu-tree-vs-sequential-summation-error-bound",
+  "title": "Tree vs sequential summation error bound (CUDA)",
+  "track": "GPU Programming",
+  "tier": "II",
+  "module": "Mgpu",
+  "difficulty": 4,
+  "genre": "prove",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "rel_err",
+      "op": "<=",
+      "threshold": 1e-14
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "1024 elements: x[0]=1.0, x[1..1023]=1e-15 each -- an extreme dynamic-range fixture.",
+    "Reference 'true' value is computed with math.fsum (exact summation), immune to the rounding error this task measures.",
+    "A left-to-right sequential accumulation of the same array measures rel_err ~= 1.13e-13 on this fixture, over 10x the gate -- the tree reduction measures rel_err = 0.0."
+  ]
+}

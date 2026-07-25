@@ -1,0 +1,13 @@
+{
+  "id": "cpu-transformer-layer-tensor-residency-budget",
+  "title": "Transformer layer tensor residency & DRAM byte budget (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

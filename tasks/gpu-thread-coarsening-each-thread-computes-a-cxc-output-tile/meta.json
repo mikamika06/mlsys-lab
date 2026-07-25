@@ -1,0 +1,13 @@
+{
+  "id": "gpu-thread-coarsening-each-thread-computes-a-cxc-output-tile",
+  "title": "Thread coarsening: each thread computes a CxC output tile (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-9}],
+  "info": []
+}

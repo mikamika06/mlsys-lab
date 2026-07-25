@@ -1,0 +1,18 @@
+{
+  "id": "gpu-triton-fused-elementwise-add-scale-activation",
+  "title": "Fused elementwise add + scale + activation (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "transactions", "op": "<=", "threshold": 10}
+  ],
+  "info": [
+    "Real CUDA-C: a single-pass fused add+scale+ReLU kernel over 64 elements (2 blocks), executed on the software SIMT GPU; reference measures 6 transactions (one coalesced 128-byte transaction per array per block)."
+  ]
+}

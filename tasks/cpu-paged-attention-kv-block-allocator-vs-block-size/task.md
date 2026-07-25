@@ -1,52 +1,67 @@
 ## Context
 
-Paged attention implementations for large language models maintain *key-value (KV) caches* whose entries are blocks of hidden-state vectors. Each decoded token reserves
-a few bytes in GPU or CPU memory; to avoid frequent reallocations, these entries are managed by a simple *paged allocator*. Allocation granularity — the **block size** —
-controls internal fragmentation (wasted gaps within blocks) and also table overhead (page table entries, meta‑data).
-
-If each token uses $s$ bytes and you round allocations to the nearest multiple of block size $b$, fragmentation leads to $\frac{b - s \bmod b}{b}$ unused fraction per allocation on average, while smaller $b$ increases the page table’s overhead.
-
-We want to choose a block size that minimizes wasted memory, i.e. maximizes
+Paged-attention implementations keep each sequence's key-value (KV) cache
+as a chain of fixed-size *blocks*, allocated from a pool the way an OS
+allocates physical pages. Each token's KV entry is `s` bytes; the
+allocator rounds that up to a whole number of `b`-byte blocks:
 
 $$
-\text{size\_ratio} = \frac{\text{useful bytes}}{\text{allocated bytes}}
+\text{blocks}(s, b) = \left\lceil \frac{s}{b} \right\rceil, \qquad
+\text{bytes}(s, b) = \text{blocks}(s, b) \cdot b .
 $$
 
-for the modeled workload of token sizes.
+Rounding up wastes up to $b-1$ bytes per token (*internal
+fragmentation*) — worse for larger $b$. But every block also costs
+`table_overhead_per_block` bytes of block-table metadata (an entry
+identifying which physical block backs it), and a larger $b$ means
+*fewer* blocks per token, so *less* total table overhead. Block size
+trades one kind of waste for the other.
 
 ## Task
 
-Implement:
+Implement
 
-```python
-def choose_kv_block_size(token_sizes: list[int], table_overhead_per_block: int) -> tuple[int, float]:
-    """
-    Choose an integer block size (power of two) that maximizes useful / allocated
-    bytes for the given workloads.
-    Returns (best_block_size, achieved_ratio).
-    """
+```cpp
+void choose_kv_block_size(const int* token_sizes, int n, int table_overhead_per_block,
+                           int* out_block_size, long* out_useful_bytes, long* out_allocated_bytes);
 ```
 
-For each candidate block size $b \in \{16, 32, 64, 128, 256, 512, 1024\}$ bytes:
+Candidate block sizes are the powers of two `{16, 32, 64, 128, 256, 512,
+1024}`. For a workload of `n` tokens `token_sizes[0..n)`, and a candidate
+`b`:
 
-* Each token of size `s` consumes `ceil(s / b) * b` total bytes.
-* The total allocated bytes = sum over tokens + (#blocks) * `table_overhead_per_block`,
-  where #blocks is the total number of `ceil(s / b)` across all tokens.
-* The useful bytes = sum of the `token_sizes`.
+$$
+\text{allocated}(b) = \sum_i \text{bytes}(\text{token\_sizes}[i], b)
+                       + \text{total\_blocks}(b) \cdot \text{table\_overhead\_per\_block}
+$$
 
-Return the block size giving highest ratio `useful / allocated`. In ties, pick the smaller block size.
+where $\text{total\_blocks}(b) = \sum_i \text{blocks}(\text{token\_sizes}[i], b)$.
+The useful bytes, $\sum_i \text{token\_sizes}[i]$, is the **same for every
+candidate** — so the block size maximizing $\text{useful}/\text{allocated}(b)$
+is exactly the one **minimizing** $\text{allocated}(b)$, an integer
+comparison with no floating point involved.
+
+Write the chosen block size to `*out_block_size`, the useful-byte total to
+`*out_useful_bytes`, and the chosen candidate's `allocated(b)` to
+`*out_allocated_bytes`. Break ties between equally-good candidates by
+picking the **smaller** block size.
 
 ## Example
 
-```python
-sizes = [80, 96, 200, 500]
-best_b, ratio = choose_kv_block_size(sizes, table_overhead_per_block=16)
-# best_b might be 128, ratio ≈ 0.91
-```
+Two tokens, sizes `{80, 96}`, `table_overhead_per_block = 16`:
+
+- `b=64`: blocks = `ceil(80/64) + ceil(96/64)` = `2 + 2` = `4`; allocated
+  = `(128 + 128) + 4*16` = `256 + 64` = `320`.
+- `b=128`: blocks = `1 + 1` = `2`; allocated = `(128 + 128) + 2*16` =
+  `256 + 32` = `288` — fewer wasted table entries here outweigh the
+  identical padding, so `b=128` wins for this workload.
 
 ## What the gate checks
 
-The grader recomputes ratios for all candidates using its own formula
-(never a hard‑coded table) and compares the student's result with the reference’s best
-choice. The metric is `size_ratio` = (ratio_student / ratio_ref). Solutions within
-10% of the optimal (≥ 0.9) pass. Deterministic and hardware‑independent.
+`exact_match` on the printed `(block_size, useful_bytes, allocated_bytes)`
+triple for a fixed 30-token workload. Picking a candidate that isn't the
+true minimizer, breaking a tie toward the larger block size instead of
+the smaller one, or getting `total_blocks` wrong (e.g. counting
+`floor(s/b)` instead of `ceil(s/b)`, which undercounts blocks for any
+token that isn't an exact multiple of `b`) all change at least one of the
+three printed numbers.

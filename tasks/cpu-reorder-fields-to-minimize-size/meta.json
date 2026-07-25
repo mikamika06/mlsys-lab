@@ -1,0 +1,15 @@
+{
+  "id": "cpu-reorder-fields-to-minimize-size",
+  "title": "Reorder struct fields to minimize size (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 2,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "Real C++: reorders 7 struct fields to minimize sizeof(...) under the actual clang++ compiler's real alignment/padding rules -- no simulated layout model."
+  ]
+}

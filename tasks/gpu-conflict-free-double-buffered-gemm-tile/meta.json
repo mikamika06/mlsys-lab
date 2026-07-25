@@ -1,0 +1,29 @@
+{
+  "id": "gpu-conflict-free-double-buffered-gemm-tile",
+  "title": "Conflict-free, double-buffered GEMM tile (CUDA)",
+  "track": "GPU Programming",
+  "tier": "II",
+  "module": "Mgpu",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "smem_wave_ratio",
+      "op": "<=",
+      "threshold": 1.5
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "32x32 x 32x32 GEMM (K=64, two 32-wide K-tiles), single block of 1024 threads, col = threadIdx.x/32, row = threadIdx.x%32 so a whole warp shares one col and varies row.",
+    "smem_wave_ratio is measured shared-memory waves divided by the conflict-free, double-buffered lower bound the grader computes itself.",
+    "This simulator's cost model is a simple additive sum (no pipeline overlap), so it cannot measure the LATENCY-HIDING benefit of double buffering -- only whether the buffer-swap indexing is correct (max_abs_err) and whether the tile layout is bank-conflict-free (smem_wave_ratio)."
+  ]
+}

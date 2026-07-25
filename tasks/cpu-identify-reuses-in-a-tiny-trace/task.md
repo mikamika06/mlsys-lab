@@ -1,58 +1,50 @@
 ## Context
 
-Caches are a key component of modern CPUs, providing fast access to recently used data.  
-A cache is organized into *sets* and each set contains a number of *ways*.  
-When an address is accessed it maps to a particular set; if the line containing that
-address is already present in one of the ways of that set, the access is a **hit**,
-otherwise it is a **miss**.  A common replacement policy is Least‑Recently‑Used (LRU).
-
-The *reuse distance* of an access is the number of distinct addresses accessed since
-the previous reference to the same address.  Small reuse distances lead to cache hits.
-
-In this task you will be given a fixed trace of byte addresses and asked to count how many
-of those accesses are cache hits for a deterministic LRU cache with known parameters.
+**Temporal locality** is the observation that a program which touches an
+address once is likely to touch that same address again soon. The
+simplest possible measurement of temporal locality in a trace doesn't
+need a cache model at all, and doesn't need capacity, associativity, or
+an eviction policy — it only needs one question per access: *has this
+exact address ever appeared earlier in the trace?* An access that
+answers "yes" is a **reuse**; an access to a brand-new address is a
+**first touch**, and first touches are never reuses, no matter how many
+times that address shows up later.
 
 ## Task
 
-Implement the function `count_cache_hits(trace)` that takes a one‑dimensional NumPy array
-`trace` of integer byte addresses (dtype `int64`) and returns an integer equal to the
-number of cache hits when this trace is processed by an LRU cache with the following
-configuration:
+Implement
 
-* line size: 8 bytes  
-* number of sets: 4  
-* associativity (ways): 2  
-
-You may use the provided `cachesim.simulate` helper from the Arena runtime, which
-accepts the same arguments and returns a dictionary containing at least the keys
-`'hits'` and `'misses'`.
-
-```python
-def count_cache_hits(trace: np.ndarray) -> int:
-    ...
+```cpp
+long long count_reuses(const long* addrs, int n);
 ```
 
-The function must return an `int`.  It should not print anything.
+`addrs[0..n)` is a trace of byte addresses. For each index `i`, the
+access is a reuse if `addrs[i]` equals `addrs[j]` for at least one
+`j < i`. Return the total number of reuse accesses in the trace (the
+first occurrence of every distinct address is excluded from the count).
 
 ## Example
 
-```python
-import numpy as np
+Trace `[0, 8, 16, 24, 32, 40, 48, 56, 0, 8, 16, 24]`:
 
-# A tiny trace of byte addresses (each address is the start of a cache line)
-trace = np.array([0, 8, 16, 24, 32, 40, 48, 56,
-                  0, 8, 16, 24], dtype=np.int64)
+- The first 8 accesses (`0, 8, 16, 24, 32, 40, 48, 56`) are all first
+  touches — 0 reuses so far.
+- `0`, `8`, `16`, `24` then repeat — each of those 4 accesses is a reuse.
 
-hits = count_cache_hits(trace)
-print(hits)   # → 4
-```
-
-In this example the first eight accesses are all misses; the last four accesses
-re‑reference addresses that are still present in the cache, yielding four hits.
+`count_reuses` returns `4` for this trace.
 
 ## What the gate checks
 
-The grader runs your implementation on a fixed trace (the one shown above) and
-compares the returned integer against the reference value computed by the same
-`cachesim.simulate` call.  The metric is `exact_match`; you must return exactly
-the correct number of hits.
+`main.cpp` generates a fixed 40-access trace over a working set of 10
+distinct byte addresses using a seeded generator (reproducible on every
+run), calls `count_reuses`, and prints the result. The grader compiles
+your `.cpp` with the real local `clang++`, runs it, and requires
+
+$$
+\mathrm{exact\_match} = 1 \iff \text{your printed count matches the reference's exactly}
+$$
+
+Returning `0` (or any other constant) fails immediately, since a 40-long
+trace over only 10 distinct addresses is guaranteed to contain many
+reuses — you actually have to track which addresses have already been
+seen.

@@ -1,0 +1,18 @@
+{
+  "id": "gpu-half2-packed-feed-into-a-mixed-precision-matmul",
+  "title": "half2-packed lanes feeding a modeled mixed-precision dot product (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 0.02}
+  ],
+  "info": [
+    "one warp (32 threads), n=64, quantization modeled as rounding to the nearest multiple of 1/256 (no real fp16/half2 type in this language subset)",
+    "tolerance 0.02 accounts for expected quantization error (~0.003 for the reference); this is precision loss, not a correctness bug"
+  ]
+}

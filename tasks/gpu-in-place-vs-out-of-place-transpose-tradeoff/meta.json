@@ -1,0 +1,1 @@
+{"id":"gpu-in-place-vs-out-of-place-transpose-tradeoff","title":"In-place vs out-of-place transpose tradeoff (CUDA)","native":"cuda","difficulty":4,"gates":[{"metric":"in_place_max_abs_err","op":"==","threshold":0.0},{"metric":"out_of_place_max_abs_err","op":"==","threshold":0.0}]}

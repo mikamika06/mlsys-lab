@@ -1,0 +1,15 @@
+{
+  "id": "gpu-deterministic-dropout-under-backward-recompute",
+  "title": "Deterministic dropout under backward recompute (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": [
+    "Real CUDA-C: forward dropout and backward gradient scaling share no stored mask -- both independently recompute the identical per-element counter-based hash from (seed, global index), executed on the software SIMT GPU across 2 blocks."
+  ]
+}

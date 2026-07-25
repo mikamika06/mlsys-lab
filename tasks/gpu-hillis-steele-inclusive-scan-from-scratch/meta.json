@@ -1,0 +1,9 @@
+{
+  "id": "gpu-hillis-steele-inclusive-scan-from-scratch",
+  "title": "Hillis-Steele inclusive scan from scratch",
+  "track": "05 GPU", "tier": "I", "module": "M5", "difficulty": 2,
+  "genre": "implement", "platform": "cross-platform", "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}
+  ], "info": []
+}

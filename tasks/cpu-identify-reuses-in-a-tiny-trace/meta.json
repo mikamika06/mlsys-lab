@@ -4,11 +4,12 @@
   "track": "01 CPU Basics",
   "tier": "I",
   "module": "M1cpu",
-  "difficulty": 2,
+  "difficulty": 1,
   "genre": "implement",
   "platform": "cross-platform",
+  "native": "cpp",
   "provides": [
-    "count_cache_hits"
+    "count_reuses"
   ],
   "fixtures": [],
   "gates": [

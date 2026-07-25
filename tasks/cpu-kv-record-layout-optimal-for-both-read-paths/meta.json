@@ -1,29 +1,13 @@
 {
   "id": "cpu-kv-record-layout-optimal-for-both-read-paths",
-  "title": "KV record layout optimal for per-head read and token write",
-  "track": "03 CPU Systems",
-  "tier": "II",
-  "module": "M2layout",
+  "title": "KV record layout optimal for both read paths (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
   "difficulty": 5,
   "genre": "implement",
-  "platform": "macOS",
-  "provides": [
-    "kv_record_layout_trace"
-  ],
-  "fixtures": [],
-  "gates": [
-    {
-      "metric": "exact_match",
-      "op": "==",
-      "threshold": 1.0
-    },
-    {
-      "metric": "byte_rel_err",
-      "op": "<=",
-      "threshold": 0.0
-    }
-  ],
-  "info": [
-    "Uses arena.cachesim as the deterministic cache oracle"
-  ]
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
 }

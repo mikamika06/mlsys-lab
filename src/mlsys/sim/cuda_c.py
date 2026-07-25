@@ -52,7 +52,7 @@ _TOKEN_SPEC = [
     ("COMMENT_LINE", r"//[^\n]*"),
     ("NUMBER", r"0[xX][0-9a-fA-F]+[uUlL]*|(?:\d+\.\d*|\.\d+|\d+)(?:[eE][+-]?\d+)?[fFuUlL]*"),
     ("ID", r"[A-Za-z_][A-Za-z0-9_]*"),
-    ("OP", r"==|!=|<=|>=|&&|\|\||\+\+|--|\+=|-=|\*=|/=|[-+*/%=<>!?:;,(){}\[\]\.]"),
+    ("OP", r"==|!=|<=|>=|&&|\|\||\+\+|--|\+=|-=|\*=|/=|[-+*/%=<>!?:;,(){}\[\]\.&]"),
     ("NEWLINE", r"\n"),
     ("SKIP", r"[ \t\r]+"),
     ("MISMATCH", r"."),
@@ -146,6 +146,36 @@ class Call:
 class Unary:
     def __init__(self, op, expr):
         self.op = op
+        self.expr = expr
+
+
+class AddrOf:
+    """`&a[i]` — the only address expression CUDA atomics need."""
+    def __init__(self, target):
+        self.target = target
+
+
+class Cast:
+    """`(int)x` / `(float)x` — a scalar C-style cast.
+
+    Binning, indexing and integer division all need this: `int b = (int)a[i];`
+    truncates toward zero exactly as C does, which is not what Python's `int()`
+    does for negatives, so it is spelled out below.
+    """
+    def __init__(self, ctype, expr):
+        self.ctype = ctype
+        self.expr = expr
+
+
+class VecCast:
+    """`(const float4*)p` / `reinterpret_cast<const float4*>(p)`.
+
+    Reinterpreting a scalar pointer as a vector pointer is how a CUDA kernel asks
+    for a wide load: one instruction fetches `width` consecutive elements, so the
+    warp issues a quarter of the addresses and the transaction count drops.
+    """
+    def __init__(self, vtype, expr):
+        self.vtype = vtype
         self.expr = expr
 
 
@@ -258,7 +288,10 @@ class Function:
         self.shared_layout: dict[str, tuple[int, int]] = {}
 
 
-TYPE_WORDS = {"void", "int", "float", "double", "unsigned", "long", "short", "char", "size_t", "bool"}
+VEC_TYPES = {"float2": 2, "float4": 4, "int2": 2, "int4": 4, "half2": 2, "uint4": 4}
+VEC_FIELDS = {"x": 0, "y": 1, "z": 2, "w": 3}
+TYPE_WORDS = ({"void", "int", "float", "double", "unsigned", "long", "short", "char", "size_t", "bool"}
+              | set(VEC_TYPES))
 ASSIGN_OPS = {"=", "+=", "-=", "*=", "/="}
 ARITH_OPS = {"+", "-", "*", "/", "%"}
 
@@ -468,8 +501,10 @@ class Parser:
         if self.peek().value in ASSIGN_OPS:
             op = self.advance().value
             right = self.parse_assignment()
-            if not isinstance(left, (Var, Index)):
-                raise CudaParseError("invalid assignment target (must be a variable or array element)")
+            # `v.x = ...` writes one lane of a vector; `((float4*)o)[i] = v` writes
+            # a whole vector through a reinterpreted pointer. Both are real CUDA.
+            if not isinstance(left, (Var, Index, Member)):
+                raise CudaParseError("invalid assignment target (must be a variable, array element or vector member)")
             return Assign(op, left, right)
         return left
 
@@ -527,6 +562,30 @@ class Parser:
 
     def parse_unary(self):
         t = self.peek()
+        # reinterpret_cast<const float4*>(p)
+        if t.type == "ID" and t.value == "reinterpret_cast" and self.peek(1).value == "<":
+            self.advance(); self.advance()
+            vt = self._vec_type_in_cast(">")
+            self.expect(value=">"); self.expect(value="(")
+            e = self.parse_expr(); self.expect(value=")")
+            return self.parse_postfix(VecCast(vt, e))
+        # (const float4*)p  — distinguishable from a parenthesised expression
+        # because a type word follows the open paren
+        if t.value == "(" and self._is_scalar_cast():
+            self.advance()
+            while self.at(value="const"):
+                self.advance()
+            ct = self.advance().value
+            self.expect(value=")")
+            return Cast(ct, self.parse_unary())
+        if t.value == "(" and self._is_vec_cast():
+            self.advance()
+            vt = self._vec_type_in_cast(")")
+            self.expect(value=")")
+            return self.parse_postfix(VecCast(vt, self.parse_unary()))
+        if t.value == "&":
+            self.advance()
+            return AddrOf(self.parse_unary())
         if t.value in ("-", "!"):
             self.advance()
             return Unary(t.value, self.parse_unary())
@@ -535,8 +594,35 @@ class Parser:
             return PreIncDec(t.value, self.parse_unary())
         return self.parse_postfix()
 
-    def parse_postfix(self):
-        expr = self.parse_primary()
+    def _is_scalar_cast(self):
+        k = 1
+        while self.peek(k).value == "const":
+            k += 1
+        tok = self.peek(k)
+        return (tok.type == "ID" and tok.value in TYPE_WORDS and tok.value not in VEC_TYPES
+                and self.peek(k + 1).value == ")")
+
+    def _is_vec_cast(self):
+        k = 1
+        while self.peek(k).value == "const":
+            k += 1
+        return self.peek(k).type == "ID" and self.peek(k).value in VEC_TYPES and self.peek(k + 1).value == "*"
+
+    def _vec_type_in_cast(self, closer):
+        while self.at(value="const"):
+            self.advance()
+        t = self.peek()
+        if t.type != "ID" or t.value not in VEC_TYPES:
+            raise CudaParseError(f"line {t.line}: expected a vector type, found {t.value!r}")
+        self.advance()
+        self.expect(value="*")
+        while self.at(value="const"):
+            self.advance()
+        return t.value
+
+    def parse_postfix(self, expr=None):
+        if expr is None:
+            expr = self.parse_primary()
         while True:
             t = self.peek()
             if t.value == "[":
@@ -660,8 +746,28 @@ class _Shared:
         self.size = size
 
 
+class _VecPtr:
+    """A scalar pointer viewed as a vector pointer: `width` elements per index."""
+    __slots__ = ("base", "width", "shared")
+
+    def __init__(self, base, width, shared=False):
+        self.base, self.width, self.shared = base, width, shared
+
+
+class _Addr:
+    """`&a[i]` — what an atomic operates on."""
+    __slots__ = ("index", "shared")
+
+    def __init__(self, index, shared=False):
+        self.index, self.shared = index, shared
+
+
 class _ReturnSignal(Exception):
     pass
+
+
+_ATOMICS = {"atomicAdd": "add", "atomicSub": "sub", "atomicMax": "max",
+            "atomicMin": "min", "atomicExch": "exch", "atomicCAS": "cas"}
 
 
 _DIM_FIELDS = {"x", "y", "z"}
@@ -782,7 +888,7 @@ class Interpreter:
                 raise ValueError(f"'{node.name}' is an array/pointer; index it like {node.name}[i]")
             return v
         if k is Member:
-            return self._dim(node, t)
+            return self._dim(node, t, env)
         if k is Index:
             return self._load(node, env, t)
         if k is Unary:
@@ -802,6 +908,30 @@ class Interpreter:
         if k is Ternary:
             branch = node.t if _truthy(self._eval(node.cond, env, t)) else node.f
             return self._eval(branch, env, t)
+        if k is AddrOf:
+            tgt = node.target
+            if not isinstance(tgt, Index) or not isinstance(tgt.arr, Var):
+                raise ValueError("only &name[expr] is supported")
+            c = env.get(tgt.arr.name)
+            i = int(self._eval(tgt.idx, env, t))
+            if isinstance(c, _Ptr):
+                return _Addr(c.base + i)
+            if isinstance(c, _Shared):
+                return _Addr(c.base + i, shared=True)
+            raise ValueError(f"'{tgt.arr.name}' is not a pointer or __shared__ array")
+        if k is Cast:
+            v = self._eval(node.expr, env, t)
+            if node.ctype in ("int", "long", "short", "size_t", "unsigned", "char"):
+                return int(v)            # C truncates toward zero, like Python's int()
+            if node.ctype == "bool":
+                return 1 if _truthy(v) else 0
+            return float(v)
+        if k is VecCast:
+            w = VEC_TYPES[node.vtype]
+            c = self._eval_ptr(node.expr, env, t)
+            if isinstance(c, _Shared):
+                return _VecPtr(c.base, w, shared=True)
+            return _VecPtr(c.base, w)
         if k is Call:
             return self._call(node, env, t)
         if k is Assign:
@@ -818,9 +948,17 @@ class Interpreter:
             return old
         raise ValueError(f"cannot evaluate expression of type {k.__name__}")  # pragma: no cover
 
-    def _dim(self, node: Member, t):
+    def _dim(self, node: Member, t, env=None):
+        if env is not None and isinstance(node.obj, Var) and isinstance(env.get(node.obj.name), list):
+            if node.field not in VEC_FIELDS:
+                raise ValueError(f"vector has no member '.{node.field}'")
+            vec = env[node.obj.name]
+            k = VEC_FIELDS[node.field]
+            if k >= len(vec):
+                raise ValueError(f"'.{node.field}' is out of range for this vector type")
+            return vec[k]
         if not isinstance(node.obj, Var) or node.obj.name not in ("threadIdx", "blockIdx", "blockDim", "gridDim"):
-            raise ValueError("unsupported member access (only threadIdx/blockIdx/blockDim/gridDim.x/.y/.z)")
+            raise ValueError("unsupported member access (only threadIdx/blockIdx/blockDim/gridDim.x/.y/.z, or .x/.y/.z/.w on a vector)")
         if node.field not in _DIM_FIELDS:
             raise ValueError(f"unsupported dimension field '.{node.field}'")
         name = node.obj.name
@@ -835,6 +973,10 @@ class Interpreter:
         return t.gridDim if node.field == "x" else 1  # gridDim
 
     def _load(self, node: Index, env, t):
+        if isinstance(node.arr, VecCast):
+            vp = self._eval(node.arr, env, t)
+            i = int(self._eval(node.idx, env, t))
+            return t.gload_wide(vp.base + i * vp.width, vp.width)
         if not isinstance(node.arr, Var):
             raise ValueError("only simple array indexing name[expr] is supported")
         name = node.arr.name
@@ -844,15 +986,32 @@ class Interpreter:
             return t.gload(container.base + idx)
         if isinstance(container, _Shared):
             return t.sload(container.base + idx)
+        if isinstance(container, _VecPtr):
+            return t.gload_wide(container.base + idx * container.width, container.width)
         raise ValueError(f"'{name}' is not a pointer parameter or __shared__ array")
 
     def _store(self, target, value, env, t):
+        if isinstance(target, Member):
+            if not isinstance(target.obj, Var) or not isinstance(env.get(target.obj.name), list):
+                raise ValueError("only a vector variable has assignable members")
+            k = VEC_FIELDS.get(target.field)
+            vec = env[target.obj.name]
+            if k is None or k >= len(vec):
+                raise ValueError(f"vector has no member '.{target.field}'")
+            vec[k] = value
+            return value
         if isinstance(target, Var):
             if target.name not in env or isinstance(env[target.name], (_Ptr, _Shared)):
                 raise ValueError(f"cannot assign to '{target.name}'")
             env[target.name] = value
             return value
         if isinstance(target, Index):
+            if isinstance(target.arr, VecCast):
+                vp = self._eval(target.arr, env, t)
+                i = int(self._eval(target.idx, env, t))
+                vals = value if isinstance(value, list) else [value] * vp.width
+                t.gstore_wide(vp.base + i * vp.width, vals)
+                return value
             if not isinstance(target.arr, Var):
                 raise ValueError("only simple array indexing name[expr] is supported")
             name = target.arr.name
@@ -863,6 +1022,10 @@ class Interpreter:
                 return value
             if isinstance(container, _Shared):
                 t.sstore(container.base + idx, value)
+                return value
+            if isinstance(container, _VecPtr):
+                vals = value if isinstance(value, list) else [value] * container.width
+                t.gstore_wide(container.base + idx * container.width, vals)
                 return value
             raise ValueError(f"'{name}' is not a pointer parameter or __shared__ array")
         raise ValueError("invalid assignment target")  # pragma: no cover — parser already filters this
@@ -876,6 +1039,15 @@ class Interpreter:
         new = self._binop(node.op[0], old, rhs)
         return self._store(node.target, new, env, t)
 
+    def _eval_ptr(self, node, env, t):
+        if isinstance(node, Var):
+            c = env.get(node.name)
+            if isinstance(c, (_Ptr, _Shared, _VecPtr)):
+                return c
+        if isinstance(node, VecCast):
+            return self._eval(node, env, t)
+        raise ValueError("a vector cast needs a pointer operand")
+
     def _call(self, node: Call, env, t):
         args = [self._eval(a, env, t) for a in node.args]
         if node.name == "__syncthreads":
@@ -888,6 +1060,23 @@ class Interpreter:
             if len(args) != 2:
                 raise ValueError(f"{node.name}() takes 2 arguments")
             return _MATH_2ARG[node.name](args[0], args[1])
+        if node.name in _ATOMICS:
+            op = _ATOMICS[node.name]
+            if not args or not isinstance(args[0], _Addr):
+                raise ValueError(f"{node.name}() takes an address: {node.name}(&a[i], value)")
+            addr = args[0]
+            if op == "cas":
+                if len(args) != 3:
+                    raise ValueError("atomicCAS(&a[i], compare, val) takes 3 arguments")
+                return t.atomic("cas", addr.index, (args[1], args[2]), shared=addr.shared)
+            if len(args) != 2:
+                raise ValueError(f"{node.name}(&a[i], value) takes 2 arguments")
+            return t.atomic(op, addr.index, args[1], shared=addr.shared)
+        if node.name.startswith("make_") and node.name[5:] in VEC_TYPES:
+            w = VEC_TYPES[node.name[5:]]
+            if len(args) != w:
+                raise ValueError(f"{node.name}() takes {w} arguments")
+            return list(args)
         raise ValueError(f"unsupported function call '{node.name}(...)'")
 
     def _shfl(self, node: Call, env, t):

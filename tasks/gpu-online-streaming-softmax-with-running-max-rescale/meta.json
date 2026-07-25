@@ -1,0 +1,15 @@
+{
+  "id": "gpu-online-streaming-softmax-with-running-max-rescale",
+  "title": "Online (streaming) softmax with running max + rescale (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: single-pass online softmax (running max + rescaled running sum) followed by a normalization pass, over a 40-element fixture with a late dominant spike that forces a mid-stream rescale, executed on the software SIMT GPU."
+  ]
+}

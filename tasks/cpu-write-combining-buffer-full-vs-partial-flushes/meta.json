@@ -7,10 +7,7 @@
   "difficulty": 3,
   "genre": "implement",
   "platform": "cross-platform",
-  "provides": [
-    "wc_flush_stats"
-  ],
-  "fixtures": [],
+  "native": "cpp",
   "gates": [
     {
       "metric": "exact_match",

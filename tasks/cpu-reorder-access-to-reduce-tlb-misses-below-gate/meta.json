@@ -1,0 +1,22 @@
+{
+  "id": "cpu-reorder-access-to-reduce-tlb-misses-below-gate",
+  "title": "Reorder access to reduce TLB misses (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "TLB misses come from a real fully-associative LRU TLB model in main.cpp (16384-byte pages, 20 entries), never hardware performance counters",
+    "the matrix sum must agree regardless of traversal order -- only tlb_misses is meant to change"
+  ]
+}

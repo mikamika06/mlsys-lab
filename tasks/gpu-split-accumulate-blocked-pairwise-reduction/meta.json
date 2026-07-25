@@ -1,0 +1,18 @@
+{
+  "id": "gpu-split-accumulate-blocked-pairwise-reduction",
+  "title": "Split-accumulate (blocked) reduction protects against a mid-stream magnitude spike (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "rel_err", "op": "<=", "threshold": 1e-9}
+  ],
+  "info": [
+    "single thread; fixture is 30 ones, then [1e20, -1e20], then 32 more ones (64 elements); true sum is exactly 62.0",
+    "block_size=2 isolates the (1e20, -1e20) pair into its own block, so it cancels to exactly 0.0 without ever combining with a small value directly"
+  ]
+}

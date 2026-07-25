@@ -1,0 +1,29 @@
+{
+  "id": "gpu-fuse-layernorm-residual-add",
+  "title": "Fuse LayerNorm + residual add (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "transaction_ratio",
+      "op": "<=",
+      "threshold": 0.9
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "N=32 rows, D=8 features, one thread per row.",
+    "transaction_ratio is the candidate's measured transactions divided by an UNFUSED two-kernel (write x+residual, then read it back for LayerNorm) baseline the grader runs itself through the simulator.",
+    "A single-kernel solution that still writes x+residual into `out` first and reads it back measures the SAME transaction count as the true 2-kernel baseline -- fusion has to happen in registers, not just in kernel count."
+  ]
+}

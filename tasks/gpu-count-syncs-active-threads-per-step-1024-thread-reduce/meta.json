@@ -1,0 +1,16 @@
+{
+  "id": "gpu-count-syncs-active-threads-per-step-1024-thread-reduce",
+  "title": "Count syncs & active threads per step (1024-thread reduce, CUDA)",
+  "track": "07 GPU", "tier": "I", "module": "M2gpu", "difficulty": 2,
+  "genre": "implement", "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "smem_insts", "op": "==", "threshold": 4094}
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "Single block of 1024 threads reducing 1024 elements to out[0].",
+    "smem_insts == 4*n-2 == 4094 is the closed-form total shared-memory instruction count for a correct log2(1024)=10-step tree reduction: n initial stores + 3*(n-1) load/load/store ops across the halving-active-thread steps + 1 final read; see check.py."
+  ]
+}

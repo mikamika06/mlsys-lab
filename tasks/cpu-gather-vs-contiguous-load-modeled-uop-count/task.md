@@ -1,53 +1,85 @@
 ## Context
 
-Modern CPUs execute SIMD vector loads and scalar (gather) loads with different
-micro-operation (uop) counts.  A **contiguous aligned** vector load of $vw$
-elements costs **1 load uop**.  A **scatter / gather** load that fetches $m$
-non-contiguous elements costs **$m$ load uops** (one per element) because each
-address must be calculated and issued separately.
+Modern CPUs execute SIMD vector loads and scalar (gather) loads with very
+different micro-op (uop) counts. A **contiguous, aligned** vector load
+that reads `vec_width` elements issues exactly **one** load uop, no
+matter how many bytes that register spans -- the address is computed
+once. A **gather** load that fetches the same number of elements from
+scattered indices has no vector hardware support for the address
+pattern, so the CPU computes each element's address separately and
+issues **one load uop per element**.
 
-A 64-byte **cache line** holds $64 / e$ elements of element size $e$ bytes.
-Sequential accesses that stay within one line cause only 1 compulsory miss;
-jumping to a new line (as a gather pattern does when the access order is
-scrambled) incurs additional misses.
+That uop-count gap (`n` vs `n / vec_width`) is only half the story.
+Whether those loads are cheap or expensive in cycles also depends on
+**cache traffic**, which this task models with a real, deterministic
+64-byte-line / 32-set / 4-way LRU cache (fed through a `touch()` hook,
+since real hardware cache timing isn't reproducible). A sequential scan
+touches every 64-byte line exactly once -- the theoretical minimum. A
+gather over the *same set of elements*, visited in a badly-ordered
+permutation, can touch a line, get evicted before the line's other
+elements are read, and pay for that same line again later -- turning a
+128-line working set into far more than 128 misses, purely from
+visitation order.
 
 ## Task
 
-Implement `modeled_load_uops(m, vw, e)` that returns a dictionary with four
-keys:
+Implement, in `solve.cpp`:
 
-| Key | Meaning |
-|-----|---------|
-| `contiguous_uops` | Modeled load-uop count for a **vectorised contiguous** load of $m$ elements with vector width $vw$: $\lceil m / vw \rceil$ |
-| `gather_uops` | Modeled load-uop count for a **scalar gather** of $m$ elements: $m$ |
-| `contiguous_misses` | Cache misses (via the simulator) for a **sequential** access of $m$ contiguous elements, each $e$ bytes |
-| `gather_misses` | Cache misses for a **scrambled-order** access of the **same** $m$ elements |
+```cpp
+long contiguous_load(long base, int n, int vec_width, int elem_bytes);
+long gather_load(long base, const int* idx, int n, int elem_bytes);
+```
 
-Cache parameters are fixed: `line_bytes=64, sets=64, ways=8`.
-Element $i$ maps to byte address $i \times e$.
+`contiguous_load` reads `n` elements (an exact multiple of `vec_width`)
+strictly in order, `vec_width` elements per chunk. Call `touch()` exactly
+once per chunk, at the chunk's first byte address
+(`base + chunk_index * vec_width * elem_bytes`), and return the number
+of chunks (`n / vec_width`) as the modeled uop count.
 
-Use Python's `random` module with seed **42** to produce the scrambled order
-(deterministic across runs).
+`gather_load` reads the same `n` elements through a permutation `idx`:
+`idx[k]` is the k-th element index visited. Call `touch()` exactly once
+per element, in order, at `base + (long)idx[k] * elem_bytes`, and return
+`n` as the modeled uop count -- one load uop per element.
+
+`touch()`, `reset_cache()`, and `misses()` are declared in `sol.hpp` and
+defined in `main.cpp`: a fixed 64-byte-line, 32-set, 4-way LRU cache
+model. You only need to call `touch()` at the right addresses, in the
+right order, the right number of times -- the cache model does the rest.
 
 ## Example
 
-```python
-result = modeled_load_uops(100, 4, 8)
-# result["contiguous_uops"] == 25        # ceil(100/4)
-# result["gather_uops"]      == 100      # one uop per element
+The driver fixes `n = 4096`, `vec_width = 16`, `elem_bytes = 4` (so one
+vector chunk is exactly `16 * 4 = 64` bytes -- one cache line), and
+builds `idx` as a 12-bit bit-reversal permutation of `0..4095` (the same
+trick FFT implementations use to produce a maximally scattered visitation
+order over a fixed index set).
+
+Running the reference:
+
 ```
+contig_uops=256 contig_misses=256
+gather_uops=4096 gather_misses=4096
+```
+
+Both passes touch the identical 4096 elements / 256 distinct 64-byte
+lines. The contiguous pass needs only 256 load uops and 256 misses (the
+compulsory minimum -- every line is fetched once and never revisited).
+The gather pass needs 4096 load uops (16x more, exactly `vec_width`) —
+and its scattered visitation order means every single touch misses too:
+by the time a line's other 15 elements are visited, it has already been
+evicted. Same elements, same cache, only the order differs, and it costs
+4096 misses instead of 256. (Visiting `idx[k] = k`, i.e. the same order
+as `contiguous_load`, through `gather_load` reproduces the 256-miss
+result -- the miss count is a property of visitation order, not of
+"gather" as such.)
 
 ## What the gate checks
 
-`check.py` computes the reference answer using the same algorithm (uop formula
-plus `arena.cachesim.simulate` for miss counts) and compares the learner's
-result element-by-element.  Each gate returns 1 (pass) or 0 (fail):
-
-| Metric | Condition | What it verifies |
-|--------|-----------|------------------|
-| `contiguous_uops` | exact match | $\lceil m / vw \rceil$ formula |
-| `gather_uops` | exact match | $m$ uops for scatter |
-| `contiguous_misses` | exact match | sequential trace miss count |
-| `gather_misses` | exact match | scrambled trace miss count |
-
-All four must be 1 for the task to pass.
+The grader compiles `main.cpp` + `solve.cpp` with `clang++ -O2 -std=c++20`,
+runs it, and requires `exact_match == 1` against the same driver linked
+with `ref.cpp`: both printed lines (`contig_uops=... contig_misses=...`
+and `gather_uops=... gather_misses=...`) must match exactly. The starter
+returns `0` from both functions and never calls `touch()`, so it prints
+`contig_uops=0 contig_misses=0` / `gather_uops=0 gather_misses=0` --
+wrong uop counts and, since the cache model was never fed a single
+address, wrong (zero) miss counts too.

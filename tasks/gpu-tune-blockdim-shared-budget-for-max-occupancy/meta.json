@@ -1,0 +1,23 @@
+{
+  "id": "gpu-tune-blockdim-shared-budget-for-max-occupancy",
+  "title": "Tune blockDim + shared budget for max occupancy (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "6 candidate blockDims (32..1024); fixed regs_per_thread=32, shared_bytes_per_thread=64, and SM limits (2048 threads / 32 blocks / 65536 regs / 98304 shared bytes).",
+    "The reference maximum achievable occupancy on this fixture is 0.75, reached at several blockDims (64, 128, 256, 512) -- the gate only checks that SOME candidate's computed occupancy reaches that same maximum, not which one."
+  ]
+}

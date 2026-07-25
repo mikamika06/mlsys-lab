@@ -1,0 +1,16 @@
+{
+  "id": "gpu-re-place-hot-constant-vector-into-the-broadcast-path",
+  "title": "Re-place a hot broadcast bias into the once-loaded path (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "transactions", "op": "<=", "threshold": 60}
+  ],
+  "info": []
+}

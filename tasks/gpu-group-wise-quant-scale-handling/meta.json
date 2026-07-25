@@ -1,0 +1,15 @@
+{
+  "id": "gpu-group-wise-quant-scale-handling",
+  "title": "Group-wise quantization scale handling (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": [
+    "Real CUDA-C: dequantizes 64 int4-like codes in 4 groups of 16, each with its own (deliberately very different) scale factor, executed on the software SIMT GPU across 2 blocks."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "gpu-register-blocked-gemm-microkernel-outer-product-accumulate",
+  "title": "Register-blocked GEMM microkernel: outer-product accumulate (CUDA)",
+  "track": "03 CUDA",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "size_ratio is reported for context (naive_transactions / regblock_transactions), computed from real simulator launches; it is not gated because this simulator counts memory transactions per program STEP, so fewer threads each issuing more sequential loads (register blocking's actual mechanism) isn't rewarded the way shared-memory tiling is -- the graded work is getting the outer-product accumulation correct"
+  ]
+}

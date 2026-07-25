@@ -1,0 +1,19 @@
+{
+  "id": "gpu-cut-registers-to-lift-occupancy-past-a-target",
+  "title": "Cut live registers to lift modeled occupancy past 75% (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "occupancy_ok", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "registers-per-thread is a static count of distinct local-variable declarations in your kernel body, walked from the real parsed AST",
+    "occupancy model: blocks_by_regs = 2048 // (regs_per_thread * 128), occupancy = min(blocks_by_regs, 8) / 8, target 0.75"
+  ]
+}

@@ -1,0 +1,1 @@
+{"id":"gpu-double-buffered-tiled-loop-numpy-model","title":"Double-buffered tiled matmul loop (CUDA)","native":"cuda","difficulty":4,"gates":[{"metric":"max_abs_err","op":"==","threshold":0.0}]}

@@ -1,0 +1,19 @@
+{
+  "id": "gpu-argmax-reduction-value-index",
+  "title": "Argmax reduction: value + index, deterministic tie rule (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "index_exact", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "single block of 32 threads, shared-memory tree reduction, real thread-by-thread execution on the software GPU",
+    "the fixture forces a tie between two distinct indices to pin down the lowest-index rule"
+  ]
+}

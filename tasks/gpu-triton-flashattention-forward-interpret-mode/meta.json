@@ -1,0 +1,13 @@
+{
+  "id": "gpu-triton-flashattention-forward-interpret-mode",
+  "title": "FlashAttention forward: online softmax (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-6}],
+  "info": []
+}

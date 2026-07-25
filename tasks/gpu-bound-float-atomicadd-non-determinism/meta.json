@@ -1,0 +1,16 @@
+{
+  "id": "gpu-bound-float-atomicadd-non-determinism",
+  "title": "Bound float summation non-determinism across orderings (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [
+    {"metric": "sums_match", "op": "==", "threshold": 1.0},
+    {"metric": "within_bound", "op": "==", "threshold": 1.0}
+  ],
+  "info": []
+}

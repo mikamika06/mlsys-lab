@@ -1,0 +1,13 @@
+{
+  "id": "cpu-simd-lane-utilization-for-a-masked-op",
+  "title": "SIMD lane utilization for a masked op",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": []
+}

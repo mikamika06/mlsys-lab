@@ -1,123 +1,79 @@
 ## Context
 
-A transformer decode cache stores key and value vectors for each token and each
-attention head. For $T$ tokens, $H$ heads, head dimension $D$, and element size
-$E$ bytes, the logical element is
+A transformer decode cache stores key and value vectors for every token and
+every attention head. For $T$ tokens, $H$ heads, a key/value selector
+$k \in \{0,1\}$, head dimension $D$, and element size $E$ bytes, the logical
+element is $KV[t,h,k,d]$.
+
+Two access patterns compete for the same physical byte layout:
+
+- **whole-token write**: appending the newest token $t = T-1$ touches every
+  $(h, k, d)$ for that one $t$, in order $h$, then $k$, then $d$.
+- **per-head decode read**: streaming one head's K/V across every existing
+  token touches every $(t, k, d)$ for that one $h$, in order $t$, then $k$,
+  then $d$, for every $h$.
+
+The harness models a $64$-byte cache line, and the tested shape satisfies
 
 $$
-K\!V[t,h,k,d],
+2DE = 64,
 $$
 
-where $0 \le t < T$, $0 \le h < H$, $k \in \{0,1\}$ selects key or value, and
-$0 \le d < D$.
-
-The physical byte address is determined by the layout. A token-major layout can
-make the write of a newly produced token compact, while a head-major layout can
-make the decode read for one head compact. The important detail is cache-line
-traffic, not only arithmetic contiguity. In this task the modeled cache line is
-$64$ bytes, and the tested shapes satisfy
+so one head's complete K+V record for one token fits exactly in one cache
+line. Token-major layout ("THKD" -- token, then head, then key/value, then
+dimension)
 
 $$
-2DE = 64.
+\operatorname{addr}(t,h,k,d) = \operatorname{base} + \big(((tH+h)\cdot 2 + k)D + d\big) E
 $$
 
-So one head's complete key and value record for one token fits exactly in one
-cache line. The traffic-optimal record layout is therefore token-major by token,
-then head, then key or value, then dimension. Its layout id is `THKD`:
-
-$$
-\operatorname{addr}(t,h,k,d)
-= \operatorname{base}
-+ ((((tH + h)2 + k)D + d)E).
-$$
-
-This layout writes a whole token as one compact record and reads one head's
-stream without mixing unrelated heads into the same cache line.
+keeps a whole token's multi-head record contiguous (cheap write) while never
+splitting one head's one-line K+V record across two lines (cheap per-head
+read), which is why it beats the other orderings on total traffic.
 
 ## Task
 
-Implement `kv_record_layout_trace`:
+Implement, in `solve.cpp`:
 
-```python
-def kv_record_layout_trace(
-    num_tokens: int,
-    num_heads: int,
-    head_dim: int,
-    elem_bytes: int,
-    base_addr: int = 0,
-) -> dict:
-    ...
+```cpp
+long thkd_addr(long base, int T, int H, int D, int E, int t, int h, int k, int d);
 ```
 
-Return a dictionary with exactly these fields:
+using exactly the THKD formula above:
 
-```python
-{
-    "layout_id": "THKD",
-    "write_addrs": [...],
-    "read_addrs": [...],
-}
+```
+index = (((t*H + h)*2 + k)*D + d)
+addr  = base + index * E
 ```
 
-`write_addrs` must be the byte-address trace for writing the newest token
-$t = T - 1$. Emit one address per element, in this logical order:
-
-```python
-for h in range(num_heads):
-    for k in range(2):
-        for d in range(head_dim):
-            ...
-```
-
-`read_addrs` must be the byte-address trace for a decode read that streams by
-head over all existing tokens. Emit one address per element, in this logical
-order:
-
-```python
-for h in range(num_heads):
-    for t in range(num_tokens):
-        for k in range(2):
-            for d in range(head_dim):
-                ...
-```
-
-Use integer byte addresses. Do not call the cache simulator yourself. The grader
-will run the deterministic simulator on your returned traces.
+`main.cpp` (fixed) calls `thkd_addr` to build the write trace for the newest
+token and the read trace for a per-head decode sweep, replays both through a
+deterministic 64-byte-line, 32-set, 4-way LRU cache model (`touch_byte`,
+declared in `sol.hpp`, defined in `main.cpp`), and does the same for four
+other fixed orderings (TKHD, TDHK, HTKD, HKTD) so you can see THKD's traffic
+against the alternatives. It prints every layout's write/read/total miss
+count and the name of the layout with the lowest total.
 
 ## Example
 
-```python
-out = kv_record_layout_trace(
-    num_tokens=3,
-    num_heads=2,
-    head_dim=2,
-    elem_bytes=1,
-    base_addr=1000,
-)
+For $T=32, H=8, D=16, E=2$ (so $2DE=64$), the driver prints one line per
+layout, e.g.
 
-out["layout_id"]
-# "THKD"
-
-out["write_addrs"]
-# [1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015]
-
-out["read_addrs"][:8]
-# [1000, 1001, 1002, 1003, 1008, 1009, 1010, 1011]
 ```
-
-In this toy example the address formula is
-
-$$
-1000 + ((((t \cdot 2 + h) \cdot 2 + k) \cdot 2 + d) \cdot 1).
-$$
+THKD write_misses=<w> read_misses=<r> total=<w+r>
+TKHD write_misses=<w> read_misses=<r> total=<w+r>
+...
+best=THKD
+```
 
 ## What the gate checks
 
-The grader computes its own reference by enumerating several candidate layouts,
-building their access traces, and running `arena.cachesim.simulate` with pinned
-cache parameters. It does not use wall-clock timing or hardware counters.
-
-The gate checks two things. First, `exact_match` is $1$ only if your `layout_id`
-matches the simulator-selected reference layout and both modeled byte counts
-match exactly. Second, `byte_rel_err` is the relative error of your modeled
-write and read traffic compared with the reference traffic. It must be $0$.
+`exact_match` requires the candidate's full stdout to equal the reference's
+stdout byte-for-byte. The reference's `thkd_addr` produces the lowest total
+miss count of the five layouts, so `best=THKD` is correct and the whole
+printed table matches. A wrong `thkd_addr` (for example one that ignores its
+arguments) changes the THKD line and can even change which layout the driver
+reports as `best`, so the mismatch is caught immediately -- the obvious wrong
+approach (any layout that isn't token-major-then-head-then-kv-then-dim, or no
+addressing logic at all) fails because its printed miss counts do not equal
+the reference's.

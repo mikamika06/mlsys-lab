@@ -1,27 +1,13 @@
 {
   "id": "cpu-force-vectorized-gather-via-settrace",
-  "title": "Force vectorized gather via settrace",
-  "track": "01 Deep Python",
-  "tier": "II",
-  "module": "M1py",
+  "title": "Dedup repeated gather indices like a vectorized load (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
   "difficulty": 2,
   "genre": "implement",
   "platform": "cross-platform",
-  "provides": [
-    "gather"
-  ],
-  "fixtures": [],
-  "gates": [
-    {
-      "metric": "exact_match",
-      "op": "==",
-      "threshold": 1.0
-    },
-    {
-      "metric": "line_events",
-      "op": "<=",
-      "threshold": 50
-    }
-  ],
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
   "info": []
 }

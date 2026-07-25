@@ -1,0 +1,15 @@
+{
+  "id": "gpu-tensor-core-tiled-qk-t-mixed-precision-model",
+  "title": "Tensor-core-style QK^T, mixed precision (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: 4x4 attention score matrix QK^T/sqrt(D), each input rounded to exact fp16 precision (Q,K in [1,2), where fp16's ULP is exactly 1/1024) before multiplying, accumulated in full precision, executed on the software SIMT GPU."
+  ]
+}

@@ -1,0 +1,1 @@
+{"id":"gpu-conflict-free-shared-staging-for-a-gemm-tile","title":"Conflict-free shared staging for a GEMM tile (CUDA)","native":"cuda","difficulty":5,"gates":[{"metric":"max_abs_err","op":"==","threshold":0.0},{"metric":"smem_waves","op":"<=","threshold":300}]}

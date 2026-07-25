@@ -1,0 +1,18 @@
+{
+  "id": "cpu-sharded-histogram-invalidation-budget-token-counting",
+  "title": "Sharded per-thread histogram: pad away false sharing (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 5,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "invalidations come from a deterministic per-64-byte-line last-writer coherence model, not a real multithreaded run",
+    "the workload is a fixed, deterministic round-robin schedule across NUM_THREADS threads, not actual concurrency"
+  ]
+}

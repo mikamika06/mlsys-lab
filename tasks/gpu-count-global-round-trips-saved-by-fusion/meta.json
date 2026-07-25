@@ -1,0 +1,18 @@
+{
+  "id": "gpu-count-global-round-trips-saved-by-fusion",
+  "title": "Kernel fusion: cut global memory round-trips (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "transactions", "op": "<=", "threshold": 16}
+  ],
+  "info": [
+    "256 elements, 4 blocks of 64 (8 warps), 2 coalesced access steps (read x, write y) per warp -- 16 transactions for a genuinely fused kernel"
+  ]
+}

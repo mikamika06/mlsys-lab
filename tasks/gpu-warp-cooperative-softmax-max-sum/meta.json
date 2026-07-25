@@ -1,0 +1,15 @@
+{
+  "id": "gpu-warp-cooperative-softmax-max-sum",
+  "title": "Warp-cooperative softmax: max + sum via shuffle (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": [
+    "Real CUDA-C: full numerically-stable softmax over two independent 32-lane warps, both the max-reduction and the sum-reduction done entirely with __shfl_xor_sync butterfly ladders (no shared memory), executed on the software SIMT GPU."
+  ]
+}

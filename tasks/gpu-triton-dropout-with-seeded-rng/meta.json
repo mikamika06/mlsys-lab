@@ -1,0 +1,1 @@
+{"id":"gpu-triton-dropout-with-seeded-rng","title":"Triton dropout with seeded RNG and inverted scaling (CUDA)","native":"cuda","difficulty":4,"gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-6}]}

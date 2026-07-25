@@ -3,42 +3,64 @@
 The attention mechanism's $QK^T$ contraction multiplies a query matrix
 $Q \in \mathbb{R}^{S \times d}$ by the transpose of a key matrix
 $K^T \in \mathbb{R}^{d \times S}$ to produce a score matrix
-$S_{ij} = \sum_{k=0}^{d-1} Q_{ik} \cdot K_{jk}$.
 
-Both $Q$ and $K$ are stored in **row-major** layout (each row is contiguous).
-A naive $i$-$j$-$k$ loop reads $K$ with stride $d$ (column-major in $K^T$),
-causing a cache miss on every access.
+$$
+\text{score}_{ij} = \sum_{k=0}^{d-1} Q_{ik} \cdot K_{jk}.
+$$
 
-**Tiling** (blocking) reuses cache lines. By choosing a block size $B$ and
-iterating in tiles of $B \times B$, we keep $Q[i, :]$ and $K[j, :]$ in cache
-and dramatically reduce DRAM traffic.
+Both $Q$ and $K$ are stored **row-major** (each row contiguous). A naive
+$i$-$j$-$k$ loop computes every score by walking all of $j$ (all $S$ rows of
+$K$) to completion for a single row $i$ of $Q$ before moving to the next
+$i$ — so if $K$ doesn't fit in cache on its own, it gets evicted and
+re-fetched from DRAM again for every single row of $Q$.
 
-$$\text{DRAM bytes} \approx \frac{S^2 \cdot d \cdot \text{element\_size}}{B}$$
+**Tiling** (blocking) fixes this: pick a block size $B$ and process the score
+matrix in $B \times B$ tiles. Within one tile, $B$ rows of $Q$ and $B$ rows
+of $K$ are reused across each other's inner loop before the tile is done and
+the next one starts — so instead of re-streaming all of $K$ once per row of
+$Q$, you re-stream roughly $1/B$ as much of it per row.
 
 ## Task
 
-Implement `qkt_access_order(S, d, B, elem_bytes) -> list[int]`, which returns
-a flat list of **byte addresses** in the order they are accessed by a blocked
-$QK^T$ computation:
+Implement
 
-- Outer loops: tile row $ii$ in steps of $B$, tile column $jj$ in steps of $B$
-- Inner loops: row $i$ in $[ii, ii+B)$, then column $j$ in $[jj, jj+B)$, then
-  $k$ in $[0, d)$
-- For each $(i, j, k)$: emit address of $Q[i, k]$ then address of $K[j, k]$
-- $Q$ row-major base = 0; $K$ row-major base = $S \times d \times \text{elem\_bytes}$
+```cpp
+void qkt_access(int S, int d, int B, int elem_bytes);
+```
 
-$$Q[i,k] \text{ addr} = (i \cdot d + k) \cdot \text{elem\_bytes}$$
-$$K[j,k] \text{ addr} = S \cdot d \cdot \text{elem\_bytes} + (j \cdot d + k) \cdot \text{elem\_bytes}$$
+which, for every $(i, j, k) \in [0,S) \times [0,S) \times [0,d)$ exactly
+once, calls `touch()` (declared in `sol.hpp`, a cache-access hook the
+driver defines) on the byte address of $Q[i,k]$ then of $K[j,k]$:
+
+$$
+Q[i,k] \text{ addr} = (i \cdot d + k) \cdot \text{elem\_bytes}
+$$
+$$
+K[j,k] \text{ addr} = S \cdot d \cdot \text{elem\_bytes} + (j \cdot d + k) \cdot \text{elem\_bytes}
+$$
+
+Tile the $i$ and $j$ loops in blocks of $B$ (outer loops step $ii$, $jj$ by
+$B$; inner loops range $i \in [ii, ii{+}B)$, $j \in [jj, jj{+}B)$, $k \in
+[0,d)$) instead of iterating $i$ and $j$ over their full range directly.
 
 ## Example
 
-```python
-addrs = qkt_access_order(S=4, d=4, B=2, elem_bytes=4)
-# Returns a list of byte addresses in tile-blocked QK^T access order
-```
+With $S=4, d=4, B=2$: the naive order finishes all $j \in [0,4)$ for $i=0$
+before touching $i=1$ — every row of $Q$ re-touches every row of $K$ from
+scratch. The tiled order instead finishes tile $(ii,jj)=(0,0)$ — $i,j \in
+\{0,1\}$, all $k$ — before moving to $(ii,jj)=(0,2)$, reusing $K$'s rows 0-1
+across both rows 0-1 of $Q$ within that tile.
 
 ## What the gate checks
 
-`check.py` simulates the returned address trace through a cache and checks that
-`modeled_cache_misses` is at or below a budget — blocking must substantially
-reduce misses compared to naive row-by-column access.
+`main.cpp` runs `qkt_access(S=128, d=64, B=16, elem_bytes=4)` against a
+fixed single-level, set-associative LRU cache model (64-byte lines, 64
+sets, 8-way — 32768 bytes total), and prints the resulting miss count. At
+these sizes $Q$ and $K$ are 32768 bytes each — together twice the size of
+the whole cache — so the loop order has a real, measured effect: the
+reference (tiled) order measures **4608** misses, while the naive
+(unblocked) $i$-$j$-$k$ order measures **9124** — almost double, since it
+re-streams all of $K$ from DRAM on nearly every row of $Q$. `verify_native.sh`
+compiles `solve.cpp` and `ref.cpp` against the same `main.cpp` with
+`clang++ -O2 -std=c++20` and requires the printed miss count to match the
+reference exactly.

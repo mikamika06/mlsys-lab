@@ -1,0 +1,13 @@
+{
+  "id": "gpu-fix-rng-correlated-across-threads",
+  "title": "Fix RNG correlated across threads (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [{"metric": "mean_dev", "op": "<=", "threshold": 0.1}],
+  "info": []
+}

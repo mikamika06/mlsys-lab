@@ -1,73 +1,72 @@
 ## Context
 
 A modern out-of-order processor can have multiple cache misses **in flight**
-simultaneously.  This capability is called **memory-level parallelism** (MLP).
-When MLP independent miss streams overlap, the effective latency per miss drops.
+simultaneously — a non-blocking cache lets several independent loads stay
+outstanding at once instead of stalling the pipeline one at a time. This
+capability is called **memory-level parallelism** (MLP). When `mlp`
+independent miss streams overlap, the effective latency the program pays per
+miss drops, because the misses are serviced concurrently instead of back to
+back.
 
-A simple analytical model for a memory-bound kernel is:
+A simple analytical model for a memory-bound loop's stall time is
 
 $$
 T_{\text{model}} \;=\; \frac{N_{\text{misses}}}{\text{MLP}} \;\times\; t_{\text{miss}}
 $$
 
-where $N_{\text{misses}}$ is the total number of unique cache-line misses produced
-by the access trace, MLP is the number of outstanding misses the hardware can
-service in parallel, and $t_{\text{miss}}$ is the latency of a single DRAM
-access in cycles.
-
-Consider a pointer-chasing traversal of $n$ nodes, each of `node_size` bytes,
-laid out sequentially in memory starting at byte address $0$.  Node $i$ resides
-at byte address $i \times \text{node\_size}$.  The access order is:
-
-$$
-0,\;\text{node\_size},\;2 \times \text{node\_size},\;\ldots,\;(n-1) \times \text{node\_size}
-$$
-
-The cache is fully-associative-within-set (set-associative), parameterised by
-`line_bytes` (cache-line size in bytes), `sets` (number of sets), and `ways`
-(associativity).  Two addresses that map to the same cache line and the same
-set compete for the same slot; an access that cannot be satisfied from the
-current tags is a **miss**.
+where $N_{\text{misses}}$ is the total number of cache-line misses the loop
+produces, `MLP` is the number of outstanding misses the hardware can service
+in parallel, and $t_{\text{miss}}$ is the latency of a single miss in cycles.
+The intuition: `N_misses` misses, grouped into waves of up to `MLP`
+concurrent ones, take `N_misses / MLP` waves, each wave costing one
+`miss_latency`.
 
 ## Task
 
-Implement:
+Implement
 
-```python
-def modeled_runtime(n_nodes, node_size, line_bytes, sets, ways, mlp, miss_latency):
-    """Return the modeled execution time in cycles (float)."""
+```cpp
+double modeled_cycles(long num_misses, int mlp, double miss_latency);
 ```
 
-Your function must:
+which returns $T_{\text{model}} = (\text{num\_misses} / \text{mlp}) \times \text{miss\_latency}$,
+computed in floating point (do not truncate the division to an integer
+first).
 
-1. Generate the sequential pointer-chase byte-address trace for `n_nodes` nodes
-   of `node_size` bytes each (addresses $0, \text{node\_size}, \ldots$).
-2. Determine the number of cache misses that trace produces in a set-associative
-   cache with the given `line_bytes`, `sets`, and `ways`.
-3. Return the modeled runtime $\frac{N_{\text{misses}}}{\text{MLP}} \times t_{\text{miss}}$.
-
-You may use `arena.cachesim.simulate` to obtain the miss count, or derive it
-analytically.  Either approach is acceptable as long as the final value is
-correct.
+The fixed driver (`main.cpp`) produces `num_misses` itself, for five
+scenarios, by replaying a real strided access trace (`n_nodes` elements
+spaced `node_size` bytes apart — a pointer-chase-shaped pattern) through a
+deterministic set-associative LRU cache model parameterized by
+`line_bytes`/`sets`/`ways`; your function only has to turn the resulting
+miss count, `mlp`, and `miss_latency` into a cycle count.
 
 ## Example
 
-```python
-# 256 nodes, 128 bytes each -> every node is on its own cache line
-# 64-byte lines, 16 sets, 4 ways -> 256 misses
-# MLP=4, miss_latency=200 -> (256/4)*200 = 12800.0
-modeled_runtime(256, 128, 64, 16, 4, 4, 200)  # -> 12800.0
 ```
+num_misses = 256, mlp = 4, miss_latency = 200.0
+modeled_cycles(256, 4, 200.0) -> (256 / 4) * 200.0 = 12800.0
+```
+
+A model that instead serializes every miss —
+`num_misses * miss_latency = 256 * 200.0 = 51200.0` — ignores memory-level
+parallelism entirely and overestimates the true stall time by exactly a
+factor of `mlp`.
 
 ## What the gate checks
 
-The grader runs `arena.cachesim.simulate` on the same trace for **five**
-different parameter sets, computes the reference runtime for each, and measures
-the maximum relative error:
+`main.cpp` runs five fixed `(n_nodes, node_size, line_bytes, sets, ways,
+mlp, miss_latency)` scenarios, computes each real miss count from its own
+cache model, calls `modeled_cycles` on it, and prints `misses=<N>
+cycles=<T>` per scenario. `verify_native.sh` compiles `solve.cpp` and
+`ref.cpp` against the same `main.cpp` with `clang++ -O2 -std=c++20`, runs
+both, and requires
 
 $$
-\text{rel\_err} = \max_k \frac{\lvert T_{\text{learner}}^{(k)} - T_{\text{ref}}^{(k)} \rvert}{T_{\text{ref}}^{(k)}}
+\max_k \lvert T_{\text{candidate}}^{(k)} - T_{\text{ref}}^{(k)} \rvert \le 10^{-6}
 $$
 
-The gate passes when $\text{rel\_err} \le 0.01$ (at most 1 % error on every
-configuration).
+Since both binaries share the same driver and cache model, the printed
+`misses=<N>` values always agree — only a wrong `modeled_cycles` formula
+(forgetting to divide by `mlp`, dividing by the wrong quantity, swapping the
+multiply for an add, ...) can make the printed `cycles=<T>` values diverge
+from the reference.

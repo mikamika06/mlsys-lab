@@ -1,0 +1,11 @@
+{
+  "id": "gpu-fuse-bias-gelu-into-a-matmul-epilogue",
+  "title": "Fuse bias + GELU into a matmul epilogue",
+  "track": "05 GPU", "tier": "II", "module": "M5", "difficulty": 3,
+  "genre": "implement", "platform": "cross-platform", "native": "cuda",
+  "gates": [
+    {"metric": "rel_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "transactions", "op": "<=", "threshold": 19},
+    {"metric": "cycles", "op": "<=", "threshold": 3900}
+  ], "info": []
+}

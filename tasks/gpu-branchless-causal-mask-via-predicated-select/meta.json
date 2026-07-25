@@ -1,0 +1,18 @@
+{
+  "id": "gpu-branchless-causal-mask-via-predicated-select",
+  "title": "Branchless causal mask via predicated select (CUDA)",
+  "track": "03 CUDA",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "divergences", "op": "==", "threshold": 0}
+  ],
+  "info": [
+    "divergences comes straight from the simulator's launch metrics -- warps whose lanes issued a different number of global accesses -- not a hardcoded value"
+  ]
+}

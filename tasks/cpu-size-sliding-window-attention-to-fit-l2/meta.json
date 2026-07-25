@@ -1,0 +1,15 @@
+{
+  "id": "cpu-size-sliding-window-attention-to-fit-l2",
+  "title": "Size sliding-window attention to fit L2 (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "II",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "Real C++: derives the attention working-set-bytes formula (Q + out + W keys/values/scores) and searches it for the largest window W that still fits a given L2 capacity, compiled by clang++."
+  ]
+}

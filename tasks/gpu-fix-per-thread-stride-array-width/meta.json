@@ -1,0 +1,19 @@
+{
+  "id": "gpu-fix-per-thread-stride-array-width",
+  "title": "Fix an accidental transpose: per-thread stride equal to the array width (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "transactions", "op": "<=", "threshold": 20}
+  ],
+  "info": [
+    "w=32, h=8, one warp per block (block=32), so the broken version's row/col swap shows up entirely within single warps",
+    "reference measured transactions=16; the broken starter measures transactions=128, correctness identical (both max_abs_err=0)"
+  ]
+}

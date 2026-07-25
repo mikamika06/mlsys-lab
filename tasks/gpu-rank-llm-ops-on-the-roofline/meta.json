@@ -1,0 +1,17 @@
+{
+  "id": "gpu-rank-llm-ops-on-the-roofline",
+  "title": "Rank GEMM / attention / LayerNorm / elementwise on the roofline (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "single thread, one fixed size per op (64x64x64 GEMM, S=D=64 attention, 4096-element LayerNorm and elementwise), fixed ridge point peak_flops/peak_bw = 10.0"
+  ]
+}

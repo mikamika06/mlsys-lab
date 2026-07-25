@@ -1,0 +1,18 @@
+{
+  "id": "gpu-fused-dropout-add-layernorm-training-block",
+  "title": "Fused dropout + residual add + LayerNorm training block (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 5,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "one block per row (4 rows), one thread per feature (16 features)",
+    "no RNG builtin exists in this language subset -- 'fixed seed' dropout means a deterministic arithmetic hash of (flat index, seed), replicated identically by the numpy oracle"
+  ]
+}

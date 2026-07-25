@@ -1,0 +1,17 @@
+{
+  "id": "gpu-fix-online-softmax-that-forgets-to-rescale-the-running-sum",
+  "title": "Fix online softmax that forgets to rescale the running sum (CUDA)",
+  "track": "03 CUDA",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "graded against a numpy batch-softmax oracle computed from the same seeded random input, not a hardcoded array"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "gpu-modeled-cycle-cost-of-a-multi-level-access-pattern",
+  "title": "Modeled cycle cost of a multi-level access pattern (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: sums the per-access modeled latency of a fixed 40-entry memory-hierarchy access trace (register/shared/L2/DRAM), executed on the software SIMT GPU."
+  ]
+}

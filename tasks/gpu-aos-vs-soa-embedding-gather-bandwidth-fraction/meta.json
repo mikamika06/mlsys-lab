@@ -1,0 +1,18 @@
+{
+  "id": "gpu-aos-vs-soa-embedding-gather-bandwidth-fraction",
+  "title": "AoS vs SoA embedding-gather coalescing (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "measure",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "transactions", "op": "<=", "threshold": 40}
+  ],
+  "info": [
+    "Real CUDA-C: a warp gathers 32 embedding rows and sums D dimensions per thread from an SoA (dimension-major) table, executed on the software SIMT GPU; transactions gate forces per-step coalescing across the warp instead of per-thread AoS striding."
+  ]
+}

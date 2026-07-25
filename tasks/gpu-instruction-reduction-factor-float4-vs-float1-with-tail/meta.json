@@ -1,0 +1,18 @@
+{
+  "id": "gpu-instruction-reduction-factor-float4-vs-float1-with-tail",
+  "title": "Instruction-reduction factor: float4 vs float1 loads, with a scalar tail (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "single thread, no actual float4 type exists in this language subset -- the task is the arithmetic itself, not a real vectorized memory op",
+    "graded over 4 fixed n values: 17, 100, 256, 4097 (a mix of multiples of 4 and not)"
+  ]
+}

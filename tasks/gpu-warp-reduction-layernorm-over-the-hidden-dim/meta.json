@@ -1,0 +1,13 @@
+{
+  "id": "gpu-warp-reduction-layernorm-over-the-hidden-dim",
+  "title": "Warp-reduction LayerNorm over the hidden dim (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}],
+  "info": []
+}

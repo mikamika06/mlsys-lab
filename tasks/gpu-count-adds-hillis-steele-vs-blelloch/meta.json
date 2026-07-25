@@ -1,0 +1,19 @@
+{
+  "id": "gpu-count-adds-hillis-steele-vs-blelloch",
+  "title": "Count arithmetic ops: Hillis-Steele vs Blelloch scan (CUDA)",
+  "track": "03 CUDA",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "ops_hillis", "op": "==", "threshold": 708},
+    {"metric": "ops_blelloch", "op": "==", "threshold": 489}
+  ],
+  "info": [
+    "op counts are measured by actually running both kernels through the simulator (cycles minus its memory/shared-memory components), not hardcoded theory numbers"
+  ]
+}

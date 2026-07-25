@@ -1,0 +1,28 @@
+{
+  "id": "gpu-replace-shared-memory-warp-final-reduce-with-shuffle-only",
+  "title": "Replace shared-memory warp-final reduce with shuffle-only (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    },
+    {
+      "metric": "smem_waves",
+      "op": "<=",
+      "threshold": 0
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "Single warp of 32 threads reducing 32 partial sums to one total in out[0].",
+    "smem_waves must be exactly 0 -- a shared-memory tree reduction (with __syncthreads()) computes the same correct sum but measures smem_waves=17 on this fixture, failing the gate."
+  ]
+}

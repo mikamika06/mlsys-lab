@@ -1,0 +1,23 @@
+{
+  "id": "gpu-fix-a-flash-kernel-that-mis-merges-block-statistics",
+  "title": "Fix a flash-attention kernel that mis-merges block statistics (CUDA)",
+  "track": "GPU Programming",
+  "tier": "II",
+  "module": "Mgpu",
+  "difficulty": 4,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "8 queries, D=4, 16 keys processed as 2 blocks of 8, one thread per query row.",
+    "The second K-block is deliberately larger in magnitude than the first, so the running max genuinely changes on that merge (alpha != 1), exposing a missing-rescale bug."
+  ]
+}

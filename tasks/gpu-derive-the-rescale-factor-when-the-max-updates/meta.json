@@ -1,0 +1,18 @@
+{
+  "id": "gpu-derive-the-rescale-factor-when-the-max-updates",
+  "title": "Derive the online-softmax rescale factor when the running max updates (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "single thread (block=1, grid=1), a genuinely sequential scan -- the online-softmax recurrence is inherently a running dependency chain",
+    "the 8-value fixture deliberately mixes max-updating and max-preserving steps, including a tie"
+  ]
+}

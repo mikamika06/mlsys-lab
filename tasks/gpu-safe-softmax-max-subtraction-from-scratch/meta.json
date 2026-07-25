@@ -1,0 +1,15 @@
+{
+  "id": "gpu-safe-softmax-max-subtraction-from-scratch",
+  "title": "Safe softmax (max-subtraction) from scratch (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: three-pass numerically-stable softmax (max, sum-of-exp, normalize) over a 10-element fixture with one logit (750.0) large enough that exp() alone would overflow float64, executed on the software SIMT GPU."
+  ]
+}

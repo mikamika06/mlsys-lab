@@ -1,0 +1,15 @@
+{
+  "id": "gpu-fix-catastrophic-cancellation-in-variance",
+  "title": "Fix catastrophic cancellation in a variance kernel (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: a 32-element single-block variance reduction. The shipped kernel uses the single-pass E[x^2]-E[x]^2 formula, which returns a NEGATIVE variance (-16384) on a large-mean fixture where the true variance is 4.8896484375; a mean-centered two-pass reduction gets it exactly right."
+  ]
+}

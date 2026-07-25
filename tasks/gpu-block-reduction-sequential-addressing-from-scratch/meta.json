@@ -1,0 +1,28 @@
+{
+  "id": "gpu-block-reduction-sequential-addressing-from-scratch",
+  "title": "Block reduction with sequential addressing, from scratch (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-9
+    },
+    {
+      "metric": "smem_waves",
+      "op": "<=",
+      "threshold": 50
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "Single block of 256 threads reducing 256 elements to out[0].",
+    "smem_waves threshold is set just above the reference's own measured value (45); an interleaved/modulo tree reduction measures 150 on the same input."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "gpu-roofline-of-decode-vs-prefill-batch-1",
+  "title": "Roofline of decode (batch=1) vs prefill: why decode is always memory-bound (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "single thread, d_in=d_out=4096, t=128, ridge point peak_flops/peak_bw = 10.0"
+  ]
+}

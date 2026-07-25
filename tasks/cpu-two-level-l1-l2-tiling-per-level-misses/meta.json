@@ -1,0 +1,23 @@
+{
+  "id": "cpu-two-level-l1-l2-tiling-per-level-misses",
+  "title": "Two-level (L1+L2) tiling per-level misses (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "L1/L2 miss counts come from two real set-associative LRU cache models in main.cpp (8 sets/2 ways and 64 sets/8 ways, both 64-byte lines), never hardware performance counters",
+    "leading dimensions (65) are deliberately not a multiple of either level's set-count*line-size, isolating the tiling lesson from leading-dimension aliasing",
+    "C's accumulator is never passed through touch() -- only A and B reads count toward the miss vector"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "gpu-fix-grid-stride-loop-that-drops-the-tail",
+  "title": "Fix a grid-stride loop that drops the tail when N exceeds the launch grid (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}
+  ],
+  "info": [
+    "n=300, grid=2 blocks of 64 threads = 128 total threads, well under half of n, so a single-pass kernel misses more than half the array"
+  ]
+}

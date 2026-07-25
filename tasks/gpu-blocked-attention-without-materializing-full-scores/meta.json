@@ -1,0 +1,9 @@
+{
+  "id": "gpu-blocked-attention-without-materializing-full-scores",
+  "title": "Blocked attention without materializing full scores (CUDA)",
+  "native": "cuda",
+  "difficulty": 4,
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}
+  ]
+}

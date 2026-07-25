@@ -1,16 +1,13 @@
 {
   "id": "cpu-embedding-gather-choose-page-size",
-  "title": "Embedding gather: choose optimal page size",
-  "track": "03 Systems",
+  "title": "Embedding gather: choose optimal page size (real C++)",
+  "track": "01 CPU Perf",
   "tier": "II",
   "module": "M2cpu",
   "difficulty": 5,
   "genre": "compare",
   "platform": "cross-platform",
-  "provides": [
-    "choose_page_size"
-  ],
-  "fixtures": [],
+  "native": "cpp",
   "gates": [
     {
       "metric": "exact_match",
@@ -18,5 +15,8 @@
       "threshold": 1.0
     }
   ],
-  "info": []
+  "info": [
+    "Real C++: sweeps a fixed fully-associative LRU TLB model (16 entries) over several candidate page sizes for the same scattered embedding-gather trace and picks the one with fewest misses, compiled by clang++.",
+    "the driver's candidates include an intentional tie between two huge page sizes -- the tie-break rule (prefer the smaller page size) is part of what's graded."
+  ]
 }

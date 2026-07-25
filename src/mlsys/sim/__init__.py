@@ -14,8 +14,17 @@ misses — and get the same answer on every machine.
 """
 
 from . import abi, cache, simt
-from .cuda_c import CudaParseError, CudaProgram
-from .gpu import GPU, BANKS, SEGMENT, WARP, ShflRequest, Thread
+# AST node types are part of the surface too: a few tasks ask the learner to
+# reason about the parsed program, not just run it.
+from .cuda_c import (Block, CudaParseError, CudaProgram, For, If, SharedDecl,
+                     VarDecl, While)
+from .gpu import (GPU, BANKS, CYC_ALU, CYC_MEM, CYC_SMEM, SEGMENT, WARP,
+                  ShflRequest, Thread, occupancy, latency_hiding,
+                  SM_MAX_WARPS, SM_REGS, SM_SMEM)
 
 __all__ = ["GPU", "Thread", "ShflRequest", "WARP", "SEGMENT", "BANKS",
-           "CudaProgram", "CudaParseError", "cache", "abi", "simt"]
+           "CYC_MEM", "CYC_SMEM", "CYC_ALU",
+           "CudaProgram", "CudaParseError", "Block", "For", "If", "While",
+           "VarDecl", "SharedDecl",
+           "cache", "abi", "simt",
+           "occupancy", "latency_hiding", "SM_REGS", "SM_SMEM", "SM_MAX_WARPS"]

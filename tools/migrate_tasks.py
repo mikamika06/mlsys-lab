@@ -63,6 +63,15 @@ def copy_task(src_dir, dst_dir):
         if item.name in SKIP_DIRS or item.name in SKIP_FILES:
             continue
         if item.is_dir():
+            # A task may ship binary fixtures (fixtures/*.npy). Skipping every
+            # directory silently produced tasks whose grader could not load its
+            # own data, so subdirectories are mirrored, not dropped.
+            seen.add(item.name)
+            target_dir = dst_dir / item.name
+            if target_dir.exists():
+                shutil.rmtree(target_dir)
+            shutil.copytree(item, target_dir,
+                            ignore=shutil.ignore_patterns(*SKIP_DIRS, ".DS_Store"))
             continue
         seen.add(item.name)
         target = dst_dir / item.name
@@ -89,8 +98,12 @@ def copy_task(src_dir, dst_dir):
 
     # drop files that no longer exist upstream (a re-run must not keep stale ones)
     for item in dst_dir.iterdir():
-        if item.is_file() and item.name not in seen and item.name not in SKIP_FILES:
+        if item.name in seen or item.name in SKIP_FILES:
+            continue
+        if item.is_file():
             item.unlink()
+        elif item.name not in SKIP_DIRS:
+            shutil.rmtree(item)
     return len(seen)
 
 

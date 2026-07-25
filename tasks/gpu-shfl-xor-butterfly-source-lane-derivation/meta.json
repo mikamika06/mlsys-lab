@@ -1,0 +1,23 @@
+{
+  "id": "gpu-shfl-xor-butterfly-source-lane-derivation",
+  "title": "shfl_xor butterfly source-lane derivation (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-6
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "32 lanes; graded over 5 separate launches, one per power-of-two mask (1, 2, 4, 8, 16).",
+    "This CUDA-C subset has no bitwise operators, so XOR-with-power-of-two must be derived arithmetically."
+  ]
+}

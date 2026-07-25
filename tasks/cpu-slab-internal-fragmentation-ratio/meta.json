@@ -1,0 +1,13 @@
+{
+  "id": "cpu-slab-internal-fragmentation-ratio",
+  "title": "Slab allocator internal-fragmentation ratio",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 2,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": []
+}

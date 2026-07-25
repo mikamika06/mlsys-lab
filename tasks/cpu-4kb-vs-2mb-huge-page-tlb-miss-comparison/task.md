@@ -1,29 +1,62 @@
 ## Context
 
-A **Translation Lookaside Buffer (TLB)** caches virtual-to-physical page translations. Each TLB entry covers one page. A **TLB miss** occurs when accessed memory lies on a page not currently in the TLB — requiring a costly page walk.
+A **Translation Lookaside Buffer (TLB)** caches virtual-to-physical page
+translations. Each entry covers exactly one page, so a TLB with $S$ sets
+and $W$ ways holds at most $S \times W$ distinct pages at once -- its
+**reach** is $S \times W \times P$ bytes, where $P$ is the page size. A
+**TLB miss** means the accessed address lies on a page not currently
+cached, forcing a page-table walk.
 
-Typical **base page** size is 4 KB (x86-64) or 16 KB (Apple Silicon). **Huge pages** (2 MB on x86, 2 MB on Mac) dramatically reduce TLB misses: each entry covers 512× more address space than a 4 KB page, so a working set that needs many 4 KB entries may need only one 2 MB entry.
+The default page size is 4 KiB on x86-64 (16 KiB on Apple Silicon).
+**Huge pages** (2 MiB here) make each entry cover $512\times$ more
+address space, so the *same* working set that overflows the TLB's reach
+under 4 KiB pages can collapse into a single entry under 2 MiB pages.
 
-We model a TLB with $S$ sets, $W$ ways, and a fixed **page size** $P$ bytes. A page-aligned address $A$ maps to set $\lfloor A / P \rfloor \bmod S$, and eviction is LRU within the set. The cache simulator `cachesim.simulate` runs this for a given list of byte addresses and page size, returning `{"misses": m}`.
+The driver in `main.cpp` owns a deterministic set-associative LRU TLB
+model: $S = 64$ sets, $W = 4$ ways (256 entries total), reconfigurable
+page size. `touch(addr)` records one access; `reset_tlb(page_size)`
+clears the TLB and sets its page size; `miss_count()` reports misses
+since the last reset. This model -- not any real CPU's TLB -- is the
+sole source of every number the gate checks.
 
 ## Task
 
-Implement `tlb_miss_count(addrs, page_size)` that returns the **number of TLB misses** for the given list of byte addresses and page size, using the specified TLB configuration.
+Implement `tlb_miss_pair(base, stride, count, passes, out)`.
 
-**TLB parameters**: $S = 64$ sets, $W = 4$ ways, LRU replacement. Page size $P$ is provided as argument (between 4 KiB and 2 MiB, always a power of two).
+Replay the SAME access pattern -- touch `base + i*stride` for
+$i \in [0, \text{count})$, repeated `passes` times in the same ascending
+order each pass -- twice:
+
+1. against a TLB freshly reset with `page_size = 4096` (4 KiB), writing
+   the resulting `miss_count()` into `out[0]`;
+2. against a TLB freshly reset with `page_size = 2*1024*1024` (2 MiB),
+   writing the resulting `miss_count()` into `out[1]`.
+
+Only the page size differs between the two runs -- the addresses touched
+are identical.
 
 ## Example
 
-```python
-# Access pages 0, 1, 0, 2 (4 KB each)
-addrs = [0, 4096, 4096, 8192]
-# With 4 KB pages: first access = miss for pages 0,1,2 → 3 misses
-print(tlb_miss_count(addrs, 4096))  # 3
+With `count=300, stride=4096, passes=3` the working set spans
+$300 \times 4096 = 1{,}228{,}800$ bytes:
 
-# With 2 MB pages: all addresses in same huge page → 1 miss
-print(tlb_miss_count(addrs, 2 * 1024 * 1024))  # 1
-```
+- Under 4 KiB pages the TLB's reach is $256 \times 4096 = 1{,}048{,}576$
+  bytes -- smaller than the working set -- so pages get evicted before
+  the next pass revisits them, and the reference measures **740**
+  misses across all three passes (300 compulsory in pass 1, then steady
+  thrashing in passes 2-3).
+- Under 2 MiB pages the entire 1.2 MB working set lies inside a single
+  page ($1{,}228{,}800 < 2{,}097{,}152$), so after the very first touch
+  every later access is a hit: **1** miss total.
 
 ## What the gate checks
 
-The grader calls your function with a fixed address trace and two page sizes (4 KiB and 2 MiB). It runs both through `cachesim.simulate` with the same reference TLB parameters (64 sets, 4 ways, LRU) and compares the two integer counts to your returned pair. The gate `exact_match` passes only if **both** counts match exactly.
+The gate is `exact_match` on the full printed output of two fixed
+scenarios. It compiles your `tlb_miss_pair` against the fixed driver,
+runs it, and byte-compares stdout against the reference's stdout -- both
+`out[0]` (4 KiB) and `out[1]` (2 MiB) must match for every scenario.
+Returning zeros, running only one page size, forgetting to
+`reset_tlb()` between the two runs (so the second run's TLB isn't
+actually reconfigured, or still carries state from the first), or
+replaying the addresses in a different order all change the miss counts
+and fail the gate.

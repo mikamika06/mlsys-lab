@@ -1,0 +1,16 @@
+{
+  "id": "gpu-conflict-free-swizzle-index-function",
+  "title": "Conflict-free swizzle index function (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "smem_waves", "op": "<=", "threshold": 40}
+  ],
+  "info": []
+}

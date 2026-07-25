@@ -1,0 +1,19 @@
+{
+  "id": "gpu-privatized-shared-histogram-with-one-atomic-flush",
+  "title": "Privatized shared histogram with one atomic flush (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "races", "op": "<=", "threshold": 0.0}
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "128 elements, 8 bins, 4 blocks of 32 threads; graded on both the histogram result and the simulator's races metric (a non-atomic accumulate happens to sum correctly in this simulator's one-thread-at-a-time execution, so races is the metric that actually forces atomics)."
+  ]
+}

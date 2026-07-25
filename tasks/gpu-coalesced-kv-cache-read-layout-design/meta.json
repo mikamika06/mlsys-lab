@@ -1,0 +1,18 @@
+{
+  "id": "gpu-coalesced-kv-cache-read-layout-design",
+  "title": "Coalesced KV-cache decode-step read: thread-to-index layout design (CUDA)",
+  "track": "03 CUDA",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 5,
+  "genre": "design",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "transactions", "op": "<=", "threshold": 70}
+  ],
+  "info": [
+    "transactions comes straight from the simulator's launch metrics over the real seeded KV-cache buffer, not a hardcoded value"
+  ]
+}

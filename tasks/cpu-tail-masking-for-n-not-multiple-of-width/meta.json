@@ -1,0 +1,17 @@
+{
+  "id": "cpu-tail-masking-for-n-not-multiple-of-width",
+  "title": "Fix a missing SIMD tail: handle N not a multiple of the vector width (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "debug",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "WIDTH models a SIMD lane count in plain scalar C++, so the bug is purely algorithmic (the missing tail loop), not intrinsic-specific"
+  ]
+}

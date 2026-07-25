@@ -1,0 +1,15 @@
+{
+  "id": "gpu-model-compute-cycles-hidden-by-prefetch",
+  "title": "Model compute cycles hidden by prefetch (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-3}],
+  "info": [
+    "Real CUDA-C: derives serial vs software-pipelined total cycle counts for T tiles with per-tile load latency L and compute C, for 5 fixed scenarios (compute-bound, load-bound, single-tile, tied, and extreme-load-bound), executed on the software SIMT GPU."
+  ]
+}

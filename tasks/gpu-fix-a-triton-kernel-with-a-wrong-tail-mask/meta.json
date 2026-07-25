@@ -1,0 +1,1 @@
+{"id":"gpu-fix-a-triton-kernel-with-a-wrong-tail-mask","title":"Fix a wrong tail mask leaking garbage into the last block (CUDA)","native":"cuda","difficulty":2,"gates":[{"metric":"max_abs_err","op":"==","threshold":0.0}]}

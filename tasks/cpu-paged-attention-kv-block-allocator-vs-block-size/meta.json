@@ -1,22 +1,22 @@
 {
   "id": "cpu-paged-attention-kv-block-allocator-vs-block-size",
-  "title": "Paged-Attention KV block allocator vs block size",
-  "track": "04 Systems Performance",
+  "title": "Paged-Attention KV block allocator vs block size (real C++)",
+  "track": "01 CPU Perf",
   "tier": "II",
-  "module": "M4alloc",
+  "module": "M2cpu",
   "difficulty": 5,
   "genre": "optimize",
-  "platform": "cpu",
-  "provides": [
-    "choose_kv_block_size"
-  ],
-  "fixtures": [],
+  "platform": "cross-platform",
+  "native": "cpp",
   "gates": [
     {
-      "metric": "size_ratio",
-      "op": ">=",
-      "threshold": 0.9
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
     }
   ],
-  "info": []
+  "info": [
+    "Real C++: sweeps 7 power-of-two KV block sizes to minimize total allocated bytes (internal fragmentation + per-block table overhead) for a fixed token-size workload, compiled by clang++.",
+    "useful bytes is invariant across candidates, so maximizing the ratio reduces to an exact integer minimization -- no floating point involved in the choice."
+  ]
 }

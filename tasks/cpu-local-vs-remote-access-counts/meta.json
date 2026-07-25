@@ -1,16 +1,13 @@
 {
   "id": "cpu-local-vs-remote-access-counts",
-  "title": "Cache-friendly access trace generation",
-  "track": "03 Systems",
+  "title": "NUMA: local vs remote access counts (real C++)",
+  "track": "01 CPU Perf",
   "tier": "II",
   "module": "M2cpu",
   "difficulty": 3,
   "genre": "implement",
   "platform": "cross-platform",
-  "provides": [
-    "blocked_access_trace"
-  ],
-  "fixtures": [],
+  "native": "cpp",
   "gates": [
     {
       "metric": "exact_match",
@@ -18,5 +15,7 @@
       "threshold": 1.0
     }
   ],
-  "info": []
+  "info": [
+    "Real C++: classifies each address in a fixed access trace as NUMA-local or NUMA-remote against a fixed page-to-node placement, compiled by clang++."
+  ]
 }

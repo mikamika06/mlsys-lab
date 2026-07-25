@@ -1,0 +1,15 @@
+{
+  "id": "gpu-label-variable-residency-flag-spills",
+  "title": "Label variable residency and flag register spills (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "classify",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": [
+    "Real CUDA-C: classifies 10 declared variables (register-candidate/shared/global/constant) by residency against a per-thread register budget, flagging spills to local memory when the running register-word total overflows the budget, executed on the software SIMT GPU."
+  ]
+}

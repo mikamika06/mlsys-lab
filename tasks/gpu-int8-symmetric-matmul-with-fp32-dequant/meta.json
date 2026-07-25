@@ -1,0 +1,16 @@
+{
+  "id": "gpu-int8-symmetric-matmul-with-fp32-dequant",
+  "title": "INT8 symmetric matmul with fp32 dequant (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cuda",
+  "native": "cuda",
+  "gates": [
+    {"metric": "rel_err", "op": "<=", "threshold": 0.02},
+    {"metric": "rel_err", "op": ">=", "threshold": 0.0005}
+  ],
+  "info": []
+}

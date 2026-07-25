@@ -1,16 +1,15 @@
 {
   "id": "cpu-predict-which-of-5-loops-auto-vectorize",
-  "title": "Predict which of 5 loops auto-vectorize",
-  "track": "13 CPU-perf",
-  "tier": "IV",
-  "module": "M13",
+  "title": "Predict which of 5 loops auto-vectorize (real C++)",
+  "track": "02 Deep C++",
+  "tier": "II",
+  "module": "M2",
   "difficulty": 4,
   "genre": "classify",
-  "platform": "cross-platform",
-  "provides": ["classify_loops"],
-  "fixtures": [],
-  "gates": [
-    {"metric": "exact_match", "op": "==", "threshold": 1.0}
-  ],
-  "info": []
+  "platform": "mac",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "Real C++: ground truth comes from disassembling this executable's OWN compiled code (otool -tV) and looking for real NEON vector instructions -- not a rule-based prediction table."
+  ]
 }

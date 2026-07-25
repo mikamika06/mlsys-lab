@@ -1,0 +1,18 @@
+{
+  "id": "cpu-reassociate-for-parallel-sum-within-error-tol",
+  "title": "Reassociate a sum for ILP: keep the critical path below gate (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-3}
+  ],
+  "info": [
+    "critical_path_depth is a real dependency-depth model, fed by your own record_add calls, not a modeled hardware pipeline",
+    "the sum itself is real float arithmetic, so reassociation's small rounding difference from the reference must stay within tolerance too"
+  ]
+}

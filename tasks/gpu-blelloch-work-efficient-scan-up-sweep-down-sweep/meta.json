@@ -1,0 +1,17 @@
+{
+  "id": "gpu-blelloch-work-efficient-scan-up-sweep-down-sweep",
+  "title": "Blelloch work-efficient scan: up-sweep / down-sweep (CUDA)",
+  "track": "03 CUDA",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "graded against a numpy np.cumsum oracle computed from the same seeded random input, not a hardcoded array"
+  ]
+}

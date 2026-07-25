@@ -1,0 +1,17 @@
+{
+  "id": "gpu-loop-count-divergence-penalty",
+  "title": "Loop-count divergence penalty: serialized iterations and wasted lane-iterations (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "single thread, 32 fixed per-lane trip counts: trips[i] = (i*7) % 11"
+  ]
+}

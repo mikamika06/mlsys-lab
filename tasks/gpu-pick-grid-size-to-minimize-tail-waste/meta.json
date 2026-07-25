@@ -1,0 +1,17 @@
+{
+  "id": "gpu-pick-grid-size-to-minimize-tail-waste",
+  "title": "Pick grid size to minimize tail-wave waste (CUDA)",
+  "track": "03 CUDA",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "graded against an independently-computed Python integer reference for each scenario, not hardcoded expected values"
+  ]
+}

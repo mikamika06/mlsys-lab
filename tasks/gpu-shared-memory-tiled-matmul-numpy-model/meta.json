@@ -1,0 +1,18 @@
+{
+  "id": "gpu-shared-memory-tiled-matmul-numpy-model",
+  "title": "Shared-memory-tiled matmul (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "transactions", "op": "<=", "threshold": 15}
+  ],
+  "info": [
+    "Real CUDA-C: classic shared-memory-tiled GEMM (C = A x B, M=N=K=8, TILE=4, 4 blocks of 16 threads), executed on the software SIMT GPU; reference measures 10 transactions."
+  ]
+}

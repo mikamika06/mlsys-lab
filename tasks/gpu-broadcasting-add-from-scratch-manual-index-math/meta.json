@@ -1,0 +1,18 @@
+{
+  "id": "gpu-broadcasting-add-from-scratch-manual-index-math",
+  "title": "Broadcasting add from scratch: manual row/col index math (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 2,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "transactions", "op": "<=", "threshold": 24}
+  ],
+  "info": [
+    "4x64 matrix, one row per block (BLOCK == COLS), so a correct col = i % cols derivation stays coalesced"
+  ]
+}

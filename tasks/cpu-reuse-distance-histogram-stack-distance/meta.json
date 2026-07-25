@@ -1,0 +1,17 @@
+{
+  "id": "cpu-reuse-distance-histogram-stack-distance",
+  "title": "Reuse-distance histogram: classic stack-distance algorithm (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "stack distance is measured exactly, over the full fixed 12-access trace, not sampled or approximated"
+  ]
+}

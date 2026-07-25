@@ -86,7 +86,56 @@ class Thread:
 
     def gstore(self, idx, val, itembytes=4):
         self._g.append(int(idx) * itembytes)
+        self._sim._wrote(int(idx), self.gid, atomic=False)
         self._sim.gmem[int(idx)] = val
+
+    # --- wide access. A float4 / half2 load is ONE instruction covering several
+    # consecutive elements, so the warp issues one address for the whole vector
+    # instead of one per element — which is the entire point of vectorising.
+    def gload_wide(self, idx, n, itembytes=4):
+        base = int(idx)
+        self._g.append(base * itembytes)
+        return [float(self._sim.gmem[base + k]) for k in range(n)]
+
+    def gstore_wide(self, idx, vals, itembytes=4):
+        base = int(idx)
+        self._g.append(base * itembytes)
+        for k, v in enumerate(vals):
+            self._sim._wrote(base + k, self.gid, atomic=False)
+            self._sim.gmem[base + k] = v
+
+    # --- atomics. Threads here are executed one at a time, so an ordinary
+    # read-modify-write would *appear* to work; the hazard is instead recorded
+    # (see GPU._wrote / the `races` metric) and an atomic is what clears it.
+    def atomic(self, op, idx, val, shared=False):
+        mem = self._sim.smem if shared else self._sim.gmem
+        i = int(idx)
+        if shared:
+            self._s.append(i)
+        else:
+            self._g.append(i * 4)
+            self._sim._wrote(i, self.gid, atomic=True)
+        old = float(mem[i])
+        if op == "add":
+            mem[i] = old + val
+        elif op == "sub":
+            mem[i] = old - val
+        elif op == "max":
+            mem[i] = max(old, val)
+        elif op == "min":
+            mem[i] = min(old, val)
+        elif op == "exch":
+            mem[i] = val
+        elif op == "cas":
+            # val is (compare, replacement) — CAS is the primitive the others build on
+            cmp_, rep = val
+            if old == cmp_:
+                mem[i] = rep
+        else:
+            raise ValueError("unknown atomic op: %s" % op)
+        self._alu += 1
+        self._sim._atomics += 1
+        return old
 
     def sload(self, widx):
         self._s.append(int(widx))
@@ -144,6 +193,58 @@ class Thread:
         return ShflRequest("xor", val, mask)
 
 
+# --- occupancy model -------------------------------------------------------
+# Per-SM resource limits. These are the Ampere/Ada numbers; they are pinned here
+# so the answer is the same on every machine, which is the whole point.
+SM_REGS = 65536          # 32-bit registers in the SM register file
+SM_SMEM = 49152          # bytes of shared memory available to blocks
+SM_MAX_WARPS = 48        # resident warp slots
+SM_MAX_BLOCKS = 16       # resident block slots
+REG_GRAN = 256           # registers are allocated per warp in this granularity
+MAX_REGS_PER_THREAD = 255
+
+
+def occupancy(regs_per_thread, smem_bytes_per_block, block_size):
+    """Resident warps per SM, and which resource is the limiter.
+
+    This is the arithmetic `nvcc --ptxas-options=-v` plus the occupancy
+    calculator do: round the register allocation up to the granularity, see how
+    many blocks each resource allows, take the smallest, and report what bound
+    it. Anything above MAX_REGS_PER_THREAD cannot be held in registers at all —
+    the compiler spills the excess to local memory, which is really global.
+    """
+    warps_per_block = -(-block_size // WARP)      # ceil
+    spilled = max(0, regs_per_thread - MAX_REGS_PER_THREAD)
+    regs = min(regs_per_thread, MAX_REGS_PER_THREAD)
+
+    regs_per_warp = -(-(regs * WARP) // REG_GRAN) * REG_GRAN
+    by_reg = SM_REGS // (regs_per_warp * warps_per_block) if regs_per_warp else SM_MAX_BLOCKS
+    by_smem = SM_SMEM // smem_bytes_per_block if smem_bytes_per_block else SM_MAX_BLOCKS
+    by_warp = SM_MAX_WARPS // warps_per_block if warps_per_block else SM_MAX_BLOCKS
+    blocks = max(0, min(by_reg, by_smem, by_warp, SM_MAX_BLOCKS))
+
+    limiter = min((by_reg, "registers"), (by_smem, "shared memory"),
+                  (by_warp, "warp slots"), (SM_MAX_BLOCKS, "block slots"))[1]
+    warps = blocks * warps_per_block
+    return {"blocks_per_sm": blocks, "warps_per_sm": warps,
+            "occupancy": warps / SM_MAX_WARPS, "limiter": limiter,
+            "regs_per_warp": regs_per_warp, "spilled_regs": spilled}
+
+
+def latency_hiding(warps_per_sm, ilp, mem_latency=CYC_MEM, issue_cycles=4):
+    """Cycles to cover one memory latency, given occupancy AND per-thread ILP.
+
+    Volkov's point: occupancy is not the only way to hide latency. A kernel with
+    few warps but several independent operations in flight per thread can cover
+    the same latency as a kernel with many warps and no ILP. Both terms multiply.
+    """
+    in_flight = max(1, warps_per_sm) * max(1, ilp)
+    covered = in_flight * issue_cycles
+    return {"in_flight": in_flight, "covered_cycles": covered,
+            "stall_cycles": max(0, mem_latency - covered),
+            "hides_latency": covered >= mem_latency}
+
+
 def _dims(v):
     """Accept 4 as (4, 1) and (4, 8) as itself — a scalar launch is a 1D launch."""
     if isinstance(v, (tuple, list)):
@@ -159,6 +260,27 @@ class GPU:
         self.smem = np.zeros(max(smem_size, 1), dtype=np.float64)
         self._smem_next = 0
         self._smem_decls = []
+        # address -> {"threads": set of gids that wrote it, "atomic": bool}
+        self._writes = {}
+        self._atomics = 0
+
+    def _wrote(self, addr, gid, atomic):
+        """Record a write so a lost-update race can be detected deterministically.
+
+        Real hardware loses updates when several threads read-modify-write the
+        same address without an atomic; here every thread runs to completion in
+        turn, so the arithmetic would silently come out right. Rather than fake
+        nondeterminism, the simulator reports the hazard itself: any address
+        written by more than one thread with at least one NON-atomic write is a
+        race, and `races` counts those addresses.
+        """
+        w = self._writes.get(addr)
+        if w is None:
+            self._writes[addr] = {"threads": {gid}, "nonatomic": not atomic}
+        else:
+            w["threads"].add(gid)
+            if not atomic:
+                w["nonatomic"] = True
 
     def _smem_decl(self, k, n):
         """Return the base of this block's k-th __shared__ declaration.
@@ -211,6 +333,8 @@ class GPU:
             its own result, which is what makes `__shfl_up_sync` meaningful.
         """
         is_barrier_kernel = inspect.isgeneratorfunction(kernel)
+        self._writes = {}
+        self._atomics = 0
         gx, gy = _dims(grid)
         bx, by = _dims(block)
         block_n = bx * by
@@ -298,9 +422,18 @@ class GPU:
                 smem_waves += max((len(s) for s in per_bank.values()), default=0)
             alu_ops += max((t._alu for t in warp), default=0)
 
+        # Memory INSTRUCTIONS issued, which is what vectorising actually cuts: a
+        # float4 load moves the same bytes as four float loads and needs the same
+        # 128-byte transactions, but it is one instruction instead of four.
+        mem_insts = sum(len(t._g) for t in flat)
+        smem_insts = sum(len(t._s) for t in flat)
+        races = sum(1 for w in self._writes.values()
+                    if len(w["threads"]) > 1 and w["nonatomic"])
         cycles = transactions * CYC_MEM + smem_waves * CYC_SMEM + alu_ops * CYC_ALU
         warps = (len(flat) + WARP - 1) // WARP
         return {"result": self.gmem, "transactions": transactions,
                 "smem_waves": smem_waves, "divergences": divergences,
                 "cycles": cycles, "warps": warps,
+                "races": races, "atomics": self._atomics,
+                "mem_insts": mem_insts, "smem_insts": smem_insts,
                 "cycles_per_warp": cycles / warps if warps else 0}

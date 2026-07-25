@@ -1,0 +1,15 @@
+{
+  "id": "gpu-derive-pipeline-stage-count-to-hide-latency",
+  "title": "Derive the pipeline stage count needed to hide latency (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "derive",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}],
+  "info": [
+    "Real CUDA-C: derives stages = ceil(L/C) + 1 (the minimal software-pipeline depth that fully hides a per-tile async-copy latency L behind C cycles of per-tile compute) for 6 fixed (L, C) pairs, executed on the software SIMT GPU."
+  ]
+}

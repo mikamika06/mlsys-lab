@@ -1,0 +1,13 @@
+{
+  "id": "cpu-rank-5-kernels-by-roofline-attainable-perf",
+  "title": "Rank 5 kernels by roofline-attainable throughput (real C++)",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "compare",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": []
+}

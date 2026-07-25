@@ -1,0 +1,18 @@
+{
+  "id": "gpu-wmma-16x16x16-fragment-tiling-math",
+  "title": "WMMA 16x16x16 fragment tiling: scatter a per-lane accumulator fragment to its C-matrix layout (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "derive",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}
+  ],
+  "info": [
+    "one warp (32 threads), 8 accumulator elements per lane, 16x16=256 output elements total",
+    "the fragment-to-element mapping (row=(t/4)+8*(k/4), col=(t%4)*4+(k%4)) is this task's own deliberately simplified definition, not a specific real GPU's exact PTX layout"
+  ]
+}

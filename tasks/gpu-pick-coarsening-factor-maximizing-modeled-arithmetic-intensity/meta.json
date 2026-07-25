@@ -1,0 +1,18 @@
+{
+  "id": "gpu-pick-coarsening-factor-maximizing-modeled-arithmetic-intensity",
+  "title": "Pick the thread-coarsening factor that maximizes modeled arithmetic intensity (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+  ],
+  "info": [
+    "single thread, 3 fixed (reg_budget, base_regs, regs_per_c, flops_per_elem, bytes_per_elem) cases",
+    "AI(C) is monotonically increasing in C in this model, so maximizing it under a register budget is exactly 'take the largest feasible C'"
+  ]
+}

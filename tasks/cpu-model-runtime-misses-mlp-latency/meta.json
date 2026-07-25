@@ -1,10 +1,2 @@
-{
-  "id": "cpu-model-runtime-misses-mlp-latency",
-  "title": "Model runtime from cache misses and memory-level parallelism",
-  "track": "13 CPU-perf", "tier": "IV", "module": "M13", "difficulty": 3,
-  "genre": "derive", "platform": "cross-platform",
-  "provides": ["modeled_runtime"], "fixtures": [],
-  "gates": [
-    {"metric": "rel_err", "op": "<=", "threshold": 0.01}
-  ], "info": []
-}
+{"id":"cpu-model-runtime-misses-mlp-latency","title":"Model runtime from cache misses and memory-level parallelism (real C++)","native":"cpp","difficulty":3,
+ "gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-6}]}

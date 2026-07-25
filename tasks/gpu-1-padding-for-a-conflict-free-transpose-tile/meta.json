@@ -1,0 +1,10 @@
+{
+  "id": "gpu-1-padding-for-a-conflict-free-transpose-tile",
+  "title": "+1 padding for a conflict-free transpose tile (CUDA)",
+  "native": "cuda",
+  "difficulty": 3,
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-9},
+    {"metric": "smem_waves", "op": "<=", "threshold": 100}
+  ]
+}

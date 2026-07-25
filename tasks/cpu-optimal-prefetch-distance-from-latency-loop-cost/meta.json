@@ -1,16 +1,13 @@
 {
   "id": "cpu-optimal-prefetch-distance-from-latency-loop-cost",
-  "title": "Optimal prefetch distance from latency and loop cost",
+  "title": "Optimal prefetch distance from latency and loop cost (real C++)",
   "track": "02 Performance Engineering",
   "tier": "II",
   "module": "M2perf",
   "difficulty": 4,
   "genre": "derive",
   "platform": "cross-platform",
-  "provides": [
-    "optimal_prefetch_distance"
-  ],
-  "fixtures": [],
+  "native": "cpp",
   "gates": [
     {
       "metric": "exact_match",
@@ -18,5 +15,7 @@
       "threshold": 1.0
     }
   ],
-  "info": []
+  "info": [
+    "stall counts come from a deterministic fixed-cost timeline model, not real hardware timing"
+  ]
 }

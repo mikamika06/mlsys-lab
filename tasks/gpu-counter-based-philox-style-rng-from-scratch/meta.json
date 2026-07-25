@@ -1,0 +1,15 @@
+{
+  "id": "gpu-counter-based-philox-style-rng-from-scratch",
+  "title": "Counter-based (Philox-style) RNG from scratch (CUDA)",
+  "track": "03 GPU",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": [
+    "Real CUDA-C: a stateless, fully-parallel counter-based RNG (3-round multiply-add-mod hash of (key, counter), no cross-thread dependency), executed on the software SIMT GPU."
+  ]
+}

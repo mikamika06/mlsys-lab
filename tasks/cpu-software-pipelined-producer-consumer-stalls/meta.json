@@ -1,0 +1,22 @@
+{
+  "id": "cpu-software-pipelined-producer-consumer-stalls",
+  "title": "Software-pipelined producer-consumer stalls (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 4,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [
+    "a pure instruction-count/cycle model (no real hardware timing) -- every (n, latency) pair is fixed by the driver",
+    "stalls are counted relative to the 2-issue-per-cycle floor of n cycles, the same floor for both the naive and pipelined schedules"
+  ]
+}

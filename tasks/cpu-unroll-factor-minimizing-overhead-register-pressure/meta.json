@@ -1,0 +1,15 @@
+{
+  "id": "cpu-unroll-factor-minimizing-overhead-register-pressure",
+  "title": "Unroll factor minimizing overhead + register pressure (real C++)",
+  "track": "01 CPU Perf",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "optimize",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}],
+  "info": [
+    "Real C++: a modeled per-unroll-factor cost (loop-overhead amortization vs. register-spill penalty) is minimized by brute-force search over unroll factors, compiled by clang++."
+  ]
+}

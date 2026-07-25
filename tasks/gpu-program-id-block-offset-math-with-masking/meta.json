@@ -1,0 +1,1 @@
+{"id":"gpu-program-id-block-offset-math-with-masking","title":"program_id -> block offset math with masking (CUDA)","native":"cuda","difficulty":2,"gates":[{"metric":"max_abs_err","op":"==","threshold":0.0}]}

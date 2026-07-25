@@ -1,0 +1,18 @@
+{
+  "id": "gpu-dram-bytes-tiled-vs-untiled-matmul",
+  "title": "DRAM bytes: tiled vs untiled matmul (CUDA)",
+  "track": "03 CUDA",
+  "tier": "I",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [
+    {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6},
+    {"metric": "size_ratio", "op": ">=", "threshold": 8.0}
+  ],
+  "info": [
+    "size_ratio = naive_transactions / tiled_transactions, both measured by actually running real kernels through the simulator, not hardcoded"
+  ]
+}

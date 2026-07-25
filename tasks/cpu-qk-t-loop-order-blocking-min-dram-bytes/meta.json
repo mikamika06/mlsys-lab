@@ -1,16 +1,2 @@
-{
-  "id": "cpu-qk-t-loop-order-blocking-min-dram-bytes",
-  "title": "QK^T loop order + blocking min DRAM bytes",
-  "track": "13 CPU-perf",
-  "tier": "IV",
-  "module": "M13",
-  "difficulty": 5,
-  "genre": "optimize",
-  "platform": "cross-platform",
-  "provides": ["qkt_access_order"],
-  "fixtures": [],
-  "gates": [
-    {"metric": "modeled_cache_misses", "op": "<=", "threshold": 8192}
-  ],
-  "info": []
-}
+{"id":"cpu-qk-t-loop-order-blocking-min-dram-bytes","title":"QK^T loop order + blocking to minimize DRAM traffic (real C++)","native":"cpp","difficulty":5,
+ "gates":[{"metric":"exact_match","op":"==","threshold":1.0}]}

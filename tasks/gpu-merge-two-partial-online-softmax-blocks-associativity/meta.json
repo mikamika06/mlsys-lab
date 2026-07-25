@@ -1,0 +1,1 @@
+{"id":"gpu-merge-two-partial-online-softmax-blocks-associativity","title":"Merge two partial online-softmax blocks (CUDA)","native":"cuda","difficulty":4,"gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-6}]}

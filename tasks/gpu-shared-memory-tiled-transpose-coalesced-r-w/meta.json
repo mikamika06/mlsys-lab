@@ -1,0 +1,1 @@
+{"id":"gpu-shared-memory-tiled-transpose-coalesced-r-w","title":"Shared-memory tiled transpose with coalesced read+write (CUDA)","native":"cuda","difficulty":3,"gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-9},{"metric":"transactions","op":"<=","threshold":20}]}

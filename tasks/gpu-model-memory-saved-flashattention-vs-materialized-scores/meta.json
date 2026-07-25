@@ -1,0 +1,22 @@
+{
+  "id": "gpu-model-memory-saved-flashattention-vs-materialized-scores",
+  "title": "Model peak memory saved: FlashAttention vs materialized scores (CUDA)",
+  "track": "GPU Programming",
+  "tier": "I",
+  "module": "Mgpu",
+  "difficulty": 4,
+  "genre": "measure",
+  "platform": "cross-platform",
+  "native": "cuda",
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-3
+    }
+  ],
+  "info": [
+    "Real CUDA-C compiled by arena.cuda_c.CudaProgram, executed on arena.cuda_sim.GPU.",
+    "5 scenarios of (seq_len, block_size, bytes_per_elem); ratio = (seq_len/block_size)^2, independent of bytes_per_elem since it cancels."
+  ]
+}

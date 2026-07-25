@@ -1,0 +1,15 @@
+{
+  "id": "gpu-log-step-warp-reduction-via-shuffle-model",
+  "title": "Log-step warp reduction via __shfl_down_sync (CUDA)",
+  "track": "03 GPU",
+  "tier": "II",
+  "module": "M3",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "gpu",
+  "native": "cuda",
+  "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-9}],
+  "info": [
+    "Real CUDA-C: sum-reduces each of two 32-lane warps with an unguarded 5-step __shfl_down_sync ladder (no shared memory, no __syncthreads()), executed on the software SIMT GPU."
+  ]
+}

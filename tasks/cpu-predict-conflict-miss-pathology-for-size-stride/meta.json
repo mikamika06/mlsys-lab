@@ -1,0 +1,18 @@
+{
+  "id": "cpu-predict-conflict-miss-pathology-for-size-stride",
+  "title": "Predict conflict-miss pathology for (array_size, stride) on an 8-way L1 (real C++)",
+  "track": "01 CPU Microarch",
+  "tier": "I",
+  "module": "M1",
+  "difficulty": 3,
+  "genre": "classify",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {"metric": "exact_match", "op": "==", "threshold": 1.0}
+  ],
+  "info": [
+    "observed is an independent empirical ground truth from a real 64-set/8-way LRU model in main.cpp, not derived from your prediction",
+    "pathological means a repeated sweep at that (array_size, stride) causes new misses on its second pass"
+  ]
+}

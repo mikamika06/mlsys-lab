@@ -1,0 +1,1 @@
+{"id":"gpu-relayout-column-major-gather-to-coalesced-row-major","title":"Relayout column-major gather to coalesced row-major (CUDA)","native":"cuda","difficulty":3,"gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-9},{"metric":"transactions","op":"<=","threshold":20}]}
