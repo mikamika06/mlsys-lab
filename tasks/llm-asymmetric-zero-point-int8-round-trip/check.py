@@ -31,7 +31,7 @@ def grade(sol, fx):
         try:
             deq, zp = sol.asymmetric_quant_round_trip(x)
         except Exception:
-            return {"rel_err": 0.0, "zero_point_match": 0.0}
+            return {"rel_err": float("inf"), "zero_point_match": 0.0}
         ref_deq, ref_zp = _ref(x)
         rel = rel_err(x, deq)
         if rel > 0.01:

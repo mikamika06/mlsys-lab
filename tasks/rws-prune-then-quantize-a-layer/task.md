@@ -58,5 +58,5 @@ The zeros correspond to pruned weights; the non‑zero values are the dequantize
 ## What the gate checks
 
 The grader computes an *oracle* implementation that follows the exact algorithm described above and compares your output against it using
-$$\text{max_abs_err} = \max_{i,j}\,|\,\hat w_{ij}^{\text{candidate}} - \hat w_{ij}^{\text{oracle}}\!|.$$
+$$\texttt{max\_abs\_err} = \max_{i,j}\,|\,\hat w_{ij}^{\text{candidate}} - \hat w_{ij}^{\text{oracle}}\!|.$$
 Your solution must achieve `max_abs_err <= 1e-5` on all test cases.

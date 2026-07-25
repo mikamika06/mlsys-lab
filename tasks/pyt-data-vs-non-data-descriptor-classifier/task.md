@@ -10,10 +10,10 @@ whether an instance dictionary entry can override the descriptor.
 For a descriptor object $d$, the classification can be written as
 
 $$
-\mathrm{is\_data}(d) =
-(\mathrm{hasattr}(\mathrm{type}(d), "__set__"))
+\texttt{is\_data}(d) =
+(\mathrm{hasattr}(\mathrm{type}(d), "\texttt{\_\_set\_\_}"))
 \lor
-(\mathrm{hasattr}(\mathrm{type}(d), "__delete__")) .
+(\mathrm{hasattr}(\mathrm{type}(d), "\texttt{\_\_delete\_\_}")) .
 $$
 
 The check uses actual Python descriptor classes and compares your implementation with

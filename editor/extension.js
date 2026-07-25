@@ -94,32 +94,19 @@ function sendTask(context, root, id) {
   const dir = path.join(root, "tasks", id);
   let meta = {}, md = "", code = "";
   try { meta = JSON.parse(fs.readFileSync(path.join(dir, "meta.json"), "utf8")); } catch (_) {}
-  // The statement may ship translations as task.<lang>.md next to task.md. Send
-  // every one we have and let the webview pick — it owns the language selector.
-  const mdLangs = {};
-  try { mdLangs.en = md = fs.readFileSync(path.join(dir, "task.md"), "utf8"); } catch (_) {}
-  try {
-    for (const f of fs.readdirSync(dir)) {
-      const m = /^task\.([a-z]{2})\.md$/.exec(f);
-      if (m) mdLangs[m[1]] = fs.readFileSync(path.join(dir, f), "utf8");
-    }
-  } catch (_) {}
+  try { md = fs.readFileSync(path.join(dir, "task.md"), "utf8"); } catch (_) {}
   const srcfile = SRCFILE[meta.native] || "solve.py";   // cpp -> solve.cpp, cuda -> solve.cu
   // A cpp task is written against a contract header; show it, or the learner is
   // implementing signatures they cannot see.
   if (meta.native === "cpp") {
-    try {
-      const hpp = "\n\n## Contract (sol.hpp)\n\n```cpp\n" + fs.readFileSync(path.join(dir, "sol.hpp"), "utf8") + "\n```\n";
-      md += hpp;
-      for (const k of Object.keys(mdLangs)) mdLangs[k] += hpp;
-    } catch (_) {}
+    try { md += "\n\n## Contract (sol.hpp)\n\n```cpp\n" + fs.readFileSync(path.join(dir, "sol.hpp"), "utf8") + "\n```\n"; } catch (_) {}
   }
   // Show the learner's attempt if there is one, else seed it from the shipped
   // starter. The starter file is never edited, so grading cannot destroy it.
   const starter = STARTER[meta.native] || "starter.py";
   try { code = fs.readFileSync(path.join(dir, srcfile), "utf8"); }
   catch (_) { try { code = fs.readFileSync(path.join(dir, starter), "utf8"); } catch (__) {} }
-  postWS({ type: "task", file: srcfile, code, md, md_langs: mdLangs, task: {
+  postWS({ type: "task", file: srcfile, code, md, task: {
     id: meta.id || id, title: meta.title || id, difficulty: meta.difficulty,
     genre: meta.genre, platform: meta.platform, track: meta.track, gates: meta.gates || [], native: meta.native } });
 }

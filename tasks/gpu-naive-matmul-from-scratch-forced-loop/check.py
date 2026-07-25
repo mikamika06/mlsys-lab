@@ -17,7 +17,7 @@ def grade(sol, fx) -> dict:
         try:
             C_candidate = sol.matmul_loops(A, B)
         except Exception:
-            return {"rel_err": 0.0, "line_count": 0}
+            return {"rel_err": float("inf"), "line_count": 0}
         C_ref = A @ B
         # Relative error
         rel_err = np.linalg.norm(C_candidate - C_ref) / (np.linalg.norm(C_ref) + 1e-12)

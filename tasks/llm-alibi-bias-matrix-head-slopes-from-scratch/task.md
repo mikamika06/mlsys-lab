@@ -19,7 +19,7 @@ def alibi_bias_matrix(head_slopes: np.ndarray, seq_len: int) -> np.ndarray:
 The function receives a 1‑D NumPy array of shape $(H)$ containing the slopes for $H$ heads and an integer `seq_len`.  
 It must return a 3‑D float64 array of shape $(H,\;L,\;L)$ where
 
-$$\text{bias}[h,i,j] = -\, \text{head_slopes}[h]\,(i-j).$$
+$$\text{bias}[h,i,j] = -\, \texttt{head\_slopes}[h]\,(i-j).$$
 
 The implementation should be fully vectorised with NumPy only – no Python loops.
 

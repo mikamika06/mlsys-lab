@@ -39,6 +39,6 @@ The ratio `15_360_000 / 7_680_000` equals `2.0`.
 
 The grader computes the reference counts using the same formulas and then evaluates the **size_ratio** metric:
 
-$$\text{size_ratio} = \frac{\text{untied_params}}{\text{tied_params}}.$$
+$$\texttt{size\_ratio} = \frac{\texttt{untied\_params}}{\texttt{tied\_params}}.$$
 
 A candidate passes if this ratio is exactly `2.0`.  The function must also return the correct tuple; otherwise the ratio will differ.

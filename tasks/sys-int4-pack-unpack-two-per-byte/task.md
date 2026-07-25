@@ -13,11 +13,11 @@ where $\ll$ denotes a left shift and $|$ the bitwise OR. If the input length is 
 Unpacking reverses this process:
 
 $$
-x_{2k} = (p_k \gg 4) \;\; &\; 0xF,\qquad
-x_{2k+1} = p_k \;\; &\; 0xF,
+x_{2k} = (p_k \gg 4) \mathbin{\&} \mathtt{0xF},\qquad
+x_{2k+1} = p_k \mathbin{\&} \mathtt{0xF},
 $$
 
-where $\gg$ is a right shift and $&$ the bitwise AND.
+where $\gg$ is a right shift and  the bitwise AND.
 
 ## Task
 

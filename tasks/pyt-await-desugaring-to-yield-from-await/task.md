@@ -5,7 +5,7 @@ An `await` expression works by obtaining an iterator from the awaited object's
 machinery. For a custom awaitable object $x$, the core relationship is:
 
 $$
-\operatorname{await}\ x \quad \sim \quad \operatorname{yield\ from}\ x.__await__().
+\operatorname{await}\ x \quad \sim \quad \operatorname{yield\ from}\ x.\texttt{\_\_await\_\_}().
 $$
 
 The similarity is not that `await` literally expands into source code. Instead,

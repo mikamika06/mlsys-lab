@@ -36,7 +36,7 @@ Create one instance of each class, assign all attributes, and return
 
 $$
 R = \frac{\mathrm{getsizeof}(\mathrm{dict\ instance}) +
-\mathrm{getsizeof}(\mathrm{dict\ instance.__dict__})}
+\mathrm{getsizeof}(\texttt{dict\ instance.\_\_dict\_\_})}
 {\mathrm{getsizeof}(\mathrm{slots\ instance})}.
 $$
 

@@ -86,6 +86,6 @@ $$
 \frac{L(x+h)-L(x-h)}{2h}.
 $$
 
-The returned gradients must have maximum absolute error at most $10^{-5$ compared with the oracle.
+The returned gradients must have maximum absolute error at most $10^{-5}$ compared with the oracle.
 
 The memory gate computes the activation bytes required by a full attention checkpoint and requires the reported checkpoint memory to be lower. A solution that computes correct gradients but stores the complete attention probability matrix does not pass.

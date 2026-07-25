@@ -8,7 +8,7 @@ $$
 R = \{ \text{name} \rightarrow (\text{name}, \text{bases}, \text{attributes}) \}.
 $$
 
-For a class $C$, the direct base classes are obtained from $C.__bases__$. Public attributes are the names defined in the class body that do not begin with an underscore.
+For a class $C$, the direct base classes are obtained from $C.\texttt{\_\_bases\_\_}$. Public attributes are the names defined in the class body that do not begin with an underscore.
 
 ## Task
 

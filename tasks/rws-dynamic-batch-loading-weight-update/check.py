@@ -7,7 +7,7 @@ def grade(sol, fx) -> dict:
     try:
         got = sol.update_weights(prior, excess, eta)
     except Exception:
-        return {"rel_err": 0.0, "sum_close": 0.0}
+        return {"rel_err": float("inf"), "sum_close": 0.0}
     ref = prior * np.exp(eta * excess)
     ref /= ref.sum()
     rel_err = np.linalg.norm(got - ref) / (np.linalg.norm(ref)+1e-12)

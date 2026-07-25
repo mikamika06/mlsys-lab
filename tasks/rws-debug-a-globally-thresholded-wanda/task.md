@@ -37,7 +37,7 @@ The inputs are:
 - `col_norms`: a 1-D NumPy array of length $n$ containing input column norms.
 - `keep_ratio`: a value in $(0,1]` specifying the fraction of weights to keep in every output row.
 
-Return a boolean NumPy array of shape $(m,n)$. For each row, exactly $k$ positions should be `True`, where $k=\max(1,\operatorname{round}(n\,\texttt{keep_ratio}))$.
+Return a boolean NumPy array of shape $(m,n)$. For each row, exactly $k$ positions should be `True`, where $k=\max(1,\operatorname{round}(n\,\texttt{keep\_ratio}))$.
 
 Use the Wanda score formula and perform the selection independently for every row. Ties may be resolved by NumPy's deterministic ordering.
 

@@ -29,7 +29,7 @@ def grade(sol, fx) -> dict:
     try:
         got = sol.angular_distance_per_layer(states_a, states_b)
     except Exception as e:
-        return {"max_abs_err": 0.0}
+        return {"max_abs_err": float("inf")}
 
     ref = _oracle(states_a, states_b)
 

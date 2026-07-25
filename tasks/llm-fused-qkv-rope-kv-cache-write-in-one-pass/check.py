@@ -87,7 +87,7 @@ def grade(sol, fx) -> dict:
                 cache_pos
             )
         except Exception as e:
-            return {"max_abs_err": 0.0}
+            return {"max_abs_err": float("inf")}
 
         q_ref, k_rot_ref, v_rot_ref = _reference(
             x, wq, wk, wv,

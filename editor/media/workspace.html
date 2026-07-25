@@ -57,53 +57,71 @@
   .home-head .legend{margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:10.5px;color:var(--ink-mut);}
   .legend i{display:inline-flex;align-items:center;gap:6px;} .legend .sw{width:9px;height:9px;border-radius:3px;}
   .sw.mast{background:var(--pass);} .sw.act{background:var(--amber);} .sw.lock{background:var(--line-2);}
-  /* ---- roadmap: a honeycomb you drill into ----
-     Hexes cannot nest, so the three levels are three views of the same comb:
-     areas -> tracks -> tasks, with a crumb trail back up. One cell is one thing
-     you can click; its fill is how much of it you have finished. */
-  .comb-head{display:flex;align-items:center;gap:10px;margin:0 0 18px;min-height:28px;}
-  .crumbs{display:flex;align-items:center;gap:6px;font-size:12.5px;flex-wrap:wrap;}
-  .crumb-b{background:none;border:0;padding:2px 4px;color:var(--ink-mut);font:inherit;cursor:pointer;border-radius:5px;}
-  .crumb-b:hover{color:var(--ink);background:var(--panel);}
-  .crumb-b:focus-visible{outline:2px solid var(--amber);outline-offset:1px;}
-  .crumb-cur{color:var(--ink);font-weight:600;padding:2px 4px;}
-  .crumb-sep{color:var(--ink-faint);}
-  .comb-note{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--ink-mut);}
-  .about-btn{border:1px solid var(--line-2);background:none;color:var(--ink-mut);font:600 10px var(--sans);
-    height:24px;padding:0 10px;border-radius:12px;cursor:pointer;}
-  .about-btn:hover{border-color:var(--amber-dim);color:var(--amber-2);}
-  .about-btn[aria-expanded="true"]{border-color:var(--amber-dim);color:var(--amber-2);background:var(--amber-glow);}
+  /* ---- roadmap ----
+     Area -> track -> task, the shape this had before the honeycomb detour:
+     an area is a collapsible section, a track is a card, a task is a chip.
+     Text is horizontal everywhere, which is the whole reason to be here. */
+  .tier{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden;background:var(--panel);}
+  .tier-h{display:flex;align-items:center;gap:11px;padding:13px 16px;cursor:pointer;width:100%;
+    background:none;border:0;color:inherit;font:inherit;text-align:left;}
+  .tier-h:hover{background:var(--panel-2);}
+  .tier-h:focus-visible{outline:2px solid var(--amber);outline-offset:-2px;}
+  .tw{display:grid;place-items:center;flex:0 0 auto;transition:transform .18s var(--ease);transform:rotate(90deg);}
+  .tier.collapsed .tw{transform:rotate(0deg);}
+  .tw svg{width:13px;height:13px;fill:none;stroke:var(--ink-mut);stroke-width:1.9;}
+  /* progress ring instead of the old roman numeral: it says something */
+  .tring{width:26px;height:26px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+    background:conic-gradient(var(--pass) calc(var(--p,0)*1%),var(--panel-3) 0);}
+  .tring::after{content:"";width:18px;height:18px;border-radius:50%;background:var(--panel);}
+  .tier.locked{opacity:.55;}
+  .t-main{min-width:0;flex:1;}
+  .tier-nm{font-size:14px;font-weight:650;letter-spacing:-.01em;display:block;}
+  .tier-tag{font-size:11.5px;color:var(--ink-mut);margin-top:3px;display:block;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .t-meta{margin-left:auto;display:flex;align-items:center;gap:9px;flex:0 0 auto;}
+  .lg{font-family:var(--mono);font-size:9.5px;padding:2px 5px;border-radius:4px;
+    border:1px solid var(--line-2);color:var(--ink-mut);}
+  .lg.cpp{border-color:#4A3A63;color:var(--violet);} .lg.cuda{border-color:#2C5A66;color:var(--cyan);}
+  .tier-f{font-family:var(--mono);font-size:11px;color:var(--ink-dim);}
+  .info{width:21px;height:21px;border-radius:50%;border:1px solid var(--line-2);background:none;
+    color:var(--ink-mut);font:600 10px var(--sans);cursor:pointer;display:grid;place-items:center;padding:0;}
+  .info:hover{border-color:var(--amber-dim);color:var(--amber-2);}
+  .tier.about-on .info{border-color:var(--amber-dim);color:var(--amber-2);background:var(--amber-glow);}
+  .info:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 
-  .about{display:none;max-width:70ch;margin:0 0 20px;}
-  .about.on{display:block;}
-  .about p{margin:0 0 10px;font-size:12.5px;line-height:1.65;color:var(--ink-dim);text-wrap:pretty;}
+  /* "what is this block" — prose, opened from the ? button */
+  .about{display:none;padding:2px 18px 16px 53px;max-width:76ch;}
+  .tier.about-on .about{display:block;}
+  .about p{margin:0;font-size:12.5px;line-height:1.65;color:var(--ink-dim);text-wrap:pretty;}
   .about .lbl{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mut);margin:14px 0 6px;}
   .about ul{margin:0;padding-left:16px;} .about li{font-size:12.5px;line-height:1.6;color:var(--ink-dim);margin:4px 0;}
   .about .how{font-family:var(--mono);font-size:10.5px;color:var(--ink-mut);line-height:1.55;
     margin-top:14px;padding-top:10px;border-top:1px solid var(--line);}
 
-  /* the comb itself: cells are absolutely placed on an axial grid by JS */
-  .comb{position:relative;}
-  .cell{position:absolute;border:0;padding:0;background:none;cursor:pointer;color:inherit;font:inherit;
-    -webkit-clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
-    clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
-    display:grid;place-items:center;text-align:center;
-    transition:filter .15s ease-out,transform .15s ease-out;}
-  .cell:hover{filter:brightness(1.28);transform:scale(1.035);z-index:2;}
-  .cell:focus-visible{outline:none;filter:brightness(1.4);transform:scale(1.05);z-index:3;}
-  .cell.empty{cursor:default;} .cell.empty:hover{filter:none;transform:none;}
-  .cell .in{padding:6px 10%;pointer-events:none;}
-  .cell .nm{display:block;font-size:11.5px;font-weight:600;line-height:1.25;color:var(--ink);
-    overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
-  .cell .ct{display:block;font-family:var(--mono);font-size:10px;margin-top:4px;color:var(--ink-mut);}
-  .cell .lg{display:inline-block;font-family:var(--mono);font-size:8.5px;margin-top:3px;
-    padding:1px 4px;border-radius:3px;border:1px solid var(--line-2);color:var(--ink-mut);}
-  .cell.locked .nm{color:var(--ink-mut);} .cell.locked{opacity:.6;}
-  /* task cells are small: difficulty is the label, the id lives in the tooltip */
-  .cell.task .nm{font-family:var(--mono);font-size:13px;font-weight:500;}
-  .cell.task .ct{font-size:8.5px;margin-top:2px;}
-  .comb-empty{font-family:var(--mono);font-size:11px;color:var(--ink-faint);padding:20px 0;}
-  @media (prefers-reduced-motion:reduce){.cell{transition:none;} .cell:hover,.cell:focus-visible{transform:none;}}
+  .tier-b{padding:4px 16px 16px;} .tier.collapsed .tier-b{display:none;}
+  .nodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:12px;}
+  .node{border:1px solid var(--line);border-radius:10px;background:var(--canvas);padding:12px 13px;
+    display:flex;flex-direction:column;gap:9px;}
+  .node.active{border-color:var(--amber-dim);} .node.locked{opacity:.55;}
+  .node .n-top{display:flex;align-items:baseline;gap:8px;}
+  .node .n-nm{font-size:12.5px;font-weight:600;color:var(--ink-dim);line-height:1.35;}
+  .node.active .n-nm{color:var(--ink);}
+  .node .n-fr{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--ink-mut);flex:0 0 auto;}
+  .bar{position:relative;height:3px;border-radius:2px;background:var(--panel-3);overflow:hidden;}
+  .bar .f{position:absolute;left:0;top:0;bottom:0;background:var(--amber);border-radius:2px;}
+  .node.done .bar .f{background:var(--pass);}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .chip{font-family:var(--mono);font-size:11px;padding:5px 8px;border-radius:7px;cursor:pointer;
+    border:1px solid var(--line-2);background:var(--panel);color:var(--ink-dim);
+    display:inline-flex;align-items:center;gap:6px;
+    transition:border-color .15s var(--ease),color .15s var(--ease);}
+  .chip:hover{border-color:var(--amber-dim);color:var(--amber-2);}
+  .chip:focus-visible{outline:2px solid var(--amber);outline-offset:1px;}
+  .chip.solved{border-color:var(--pass-dim);color:var(--pass-2);}
+  .chip .d{color:var(--ink-faint);} .chip .lang{color:var(--steel);}
+  .chip.cuda .lang{color:var(--cyan);} .chip.cpp .lang{color:var(--violet);}
+  .node .plan{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);}
+  @media (prefers-reduced-motion:reduce){.tw,.chip{transition:none;}}
 
   .bar{height:5px;border-radius:3px;background:var(--panel-3);overflow:hidden;position:relative;background-image:repeating-linear-gradient(90deg,var(--tick) 0,var(--tick) 1px,transparent 1px,transparent 7px);}
   .bar .f{position:absolute;left:0;top:0;bottom:0;background:var(--amber);border-radius:3px;} .node.done .bar .f{background:var(--pass);}
@@ -131,7 +149,19 @@
   .md p{margin:8px 0;} .md strong{color:var(--ink);}
   .md code{font-family:var(--mono);font-size:12px;background:var(--panel-2);border-radius:4px;padding:1px 5px;color:var(--ink);}
   .md pre{background:var(--canvas-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;margin:9px 0;} .md pre code{background:none;border:0;padding:0;color:var(--ink-dim);}
-  .md ul{margin:8px 0;padding-left:18px;} .md li{margin:2px 0;}
+  .md ul,.md ol{margin:9px 0;padding-left:22px;} .md li{margin:4px 0;line-height:1.6;}
+  /* A list item that is nothing but code is a line of code, not a phrase with a
+     grey highlight behind it: give it a block of its own so it never wraps into
+     an irregular blob. */
+  .md li > code.block, .md p > code.block{display:block;margin:3px 0 2px;padding:7px 9px;
+    background:var(--canvas-2);border:1px solid var(--line);border-radius:6px;
+    color:var(--ink-dim);white-space:pre-wrap;line-height:1.5;}
+  /* when an inline span does wrap, each line keeps its own padding and corners */
+  .md code{-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+  .md ol{list-style:decimal;} .md ol li::marker{color:var(--ink-mut);font-family:var(--mono);font-size:11px;}
+  .md hr{border:0;border-top:1px solid var(--line);margin:16px 0;}
+  /* a long identifier in a narrow column must break rather than overflow */
+  .md code{overflow-wrap:anywhere;}
   .md blockquote{border-left:2px solid var(--amber-dim);margin:9px 0;padding:2px 0 2px 12px;color:var(--ink-mut);}
   .md table{border-collapse:collapse;width:100%;margin:11px 0;font-size:12px;} .md th,.md td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top;} .md th{background:var(--panel-2);color:var(--ink);font-weight:600;font-size:11.5px;}
 
@@ -181,13 +211,13 @@
   <div class="app is-home" id="app">
     <div class="top">
       <span class="mark"><span></span><span></span><span></span></span>
-      <span class="wm">Arena</span>
+      <span class="wm">mlsys-lab</span>
       <span class="back" id="back">‹ <span data-t="roadmap">Roadmap</span></span>
       <span class="crumb" id="crumb"></span>
       <span class="spc"></span>
       <span class="prog" id="prog"></span>
       <span class="lang"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
-        <select id="langSel"></select></span>
+        </span>
       <div class="grade" id="gradeBtn" disabled><span class="spin"></span><span class="gl">▷</span> <span data-t="grade">Grade</span> <kbd>⌘↵</kbd></div>
     </div>
 
@@ -234,33 +264,22 @@
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   let mapData=null,curId=null,busy=false;
-  // The comb shows one level at a time, so there is no expand/collapse state —
-  // only which level we are on (see `view`) and whether the block description is open.
-  let aboutOn=false;
+  const collapsed=new Set();   // areas the learner folded away
+  const aboutOpen=new Set();   // areas whose description is open
 
   /* ---------- i18n ---------- */
-  const LANG={
-    en:{name:'English',roadmap:'Roadmap',grade:'Grade',solved:'solved',available:'available',planned:'planned',task:'Task',instrument:'Instrument',output:'output',awaiting:'AWAITING',measuring:'MEASURING…',vsub:'deterministic · same-machine · local',running:'running locally',consIdle:'— press Grade (⌘↵)',pass:'PASS',fail:'FAIL',error:'ERROR',gatesGreen:'gates green',begin:'Choose a task on the roadmap →'},
-    uk:{name:'Українська',roadmap:'Дорожня карта',grade:'Перевірити',solved:'освоєно',available:'доступно',planned:'заплановано',task:'Задача',instrument:'Інструмент',output:'вивід',awaiting:'ОЧІКУЄ',measuring:'ВИМІРЮЮ…',vsub:'детерміновано · те саме залізо · локально',running:'працює локально',consIdle:'— натисни Перевірити (⌘↵)',pass:'PASS',fail:'FAIL',error:'ПОМИЛКА',gatesGreen:'гейти зелені',begin:'Обери задачу на карті →'},
-    de:{name:'Deutsch',roadmap:'Roadmap',grade:'Prüfen',solved:'gelöst',available:'verfügbar',planned:'geplant',task:'Aufgabe',instrument:'Instrument',output:'Ausgabe',awaiting:'BEREIT',measuring:'MESSE…',vsub:'deterministisch · gleiche Maschine · lokal',running:'läuft lokal',consIdle:'— Prüfen drücken (⌘↵)',pass:'PASS',fail:'FAIL',error:'FEHLER',gatesGreen:'Tore grün',begin:'Wähle eine Aufgabe →'},
-    es:{name:'Español',roadmap:'Ruta',grade:'Evaluar',solved:'resuelto',available:'disponible',planned:'planeado',task:'Tarea',instrument:'Instrumento',output:'salida',awaiting:'EN ESPERA',measuring:'MIDIENDO…',vsub:'determinista · misma máquina · local',running:'ejecutando local',consIdle:'— pulsa Evaluar (⌘↵)',pass:'PASS',fail:'FAIL',error:'ERROR',gatesGreen:'puertas verdes',begin:'Elige una tarea →'},
-    fr:{name:'Français',roadmap:'Feuille de route',grade:'Évaluer',solved:'résolu',available:'disponible',planned:'prévu',task:'Tâche',instrument:'Instrument',output:'sortie',awaiting:'EN ATTENTE',measuring:'MESURE…',vsub:'déterministe · même machine · local',running:'exécution locale',consIdle:'— appuie sur Évaluer (⌘↵)',pass:'PASS',fail:'FAIL',error:'ERREUR',gatesGreen:'portes vertes',begin:'Choisis une tâche →'},
-    pl:{name:'Polski',roadmap:'Mapa',grade:'Sprawdź',solved:'ukończone',available:'dostępne',planned:'planowane',task:'Zadanie',instrument:'Instrument',output:'wyjście',awaiting:'OCZEKUJE',measuring:'MIERZĘ…',vsub:'deterministycznie · ta sama maszyna · lokalnie',running:'działa lokalnie',consIdle:'— naciśnij Sprawdź (⌘↵)',pass:'PASS',fail:'FAIL',error:'BŁĄD',gatesGreen:'bramki zielone',begin:'Wybierz zadanie →'},
-    zh:{name:'中文',roadmap:'路线图',grade:'评测',solved:'已完成',available:'可用',planned:'计划',task:'任务',instrument:'仪表',output:'输出',awaiting:'等待',measuring:'测量中…',vsub:'确定性 · 同机 · 本地',running:'本地运行',consIdle:'— 按 评测 (⌘↵)',pass:'PASS',fail:'FAIL',error:'错误',gatesGreen:'门通过',begin:'在路线图选择任务 →'},
-  };
-  let lang=(vscode.getState()&&vscode.getState().lang)||'en';
-  function t(k){return (LANG[lang]&&LANG[lang][k])||LANG.en[k]||k;}
-  function applyLang(){
-    document.querySelectorAll('[data-t]').forEach(el=>{el.textContent=t(el.getAttribute('data-t'));});
-    if(mapData)renderMap(mapData);
-    renderBrief();
-    if(!curId){$('vsub').textContent=t('vsub');}
-    const st=vscode.getState()||{}; st.lang=lang; vscode.setState(st);
-  }
+  /* The interface is English only. Statements are authored in English, which is
+     also the working language of everything the learner will meet next — compiler
+     errors, CUDA docs, papers — so nothing here is translated. */
+  const TXT={roadmap:'Roadmap',grade:'Grade',solved:'solved',available:'available',
+    planned:'planned',task:'Task',instrument:'Instrument',output:'output',
+    awaiting:'AWAITING',measuring:'MEASURING…',
+    vsub:'deterministic · same-machine · local',running:'running locally',
+    consIdle:'— press Grade (⌘↵)',pass:'PASS',fail:'FAIL',error:'ERROR',
+    gatesGreen:'gates green',begin:'Choose a task on the roadmap →'};
+  function t(k){return TXT[k]||k;}
   function initLang(){
-    $('langSel').innerHTML=Object.keys(LANG).map(k=>`<option value="${k}" ${k===lang?'selected':''}>${LANG[k].name}</option>`).join('');
-    $('langSel').addEventListener('change',e=>{lang=e.target.value;applyLang();});
-    applyLang();
+    document.querySelectorAll('[data-t]').forEach(el=>{el.textContent=t(el.getAttribute('data-t'));});
   }
 
   /* ---------- roadmap ---------- */
@@ -271,229 +290,214 @@
      they will be able to do after it. Keyed by the area slug the backend sends. */
   const AREA_INFO={
     'python-core':{
-      tag:{en:'The interpreter as a machine you can measure.',uk:'Інтерпретатор як машина, яку можна виміряти.'},
-      body:{en:'CPython is not magic: objects have layouts, attribute lookup follows a fixed protocol, and every abstraction has a cost you can count. This block replaces folklore ("comprehensions are faster") with measurements.',
-            uk:'CPython не магія: об’єкти мають розкладку в пам’яті, пошук атрибута йде фіксованим протоколом, і кожна абстракція має ціну, яку можна порахувати. Цей блок міняє фольклор («генератори швидші») на вимір.'},
-      you:{en:['read the data model — descriptors, MRO, slots, the GIL','predict allocation and copy counts before running anything','tell a real optimisation from a superstition'],
-           uk:['читати модель даних — дескриптори, MRO, slots, GIL','передбачати кількість алокацій і копій до запуску','відрізняти справжню оптимізацію від забобону']},
-      how:{en:'graded in python: metrics come from a deterministic probe, never from wall-clock time',
-           uk:'грейдиться пайтоном: метрики з детермінованого зонда, ніколи з таймера'}},
+      tag:'The interpreter as a machine you can measure.',
+      body:'CPython is not magic: objects have layouts, attribute lookup follows a fixed protocol, and every abstraction has a cost you can count. This block replaces folklore ("comprehensions are faster") with measurements.',
+      you:['read the data model — descriptors, MRO, slots, the GIL','predict allocation and copy counts before running anything','tell a real optimisation from a superstition'],
+      how:'graded in python: metrics come from a deterministic probe, never from wall-clock time'},
     'cpp-core':{
-      tag:{en:'Real C++, compiled by the real clang++.',uk:'Справжній C++, компільований справжнім clang++.'},
-      body:{en:'You write solve.cpp against a header contract; the grader compiles it with clang++ -O2 -std=c++20, runs it and diffs the numbers against a reference implementation. Ownership, lifetime and ABI stop being trivia and become things that either compile or crash.',
-            uk:'Ти пишеш solve.cpp за контрактом у заголовку; грейдер компілює його clang++ -O2 -std=c++20, запускає і звіряє числа з еталоном. Володіння, час життя й ABI перестають бути теорією — воно або збирається, або падає.'},
-      you:{en:['write move/copy semantics that do not double-free','reason about layout, alignment, vtables and name mangling','fix undefined behaviour you can actually observe'],
-           uk:['писати move/copy семантику без подвійного звільнення','міркувати про розкладку, вирівнювання, vtable і мангл імен','лагодити UB, яке справді видно у виводі']},
-      how:{en:'graded in C++: clang++ compile + run, output diffed against ref.cpp',
-           uk:'грейдиться C++: компіляція clang++ + запуск, вивід звіряється з ref.cpp'}},
+      tag:'Real C++, compiled by the real clang++.',
+      body:'You write solve.cpp against a header contract; the grader compiles it with clang++ -O2 -std=c++20, runs it and diffs the numbers against a reference implementation. Ownership, lifetime and ABI stop being trivia and become things that either compile or crash.',
+      you:['write move/copy semantics that do not double-free','reason about layout, alignment, vtables and name mangling','fix undefined behaviour you can actually observe'],
+      how:'graded in C++: clang++ compile + run, output diffed against ref.cpp'},
     'cpu-perf':{
-      tag:{en:'Where the cycles actually go on a CPU.',uk:'Куди насправді йдуть такти процесора.'},
-      body:{en:'Caches, branch prediction, SIMD and memory layout decide throughput far more than instruction count does. Timings are not reproducible, so the gates count deterministic proxies — cache misses under a modelled hierarchy, lines touched, comparisons made.',
-            uk:'Кеші, передбачення переходів, SIMD і розкладка пам’яті вирішують більше, ніж кількість інструкцій. Час невідтворюваний, тому гейти рахують детерміновані проксі — промахи в модельованому кеші, торкнуті лінії, порівняння.'},
-      you:{en:['restructure loops and layouts for locality (AoS vs SoA, blocking)','predict miss counts before measuring them','recognise false sharing, aliasing and the cost of a branch'],
-           uk:['перебудовувати цикли й розкладку під локальність (AoS/SoA, блокування)','передбачати промахи до заміру','бачити false sharing, аліасинг і ціну гілки']},
-      how:{en:'graded in C++ plus a deterministic cache model — same numbers on every machine',
-           uk:'грейдиться C++ плюс детермінована модель кешу — однакові числа на будь-якій машині'}},
+      tag:'Where the cycles actually go on a CPU.',
+      body:'Caches, branch prediction, SIMD and memory layout decide throughput far more than instruction count does. Timings are not reproducible, so the gates count deterministic proxies — cache misses under a modelled hierarchy, lines touched, comparisons made.',
+      you:['restructure loops and layouts for locality (AoS vs SoA, blocking)','predict miss counts before measuring them','recognise false sharing, aliasing and the cost of a branch'],
+      how:'graded in C++ plus a deterministic cache model — same numbers on every machine'},
     'numeric-tensors':{
-      tag:{en:'Floating point, shapes and strides — from scratch.',uk:'Плаваюча кома, форми і кроки — з нуля.'},
-      body:{en:'Every numerical bug downstream starts here: catastrophic cancellation, denormals, an accumulation order that changes the answer, a broadcast that silently allocates. You reimplement the primitives instead of trusting them.',
-            uk:'Усі числові баги нижче по стеку починаються тут: катастрофічне скорочення, денормалі, порядок накопичення, що змінює відповідь, бродкаст, який тихо алокує. Ти переписуєш примітиви замість вірити їм.'},
-      you:{en:['implement stable softmax, logsumexp, Welford, Kahan summation','read a tensor as (shape, strides, offset) and see the copies','bound and explain fp16/bf16/fp8 error instead of guessing'],
-           uk:['реалізувати стабільні softmax, logsumexp, Welford, суму Кагана','читати тензор як (форма, кроки, зсув) і бачити копії','оцінювати похибку fp16/bf16/fp8, а не вгадувати']},
-      how:{en:'graded in python against a numpy oracle the grader computes itself',
-           uk:'грейдиться пайтоном проти numpy-оракула, який грейдер рахує сам'}},
+      tag:'Floating point, shapes and strides — from scratch.',
+      body:'Every numerical bug downstream starts here: catastrophic cancellation, denormals, an accumulation order that changes the answer, a broadcast that silently allocates. You reimplement the primitives instead of trusting them.',
+      you:['implement stable softmax, logsumexp, Welford, Kahan summation','read a tensor as (shape, strides, offset) and see the copies','bound and explain fp16/bf16/fp8 error instead of guessing'],
+      how:'graded in python against a numpy oracle the grader computes itself'},
     'algorithms-scratch':{
-      tag:{en:'The ML building blocks, written by hand.',uk:'Будівельні блоки ML, написані руками.'},
-      body:{en:'kNN, k-means, PCA, gradient descent — small enough to write in an afternoon, deep enough that the numerical details decide whether they work. This is where the maths becomes code you own.',
-            uk:'kNN, k-means, PCA, градієнтний спуск — малі настільки, щоб написати за вечір, і глибокі настільки, що числові деталі вирішують, чи це працює. Тут математика стає твоїм кодом.'},
-      you:{en:['derive and implement the core estimators without a library','choose distance metrics and initialisations on evidence','see why power iteration and SVD give the same subspace'],
-           uk:['вивести й реалізувати базові алгоритми без бібліотек','обирати метрики і ініціалізацію за доказами','бачити, чому степеневий метод і SVD дають той самий підпростір']},
-      how:{en:'graded in python: seeded data, reference computed in the grader',
-           uk:'грейдиться пайтоном: дані з фіксованим сідом, еталон рахує грейдер'}},
+      tag:'The ML building blocks, written by hand.',
+      body:'kNN, k-means, PCA, gradient descent — small enough to write in an afternoon, deep enough that the numerical details decide whether they work. This is where the maths becomes code you own.',
+      you:['derive and implement the core estimators without a library','choose distance metrics and initialisations on evidence','see why power iteration and SVD give the same subspace'],
+      how:'graded in python: seeded data, reference computed in the grader'},
     'llm-internals':{
-      tag:{en:'A transformer, part by part.',uk:'Трансформер по деталях.'},
-      body:{en:'Attention, RoPE, GQA, normalisation, the KV cache, sampling — each rebuilt from the definition until the shapes and the masks stop being mysterious. This is the block that makes the systems work later make sense.',
-            uk:'Увага, RoPE, GQA, нормалізація, KV-кеш, семплінг — кожне зібране з визначення, доки форми й маски не перестануть бути загадкою. Саме цей блок робить осмисленою системну частину далі.'},
-      you:{en:['implement attention with causal masks and cache reuse correctly','convert MHA to GQA/MQA and know what it costs','explain a decoding artefact by pointing at the tensor that caused it'],
-           uk:['коректно реалізувати увагу з причинними масками й кешем','конвертувати MHA у GQA/MQA і знати ціну','пояснити артефакт декодування, вказавши на конкретний тензор']},
-      how:{en:'graded in python against an oracle implementation of the same maths',
-           uk:'грейдиться пайтоном проти оракульної реалізації тієї ж математики'}},
+      tag:'A transformer, part by part.',
+      body:'Attention, RoPE, GQA, normalisation, the KV cache, sampling — each rebuilt from the definition until the shapes and the masks stop being mysterious. This is the block that makes the systems work later make sense.',
+      you:['implement attention with causal masks and cache reuse correctly','convert MHA to GQA/MQA and know what it costs','explain a decoding artefact by pointing at the tensor that caused it'],
+      how:'graded in python against an oracle implementation of the same maths'},
     'gpu-cuda':{
-      tag:{en:'Real CUDA-C on a software GPU that measures like hardware.',uk:'Справжній CUDA-C на програмному GPU, який міряє як залізо.'},
-      body:{en:'You write an actual .cu kernel — __global__, threadIdx, __shared__, __syncthreads, warp shuffles. It runs on a simulator that models 32-lane warps, 128-byte coalescing transactions, 32 shared-memory banks and warp divergence, so the lesson is a measured number, not a claim. No NVIDIA GPU required.',
-            uk:'Ти пишеш справжнє .cu ядро — __global__, threadIdx, __shared__, __syncthreads, warp-shuffle. Воно виконується на симуляторі, який моделює 32-лейнові варпи, 128-байтові транзакції коалесингу, 32 банки shared memory і дивергенцію, тому урок — це виміряне число, а не твердження. GPU від NVIDIA не потрібна.'},
-      you:{en:['write coalesced kernels and prove it by transaction count','kill shared-memory bank conflicts (and see the 16x)','use barriers and warp shuffles with correct semantics'],
-           uk:['писати коалесовані ядра й доводити це числом транзакцій','прибирати банк-конфлікти shared memory (і бачити 16x)','користуватись бар’єрами і warp-shuffle з правильною семантикою']},
-      how:{en:'graded in CUDA-C: your .cu is parsed and executed thread by thread; gates read transactions, bank waves, divergence',
-           uk:'грейдиться CUDA-C: твій .cu парситься і виконується потік за потоком; гейти читають транзакції, хвилі банків, дивергенцію'}},
+      tag:'Real CUDA-C on a software GPU that measures like hardware.',
+      body:'You write an actual .cu kernel — __global__, threadIdx, __shared__, __syncthreads, warp shuffles. It runs on a simulator that models 32-lane warps, 128-byte coalescing transactions, 32 shared-memory banks and warp divergence, so the lesson is a measured number, not a claim. No NVIDIA GPU required.',
+      you:['write coalesced kernels and prove it by transaction count','kill shared-memory bank conflicts (and see the 16x)','use barriers and warp shuffles with correct semantics'],
+      how:'graded in CUDA-C: your .cu is parsed and executed thread by thread; gates read transactions, bank waves, divergence'},
     'llm-systems':{
-      tag:{en:'Serving an LLM: batching, memory, parallelism.',uk:'Обслуговування LLM: батчинг, пам’ять, паралелізм.'},
-      body:{en:'One model on one GPU is easy. The hard part is many requests at once: paged KV blocks, continuous batching, preemption, prefix reuse, tensor and pipeline parallelism, speculative decoding. Here you build the mechanisms a serving engine is made of.',
-            uk:'Одна модель на одній GPU — просто. Складне починається з багатьох запитів: сторінковий KV, безперервний батчинг, витіснення, повторне використання префіксів, тензорний і конвеєрний паралелізм, спекулятивне декодування. Тут ти будуєш механізми, з яких зроблений сервінг-рушій.'},
-      you:{en:['implement a paged KV allocator with copy-on-write','simulate a scheduler and read its throughput/latency tradeoff','size memory and traffic for a parallelism plan before deploying'],
-           uk:['реалізувати сторінковий KV-алокатор з copy-on-write','симулювати планувальник і бачити компроміс пропускної/затримки','рахувати пам’ять і трафік плану паралелізму до деплою']},
-      how:{en:'graded in python: deterministic traces, reference computed by the grader',
-           uk:'грейдиться пайтоном: детерміновані траси, еталон рахує грейдер'}},
+      tag:'Serving an LLM: batching, memory, parallelism.',
+      body:'One model on one GPU is easy. The hard part is many requests at once: paged KV blocks, continuous batching, preemption, prefix reuse, tensor and pipeline parallelism, speculative decoding. Here you build the mechanisms a serving engine is made of.',
+      you:['implement a paged KV allocator with copy-on-write','simulate a scheduler and read its throughput/latency tradeoff','size memory and traffic for a parallelism plan before deploying'],
+      how:'graded in python: deterministic traces, reference computed by the grader'},
     'rw-applied-quantization':{
-      tag:{en:'Making weights smaller without breaking them.',uk:'Зменшити ваги, не зламавши модель.'},
-      body:{en:'Scales, zero points, group sizes, outliers. RTN, GPTQ, AWQ, SmoothQuant, fp8 and int4 formats — reimplemented so the error budget is something you compute rather than hope for.',
-            uk:'Масштаби, нульові точки, розміри груп, викиди. RTN, GPTQ, AWQ, SmoothQuant, формати fp8 та int4 — перезібрані так, щоб бюджет похибки рахувався, а не сподівався.'},
-      you:{en:['implement symmetric/asymmetric quant-dequant round trips','derive calibration thresholds (min-max, percentile, entropy)','predict which layers will break and why'],
-           uk:['реалізувати симетричні/асиметричні цикли quant-dequant','виводити пороги калібрування (min-max, перцентиль, ентропія)','передбачати, які шари зламаються і чому']},
-      how:{en:'graded in python: error metrics against a full-precision oracle',
-           uk:'грейдиться пайтоном: метрики похибки проти оракула у повній точності'}},
+      tag:'Making weights smaller without breaking them.',
+      body:'Scales, zero points, group sizes, outliers. RTN, GPTQ, AWQ, SmoothQuant, fp8 and int4 formats — reimplemented so the error budget is something you compute rather than hope for.',
+      you:['implement symmetric/asymmetric quant-dequant round trips','derive calibration thresholds (min-max, percentile, entropy)','predict which layers will break and why'],
+      how:'graded in python: error metrics against a full-precision oracle'},
     'rw-attention-and-kv':{
-      tag:{en:'Attention at production scale.',uk:'Увага в продакшн-масштабі.'},
-      body:{en:'FlashAttention-style tiling, online softmax, causal masking, sliding windows, KV quantization and cache reuse — the techniques that decide whether long context is affordable.',
-            uk:'Тайлінг у стилі FlashAttention, онлайн-softmax, причинні маски, ковзні вікна, квантизація KV і повторне використання кешу — те, що вирішує, чи довгий контекст взагалі по кишені.'},
-      you:{en:['implement a tiled attention step with running max and denominator','compute HBM traffic saved by tiling before writing a kernel','reuse a KV cache and prove the result is unchanged'],
-           uk:['реалізувати тайловий крок уваги з поточним максимумом і знаменником','рахувати зекономлений трафік HBM до написання ядра','перевикористати KV-кеш і довести незмінність результату']},
-      how:{en:'graded in python against a dense-attention oracle',
-           uk:'грейдиться пайтоном проти оракула щільної уваги'}},
+      tag:'Attention at production scale.',
+      body:'FlashAttention-style tiling, online softmax, causal masking, sliding windows, KV quantization and cache reuse — the techniques that decide whether long context is affordable.',
+      you:['implement a tiled attention step with running max and denominator','compute HBM traffic saved by tiling before writing a kernel','reuse a KV cache and prove the result is unchanged'],
+      how:'graded in python against a dense-attention oracle'},
     'rw-compilation-and-export':{
-      tag:{en:'From a model object to a deployable artifact.',uk:'Від об’єкта моделі до артефакту для деплою.'},
-      body:{en:'Graph capture, operator semantics, fusion boundaries, shape specialisation and the export formats (ONNX, TensorRT engines, CoreML, GGUF). Compilers help only if you know what they may and may not change.',
-            uk:'Захоплення графа, семантика операторів, межі злиття, спеціалізація за формами і формати експорту (ONNX, движки TensorRT, CoreML, GGUF). Компілятор допомагає лише якщо знаєш, що йому можна міняти, а що ні.'},
-      you:{en:['decide fusion boundaries from traffic and recompute cost','reproduce operator semantics an exporter must preserve','read a graph and find the specialisation that broke it'],
-           uk:['вирішувати межі злиття за трафіком і вартістю перерахунку','відтворювати семантику операторів, яку експортер має зберегти','читати граф і знаходити спеціалізацію, що його зламала']},
-      how:{en:'graded in python: exact structural or numeric match against the reference',
-           uk:'грейдиться пайтоном: точний структурний або числовий збіг з еталоном'}},
+      tag:'From a model object to a deployable artifact.',
+      body:'Graph capture, operator semantics, fusion boundaries, shape specialisation and the export formats (ONNX, TensorRT engines, CoreML, GGUF). Compilers help only if you know what they may and may not change.',
+      you:['decide fusion boundaries from traffic and recompute cost','reproduce operator semantics an exporter must preserve','read a graph and find the specialisation that broke it'],
+      how:'graded in python: exact structural or numeric match against the reference'},
     'rw-batching-and-serving':{
-      tag:{en:'Throughput, latency and the queue between them.',uk:'Пропускна здатність, затримка і черга між ними.'},
-      body:{en:'Continuous batching, chunked prefill, admission control, SLO-aware goodput. The interesting work is scheduling policy, and it is measurable without a cluster.',
-            uk:'Безперервний батчинг, порційний prefill, контроль допуску, goodput під SLO. Найцікавіше тут — політика планування, і її можна виміряти без кластера.'},
-      you:{en:['simulate arrivals against slots and reproduce completion order','separate prefill from decode and report each honestly','pick a batch policy that meets a p95 target'],
-           uk:['симулювати надходження проти слотів і відтворити порядок завершення','розділяти prefill і decode та звітувати чесно','обрати політику батчингу під ціль p95']},
-      how:{en:'graded in python: discrete-event simulation with a deterministic trace',
-           uk:'грейдиться пайтоном: дискретно-подієва симуляція на детермінованій трасі'}},
+      tag:'Throughput, latency and the queue between them.',
+      body:'Continuous batching, chunked prefill, admission control, SLO-aware goodput. The interesting work is scheduling policy, and it is measurable without a cluster.',
+      you:['simulate arrivals against slots and reproduce completion order','separate prefill from decode and report each honestly','pick a batch policy that meets a p95 target'],
+      how:'graded in python: discrete-event simulation with a deterministic trace'},
     'rw-memory-and-offload':{
-      tag:{en:'Fitting a model into memory you do not have.',uk:'Вмістити модель у пам’ять, якої нема.'},
-      body:{en:'Activation checkpointing, ZeRO stages, offload to host and disk, paging and residency planning. Memory is the binding constraint far more often than compute.',
-            uk:'Чекпоінтинг активацій, стадії ZeRO, вивантаження в хост і диск, пейджинг і планування резидентності. Пам’ять обмежує значно частіше, ніж обчислення.'},
-      you:{en:['compute per-layer activation and optimizer-state footprints','choose a ZeRO stage from a budget, not from a blog post','model the bandwidth cost of an offload decision'],
-           uk:['рахувати пам’ять активацій і станів оптимізатора по шарах','обирати стадію ZeRO з бюджету, а не з блогопосту','моделювати вартість вивантаження за пропускною здатністю']},
-      how:{en:'graded in python: formulas checked against a simulated allocator',
-           uk:'грейдиться пайтоном: формули звіряються з симульованим алокатором'}},
+      tag:'Fitting a model into memory you do not have.',
+      body:'Activation checkpointing, ZeRO stages, offload to host and disk, paging and residency planning. Memory is the binding constraint far more often than compute.',
+      you:['compute per-layer activation and optimizer-state footprints','choose a ZeRO stage from a budget, not from a blog post','model the bandwidth cost of an offload decision'],
+      how:'graded in python: formulas checked against a simulated allocator'},
     'rw-sparsity-pruning-distillation':{
-      tag:{en:'Removing capacity you were not using.',uk:'Прибрати потужність, якою ти не користувався.'},
-      body:{en:'Magnitude and structured pruning, 2:4 semi-structured sparsity, distillation objectives, and the recipes that combine them with quantization without compounding the damage.',
-            uk:'Прунінг за величиною і структурний, напівструктурована розрідженість 2:4, цілі дистиляції та рецепти, що поєднують це з квантизацією без накопичення шкоди.'},
-      you:{en:['implement pruning masks that respect a hardware pattern','write a distillation loss and see what it actually transfers','order a compression pipeline so errors do not multiply'],
-           uk:['реалізувати маски прунінгу під апаратний патерн','написати лосс дистиляції і побачити, що він переносить','упорядкувати пайплайн стиснення, щоб похибки не множились']},
-      how:{en:'graded in python against a dense reference and a sparsity-pattern check',
-           uk:'грейдиться пайтоном проти щільного еталона плюс перевірка патерну розрідженості'}},
+      tag:'Removing capacity you were not using.',
+      body:'Magnitude and structured pruning, 2:4 semi-structured sparsity, distillation objectives, and the recipes that combine them with quantization without compounding the damage.',
+      you:['implement pruning masks that respect a hardware pattern','write a distillation loss and see what it actually transfers','order a compression pipeline so errors do not multiply'],
+      how:'graded in python against a dense reference and a sparsity-pattern check'},
   };
   function areaInfo(k){return AREA_INFO[k]||null;}
-  function L(o){return o?(o[lang]||o.en):'';}
 
-  /* view state: which level of the comb we are looking at */
-  let view={lvl:'areas',ai:0,ti:0};
-
-  function hexPos(i,cols,W){
-    // pointy-top honeycomb: odd rows shift half a cell, rows overlap by a quarter
-    const H=W*1.1547, row=Math.floor(i/cols), col=i%cols;
-    return {x:col*W+(row%2?W/2:0), y:row*H*0.75, W, H};
-  }
-  function fill(pct,active){
-    // the cell IS the progress bar: filled from the bottom
-    const base=active?'var(--panel-3)':'var(--panel)';
-    return pct>0?`background:linear-gradient(0deg,var(--pass-dim) 0 ${pct}%,${base} ${pct}% 100%);`
-                :`background:${base};`;
-  }
-  function colsFor(W){
-    // the comb must fit the panel, not a fixed column count: the last column
-    // needs half a cell of slack for the odd-row offset
-    const avail=($('map')&&$('map').clientWidth||900)-8;
-    return Math.max(2,Math.floor((avail-W/2)/W));
-  }
-  function combHTML(cells,W){
-    const cols=colsFor(W);
-    // cells: {nm,ct,cls,pct,title,data,badge}
-    let h='',maxY=0;
-    cells.forEach((c,i)=>{
-      const p=hexPos(i,cols,W);
-      maxY=Math.max(maxY,p.y+p.H);
-      h+=`<button class="cell ${c.cls||''}" ${c.data||''} title="${esc(c.title||c.nm)}"
-        style="left:${p.x}px;top:${p.y}px;width:${W-4}px;height:${p.H-4}px;${fill(c.pct||0,!c.locked)}">
-        <span class="in"><span class="nm">${esc(c.nm)}</span>${c.ct?`<span class="ct">${esc(c.ct)}</span>`:''}${c.badge||''}</span></button>`;
-    });
-    return `<div class="comb" style="height:${Math.round(maxY)}px">${h}</div>`;
-  }
+  const LGN={py:'PY',cpp:'C++',cuda:'CUDA'};
 
   function renderMap(d){
     mapData=d;
     $('prog').innerHTML=`<b>${d.totals.solved}</b>/${d.totals.built} · ${d.totals.planned} ${t('planned')}`;
     $('hsub').innerHTML=`${d.tiers.length} · <b>${d.totals.built}</b> ${t('available')} · ${d.totals.planned} ${t('planned')}`;
-    const T=d.tiers[view.ai]||d.tiers[0], TR=T&&(T.tracks[view.ti]||T.tracks[0]);
-    const LGN={py:'PY',cpp:'C++',cuda:'CUDA'};
-    const cnt=(tracks)=>{const all=tracks.reduce((a,x)=>a.concat(x.tasks),[]);
-      return {b:all.length,s:all.filter(x=>x.solved).length,all};};
+    let h='';
+    d.tiers.forEach((T,ti)=>{
+      const all=T.tracks.reduce((a,x)=>a.concat(x.tasks),[]);
+      const solved=all.filter(x=>x.solved).length, built=all.length;
+      const pct=built?Math.round(100*solved/built):0;
+      const key='ti'+ti, info=areaInfo(T.key||'');
+      const cls=[built?'':'locked', collapsed.has(key)?'collapsed':'', aboutOpen.has(key)?'about-on':''].join(' ');
+      const mix={}; all.forEach(x=>{const k=x.native||'py'; mix[k]=(mix[k]||0)+1;});
+      const langs=Object.keys(mix).sort((a,b)=>mix[b]-mix[a]).filter(k=>k!=='py'||Object.keys(mix).length===1)
+        .map(k=>`<span class="lg ${k}">${LGN[k]||k} ${mix[k]}</span>`).join('');
 
-    // ---- crumb trail
-    let cr=`<button class="crumb-b" data-lvl="areas">${t('roadmap')}</button>`;
-    if(view.lvl!=='areas')cr+=`<span class="crumb-sep">›</span>`+
-      (view.lvl==='tasks'?`<button class="crumb-b" data-lvl="tracks">${esc(T.name)}</button>`
-                         :`<span class="crumb-cur">${esc(T.name)}</span>`);
-    if(view.lvl==='tasks')cr+=`<span class="crumb-sep">›</span><span class="crumb-cur">${esc(TR.name)}</span>`;
-    const info=view.lvl!=='areas'?areaInfo(T.key||''):null;
-    let head=`<div class="comb-head"><div class="crumbs">${cr}</div>`;
-    if(info)head+=`<button class="about-btn" data-about="1" aria-expanded="${aboutOn}">${lang==='uk'?'про блок':'about'}</button>`;
-    head+=`</div>`;
-    if(info)head+=`<div class="about ${aboutOn?'on':''}"><p>${esc(L(info.body))}</p>
-      <div class="lbl">${lang==='uk'?'Після блоку ти зможеш':'After this block you can'}</div>
-      <ul>${(info.you[lang]||info.you.en).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
-      <div class="how">${esc(L(info.how))}</div></div>`;
-
-    let body='';
-    if(view.lvl==='areas'){
-      const cells=d.tiers.map((A,i)=>{
-        const c=cnt(A.tracks), mix={};
-        c.all.forEach(x=>{const k=x.native||'py';mix[k]=(mix[k]||0)+1;});
-        const top=Object.keys(mix).sort((x,y)=>mix[y]-mix[x])[0];
-        const ai=areaInfo(A.key||'');
-        return {nm:A.name, ct:c.b?`${c.s}/${c.b}`:t('planned'),
-          badge:top&&top!=='py'?`<span class="lg">${LGN[top]} ${mix[top]}</span>`:'',
-          pct:c.b?Math.round(100*c.s/c.b):0, cls:'area'+(c.b?'':' locked empty'),
-          locked:!c.b, data:`data-area="${i}"`, title:ai?A.name+' — '+L(ai.tag):A.name};
+      h+=`<section class="tier ${cls}" data-k="${key}">
+        <button class="tier-h" data-tg="${key}" aria-expanded="${!collapsed.has(key)}">
+          <span class="tw">${CHEV}</span>
+          <span class="tring" style="--p:${pct}"></span>
+          <span class="t-main"><span class="tier-nm">${esc(T.name)}</span>${
+            info?`<span class="tier-tag">${esc(info.tag)}</span>`:''}</span>
+          <span class="t-meta">${langs}<span class="tier-f">${solved}/${built}</span>${
+            info?`<span class="info" role="button" tabindex="0" data-about="${key}"
+                    aria-expanded="${aboutOpen.has(key)}"
+                    aria-label="About this block">?</span>`:''}</span>
+        </button>`;
+      if(info){
+        h+=`<div class="about"><p>${esc(info.body)}</p>
+          <div class="lbl">After this block you can</div>
+          <ul>${info.you.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+          <div class="how">${esc(info.how)}</div></div>`;
+      }
+      h+=`<div class="tier-b"><div class="nodes">`;
+      T.tracks.forEach(tr=>{
+        const b=tr.tasks.length, sv=tr.tasks.filter(x=>x.solved).length;
+        const act=b>0, done=act&&sv===b, p=act?Math.round(100*sv/b):0;
+        h+=`<div class="node ${act?'active':'locked'} ${done?'done':''}">
+          <div class="n-top"><span class="n-nm">${esc(tr.name)}</span>
+            <span class="n-fr">${act?sv+'/'+b:''}</span></div>`;
+        if(act){
+          h+=`<div class="bar"><span class="f" style="width:${p}%"></span></div><div class="chips">`+
+            tr.tasks.map(x=>{
+              const n=x.native||'py';
+              return `<button class="chip ${x.solved?'solved':''} ${n}" data-open="${esc(x.id)}"
+                        title="${esc(x.title||x.id)}">${esc(shortId(x.id))}
+                        <span class="d">d${x.difficulty??'?'}</span>
+                        <span class="lang">${LGN[n].toLowerCase()}</span></button>`;
+            }).join('')+`</div>`;
+        } else h+=`<div class="plan">${tr.planned} ${t('planned')}</div>`;
+        h+=`</div>`;
       });
-      body=combHTML(cells,150);
-    } else if(view.lvl==='tracks'){
-      const cells=T.tracks.map((tr,i)=>{
-        const b=tr.tasks.length,sv=tr.tasks.filter(x=>x.solved).length;
-        return {nm:tr.name, ct:b?`${sv}/${b}`:`${tr.planned} ${t('planned')}`,
-          pct:b?Math.round(100*sv/b):0, cls:'track'+(b?'':' locked empty'),
-          locked:!b, data:b?`data-track="${i}"`:'', title:tr.name};
-      });
-      body=cells.length?combHTML(cells,132):`<div class="comb-empty">${t('planned')}</div>`;
-    } else {
-      const cells=(TR?TR.tasks:[]).map(x=>({
-        nm:'d'+(x.difficulty??'?'),
-        ct:x.native==='cuda'?'cu':x.native==='cpp'?'c++':'py',
-        pct:x.solved?100:0, cls:'task'+(x.solved?' solved':''),
-        data:`data-open="${esc(x.id)}"`, title:x.id}));
-      body=cells.length?combHTML(cells,78):`<div class="comb-empty">—</div>`;
-    }
-    $('map').innerHTML=head+body;
+      h+=`</div></div></section>`;
+    });
+    $('map').innerHTML=h;
   }
+
+  /* Chips carry the id, and every id repeats its track prefix. Drop it: the
+     card above already says which track this is. */
+  function shortId(id){
+    const i=id.indexOf('-');
+    return i>0 ? id.slice(i+1) : id;
+  }
+
   function goHome(){$('app').className='app is-home'; curId=null;}
   function goWork(){$('app').className='app is-work';}
 
   /* ---------- markdown ---------- */
   function inl(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');}
+  /* A small markdown renderer. It only has to cover what the statements
+     actually use — measured across the bank: headings, bullets, ORDERED lists
+     (458 statements use them), tables, fenced code, indented continuation
+     lines, and horizontal rules. */
+  const RE_FENCE=/^\s*```/, RE_HEAD=/^(#{1,6})\s+(.*)/, RE_UL=/^(\s*)[-*+]\s+(.*)/,
+        RE_OL=/^(\s*)(\d+)[.)]\s+(.*)/, RE_QUOTE=/^\s*>\s?/, RE_HR=/^\s*(---+|\*\*\*+)\s*$/,
+        RE_ROW=/^\s*\|.*\|/, RE_SEP=/^\s*\|[\s:|-]+\|\s*$/;
+
+  function listBlock(L,i,ordered){
+    // Collect one list. A line that is indented but is not a new item belongs to
+    // the previous item — that is how a statement continues a bullet on the next
+    // line, and joining it into the paragraph instead used to break the list.
+    const items=[]; const RE=ordered?RE_OL:RE_UL;
+    let start=null;
+    while(i<L.length){
+      const m=L[i].match(RE);
+      if(m){ items.push([ordered?m[3]:m[2]]); if(start===null)start=(m[1]||'').length; i++; continue; }
+      if(items.length && L[i].trim()!=='' && /^\s{2,}/.test(L[i]) && !RE_FENCE.test(L[i])){
+        items[items.length-1].push(L[i].trim()); i++; continue;
+      }
+      break;
+    }
+    const tag=ordered?'ol':'ul';
+    return [`<${tag}>${items.map(p=>`<li>${inl(p.join(' '))}</li>`).join('')}</${tag}>`, i];
+  }
+
+  /* A code span that IS the whole item/paragraph, or is simply long, reads as a
+     line of code. `inl` cannot know that — it works on fragments — so it is
+     decided here, where the whole item is visible. */
+  function codeBlocks(html){
+    return html
+      .replace(/<li><code>([^<]{40,})<\/code><\/li>/g, '<li><code class="block">$1</code></li>')
+      .replace(/<p><code>([^<]{40,})<\/code><\/p>/g,  '<p><code class="block">$1</code></p>');
+  }
+
   function md(src){
-    const L=(src||'').split('\n');let h='',i=0;
-    while(i<L.length){let ln=L[i];
-      if(/^```/.test(ln)){let b=[];i++;while(i<L.length&&!/^```/.test(L[i])){b.push(esc(L[i]));i++;}i++;h+=`<pre><code>${b.join('\n')}</code></pre>`;continue;}
-      let m;if((m=ln.match(/^(#{1,3})\s+(.*)/))){h+=`<h${m[1].length}>${inl(m[2])}</h${m[1].length}>`;i++;continue;}
-      if(/^\s*>\s?/.test(ln)){let b=[];while(i<L.length&&/^\s*>\s?/.test(L[i])){b.push(L[i].replace(/^\s*>\s?/,''));i++;}h+=`<blockquote>${inl(b.join(' '))}</blockquote>`;continue;}
-      if(/^\s*\|.*\|/.test(ln)&&i+1<L.length&&/^\s*\|[\s:|-]+\|/.test(L[i+1])){const row=s=>s.trim().replace(/^\||\|$/g,'').split('|').map(c=>c.trim());const hd=row(ln);i+=2;let bd='';while(i<L.length&&/^\s*\|.*\|/.test(L[i])){bd+='<tr>'+row(L[i]).map(c=>`<td>${inl(c)}</td>`).join('')+'</tr>';i++;}h+=`<table><thead><tr>${hd.map(c=>`<th>${inl(c)}</th>`).join('')}</tr></thead><tbody>${bd}</tbody></table>`;continue;}
-      if(/^\s*[-*]\s+/.test(ln)){let b=[];while(i<L.length&&/^\s*[-*]\s+/.test(L[i])){b.push(L[i].replace(/^\s*[-*]\s+/,''));i++;}h+=`<ul>${b.map(x=>`<li>${inl(x)}</li>`).join('')}</ul>`;continue;}
+    const L=(src||'').split('\n'); let h='', i=0;
+    while(i<L.length){
+      const ln=L[i];
+      if(RE_FENCE.test(ln)){
+        const lang=(ln.trim().slice(3)||'').trim(); const b=[]; i++;
+        while(i<L.length&&!RE_FENCE.test(L[i])){b.push(esc(L[i]));i++;}
+        i++; h+=`<pre${lang?` data-lang="${esc(lang)}"`:''}><code>${b.join('\n')}</code></pre>`; continue;
+      }
+      let m;
+      if((m=ln.match(RE_HEAD))){h+=`<h${Math.min(m[1].length,4)}>${inl(m[2])}</h${Math.min(m[1].length,4)}>`;i++;continue;}
+      if(RE_HR.test(ln)){h+='<hr>';i++;continue;}
+      if(RE_QUOTE.test(ln)){const b=[];while(i<L.length&&RE_QUOTE.test(L[i])){b.push(L[i].replace(RE_QUOTE,''));i++;}h+=`<blockquote>${inl(b.join(' '))}</blockquote>`;continue;}
+      if(RE_ROW.test(ln)&&i+1<L.length&&RE_SEP.test(L[i+1])){
+        const row=s=>s.trim().replace(/^\||\|$/g,'').split('|').map(c=>c.trim());
+        const hd=row(ln); i+=2; let bd='';
+        while(i<L.length&&RE_ROW.test(L[i])){bd+='<tr>'+row(L[i]).map(c=>`<td>${inl(c)}</td>`).join('')+'</tr>';i++;}
+        h+=`<table><thead><tr>${hd.map(c=>`<th>${inl(c)}</th>`).join('')}</tr></thead><tbody>${bd}</tbody></table>`;continue;
+      }
+      if(RE_OL.test(ln)){const r=listBlock(L,i,true); h+=r[0]; i=r[1]; continue;}
+      if(RE_UL.test(ln)){const r=listBlock(L,i,false); h+=r[0]; i=r[1]; continue;}
       if(ln.trim()===''){i++;continue;}
-      let b=[];while(i<L.length&&L[i].trim()!==''&&!/^(#{1,3}\s|```|\s*>\s|\s*[-*]\s|\s*\|)/.test(L[i])){b.push(L[i]);i++;}
-      if(b.length===0){if(i<L.length)b.push(L[i]);i++;}
+      const b=[];
+      while(i<L.length&&L[i].trim()!==''&&!RE_FENCE.test(L[i])&&!RE_HEAD.test(L[i])&&
+            !RE_QUOTE.test(L[i])&&!RE_UL.test(L[i])&&!RE_OL.test(L[i])&&!RE_ROW.test(L[i])&&!RE_HR.test(L[i])){
+        b.push(L[i]); i++;
+      }
+      if(b.length===0){ if(i<L.length)b.push(L[i]); i++; }
       h+=`<p>${inl(b.join(' '))}</p>`;
     }
-    return h;
+    return codeBlocks(h);
   }
 
   /* ---------- editor ---------- */
@@ -534,26 +538,19 @@
   /* ---------- open task (-> work mode) ---------- */
   function fmt(v){if(v==null||(typeof v==='number'&&isNaN(v)))return '—';const a=Math.abs(v);if(a!==0&&(a<1e-3||a>=1e5))return v.toExponential(3);return String(Math.round(v*10000)/10000);}
   function setVerdict(state,label,sub){const v=$('verdict');v.className='verdict'+(state?' '+state:'');$('vbadge').textContent={pass:'✓',fail:'✗',measuring:'◌',error:'!'}[state]||'·';$('vlabel').textContent=label;if(sub!==undefined)$('vsub').innerHTML=sub;$('instSt').textContent=state||'awaiting';}
-  let curTask=null, curTags=[], curMd={};
+  let curTask=null, curTags=[], curMd='';
   function renderBrief(){
     if(!curTask)return;
     const t2=curTask;
-    const have=curMd[lang]!=null, body=curMd[lang]||curMd.en||'';
-    // Be honest: the statement is authored in English and only some tasks are
-    // translated. Silently showing English under a "Українська" selector reads
-    // like the switch is broken.
-    const note=have?'':`<div class="md-note">${lang==='uk'
-      ? 'Умова англійською — перекладу для цієї мови ще немає.'
-      : 'Statement shown in English — no translation for the selected language yet.'}</div>`;
     $('brief').innerHTML=`<div class="b-id">${esc(t2.id)}</div><div class="b-title">${esc(t2.title)}</div>`
       +`<div class="b-tags">${curTags.map(x=>`<span class="b-tag">${esc(x)}</span>`).join('')}</div>`
-      +note+`<div class="md">${md(body)}</div>`;
+      +`<div class="md">${md(curMd)}</div>`;
     try{if(window.renderMathInElement)renderMathInElement($('brief'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});}catch(e){}
   }
   function openTask(m){
     curId=m.task.id;
     const t2=m.task,tags=[];tags.push({cpp:'C++',cuda:'CUDA'}[t2.native]||'Python');if(t2.difficulty!=null)tags.push('d'+t2.difficulty);if(t2.genre)tags.push(t2.genre);if(t2.platform)tags.push(t2.platform);if(t2.track)tags.push(t2.track);
-    curTask=t2; curTags=tags; curMd=m.md_langs||{en:m.md||''};
+    curTask=t2; curTags=tags; curMd=m.md||'';
     renderBrief();
     try{if(window.renderMathInElement)renderMathInElement($('brief'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});}catch(e){}
     $('crumb').innerHTML=`<b>${esc(t2.track||'')}</b> › ${esc(t2.id)}`;
@@ -600,17 +597,19 @@
   /* ---------- nav / messages ---------- */
   document.addEventListener('click',e=>{
     const ab=e.target.closest('[data-about]');
-    if(ab){aboutOn=!aboutOn;renderMap(mapData);return;}
+    if(ab){e.stopPropagation();const k=ab.getAttribute('data-about');
+      const on=aboutOpen.has(k); on?aboutOpen.delete(k):aboutOpen.add(k);
+      const nd=document.querySelector(`[data-k="${k}"]`);
+      if(nd)nd.classList.toggle('about-on',!on);
+      ab.setAttribute('aria-expanded',String(!on));return;}
     const o=e.target.closest('[data-open]');
     if(o){vscode.postMessage({type:'open',id:o.getAttribute('data-open')});return;}
-    const ar=e.target.closest('[data-area]');
-    if(ar){view={lvl:'tracks',ai:+ar.getAttribute('data-area'),ti:0};aboutOn=false;renderMap(mapData);$('map').scrollIntoView({block:'start'});return;}
-    const tr=e.target.closest('[data-track]');
-    if(tr){view={lvl:'tasks',ai:view.ai,ti:+tr.getAttribute('data-track')};renderMap(mapData);return;}
-    const cb=e.target.closest('[data-lvl]');
-    if(cb){const l=cb.getAttribute('data-lvl');
-      view={lvl:l,ai:view.ai,ti:view.ti}; if(l==='areas')aboutOn=false;
-      renderMap(mapData);return;}
+    const tg=e.target.closest('[data-tg]');
+    if(tg){const k=tg.getAttribute('data-tg');
+      const on=collapsed.has(k); on?collapsed.delete(k):collapsed.add(k);
+      const nd=document.querySelector(`[data-k="${k}"]`);
+      if(nd)nd.classList.toggle('collapsed',!on);
+      tg.setAttribute('aria-expanded',String(on));}
   });
   let rzT=null;
   window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(mapData)renderMap(mapData);},120);});

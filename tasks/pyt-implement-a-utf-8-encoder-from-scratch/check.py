@@ -36,17 +36,18 @@ def grade(sol, fx) -> dict:
     matched = 0
     for text in cases:
         expected = _oracle(text)
+        # count the bytes we are asking for even when the solver blows up,
+        # otherwise a solver that always raises measures nothing and a
+        # "nothing measured" score would look like a perfect one
+        total += len(expected)
         try:
             got = sol.utf8_encode(text)
         except Exception:
             continue
-        total += len(expected)
-        matched += sum(1 for a, b in zip(got, expected) if a == b)
-        if len(got) != len(expected):
+        if not isinstance(got, (bytes, bytearray)) or len(got) != len(expected):
             continue
+        matched += sum(1 for a, b in zip(got, expected) if a == b)
 
-    if total == 0:
-        score = 1.0
-    else:
-        score = matched / total
-    return {"byte_exact_fraction": float(score)}
+    if total == 0:                      # every case is the empty string: no evidence
+        return {"byte_exact_fraction": 0.0}
+    return {"byte_exact_fraction": float(matched / total)}

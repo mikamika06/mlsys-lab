@@ -9,8 +9,8 @@ For an object $x$ and attribute name $a$, the simplified lookup rule is:
 $$
 \mathrm{winner}(x, a) =
 \begin{cases}
-\mathrm{instance}, & a \in x.__dict__ \\
-\mathrm{class}, & a \notin x.__dict__
+\mathrm{instance}, & a \in x.\texttt{\_\_dict\_\_} \\
+\mathrm{class}, & a \notin x.\texttt{\_\_dict\_\_}
 \end{cases}
 $$
 

@@ -15,7 +15,7 @@ def grade(sol, fx) -> dict:
     try:
         cand = sol.geglu_ffn(X, W_gate, W_up)
     except Exception:
-        return {"max_abs_err": 0.0}
+        return {"max_abs_err": float("inf")}
 
     gate_ref = X @ W_gate
     up_ref   = X @ W_up

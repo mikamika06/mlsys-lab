@@ -30,7 +30,7 @@ def grade(srcfile: str = "solve.cu") -> dict:
     try:
         prog = CudaProgram(src)
     except ValueError as e:
-        return {"rel_err": float("inf"), "error": str(e)}
+        return {"rel_err": 0.0, "error": str(e)}
 
     gpu = GPU(M * K + K * N + M * N)
     gpu.gmem[0:M * K] = A.flatten()

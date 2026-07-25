@@ -45,7 +45,7 @@ Y = zca_whitening(X)
 The grader computes the covariance matrix of the returned data and compares it to the identity matrix.  
 It reports the maximum absolute entrywise difference:
 
-$$\text{max_abs_err} = \max_{i,j}\,|\,\operatorname{Cov}(Y)_{ij}-I_{ij}\,|.$$
+$$\texttt{max\_abs\_err} = \max_{i,j}\,|\,\operatorname{Cov}(Y)_{ij}-I_{ij}\,|.$$
 
-The solution must satisfy $\text{max_abs_err}\le 10^{-6}$ on a set of random test cases.  
+The solution must satisfy $\texttt{max\_abs\_err}\le 10^{-6}$ on a set of random test cases.  
 Additionally the output shape must match the input shape.

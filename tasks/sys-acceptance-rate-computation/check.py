@@ -16,7 +16,7 @@ def grade(sol, fx) -> dict:
         try:
             got = sol.acceptance_rate(target, draft)
         except Exception:
-            return {"rel_err": 0.0}
+            return {"rel_err": float("inf")}
         if not isinstance(got, np.ndarray):
             return {"rel_err": 0.0}
         got = np.asarray(got, dtype=np.float64)

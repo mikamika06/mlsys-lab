@@ -9,9 +9,9 @@ Python distinguishes three kinds of user‑defined callables that produce iterat
 Internally each function’s code object contains a bitmask `co_flags` that encodes these properties. The relevant flag constants are:
 
 $$
-\text{CO_COROUTINE} = 0x2000,\qquad
-\text{CO_ASYNC_GENERATOR} = 0x8000,\qquad
-\text{CO_GENERATOR} = 0x20.
+\texttt{CO\_COROUTINE} = 0x2000,\qquad
+\texttt{CO\_ASYNC\_GENERATOR} = 0x8000,\qquad
+\texttt{CO\_GENERATOR} = 0x20.
 $$
 
 A function is a coroutine if `co_flags & CO_COROUTINE` is non‑zero, an async generator if `co_flags & CO_ASYNC_GENERATOR`, and a generator if `co_flags & CO_GENERATOR`. Note that an async generator has both the coroutine and async‑generator flags set.

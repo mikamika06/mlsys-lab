@@ -16,13 +16,13 @@ $$\lambda_{\min}\le \dots \le \lambda_{\max}$$
 be the eigenvalues and define the condition number $\kappa=\lambda_{\max}/\lambda_{\min}>1$.  
 For fixed stepsize $\alpha=2/(\lambda_{\min}+\lambda_{\max})$ the optimal momentum that minimises the asymptotic convergence factor is
 
-$$\beta^\*=\Bigl(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\Bigr)^2.$$
+$$\beta^{*}=\Bigl(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\Bigr)^2.$$
 
 This value guarantees the fastest linear rate for all eigencomponents.
 
 ## Task
 
-Implement a function `optimal_momentum_beta(A)` that receives a symmetric positive‑definite NumPy array `A` of shape `(n, n)`, computes its condition number $\kappa$, and returns the optimal momentum coefficient $\beta^\*$ as a Python float.  The implementation must use only NumPy operations; no explicit loops are required.
+Implement a function `optimal_momentum_beta(A)` that receives a symmetric positive‑definite NumPy array `A` of shape `(n, n)`, computes its condition number $\kappa$, and returns the optimal momentum coefficient $\beta^{*}$ as a Python float.  The implementation must use only NumPy operations; no explicit loops are required.
 
 ```python
 import numpy as np
@@ -50,8 +50,8 @@ The returned value equals the analytical expression above for $\kappa=3/1=3$.
 
 Two tests are performed:
 
-* **Relative error** – The grader computes a reference $\beta^\*$ from an oracle (NumPy eigenvalue routine) and compares your result with it.  Your implementation must satisfy  
-  $$\frac{|\hat{\beta}-\beta^\*|}{|\beta^\*|}\le 10^{-6}.$$
+* **Relative error** – The grader computes a reference $\beta^{*}$ from an oracle (NumPy eigenvalue routine) and compares your result with it.  Your implementation must satisfy  
+  $$\frac{|\hat{\beta}-\beta^{*}|}{|\beta^{*}|}\le 10^{-6}.$$
 
 * **Correctness of the contract** – The function must return a scalar `float` and accept only square NumPy arrays.
 

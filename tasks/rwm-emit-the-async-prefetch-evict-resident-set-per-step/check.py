@@ -37,7 +37,7 @@ def grade(sol, fx) -> dict:
         try:
             got: List[Set[int]] = sol.emit_resident_set_per_step(num_layers, num_steps)
         except Exception:
-            return {"exact_match": 0.0, "peak_resident": 0.0}
+            return {"exact_match": 0.0, "peak_resident": float("inf")}
         ref = _oracle(num_layers, num_steps)
         if got != ref:
             ok = 0.0

@@ -17,7 +17,7 @@ def grade(sol, fx) -> dict:
         try:
             m_out, l_out = sol.online_softmax_stats(S)
         except Exception:
-            return {"rel_err": 0.0, "shape_ok": 0}
+            return {"rel_err": float("inf"), "shape_ok": 0}
 
         # Shape check
         if m_out.shape != (n,) or l_out.shape != (n,):

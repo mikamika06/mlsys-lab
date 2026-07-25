@@ -64,6 +64,6 @@ and return a `float`.  No external libraries beyond the standard library are req
 
 The grader computes the reference value using the same formula and compares it to your output with a relative error metric:
 
-$$\text{rel_err} = \frac{|\,y_{\text{candidate}} - y_{\text{reference}}\,|}{|\,y_{\text{reference}}\,| + 10^{-12}}.$$
+$$\texttt{rel\_err} = \frac{|\,y_{\text{candidate}} - y_{\text{reference}}\,|}{|\,y_{\text{reference}}\,| + 10^{-12}}.$$
 
-The solution must satisfy $\text{rel_err}\leq 1\times10^{-9}$ for all test cases.
+The solution must satisfy $\texttt{rel\_err}\leq 1\times10^{-9}$ for all test cases.

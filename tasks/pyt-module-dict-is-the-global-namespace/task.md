@@ -3,7 +3,7 @@
 Every Python module object owns a namespace dictionary. A function defined at module scope stores a reference to that namespace as its global namespace:
 
 $$
-f.__globals__ = M.__dict__,
+f.\texttt{\_\_globals\_\_} = M.\texttt{\_\_dict\_\_},
 $$
 
 where $M$ is the module containing the function definition.
@@ -13,7 +13,7 @@ When a function reads a global variable, Python looks up the name inside the dic
 For a module-level function $f$, the identity relationship is:
 
 $$
-f.__globals__ \text{ is } M.__dict__ .
+f.\texttt{\_\_globals\_\_} \text{ is } M.\texttt{\_\_dict\_\_} .
 $$
 
 ## Task

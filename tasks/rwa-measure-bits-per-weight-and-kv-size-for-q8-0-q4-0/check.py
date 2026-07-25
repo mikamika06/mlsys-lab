@@ -6,7 +6,7 @@ def grade(sol, fx) -> dict:
         got = sol.measure_qkv()
         got_arr = np.array(got, dtype=np.float64)
     except Exception:
-        return {"rel_err": 0.0}
+        return {"rel_err": float("inf")}
     block_size = 32
     bpw_q8 = (34 * 8) / block_size
     bpw_q4 = (18 * 8) / block_size

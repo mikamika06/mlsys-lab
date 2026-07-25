@@ -58,7 +58,7 @@ The grader computes a reference prediction using NumPy and compares it to your o
 Your solution must achieve an agreement of at least **99.9 %**:
 
 $$
-\frac{\text{# correctly classified grid points}}{\text{total grid points}}
+\frac{\texttt{\# correctly classified grid points}}{\text{total grid points}}
   \;\ge\; 0.999 .
 $$
 

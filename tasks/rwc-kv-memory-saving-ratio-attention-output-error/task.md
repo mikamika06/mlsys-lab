@@ -43,7 +43,7 @@ def kv_memory_saving_ratio_and_attention_error(
 The function must:
 
 1. Compute  
-   $$\text{ratio} = \frac{\text{kv_fp16.nbytes}}{\text{kv_fp8.nbytes}}.$$
+   $$\text{ratio} = \frac{\texttt{kv\_fp16.nbytes}}{\texttt{kv\_fp8.nbytes}}.$$
 2. Dequantise the FP8 tensors by dividing by $127$ to obtain float values in
    $[-1,\,1]$.
 3. Compute the attention outputs for both FP16 and dequantised FP8 tensors,

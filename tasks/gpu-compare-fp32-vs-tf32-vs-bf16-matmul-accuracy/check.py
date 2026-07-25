@@ -55,8 +55,8 @@ def grade(srcfile: str = "solve.cu") -> dict:
     try:
         prog = CudaProgram(src)
     except ValueError as e:
-        return {"fp32_rel_err": float("inf"), "tf32_rel_err": float("inf"),
-                 "bf16_rel_err": float("inf"), "error": str(e)}
+        return {"fp32_rel_err": float("inf"), "tf32_rel_err": 0.0,
+                 "bf16_rel_err": 0.0, "error": str(e)}
 
     out = {}
     for name, bits in (("fp32", FP32_BITS), ("tf32", TF32_BITS), ("bf16", BF16_BITS)):

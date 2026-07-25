@@ -55,7 +55,7 @@ print(outputs.shape)   # (3, 3)
 The grader computes a reference implementation that performs the full pre‑fill attention in one pass.  
 Your output must match this reference within a maximum absolute error of $10^{-5}$:
 
-$$\max_{i,j}\bigl|\,O^{\text{your}}_{ij}-O^{\ref}_{ij}\bigr|\;\le 1\times10^{-5}.$$
+$$\max_{i,j}\bigl|\,O^{\text{your}}_{ij}-O^{\mathrm{ref}}_{ij}\bigr|\;\le 1\times10^{-5}.$$
 
 The gate metric is named `max_abs_err`.  
 If the error exceeds this threshold, the solution fails.

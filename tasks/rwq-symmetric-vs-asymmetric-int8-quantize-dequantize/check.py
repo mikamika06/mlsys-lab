@@ -40,7 +40,7 @@ def grade(sol, fx) -> dict:
             sym_out = sol.sym_quant_dequant(x)
             asym_out = sol.asym_quant_dequant(x)
         except Exception:
-            return {"max_abs_err": 0.0, "sym_mse_diff": 0.0, "asym_mse_diff": 0.0}
+            return {"max_abs_err": float("inf"), "sym_mse_diff": float("inf"), "asym_mse_diff": float("inf")}
 
         if sym_out.shape != x.shape or asym_out.shape != x.shape:
             return {"max_abs_err": 0.0, "sym_mse_diff": 0.0, "asym_mse_diff": 0.0}

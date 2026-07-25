@@ -20,7 +20,7 @@ def grade(sol, fx) -> dict:
     try:
         scale, zp = sol.dynamic_activation_scale_zero_point(x)
     except Exception:
-        return {"scale_rel_err": 0.0, "zero_point_match": 0.0}
+        return {"scale_rel_err": float("inf"), "zero_point_match": 0.0}
 
     # Compute metrics
     scale_rel_err = np.linalg.norm(scale - ref_scale) / (np.abs(ref_scale) + 1e-12)

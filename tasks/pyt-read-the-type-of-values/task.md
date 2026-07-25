@@ -5,7 +5,7 @@ Every Python value has an associated type object. The built-in function `type(x)
 For a value $x$, the operation performed by Python is:
 
 $$
-\mathrm{type\_name}(x) = \mathrm{type}(x).__name__ .
+\texttt{type\_name}(x) = \mathrm{type}(x).\texttt{\_\_name\_\_} .
 $$
 
 Python objects also form a type/instance/metatype triangle: ordinary values are instances of types, and type objects themselves are instances of the metaclass `type`.

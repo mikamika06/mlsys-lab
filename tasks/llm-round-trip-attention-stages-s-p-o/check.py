@@ -17,7 +17,7 @@ def grade(sol, fx) -> dict:
     try:
         S, P, O = sol.attention_roundtrip(Q, K, V)
     except Exception:
-        return {"S": 0.0, "P": 0.0, "O": 0.0}
+        return {"S": float("inf"), "P": float("inf"), "O": float("inf")}
 
     err_S = scorers.max_abs_err(S, scores_ref)
     err_P = scorers.max_abs_err(P, probs_ref)

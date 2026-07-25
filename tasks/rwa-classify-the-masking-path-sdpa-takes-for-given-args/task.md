@@ -2,7 +2,7 @@
 
 In scaled‑dot‑product attention (SDPA) the logits $QK^\top / \sqrt{d_k}$ are modified by a mask before the softmax. The mask can be *causal*—disallowing future positions—or an explicit tensor that either blocks positions (boolean mask) or adds bias values (float mask). In many libraries these options are mutually exclusive: a causal flag cannot coexist with an explicit mask.
 
-The classification of which masking path is taken for a given pair of arguments $(\text{is\_causal}, \text{attn_mask})$ is useful for debugging and for generating reproducible attention patterns. The task below asks you to implement a small dispatcher that, given the two inputs, returns one of four labels:
+The classification of which masking path is taken for a given pair of arguments $(\texttt{is\_causal}, \texttt{attn\_mask})$ is useful for debugging and for generating reproducible attention patterns. The task below asks you to implement a small dispatcher that, given the two inputs, returns one of four labels:
 
 - `"causal"` – causal masking only,
 - `"bool_mask"` – an explicit boolean mask,

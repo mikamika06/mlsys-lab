@@ -21,7 +21,7 @@ def grade(sol, fx) -> dict:
         try:
             X_est = sol.mds_from_distances(D2, k)
         except Exception:
-            return {"rel_err": 0.0}
+            return {"rel_err": float("inf")}
         if X_est.shape != (n, k):
             return {"rel_err": 0.0}
         D2_est = np.sum((X_est[:, None, :] - X_est[None, :, :]) ** 2, axis=2)

@@ -17,7 +17,7 @@ def grade(sol, fx) -> dict:
             got_log = sol.stable_log1p(x)
             got_expm1 = sol.stable_expm1(x)
         except Exception:
-            return {"log_rel_err": 0.0, "expm1_rel_err": 0.0}
+            return {"log_rel_err": float("inf"), "expm1_rel_err": float("inf")}
         max_log_err = max(max_log_err, _rel_err(ref_log, got_log))
         max_expm1_err = max(max_expm1_err, _rel_err(ref_expm1, got_expm1))
     return {"log_rel_err": max_log_err, "expm1_rel_err": max_expm1_err}

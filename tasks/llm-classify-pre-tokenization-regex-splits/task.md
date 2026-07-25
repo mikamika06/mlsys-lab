@@ -3,9 +3,9 @@
 The GPT‑2 language model uses a byte‑pair encoding (BPE) tokenizer.  
 Before the BPE step, the raw text is split into *pre‑tokens* by a regular expression that groups together contiguous sequences of either non‑ASCII characters, word characters, or any other single non‑whitespace character.  The official pattern used in the HuggingFace `tokenizers` library is
 
-$$
-\texttt{(?:(?:[^\x00-\x7F]+)|(?:\\w+)|(?:[^\\s\\w]))}
-$$
+```
+(?:(?:[^\x00-\x7F]+)|(?:\w+)|(?:[^\s\w]))
+```
 
 Applying this pattern with `re.findall` yields a list of strings that will later be fed to the BPE merge table.
 

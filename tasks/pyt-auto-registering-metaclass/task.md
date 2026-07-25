@@ -4,10 +4,10 @@ A metaclass controls how Python creates classes. When a class statement is execu
 
 A useful pattern is automatic registration: instead of manually adding every implementation to a list, the metaclass records each subclass as it is created.
 
-For a class $C$, Python exposes its class name through $C.__name__$ and its qualified name through $C.__qualname__$. A registry can store entries of the form
+For a class $C$, Python exposes its class name through $C.\texttt{\_\_name\_\_}$ and its qualified name through $C.\texttt{\_\_qualname\_\_}$. A registry can store entries of the form
 
 $$
-R[C.__name__] = C.__qualname__ .
+R[C.\texttt{\_\_name\_\_}] = C.\texttt{\_\_qualname\_\_} .
 $$
 
 The registry is populated as a side effect of class creation.

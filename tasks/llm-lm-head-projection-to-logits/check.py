@@ -13,7 +13,7 @@ def grade(sol, fx) -> dict:
         try:
             got = sol.lm_head_projection(hidden, weight, bias)
         except Exception:
-            return {"max_abs_err": 0.0}
+            return {"max_abs_err": float("inf")}
         ref = np.matmul(hidden, weight.T) + bias
         err = scorers.max_abs_err(ref, got)
         if err > max_err:

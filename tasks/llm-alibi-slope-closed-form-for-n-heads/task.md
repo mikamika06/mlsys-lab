@@ -44,6 +44,6 @@ For `n_heads=4` the slopes are `[2^{-7}, 2^{-6}, 2^{-5}, 2^{-4}]`.
 
 The grader computes a reference array using the exact algorithm and compares it to your output with the relative error metric:
 
-$$\text{rel_err} = \frac{\lVert \hat{s}-s\rVert_2}{\lVert s\rVert_2 + 10^{-12}}.$$
+$$\texttt{rel\_err} = \frac{\lVert \hat{s}-s\rVert_2}{\lVert s\rVert_2 + 10^{-12}}.$$
 
 Your solution must achieve `rel_err ≤ 1e-6`.  Any deviation larger than this threshold will cause the gate to fail.  The grader also verifies that your function accepts only positive integers and returns a NumPy array of dtype `float32`.

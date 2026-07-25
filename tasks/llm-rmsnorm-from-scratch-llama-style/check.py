@@ -39,7 +39,7 @@ def grade(sol, fx) -> dict:
         try:
             y_cand = sol.rmsnorm(x, w)
         except Exception:
-            return {"max_abs_err": 0.0, "jacobian_error": 0.0}
+            return {"max_abs_err": float("inf"), "jacobian_error": float("inf")}
         y_ref = _ref(x,w)
         out_err = max_abs_err(y_ref, y_cand)
         if out_err > max_out_err:

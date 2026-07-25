@@ -32,7 +32,7 @@ def grade(sol, fx) -> dict:
         try:
             student = sol.nesterov_minimize(Q, c, x0, lr, beta, T)
         except Exception:
-            return {"rel_err": 0.0}
+            return {"rel_err": float("inf")}
         student = np.asarray(student, dtype=np.float64)
         ref = np.asarray(ref, dtype=np.float64)
 

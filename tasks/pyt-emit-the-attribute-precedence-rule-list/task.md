@@ -5,7 +5,7 @@ Python attribute lookup combines several mechanisms: instance dictionaries, desc
 For an object $o$ and attribute name $n$, lookup chooses between possible providers according to a precedence relation:
 
 $$
-\text{data descriptor} \succ \text{instance dictionary} \succ \text{non-data descriptor} \succ \text{class attribute} \succ \text{__getattr__ fallback}.
+\text{data descriptor} \succ \text{instance dictionary} \succ \text{non-data descriptor} \succ \text{class attribute} \succ \texttt{\_\_getattr\_\_ fallback}.
 $$
 
 The method `__getattribute__` is called before normal attribute lookup begins. If the normal lookup path cannot find an attribute, `__getattr__` may provide a fallback value.

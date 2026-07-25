@@ -18,7 +18,7 @@ def grade(sol, fx) -> dict:
         try:
             out = sol.per_channel_scale(X, W, alpha)
         except Exception:
-            return {"rel_err": 0.0}
+            return {"rel_err": float("inf")}
         ref = _reference(X, W, alpha)
         rel_errs.append(scorers.rel_err(ref, out))
     # Use the worst relative error

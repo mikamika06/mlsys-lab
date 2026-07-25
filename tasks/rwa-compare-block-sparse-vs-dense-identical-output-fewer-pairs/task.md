@@ -77,7 +77,7 @@ The gate computes a NumPy float64 dense masked-attention oracle and compares the
 The `attended_pairs` value must equal the number of pairs inside non-empty mask blocks:
 
 $$
-n^2 - (\text{empty_blocks} \times \text{block_size}^2).
+n^2 - (\texttt{empty\_blocks} \times \texttt{block\_size}^2).
 $$
 
 A solution that computes the correct dense output but always reports $n^2$ pairs fails the pair-count check.

@@ -10,20 +10,19 @@ def _reference_attention(q, k, v):
     return np.matmul(probs, v)
 
 def grade(sol, fx) -> dict:
+    # seeded, or the same submission scores differently on every run
+    rng = np.random.default_rng(0)
+    q = rng.standard_normal((2, 3, 4))
+    k = rng.standard_normal((2, 5, 4))
+    v = rng.standard_normal((2, 5, 6))
+
+    ref = _reference_attention(q, k, v)
     try:
-        # deterministic test tensors
-        q = np.random.randn(2, 3, 4).astype(np.float64)
-        k = np.random.randn(2, 5, 4).astype(np.float64)
-        v = np.random.randn(2, 5, 6).astype(np.float64)
-
-        ref = _reference_attention(q, k, v)
         got = sol.offload_attention(q, k, v)
-
-        if not isinstance(got, np.ndarray):
-            err = 0.0
-        else:
-            err = scorers.max_abs_err(ref, got)
     except Exception:
-        err = 0.0
+        return {"max_abs_err": float("inf")}
 
-    return {"max_abs_err": err}
+    got = np.asarray(got)
+    if got.shape != ref.shape:
+        return {"max_abs_err": float("inf")}
+    return {"max_abs_err": float(scorers.max_abs_err(ref, got))}

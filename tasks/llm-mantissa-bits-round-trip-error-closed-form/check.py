@@ -18,5 +18,7 @@ def grade(sol, fx) -> dict:
         den = np.linalg.norm(ref) + 1e-12
         rel_err = float(num / den)
     except Exception:
-        rel_err = 0.0
+        # a crash must land on the failing side of the gate, not on 0.0, which is
+        # the best possible score
+        rel_err = float("inf")
     return {"rel_err": rel_err}

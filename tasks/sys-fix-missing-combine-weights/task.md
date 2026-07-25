@@ -3,7 +3,7 @@
 In a Mixture-of-Experts (MoE) layer, a router produces a probability vector
 $g \in \mathbb{R}^{E}$ over $E$ experts via a softmax:
 
-$$g_i = \frac{\exp(z_i)}{\sum_{j=1}^{E} \exp(z_j)}, \qquad \sum_{i=1}^{E} g_i = 1.$
+$$g_i = \frac{\exp(z_i)}{\sum_{j=1}^{E} \exp(z_j)}, \qquad \sum_{i=1}^{E} g_i = 1.$$
 
 Each expert $f_i$ transforms the input $x$ into a hidden-state vector
 $f_i(x) \in \mathbb{R}^{d}$. The MoE output is the **gated** combination:

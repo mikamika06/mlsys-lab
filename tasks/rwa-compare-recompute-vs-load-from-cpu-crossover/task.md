@@ -19,7 +19,7 @@ in bytes per second.
 The crossover is the smallest integer sequence length where loading is no more
 expensive than recomputing:
 
-$$s^\* = \min \{s \ge 1 : C_\mathrm{load}(s) \le C_\mathrm{recompute}(s)\}.$$
+$$s^{*} = \min \{s \ge 1 : C_\mathrm{load}(s) \le C_\mathrm{recompute}(s)\}.$$
 
 A production runtime can use this value to decide whether to recompute or fetch KV
 state.

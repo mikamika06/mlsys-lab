@@ -3,10 +3,10 @@
 In transformer models the attention mechanism requires three linear projections of the input token embeddings: queries $Q$, keys $K$ and values $V$. For efficiency many implementations fuse these three projections into a single matrix multiplication followed by a split. Additionally, Rotary Positional Embedding (RoPE) injects absolute position information by rotating pairs of embedding dimensions in the key and value tensors:
 
 $$
-\\begin{aligned}
-k'_{i,2j} &= k_{i,2j}\\cos(\\theta_j) - k_{i,2j+1}\\sin(\\theta_j),\\\\
-k'_{i,2j+1} &= k_{i,2j}\\sin(\\theta_j) + k_{i,2j+1}\\cos(\\theta_j),
-\\end{aligned}
+\begin{aligned}
+k'_{i,2j} &= k_{i,2j}\cos(\theta_j) - k_{i,2j+1}\sin(\theta_j),\\
+k'_{i,2j+1} &= k_{i,2j}\sin(\theta_j) + k_{i,2j+1}\cos(\theta_j),
+\end{aligned}
 $$
 
 where $\\theta_j = \\omega_j\,p_i$ with $p_i$ the position of token $i$ and $\\omega_j$ a frequency schedule.

@@ -11,7 +11,7 @@ def grade(sol, fx):
         try:
             vanilla, gated = sol.param_counts(input_dim, output_dim, hidden)
         except Exception:
-            return {"param_ratio": 0.0}
+            return {"param_ratio": float("inf")}
         if vanilla <= 0 or gated <= 0:
             return {"param_ratio": 0.0}
         ratios.append(gated / vanilla)

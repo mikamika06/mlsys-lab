@@ -8,7 +8,7 @@ allocated dynamically on the heap.
 For a type object $T$, the heap-type predicate is
 
 $$
-\mathrm{is\_heap}(T) = (T.__flags__ \mathbin{\&} M) \neq 0,
+\texttt{is\_heap}(T) = (T.\texttt{\_\_flags\_\_} \mathbin{\&} M) \neq 0,
 $$
 
 where $M$ is the heap-type flag mask.

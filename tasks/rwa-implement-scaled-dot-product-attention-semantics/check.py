@@ -51,7 +51,7 @@ def grade(sol, fx) -> dict:
         try:
             out, w = sol.scaled_dot_product_attention(Q, K, V, mask=mask, causal=causal)
         except Exception:
-            return {"output_error": 0.0, "weight_error": 0.0}
+            return {"output_error": float("inf"), "weight_error": float("inf")}
 
         ref_out, ref_w = _reference(Q, K, V, mask=mask, causal=causal)
 

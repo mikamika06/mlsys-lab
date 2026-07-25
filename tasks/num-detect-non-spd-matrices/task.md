@@ -23,7 +23,7 @@ uses it.
 Two failure modes are easy to miss:
 
 * a matrix can have all-positive eigenvalues and still not be SPD because it is
-  **not symmetric** (e.g. $\begin{psmallmatrix}2&1\\0&3\end{psmallmatrix}$ has
+  **not symmetric** (e.g. $\begin{pmatrix}2&1\\0&3\end{pmatrix}$ has
   eigenvalues $2,3$);
 * a *negative pivot* must abort the factorisation. If you let `np.sqrt` of a
   negative number produce `nan` and keep going, the propagated `nan`s can be

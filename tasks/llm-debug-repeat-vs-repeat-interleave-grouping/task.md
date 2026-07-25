@@ -45,7 +45,7 @@ def expand_kv_heads(kv: np.ndarray, num_q_heads: int) -> np.ndarray:
 The input `kv` is a NumPy array with shape $(b, h_{kv}, s, d)$. The value
 `num_q_heads` is a positive multiple of the number of key/value heads.
 
-Return a new array with shape $(b, num_q_heads, s, d)$ where each key/value head
+Return a new array with shape `(b, num_q_heads, s, d)` where each key/value head
 is repeated the required number of times for grouped-query attention. Use NumPy
 operations and preserve the input dtype.
 

@@ -11,7 +11,7 @@ local precedence order while preserving monotonicity.
 The value of `cls.__mro__` is a tuple of class objects:
 
 $$
-\mathrm{cls.__mro__} = (C_0, C_1, \dots, C_n),
+\texttt{cls.\_\_mro\_\_} = (C_0, C_1, \dots, C_n),
 $$
 
 where $C_0$ is `cls` itself and later entries are its base classes and

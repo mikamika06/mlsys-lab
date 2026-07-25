@@ -76,7 +76,7 @@ Token 2 appears once → penalty $1·0.1 + 0.05 = 0.15$.
 The grader computes a reference implementation using NumPy and compares your output to it with the metric  
 
 $$
-\max_{t} |\,l'_t^{\text{your}} - l'_t^{\text{reference}}\,| .
+\max_{t} \bigl|\, {l'}_t^{\text{your}} - {l'}_t^{\text{reference}} \bigr| .
 $$
 
 Your solution must achieve `max_abs_err <= 1e-6`.  Any deviation larger than this threshold will cause the gate to fail.  The grader also verifies that your function returns a `float64` array of the same shape as the input logits.

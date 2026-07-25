@@ -15,7 +15,7 @@ $$
 \mathrm{OI}(B) = \frac{B\,C}{M\,\sqrt{B}} = \frac{C}{M}\,\sqrt{B}.
 $$
 
-The *crossover* batch size $B^\*$ is the smallest integer such that $\mathrm{OI}(B^\*) \ge \theta$.
+The *crossover* batch size $B^{*}$ is the smallest integer such that $\mathrm{OI}(B^{*}) \ge \theta$.
 
 ## Task
 
@@ -29,7 +29,7 @@ def crossover_batch_size(peak_compute: float,
     ...
 ```
 
-The function should return the minimal integer batch size $B^\*$ that satisfies
+The function should return the minimal integer batch size $B^{*}$ that satisfies
 $$\frac{C}{M}\,\sqrt{B} \;\ge\; \theta,$$
 where $\theta = \mathrm{Peak}_{\text{compute}}/\mathrm{Peak}_{\text{mem}}$.
 Use only the Python standard library (you may import `math`).
@@ -50,7 +50,7 @@ Here $\theta = 8$, $C/M = 0.25$ and the smallest integer $B$ with $0.25\sqrt{B}\
 
 The grader evaluates a handful of random test cases. For each case it computes the reference answer using the exact formula above, then compares your output to that reference. The relative error
 $$
-\mathrm{rel\_err} = \frac{|\,\text{your}\;B^\* - B_{\text{ref}}^\*|}{\max(1,B_{\text{ref}}^\*)}
+\texttt{rel\_err} = \frac{|\,\text{your}\;B^{*} - B_{\text{ref}}^{*}|}{\max(1,B_{\text{ref}}^{*})}
 $$
 must be at most $10^{-3}$.
 

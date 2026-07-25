@@ -22,7 +22,7 @@ def grade(sol, fx) -> dict:
         try:
             got = sol.layernorm_int8(x, gamma, beta, eps)
         except Exception:
-            return {"rel_err": 0.0}
+            return {"rel_err": float("inf")}
         ref = _reference(x, gamma, beta, eps)
         err = rel_err(ref, got)
         if err > max_err:

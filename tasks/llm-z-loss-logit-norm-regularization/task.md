@@ -51,7 +51,7 @@ L_i =
 +
 \log\left(\sum_j e^{z_{i,j}}\right)
 +
-\lambda_
+\lambda
 \left(
 \log\left(\sum_j e^{z_{i,j}}\right)
 \right)^2 .

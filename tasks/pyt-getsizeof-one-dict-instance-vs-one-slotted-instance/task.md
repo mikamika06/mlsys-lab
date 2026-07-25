@@ -5,7 +5,7 @@ Python objects can store instance attributes in different ways. A normal class i
 The memory contribution of a normal instance can be approximated as
 
 $$
-S_{\mathrm{dict}} = \operatorname{getsizeof}(x) + \operatorname{getsizeof}(x.__dict__),
+S_{\mathrm{dict}} = \operatorname{getsizeof}(x) + \operatorname{getsizeof}(x.\texttt{\_\_dict\_\_}),
 $$
 
 because both the object header and the attribute dictionary occupy memory. A slotted instance has no instance dictionary, so the comparable measurement is
@@ -34,7 +34,7 @@ def dict_vs_slots_size_ratio() -> float:
 Create one normal class and one class using `__slots__`. Each class should define the same small set of instance attributes. Create one instance of each class and return the ratio
 
 $$
-\frac{\operatorname{getsizeof}(\text{dict instance}) + \operatorname{getsizeof}(\text{dict instance}.__dict__)}
+\frac{\operatorname{getsizeof}(\text{dict instance}) + \operatorname{getsizeof}(\text{dict instance}.\texttt{\_\_dict\_\_})}
 {\operatorname{getsizeof}(\text{slotted instance})}.
 $$
 

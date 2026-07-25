@@ -125,20 +125,11 @@ def task_payload(tid):
     native = meta.get("native") or ""
     srcfile = SRCFILE.get(native, "solve.py")
 
-    md_langs = {}
-    p = d / "task.md"
-    if p.is_file():
-        md_langs["en"] = p.read_text(encoding="utf-8")
-    for f in d.iterdir():
-        m = re.fullmatch(r"task\.([a-z]{2})\.md", f.name)
-        if m:
-            md_langs[m.group(1)] = f.read_text(encoding="utf-8")
+    md = (d / "task.md").read_text(encoding="utf-8") if (d / "task.md").is_file() else ""
 
     # A C++ task is written against a contract header — show it with the statement.
     if native == "cpp" and (d / "sol.hpp").is_file():
-        hpp = "\n\n## Contract (sol.hpp)\n\n```cpp\n" + (d / "sol.hpp").read_text(encoding="utf-8") + "\n```\n"
-        for k in md_langs:
-            md_langs[k] += hpp
+        md += "\n\n## Contract (sol.hpp)\n\n```cpp\n" + (d / "sol.hpp").read_text(encoding="utf-8") + "\n```\n"
 
     # Show the learner's own attempt if there is one, otherwise the shipped
     # starter. The starter file itself is never handed out as the editable file,
@@ -151,7 +142,7 @@ def task_payload(tid):
             break
 
     area, sub = CURRICULUM.get(tid, (PREFIX_AREA.get(tid.split("-")[0], "other"), "other"))
-    return {"file": srcfile, "code": code, "md": md_langs.get("en", ""), "md_langs": md_langs,
+    return {"file": srcfile, "code": code, "md": md,
             "task": {"id": tid, "title": meta.get("title", tid), "difficulty": meta.get("difficulty"),
                      "genre": meta.get("genre"), "platform": meta.get("platform"),
                      "track": sub, "gates": meta.get("gates", []), "native": native}}
@@ -190,7 +181,7 @@ window.acquireVsCodeApi=function(){
         fetch('/api/map').then(r=>r.json()).then(d=>post({type:'map',payload:d}));
       } else if(m.type==='open'&&m.id){
         fetch('/api/task/'+encodeURIComponent(m.id)).then(r=>r.json()).then(d=>{
-          post({type:'task',file:d.file,code:d.code,md:d.md,md_langs:d.md_langs,task:d.task});
+          post({type:'task',file:d.file,code:d.code,md:d.md,task:d.task});
         });
       } else if(m.type==='grade'){
         fetch('/api/grade',{method:'POST',headers:{'Content-Type':'application/json'},

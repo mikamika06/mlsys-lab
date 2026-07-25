@@ -4,7 +4,7 @@ In a language model the final linear layer (the *head*) maps hidden states to lo
 If $H \in \mathbb{R}^{B\times T\times d}$ denotes the hidden activations for a batch of size $B$ and sequence length $T$, the weight matrix $W_{\text{out}}\in\mathbb{R}^{V\times d}$ (where $V$ is the vocabulary size) and bias $b \in \mathbb{R}^V$, the logits are
 
 $$
-L_{b,t,v}= H_{b,t,:}\, W_{\text{out}}^{\top}_{v,:}+ b_v .
+L_{b,t,v}= H_{b,t,:}\, \bigl(W_{\text{out}}^{\top}\bigr)_{v,:}+ b_v .
 $$
 
 The operation can be expressed as a batched matrix multiplication followed by broadcasting of the bias.

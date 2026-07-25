@@ -21,11 +21,11 @@ $$
 The two roofs cross at the **ridge point**
 
 $$
-I^{\*} \;=\; \frac{P}{B},
+I^{*} \;=\; \frac{P}{B},
 $$
 
 the smallest intensity at which a kernel can still be compute-bound. Kernels with
-$I < I^{\*}$ are memory-bound; the machine's FLOP peak is irrelevant for them.
+$I < I^{*}$ are memory-bound; the machine's FLOP peak is irrelevant for them.
 
 ## Task
 
@@ -49,7 +49,7 @@ Return the triple
 
 * `ai` — float64 array of arithmetic intensities $I_k = W_k / Q_k$,
 * `attainable` — float64 array of $A(I_k) = \min(P,\; I_k B)$ in FLOP/s,
-* `ridge` — the scalar ridge point $I^{\*} = P / B$ in FLOP/byte.
+* `ridge` — the scalar ridge point $I^{*} = P / B$ in FLOP/byte.
 
 ## Example
 
