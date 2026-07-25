@@ -12,7 +12,8 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onCommand:mlsys.open",
+    "workspaceContains:tasks/**/meta.json"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -47,5 +48,6 @@
     "type": "git",
     "url": "https://github.com/mikamika06/mlsys-lab.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "icon": "icon.png"
 }

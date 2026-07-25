@@ -224,8 +224,9 @@ function openPanel(context, root) {
 }
 
 function activate(context) {
+  // The channel is for diagnosing a silent host failure; forcing it open on
+  // every window is noise, so it stays available but hidden.
   out = vscode.window.createOutputChannel("mlsys-lab");
-  out.show(true);
   const root = repoRoot();
   log("=== mlsys-lab activated ===");
   log("extensionPath = " + context.extensionPath);
@@ -240,8 +241,16 @@ function activate(context) {
   context.subscriptions.push(out, status,
     vscode.commands.registerCommand("mlsys.open", () => openPanel(context, root)));
 
-  if (!root) { vscode.window.showErrorMessage("mlsys-lab: open the repository folder (it must contain src/mlsys/ and tasks/)."); return; }
-  openPanel(context, root);
+  // Opening a panel unasked hijacks the window — in a repository that has
+  // nothing to do with this extension it is simply wrong. The status bar item
+  // and the command are the entry points; the panel opens when asked for.
+  if (!root) {
+    status.text = "$(window) mlsys-lab (no bank)";
+    status.tooltip = "Open a folder containing src/mlsys/ and tasks/";
+    log("no bank found here — staying idle");
+    return;
+  }
+  log("bank found; use the status bar item or `mlsys-lab: Open Workspace`");
 }
 function deactivate() {}
 module.exports = { activate, deactivate };
