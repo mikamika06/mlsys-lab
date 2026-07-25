@@ -1,4 +1,5 @@
-// Arena — minimal, bulletproof. One webview panel = the whole app. Heavy logging.
+// mlsys-lab — one webview panel is the whole app. Logs verbosely, because a
+// silent extension host failure is otherwise invisible.
 const vscode = require("vscode");
 const cp = require("child_process");
 const fs = require("fs");
@@ -6,26 +7,6 @@ const path = require("path");
 
 let panel = null;
 let out = null;
-
-const CURRICULUM = [
-  { roman: "I", name: "Мови та основи", tracks: [
-    { num: "01", name: "Deep Python", planned: 34 }, { num: "02", name: "Deep C++", planned: 32 },
-    { num: "03", name: "Rust", planned: 28 }, { num: "04", name: "Assembly", planned: 22 } ] },
-  { roman: "II", name: "Математичне ядро", tracks: [
-    { num: "05", name: "Numerical methods", planned: 26 }, { num: "06", name: "Autograd", planned: 24 } ] },
-  { roman: "III", name: "Всередині моделі", tracks: [
-    { num: "07", name: "Quantization", planned: 29 }, { num: "08", name: "Transformer internals", planned: 33 },
-    { num: "09", name: "Architecture zoo", planned: 28 }, { num: "10", name: "KV-cache", planned: 22 } ] },
-  { roman: "IV", name: "Заліза та кернели", tracks: [
-    { num: "11", name: "GPU kernels", planned: 40 }, { num: "12", name: "ML compilers", planned: 30 },
-    { num: "13", name: "CPU-perf", planned: 28 }, { num: "14", name: "Memory", planned: 26 } ] },
-  { roman: "V", name: "Масштаб і подача", tracks: [
-    { num: "15", name: "Distributed", planned: 34 }, { num: "16", name: "Data pipeline", planned: 26 },
-    { num: "17", name: "Serving", planned: 30 } ] },
-  { roman: "VI", name: "Майстерність", tracks: [
-    { num: "18", name: "Profiling", planned: 24 }, { num: "19", name: "Platform / grader", planned: 22 },
-    { num: "20", name: "Freshness", planned: 19 } ] },
-];
 
 function log(m) { try { out && out.appendLine(m); } catch (_) {} }
 
@@ -37,15 +18,69 @@ function repoRoot() {
   }
   return folders.length ? folders[0].uri.fsPath : null;
 }
+
+function repoRoot() {
+  const folders = vscode.workspace.workspaceFolders || [];
+  for (const f of folders) {
+    const p = f.uri.fsPath;
+    if (fs.existsSync(path.join(p, "src", "mlsys")) && fs.existsSync(path.join(p, "tasks"))) return p;
+  }
+  return folders.length ? folders[0].uri.fsPath : null;
+}
+
 function getNonce() {
   const c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let s = ""; for (let i = 0; i < 24; i++) s += c[Math.floor(Math.random() * c.length)]; return s;
 }
+
 function fmtNum(v) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const a = Math.abs(v);
   if (a !== 0 && (a < 1e-3 || a >= 1e5)) return v.toExponential(3);
   return String(Math.round(v * 10000) / 10000);
+}
+
+// How the bank is grouped on the roadmap. The curriculum list is the single
+// source of truth and `tools/serve.py` reads exactly the same file, so the
+// editor and the browser can never disagree about which tasks exist — an
+// earlier hardcoded copy of an old plan hid 135 tasks from the editor while the
+// browser showed all of them.
+const AREA_TITLE = {
+  "python-core": "Deep Python", "cpp-core": "Deep C++", "cpu-perf": "CPU-perf",
+  "numeric-tensors": "Numeric & tensors", "algorithms-scratch": "Algorithms (ML)",
+  "llm-internals": "LLM internals", "gpu-cuda": "GPU / CUDA", "llm-systems": "LLM systems",
+  "rw-applied-quantization": "RW · Quantization", "rw-attention-and-kv": "RW · Attention/KV",
+  "rw-compilation-and-export": "RW · Compile/Export", "rw-batching-and-serving": "RW · Batching/Serving",
+  "rw-memory-and-offload": "RW · Memory/Offload", "rw-sparsity-pruning-distillation": "RW · Sparsity/Distill",
+};
+const AREA_ORDER = Object.keys(AREA_TITLE);
+const PREFIX_AREA = {
+  pyt: "python-core", py: "python-core", cpp: "cpp-core", cpu: "cpu-perf",
+  num: "numeric-tensors", alg: "algorithms-scratch", llm: "llm-internals",
+  gpu: "gpu-cuda", sys: "llm-systems", rwq: "rw-applied-quantization",
+  rwa: "rw-attention-and-kv", rwc: "rw-compilation-and-export",
+  rwb: "rw-batching-and-serving", rwm: "rw-memory-and-offload",
+  rws: "rw-sparsity-pruning-distillation",
+};
+
+let _curriculum = null;
+function curriculum(root) {
+  if (_curriculum) return _curriculum;
+  _curriculum = {};
+  try {
+    const rows = JSON.parse(fs.readFileSync(path.join(root, "docs", "task_list2.json"), "utf8")).rows;
+    for (const r of rows) {
+      const sub = ((r.method || r.concept || "other") + "").trim();
+      _curriculum[r.id] = [r.area, sub];
+    }
+  } catch (_) { /* a checkout without the list still works, via the prefix */ }
+  return _curriculum;
+}
+
+function placeOf(root, id) {
+  const c = curriculum(root)[id];
+  if (c) return c;
+  return [PREFIX_AREA[id.split("-")[0]] || "other", "other"];
 }
 
 function scanBuilt(root) {
@@ -56,32 +91,44 @@ function scanBuilt(root) {
     const mf = path.join(dir, d, "meta.json");
     if (!fs.existsSync(mf)) continue;
     let meta = {};
-    try { meta = JSON.parse(fs.readFileSync(mf, "utf8")); } catch (_) {}
-    const tn = (String(meta.track || "").match(/\d+/) || [])[0] || null;
+    try { meta = JSON.parse(fs.readFileSync(mf, "utf8")); } catch (_) { continue; }
     arr.push({ id: meta.id || d, title: meta.title || d, difficulty: meta.difficulty,
-               trackNum: tn, native: meta.native || "" });
+               native: meta.native || "" });
   }
   return arr;
 }
+
 function homeData(root, context) {
   const built = scanBuilt(root);
   const solved = new Set(context.globalState.get("mlsys.solved", []));
-  let bt = 0, pt = 0;
-  const tiers = CURRICULUM.map((T) => {
-    let bc = 0, pl = 0;
-    const tracks = T.tracks.map((tr) => {
-      pl += tr.planned;
-      const tasks = built.filter((b) => b.trackNum === tr.num)
-        .map((b) => ({ id: b.id, title: b.title, difficulty: b.difficulty, solved: solved.has(b.id), native: b.native || "" }));
-      bc += tasks.length;
-      return { num: tr.num, name: tr.name, planned: tr.planned, tasks };
+  const groups = {};
+  for (const b of built) {
+    const [area, sub] = placeOf(root, b.id);
+    ((groups[area] = groups[area] || {})[sub] = groups[area][sub] || []).push({
+      id: b.id, title: b.title, difficulty: b.difficulty,
+      solved: solved.has(b.id), native: b.native,
     });
-    bt += bc; pt += pl;
-    return { roman: T.roman, key: T.key || String(T.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-             name: T.name, planned: pl, builtCount: bc, tracks };
-  });
-  return { totals: { solved: built.filter((b) => solved.has(b.id)).length, built: bt, planned: pt }, tiers };
+  }
+  const rank = (a) => { const i = AREA_ORDER.indexOf(a); return i < 0 ? 99 : i; };
+  const tiers = [];
+  let total = 0;
+  for (const area of Object.keys(groups).sort((x, y) => rank(x) - rank(y) || x.localeCompare(y))) {
+    const tracks = [];
+    let n = 0;
+    for (const sub of Object.keys(groups[area]).sort()) {
+      const ts = groups[area][sub].sort((p, q) =>
+        String(p.difficulty).localeCompare(String(q.difficulty)) || p.id.localeCompare(q.id));
+      tracks.push({ num: "", name: sub, planned: ts.length, tasks: ts });
+      n += ts.length;
+    }
+    total += n;
+    tiers.push({ roman: "", key: area, name: AREA_TITLE[area] || area,
+                 planned: n, builtCount: n, tracks });
+  }
+  return { totals: { solved: built.filter((b) => solved.has(b.id)).length,
+                     built: total, planned: total }, tiers };
 }
+
 
 function postWS(msg) { try { panel && panel.webview.postMessage(msg); } catch (_) {} }
 
@@ -163,7 +210,7 @@ function openPanel(context, root) {
   } catch (e) {
     log("READ FAILED: " + p + " :: " + e.message);
     doc = `<!DOCTYPE html><html><body style="background:#101216;color:#F2694F;font-family:monospace;padding:24px;font-size:13px">`
-      + `<b>Arena — cannot read UI file</b><br><br>${p}<br>${String(e && e.message)}</body></html>`;
+      + `<b>mlsys-lab — cannot read UI file</b><br><br>${p}<br>${String(e && e.message)}</body></html>`;
   }
   panel.webview.html = doc;
   panel.webview.onDidReceiveMessage((m) => {
@@ -177,16 +224,16 @@ function openPanel(context, root) {
 }
 
 function activate(context) {
-  out = vscode.window.createOutputChannel("Arena");
+  out = vscode.window.createOutputChannel("mlsys-lab");
   out.show(true);
   const root = repoRoot();
-  log("=== Arena activated ===");
+  log("=== mlsys-lab activated ===");
   log("extensionPath = " + context.extensionPath);
   log("repoRoot = " + root);
 
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-  status.text = "$(window) Arena";
-  status.tooltip = "Open Arena workspace";
+  status.text = "$(window) mlsys-lab";
+  status.tooltip = "Open the mlsys-lab workspace";
   status.command = "mlsys.open";
   status.show();
 

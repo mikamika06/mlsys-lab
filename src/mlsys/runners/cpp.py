@@ -8,6 +8,8 @@ solve.cpp (candidate), meta.json (gates).
 """
 import subprocess, os, sys, json, re, tempfile
 
+from .. import jsonsafe
+
 CXX = os.environ.get("ARENA_CXX", "clang++")
 FLAGS = ["-O2", "-std=c++20"]
 
@@ -55,4 +57,4 @@ def grade(taskdir, srcfile="solve.cpp"):
 
 
 if __name__ == "__main__":
-    print(json.dumps(grade(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "solve.cpp"), indent=2))
+    print(jsonsafe.dumps(grade(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "solve.cpp"), indent=2))

@@ -5,7 +5,7 @@ import argparse
 import json
 import sys
 
-from . import __version__, runner
+from . import __version__, jsonsafe, runner
 from .task import find_task, list_tasks
 
 # dependency-free ANSI (disabled when not a tty)
@@ -63,7 +63,7 @@ def cmd_grade(args) -> int:
                 for g in res.gates
             ],
         }
-        print(json.dumps(out, indent=2))
+        print(jsonsafe.dumps(out, indent=2))
         return 0 if res.passed else 1
 
     print()

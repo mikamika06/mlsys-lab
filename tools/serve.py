@@ -29,6 +29,8 @@ import webbrowser
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
+from mlsys import jsonsafe   # noqa: E402 — the path above has to be set first
+
 TASKS = ROOT / "tasks"
 MEDIA = ROOT / "editor" / "media"
 
@@ -227,14 +229,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             if self.path in ("/", "/index.html"):
                 return self._send(200, page(), "text/html; charset=utf-8")
             if self.path == "/api/map":
-                return self._send(200, json.dumps(scan()[0]))
+                return self._send(200, jsonsafe.dumps(scan()[0]))
             if self.path.startswith("/api/task/"):
                 tid = self.path[len("/api/task/"):]
                 from urllib.parse import unquote
                 tid = unquote(tid)
                 if not (TASKS / tid / "meta.json").is_file():
                     return self._send(404, json.dumps({"error": "no such task"}))
-                return self._send(200, json.dumps(task_payload(tid)))
+                return self._send(200, jsonsafe.dumps(task_payload(tid)))
             if self.path.startswith("/media/"):
                 f = MEDIA / self.path[len("/media/"):].split("?")[0]
                 # never serve outside the media directory
@@ -261,7 +263,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             res = grade(tid, code)
             if res.get("passed"):
                 s = load_solved(); s.add(tid); save_solved(s)
-            return self._send(200, json.dumps(res, default=str))
+            return self._send(200, jsonsafe.dumps(res, default=str))
         except Exception as e:  # noqa: BLE001
             return self._send(200, json.dumps({"error": f"{type(e).__name__}: {e}"}))
 

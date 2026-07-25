@@ -253,7 +253,7 @@
           <div class="verdict" id="verdict"><span class="reticle tl"></span><span class="reticle tr"></span><span class="reticle bl"></span><span class="reticle br"></span><span class="sweep"></span>
             <div class="vst"><span class="bdg" id="vbadge">·</span><span id="vlabel">AWAITING</span></div><div class="vsub" id="vsub"></div></div>
           <div class="metrics" id="metrics"></div>
-          <div class="console"><div class="ch">[ <span data-t="output">output</span> ] arena grade</div><div class="cb" id="cons">—</div></div>
+          <div class="console"><div class="ch">[ <span data-t="output">output</span> ] mlsys grade</div><div class="cb" id="cons">—</div></div>
         </div>
       </div>
     </div>
@@ -536,7 +536,26 @@
   });
 
   /* ---------- open task (-> work mode) ---------- */
-  function fmt(v){if(v==null||(typeof v==='number'&&isNaN(v)))return '—';const a=Math.abs(v);if(a!==0&&(a<1e-3||a>=1e5))return v.toExponential(3);return String(Math.round(v*10000)/10000);}
+  /* Non-finite metrics arrive as the strings "Infinity" / "-Infinity" / "NaN",
+     because bare Infinity is not valid JSON and JSON.parse would reject the whole
+     verdict. A failing grader very often returns inf, so this is the common path,
+     not an edge case. */
+  function num(v){
+    if(typeof v==='number')return v;
+    if(v==='Infinity')return Infinity;
+    if(v==='-Infinity')return -Infinity;
+    if(v==='NaN')return NaN;
+    return v;
+  }
+  function fmt(v){
+    v=num(v);
+    if(v==null||(typeof v==='number'&&isNaN(v)))return '—';
+    if(v===Infinity)return '∞'; if(v===-Infinity)return '−∞';
+    if(typeof v!=='number')return String(v);
+    const a=Math.abs(v);
+    if(a!==0&&(a<1e-3||a>=1e5))return v.toExponential(3);
+    return String(Math.round(v*10000)/10000);
+  }
   function setVerdict(state,label,sub){const v=$('verdict');v.className='verdict'+(state?' '+state:'');$('vbadge').textContent={pass:'✓',fail:'✗',measuring:'◌',error:'!'}[state]||'·';$('vlabel').textContent=label;if(sub!==undefined)$('vsub').innerHTML=sub;$('instSt').textContent=state||'awaiting';}
   let curTask=null, curTags=[], curMd='';
   function renderBrief(){
@@ -570,7 +589,7 @@
     $('metrics').innerHTML=h;
     const n=(d.gates||[]).filter(g=>g.ok).length,tot=(d.gates||[]).length;
     if(d.passed)setVerdict('pass',t('pass'),`<span class="ok">${n}/${tot} ${t('gatesGreen')}</span>`); else setVerdict('fail',t('fail'),`${n}/${tot} gates`);
-    let log=`> arena grade ${curId}\n`;(d.gates||[]).forEach(g=>log+=`  ${g.ok?'✓':'✗'} ${g.metric} = ${fmt(g.value)}   gate ${g.op} ${g.threshold}\n`);log+=`  ${d.verdict}`;
+    let log=`> mlsys grade ${curId}\n`;(d.gates||[]).forEach(g=>log+=`  ${g.ok?'✓':'✗'} ${g.metric} = ${fmt(g.value)}   gate ${g.op} ${fmt(g.threshold)}\n`);log+=`  ${d.verdict}`;
     $('cons').innerHTML=esc(log).replace(/✓/g,'<span class="ok">✓</span>').replace(/✗/g,'<span class="bad">✗</span>');
   }
   function doGrade(){if(busy||!curId)return;busy=true;$('gradeBtn').classList.add('running');$('gradeBtn').setAttribute('disabled','');setVerdict('measuring',t('measuring'),t('running'));$('cons').textContent='> spawning grader …';vscode.postMessage({type:'grade',id:curId,file:curFile,code:ta.value});}

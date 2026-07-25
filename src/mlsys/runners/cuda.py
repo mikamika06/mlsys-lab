@@ -13,6 +13,8 @@ import json
 import os
 import sys
 
+from .. import jsonsafe
+
 
 def _load_check(taskdir):
     spec = importlib.util.spec_from_file_location("mlsys_task_check",
@@ -56,4 +58,4 @@ if __name__ == "__main__":
     # check.py imports `mlsys.sim` by name, so no path surgery is needed here.
     td = sys.argv[1]
     sf = sys.argv[2] if len(sys.argv) > 2 else "solve.cu"
-    print(json.dumps(grade(td, sf), indent=2, default=str))
+    print(jsonsafe.dumps(grade(td, sf), indent=2, default=str))

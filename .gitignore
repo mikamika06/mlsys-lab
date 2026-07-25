@@ -21,3 +21,4 @@ a.out
 
 # generation queues, archives and one-off scripts stay out of the published repo
 .internal/
+*.vsix
