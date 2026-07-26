@@ -275,10 +275,15 @@
   const saved=(vscode.getState&&vscode.getState())||{};
   const collapsed=new Set(saved.collapsed||[]);
   const aboutOpen=new Set();   // areas whose description is open
-  let foldedOnce=!!saved.foldedOnce;
+  /* Versioned, because 0.1.5 set the old flag while folding nothing — it added
+     T.key to a set the renderer reads by position — so anyone who opened that build
+     carries an "already folded" mark for a fold that never happened. Bumping the name
+     makes the fold apply once more, and is the honest way to migrate a wrong state. */
+  const FOLD_V=2;
+  let foldedOnce=saved.foldV===FOLD_V;
   function persistFolds(){
     try{vscode.setState({...(vscode.getState&&vscode.getState()||{}),
-                         collapsed:[...collapsed],foldedOnce:true});}catch(_){}
+                         collapsed:[...collapsed],foldV:FOLD_V});}catch(_){}
   }
 
   /* ---------- i18n ---------- */
@@ -380,7 +385,10 @@
 
   function renderMap(d){
     mapData=d;
-    if(!foldedOnce){ d.tiers.forEach(T=>collapsed.add(T.key)); foldedOnce=true; persistFolds(); }
+    /* The renderer keys areas by position ('ti'+index), not by T.key. Folding with
+       T.key silently did nothing, because collapsed.has() was asked a different
+       question than the one answered. Same key space or no effect. */
+    if(!foldedOnce){ d.tiers.forEach((_,i)=>collapsed.add('ti'+i)); foldedOnce=true; persistFolds(); }
     $('prog').innerHTML=`<b>${d.totals.solved}</b>/${d.totals.built} · ${d.totals.planned} ${t('planned')}`;
     $('hsub').innerHTML=`${d.tiers.length} · <b>${d.totals.built}</b> ${t('available')} · ${d.totals.planned} ${t('planned')}`;
     let h='';

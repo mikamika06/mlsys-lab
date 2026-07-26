@@ -159,9 +159,13 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
   check("areas start folded", () => {
     const h = panel.webview.html;
-    if (!/foldedOnce/.test(h)) throw new Error("no fold-on-first-render logic in the page");
-    if (!/d\.tiers\.forEach\(T=>collapsed\.add\(T\.key\)\)/.test(h))
-      throw new Error("first render does not collapse every area");
+    if (!/FOLD_V/.test(h)) throw new Error("the fold flag is not versioned — a wrong saved state could never be corrected");
+    // The renderer keys areas by position; folding with any other key is a no-op,
+    // which is exactly the bug this line exists to prevent recurring.
+    if (!/collapsed\.add\('ti'\+i\)/.test(h))
+      throw new Error("first render does not collapse using the renderer's own key");
+    const keyForm = /const key='ti'\+ti/.test(h);
+    if (!keyForm) throw new Error("renderer no longer keys areas by position — update the fold");
     if (!/persistFolds\(\)/.test(h)) throw new Error("the learner's folding is not remembered");
     return "collapsed on first render, choice persisted";
   });
