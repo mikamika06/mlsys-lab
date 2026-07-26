@@ -4,8 +4,10 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from pathlib import Path
 
 from . import __version__, jsonsafe, runner
+from .bank import bank_root
 from .task import find_task, list_tasks
 
 # dependency-free ANSI (disabled when not a tty)
@@ -32,9 +34,14 @@ def _fmt(v: float) -> str:
 
 
 def cmd_list(args) -> int:
-    tasks = list_tasks(args.tasks_root)
+    try:
+        root = bank_root(args.tasks_root)
+    except FileNotFoundError as e:
+        print(_c(RED, str(e)))
+        return 2
+    tasks = list_tasks(root)
     if not tasks:
-        print(_c(DIM, f"no tasks under ./{args.tasks_root}"))
+        print(_c(DIM, f"no tasks under {root}"))
         return 0
     for t in tasks:
         m = t.meta
@@ -44,9 +51,100 @@ def cmd_list(args) -> int:
     return 0
 
 
+# The learner's file. `starter.py`/`starter.cpp`/`starter.cu` is what ships; the
+# candidate is always their own copy, and it never goes inside the task directory
+# because an installed bank lives in site-packages.
+SRCFILE = {None: "solve.py", "cpp": "solve.cpp", "cuda": "solve.cu"}
+STARTER = {None: "starter.py", "cpp": "starter.cpp", "cuda": "starter.cu"}
+
+
+def _native(task):
+    return task.meta.get("native") or None
+
+
+def _find_candidate(task, given):
+    """Where the learner's attempt is. `given` wins; otherwise look in the obvious
+    places, nearest first, so `mlsys grade <id>` works after `mlsys start <id>`."""
+    want = SRCFILE[_native(task)]
+    if given:
+        p = Path(given).expanduser()
+        # a bare filename may name a file in cwd or in the task dir (a checkout)
+        for cand in (p, Path.cwd() / p, task.path / p):
+            if cand.is_file():
+                return cand
+        return None
+    for cand in (Path.cwd() / task.id / want, Path.cwd() / want, task.path / want):
+        if cand.is_file():
+            return cand
+    return None
+
+
+def cmd_start(args) -> int:
+    """Copy a task's starter into a working directory so there is something to edit."""
+    try:
+        task = find_task(args.task, args.tasks_root)
+    except FileNotFoundError as e:
+        print(_c(RED, str(e)))
+        return 2
+    nat = _native(task)
+    src = task.path / STARTER[nat]
+    if not src.is_file():
+        print(_c(RED, f"{task.id} ships no {STARTER[nat]}"))
+        return 2
+    dest_dir = Path(args.dir).expanduser() / task.id
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    dest = dest_dir / SRCFILE[nat]
+    if dest.exists() and not args.force:
+        print(_c(AMBER, f"{dest} exists (use --force to overwrite)"))
+    else:
+        dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+        print(f"  {_c(BOLD, task.meta.get('title', task.id))}")
+        print(f"  {_c(DIM, 'wrote')} {dest}")
+    stmt = task.path / "task.md"
+    if stmt.is_file():
+        print(f"  {_c(DIM, 'read')}  {stmt}")
+    if nat == "cpp":
+        print(f"  {_c(DIM, 'contract')} {task.path / 'sol.hpp'}")
+    print()
+    print(f"  {_c(STEEL, 'mlsys grade ' + task.id)}")
+    return 0
+
+
 def cmd_grade(args) -> int:
-    task = find_task(args.task, args.tasks_root)
-    res = runner.grade(task, solver_file=args.file)
+    try:
+        task = find_task(args.task, args.tasks_root)
+    except FileNotFoundError as e:
+        print(_c(RED, str(e)))
+        return 2
+    cand = _find_candidate(task, args.file)
+    if cand is None:
+        want = SRCFILE[_native(task)]
+        print(_c(RED, f"no {want} found for {task.id}."))
+        print(_c(DIM, f"  it is a {_native(task) or 'python'} task, so your file must be {want}."))
+        print()
+        print(f"  {_c(STEEL, 'mlsys start ' + task.id)}   {_c(DIM, 'writes the starter here to edit')}")
+        print(f"  {_c(DIM, 'or:')} mlsys grade {task.id} --file path/to/{want}")
+        return 2
+
+    nat = _native(task)
+    if nat in ("cpp", "cuda"):
+        # A native task is compiled or executed by its own runner; the python
+        # check.py path cannot grade it, and used to fail with a confusing
+        # "solve.py not found" for all 460 of them.
+        from importlib import import_module
+        raw = import_module(f".runners.{nat}", __package__).grade(str(task.path), str(cand))
+        res = runner.GradeResult(task_id=task.id, solver_file=str(cand),
+                                 metrics=raw.get("metrics") or {},
+                                 passed=bool(raw.get("passed")),
+                                 error=raw.get("error"))
+        for g in task.gates:
+            v = res.metrics.get(g["metric"])
+            ok = v is not None and (v <= g["threshold"] if g["op"] == "<=" else
+                                    v >= g["threshold"] if g["op"] == ">=" else
+                                    v == g["threshold"])
+            res.gates.append(runner.GateResult(g["metric"], g["op"], g["threshold"], v, bool(ok)))
+    else:
+        res = runner.grade(task, solver_file=str(cand))
 
     if args.json:
         out = {
@@ -68,7 +166,7 @@ def cmd_grade(args) -> int:
 
     print()
     print(f"  {_c(BOLD, task.meta.get('title', task.id))}")
-    print(f"  {_c(DIM, task.id + ' · ' + args.file)}")
+    print(f"  {_c(DIM, task.id + ' · ' + str(cand))}")
     print()
 
     if res.error:
@@ -104,14 +202,23 @@ def cmd_grade(args) -> int:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="mlsys", description="Local auto-graded trainer.")
     p.add_argument("--version", action="version", version=f"mlsys {__version__}")
-    p.add_argument("--tasks-root", default="tasks", help="directory holding task folders")
+    p.add_argument("--tasks-root", default=None,
+                   help="directory holding task folders (default: ./tasks in a checkout, "
+                        "else the bank installed with the package; see $MLSYS_TASKS)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("list", help="list available tasks").set_defaults(func=cmd_list)
 
+    st = sub.add_parser("start", help="copy a task's starter into a working directory")
+    st.add_argument("task", help="task id, dir name, or path")
+    st.add_argument("--dir", default=".", help="where to create <task-id>/ (default: here)")
+    st.add_argument("--force", action="store_true", help="overwrite an existing attempt")
+    st.set_defaults(func=cmd_start)
+
     g = sub.add_parser("grade", help="grade a solver against a task")
     g.add_argument("task", help="task id, dir name, or path")
-    g.add_argument("--file", default="solve.py", help="solver file in the task dir")
+    g.add_argument("--file", default=None,
+                   help="your solution file (default: ./<task-id>/solve.* or ./solve.*)")
     g.add_argument("--json", action="store_true", help="machine-readable output (for the editor extension)")
     g.set_defaults(func=cmd_grade)
     return p

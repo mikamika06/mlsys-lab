@@ -1,4 +1,4 @@
-"""Deterministic SIMT (GPU-warp) memory model — the ARENA VIRTUAL GPU.
+"""Deterministic SIMT (GPU-warp) memory model — the MLSYS VIRTUAL GPU.
 Pure Python, identical on every machine. Models the memory-access behaviour that
 GPU tasks actually reason about: global-memory coalescing, shared-memory bank
 conflicts, and warp divergence — as exact, deterministic counts. A pinned spec.

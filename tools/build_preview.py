@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Standalone BROWSER preview of the bank, grouped by v2 structure:
 CATEGORY (area) -> SUBCATEGORY (concept for Part 1, method for Part 2) -> tasks.
-Grouping/labels come from docs/task_list2.json (NOT the model-invented meta.track).
+Grouping/labels come from src/mlsys/task_list2.json (NOT the model-invented meta.track).
 Reuses media/workspace.html; stubs the VS Code API for a plain browser.
 """
 import json, os, re
@@ -30,7 +30,7 @@ PREFIX_AREA = {"pyt": "python-core", "cpp": "cpp-core", "cpu": "cpu-perf", "num"
 
 # id -> (area, subcategory) from the v2 list
 id2 = {}
-for r in json.load(open(os.path.join(ROOT, "docs/task_list2.json")))["rows"]:
+for r in json.load(open(os.path.join(ROOT, "src/mlsys/task_list2.json")))["rows"]:
     sub = (r.get("method") or r.get("concept") or "інше").strip() if r["part"] == 2 else (r.get("concept") or "інше").strip()
     id2[r["id"]] = (r["area"], sub)
 

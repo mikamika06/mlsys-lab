@@ -61,7 +61,7 @@ PREFIX_AREA = {
 def _curriculum():
     """id -> (area, subcategory), from the curriculum list when it is present."""
     out = {}
-    f = ROOT / "docs" / "task_list2.json"
+    f = ROOT / "src" / "mlsys" / "task_list2.json"
     if f.is_file():
         try:
             for r in json.loads(f.read_text())["rows"]:

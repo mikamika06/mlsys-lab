@@ -10,7 +10,7 @@ import subprocess, os, sys, json, re, tempfile
 
 from .. import jsonsafe
 
-CXX = os.environ.get("ARENA_CXX", "clang++")
+CXX = os.environ.get("MLSYS_CXX", "clang++")
 FLAGS = ["-O2", "-std=c++20"]
 
 

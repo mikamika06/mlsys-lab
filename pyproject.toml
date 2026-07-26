@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mlsys-lab"
-version = "0.1.0"
+version = "0.1.1"
 description = "Auto-graded exercises in low-level ML systems: real C++, real CUDA-C on a software GPU, deterministic metrics"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -33,3 +33,22 @@ mlsys = "mlsys.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mlsys"]
+# `solve.*` is the learner's scratch file. It is gitignored, but a build copies the
+# working tree and not the index, so a developer who had run the verifier would ship
+# 1,596 stale scratch files — and, if they had just solved something, the answer.
+# Excluded here so the state of the working tree cannot affect what gets published.
+exclude = ["**/solve.py", "**/solve.cpp", "**/solve.cu", "**/__pycache__", "**/*.pyc"]
+
+# The bank lives at the repo root for development but has to ship inside the
+# package, because a wheel installs into site-packages and nothing outside the
+# package directory survives. mlsys/bank.py looks for it there last.
+#
+# It is staged by hatch_build.py rather than force-included directly: force-include
+# ignores the `exclude` patterns above, so a direct include ships the learner's
+# gitignored solve.* scratch files. See that file for the measurement.
+[tool.hatch.build.targets.wheel.hooks.custom]
+path = "hatch_build.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/mlsys", "tasks", "tools", "docs", "README.md", "LICENSE", "pyproject.toml"]
+exclude = ["**/solve.py", "**/solve.cpp", "**/solve.cu", "**/__pycache__", "**/*.pyc"]

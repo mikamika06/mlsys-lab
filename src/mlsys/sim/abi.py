@@ -1,4 +1,4 @@
-"""Deterministic C++ ABI model — the ARENA VIRTUAL ABI (pinned LP64, Itanium).
+"""Deterministic C++ ABI model — the MLSYS VIRTUAL ABI (pinned LP64, Itanium).
 Pure Python, identical on every machine (unlike ctypes.sizeof, which differs by
 OS/compiler). Fixed type sizes + natural alignment + standard struct padding, so
 'predict the sizeof / offsets' has ONE right answer everywhere.

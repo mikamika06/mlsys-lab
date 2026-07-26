@@ -1,7 +1,7 @@
 """Deterministic set-associative cache simulator.
 Runs identically on every machine (pure Python, no hardware). Tasks feed a trace
 of byte addresses; the model returns exact hit/miss/eviction counts under LRU.
-This is the ARENA VIRTUAL CACHE — a pinned spec, the same for everyone.
+This is the MLSYS VIRTUAL CACHE — a pinned spec, the same for everyone.
 """
 from collections import OrderedDict
 

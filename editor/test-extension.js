@@ -15,6 +15,14 @@ const fs = require("fs");
 const Module = require("module");
 
 const REPO = path.resolve(__dirname, "..");
+
+// MODE=installed drives the pip-installed path: no repo folder in the workspace,
+// so the extension has to locate the bank by asking the interpreter. That is the
+// path a Marketplace user takes, and it is invisible to a checkout-only test.
+const MODE = process.env.MLSYS_TEST_MODE || "checkout";
+const PY = process.env.MLSYS_TEST_PYTHON || "python3";
+const WORK = process.env.MLSYS_TEST_WORKDIR || path.join(require("os").tmpdir(), "mlsys-test-work");
+fs.rmSync(WORK, { recursive: true, force: true });
 const posted = [];
 let statusText = null, registered = {}, panel = null;
 
@@ -44,13 +52,15 @@ const vscode = {
     createOutputChannel: () => ({ appendLine() {}, show() {}, dispose() {} }),
   },
   workspace: {
-    workspaceFolders: [{ uri: { fsPath: REPO } }],
-    getConfiguration: () => ({ get: (_k, d) => d }),
+    workspaceFolders: MODE === "installed" ? [] : [{ uri: { fsPath: REPO } }],
+    getConfiguration: () => ({ get: (k, d) =>
+      k === "workDir" ? WORK : k === "pythonPath" ? PY : d }),
   },
   commands: { registerCommand(id, fn) { registered[id] = fn; return { dispose() {} }; } },
   Uri: { file: (p) => ({ fsPath: p, toString: () => "file://" + p }), joinPath: (u, ...r) => ({ fsPath: path.join(u.fsPath, ...r) }) },
   ViewColumn: { Active: 1 },
   StatusBarAlignment: { Left: 1, Right: 2 },
+  ProgressLocation: { Notification: 15 },
 };
 
 const origResolve = Module._resolveFilename;
@@ -87,8 +97,8 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     if (!registered["mlsys.open"]) throw new Error("registered: " + Object.keys(registered));
   });
 
+  await registered["mlsys.open"]();
   check("panel opens and gets HTML", () => {
-    registered["mlsys.open"]();
     if (!panel) throw new Error("no panel created");
     if (!panel.webview.html.includes("<html")) throw new Error("html is empty");
     if (panel.webview.html.includes("{{")) throw new Error("unsubstituted placeholder in html");
@@ -107,6 +117,14 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     if (built < 2000) throw new Error("only " + built + " tasks in the map");
     return built + " tasks, " + m.payload.tiers.length + " areas";
   });
+
+  // Where the bank actually is in this mode — the reference/starter files are read
+  // from there, exactly as the extension reads them.
+  const BANK = MODE === "installed"
+    ? require("child_process").execFileSync(PY,
+        ["-c", "from mlsys import bank; print(bank.bank_root())"], { encoding: "utf8" }).trim()
+    : path.join(REPO, "tasks");
+  check("bank located", () => { if (!fs.existsSync(BANK)) throw new Error("no bank at " + BANK); return MODE + ": " + BANK; });
 
   // one task per language, through the real host path
   for (const [tid, lang, srcExpect] of [
@@ -127,7 +145,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     });
 
     // grade the reference and the starter through the extension's own dispatch
-    const d = path.join(REPO, "tasks", tid);
+    const d = path.join(BANK, tid);
     const refFile = { python: "solution_ref.py", cpp: "ref.cpp", cuda: "ref.cu" }[lang];
     const stFile = { python: "starter.py", cpp: "starter.cpp", cuda: "starter.cu" }[lang];
 
@@ -152,6 +170,12 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
         if (!fs.existsSync(path.join(d, stFile))) throw new Error(stFile + " was destroyed");
       });
     }
+    check(`${lang} bank not written to`, () => {
+      const stray = fs.readdirSync(d).filter((f) => f.startsWith("solve."));
+      if (stray.length) throw new Error("wrote into the bank: " + stray.join(", "));
+      const mine = path.join(WORK, tid, srcExpect);
+      if (!fs.existsSync(mine)) throw new Error("solution not written to the workspace: " + mine);
+    });
   }
 
   const bad = results.filter((r) => r[0] === "FAIL");

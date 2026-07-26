@@ -4,6 +4,7 @@ const vscode = require("vscode");
 const cp = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
 let panel = null;
 let out = null;
@@ -19,13 +20,108 @@ function repoRoot() {
   return folders.length ? folders[0].uri.fsPath : null;
 }
 
-function repoRoot() {
-  const folders = vscode.workspace.workspaceFolders || [];
-  for (const f of folders) {
-    const p = f.uri.fsPath;
-    if (fs.existsSync(path.join(p, "src", "mlsys")) && fs.existsSync(path.join(p, "tasks"))) return p;
+// ---------------------------------------------------------------------------
+// Where the bank is, and where the learner's own files go.
+//
+// Two ways to have this installed and they must both work: a git checkout (the
+// contributor case — grade what you are editing) and `pip install mlsys-lab`,
+// which puts the 2052 tasks inside site-packages. The installed bank is
+// read-only in practice, so the learner's solve.* never goes next to the task;
+// it goes in a workspace directory that is theirs to keep.
+// ---------------------------------------------------------------------------
+function pythonPath() {
+  return vscode.workspace.getConfiguration("mlsys").get("pythonPath", "python3");
+}
+
+function workDir() {
+  const cfg = vscode.workspace.getConfiguration("mlsys").get("workDir", "");
+  return cfg ? cfg.replace(/^~(?=$|[/\\])/, os.homedir()) : path.join(os.homedir(), "mlsys-lab");
+}
+
+function solvePath(id, srcfile) {
+  return path.join(workDir(), id, srcfile);
+}
+
+// Ask the installed package where its bank is. One subprocess, short timeout —
+// a wrong pythonPath must fail fast and say so, not hang the panel.
+function probeInstalled() {
+  try {
+    const r = cp.execFileSync(pythonPath(),
+      ["-c", "from mlsys import bank; print(bank.bank_root()); print(bank.curriculum_file() or '')"],
+      { encoding: "utf8", timeout: 20000, stdio: ["ignore", "pipe", "pipe"] });
+    const [tasksDir, listFile] = r.trim().split("\n");
+    if (!tasksDir || !fs.existsSync(tasksDir)) return null;
+    return { mode: "installed", tasksDir, listFile: listFile && fs.existsSync(listFile) ? listFile : null, pyEnv: {} };
+  } catch (e) {
+    log("probeInstalled failed: " + (e.stderr || e.message || "").toString().slice(0, 300));
+    return null;
   }
-  return folders.length ? folders[0].uri.fsPath : null;
+}
+
+function labFromCheckout() {
+  const root = repoRoot();
+  if (!root || !fs.existsSync(path.join(root, "tasks"))) return null;
+  const listFile = path.join(root, "src", "mlsys", "task_list2.json");
+  return {
+    mode: "checkout", tasksDir: path.join(root, "tasks"),
+    listFile: fs.existsSync(listFile) ? listFile : null,
+    pyEnv: { PYTHONPATH: path.join(root, "src") },   // src-layout: engine is not installed
+  };
+}
+
+async function ensureLab() {
+  const checkout = labFromCheckout();
+  if (checkout) { log("bank: checkout at " + checkout.tasksDir); return checkout; }
+
+  const installed = probeInstalled();
+  if (installed) { log("bank: installed at " + installed.tasksDir); return installed; }
+
+  const pick = await vscode.window.showInformationMessage(
+    "mlsys-lab needs its task bank. Install the mlsys-lab package (about 11 MB) with pip?",
+    { modal: false }, "Install", "Choose interpreter", "Cancel");
+  if (pick === "Choose interpreter") {
+    await vscode.commands.executeCommand("workbench.action.openSettings", "mlsys.pythonPath");
+    return null;
+  }
+  if (pick !== "Install") return null;
+
+  const res = await vscode.window.withProgress(
+    { location: vscode.ProgressLocation.Notification, title: "Installing mlsys-lab…" },
+    () => new Promise((resolve) => {
+      const p = cp.spawn(pythonPath(), ["-m", "pip", "install", "--upgrade", "mlsys-lab"]);
+      let err = "";
+      p.stderr.on("data", (d) => { err += d.toString(); log(d.toString().trimEnd()); });
+      p.stdout.on("data", (d) => log(d.toString().trimEnd()));
+      p.on("error", (e) => { log("pip spawn failed: " + e.message); resolve({ ok: false, err: e.message }); });
+      p.on("close", (c) => {
+        if (c !== 0) log("pip exited " + c + "\n" + err.slice(-800));
+        resolve({ ok: c === 0, err });
+      });
+    }));
+  if (!res.ok) {
+    // A Homebrew or distro python refuses to install into itself (PEP 668). That is
+    // the most likely failure on macOS and Debian, and "pip install failed" sends
+    // the reader nowhere, so name the actual cause and the actual fix.
+    if (/externally-managed-environment|externally managed/i.test(res.err || "")) {
+      const pick = await vscode.window.showErrorMessage(
+        "This Python refuses to install packages into itself (PEP 668). Use a virtual environment, "
+        + "then point mlsys.pythonPath at it.", "How", "Open settings");
+      if (pick === "Open settings") {
+        await vscode.commands.executeCommand("workbench.action.openSettings", "mlsys.pythonPath");
+      } else if (pick === "How") {
+        log("python3 -m venv ~/.mlsys-venv && ~/.mlsys-venv/bin/pip install mlsys-lab");
+        log("then set mlsys.pythonPath to ~/.mlsys-venv/bin/python");
+        out && out.show(true);
+      }
+      return null;
+    }
+    vscode.window.showErrorMessage(
+      `mlsys-lab: pip install failed. See the mlsys-lab output channel. You can also run: ${pythonPath()} -m pip install mlsys-lab`);
+    return null;
+  }
+  const after = probeInstalled();
+  if (!after) vscode.window.showErrorMessage("mlsys-lab: installed, but the bank still could not be located.");
+  return after;
 }
 
 function getNonce() {
@@ -64,11 +160,12 @@ const PREFIX_AREA = {
 };
 
 let _curriculum = null;
-function curriculum(root) {
+function curriculum(lab) {
   if (_curriculum) return _curriculum;
   _curriculum = {};
   try {
-    const rows = JSON.parse(fs.readFileSync(path.join(root, "docs", "task_list2.json"), "utf8")).rows;
+    if (!lab.listFile) throw new Error("no curriculum file");
+    const rows = JSON.parse(fs.readFileSync(lab.listFile, "utf8")).rows;
     for (const r of rows) {
       const sub = ((r.method || r.concept || "other") + "").trim();
       _curriculum[r.id] = [r.area, sub];
@@ -77,14 +174,14 @@ function curriculum(root) {
   return _curriculum;
 }
 
-function placeOf(root, id) {
-  const c = curriculum(root)[id];
+function placeOf(lab, id) {
+  const c = curriculum(lab)[id];
   if (c) return c;
   return [PREFIX_AREA[id.split("-")[0]] || "other", "other"];
 }
 
-function scanBuilt(root) {
-  const dir = root && path.join(root, "tasks");
+function scanBuilt(lab) {
+  const dir = lab && lab.tasksDir;
   const arr = [];
   if (!dir || !fs.existsSync(dir)) return arr;
   for (const d of fs.readdirSync(dir).sort()) {
@@ -98,12 +195,12 @@ function scanBuilt(root) {
   return arr;
 }
 
-function homeData(root, context) {
-  const built = scanBuilt(root);
+function homeData(lab, context) {
+  const built = scanBuilt(lab);
   const solved = new Set(context.globalState.get("mlsys.solved", []));
   const groups = {};
   for (const b of built) {
-    const [area, sub] = placeOf(root, b.id);
+    const [area, sub] = placeOf(lab, b.id);
     ((groups[area] = groups[area] || {})[sub] = groups[area][sub] || []).push({
       id: b.id, title: b.title, difficulty: b.difficulty,
       solved: solved.has(b.id), native: b.native,
@@ -137,8 +234,8 @@ function postWS(msg) { try { panel && panel.webview.postMessage(msg); } catch (_
 const SRCFILE = { cpp: "solve.cpp",   cuda: "solve.cu" };    // the learner's own file
 const STARTER = { cpp: "starter.cpp", cuda: "starter.cu" };  // what ships with the task
 
-function sendTask(context, root, id) {
-  const dir = path.join(root, "tasks", id);
+function sendTask(context, lab, id) {
+  const dir = path.join(lab.tasksDir, id);
   let meta = {}, md = "", code = "";
   try { meta = JSON.parse(fs.readFileSync(path.join(dir, "meta.json"), "utf8")); } catch (_) {}
   try { md = fs.readFileSync(path.join(dir, "task.md"), "utf8"); } catch (_) {}
@@ -150,30 +247,41 @@ function sendTask(context, root, id) {
   }
   // Show the learner's attempt if there is one, else seed it from the shipped
   // starter. The starter file is never edited, so grading cannot destroy it.
+  // The attempt lives in the learner's own workspace, never beside the task: an
+  // installed bank sits in site-packages, and even in a checkout the task dir
+  // should stay pristine.
   const starter = STARTER[meta.native] || "starter.py";
-  try { code = fs.readFileSync(path.join(dir, srcfile), "utf8"); }
+  try { code = fs.readFileSync(solvePath(id, srcfile), "utf8"); }
   catch (_) { try { code = fs.readFileSync(path.join(dir, starter), "utf8"); } catch (__) {} }
   postWS({ type: "task", file: srcfile, code, md, task: {
     id: meta.id || id, title: meta.title || id, difficulty: meta.difficulty,
     genre: meta.genre, platform: meta.platform, track: meta.track, gates: meta.gates || [], native: meta.native } });
 }
 
-function gradeCode(context, root, id, file, code) {
+function gradeCode(context, lab, id, file, code) {
+  const taskDir = path.join(lab.tasksDir, id);
   let meta = {};
-  try { meta = JSON.parse(fs.readFileSync(path.join(root, "tasks", id, "meta.json"), "utf8")); } catch (_) {}
+  try { meta = JSON.parse(fs.readFileSync(path.join(taskDir, "meta.json"), "utf8")); } catch (_) {}
   const native = meta.native;                       // "cpp" | "cuda" | undefined
   const srcfile = SRCFILE[native] || (file || "solve.py");
-  const solve = path.join(root, "tasks", id, srcfile);
-  try { fs.writeFileSync(solve, code, "utf8"); } catch (e) { postWS({ type: "error", message: e.message }); return; }
-  const py = vscode.workspace.getConfiguration("mlsys").get("pythonPath", "python3");
-  // the engine lives in src/ (src-layout), so the grader subprocess needs it on the path
-  const env = Object.assign({}, process.env, { PYTHONPATH: path.join(root, "src") });
-  log(`grade ${id} (${native === "cpp" ? "cpp/clang++" : native === "cuda" ? "cuda/software-gpu" : "py"})`);
+  const solve = solvePath(id, srcfile);
+  try {
+    fs.mkdirSync(path.dirname(solve), { recursive: true });
+    fs.writeFileSync(solve, code, "utf8");
+  } catch (e) { postWS({ type: "error", message: e.message }); return; }
+  const py = pythonPath();
+  // In a checkout the engine is not installed, so src/ goes on the path. When the
+  // package is installed there is nothing to add.
+  const env = Object.assign({}, process.env, lab.pyEnv || {});
+  log(`grade ${id} (${native === "cpp" ? "cpp/clang++" : native === "cuda" ? "cuda/software-gpu" : "py"}) → ${solve}`);
+  // Absolute paths on both sides: the task dir may be read-only site-packages and
+  // the solution is in the learner's workspace. Both runners accept a candidate
+  // outside the task directory.
   const cargs =
-    native === "cpp"  ? ["-m", "mlsys.runners.cpp",  path.join("tasks", id), "solve.cpp"]  // real clang++ compile + run
-  : native === "cuda" ? ["-m", "mlsys.runners.cuda", path.join("tasks", id), "solve.cu"]   // real .cu on the CUDA-C frontend
-  :                     ["-m", "mlsys", "grade", id, "--file", "solve.py", "--json"];
-  const proc = cp.spawn(py, cargs, { cwd: root, env });
+    native === "cpp"  ? ["-m", "mlsys.runners.cpp",  taskDir, solve]   // real clang++ compile + run
+  : native === "cuda" ? ["-m", "mlsys.runners.cuda", taskDir, solve]   // real .cu on the CUDA-C frontend
+  :                     ["-m", "mlsys", "grade", taskDir, "--file", solve, "--json"];
+  const proc = cp.spawn(py, cargs, { cwd: workDir(), env });
   let buf = "", eb = "";
   proc.stdout.on("data", (d) => (buf += d.toString()));
   proc.stderr.on("data", (d) => (eb += d.toString()));
@@ -185,12 +293,12 @@ function gradeCode(context, root, id, file, code) {
     if (data.passed) {
       const s = new Set(context.globalState.get("mlsys.solved", []));
       s.add(id); context.globalState.update("mlsys.solved", Array.from(s));
-      postWS({ type: "mapdata", payload: homeData(root, context) });
+      postWS({ type: "mapdata", payload: homeData(lab, context) });
     }
   });
 }
 
-function openPanel(context, root) {
+function openPanel(context, lab) {
   if (panel) { try { panel.reveal(vscode.ViewColumn.Active, false); } catch (_) {} log("reveal existing panel"); return; }
   log("creating webview panel…");
   panel = vscode.window.createWebviewPanel(
@@ -215,10 +323,10 @@ function openPanel(context, root) {
   panel.webview.html = doc;
   panel.webview.onDidReceiveMessage((m) => {
     if (!m) return;
-    if (m.type === "ready") { log("webview ready → sending map"); postWS({ type: "map", payload: homeData(root, context) }); }
+    if (m.type === "ready") { log("webview ready → sending map"); postWS({ type: "map", payload: homeData(lab, context) }); }
     else if (m.type === "diag") { log("DIAG: " + m.msg); }
-    else if (m.type === "open" && m.id) sendTask(context, root, m.id);
-    else if (m.type === "grade" && m.id) gradeCode(context, root, m.id, m.file, m.code || "");
+    else if (m.type === "open" && m.id) sendTask(context, lab, m.id);
+    else if (m.type === "grade" && m.id) gradeCode(context, lab, m.id, m.file, m.code || "");
   });
   panel.onDidDispose(() => { panel = null; log("panel disposed"); });
 }
@@ -227,10 +335,8 @@ function activate(context) {
   // The channel is for diagnosing a silent host failure; forcing it open on
   // every window is noise, so it stays available but hidden.
   out = vscode.window.createOutputChannel("mlsys-lab");
-  const root = repoRoot();
   log("=== mlsys-lab activated ===");
   log("extensionPath = " + context.extensionPath);
-  log("repoRoot = " + root);
 
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
   status.text = "$(window) mlsys-lab";
@@ -238,19 +344,18 @@ function activate(context) {
   status.command = "mlsys.open";
   status.show();
 
+  // Activation stays cheap and side-effect free: locating the bank can mean
+  // running a python subprocess, and doing that in every window that happens to
+  // open would be both slow and rude. It happens when the panel is asked for.
+  // Opening a panel unasked hijacks the window, so that never happens either.
   context.subscriptions.push(out, status,
-    vscode.commands.registerCommand("mlsys.open", () => openPanel(context, root)));
+    vscode.commands.registerCommand("mlsys.open", async () => {
+      const lab = await ensureLab();
+      if (!lab) { log("no bank — panel not opened"); return; }
+      openPanel(context, lab);
+    }));
 
-  // Opening a panel unasked hijacks the window — in a repository that has
-  // nothing to do with this extension it is simply wrong. The status bar item
-  // and the command are the entry points; the panel opens when asked for.
-  if (!root) {
-    status.text = "$(window) mlsys-lab (no bank)";
-    status.tooltip = "Open a folder containing src/mlsys/ and tasks/";
-    log("no bank found here — staying idle");
-    return;
-  }
-  log("bank found; use the status bar item or `mlsys-lab: Open Workspace`");
+  log("ready; use the status bar item or `mlsys-lab: Open Workspace`");
 }
 function deactivate() {}
 module.exports = { activate, deactivate };

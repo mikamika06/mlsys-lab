@@ -1,7 +1,7 @@
 {
   "name": "mlsys-lab",
-  "displayName": "mlsys-lab",
-  "description": "Auto-graded exercises in low-level ML systems: real C++, real CUDA-C, deterministic metrics",
+  "displayName": "mlsys-lab — CUDA, C++ and LLM-systems exercises, auto-graded",
+  "description": "2052 graded exercises in CUDA, C++, Python and LLM systems. Write real CUDA kernels with no NVIDIA GPU: a software GPU counts warps, coalescing transactions, shared-memory bank conflicts and divergence. Deterministic gates, identical score on any machine.",
   "version": "0.1.0",
   "publisher": "mikamika06",
   "engines": {
@@ -9,7 +9,8 @@
   },
   "categories": [
     "Education",
-    "Programming Languages"
+    "Programming Languages",
+    "Testing"
   ],
   "activationEvents": [
     "onCommand:mlsys.open",
@@ -31,6 +32,11 @@
           "type": "string",
           "default": "python3",
           "description": "Python interpreter used to run the grader."
+        },
+        "mlsys.workDir": {
+          "type": "string",
+          "default": "",
+          "description": "Directory for your solutions, one folder per task. Empty means ~/mlsys-lab. The task bank itself is never written to."
         }
       }
     }
@@ -38,11 +44,24 @@
   "keywords": [
     "cuda",
     "gpu",
-    "performance",
+    "cuda exercises",
+    "gpu programming",
     "c++",
+    "performance",
     "quantization",
     "llm",
-    "exercises"
+    "kv cache",
+    "flash attention",
+    "exercises",
+    "interview preparation",
+    "machine learning systems",
+    "simulator",
+    "education",
+    "coalescing",
+    "bank conflicts",
+    "simd",
+    "numerics",
+    "autograder"
   ],
   "repository": {
     "type": "git",

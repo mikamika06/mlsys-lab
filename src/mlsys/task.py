@@ -7,6 +7,8 @@ from pathlib import Path
 
 import numpy as np
 
+from .bank import bank_root
+
 
 class Task:
     def __init__(self, path: str | Path):
@@ -41,12 +43,12 @@ class Task:
         return self.meta.get("gates", [])
 
 
-def find_task(name: str, tasks_root: str | Path = "tasks") -> Task:
-    """Resolve a task by path, by directory name under tasks/, or by meta id."""
+def find_task(name: str, tasks_root: str | Path | None = None) -> Task:
+    """Resolve a task by path, by directory name under the bank, or by meta id."""
     p = Path(name)
     if (p / "meta.json").exists():
         return Task(p)
-    root = Path(tasks_root)
+    root = bank_root(tasks_root)
     if (root / name / "meta.json").exists():
         return Task(root / name)
     for d in sorted(root.glob("*")):
@@ -57,11 +59,11 @@ def find_task(name: str, tasks_root: str | Path = "tasks") -> Task:
                     return Task(d)
             except json.JSONDecodeError:
                 continue
-    raise FileNotFoundError(f"task '{name}' not found (looked in ./{tasks_root})")
+    raise FileNotFoundError(f"task '{name}' not found (looked in {root})")
 
 
-def list_tasks(tasks_root: str | Path = "tasks") -> list[Task]:
-    root = Path(tasks_root)
+def list_tasks(tasks_root: str | Path | None = None) -> list[Task]:
+    root = bank_root(tasks_root)
     out = []
     for d in sorted(root.glob("*")):
         if (d / "meta.json").exists():
