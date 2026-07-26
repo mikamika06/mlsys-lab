@@ -32,7 +32,11 @@ r2=$(grade); m2=$(printf '%s' "$r2" | metrics)
 cp "$d/starter.py" "$cand"
 s=$(grade); sp=$(printf '%s' "$s" | passed)
 
-[ "$rp" = "1" ] || { echo "TASK_FAIL: reference does not pass gates"; exit 1; }
+# Report which gate and which value: "does not pass gates" with no number is a
+# failure nobody can act on, least of all from a CI log on another architecture.
+[ "$rp" = "1" ] || {
+  detail=$(printf '%s' "$r1" | python3 "$ROOT/tools/gate_detail.py")
+  echo "TASK_FAIL: reference does not pass gates | $detail"; exit 1; }
 [ "$sp" = "0" ] || { echo "TASK_FAIL: starter unexpectedly passes (gate does not discriminate)"; exit 1; }
 [ -n "$m1" ] && [ "$m1" = "$m2" ] || { echo "TASK_FAIL: reference grade is non-deterministic"; exit 1; }
 echo "TASK_OK"

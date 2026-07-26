@@ -15,5 +15,6 @@
       "threshold": 1.0
     }
   ],
-  "info": []
+  "info": [],
+  "requires_arch": "aarch64"
 }

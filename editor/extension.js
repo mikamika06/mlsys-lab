@@ -25,7 +25,7 @@ function repoRoot() {
 //
 // Two ways to have this installed and they must both work: a git checkout (the
 // contributor case — grade what you are editing) and `pip install mlsys-lab`,
-// which puts the 2052 tasks inside site-packages. The installed bank is
+// which puts the 2053 tasks inside site-packages. The installed bank is
 // read-only in practice, so the learner's solve.* never goes next to the task;
 // it goes in a workspace directory that is theirs to keep.
 // ---------------------------------------------------------------------------

@@ -1,0 +1,32 @@
+{
+  "id": "pyt-cut-gc-collections-under-a-budget-without-leaking",
+  "title": "Cut GC collections under a budget without leaking",
+  "track": "01 Deep Python",
+  "tier": "II",
+  "module": "M3py",
+  "difficulty": 4,
+  "genre": "optimize",
+  "platform": "CPython",
+  "provides": [
+    "cut_gc_collections_under_budget"
+  ],
+  "fixtures": [],
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "restored_state",
+      "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "did_work",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": []
+}

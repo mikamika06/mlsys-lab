@@ -58,7 +58,8 @@ the coherence protocol has to pay for.
 
 Reproduce it — pure counting, no timing, so the numbers are the same everywhere:
 
-```python
+```bash
+python3 - <<'PY'
 LINE, THREADS, ITERS = 64, 8, 1000
 
 def trace(stride):                     # round-robin is what exposes the sharing
@@ -75,7 +76,9 @@ def invalidations(tr, line=LINE):
 
 for stride in (8, 16, 32, 64, 128):
     tr = trace(stride)
-    print(stride, len({a // LINE for a, _ in tr}), invalidations(tr))
+    lines = len({a // LINE for a, _ in tr})
+    print(f"stride={stride:>4}B  lines={lines:>2}  invalidations={invalidations(tr):>5}")
+PY
 ```
 
 Two things in that table are worth more than the headline. First, **padding partway does

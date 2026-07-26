@@ -1,2 +1,14 @@
-{"id":"cpp-neon-f32x4-saxpy-from-intrinsics","title":"NEON f32x4 SAXPY from intrinsics (real C++)","native":"cpp","difficulty":3,
- "gates":[{"metric":"max_abs_err","op":"<=","threshold":1e-6}]}
+{
+  "id": "cpp-neon-f32x4-saxpy-from-intrinsics",
+  "title": "NEON f32x4 SAXPY from intrinsics (real C++)",
+  "native": "cpp",
+  "difficulty": 3,
+  "gates": [
+    {
+      "metric": "max_abs_err",
+      "op": "<=",
+      "threshold": 1e-06
+    }
+  ],
+  "requires_arch": "aarch64"
+}

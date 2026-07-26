@@ -14,6 +14,7 @@ import concurrent.futures as cf
 import json
 import os
 import pathlib
+import platform
 import subprocess
 import sys
 import time
@@ -24,6 +25,14 @@ REPORT = ROOT / ".internal" / "verify_report.json"
 
 def verify(tid):
     meta = json.loads((ROOT / "tasks" / tid / "meta.json").read_text())
+    # Some tasks are written against a specific ISA — the NEON ones include
+    # <arm_neon.h>, which x86 clang refuses outright. Skipping is honest; passing
+    # them silently on the wrong machine would not be.
+    need = meta.get("requires_arch")
+    if need and platform.machine() not in (need, {"aarch64": "arm64"}.get(need)):
+        return {"id": tid, "native": meta.get("native") or "python",
+                "genre": meta.get("genre"), "ok": True, "skipped": need,
+                "msg": f"skipped: needs {need}, this is {platform.machine()}", "secs": 0.0}
     script = "verify_native.sh" if meta.get("native") else "verify_task.sh"
     t0 = time.time()
     try:
@@ -69,6 +78,11 @@ def main():
                 print(f"  {done}/{len(ids)}  failing {bad}  "
                       f"eta {int((len(ids)-done)/max(rate,1e-9)/60)}m", flush=True)
 
+    skipped = [r for r in res if r.get("skipped")]
+    if skipped:
+        print(f"\nskipped {len(skipped)} task(s) that need another architecture:")
+        for r in skipped:
+            print(f"  {r['id'][:56]:58} {r['msg']}")
     bad = [r for r in res if not r["ok"]]
     REPORT.parent.mkdir(exist_ok=True)
     REPORT.write_text(json.dumps(res, indent=1))

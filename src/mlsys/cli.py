@@ -66,16 +66,19 @@ def _find_candidate(task, given):
     """Where the learner's attempt is. `given` wins; otherwise look in the obvious
     places, nearest first, so `mlsys grade <id>` works after `mlsys start <id>`."""
     want = SRCFILE[_native(task)]
+    # Always resolved: the runners join the candidate onto the task directory, and
+    # pathlib only discards the left operand for an ABSOLUTE right one. A relative
+    # path handed back from here became <task-dir>/<relative-path> and vanished.
     if given:
         p = Path(given).expanduser()
         # a bare filename may name a file in cwd or in the task dir (a checkout)
         for cand in (p, Path.cwd() / p, task.path / p):
             if cand.is_file():
-                return cand
+                return cand.resolve()
         return None
     for cand in (Path.cwd() / task.id / want, Path.cwd() / want, task.path / want):
         if cand.is_file():
-            return cand
+            return cand.resolve()
     return None
 
 

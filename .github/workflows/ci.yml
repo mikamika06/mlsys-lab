@@ -41,16 +41,22 @@ jobs:
       - name: The archive must not contain the learner's scratch files
         run: |
           python - <<'PY'
-          import glob, zipfile, sys
+          import glob, pathlib, zipfile, sys
           whl = glob.glob("dist/*.whl")[0]
           names = zipfile.ZipFile(whl).namelist()
           tasks = {n.split("/")[2] for n in names
                    if n.startswith("mlsys/tasks/") and n.count("/") > 2}
+          # The invariant is "the wheel ships every task in the checkout", not a
+          # literal count: a hardcoded number silently rots the moment a task lands.
+          on_disk = {d.name for d in pathlib.Path("tasks").iterdir() if (d / "meta.json").is_file()}
           scratch = [n for n in names if "/solve." in n]
           pyc = [n for n in names if "__pycache__" in n]
-          print(f"{len(tasks)} tasks, {len(scratch)} scratch, {len(pyc)} pycache")
+          print(f"{len(tasks)} tasks in the wheel, {len(on_disk)} in the checkout, "
+                f"{len(scratch)} scratch, {len(pyc)} pycache")
           fail = []
-          if len(tasks) != 2052:                      fail.append(f"{len(tasks)} tasks, expected 2052")
+          missing = on_disk - tasks
+          if missing:                                 fail.append(f"{len(missing)} tasks not in the wheel: {sorted(missing)[:3]}")
+          if len(tasks) != len(on_disk):              fail.append(f"wheel has {len(tasks)}, checkout has {len(on_disk)}")
           if scratch:                                 fail.append(f"scratch files shipped: {scratch[:3]}")
           if pyc:                                     fail.append(f"__pycache__ shipped: {pyc[:3]}")
           if "mlsys/task_list2.json" not in names:    fail.append("curriculum missing")
@@ -107,7 +113,8 @@ jobs:
           mkdir -p /tmp/w2 && cd /tmp/w2
           /tmp/venv/bin/mlsys start gpu-ex-cuda-coalesced-scale
           test -f gpu-ex-cuda-coalesced-scale/solve.cu
-          test "$(/tmp/venv/bin/mlsys list | grep -c '^  ')" = 4104
+          expected=$(( $(ls -d "$GITHUB_WORKSPACE"/tasks/*/ | wc -l) * 2 ))
+          test "$(/tmp/venv/bin/mlsys list | grep -c '^  ')" = "$expected"
 
       # A user with a Homebrew or distro python cannot pip-install into it (PEP 668),
       # and the extension has to recognise that exact failure to give useful advice.
@@ -194,6 +201,12 @@ jobs:
         with: { python-version: "3.11" }
       - uses: actions/setup-node@v4
         with: { node-version: "20" }
-      - run: python3 tools/check_page.py
+      - run: python -m pip install --quiet -e .
+      - name: Structure, word count, and every link resolves
+        run: python3 tools/check_page.py
+      # The pages claim the reader can regenerate their numbers. This runs each page's
+      # own snippet and fails if it prints anything the page does not say.
+      - name: Every page reproduces its own measurement
+        run: python3 tools/verify_pages.py
       - name: KaTeX must parse every math span in every statement
         run: node tools/check_latex.js
