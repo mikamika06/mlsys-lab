@@ -2,7 +2,7 @@
   "name": "mlsys-lab",
   "displayName": "mlsys-lab — CUDA, C++ and LLM-systems exercises, auto-graded",
   "description": "Graded exercises in CUDA, C++, Python and LLM systems. Write real CUDA kernels with no NVIDIA GPU: a software GPU counts warps, coalescing transactions, shared-memory bank conflicts and divergence. Deterministic gates, identical score on any machine.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "mikamika06",
   "engines": {
     "vscode": "^1.85.0"
@@ -13,6 +13,7 @@
     "Testing"
   ],
   "activationEvents": [
+    "onView:mlsys.bank",
     "onCommand:mlsys.open",
     "workspaceContains:tasks/**/meta.json"
   ],
@@ -21,8 +22,20 @@
     "commands": [
       {
         "command": "mlsys.open",
-        "title": "mlsys-lab: Open Workspace",
+        "title": "Open Workspace",
+        "category": "mlsys-lab",
         "icon": "$(window)"
+      },
+      {
+        "command": "mlsys.openTask",
+        "title": "Open this task",
+        "category": "mlsys-lab"
+      },
+      {
+        "command": "mlsys.refresh",
+        "title": "Refresh",
+        "category": "mlsys-lab",
+        "icon": "$(refresh)"
       }
     ],
     "configuration": {
@@ -39,6 +52,37 @@
           "description": "Directory for your solutions, one folder per task. Empty means ~/mlsys-lab. The task bank itself is never written to."
         }
       }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "mlsys",
+          "title": "mlsys-lab",
+          "icon": "media/activity-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "mlsys": [
+        {
+          "id": "mlsys.bank",
+          "name": "Task bank"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "mlsys.open",
+          "when": "view == mlsys.bank",
+          "group": "navigation@1"
+        },
+        {
+          "command": "mlsys.refresh",
+          "when": "view == mlsys.bank",
+          "group": "navigation@2"
+        }
+      ]
     }
   },
   "keywords": [

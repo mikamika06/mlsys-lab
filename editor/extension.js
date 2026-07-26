@@ -331,6 +331,77 @@ function openPanel(context, lab) {
   panel.onDidDispose(() => { panel = null; log("panel disposed"); });
 }
 
+
+// ---------------------------------------------------------------------------
+// The activity-bar view. Without one the extension had no icon in the sidebar and
+// could only be reached by typing a command, which is not where anyone looks.
+//
+// The tree resolves the bank lazily. Locating it can mean running a python
+// subprocess and, on a machine without the package, prompting to install it —
+// neither belongs in the render path of a sidebar that VS Code opens on startup.
+// Until it is resolved the view shows one actionable row.
+// ---------------------------------------------------------------------------
+class BankTree {
+  constructor(context) {
+    this.context = context;
+    this.lab = null;
+    this._onDidChange = new vscode.EventEmitter();
+    this.onDidChangeTreeData = this._onDidChange.event;
+  }
+
+  refresh(lab) { if (lab !== undefined) this.lab = lab; _curriculum = null; this._onDidChange.fire(); }
+
+  getTreeItem(e) { return e; }
+
+  getChildren(node) {
+    if (!this.lab) {
+      const lab = labFromCheckout() || probeInstalled();
+      if (lab) this.lab = lab;
+    }
+    if (!this.lab) {
+      const it = new vscode.TreeItem("Locate the task bank…", vscode.TreeItemCollapsibleState.None);
+      it.command = { command: "mlsys.open", title: "Locate the task bank" };
+      it.iconPath = new vscode.ThemeIcon("search");
+      it.tooltip = "Opens a checkout, or offers to pip install mlsys-lab";
+      return [it];
+    }
+
+    const data = homeData(this.lab, this.context);
+    if (!node) {
+      return data.tiers.map((t) => {
+        const solved = t.tracks.reduce((n, tr) => n + tr.tasks.filter((x) => x.solved).length, 0);
+        const it = new vscode.TreeItem(t.name, vscode.TreeItemCollapsibleState.Collapsed);
+        it.description = `${solved}/${t.planned}`;
+        it.id = "area:" + t.key;
+        it._area = t;
+        return it;
+      });
+    }
+    if (node._area) {
+      return node._area.tracks.map((tr) => {
+        const solved = tr.tasks.filter((x) => x.solved).length;
+        const it = new vscode.TreeItem(tr.name, vscode.TreeItemCollapsibleState.Collapsed);
+        it.description = `${solved}/${tr.tasks.length}`;
+        it.id = "track:" + node._area.key + ":" + tr.name;
+        it._tasks = tr.tasks;
+        return it;
+      });
+    }
+    if (node._tasks) {
+      return node._tasks.map((t) => {
+        const it = new vscode.TreeItem(t.title || t.id, vscode.TreeItemCollapsibleState.None);
+        it.id = "task:" + t.id;
+        it.description = (t.native || "py") + (t.difficulty ? " · d" + t.difficulty : "");
+        it.tooltip = t.id;
+        it.iconPath = new vscode.ThemeIcon(t.solved ? "pass-filled" : "circle-large-outline");
+        it.command = { command: "mlsys.openTask", title: "Open", arguments: [t.id] };
+        return it;
+      });
+    }
+    return [];
+  }
+}
+
 function activate(context) {
   // The channel is for diagnosing a silent host failure; forcing it open on
   // every window is noise, so it stays available but hidden.
@@ -348,14 +419,32 @@ function activate(context) {
   // running a python subprocess, and doing that in every window that happens to
   // open would be both slow and rude. It happens when the panel is asked for.
   // Opening a panel unasked hijacks the window, so that never happens either.
-  context.subscriptions.push(out, status,
-    vscode.commands.registerCommand("mlsys.open", async () => {
-      const lab = await ensureLab();
-      if (!lab) { log("no bank — panel not opened"); return; }
-      openPanel(context, lab);
+  const tree = new BankTree(context);
+  const view = vscode.window.createTreeView("mlsys.bank", { treeDataProvider: tree });
+
+  const open = async () => {
+    const lab = await ensureLab();
+    if (!lab) { log("no bank — panel not opened"); return null; }
+    tree.refresh(lab);
+    openPanel(context, lab);
+    return lab;
+  };
+
+  context.subscriptions.push(out, status, view,
+    vscode.commands.registerCommand("mlsys.open", open),
+    vscode.commands.registerCommand("mlsys.refresh", () => tree.refresh()),
+    vscode.commands.registerCommand("mlsys.openTask", async (id) => {
+      const lab = tree.lab || (await open());
+      if (!lab) return;
+      if (!panel) openPanel(context, lab);
+      // The webview may still be loading; it asks for the map on ready, so a task
+      // sent too early is dropped. One retry covers the cold-open case.
+      const send = () => sendTask(context, lab, id);
+      send();
+      setTimeout(send, 600);
     }));
 
-  log("ready; use the status bar item or `mlsys-lab: Open Workspace`");
+  log("ready; sidebar view `mlsys-lab`, or the status bar item");
 }
 function deactivate() {}
 module.exports = { activate, deactivate };

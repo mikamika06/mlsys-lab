@@ -1,11 +1,37 @@
-# mlsys-lab
+<p align="center">
+  <img src=".github/assets/logo.png" alt="mlsys-lab" width="120">
+</p>
 
-Auto-graded exercises in low-level ML systems. You write **real C++**, **real
-CUDA-C** and Python; a local grader runs it and checks a **measured number**
-against declarative gates.
+<h1 align="center">mlsys-lab</h1>
 
-No cloud, no account, no GPU required. Every metric is deterministic, so the same
-submission scores identically on any machine.
+<p align="center">
+  <em>Auto-graded exercises in low-level ML systems.<br>
+  Write real C++ and real CUDA-C; a local grader checks a measured number, never a clock.</em>
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/mlsys-lab/"><img src="https://img.shields.io/pypi/v/mlsys-lab?logo=pypi&logoColor=white&label=pypi" alt="PyPI"></a>
+  <a href="https://open-vsx.org/extension/mikamika06/mlsys-lab"><img src="https://img.shields.io/open-vsx/v/mikamika06/mlsys-lab?logo=visualstudiocode&logoColor=white&label=extension" alt="Extension"></a>
+  <a href="https://github.com/mikamika06/mlsys-lab/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/mikamika06/mlsys-lab/ci.yml?branch=main&label=ci" alt="CI"></a>
+  <a href="https://github.com/mikamika06/mlsys-lab/actions/workflows/bank.yml"><img src="https://img.shields.io/github/actions/workflow/status/mikamika06/mlsys-lab/bank.yml?branch=main&label=task%20bank" alt="Task bank"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT"></a>
+</p>
+
+<!-- ─────────────────────────────────────────────────────────────────────────────
+     DEMO GOES HERE.
+
+     Record `mlsys start` then `mlsys grade` on the bank-conflict task — the
+     16.5 dropping to 1.0 is the whole pitch in five seconds. Drop the file in
+     .github/assets/ and swap the <img> in below.
+
+     GIF, not mp4: of twenty popular dev-tool READMEs measured, six embed a GIF
+     and NOT ONE embeds a video, because GitHub will not play one inline. Record
+     with asciinema + agg, or vhs (github.com/charmbracelet/vhs).
+
+<p align="center">
+  <img src=".github/assets/demo.gif" alt="Grading a CUDA task: max_abs_err passes, smem_wave_ratio fails at 16.5, then passes at 1.0" width="760">
+</p>
+     ───────────────────────────────────────────────────────────────────────── -->
 
 ```
 $ mlsys grade gpu-1-padding-to-remove-transpose-bank-conflicts
@@ -27,6 +53,9 @@ pip install mlsys-lab
 mlsys start gpu-1-padding-to-remove-transpose-bank-conflicts   # writes the starter here
 mlsys grade gpu-1-padding-to-remove-transpose-bank-conflicts   # measure it
 ```
+
+No cloud, no account, no GPU. Every metric is deterministic, so the same submission
+scores identically on any machine.
 
 Fourteen areas, from the CPython data model to paged attention. A survey of 135 other
 resources found that **six of those fourteen have no automatically graded material

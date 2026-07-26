@@ -29,6 +29,7 @@ let statusText = null, registered = {}, panel = null;
 // ---- the stub -------------------------------------------------------------
 const vscode = {
   window: {
+    createTreeView(id, opts) { treeProvider = opts.treeDataProvider; return { dispose() {} }; },
     createWebviewPanel(id, title) {
       panel = {
         title,
@@ -56,7 +57,12 @@ const vscode = {
     getConfiguration: () => ({ get: (k, d) =>
       k === "workDir" ? WORK : k === "pythonPath" ? PY : d }),
   },
-  commands: { registerCommand(id, fn) { registered[id] = fn; return { dispose() {} }; } },
+  commands: { registerCommand(id, fn) { registered[id] = fn; return { dispose() {} }; },
+              executeCommand() { return Promise.resolve(); } },
+  EventEmitter: class { constructor() { this.event = () => ({ dispose() {} }); } fire() {} },
+  TreeItem: class { constructor(label, state) { this.label = label; this.collapsibleState = state; } },
+  TreeItemCollapsibleState: { None: 0, Collapsed: 1, Expanded: 2 },
+  ThemeIcon: class { constructor(id) { this.id = id; } },
   Uri: { file: (p) => ({ fsPath: p, toString: () => "file://" + p }), joinPath: (u, ...r) => ({ fsPath: path.join(u.fsPath, ...r) }) },
   ViewColumn: { Active: 1 },
   StatusBarAlignment: { Left: 1, Right: 2 },
@@ -116,6 +122,19 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     const built = m.payload.totals.built;
     if (built < 2000) throw new Error("only " + built + " tasks in the map");
     return built + " tasks, " + m.payload.tiers.length + " areas";
+  });
+
+  check("sidebar tree lists the bank", () => {
+    if (!treeProvider) throw new Error("no tree view was registered — no sidebar icon");
+    const areas = treeProvider.getChildren();
+    if (!areas || areas.length < 10) throw new Error("only " + (areas || []).length + " areas");
+    const tracks = treeProvider.getChildren(areas[0]);
+    if (!tracks || !tracks.length) throw new Error("area has no tracks");
+    const tasks = treeProvider.getChildren(tracks[0]);
+    if (!tasks || !tasks.length) throw new Error("track has no tasks");
+    if (!tasks[0].command || tasks[0].command.command !== "mlsys.openTask")
+      throw new Error("task row does not open anything");
+    return `${areas.length} areas, first has ${tracks.length} tracks, ${tasks.length} tasks`;
   });
 
   // Where the bank actually is in this mode — the reference/starter files are read

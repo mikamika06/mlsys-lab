@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <!-- Activity-bar icons are masked to one theme colour, so this is a single stroked
+       path with no fills and no colour of its own: an M and an L sharing a baseline. -->
+  <path d="M3 18V7l4.5 7L12 7v11" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M16 7v11h5" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
