@@ -92,7 +92,8 @@ eigvals, eigvecs = eigvals[order], eigvecs[:, order]
 
 _, S, _ = np.linalg.svd(Xc, full_matrices=False)   # route 2: SVD, must agree
 svd_vals = (S ** 2) / (n - 1)
-print(f"max|eig - svd variance| = {np.max(np.abs(eigvals - svd_vals)):.3e}")
+agree = float(np.max(np.abs(eigvals - svd_vals)))
+print(f"eig and svd variances agree to < 1e-12: {agree < 1e-12}")
 
 G = (X.T @ X) / (n - 1)                        # route 3: skip centering entirely
 eigvals_nc, eigvecs_nc = np.linalg.eigh(G)
@@ -110,7 +111,7 @@ for k in range(1, d + 1):
 PY
 ```
 
-The covariance route and the SVD route agree to `3.553e-14`, which is floating-point
+The covariance route and the SVD route agree to better than `1e-12`, which is floating-point
 noise, not a real disagreement — that is the first thing the snippet prints. The
 centered columns read exactly as PCA promises: three real latent factors show up as
 three components carrying almost all the variance, and MSE collapses toward zero well

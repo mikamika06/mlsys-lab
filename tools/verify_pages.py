@@ -21,7 +21,22 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 HEREDOC = re.compile(r"python3 - <<'PY'\n(.*?)\nPY\n", re.S)
+PIPLINE = re.compile(r"^pip install (.+)$", re.M)
 NUM = re.compile(r"-?\d+\.?\d*(?:[eE][-+]?\d+)?")
+
+
+def declared_deps(text: str) -> list[str]:
+    """What the page tells the reader to install, beyond this package itself.
+
+    The page is the instruction; if it says `pip install mlsys-lab ml_dtypes` then a
+    missing ml_dtypes is the checking environment's problem, not the page's. Report
+    it as that, so a real defect is never confused with a missing package.
+    """
+    out: list[str] = []
+    for m in PIPLINE.finditer(text):
+        out += [p for p in m.group(1).split()
+                if not p.startswith("-") and p not in ("mlsys-lab", "mlsys_lab")]
+    return sorted(set(out))
 
 
 def _sig_digits(s: str) -> int:
@@ -73,7 +88,16 @@ def check(p: Path) -> list[str]:
                            text=True, cwd=ROOT, timeout=600)
         if r.returncode != 0:
             tail = (r.stderr or "").strip().splitlines()
-            problems.append(f"snippet {i + 1} exited {r.returncode}: {tail[-1] if tail else '?'}")
+            last = tail[-1] if tail else "?"
+            missing_dep = re.search(r"No module named '([^']+)'", last)
+            if missing_dep and missing_dep.group(1) in {d.replace("-", "_")
+                                                       for d in declared_deps(text)}:
+                problems.append(
+                    f"snippet {i + 1} needs `{missing_dep.group(1)}`, which the page does "
+                    f"tell the reader to install — install it here too: "
+                    f"pip install {' '.join(declared_deps(text))}")
+            else:
+                problems.append(f"snippet {i + 1} exited {r.returncode}: {last}")
             continue
         printed = {n.replace(",", "") for n in NUM.findall(r.stdout)}
         # A number the script prints but the page never mentions means the table and
