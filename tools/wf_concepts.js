@@ -157,8 +157,7 @@ const SCHEMA = {
   },
 }
 
-const CONTEXT = `You are writing one page for github.com/mikamika06/mlsys-lab, a bank of 2053
-auto-graded exercises in low-level ML systems. Work in /Users/macbook/mlsys-lab.
+const CONTEXT = `You are writing one page for github.com/mikamika06/mlsys-lab, a bank of auto-graded exercises in low-level ML systems. Work in /Users/macbook/mlsys-lab.
 
 === THE ONE RULE THAT MATTERS ===
 Every number in your page must come from code you actually ran, and the page must contain the

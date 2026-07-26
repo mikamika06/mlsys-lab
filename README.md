@@ -39,7 +39,7 @@ a task cannot be passed by guessing the expected output.
 ## Install
 
 ```bash
-pip install mlsys-lab                             # the engine and all 2053 tasks
+pip install mlsys-lab                             # the engine and the whole task bank
 
 mlsys list                                        # browse the bank
 mlsys start gpu-ex-cuda-coalesced-scale           # writes ./<task-id>/solve.cu to edit

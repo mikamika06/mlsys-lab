@@ -1,6 +1,6 @@
 """Where the task bank lives.
 
-The bank is 2053 directories under `tasks/`. In a git checkout that is `./tasks`
+The bank is a directory of task directories under `tasks/`. In a git checkout that is `./tasks`
 relative to the repo root; in a `pip install mlsys-lab` it is shipped inside the
 package as `mlsys/tasks` (hatchling force-includes it — see pyproject.toml). Code
 must not assume either one, so everything asks here.
@@ -65,7 +65,7 @@ def missing_pkgs(meta: dict) -> list[str]:
 def curriculum_file() -> Path | None:
     """The area/sub-track grouping for the bank, if it shipped or is in the checkout.
 
-    Editors group 2053 tasks by it. Missing is survivable — the id prefix recovers
+    Editors group the bank by it. Missing is survivable — the id prefix recovers
     the 14 areas — so this returns None rather than raising.
     """
     p = Path(__file__).resolve().parent / "task_list2.json"
