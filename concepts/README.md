@@ -93,6 +93,17 @@ Derived from measuring the pages that currently rank for these terms, not from f
   into the task pages, which are otherwise unreachable: GitHub's `robots.txt` blocks
   `/*/tree/`, so nothing but a hand-written link reaches them.
 - **2+ references with URLs**, primary sources.
+- **Never quote a floating-point residual as an exact digit.** If a number is the leftover
+  of a "these two should be equal" check, it is rounding, and numpy's SIMD kernels on x86 and
+  ARM disagree about it. Two pages shipped this and CI caught both: the softmax page claimed
+  `4.180e-13` where x86 printed `4.554e-18`, and a derived ratio of two such residuals came
+  out 50.9 here and 4,668,318 there. State the bound instead — `< 1e-10` — and have the
+  snippet print the bound check, not the digits behind it.
+
+  The line is sharp and worth knowing. A residual that lands on an exact small multiple of
+  machine epsilon is safe, because it has hit the representable floor: `2.220e-16` is one ULP,
+  `6.661e-16` is three, `1.110e-15` is five, and three pages quote those and pass everywhere.
+  Anything above that floor is accumulated error, and accumulation order is what differs.
 - Prose may be drafted with help; **the number, the gate thresholds, the reproduction command
   and the citations may not**. Google's own wording makes production method irrelevant and
   value the only test — a page whose only input was a keyword is the thing that gets

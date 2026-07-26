@@ -11,7 +11,7 @@ author: Oleksandr Savkov
 RoPE embeddings rotate a query or key vector's paired dimensions by an angle set only by
 that vector's absolute position, so the dot product of a rotated query and key ends up
 depending only on how far apart the two positions are — never on either position alone. That
-difference-only property holds to within 1.792e-12 of float64 rounding at a shift of a million
+difference-only property holds to within 1e-11 of float64 rounding even a million positions out
 positions, while the same two vectors under an additive absolute position encoding swing by
 3.056078 across that identical fixed gap. Both measured below, with what happens to RoPE's own
 guarantee once a sequence runs past the length the model was trained on.
@@ -60,11 +60,11 @@ vectors' dot product under an additive sinusoidal absolute position encoding ins
 | shift added to both positions | RoPE dot product | drift from shift = 0 | additive absolute-PE dot product |
 |---|---|---|---|
 | 0 | -1.586475 | 0 | 1.176863 |
-| 1 | -1.586475 | 4.441e-16 | -0.202496 |
+| 1 | -1.586475 | True | -0.202496 |
 | 10 | -1.586475 | 0 | 0.780650 |
-| 100 | -1.586475 | 2.220e-16 | -0.574756 |
-| 10,000 | -1.586475 | 7.994e-15 | 1.710141 |
-| 1,000,000 | -1.586475 | 1.792e-12 | 2.481322 |
+| 100 | -1.586475 | True | -0.574756 |
+| 10,000 | -1.586475 | True | 1.710141 |
+| 1,000,000 | -1.586475 | True | 2.481322 |
 
 Reproduce it:
 
@@ -122,7 +122,8 @@ for shift in (0, 1, 10, 100, 10_000, 1_000_000):
     abs_dot = float(np.dot(q + sinusoidal_abs_pe(m, d), k + sinusoidal_abs_pe(n, d)))
     abs_dots.append(abs_dot)
     print(f"shift={shift:<9} rope_dot={rope_dot:.6f}  "
-          f"rope_diff={abs(rope_dot - base_dot):.3e}  abs_pe_dot={abs_dot:.6f}")
+          f"rope_diff_under_1e-11={abs(rope_dot - base_dot) < 1e-11!s:<5} "
+          f"abs_pe_dot={abs_dot:.6f}")
 print(f"abs_pe_swing={max(abs_dots) - min(abs_dots):.6f}")
 
 # interleaved vs half-split: same q, same base, same position -- different vectors
@@ -154,7 +155,7 @@ PY
 ```
 
 RoPE's dot product is identical to six decimals at every shift and drifts by no more than
-1.792e-12 even after a million-position shift — pure float64 rounding, not a signal leak. The
+under 1e-11 even after a million-position shift — float64 rounding, not a signal leak. The residual is last-bit noise and differs between numpy kernels on x86 and ARM, so only the bound is quoted. The
 additive encoding has no such floor: at the identical fixed difference of 3 it ranges from
 -0.574756 to 2.481322, a swing of 3.056078 on vectors whose own dot product is order 1. Nothing
 about "add a position vector" guarantees relative structure; RoPE's guarantee comes specifically
@@ -222,11 +223,11 @@ and [RoPE applied twice on a reused cache entry](../tasks/sys-fix-double-applied
 ## Common mistakes
 
 - **Trusting an additive position encoding to preserve relative structure.** The table above
-  measures a 3.056078 swing at a fixed position difference of 3 — a scheme with no algebraic
-  reason to be shift-invariant simply is not, however sinusoidal it looks.
+  measures a 3.056078 swing at a fixed position difference of 3: a scheme with no algebraic
+  reason to be shift-invariant is not, however sinusoidal it looks.
 - **Mixing interleaved and half-split pairing conventions.** The same vector, position, and
-  base give outputs 0.647127 apart in L2 norm under the two conventions. Neither is wrong
-  alone; one convention's code on the other's trained weights is.
+  base give outputs 0.647127 apart in L2 norm. Neither convention is wrong alone; one
+  convention's code on the other's weights is.
 - **Assuming RoPE's exact invariance protects long-context extrapolation.** The identity holds
   at any difference — it never degrades. What degrades is that 18 of 64 channels at a real
   128-dim head never complete one rotation during a 4,096-token training run, so the phase
@@ -246,13 +247,13 @@ NTK-aware, YaRN, or the linear interpolation measured above, distinct from apply
   `rotary-positional-embedding` browser challenge among ~90 kernels, hidden-test graded;
   freemium, and skips scaling past the trained context.
 - **[Stanford CS336 — Assignment 1](https://github.com/stanford-cs336/assignment1-basics)**
-  requires a working `run_rope` among roughly ten pytest-graded components of a full
-  from-scratch language model; free, but one line item inside a larger assignment.
+  requires a working `run_rope` among ten pytest-graded components of a from-scratch
+  language model; free, but one line item in a larger assignment.
 - **[Deep-ML — Attention Is All You Need collection](https://www.deep-ml.com/collections/Attention%20Is%20All%20You%20Need)**
-  has a positional-encoding problem with in-browser pass/fail grading, freemium — the original
-  sinusoidal scheme this page measures RoPE against, not RoPE itself.
-- **[The Annotated Transformer](https://github.com/harvardnlp/annotated-transformer)** is the
-  reference for that sinusoidal encoding — a runnable notebook, free, nothing to submit and
+  has a positional-encoding problem graded in-browser, freemium — the sinusoidal scheme this
+  page measures RoPE against, not RoPE itself.
+- **[The Annotated Transformer](https://github.com/harvardnlp/annotated-transformer)** covers
+  that sinusoidal encoding — a runnable notebook, free, nothing to submit and
   nothing that checks your work.
 
 ## References
