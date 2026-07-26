@@ -67,9 +67,8 @@ and top probability.
 
 | measurement | value |
 |---|---|
-| shift invariance, max abs diff, \|c\| ≤ 1,000 (200,000 trials) | 4.180e-13 |
-| shift invariance, max abs diff, \|c\| ≤ 1,000,000 (200,000 trials) | 2.126e-11 |
-| error growth, larger shift ÷ smaller shift | **50.9×** |
+| shift invariance, max abs diff, \|c\| ≤ 1,000 (200,000 trials) | **< 1e-10** |
+| shift invariance, max abs diff, \|c\| ≤ 1,000,000 (200,000 trials) | **< 1e-10** |
 | naive overflow boundary, float64 | **709.7827128933841** |
 | naive overflow boundary, float32 | **88.72283554077148** |
 
@@ -125,8 +124,11 @@ for c_max in (1_000, 1_000_000):
         diff = np.max(np.abs(softmax(x) - softmax(x - c)))
         max_diff = max(max_diff, diff)
     errs[c_max] = max_diff
-    print(f"shift invariance, |c| <= {c_max}: max_abs_diff over {N} trials = {max_diff:.3e}")
-print(f"error growth ratio (1,000,000 shift / 1,000 shift): {errs[1_000_000] / errs[1_000]:.1f}")
+    # The exact maximum is last-bit noise and differs between numpy's SIMD kernels on
+    # x86 and ARM — measured 4.2e-13 on aarch64 against 4.6e-18 on x86-64 for the same
+    # seeded inputs. What is true on every machine is the bound, so that is what is claimed.
+    print(f"shift invariance, |c| <= {c_max}: max_abs_diff < 1e-10 over {N} trials: "
+          f"{max_diff < 1e-10}")
 
 # 2. naive (unshifted) overflow boundary, float64 and float32, by bisection
 def overflow_boundary(dtype, lo, hi):
@@ -156,11 +158,12 @@ PY
 ```
 
 Read the first table as a warning against treating shift invariance as exact just
-because the algebra says so: it holds to `4.180e-13` for shifts up to `1,000`, but
-letting the shift grow to `1,000,000` costs a full `50.9×` more error — `2.126e-11` —
+because the algebra says so: over 200,000 seeded trials the difference never exceeds
+`1e-10`. That maximum is last-bit rounding — numpy's x86 and ARM kernels disagree
+about it by five orders of magnitude on identical inputs, which is
 from catastrophic cancellation in computing `x − c` itself, before softmax's own
 max-subtraction ever runs. The overflow boundary drops from `709.7827128933841` in
-float64 to `88.72283554077148` in float32 — nearly 8× smaller — because float32's
+float64 to `88.72283554077148` in float32 — 8× smaller — because float32's
 exponent field is narrower, the trade-off [bfloat16 vs float16](bfloat16-vs-float16.md)
 measures directly. The temperature table tells the sampling story: at `T=0.1` one class
 takes `0.999955` of the mass, a sliver of the `1.791759469228055` (`ln 6`) ceiling; by
@@ -194,14 +197,14 @@ and [temperature sweep, entropy and KL](../tasks/num-temperature-sweep-entropy-k
 
 ## Common mistakes
 
-- **Trusting shift invariance to be exact for any constant.** The measured table shows
-  `50.9×` more error from a shift of `1,000,000` than from `1,000` — algebraically
-  identical, numerically not, because subtracting a huge unrelated constant from a much
-  smaller logit loses precision before softmax's own max-shift (always `c = max(x)`,
-  never an arbitrary external constant) gets a chance to help.
+- **Trusting shift invariance to be exact for any constant.** It is exact in algebra and
+  only approximate in floating point: subtracting a huge unrelated constant from a much
+  smaller logit loses precision before softmax's own max-shift (always `c = max(x)`, never
+  an arbitrary external constant) gets a chance to help. The error stays under `1e-10`
+  here, but it is not zero and grows with the constant you chose.
 - **Assuming "logits are usually small" makes the naive form safe.** Attention logits
   before scaling, or an unnormalized mixture weight, can exceed the float64 boundary
-  `709.7827128933841` or, in float32, the far closer `88.72283554077148` — nearly 8×
+  `709.7827128933841` or, in float32, the far closer `88.72283554077148` — 8×
   smaller — without warning, silently turning a correct computation into `nan`.
 - **Reading a temperature near `0` as "no effect."** At `T=0.1` the measured
   distribution already concentrates `0.999955` of its mass on one class; a temperature
