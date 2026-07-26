@@ -112,11 +112,15 @@ Three native tracks plus the systems material:
 
 ## Concepts, explained with a number
 
-[`concepts/`](concepts/) — one page per concept, each with a measurement produced by
-the simulator in this repo and the command that regenerates it, then the graded exercise.
-Start with [memory coalescing](concepts/memory-coalescing.md) (128-byte transactions
-against read stride, 2 → 33) or [false sharing](concepts/false-sharing.md) (coherence
-invalidations against padding, 7,999 → 0).
+[`concepts/`](concepts/) — 22 pages, one per concept, each with a measurement produced by
+this repo and the command that regenerates it, then the graded exercise. Two checks run in
+CI: one for structure and links, one that **executes each page's own snippet** and fails if
+it prints anything the page does not say.
+
+Start with [memory coalescing](concepts/memory-coalescing.md) (128-byte transactions against
+read stride, 2 → 33), [false sharing](concepts/false-sharing.md) (coherence invalidations
+against padding, 7,999 → 0), or [gguf vs safetensors](concepts/gguf-vs-safetensors.md)
+(bytes per weight *actual* rather than the nominal 4 bits).
 
 ## What else exists
 

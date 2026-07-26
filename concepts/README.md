@@ -17,14 +17,24 @@ teacher than this bank, the page says so and links it.
 | [What is warp divergence?](warp-divergence.md) | divergences and cycles against which lanes take the branch |
 | [What are shared memory bank conflicts?](cuda-shared-memory-bank-conflicts.md) | conflict waves against row stride, and why stride 64 is as bad as 32 |
 | [What is false sharing?](false-sharing.md) | coherence invalidations against counter padding, 7,999 → 0 |
-| [What is cache blocking?](cache-blocking.md) | cache misses against tile size, including a tile that is worse than not blocking at all |
-| [What is kahan summation?](kahan-summation.md) | absolute error of naive, pairwise and compensated summation against the exact sum |
+| [What is cache blocking?](cache-blocking.md) | misses against tile size, including a tile worse than not blocking at all |
+| [What is cache locality?](cache-locality.md) | the exact row length at which column-major becomes one miss per access |
+| [What is loop unrolling?](loop-unrolling.md) | loop-control work against unroll factor, and where the tail eats the saving |
+| [What is simd?](simd.md) | vector and scalar ops against register width; below N = W, widening buys nothing |
+| [What is kahan summation?](kahan-summation.md) | error of naive, pairwise and compensated summation against the exact sum |
 | [What is log sum exp?](log-sum-exp.md) | the exact input at which the naive form overflows |
 | [What is bfloat16 vs float16?](bfloat16-vs-float16.md) | range, epsilon and the first value that overflows each format |
-| [What is the int8 range?](integer-quantization-ranges.md) | levels and quantization error for int4 / int8 / int16, symmetric and asymmetric |
+| [What is the int8 range?](integer-quantization-ranges.md) | levels and quantization error for int4 / int8 / int16 |
+| [What is gguf vs safetensors?](gguf-vs-safetensors.md) | bytes per weight *actual* vs nominal, once block metadata is counted |
+| [What is softmax vs sigmoid?](softmax-vs-sigmoid.md) | they are identical at two classes and diverge from three; plus both overflow points |
+| [What is rmsnorm vs layernorm?](rmsnorm-vs-layernorm.md) | parameters and ops for each, and what subtracting the mean actually buys |
+| [What is gradient checkpointing?](gradient-checkpointing.md) | retained activations and recomputations against segment count |
+| [What is continuous batching?](continuous-batching.md) | wasted decode slot-steps, static against continuous, as output length varies |
 | [What is python slots?](python-slots.md) | bytes per instance with and without `__slots__` |
+| [What is python descriptors?](python-descriptors.md) | which protocol method fires per lookup path, and how often |
+| [What is python multiprocessing?](python-multiprocessing.md) | bytes actually pickled per argument shape, and which shapes cannot cross at all |
 | [What is kmeans?](kmeans.md) | iterations and final inertia, random init against k-means++ |
-| [What is PCA?](pca.md) | explained variance and reconstruction error per component, and what skipping centering costs |
+| [What is PCA?](pca.md) | explained variance and reconstruction error per component, and the cost of skipping centering |
 
 ## The rules these pages follow
 
@@ -63,9 +73,9 @@ in it at all.
 
 Ordered by how contested the term is, then by how much a measurement adds:
 
-`python multiprocessing` · `softmax vs sigmoid` · `cache locality` · `simd` ·
-`python descriptors` · `loop unrolling` · `gradient checkpointing` · `continuous batching` ·
-`rmsnorm vs layernorm` · `gguf vs safetensors`
+`python gil` · `virtual function table` · `rvalue reference` · `torch compile` ·
+`paged attention` · `knowledge distillation` · `speculative decoding` · `cuda graphs` ·
+`floating point precision python` · `torch onnx export`
 
 Two rules for that list. Merge synonyms onto one page — `log sum exp` and `logsumexp` are the
 same page, and splitting them is how a site cannibalises itself. And drop anything whose
