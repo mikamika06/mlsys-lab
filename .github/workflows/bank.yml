@@ -1,0 +1,46 @@
+name: bank
+
+# Every task must discriminate: the reference passes its gates and the shipped starter
+# fails them. A task anything can pass is not a task.
+#
+# Its own workflow because it takes ~15 minutes. In ci.yml it shared a concurrency group
+# with the fast jobs and cancel-in-progress killed it on the next push, so the project's
+# only exhaustive check almost never ran to completion. Here a run is allowed to finish.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: bank-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: every task discriminates
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install the engine and the extras a few tasks' oracles need
+        run: |
+          python -m pip install --quiet -e ".[extras]"
+          # One task's oracle uses torch. The CPU wheel keeps it to ~200 MB instead of
+          # the ~800 MB CUDA build, and nothing here needs a GPU.
+          python -m pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+      - run: clang++ --version
+      - name: Verify the whole bank
+        run: python3 tools/verify_all.py
+      - name: The verifier must not litter the bank
+        run: |
+          n=$(find tasks -maxdepth 2 -name 'solve.*' | wc -l)
+          test "$n" -eq 0 || { echo "verifier left $n scratch files in the bank"; exit 1; }
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: verify-report
+          path: .internal/verify_report.json
