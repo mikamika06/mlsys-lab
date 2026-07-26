@@ -14,10 +14,27 @@ CXX = os.environ.get("MLSYS_CXX", "clang++")
 FLAGS = ["-O2", "-std=c++20"]
 
 
+def _extra_flags(taskdir):
+    """Per-task compiler flags from meta.json.
+
+    A task about undefined behaviour cannot be graded by comparing output: UB means
+    the compiler may do anything, and it does different things on different targets —
+    measured, the shift task's buggy starter produced the well-defined answer on x86
+    and a different one on aarch64, so the task discriminated on one machine and not
+    the other. `-fsanitize=undefined` detects the UB itself, which is the same
+    everywhere.
+    """
+    try:
+        with open(os.path.join(taskdir, "meta.json")) as f:
+            return list(json.load(f).get("cxx_flags") or [])
+    except Exception:
+        return []
+
+
 def _compile_run(taskdir, srcfile, timeout=15):
     with tempfile.TemporaryDirectory() as tmp:
         exe = os.path.join(tmp, "a.out")
-        cc = subprocess.run([CXX, *FLAGS, "-I", taskdir, "-o", exe,
+        cc = subprocess.run([CXX, *FLAGS, *_extra_flags(taskdir), "-I", taskdir, "-o", exe,
                              os.path.join(taskdir, "main.cpp"), os.path.join(taskdir, srcfile)],
                             capture_output=True, text=True)
         if cc.returncode != 0:

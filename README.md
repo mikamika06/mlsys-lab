@@ -63,6 +63,19 @@ C++ tasks need a C++20 compiler (`clang++` or `g++`); everything else is Python
 plus NumPy. CUDA tasks need **no** NVIDIA hardware — the `.cu` is executed by the
 simulator in `src/mlsys/sim/`.
 
+Sixteen tasks have an oracle that needs more than NumPy — `scipy`, `ml-dtypes`,
+`mpmath`, or `torch`. Rather than make every learner install torch, each declares what
+it needs and `mlsys grade` tells you:
+
+```bash
+pip install "mlsys-lab[extras]"     # scipy, ml-dtypes, mpmath — 15 of the 16
+pip install "mlsys-lab[torch]"      # the remaining one
+```
+
+Five tasks use ARM NEON intrinsics and one loads Apple's Accelerate framework, so they
+only build on the platform they target. The verifier skips those by name rather than
+pretending they passed.
+
 ### VS Code
 
 Install **mlsys-lab** from the Marketplace, then run **mlsys-lab: Open Workspace**.

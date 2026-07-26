@@ -1,6 +1,6 @@
 {
   "id": "num-cholesky-lower-factor-reconstruct-a-ll-t",
-  "title": "Cholesky Lower Factor: Reconstruct A = L Lᵀ",
+  "title": "Cholesky Lower Factor: Reconstruct A = L L\u1d40",
   "track": "02 Numerical Algorithms",
   "tier": "II",
   "module": "M3la",
@@ -40,5 +40,8 @@
       "threshold": 0.0
     }
   ],
-  "info": []
+  "info": [],
+  "requires_pkgs": [
+    "scipy"
+  ]
 }

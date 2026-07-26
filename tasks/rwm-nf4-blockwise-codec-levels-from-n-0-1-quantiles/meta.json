@@ -17,7 +17,7 @@
     {
       "metric": "levels_max_abs_err",
       "op": "<=",
-      "threshold": 1e-6
+      "threshold": 1e-06
     },
     {
       "metric": "rel_err",
@@ -25,5 +25,8 @@
       "threshold": 0.15
     }
   ],
-  "info": []
+  "info": [],
+  "requires_pkgs": [
+    "scipy"
+  ]
 }

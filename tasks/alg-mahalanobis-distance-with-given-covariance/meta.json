@@ -15,8 +15,11 @@
     {
       "metric": "rel_err",
       "op": "<=",
-      "threshold": 1e-7
+      "threshold": 1e-07
     }
   ],
-  "info": []
+  "info": [],
+  "requires_pkgs": [
+    "scipy"
+  ]
 }

@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from . import __version__, jsonsafe, runner
+from . import bank
 from .bank import bank_root
 from .task import find_task, list_tasks
 
@@ -119,6 +120,17 @@ def cmd_grade(args) -> int:
     except FileNotFoundError as e:
         print(_c(RED, str(e)))
         return 2
+    # A task that needs scipy must say so, not hand the learner a traceback from
+    # inside somebody else's oracle.
+    lack = bank.missing_pkgs(task.meta)
+    if lack:
+        print(_c(RED, f"{task.id} needs {', '.join(lack)}, which is not installed."))
+        print(_c(DIM, "  This task's grader uses it; most of the bank does not, which is why"))
+        print(_c(DIM, "  it is not a hard dependency."))
+        print()
+        print(f"  {_c(STEEL, 'pip install ' + ' '.join(lack))}")
+        return 2
+
     cand = _find_candidate(task, args.file)
     if cand is None:
         want = SRCFILE[_native(task)]

@@ -52,10 +52,20 @@ stored as long (sign-ext) = -2147483648
 
 The driver runs `process_shifts` over 8 fixed cases mixing negative values,
 positive values, in-range shifts, and shifts `>= 32`, and prints each
-`results[i]`. The grader compiles `solve.cpp` with `clang++ -O2 -std=c++20`,
+`results[i]`. The grader compiles `solve.cpp` with
+`clang++ -O2 -std=c++20 -fsanitize=undefined -fno-sanitize-recover=all`,
 runs it, and requires
 
 $$ \mathrm{exact\_match} = 1.0 $$
+
+**The sanitizer is the real judge here, and that is deliberate.** Comparing printed
+output cannot grade a question about undefined behaviour, because UB means the compiler
+may do anything and different targets do different things: measured, this task's buggy
+starter produced exactly the well-defined answer on x86-64 and a different one on
+aarch64, so it discriminated on one machine and silently passed on the other. With
+`-fsanitize=undefined` the shift is *detected* rather than guessed at, and the program
+aborts with `shift exponent 35 is too large for 32-bit type` on every platform. Getting
+the right number by accident is not a pass.
 
 against the reference. A kernel that performs the raw `value << shift_amount`
 on signed `int` triggers real undefined behavior at `-O2` on several of the

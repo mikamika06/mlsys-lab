@@ -18,5 +18,8 @@
       "threshold": 1.0
     }
   ],
-  "info": []
+  "info": [],
+  "requires_pkgs": [
+    "ml_dtypes"
+  ]
 }

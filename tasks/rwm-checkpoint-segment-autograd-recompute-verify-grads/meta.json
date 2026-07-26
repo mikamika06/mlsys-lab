@@ -15,7 +15,7 @@
     {
       "metric": "max_abs_err",
       "op": "<=",
-      "threshold": 1e-5
+      "threshold": 1e-05
     },
     {
       "metric": "saved_tensor_count",
@@ -23,5 +23,8 @@
       "threshold": 5
     }
   ],
-  "info": []
+  "info": [],
+  "requires_pkgs": [
+    "torch"
+  ]
 }

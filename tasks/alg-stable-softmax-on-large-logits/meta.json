@@ -15,8 +15,11 @@
     {
       "metric": "mean_kl",
       "op": "<=",
-      "threshold": 1e-9
+      "threshold": 1e-09
     }
   ],
-  "info": {}
+  "info": {},
+  "requires_pkgs": [
+    "scipy"
+  ]
 }

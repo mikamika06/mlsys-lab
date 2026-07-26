@@ -18,5 +18,8 @@
       "threshold": 1e-12
     }
   ],
-  "info": []
+  "info": [],
+  "requires_pkgs": [
+    "scipy"
+  ]
 }

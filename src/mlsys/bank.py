@@ -34,6 +34,34 @@ def bundled_root() -> Path:
     return Path(__file__).resolve().parent / "tasks"
 
 
+# A handful of tasks need a package this project does not depend on: 11 use scipy in
+# their oracle, 3 use ml_dtypes, one mpmath, one torch. Depending on all of those would
+# mean every learner installing torch to get the bank, so they are declared per task in
+# meta.json as `requires_pkgs` and installable as extras. Import names, not pip names —
+# `ml_dtypes` imports that way and installs as `ml-dtypes`.
+PIP_NAME = {"ml_dtypes": "ml-dtypes"}
+
+
+def missing_pkgs(meta: dict) -> list[str]:
+    """Which of a task's declared requirements cannot be imported here.
+
+    Returned as pip names, ready to paste after `pip install`. Checked with
+    importlib.util.find_spec so nothing is actually imported and no import side
+    effect lands in the grading process.
+    """
+    import importlib.util
+
+    out = []
+    for mod in meta.get("requires_pkgs", []):
+        try:
+            found = importlib.util.find_spec(mod) is not None
+        except (ImportError, ValueError):
+            found = False
+        if not found:
+            out.append(PIP_NAME.get(mod, mod))
+    return out
+
+
 def curriculum_file() -> Path | None:
     """The area/sub-track grouping for the bank, if it shipped or is in the checkout.
 

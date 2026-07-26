@@ -20,6 +20,8 @@ import sys
 import time
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "src"))
+from mlsys.bank import missing_pkgs  # noqa: E402 — after the path is set up
 REPORT = ROOT / ".internal" / "verify_report.json"
 
 
@@ -28,11 +30,22 @@ def verify(tid):
     # Some tasks are written against a specific ISA — the NEON ones include
     # <arm_neon.h>, which x86 clang refuses outright. Skipping is honest; passing
     # them silently on the wrong machine would not be.
+    def _skip(why):
+        return {"id": tid, "native": meta.get("native") or "python",
+                "genre": meta.get("genre"), "ok": True, "skipped": why,
+                "msg": f"skipped: {why}", "secs": 0.0}
+
     need = meta.get("requires_arch")
     if need and platform.machine() not in (need, {"aarch64": "arm64"}.get(need)):
-        return {"id": tid, "native": meta.get("native") or "python",
-                "genre": meta.get("genre"), "ok": True, "skipped": need,
-                "msg": f"skipped: needs {need}, this is {platform.machine()}", "secs": 0.0}
+        return _skip(f"needs {need}, this is {platform.machine()}")
+    need_os = meta.get("requires_os")
+    if need_os and sys.platform != need_os:
+        return _skip(f"needs {need_os}, this is {sys.platform}")
+    # Same treatment for a package this project does not depend on: skipping is
+    # honest, and reporting it as a broken task would be a lie.
+    lack = missing_pkgs(meta)
+    if lack:
+        return _skip(f"needs {' '.join(lack)} (pip install {' '.join(lack)})")
     script = "verify_native.sh" if meta.get("native") else "verify_task.sh"
     t0 = time.time()
     try:

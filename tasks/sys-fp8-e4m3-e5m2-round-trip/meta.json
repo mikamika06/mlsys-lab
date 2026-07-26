@@ -15,8 +15,11 @@
     {
       "metric": "max_abs_err",
       "op": "<=",
-      "threshold": 1e-6
+      "threshold": 1e-06
     }
   ],
-  "info": []
+  "info": [],
+  "requires_pkgs": [
+    "ml_dtypes"
+  ]
 }

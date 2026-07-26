@@ -1,1 +1,20 @@
-{"id":"cpp-level-1-2-blas-axpy-gemv-correctness","title":"Level-1/2 BLAS: axpy + gemv correctness","track":"02 Deep C++","tier":"I","module":"M2","difficulty":3,"genre":"implement","platform":"cross-platform","native":"cpp","gates":[{"metric":"exact_match","op":"==","threshold":1.0}],"info":[]}
+{
+  "id": "cpp-level-1-2-blas-axpy-gemv-correctness",
+  "title": "Level-1/2 BLAS: axpy + gemv correctness",
+  "track": "02 Deep C++",
+  "tier": "I",
+  "module": "M2",
+  "difficulty": 3,
+  "genre": "implement",
+  "platform": "cross-platform",
+  "native": "cpp",
+  "gates": [
+    {
+      "metric": "exact_match",
+      "op": "==",
+      "threshold": 1.0
+    }
+  ],
+  "info": [],
+  "requires_os": "darwin"
+}

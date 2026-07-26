@@ -154,7 +154,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
-      - run: python -m pip install --quiet -e .
+      - name: Install the engine and the extras a few tasks' oracles need
+        run: |
+          python -m pip install --quiet -e ".[extras]"
+          # One task's oracle uses torch. The CPU wheel keeps it to ~200 MB instead of
+          # the ~800 MB CUDA build, and nothing here needs a GPU.
+          python -m pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
       - run: clang++ --version
       - name: Verify the whole bank
         run: python3 tools/verify_all.py
