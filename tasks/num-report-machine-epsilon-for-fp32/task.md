@@ -28,10 +28,10 @@ The function should return **the 32‑bit unsigned integer that encodes** the ma
 ```python
 >>> import numpy as np
 >>> eps = np.finfo(np.float32).eps
->>> eps.view(np.uint32)
-<array(872415232, dtype=uint32)>
+>>> int(eps.view(np.uint32))
+872415232
 >>> machine_epsilon_fp32()
-872415232  # same value
+872415232
 ```
 
 ## What the gate checks

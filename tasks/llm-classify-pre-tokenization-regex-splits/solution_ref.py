@@ -2,7 +2,7 @@ import re
 from typing import List
 
 # Official GPT‑2 pre‑tokenizer regex pattern
-_PATTERN = r"(?:(?:[^\x00-\x7F]+)|(?:\\w+)|(?:[^\\s\\w]))"
+_PATTERN = r"(?:(?:[^\x00-\x7F]+)|(?:\w+)|(?:[^\s\w]))"
 
 def split_gpt2_pre_tokenizer(text: str) -> List[str]:
     """

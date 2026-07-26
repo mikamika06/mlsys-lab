@@ -55,13 +55,14 @@ be performed with Python integers; no NumPy is required.
 
 ```python
 >>> kv_memory_usage(T=10, d=4, nbits=4, R=2, group_size=3)
+41
 ```
 
 The returned value equals
 
 $$\frac{4}{8}\,(10-2)\,4 \;+\; 2\,2\,4 \;+\;
 \left\lceil\frac{10-2}{3}\right\rceil\,(2+1) =
-16 + 16 + 12 = 44 \text{ bytes}. $$
+16 + 16 + 9 = 41 \text{ bytes}. $$
 
 ## What the gate checks
 

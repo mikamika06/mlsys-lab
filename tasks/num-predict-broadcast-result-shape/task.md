@@ -11,7 +11,7 @@ The function should accept any two tuples of positive integers (or zero). It mus
 ## Example
 
 ```python
->>> broadcast_shape((3,1), (2,4))
+>>> broadcast_shape((3,1,4), (2,4))
 (3, 2, 4)
 >>> broadcast_shape((5,), (1,5,1))
 (1, 5, 5)

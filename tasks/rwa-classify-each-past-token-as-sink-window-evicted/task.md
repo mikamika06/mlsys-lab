@@ -27,7 +27,7 @@ The function must be pure NumPy: no Python loops, no list comprehensions that it
 ```python
 >>> import numpy as np
 >>> classify_past_tokens(k=2, w=3, pos=7)
-array([0, 0, 2, 2, 1, 1, 1], dtype=int64)
+array([0, 0, 2, 2, 1, 1, 1])
 ```
 
 Explanation: indices `0` and `1` are sink; indices `4`, `5`, `6` belong to the window; indices `2` and `3` are evicted.

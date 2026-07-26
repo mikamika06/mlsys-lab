@@ -55,7 +55,7 @@ and return a `float`.  No external libraries beyond the standard library are req
 >>> compute_hbm_utilization(1, 10, 768)
 112.20833333333333
 >>> compute_hbm_utilization(2, 20, 1024, ff_hidden_mult=4)
-299.2745098039216
+149.75
 ```
 
 (The numbers above are the exact arithmetic intensities for the given parameters.)

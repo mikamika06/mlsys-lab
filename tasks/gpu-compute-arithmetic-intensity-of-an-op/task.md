@@ -32,7 +32,7 @@ def arithmetic_intensity(flops: int,
 1.666667
 
 >>> arithmetic_intensity(123456, 1111, 2222)
-44.142842
+37.040504
 
 >>> arithmetic_intensity(10, 5, 5)
 1.000000

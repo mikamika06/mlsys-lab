@@ -12,7 +12,7 @@ Consider a record with four fields:
 
 If we lay them out without padding, the total size would be
 $$4 + 1 + 8 + 1 = 14 \text{ bytes}.$$
-With natural alignment on a 64‑bit machine, the default layout becomes $16$ bytes: the 8‑byte `float64` is padded to align at an 8‑byte boundary, and the trailing byte may also be padded.
+With natural alignment on a 64‑bit machine, the fields are laid out as: `uint32` at offset $0$ (4 bytes), `uint8` at offset $4$ (1 byte), $3$ padding bytes so that `float64` starts at offset $8$ (its natural alignment), `float64` at offset $8$ (8 bytes), and `bool` at offset $16$ (1 byte) — giving $17$ bytes of used space. The struct's overall size must then be rounded up to a multiple of the strictest member alignment ($8$, from `float64`), so the final aligned layout becomes $24$ bytes.
 
 ## Task
 
@@ -29,7 +29,7 @@ The function must work for any positive integer `n`. Use only NumPy (no explicit
 
 ```python
 >>> packed_vs_aligned_ratio(5)
-1.1428571428571428  # aligned size / packed size = 16/14 ≈ 1.143
+1.7142857142857142  # aligned size / packed size = 24/14 ≈ 1.714
 ```
 
 The returned value is a pure float; the input `n` does not affect the ratio.

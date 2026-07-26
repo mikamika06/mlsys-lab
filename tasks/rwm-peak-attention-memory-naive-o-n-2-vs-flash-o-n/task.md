@@ -34,13 +34,13 @@ The function must use only integer arithmetic; no external libraries are require
 
 ```python
 >>> peak_attention_memory(4, 2, 3)
-(256, 192)
+(256, 576)
 ```
 
 Explanation:  
 - Element size $s = 8$ bytes.  
 - Naïve: $2 \times 4^2 \times 8 = 256$.  
-- Flash: $3 \times 2 \times 4 \times 3 \times 8 = 192$.
+- Flash: $3 \times 2 \times 4 \times 3 \times 8 = 576$.
 
 ## What the gate checks
 

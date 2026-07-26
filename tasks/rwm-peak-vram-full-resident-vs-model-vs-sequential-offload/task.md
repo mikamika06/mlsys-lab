@@ -56,15 +56,15 @@ All values should be `float` and expressed in megabytes. The implementation must
 
 ```python
 >>> compute_peak_vram(10, 4_096, 8)
-{'full_resident': 0.328125,
- 'model_offload': 0.03125,
+{'full_resident': 0.0703125,
+ 'model_offload': 0.0390625,
  'sequential_offload': 0.03125}
 ```
 
 Here \(W = 10 \times 4096 = 40\,960\) bytes and \(A = 4\,096 \times 8 = 32\,768\) bytes, so
 
-* \(P_{\text{full}}   = (40\,960 + 32\,768)/2^{20} = 0.328125\) MB,
-* \(P_{\text{model}} = \max(40\,960, 32\,768)/2^{20} = 0.03125\) MB,
+* \(P_{\text{full}}   = (40\,960 + 32\,768)/2^{20} = 0.0703125\) MB,
+* \(P_{\text{model}} = \max(40\,960, 32\,768)/2^{20} = 0.0390625\) MB,
 * \(P_{\text{seq}}   = \max(4\,096, 32\,768)/2^{20} = 0.03125\) MB.
 
 ## What the gate checks

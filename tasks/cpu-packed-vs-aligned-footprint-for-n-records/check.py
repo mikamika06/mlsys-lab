@@ -10,7 +10,7 @@ def grade(sol, fx) -> dict:
         ('b', np.uint8),
         ('c', np.float64),
         ('d', np.bool_)
-    ])  # align=True by default
+    ], align=True)  # explicit align=True inserts natural-alignment padding
 
     packed_dtype = np.dtype([
         ('a', np.uint32),

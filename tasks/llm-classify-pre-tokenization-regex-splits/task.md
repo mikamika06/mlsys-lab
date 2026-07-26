@@ -24,10 +24,10 @@ It should return the list of pre‑token splits produced by the regex above.  Th
 
 ```python
 >>> split_gpt2_pre_tokenizer("Hello, world! Café 😊")
-['Hello', ',', ' ', 'world', '!', ' ', 'Café', ' ', '😊']
+['Hello', ',', 'world', '!', 'Café', '😊']
 ```
 
-The comma and exclamation mark are captured as separate tokens; spaces are also returned because the regex matches any non‑whitespace character individually.
+The comma and exclamation mark are captured as separate tokens because they are single non‑word, non‑whitespace characters; the spaces themselves are dropped entirely, since none of the three alternatives in the pattern matches whitespace.
 
 ## What the gate checks
 

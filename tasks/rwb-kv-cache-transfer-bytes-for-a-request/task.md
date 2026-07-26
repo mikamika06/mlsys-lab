@@ -41,10 +41,10 @@ The function should perform only integer arithmetic and return an `int`.
 
 ```python
 >>> kv_cache_transfer_bytes(12, 16, 64, 4, 128)
-1966080
+12582912
 ```
 
-Explanation: $2 \times 12 \times 16 \times 64 \times 128 \times 4 = 1\,966\,080$.
+Explanation: $2 \times 12 \times 16 \times 64 \times 128 \times 4 = 12\,582\,912$.
 
 ## What the gate checks
 

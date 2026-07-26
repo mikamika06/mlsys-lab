@@ -34,11 +34,11 @@ The function must:
 
 ```python
 >>> estimate_memory(1000, 128)
-(8000, 2128, 2000)
+(8000, 2064, 2000)
 ```
 
 The first value is $8\times1000=8000$ bytes for FP32.  
-For blockwise: $2\times1000 + 2\times\lceil1000/128\rceil\times4 = 2000 + 2\times8\times4 = 2128$.  
+For blockwise: $2\times1000 + 2\times\lceil1000/128\rceil\times4 = 2000 + 2\times8\times4 = 2064$.  
 Paged uses only the two 1‑byte states per parameter, so $2\times1000=2000$.
 
 ## What the gate checks

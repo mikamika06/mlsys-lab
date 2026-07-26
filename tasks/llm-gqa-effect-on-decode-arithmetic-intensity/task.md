@@ -30,12 +30,14 @@ The function returns the arithmetic intensity for a single decoding step, using 
 
 ```python
 >>> decode_arithmetic_intensity(8, 64, 128, False)
-0.009765625
+0.4980544747081712
 >>> decode_arithmetic_intensity(8, 64, 128, True)
-0.01953125
+0.9922480620155039
 ```
 
-The second call shows a two‑fold increase in AI when GQA halves the number of KV heads.
+The second call shows a roughly two‑fold increase in AI when GQA halves the number of KV heads
+(ops = 8·64·128 = 65536; mem = 8·64 + 2·128·8·64 = 131584 without GQA vs. 8·64 + 2·128·4·64 = 66048
+with GQA).
 
 ## What the gate checks
 

@@ -40,7 +40,7 @@ result as an unsigned 64‑bit value (e.g. using `struct.pack`/`unpack` or NumPy
 
 ```python
 >>> predict_special_value("inf-inf")
-18442240474082181120   # 0x7ff8000000000000, canonical NaN
+9221120237041090560   # 0x7ff8000000000000, canonical NaN
 >>> predict_special_value("nan==nan")
 0                       # bit pattern of 0.0 (False)
 ```

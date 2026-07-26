@@ -29,7 +29,7 @@ Implement the function `per_gpu_bytes(phi: int, n_gpus: int, stage: int) -> int`
 
 ```python
 >>> per_gpu_bytes(10_000_000, 8, 2)
-12500000
+125000000
 ```
 
 Explanation: $\Phi=10\,\text{M}$, $N=8$, stage 2 gives  

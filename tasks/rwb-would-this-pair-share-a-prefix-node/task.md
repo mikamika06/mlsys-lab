@@ -20,7 +20,7 @@ It should return `True` when the two sequences share a non‑root prefix as defi
 ## Example
 
 ```python
->>> shares_prefix(["apple", "banana"], ["apricot", "cherry"])
+>>> shares_prefix(["apple", "banana"], ["apple", "cherry"])
 True
 >>> shares_prefix(["cat"], ["dog"])
 False

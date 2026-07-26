@@ -12,7 +12,7 @@ def packed_vs_aligned_ratio(n: int) -> float:
         ('b', np.uint8),
         ('c', np.float64),
         ('d', np.bool_)
-    ])  # align=True by default on most platforms
+    ], align=True)  # explicit align=True inserts natural-alignment padding
 
     packed_dtype = np.dtype([
         ('a', np.uint32),

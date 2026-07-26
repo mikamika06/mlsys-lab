@@ -2,7 +2,7 @@ import re
 from typing import List
 
 # Reference pattern identical to the official GPT‑2 pre‑tokenizer regex
-_PATTERN = r"(?:(?:[^\x00-\x7F]+)|(?:\\w+)|(?:[^\\s\\w]))"
+_PATTERN = r"(?:(?:[^\x00-\x7F]+)|(?:\w+)|(?:[^\s\w]))"
 
 def _ref_split(text: str) -> List[str]:
     """Compute the reference split using the official regex."""

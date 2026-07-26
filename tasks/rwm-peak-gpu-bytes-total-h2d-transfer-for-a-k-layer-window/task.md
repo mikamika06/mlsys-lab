@@ -39,11 +39,11 @@ def gpu_transfer_stats(layer_sizes: list[int], window_size: int) -> tuple[int, i
 >>> layer_sizes = [1024, 2048, 512, 4096]
 >>> window_size = 2
 >>> gpu_transfer_stats(layer_sizes, window_size)
-(6144, 7680)
+(4608, 7680)
 ```
 
 Explanation:  
-* Window sums are `[3072, 2560, 4608]`; the maximum is `6144`.  
+* Window sums are `[3072, 2560, 4608]`; the maximum is `4608`.  
 * Total H2D traffic is `1024+2048+512+4096 = 7680`.
 
 ## What the gate checks

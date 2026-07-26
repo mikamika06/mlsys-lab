@@ -37,10 +37,10 @@ It must return a boolean value.
 ## Example
 
 ```python
->>> spot_cancellation(1e16 + 1, 1e16)
-True          # the exact difference is 1 but float subtraction rounds to 0
->>> spot_cancellation(1000.0, 999.9999)
-False         # relative error ≈ 1e-7 < 1e-12
+>>> spot_cancellation(0.3, 0.1 + 0.2)
+True          # 0.1 + 0.2 rounds to 0.30000000000000004; rel_err ≈ 0.39 >> 1e-12
+>>> spot_cancellation(1000.0, 1.0)
+False         # both operands are exact in binary and far apart; rel_err == 0
 ```
 
 ## What the gate checks

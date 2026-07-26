@@ -60,7 +60,7 @@ def mixed_precision_memory_accounting(H: int, k: int) -> tuple[float, float]:
 >>> mixed_precision_memory_accounting(1024, 0)
 (1024.0, 0.5)
 >>> mixed_precision_memory_accounting(2048, 512)
-(3072.0, 0.75)
+(2560.0, 0.625)
 ```
 
 ## What the gate checks

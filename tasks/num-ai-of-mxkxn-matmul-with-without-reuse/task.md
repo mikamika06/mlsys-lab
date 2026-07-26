@@ -45,10 +45,11 @@ The function must work for any positive integers $M, K, N$.
 
 ```python
 >>> ai_matmul(64, 64, 64)
-(0.124, 5.333)   # approximate values
+(0.12403100775193798, 5.333333333333333)
 ```
 
-(The exact numbers are $0.124\ldots$ and $5.333\ldots$; the gate checks the relative error.)
+(Rounded, these are $0.124\ldots$ and $5.333\ldots$; the gate checks the relative error, so a
+correct implementation only needs to match to a handful of significant digits.)
 
 ## What the gate checks
 
