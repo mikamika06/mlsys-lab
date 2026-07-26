@@ -119,15 +119,20 @@ The ordering matters more than the spread: the plain Python list (4,871,352 byte
 smaller than the in-band NumPy array (8,000,139 bytes), because a small Python int pickles at
 roughly 4.9 bytes while a fixed int64 element always costs 8 — "just use NumPy" only shrinks
 the pickle once values stop being small integers, or once out-of-band buffers replace the
-in-band path. Out-of-band gets the array down to 121 bytes on the wire, but
-`multiprocessing`'s own pickler, `ForkingPickler.dumps`, calls `dump()` with no
-`buffer_callback`, so a `Pool.map` argument that is a NumPy array is copied in-band on every
-call unless you build the channel yourself. `shared_memory` is the version of that saving
+in-band path. Out-of-band gets the array down to 121 bytes on the wire, but stock `Pool` never
+takes that path — see below. `shared_memory` is the version of that saving
 `multiprocessing` gives you for free: put the array in a named shared block once, and every
 worker after that receives a 67-byte descriptor instead of a fresh 8-megabyte copy. A
 generator or a closure do not shrink under any trick — they refuse to serialize at all,
 `TypeError` and `AttributeError` respectively, a louder failure than a silent size difference
 would be.
+
+## `Pool` pays the in-band cost
+
+`ForkingPickler.dumps` runs with no `buffer_callback`, so a NumPy array handed to a python
+multiprocessing pool worker is pickled in-band every call, at 8,000,139 bytes, not 121. The
+only way around it is skipping `Pool` for the array and passing a `shared_memory` descriptor
+instead.
 
 ## Practise it
 
@@ -156,10 +161,8 @@ More on the same boundary, in roughly increasing difficulty:
 
 ## Common mistakes
 
-- **Passing a NumPy array through `Pool.map` and expecting `shared_memory`-level cost.**
-  Nothing in stock `multiprocessing` routes an array through PEP 574's out-of-band path;
-  every call pays the in-band cost above — 8,000,139 bytes copied into the pickle stream, and
-  as much again on the way back if the worker returns it.
+- **Passing a NumPy array through `Pool.map` and expecting `shared_memory`-level cost.** See
+  `Pool` pays the in-band cost, above.
 - **Using a closure or a `lambda` as a `Process`/`Pool` target.** It works under `fork`
   (Linux's default) since the child already has it in memory, and fails immediately with
   `AttributeError: Can't pickle local object 'make_closure.<locals>.inc'` under `spawn` — the

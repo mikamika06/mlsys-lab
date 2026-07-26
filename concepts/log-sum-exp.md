@@ -8,9 +8,11 @@ author: Oleksandr Savkov
 
 # What is log sum exp?
 
-Log sum exp is the function log(Σᵢ eˣⁱ), the operation that turns a vector of
-log-scale scores back into a single log-scale total — the normalizer behind
-softmax, cross-entropy, and mixture-model likelihoods. Computed literally, it
+Log sum exp — one word, `logsumexp`, in every library that ships it
+(`scipy.special.logsumexp`, `torch.logsumexp`) — is the function
+log(Σᵢ eˣⁱ), the operation that turns a vector of log-scale scores back into
+a single log-scale total: the normalizer behind softmax, cross-entropy, and
+mixture-model likelihoods. Computed literally, it
 overflows to `inf` for any element at or above **709.7827128933841** and
 underflows to `-inf` below **-745.1332191019412**. Below, both boundaries
 measured exactly, and the shift that removes them.

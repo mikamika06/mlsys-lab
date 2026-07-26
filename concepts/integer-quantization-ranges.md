@@ -12,8 +12,8 @@ int8 range is the set of 256 integers a signed 8-bit value can hold: -128 to 127
 symmetric scheme used for weights, or 0 to 255 unsigned when a zero-point shifts the scheme to
 asymmetric. Halving the bit width to int4 does not halve the error it causes — on a fixed
 normal tensor below, dropping from int8 to int4 raises mean absolute quantization error from
-0.009 to 0.169, an 18x jump for 4 fewer bits. The measurement that produces that number, and
-the full int4/int8/int16 range table, follow.
+0.009 to 0.169, an 18x jump for 4 fewer bits. That measurement, and the full int4/int8/int16
+range table, follow.
 
 ## How it works
 
@@ -46,8 +46,8 @@ cache-line invalidations. Range and error here are exactly that kind of number: 
 wrong, cheap to check.
 
 The practical range table below covers int4 (used group-wise for weight-only LLM inference),
-int8 (the default for both weights and KV-cache), and int16 (rare on its own, but the reference
-point for "how much do 8 fewer bits actually cost").
+int8 (the default for both weights and KV-cache), and int16 — rare on its own, but the reference
+point for "how much do 8 fewer bits actually cost." The int16 range, -32768 to 32767 symmetric or 0-65535 asymmetric, is the last two rows.
 
 ## Ranges and measured quantization error by bit width
 

@@ -15,16 +15,27 @@ way can jump its miss rate from 12.50% to a literal 100% — every single access
 Below, that exact jump is measured row length by row length with a deterministic cache
 model, no clock involved.
 
-## How it works
+## Cache line
 
-A cache does not fetch one element at a time; it fetches whole lines — 64 bytes here,
-eight `float64` values — so the cost of touching an address depends on whether its
-neighbours in that line get used too. That is **spatial locality**: read `a[0]` and the
-line brings `a[1]..a[7]` along for free, so a loop that visits them next pays for one miss
-instead of eight. **Temporal locality** is the separate question of whether an address
-gets revisited before its line is evicted; a line that is still resident on a later pass is
-a hit no matter how far away in the loop that revisit happens. The two are independent
-axes, and the measurement below only makes sense once they are told apart.
+A cache does not fetch one element at a time; it fetches a whole **cache line** — 64
+bytes here, eight `float64` values — so every count in this bank is a count of lines,
+not bytes or elements. Both locality axes below are properties of that line: whether its
+neighbours get used, and whether it survives long enough to be revisited.
+
+## Spatial locality
+
+**Spatial locality** is whether a line's neighbours get used once it is fetched: read
+`a[0]` and the line brings `a[1]..a[7]` along for free, so a loop that visits them next
+pays for one miss instead of eight.
+
+## Temporal locality
+
+**Temporal locality** is the separate question of whether an address gets revisited
+before its line is evicted; a line that is still resident on a later pass is a hit no
+matter how far away in the loop that revisit happens. The two axes are independent, and
+the measurement below only makes sense once they are told apart.
+
+## How it works
 
 A 2-D array's physical layout decides which axis is the "free" one. NumPy's default is
 C-contiguous — [row-major strides](../tasks/num-c-contiguous-strides-from-shape/task.md)

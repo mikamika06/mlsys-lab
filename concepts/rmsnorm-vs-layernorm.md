@@ -1,12 +1,12 @@
 ---
-title: "What is rmsnorm vs layernorm?"
+title: "What is layer normalization, and how does RMSNorm differ?"
 description: "RMSNorm vs LayerNorm explained, with exact parameter/FLOP counts and a measured max-abs-difference table showing exactly what mean-subtraction buys, plus a graded exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is rmsnorm vs layernorm?
+# What is layer normalization, and how does RMSNorm differ?
 
 RMSNorm vs LayerNorm is a choice of which row statistic a transformer block pays to
 compute before its learned gain: LayerNorm subtracts the mean and divides by the standard
@@ -16,7 +16,7 @@ parameters and double the memory reads of RMSNorm on every forward pass. Below, 
 counts measured exactly, and the point — a zero row mean — where the two stop disagreeing
 at all.
 
-## How it works
+## How LayerNorm and RMSNorm work
 
 Both operations solve the same problem: activations drift in scale as they pass through a
 deep network, and without renormalization a residual stream's variance either explodes or

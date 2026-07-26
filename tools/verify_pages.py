@@ -21,6 +21,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 HEREDOC = re.compile(r"python3 - <<'PY'\n(.*?)\nPY\n", re.S)
+# A plain ```python fence is a hole: it looks like code the reader will run, and until this
+# was added nothing executed it. One page claimed sklearn reproduced a value to six decimals
+# in such a block; the claim happened to be true, but nothing had checked it. Any fenced
+# python block that both imports something and prints is treated as a claim and run.
+PYFENCE = re.compile(r"```python\n(.*?)\n```", re.S)
 PIPLINE = re.compile(r"^pip install (.+)$", re.M)
 NUM = re.compile(r"-?\d+\.?\d*(?:[eE][-+]?\d+)?")
 
@@ -79,6 +84,9 @@ def check(p: Path) -> list[str]:
     blocks = HEREDOC.findall(text)
     if not blocks:
         return ["no `python3 - <<'PY'` block to run"]
+    # plain fences that look runnable — they make claims too
+    blocks += [b for b in PYFENCE.findall(text)
+               if re.search(r"^\s*(import|from)\s", b, re.M) and "print(" in b]
 
     problems: list[str] = []
     have = page_numbers(text)

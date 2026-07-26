@@ -8,8 +8,8 @@ author: Oleksandr Savkov
 
 # What is python descriptors?
 
-Python descriptors are objects whose class defines `__get__`, `__set__`, or `__delete__`, so
-that attribute lookup calls those methods instead of reading `__dict__` directly. Which method
+A descriptor in python is any object whose class defines `__get__`, `__set__`, or `__delete__`,
+so that attribute lookup calls those methods instead of reading `__dict__` directly. Which method
 fires depends entirely on one precedence rule: a descriptor that defines `__set__` wins over an
 instance's own `__dict__` entry every time, while one that defines only `__get__` loses to that
 same entry, 0 calls out of 5 reads. Below, both counts are measured directly by instrumenting

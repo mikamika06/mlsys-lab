@@ -12,8 +12,8 @@ Kmeans is an iterative clustering algorithm that partitions $n$ points into $k$ 
 alternately assigning each point to its nearest centroid and moving each centroid to the
 mean of the points assigned to it. Because that loop is a local search, not a global one, two
 runs on the identical dataset can converge to inertia values that differ by 67% depending only
-on which points happened to seed the centroids. Below, ten seeded runs of both random and
-k-means++ initialisation, and how much the seeding actually buys you.
+on which points happened to seed the centroids. Below is k-means clustering python code: ten
+seeded runs of random vs. k-means++ initialisation, and how much the seeding buys you.
 
 ## How it works
 
@@ -31,8 +31,8 @@ loop stops when assignments stop changing, or at a fixed iteration cap — predi
 which iteration that will be, and what the final labels look like, is
 [a separate skill from implementing the loop](../tasks/alg-predict-convergence-iteration-final-labels/task.md).
 
-None of this says where the first $k$ centroids come from, and that choice is the whole
-subject of this page. **Random init** picks $k$ existing points uniformly at random. **k-means++**
+None of this says where the first $k$ centroids come from — that is this page's whole
+subject. **Random init** picks $k$ existing points uniformly at random. **k-means++**
 picks the first point uniformly, then each subsequent point with probability proportional to
 its squared distance from the nearest centroid already chosen, which is a weighted sample you
 can drive from an explicit random stream instead of a black-box RNG —
@@ -41,7 +41,7 @@ Because kmeans only ever finds a local optimum, initialisation is not a footnote
 can strand a centroid on top of another one, or leave an entire cluster with none, which forces
 a repair rule for [the empty-cluster edge case](../tasks/alg-debug-empty-cluster-crash-nan-centroid/task.md).
 
-Two costs are worth naming because they show up elsewhere in this bank. The naive assignment
+Two costs matter elsewhere in this bank too. The naive assignment
 step is $O(nkd)$ with an explicit double loop; the same expansion identity that makes it a
 handful of matrix operations —
 [an exercise on its own](../tasks/alg-vectorize-assignment-with-expansion-trick/task.md) — is
@@ -52,11 +52,12 @@ accumulates each cluster's running sum in a small shared array is exactly the la
 line means eight threads fighting over ownership of it, even though the clusters are disjoint.
 At large $n$, [mini-batch kmeans](../tasks/alg-mini-batch-k-means-deterministic/task.md) trades
 the full $O(nkd)$ pass for a fixed-size random subset per step — a different lever than
-initialisation, and one that trades exactness for speed rather than local-optimum risk.
+initialisation, trading exactness for speed rather than local-optimum risk.
 
 ## Iterations and inertia measured against the seed
 
-The same 320-point, 8-blob dataset, fixed once, run from ten different seeds. Each seed drives
+Ten k-means clustering examples below: the same 320-point, 8-blob dataset, fixed once, run
+from ten different seeds. Each seed drives
 both a random-init run and a k-means++ run of the identical Lloyd loop; the only thing that
 differs between the two columns is which points started as centroids.
 
@@ -139,6 +140,16 @@ algorithm converged fast (8 iterations) to a bad local optimum instead of slowly
 k-means++'s distance-weighted sampling makes that specific failure much less likely, not
 impossible.
 
+## Kmeans sklearn: what `KMeans` does differently
+
+Search kmeans sklearn and the honest answer is: no different algorithm.
+`sklearn.cluster.KMeans` runs the same Lloyd loop as the script above; its defaults are exactly
+what this page just measured — `init="k-means++"` and `n_init="auto"` (several restarts, best
+kept). A stock `KMeans(n_clusters=k).fit(X)` call lands near the tight k-means++ column above,
+not the wide random-init one. Writing Lloyd's loop yourself is still worth it: it is the only
+way to see why `n_init` defaults above one — seed 5 shows a single k-means++ draw can still
+lose to random init's luck.
+
 ## Practise it
 
 ```bash
@@ -150,8 +161,8 @@ against a reference `compare_inertia(X, n_clusters, seeds)` that returns both in
 strategies' final inertia per seed. The shipped starter is `raise NotImplementedError`, so it
 fails immediately; the interesting way to fail past that is to get Lloyd's loop itself right
 but seed k-means++ with the wrong random stream — `np.random.default_rng(seed).choice` at the
-wrong point in the sequence produces a different, still-valid clustering, and `rel_err` catches
-the mismatch even though your output looks reasonable in isolation.
+wrong point in the sequence produces a different, still-valid clustering, and `rel_err`
+catches the mismatch.
 
 In roughly increasing order:
 [the assignment step alone](../tasks/alg-k-means-assignment-step-only/task.md),
@@ -165,8 +176,8 @@ large-$n$ variant.
 
 - **Treating "kmeans converged" as "kmeans found the best clustering".** Convergence means
   the assignment step stopped changing; inertia is provably non-increasing along the way, but
-  nothing prevents it from converging to a local optimum 67% worse than another run's, as
-  seed 3 above shows directly.
+  nothing prevents it from converging to a local optimum 67% worse than another run's — seed 3
+  above is that k-means clustering example.
 - **Re-seeding the RNG mid-run.** k-means++'s guarantee depends on drawing every centroid from
   one continuous weighted stream. Reseeding between draws, or reusing the same seed for both
   the initial point and the weighted picks, silently degrades it toward random init while
@@ -176,8 +187,8 @@ large-$n$ variant.
   code that has never hit it has not been tested, not been proven correct.
 - **Assuming k-means++ removes the need for multiple restarts.** It shrinks the bad-outcome
   tail (max inertia 442.8 instead of 688.0 here) but does not eliminate it — seed 5 above still
-  landed k-means++ at a *higher* inertia than random init got by luck. Production kmeans (e.g.
-  scikit-learn's default) still runs several inits and keeps the best.
+  landed k-means++ at a *higher* inertia than random init got by luck — see Kmeans sklearn above
+  for why.
 
 ## Where else to practise this
 

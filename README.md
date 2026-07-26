@@ -122,9 +122,14 @@ read stride, 2 → 33), [false sharing](concepts/false-sharing.md) (coherence in
 against padding, 7,999 → 0), or [gguf vs safetensors](concepts/gguf-vs-safetensors.md)
 (bytes per weight *actual* rather than the nominal 4 bits).
 
-## What else exists
+## Where else to practise this
 
-[`LANDSCAPE.md`](LANDSCAPE.md) surveys the other resources aimed at each of
+[`RESOURCES.md`](RESOURCES.md) — 135 other places to practise the same material, in one list,
+grouped by whether they check your work. Of the 135, **19 give you an automatic verdict** and
+the rest do not; each entry says what it is, what it costs, and whether it is still alive.
+
+[`LANDSCAPE.md`](LANDSCAPE.md) is the same 135 organised by this bank's own areas, with a
+verdict on each: it surveys the other resources aimed at each of
 these areas — 141 of them, every link checked — and marks whether each one actually
 grades your work or only shows you code. It says where this bank is *not* your best
 option, which is most of the point of having the page.

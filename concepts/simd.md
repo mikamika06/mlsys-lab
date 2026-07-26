@@ -62,6 +62,19 @@ lanes back into one scalar reintroduces the reordering questions
 horizontal reduction sums `W` partial results in a different order than
 the scalar loop did.
 
+## SSE, AVX2, AVX-512, NEON: which SIMD instruction set gives which width
+
+The `W` column above isn't free-floating: on real x86 CPUs it's fixed by
+which SIMD instruction set the compiler targets. SSE is a 128-bit
+instruction set, four 32-bit floats per register — the `W=4` row. AVX2 is
+a 256-bit instruction set, eight floats — `W=8`. AVX-512, where a CPU
+implements it, is a 512-bit instruction set, sixteen floats — the
+table's widest row, `W=16`. On Arm, NEON is a 128-bit instruction set,
+the same width and lane count as SSE, with no 256- or 512-bit tier in
+mainstream use. `W=2` matches no 32-bit instruction set on either
+architecture; it's in the table to show the trend, not because a 64-bit
+float vector unit ships in hardware.
+
 ## Vector ops, tail ops, and total ops measured against width and N
 
 The table below varies the vector width `W` over two fixed loop lengths —
@@ -146,49 +159,42 @@ graded on byte-exact output and a cache-miss budget together.
 
 - **Expecting the reduction to scale with the width.** Doubling `W` from
   8 to 16 at `N=37` only moves the reduction from 4.11x to 5.29x, not to
-  8.22x, because the 5-element tail costs the same 5 instructions
-  regardless of how wide the main loop is — the tail's absolute size, not
-  its fraction of `N`, is what sets the floor.
+  8.22x — the 5-element tail costs 5 instructions regardless of `W`, and
+  that fixed cost, not `N`, sets the floor.
 - **Dropping the tail loop entirely.** It looks like a performance
-  shortcut and is a correctness bug: the shipped starter for
-  [the tail-masking task](../tasks/cpu-tail-masking-for-n-not-multiple-of-width/task.md)
-  leaves the last `n % WIDTH` elements at a `-999.0` sentinel, an error of
-  about 1029 against the correct value — nowhere near `max_abs_err <=
-  1e-06`.
+  shortcut and is a correctness bug, as [the tail-masking
+  task](../tasks/cpu-tail-masking-for-n-not-multiple-of-width/task.md)'s
+  starter shows above.
 - **Vectorizing a loop shorter than the register width.** At `N=5`,
-  widths 8 and 16 both produce `total_ops=5`, identical to never
-  vectorizing at all — `vector_ops` is 0 whenever `N<W`, so the wide
-  instruction path is dead code that never runs, only maintained.
+  widths 8 and 16 both give `total_ops=5`, same as never vectorizing —
+  `vector_ops` is 0 whenever `N<W`.
 - **Assuming the compiler vectorized because the code "looks"
-  vectorizable.** Auto-vectorization requires proof of no aliasing and no
-  loop-carried dependency; a loop that reads and writes overlapping
-  ranges, or carries a running accumulator without reassociation, compiles
-  to scalar code with none of the counts in this table changing in your
-  favor.
+  vectorizable.** Auto-vectorization needs proof of no aliasing and no
+  loop-carried dependency; overlapping reads and writes, or an
+  unreassociated accumulator, compile to scalar code instead.
 
 ## Where else to practise this
 
 Honest comparison, from the [full survey of what exists](../LANDSCAPE.md):
 
-- **[perf-ninja](https://github.com/dendibakh/perf-ninja)** — has a real
-  vectorization lab among its 20+, in the same real-C++-on-real-hardware
-  style as this bank's tasks, but its pass/fail is a wall-clock speedup
-  threshold on CI hardware (Alderlake/Zen3/M1), so the verdict depends on
-  the machine, exactly what the instruction-count gates here avoid.
+- **[perf-ninja](https://github.com/dendibakh/perf-ninja)** — a real
+  vectorization lab among its 20+, real-C++-on-real-hardware like this
+  bank's tasks, but pass/fail is a wall-clock threshold on CI hardware
+  (Alderlake/Zen3/M1) — the verdict depends on the machine, which the
+  instruction-count gates here avoid.
 - **[Computer Enhance: Performance-Aware Programming](https://www.computerenhance.com/p/table-of-contents)**
-  — Casey Muratori's paid video course has a unit on SSE intrinsics with
-  weekly homework, but the homework is self-checked against community
-  solutions on GitHub; there is no autograder at all.
+  — Casey Muratori's paid course has a unit on SSE intrinsics with weekly
+  homework, self-checked against community solutions on GitHub; no
+  autograder.
 - **[Algorithms for Modern Hardware](https://en.algorithmica.org/hpc/)** —
   Sergey Slotin's free book has a dense SIMD-intrinsics chapter with real
-  case studies (vectorized string search, filtering). No exercises,
-  nothing to submit; worth reading once the tasks here pass and you want
-  hand-tuned intrinsics rather than counted instructions.
+  case studies, but no exercises; read it once the tasks here pass and you
+  want hand-tuned intrinsics rather than counted instructions.
 - **[Agner Fog's optimization manuals](https://www.agner.org/optimize/)**
-  — not a competing exercise resource, but the reference this page's
-  model deliberately does not replace: exact per-instruction latency and
-  throughput on real microarchitectures, which a reproducible op count
-  never claims to predict.
+  — not a competing exercise resource, but the reference this page's model
+  does not replace: exact per-instruction latency and throughput on real
+  microarchitectures, which a reproducible op count never claims to
+  predict.
 
 ## References
 

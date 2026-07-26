@@ -27,14 +27,14 @@ teacher than this bank, the page says so and links it.
 | [What is the int8 range?](integer-quantization-ranges.md) | levels and quantization error for int4 / int8 / int16 |
 | [What is gguf vs safetensors?](gguf-vs-safetensors.md) | bytes per weight *actual* vs nominal, once block metadata is counted |
 | [What is softmax vs sigmoid?](softmax-vs-sigmoid.md) | they are identical at two classes and diverge from three; plus both overflow points |
-| [What is rmsnorm vs layernorm?](rmsnorm-vs-layernorm.md) | parameters and ops for each, and what subtracting the mean actually buys |
+| [What is layer normalization, and how does RMSNorm differ?](rmsnorm-vs-layernorm.md) | parameters and ops for each, and what subtracting the mean actually buys |
 | [What is gradient checkpointing?](gradient-checkpointing.md) | retained activations and recomputations against segment count |
 | [What is continuous batching?](continuous-batching.md) | wasted decode slot-steps, static against continuous, as output length varies |
 | [What is python slots?](python-slots.md) | bytes per instance with and without `__slots__` |
 | [What is python descriptors?](python-descriptors.md) | which protocol method fires per lookup path, and how often |
 | [What is python multiprocessing?](python-multiprocessing.md) | bytes actually pickled per argument shape, and which shapes cannot cross at all |
 | [What is kmeans?](kmeans.md) | iterations and final inertia, random init against k-means++ |
-| [What is PCA?](pca.md) | explained variance and reconstruction error per component, and the cost of skipping centering |
+| [PCA in Python](pca.md) | explained variance and reconstruction error per component, and the cost of skipping centering |
 
 ## The rules these pages follow
 

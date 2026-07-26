@@ -1,12 +1,12 @@
 ---
-title: "What is PCA?"
-description: "PCA explained, with a measured explained-variance and reconstruction-error table you can reproduce, including what breaks when you skip centering, plus graded exercises."
+title: "PCA in Python"
+description: "PCA in Python, explained with a measured explained-variance and reconstruction-error table you can reproduce, a worked PCA example, and what breaks when you skip centering."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is PCA?
+# PCA in Python
 
 PCA is a dimensionality-reduction technique that replaces a dataset's original,
 correlated features with a small number of uncorrelated directions ranked by how much
@@ -31,8 +31,7 @@ An equivalent, more numerically stable route skips forming $C$ at all. The singu
 value decomposition $X_c = U \Sigma V^\top$ gives the same directions in the columns of
 $V$, and the eigenvalues of $C$ are just $\sigma_i^2 / (n-1)$ for the singular values
 $\sigma_i$. Forming $C$ explicitly squares the matrix's condition number, so on
-ill-conditioned data the covariance route can diverge from the SVD route in a way that
-is entirely avoidable — the subject of
+ill-conditioned data the covariance route can diverge from the SVD route — the subject of
 [`alg-covariance-eig-vs-svd-on-ill-conditioned-x`](../tasks/alg-covariance-eig-vs-svd-on-ill-conditioned-x/task.md).
 On well-conditioned data, as measured below, both routes agree to floating-point noise.
 
@@ -47,12 +46,42 @@ discarded, not something you need to recompute by actually reconstructing the ma
 as in
 [`rws-pca-slice-error-equals-tail-eigenvalue-sum`](../tasks/rws-pca-slice-error-equals-tail-eigenvalue-sum/task.md).
 
-This is the same "count the thing exactly, everywhere" spirit as
+This is the same "count the thing exactly" spirit as
 [memory coalescing](memory-coalescing.md) counting transactions instead of timing a
-kernel, or [false sharing](false-sharing.md) counting coherence invalidations instead of
-timing a loop: PCA's eigenvalues and its reconstruction error are exact, deterministic
-numbers on any machine, which is why every gate on this page is a tolerance on a number
-rather than a speed threshold.
+kernel, or [false sharing](false-sharing.md) counting invalidations instead of timing a
+loop: PCA's eigenvalues and reconstruction error are exact numbers on any machine, so
+every gate on this page is a tolerance, not a speed threshold.
+
+## A Worked PCA Example
+
+Most PCA Python tutorials skip the eigendecomposition above and go straight to
+`sklearn.decomposition.PCA`, which solves the identical problem through the SVD route
+described earlier:
+
+```bash
+pip install scikit-learn
+```
+
+```python
+from sklearn.decomposition import PCA
+import numpy as np
+
+rng = np.random.default_rng(0)
+n, d = 200, 8
+base = rng.normal(size=(n, 3)) @ rng.normal(size=(3, d))
+X = base + 0.15 * rng.normal(size=(n, d))
+X += np.array([5., -3., 10., 0., 2., -8., 1., 4.])
+
+pca = PCA(n_components=2)
+scores = pca.fit_transform(X)
+print(pca.explained_variance_ratio_.sum())
+```
+
+Because `sklearn.decomposition.PCA` centers the data internally and solves via SVD, this
+two-line call reproduces the 0.919403 cumulative explained-variance ratio for k=2 from the
+table below exactly — the same computation this page already verified two ways, wrapped
+in a library call. The library saves you the centering step that the common mistakes
+below show is easy to forget by hand.
 
 ## Explained variance and reconstruction error, by component count
 
@@ -120,8 +149,8 @@ centering *reports* a higher explained-variance ratio (0.896820 vs. 0.771503) wh
 actual reconstruction is over four times worse (3.169172 vs. 0.733227) — because with a
 mean of roughly $(5, -3, 10, 0, 2, -8, 1, 4)$, the single dominant "component" of the
 uncentered Gram matrix is mostly pointing at the mean itself, not at the correlation
-structure the latent factors created. The two views only converge once $k$ is large
-enough that the offset gets absorbed along with everything else.
+structure the latent factors created. The two views converge only once $k$ is large
+enough to absorb the offset too.
 
 ## Practise it
 
@@ -134,9 +163,8 @@ mlsys grade alg-pca-via-svd-center-decompose-project
 per-component sign alignment before scoring since a principal component's sign is not
 unique. The shipped starter is the trap this page exists to warn about: it is easy to
 write a `pca_svd` that runs the SVD correctly but forgets step 1, subtracting the column
-mean, and it will fail the gate on any fixture whose mean is not already zero — the same
-failure mode measured in the table above, just now enforced by a threshold instead of
-read off a printout.
+mean, and it fails the gate on any fixture whose mean isn't already zero — the same
+failure measured above, now enforced by a threshold instead of a printout.
 
 Building up the mechanism from both directions:
 [read singular values as variance explained](../tasks/alg-read-singular-values-variance-explained/task.md),
@@ -146,55 +174,50 @@ Building up the mechanism from both directions:
 [choosing k for a variance target](../tasks/rws-classify-k-for-a-variance-target/task.md),
 [retained variance at a given slice level](../tasks/rws-retained-variance-for-a-slice-level/task.md),
 and [PCA vs. naive magnitude column-drop](../tasks/rws-pca-slice-vs-naive-magnitude-column-drop/task.md),
-which gates on both an error tolerance and an ordering check that PCA's error is never
-worse.
+which also checks that PCA's error is never worse.
 
 ## Common mistakes
 
-- **Skipping centering.** As measured above, this doesn't just shift the numbers a
-  little — at $k=1$ it inflates the reported explained-variance ratio from 0.7715 to
-  0.8968 while making the actual reconstruction 4.3x worse, because the first
-  "component" is mostly describing the mean, not the data's structure.
+- **Skipping centering.** At $k=1$ this inflates the reported explained-variance ratio
+  from 0.7715 to 0.8968 while making reconstruction 4.3x worse, because the first
+  "component" mostly describes the mean, not the data's structure.
 - **Forming the covariance matrix when the SVD would do.** $C = X_c^\top X_c$ squares
-  the condition number of the data. On well-conditioned inputs this costs nothing
-  visible; on ill-conditioned ones the eigendecomposition of $C$ can lose precision the
-  SVD of $X_c$ never had, which is exactly the comparison in
+  the condition number of the data, so on ill-conditioned inputs the eigendecomposition
+  of $C$ can lose precision the SVD of $X_c$ never had — exactly the comparison in
   [`alg-covariance-eig-vs-svd-on-ill-conditioned-x`](../tasks/alg-covariance-eig-vs-svd-on-ill-conditioned-x/task.md).
 - **Confusing eigenvalues with singular values.** The eigenvalues of $C$ are
   $\sigma_i^2/(n-1)$, not $\sigma_i$ itself. Using $\sigma_i$ directly in a
-  variance-explained ratio silently changes every number without erroring anywhere.
+  variance-explained ratio silently changes every number.
 - **Selecting components by column norm instead of by projection.** Keeping the $k$
   raw features with the largest individual norm and zeroing the rest is not PCA — it
-  only ever looks at one column at a time and cannot exploit correlation between
-  columns, which is why it is provably no better than PCA's reconstruction error and
-  usually worse.
+  only ever looks at one column at a time, so it is provably no better than PCA's
+  reconstruction error and usually worse.
 - **Treating sign as meaningful.** Eigenvectors and right-singular vectors are only
   defined up to a sign flip; a solution that differs from a reference by `-1` on some
-  columns is not wrong, which is why the graders here align signs before scoring rather
-  than comparing raw vectors.
+  columns is not wrong, so the graders align signs before scoring rather than compare
+  raw vectors directly.
 
 ## Where else to practise this
 
 From the [full survey of what exists](../LANDSCAPE.md), this term is **crowded**:
 
-- **[deep-ml.com](https://www.deep-ml.com/problems)** — the closest analog to this bank
-  for this specific term: browser-based, actually auto-graded against hidden tests, PCA
-  and SVD both listed in its catalog. Worth doing in parallel; it does not show you a
-  measured centering-vs-not comparison, it only checks your final numbers.
+- **[deep-ml.com](https://www.deep-ml.com/problems)** — the closest analog to this bank:
+  browser-based, auto-graded against hidden tests, with PCA and SVD both in its catalog.
+  Worth doing in parallel; it doesn't show a measured centering-vs-not comparison, only
+  your final numbers.
 - **[Machine Learning Specialization (Andrew Ng / DeepLearning.AI)](https://www.coursera.org/specializations/machine-learning-introduction)**
-  — a named, auto-graded PCA lab exists in this course, in a guided fill-in-the-blank
-  format rather than an open implement-from-spec one, and it is paid.
+  — a named, auto-graded PCA lab exists here, guided fill-in-the-blank rather than
+  implement-from-spec, and paid.
 - **[CS231n Assignment 1](https://cs231n.github.io/assignments2026/assignment1/)** —
-  does not cover PCA directly, but its "image features" part builds the same
-  eigen-decomposition-of-a-Gram-matrix intuition this page uses, with a currently
-  maintained 2026 edition and self-check cells in the notebook.
+  doesn't cover PCA directly, but its "image features" part builds the same
+  eigen-decomposition-of-a-Gram-matrix intuition, with a maintained 2026 edition and
+  self-check cells in the notebook.
 - **[Data Science from Scratch](https://github.com/joelgrus/data-science-from-scratch)**
-  — walks through PCA in plain Python with no NumPy at all, which is a genuinely
-  different and useful angle if you want to see every arithmetic step; it is
-  narrative code-along, not graded.
+  — walks through PCA in plain Python with no NumPy, a genuinely different angle if you
+  want every arithmetic step visible; narrative code-along, not graded.
 - **[ddbourgin/numpy-ml](https://github.com/ddbourgin/numpy-ml)** — a documented
-  reference implementation to compare your own against once you have one working;
-  ships tests for the maintainer's own code, not for scoring yours.
+  reference implementation to compare against once yours works; it tests the
+  maintainer's code, not yours.
 
 ## References
 
