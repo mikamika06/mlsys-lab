@@ -44,6 +44,7 @@ const vscode = {
           postMessage: (m) => { posted.push(m); return Promise.resolve(true); },
           onDidReceiveMessage: (fn) => { panel._onMsg = fn; return { dispose() {} }; },
           asWebviewUri: (u) => ({ toString: () => "vscode-resource:" + u.fsPath }),
+          _state: {},
           cspSource: "vscode-resource:",
         },
         onDidDispose: () => ({ dispose() {} }),
@@ -87,7 +88,9 @@ require.cache["vscode"] = { id: "vscode", filename: "vscode", loaded: true, expo
 const ext = require(path.join(__dirname, "extension.js"));
 const ctx = {
   subscriptions: [],
-  globalState: { _s: {}, get(k, d) { return this._s[k] ?? d; }, update(k, v) { this._s[k] = v; return Promise.resolve(); } },
+  globalState: { _s: {}, _sync: null, get(k, d) { return this._s[k] ?? d; },
+                 update(k, v) { this._s[k] = v; return Promise.resolve(); },
+                 setKeysForSync(keys) { this._sync = keys; } },
   extensionUri: vscode.Uri.file(__dirname),
   extensionPath: __dirname,
 };
@@ -145,6 +148,22 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     if (!executed.includes("mlsys.open"))
       throw new Error("clicking the icon did not open the panel; fired: " + executed.join(","));
     return "mlsys.open fired on reveal";
+  });
+
+  check("progress follows the user across machines", () => {
+    const keys = ctx.globalState._sync;
+    if (!keys || !keys.includes("mlsys.solved"))
+      throw new Error("mlsys.solved is not declared for Settings Sync — a second machine starts at zero");
+    return keys.join(", ");
+  });
+
+  check("areas start folded", () => {
+    const h = panel.webview.html;
+    if (!/foldedOnce/.test(h)) throw new Error("no fold-on-first-render logic in the page");
+    if (!/d\.tiers\.forEach\(T=>collapsed\.add\(T\.key\)\)/.test(h))
+      throw new Error("first render does not collapse every area");
+    if (!/persistFolds\(\)/.test(h)) throw new Error("the learner's folding is not remembered");
+    return "collapsed on first render, choice persisted";
   });
 
   check("the panel tab carries the project icon", () => {

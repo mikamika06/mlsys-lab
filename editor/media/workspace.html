@@ -268,8 +268,18 @@
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   let mapData=null,curId=null,busy=false;
-  const collapsed=new Set();   // areas the learner folded away
+  /* Areas start folded. Fourteen areas expanded at once is several screens of
+     scrolling before the first heading, and the roadmap's job is to let you see the
+     shape of the bank and pick — not to render 2000 chips nobody asked for. The
+     learner's own folding survives a reload through the webview's own state. */
+  const saved=(vscode.getState&&vscode.getState())||{};
+  const collapsed=new Set(saved.collapsed||[]);
   const aboutOpen=new Set();   // areas whose description is open
+  let foldedOnce=!!saved.foldedOnce;
+  function persistFolds(){
+    try{vscode.setState({...(vscode.getState&&vscode.getState()||{}),
+                         collapsed:[...collapsed],foldedOnce:true});}catch(_){}
+  }
 
   /* ---------- i18n ---------- */
   /* The interface is English only. Statements are authored in English, which is
@@ -370,6 +380,7 @@
 
   function renderMap(d){
     mapData=d;
+    if(!foldedOnce){ d.tiers.forEach(T=>collapsed.add(T.key)); foldedOnce=true; persistFolds(); }
     $('prog').innerHTML=`<b>${d.totals.solved}</b>/${d.totals.built} · ${d.totals.planned} ${t('planned')}`;
     $('hsub').innerHTML=`${d.tiers.length} · <b>${d.totals.built}</b> ${t('available')} · ${d.totals.planned} ${t('planned')}`;
     let h='';
@@ -629,7 +640,7 @@
     if(o){vscode.postMessage({type:'open',id:o.getAttribute('data-open')});return;}
     const tg=e.target.closest('[data-tg]');
     if(tg){const k=tg.getAttribute('data-tg');
-      const on=collapsed.has(k); on?collapsed.delete(k):collapsed.add(k);
+      const on=collapsed.has(k); on?collapsed.delete(k):collapsed.add(k); persistFolds();
       const nd=document.querySelector(`[data-k="${k}"]`);
       if(nd)nd.classList.toggle('collapsed',!on);
       tg.setAttribute('aria-expanded',String(on));}

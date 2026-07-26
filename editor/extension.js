@@ -417,6 +417,11 @@ function activate(context) {
   // The channel is for diagnosing a silent host failure; forcing it open on
   // every window is noise, so it stays available but hidden.
   out = vscode.window.createOutputChannel("mlsys-lab");
+  // Solved tasks live in globalState: private to this user, not attached to any repo,
+  // and not shared with anyone. Declaring the key for sync means VS Code's own Settings
+  // Sync carries it between that person's machines; without it, a second machine starts
+  // from zero, which is not what "your progress is saved" should mean.
+  try { context.globalState.setKeysForSync(["mlsys.solved"]); } catch (_) {}
   log("=== mlsys-lab activated ===");
   log("extensionPath = " + context.extensionPath);
 
