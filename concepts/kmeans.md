@@ -1,19 +1,19 @@
 ---
-title: "What is kmeans?"
+title: "What is k-means clustering?"
 description: "Kmeans explained, with a measured table of iterations-to-convergence and final inertia for random vs k-means++ init that you can reproduce, plus graded exercises."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is kmeans?
+# What is k-means clustering?
 
 Kmeans is an iterative clustering algorithm that partitions $n$ points into $k$ groups by
 alternately assigning each point to its nearest centroid and moving each centroid to the
 mean of the points assigned to it. Because that loop is a local search, not a global one, two
 runs on the identical dataset can converge to inertia values that differ by 67% depending only
-on which points happened to seed the centroids. Below is k-means clustering python code: ten
-seeded runs of random vs. k-means++ initialisation, and how much the seeding buys you.
+on which points happened to seed the centroids. Below is kmeans python code: ten seeded runs
+of random vs. k-means++ initialisation, and how much the seeding buys you.
 
 ## How it works
 

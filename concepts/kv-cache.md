@@ -1,12 +1,12 @@
 ---
-title: "What is kv cache?"
+title: "What is a KV cache?"
 description: "KV cache explained, with a measured bytes-per-token table across real model shapes, the context length at which it outgrows the weights, and a graded exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is kv cache?
+# What is a KV cache?
 
 KV cache is the per-token store of attention key and value vectors that a
 decoder-only transformer keeps so it never recomputes them on a later step.

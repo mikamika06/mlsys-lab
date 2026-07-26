@@ -1,24 +1,26 @@
 ---
-title: "What is softmax function?"
+title: "What is the softmax function?"
 description: "Softmax function explained, with float64 shift invariance, the naive-overflow boundary, and a measured entropy-vs-temperature table you can reproduce, plus a graded exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is softmax function?
+# What is the softmax function?
 
 The softmax function turns a vector of real-valued logits into a probability
 distribution — one non-negative weight per class, all summing to `1.0`. Computed the way
 the formula reads, it returns `nan` once any logit clears **709.7827128933841** in
 float64, and shifting every logit by the same constant is supposed to leave the output
-untouched exactly. Below: how tightly that shift invariance actually holds in floating
-point, where the naive form breaks, and what a temperature sweep from `0.1` to `10` does
-to a fixed distribution's entropy.
+untouched exactly. Below: how tightly that shift invariance holds in floating point,
+where the naive form breaks, and what a temperature sweep from `0.1` to `10` does to a
+fixed distribution's entropy.
 
-## How it works
+## Softmax function formula
 
-`softmax(x)ᵢ = eˣⁱ / Σⱼ eˣʲ` — exponentiate every logit, then divide each by the total.
+**softmax(x)ᵢ = eˣⁱ / Σⱼ eˣʲ**
+
+Exponentiate every logit, then divide each by the total.
 Exponentiating makes every output strictly positive and turns additive differences
 between logits into multiplicative ratios (`softmax(x)ᵢ / softmax(x)ⱼ = e^(xᵢ − xⱼ)`),
 which is why the largest logit always gets the largest share and a logit that is `10`
@@ -26,8 +28,8 @@ larger than its neighbor gets roughly `e¹⁰ ≈ 22,026` times the probability 
 times. Dividing by the sum turns that pile of positive numbers into a distribution, but
 that sum is exactly the kind of accumulation that loses precision when its terms span
 many orders of magnitude — the same concern [Kahan summation](kahan-summation.md)
-addresses for an ordinary sum, though softmax's fix removes the spread before summing
-rather than compensating for it while summing.
+addresses for an ordinary sum, though softmax removes the spread before summing rather
+than compensating for it while summing.
 
 That trick rests on one algebraic identity: `softmax(x) = softmax(x − c)` for any
 constant `c`, because subtracting `c` from every exponent multiplies numerator and
@@ -35,22 +37,25 @@ denominator by the same `e⁻ᶜ`, which cancels. Choosing `c = max(x)` makes ev
 exponent `≤ 0`, so `e^(xᵢ − c) ∈ (0, 1]` and the sum can never overflow — the identity
 measured below, and proved directly in
 [the shift-invariance task](../tasks/llm-shift-invariance-proof-softmax-x-softmax-x-c/task.md).
-It is the same shift that [log-sum-exp](log-sum-exp.md) applies to its own sum of
+It is the same shift [log-sum-exp](log-sum-exp.md) applies to its own sum of
 exponentials, since softmax's denominator, in log space, *is* log-sum-exp; the two share
-one overflow boundary because they share the same `exp` underneath.
+one overflow boundary because they share the same `exp`.
 
-Two other axes matter once softmax leaves the whiteboard. Divide every logit by a
-temperature `T` before exponentiating and the same shift trick still applies, but the
-output distribution gets sharper as `T → 0` and flatter as `T → ∞`, measured below —
-the mechanism behind every LLM sampling temperature slider. And softmax is a genuinely
-different function from [sigmoid](softmax-vs-sigmoid.md), not a rebranding of it — they
-coincide exactly at two classes and diverge from three, which that page measures
-directly rather than repeating here. On real hardware, softmax's row-wise max-and-sum is
-also where a naive kernel loses parallelism efficiency the same way
-[warp divergence](warp-divergence.md) does — a per-row reduction that looks free in
-NumPy is a synchronization point across threads in CUDA — and the format the logits are
-stored in decides where the overflow boundary actually sits, which is the whole subject
-of [bfloat16 vs float16](bfloat16-vs-float16.md).
+Divide every logit by a temperature `T` before exponentiating and the same shift trick
+still applies, but the distribution gets sharper as `T → 0` and flatter as `T → ∞`,
+measured below — the mechanism behind every LLM sampling temperature slider. Softmax is
+a genuinely different function from [sigmoid](softmax-vs-sigmoid.md) — they coincide
+only at two classes and diverge from three, measured on that page — and a different job
+again from ReLU, which is elementwise, unbounded above, and has no notion of a total
+across the vector; that is why ReLU lives inside hidden layers while softmax sits at the
+output, turning logits into a distribution that sums to `1.0`. Masked multi-head
+attention leans on this function's overflow mechanics directly: setting a disallowed
+logit to `-inf` before softmax zeroes its share of the output exactly, which is how
+PyTorch's `scaled_dot_product_attention` and `nn.MultiheadAttention` build causal and
+padding masks. On real hardware, softmax's row-wise max-and-sum is also where a naive
+kernel loses parallelism the way [warp divergence](warp-divergence.md) does, and the
+format logits are stored in decides where the overflow boundary sits, the subject of
+[bfloat16 vs float16](bfloat16-vs-float16.md).
 
 ## Shift invariance, overflow, and temperature — measured
 
@@ -68,6 +73,12 @@ and top probability.
 | naive overflow boundary, float64 | **709.7827128933841** |
 | naive overflow boundary, float32 | **88.72283554077148** |
 
+### Softmax temperature
+
+Softmax temperature is `T` in `softmax(x / T)`: it leaves the shift trick and the
+ranking of classes untouched but rescales how sharply the distribution favors the
+largest logit.
+
 | T | entropy | entropy ÷ ln(6) | max probability |
 |---|---|---|---|
 | 0.1 | 0.000499 | 0.000279 | 0.999955 |
@@ -77,6 +88,10 @@ and top probability.
 | 2.0 | 1.590703 | 0.887788 | 0.380110 |
 | 5.0 | 1.757935 | 0.981122 | 0.243617 |
 | 10.0 | 1.783314 | 0.995286 | 0.203213 |
+
+### Softmax function in Python
+
+Every number above comes from the `softmax` function below — plain NumPy, no framework.
 
 Reproduce it:
 
@@ -143,14 +158,14 @@ PY
 Read the first table as a warning against treating shift invariance as exact just
 because the algebra says so: it holds to `4.180e-13` for shifts up to `1,000`, but
 letting the shift grow to `1,000,000` costs a full `50.9×` more error — `2.126e-11` —
-purely from the catastrophic cancellation in computing `x − c` itself, before softmax's
-own internal max-subtraction ever runs. The overflow boundary drops from `709.7827128933841`
-in float64 to `88.72283554077148` in float32 — nearly 8× smaller in magnitude — because
-float32's exponent field is narrower, the same trade-off [bfloat16 vs float16](bfloat16-vs-float16.md)
+from catastrophic cancellation in computing `x − c` itself, before softmax's own
+max-subtraction ever runs. The overflow boundary drops from `709.7827128933841` in
+float64 to `88.72283554077148` in float32 — nearly 8× smaller — because float32's
+exponent field is narrower, the trade-off [bfloat16 vs float16](bfloat16-vs-float16.md)
 measures directly. The temperature table tells the sampling story: at `T=0.1` one class
-takes `0.999955` of the mass and entropy is a sliver of its `1.791759469228055` (`ln 6`)
-ceiling; by `T=10` entropy has climbed to `0.995286` of that ceiling and the top class
-holds only `0.203213` — barely above the uniform `1/6 ≈ 0.1667`.
+takes `0.999955` of the mass, a sliver of the `1.791759469228055` (`ln 6`) ceiling; by
+`T=10` entropy has climbed to `0.995286` of that ceiling and the top class holds only
+`0.203213` — barely above the uniform `1/6 ≈ 0.1667`.
 
 ## Practise it
 
@@ -160,33 +175,30 @@ mlsys grade llm-shift-invariance-proof-softmax-x-softmax-x-c
 
 [That task](../tasks/llm-shift-invariance-proof-softmax-x-softmax-x-c/task.md) gates two
 metrics: `accuracy <= 1e-12` against a stable NumPy reference, and
-`shift_invariance <= 1e-12` — the exact identity measured above, checked directly on
-test vectors including `[1e6, 1e6, 1e6]` and shifts up to `±1000`. The shipped starter
-raises `NotImplementedError` and fails both outright. A softmax written without the
-max-subtraction — `exp(x) / exp(x).sum()`, no shift at all — passes on small vectors
-like `[1, 2, 3]` but fails both gates the moment a test vector crosses `709.7827128933841`:
-`exp(1000)` is already `inf`, and `inf / inf` is `nan` no matter what constant you
-subtracted first.
+`shift_invariance <= 1e-12` — the identity measured above, checked on test vectors
+including `[1e6, 1e6, 1e6]` and shifts up to `±1000`. The shipped starter raises
+`NotImplementedError` and fails both. A softmax without max-subtraction —
+`exp(x) / exp(x).sum()` — passes on small vectors like `[1, 2, 3]` but fails both gates
+the moment a test vector crosses `709.7827128933841`: `exp(1000)` is already `inf`, and
+`inf / inf` is `nan` no matter what constant you subtracted first.
 
 More tasks in the same area, roughly increasing in scope:
 [stable softmax via max-subtraction](../tasks/alg-naive-softmax-overflow-max-subtraction-fix/task.md)
-(`max_abs_err <= 1e-9`, the overflow fix on its own),
+(`max_abs_err <= 1e-9`),
 [predict which fixtures overflow a naive float32 softmax](../tasks/llm-predict-which-fixtures-overflow-naive-softmax/task.md)
-(`exact_match == 1.0`, classification rather than computation — the float32 boundary
-measured above is exactly what it gates on),
+(`exact_match == 1.0`, classification, not computation),
 [softmax survives 300 large logits](../tasks/llm-stable-softmax-survives-300-logits/task.md)
-(`max_abs_err < 1e-7` on rows up to `±1000`, the batched, higher-dimensional version),
+(`max_abs_err < 1e-7` on rows up to `±1000`),
 and [temperature sweep, entropy and KL](../tasks/num-temperature-sweep-entropy-kl/task.md)
-(`mean_kl <= 1e-9`, the exact computation behind the second table above).
+(`mean_kl <= 1e-9`, the computation behind the temperature table above).
 
 ## Common mistakes
 
 - **Trusting shift invariance to be exact for any constant.** The measured table shows
   `50.9×` more error from a shift of `1,000,000` than from `1,000` — algebraically
   identical, numerically not, because subtracting a huge unrelated constant from a much
-  smaller logit loses precision in the subtraction itself, before softmax's own
-  max-shift (which always uses `c = max(x)`, never an arbitrary external constant) gets
-  a chance to help.
+  smaller logit loses precision before softmax's own max-shift (always `c = max(x)`,
+  never an arbitrary external constant) gets a chance to help.
 - **Assuming "logits are usually small" makes the naive form safe.** Attention logits
   before scaling, or an unnormalized mixture weight, can exceed the float64 boundary
   `709.7827128933841` or, in float32, the far closer `88.72283554077148` — nearly 8×
@@ -194,32 +206,28 @@ and [temperature sweep, entropy and KL](../tasks/num-temperature-sweep-entropy-k
 - **Reading a temperature near `0` as "no effect."** At `T=0.1` the measured
   distribution already concentrates `0.999955` of its mass on one class; a temperature
   meant to sharpen a distribution slightly instead collapses it almost to a hard argmax.
-- **Confusing softmax with sigmoid past two classes.** They are the same computation
-  only at `K=2` — see [softmax vs sigmoid](softmax-vs-sigmoid.md) for the exact point
-  and size of the divergence, not restated here.
+- **Confusing softmax with sigmoid or ReLU.** Softmax equals sigmoid only at `K=2` — see
+  [softmax vs sigmoid](softmax-vs-sigmoid.md) for the divergence — and ReLU has no
+  cross-vector normalization, so neither substitutes for the other at an output layer.
 
 ## Where else to practise this
 
 From the [full survey of what exists](../LANDSCAPE.md) for this track:
 
-- **[CS231n Assignment 1](https://cs231n.github.io/assignments2026/assignment1/)** — a
-  learner derives and codes a softmax classifier by hand in raw NumPy, gradient-checked
-  in the notebook. Covers the multi-class mechanics; touches neither the shift-invariance
-  identity nor either overflow boundary measured here.
+- **[CS231n Assignment 1](https://cs231n.github.io/assignments2026/assignment1/)** — codes
+  a softmax classifier by hand in raw NumPy, gradient-checked in the notebook. Covers the
+  multi-class mechanics; touches neither shift-invariance nor either overflow boundary here.
 - **[Stanford CS336 — Assignment 1](https://github.com/stanford-cs336/assignment1-basics)**
-  — builds softmax as one gradable component inside a full from-scratch transformer
-  (alongside RMSNorm, RoPE, attention), checked by pytest. Broader scope, narrower depth
-  on softmax's own numerics specifically.
+  — softmax as one gradable component inside a from-scratch transformer (RMSNorm, RoPE,
+  attention alongside it), checked by pytest. Broader scope, narrower depth on the numerics.
 - **[Triton-Puzzles](https://github.com/gpu-mode/Triton-Puzzles)** — puzzle #8, "Long
-  Softmax," has a learner implement the row-wise max-and-sum pattern in Triton,
-  auto-checked against a reference with no GPU required. Kernel-level, not numerics-level.
-- **[Float Exposed](https://float.exposed/)** — flip bits of a float64 or float32 by
-  hand and watch it become `inf`; the clearest way to *see* why `709.7827128933841` and
+  Softmax," implements the row-wise max-and-sum pattern in Triton, auto-checked with no
+  GPU required. Kernel-level, not numerics-level.
+- **[Float Exposed](https://float.exposed/)** — flip bits of a float64 or float32 by hand
+  and watch it become `inf`; the clearest way to *see* why `709.7827128933841` and
   `88.72283554077148` are where each format gives out, with no softmax content itself.
-- The landscape survey's own verdict here is blunt: nowhere found "grades a
-  stable-softmax/log-sum-exp implementation against an overflow-triggering input" the
-  way the tasks above do — this bank's tasks are the only auto-graded coverage of that
-  half of the topic.
+- The survey found nothing anywhere that grades a stable-softmax implementation against an
+  overflow-triggering input, which is what the tasks above do.
 
 ## References
 
@@ -229,6 +237,9 @@ From the [full survey of what exists](../LANDSCAPE.md) for this track:
 2. Goldberg, D., *What Every Computer Scientist Should Know About Floating-Point
    Arithmetic*, 1991 — the overflow mechanics behind both boundaries measured here.
    https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
-3. Hinton, G., Vinyals, O., Dean, J., *Distilling the Knowledge in a Neural Network*,
+3. PyTorch documentation, `torch.nn.functional.scaled_dot_product_attention` — masking
+   attention logits before softmax with additive `-inf`.
+   https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html
+4. Hinton, G., Vinyals, O., Dean, J., *Distilling the Knowledge in a Neural Network*,
    2015 — the temperature-scaled softmax used above, introduced for knowledge
    distillation. https://arxiv.org/abs/1503.02531

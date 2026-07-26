@@ -1,12 +1,12 @@
 ---
-title: "What is gguf vs safetensors?"
+title: "GGUF vs safetensors: what is the difference?"
 description: "GGUF vs safetensors explained, with a measured bytes-per-weight table (real bit-packing, not the headline bit count) you can reproduce, plus a graded exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is gguf vs safetensors?
+# GGUF vs safetensors: what is the difference?
 
 GGUF vs safetensors is a choice between two on-disk container formats for model weights:
 safetensors stores each tensor at its native dtype behind a small JSON header, while GGUF

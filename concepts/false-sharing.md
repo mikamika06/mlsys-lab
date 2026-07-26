@@ -8,8 +8,9 @@ author: Oleksandr Savkov
 
 # What is false sharing?
 
-False sharing is the slowdown that happens when two threads write to *different* variables
-that live inside the same cache line. Nothing is actually shared, so no lock is needed and no
+False sharing — sometimes called a false sharing cache conflict — is the slowdown that
+happens when two threads write to *different* variables that live inside the same cache
+line. Nothing is actually shared, so no lock is needed and no
 result is wrong — but the coherence protocol works on whole lines, so each write invalidates
 the line in the other core's cache and the two threads take turns owning memory neither of
 them shares. Below, the cost measured as a count you can regenerate.

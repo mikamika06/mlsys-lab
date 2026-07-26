@@ -1,12 +1,12 @@
 ---
-title: "What is grouped query attention?"
+title: "What is grouped query attention (GQA)?"
 description: "Grouped query attention explained, with a measured KV-cache-bytes-vs-groups table — and the exact context length where the cache outweighs the weights — you can reproduce, plus a graded exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is grouped query attention?
+# What is grouped query attention (GQA)?
 
 Grouped query attention splits a transformer's query heads into groups that each
 share one key/value projection, instead of every head keeping its own. The saving

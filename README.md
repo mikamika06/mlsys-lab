@@ -22,6 +22,17 @@ Your transpose is numerically perfect and 16.5× slower than it needs to be, bec
 the tile is 32 floats wide and every column read lands in one shared-memory bank.
 Nothing was timed to find that out.
 
+```bash
+pip install mlsys-lab
+mlsys start gpu-1-padding-to-remove-transpose-bank-conflicts   # writes the starter here
+mlsys grade gpu-1-padding-to-remove-transpose-bank-conflicts   # measure it
+```
+
+Fourteen areas, from the CPython data model to paged attention. A survey of 135 other
+resources found that **six of those fourteen have no automatically graded material
+anywhere** — the survey is in [`RESOURCES.md`](RESOURCES.md), and it says where other
+people teach something better than this does.
+
 ## Why the numbers are trustworthy
 
 Wall-clock timing is never a gate. Instead the engine models the hardware and
@@ -37,6 +48,10 @@ The reference answer is always **computed by the grader**, never hard-coded — 
 a task cannot be passed by guessing the expected output.
 
 ## Install
+
+[PyPI](https://pypi.org/project/mlsys-lab/) ·
+[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=mikamika06.mlsys-lab) ·
+[Open VSX](https://open-vsx.org/extension/mikamika06/mlsys-lab)
 
 ```bash
 pip install mlsys-lab                             # the engine and the whole task bank
@@ -82,10 +97,6 @@ Install **mlsys-lab** from the Marketplace, then run **mlsys-lab: Open Workspace
 If the package is not installed yet, the extension offers to do it. Solutions go to
 `~/mlsys-lab/<task-id>/` (configurable via `mlsys.workDir`).
 
-PyPI: <https://pypi.org/project/mlsys-lab/> · Marketplace:
-<https://marketplace.visualstudio.com/items?itemName=mikamika06.mlsys-lab> · Open VSX:
-<https://open-vsx.org/extension/mikamika06/mlsys-lab>
-
 ### Contributing to the bank
 
 ```bash
@@ -112,7 +123,7 @@ Three native tracks plus the systems material:
 
 ## Concepts, explained with a number
 
-[`concepts/`](concepts/) — 22 pages, one per concept, each with a measurement produced by
+[`concepts/`](concepts/) — 37 pages, one per concept, each with a measurement produced by
 this repo and the command that regenerates it, then the graded exercise. Two checks run in
 CI: one for structure and links, one that **executes each page's own snippet** and fails if
 it prints anything the page does not say.

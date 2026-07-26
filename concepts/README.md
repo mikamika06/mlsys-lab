@@ -11,31 +11,72 @@ teacher than this bank, the page says so and links it.
 
 ## Written
 
-| Page | What it measures |
-|---|---|
-| [What is memory coalescing?](memory-coalescing.md) | 128-byte transactions against read stride, 2 → 33 |
-| [What is warp divergence?](warp-divergence.md) | divergences and cycles against which lanes take the branch |
-| [What are shared memory bank conflicts?](cuda-shared-memory-bank-conflicts.md) | conflict waves against row stride, and why stride 64 is as bad as 32 |
-| [What is false sharing?](false-sharing.md) | coherence invalidations against counter padding, 7,999 → 0 |
-| [What is cache blocking?](cache-blocking.md) | misses against tile size, including a tile worse than not blocking at all |
-| [What is cache locality?](cache-locality.md) | the exact row length at which column-major becomes one miss per access |
-| [What is loop unrolling?](loop-unrolling.md) | loop-control work against unroll factor, and where the tail eats the saving |
-| [What is simd?](simd.md) | vector and scalar ops against register width; below N = W, widening buys nothing |
-| [What is kahan summation?](kahan-summation.md) | error of naive, pairwise and compensated summation against the exact sum |
-| [What is log sum exp?](log-sum-exp.md) | the exact input at which the naive form overflows |
-| [What is bfloat16 vs float16?](bfloat16-vs-float16.md) | range, epsilon and the first value that overflows each format |
-| [What is the int8 range?](integer-quantization-ranges.md) | levels and quantization error for int4 / int8 / int16 |
-| [What is gguf vs safetensors?](gguf-vs-safetensors.md) | bytes per weight *actual* vs nominal, once block metadata is counted |
-| [What is softmax vs sigmoid?](softmax-vs-sigmoid.md) | they are identical at two classes and diverge from three; plus both overflow points |
-| [What is softmax function?](softmax-function.md) | float64 shift invariance under a growing shift constant, the naive overflow boundary in float64 and float32, and entropy/max-probability against temperature |
-| [What is layer normalization, and how does RMSNorm differ?](rmsnorm-vs-layernorm.md) | parameters and ops for each, and what subtracting the mean actually buys |
-| [What is gradient checkpointing?](gradient-checkpointing.md) | retained activations and recomputations against segment count |
-| [What is continuous batching?](continuous-batching.md) | wasted decode slot-steps, static against continuous, as output length varies |
-| [What is python slots?](python-slots.md) | bytes per instance with and without `__slots__` |
-| [What is python descriptors?](python-descriptors.md) | which protocol method fires per lookup path, and how often |
-| [What is python multiprocessing?](python-multiprocessing.md) | bytes actually pickled per argument shape, and which shapes cannot cross at all |
-| [What is kmeans?](kmeans.md) | iterations and final inertia, random init against k-means++ |
-| [PCA in Python](pca.md) | explained variance and reconstruction error per component, and the cost of skipping centering |
+37 pages, each carrying a number this repo measured and the command that regenerates it.
+
+**GPU and CUDA**
+
+- [What is memory coalescing?](memory-coalescing.md)
+- [What is warp divergence?](warp-divergence.md)
+- [What are shared memory bank conflicts?](cuda-shared-memory-bank-conflicts.md)
+- [What is kernel fusion?](kernel-fusion.md)
+- [What are CUDA graphs?](cuda-graphs.md)
+
+**CPU performance**
+
+- [What is false sharing?](false-sharing.md)
+- [What is cache blocking?](cache-blocking.md)
+- [What is cache locality?](cache-locality.md)
+- [What is loop unrolling?](loop-unrolling.md)
+- [What is SIMD?](simd.md)
+
+**C++**
+
+- [What is move semantics?](move-semantics.md)
+- [What is a virtual function table?](virtual-function-table.md)
+
+**Numerics**
+
+- [What is kahan summation?](kahan-summation.md)
+- [What is log sum exp?](log-sum-exp.md)
+- [What is bfloat16 vs float16?](bfloat16-vs-float16.md)
+- [What is floating point precision in Python?](floating-point-precision-python.md)
+- [What is the int8 range?](integer-quantization-ranges.md)
+- [GGUF vs safetensors: what is the difference?](gguf-vs-safetensors.md)
+
+**Attention and the KV cache**
+
+- [What is grouped query attention (GQA)?](grouped-query-attention.md)
+- [What is paged attention?](paged-attention.md)
+- [What is a KV cache?](kv-cache.md)
+- [What are rope embeddings?](rope-embeddings.md)
+- [What is self-attention vs cross-attention?](self-attention-vs-cross-attention.md)
+
+**LLM internals and systems**
+
+- [What is the softmax function?](softmax-function.md)
+- [What is softmax vs sigmoid?](softmax-vs-sigmoid.md)
+- [What is layer normalization, and how does RMSNorm differ?](rmsnorm-vs-layernorm.md)
+- [What is LLM inference?](llm-inference.md)
+- [What is LLM inference optimization?](llm-inference-optimization.md)
+- [What is continuous batching?](continuous-batching.md)
+- [What is gradient checkpointing?](gradient-checkpointing.md)
+
+**Compile and export**
+
+- [What is torch compile?](torch-compile.md)
+- [What is torch onnx export?](torch-onnx-export.md)
+
+**Deep Python**
+
+- [What is __slots__ in Python?](python-slots.md)
+- [What are python descriptors?](python-descriptors.md)
+- [What is python multiprocessing?](python-multiprocessing.md)
+
+**Algorithms**
+
+- [What is k-means clustering?](kmeans.md)
+- [PCA in Python](pca.md)
+
 
 ## The rules these pages follow
 

@@ -1,12 +1,12 @@
 ---
-title: "What is floating point precision python?"
+title: "What is floating point precision in Python?"
 description: "Floating point precision python explained, with a measured table of 0.1's exact stored fraction, the ULP gap across magnitudes, and the exact float64 value where +1 stops registering, plus a graded exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is floating point precision python?
+# What is floating point precision in Python?
 
 Floating point precision python is fixed at 53 significant bits per `float` value —
 IEEE-754 binary64's 52 stored mantissa bits plus one implicit leading bit — the same

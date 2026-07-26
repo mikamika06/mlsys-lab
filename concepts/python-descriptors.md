@@ -1,12 +1,12 @@
 ---
-title: "What is python descriptors?"
+title: "What are python descriptors?"
 description: "Python descriptors explained, with a measured protocol-call count for data vs non-data precedence you can reproduce, plus graded exercises."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is python descriptors?
+# What are python descriptors?
 
 A descriptor in python is any object whose class defines `__get__`, `__set__`, or `__delete__`,
 so that attribute lookup calls those methods instead of reading `__dict__` directly. Which method

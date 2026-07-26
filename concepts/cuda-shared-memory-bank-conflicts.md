@@ -15,6 +15,12 @@ Below, an unpadded 32-word tile column read costs 33 shared-memory waves for one
 one word of padding drops it to 2. That cliff, and the reason it does not stay fixed as padding
 grows, is measured next on the software GPU used throughout this bank.
 
+## CUDA shared memory
+
+CUDA shared memory is the on-chip scratchpad a thread block allocates with `__shared__` —
+SRAM, not the off-chip DRAM behind global memory, private to that block, and fast only because
+of the banked layout described next.
+
 ## How it works
 
 Shared memory is on-chip and word-interleaved across 32 banks: word index `w` lives in bank
@@ -35,6 +41,11 @@ also worth separating from [false sharing](false-sharing.md), which is the same 
 smaller than the access" idea on a CPU's coherence protocol: there, colliding inside a line
 costs a cache invalidation between cores; here, colliding inside a bank costs a serialized
 cycle inside one warp, and there is no correctness risk either way, only wasted cycles.
+
+CUDA's other on-chip-cached space, constant memory, works the opposite way: a small read-only
+region backed by its own broadcast cache, cheapest exactly when every lane reads the same
+address, with no banks and therefore no conflicts — the mechanics on this page do not apply to
+it at all.
 
 The pattern that reliably produces conflicts is a **tile read down its own stride**: stage a
 `row x row_stride` tile in shared memory, then have each lane of a warp read a different row

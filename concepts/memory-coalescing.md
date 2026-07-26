@@ -8,8 +8,9 @@ author: Oleksandr Savkov
 
 # What is memory coalescing?
 
-Memory coalescing is the hardware's merging of the 32 separate global-memory addresses
-requested by a warp into as few 128-byte transactions as possible. When the addresses are
+Memory coalescing — the hardware also calls the good case a **coalesced memory access** — is
+the merging of the 32 separate global-memory addresses requested by a warp into as few
+128-byte transactions as possible. When the addresses are
 consecutive, one transaction serves all 32 threads; when they are strided by 32 floats, it
 takes 33 — the same useful bytes, sixteen times the read traffic. Below is that count
 measured exactly, by a simulator that needs no GPU.

@@ -1,12 +1,12 @@
 ---
-title: "What is llm inference?"
+title: "What is LLM inference?"
 description: "LLM inference explained, with a measured arithmetic-intensity table for prefill vs. decode across model size and batch that you can reproduce, plus a graded roofline exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is llm inference?
+# What is LLM inference?
 
 LLM inference is the forward-only run of a trained transformer that turns a
 prompt into generated tokens, split into two phases with opposite hardware

@@ -109,6 +109,14 @@ gap between `max finite` and the overflow boundary — 16 for fp16, tiny in rela
 gap so narrow that a value only slightly past the format's own advertised maximum silently
 becomes non-finite rather than saturating or raising.
 
+## fp16 vs fp32
+
+fp16 vs fp32 is the more common comparison, since fp32 is the baseline both 16-bit formats
+shrink, not just bf16's rival. The table already answers it: fp32's 23 mantissa bits give an
+eps of 1.192093e-07 against fp16's 9.765625e-04, a coarser step wherever fp16 can represent
+a value; fp32's 8-bit exponent covers the full 3.402823×10³⁸ range, while fp16's 5-bit
+exponent stops at 65,504. fp16's one edge over fp32 is the 2-byte footprint, not precision.
+
 ## Practise it
 
 ```bash

@@ -1,12 +1,12 @@
 ---
-title: "What is rope embeddings?"
+title: "What are rope embeddings?"
 description: "RoPE embeddings explained, with position-difference invariance verified in float64, measured against naive absolute encodings and long-context extrapolation, plus a graded exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is rope embeddings?
+# What are rope embeddings?
 
 RoPE embeddings rotate a query or key vector's paired dimensions by an angle set only by
 that vector's absolute position, so the dot product of a rotated query and key ends up

@@ -17,8 +17,7 @@ range table, follow.
 
 ## How it works
 
-An integer type of `b` bits can represent exactly `2^b` distinct values, full stop — that count
-is fixed by the bit width and nothing else. What is *not* fixed is which real numbers those
+An integer type of `b` bits can represent exactly `2^b` distinct values, full stop. What is *not* fixed is which real numbers those
 integers stand for, and that is the entire content of a quantization scheme. **Symmetric**
 quantization is signed and centered on zero: the range splits as `-2^(b-1)` to `2^(b-1) - 1`
 (int8: -128 to 127, one extra negative slot because two's complement is asymmetric even when
@@ -31,23 +30,19 @@ That difference in floor placement is also the whole reason to have two schemes 
 one. A ReLU activation tensor is never negative — symmetric quantization would spend half its
 codes, 128 of 256 for int8, representing negative numbers that cannot appear. Weight tensors,
 by contrast, are usually close to zero-centered, so symmetric wastes almost nothing and gets a
-cheaper dequantize: `q * scale` instead of `(q - zero_point) * scale`. Picking the wrong scheme
-for the wrong tensor is a real, measurable error cost, not a style choice.
+cheaper dequantize: `q * scale` instead of `(q - zero_point) * scale`.
 
-Bit width and error do not trade off linearly, which is the part a one-line "int8 = 256 levels"
-definition hides. Going from 16 to 8 bits divides the level count by 256 but the levels were
-never spread evenly over where the data actually lives — a normal distribution's mass sits
-within about 3 standard deviations, so most of a wide integer range is already spent on rare
-tail values before the bit width shrinks at all. This is the same "count what the hardware
-actually gives you, don't estimate it" instinct as [memory coalescing](memory-coalescing.md),
-where a stride that looks harmless costs a countable multiple of memory transactions, and as
-[false sharing](false-sharing.md), where a layout that looks fine costs a countable number of
-cache-line invalidations. Range and error here are exactly that kind of number: cheap to state
-wrong, cheap to check.
+Bit width and error do not trade off linearly, which a one-line "int8 = 256 levels" definition
+hides: going from 16 to 8 bits divides the level count by 256, but a normal distribution's mass
+sits within about 3 standard deviations, so much of a wide integer range is already spent on
+tail values that barely occur. This is the same "count what the hardware actually gives you"
+instinct as [memory coalescing](memory-coalescing.md) and [false sharing](false-sharing.md):
+cheap to state wrong, cheap to check.
 
-The practical range table below covers int4 (used group-wise for weight-only LLM inference),
-int8 (the default for both weights and KV-cache), and int16 — rare on its own, but the reference
-point for "how much do 8 fewer bits actually cost." The int16 range, -32768 to 32767 symmetric or 0-65535 asymmetric, is the last two rows.
+The practical range table below covers the int4 range (used group-wise for weight-only LLM
+inference), int8 quantization (the default scheme for both weights and KV-cache), and int16 —
+rare on its own, but the reference point for "how much do 8 fewer bits actually cost." The
+int16 range, -32768 to 32767 symmetric or 0-65535 asymmetric, is the last two rows.
 
 ## Ranges and measured quantization error by bit width
 
@@ -114,9 +109,20 @@ halves the *step size* while the tensor's spread stays fixed. Second, asymmetric
 symmetric at every width here even though the input is a zero-centered normal: this particular
 100,000-sample draw has `min=-4.494` against `max=4.732`, so symmetric quantization sizes its
 whole range off the larger of the two magnitudes and wastes about 5% of its span on negative
-codes below `-4.494` that the tensor never uses. That gap would close on a perfectly symmetric
-population and would widen sharply on a real skewed activation tensor — which is exactly why
-production quantizers pick the scheme per-tensor rather than fixing one globally.
+codes below `-4.494` that the tensor never uses. That gap closes on a perfectly symmetric
+population and widens on a skewed one — why production quantizers pick the scheme per-tensor
+rather than fixing one globally.
+
+## Post-training quantization, and PyTorch quantization API
+
+Everything measured above is post-training quantization: fit a scale (and, for asymmetric, a
+zero-point) from a calibration tensor's own min and max, then quantize and dequantize — no
+retraining, unlike quantization-aware training, which learns the rounding error away through
+fake-quantized ops during training instead. PyTorch's quantization API mirrors the same two
+schemes: `torch.qint8` is signed like the symmetric column above (`-128` to `127`), and
+`torch.quint8` is unsigned with an explicit `zero_point`, like the asymmetric column (`0` to
+`255`); an observer such as `MinMaxObserver` computes that scale and zero-point from calibration
+data the same way `sym_error` and `asym_error` do by hand above.
 
 ## Practise it
 
@@ -149,16 +155,15 @@ output channel instead of one per tensor),
 - **Treating `2^b` levels as `2^b` usable levels.** Signed two's complement has one more
   negative value than positive (`-128` to `127`, not `-127` to `127`), and code that hardcodes
   a symmetric-looking `[-127, 127]` clip throws away a representable level for nothing.
-- **Using `abs(x).max()` for asymmetric scale.** Asymmetric scale must come from `min` and
-  `max` separately; reusing the symmetric absmax formula silently degrades to a worse-than-symmetric
-  result because it ignores the zero-point that asymmetric quantization exists to add.
+- **Using `abs(x).max()` for asymmetric scale.** It must come from `min` and `max` separately;
+  reusing the symmetric absmax formula ignores the zero-point asymmetric quantization exists to
+  add, and quietly degrades accuracy.
 - **Assuming halving bit width halves error.** The table shows 8-to-4 bits costs about 18x the
   mean error, not 2x, because error scales with step size, which is exponential in bit width,
   not linear.
 - **Picking symmetric for a strictly-positive tensor.** A post-ReLU activation quantized
-  symmetric wastes every negative code; on this page's tensor that kind of mismatch costs about
-  5% of the representable span even on data that is only mildly skewed, and it gets worse as
-  skew increases.
+  symmetric wastes every negative code; on this page's tensor that mismatch costs about 5% of
+  the representable span even on mildly skewed data, and worse as skew increases.
 - **Reporting `max_abs_err` alone.** One outlier element can dominate the max while every other
   element is quantized fine; `sym_mse_diff`/`asym_mse_diff`-style aggregate metrics catch a
   systematically-wrong scale that a single max value can hide.

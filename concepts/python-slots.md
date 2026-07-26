@@ -1,12 +1,12 @@
 ---
-title: "What is python slots?"
+title: "What is __slots__ in Python?"
 description: "Python slots explained, with a measured bytes-per-instance table across attribute counts you can reproduce, plus a graded exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is python slots?
+# What is __slots__ in Python?
 
 Python slots are a class-level declaration, `__slots__`, that replaces an instance's private
 dictionary with a fixed-size array of attribute descriptors. On CPython 3.11, a three-attribute

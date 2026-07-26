@@ -1,12 +1,12 @@
 ---
-title: "What is virtual function table?"
+title: "What is a virtual function table?"
 description: "Virtual function table explained, with a measured sizeof-vs-vptr table from real clang++ output you can reproduce, plus a graded C++ exercise."
 datePublished: 2026-07-26
 dateModified: 2026-07-26
 author: Oleksandr Savkov
 ---
 
-# What is virtual function table?
+# What is a virtual function table?
 
 A virtual function table is a per-class array of function pointers, built once by the
 compiler, that a call through a base pointer reads to find the correct override at runtime.
