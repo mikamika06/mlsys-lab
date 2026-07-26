@@ -18,7 +18,7 @@ where
    \bigl(\log p_{\!t,i,c}-\log p_{\!s,i,c}\bigr)$ is the mean Kullback–Leibler divergence,  
 
 * $\mathrm{CE}(s,y) = -\,\frac1N
-   \sum_{i=1}^{N} \log p_{\!s,i,y_i}$ is the cross‑entropy between the student predictions and the true labels $y$.
+   \sum_{i=1}^{N} \log p_{\!s,i,y_i}$ is the cross-entropy between the student predictions and the true labels $y$.
 
 The factor $T^{2}$ compensates for the temperature scaling of the KL term, ensuring that the two components are on a comparable scale.
 

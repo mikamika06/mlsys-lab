@@ -3,7 +3,7 @@
 In many machine‑learning pipelines a tensor is stored in a sparse format, where only the non‑zero entries (the *live* parameters) are kept. The **density** of such a mask is defined as the fraction of zero elements relative to all elements:
 
 $$\text{sparsity} = \frac{\#\text{zeros}}{\text{total elements}}
-= 1 - \frac{\#\text{non‑zeros}}{\text{total elements}}\,. $$
+= 1 - \frac{\#\text{non-zeros}}{\text{total elements}}\,. $$
 
 Knowing how many live parameters a mask contains and its sparsity is useful for memory budgeting, compression decisions, and runtime profiling.
 

@@ -1,0 +1,199 @@
+name: ci
+
+# Every check here exists because something got past a manual review.
+#
+#  - `package` installs the built wheel into a clean venv and grades from an
+#    unrelated directory. A bug where `mlsys grade` could not route C++ or CUDA
+#    tasks at all — 460 of 2052 — survived every local test, because the local
+#    tests drove the extension and the extension does its own routing. It was
+#    only caught by installing from the public index and running what the README
+#    says to run. This job is that, automated.
+#  - `package` also asserts the archive's contents. A build once shipped 1,596
+#    gitignored `solve.*` scratch files, because `force-include` ignores the
+#    `exclude` patterns. One of those would eventually have been an answer.
+#  - `bank` re-verifies every task: the reference passes its gates and the
+#    shipped starter fails them. A task anything can pass is not a task.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: wheel installs and grades from scratch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - name: Build
+        run: |
+          python -m pip install --quiet build
+          python -m build
+
+      - name: The archive must not contain the learner's scratch files
+        run: |
+          python - <<'PY'
+          import glob, zipfile, sys
+          whl = glob.glob("dist/*.whl")[0]
+          names = zipfile.ZipFile(whl).namelist()
+          tasks = {n.split("/")[2] for n in names
+                   if n.startswith("mlsys/tasks/") and n.count("/") > 2}
+          scratch = [n for n in names if "/solve." in n]
+          pyc = [n for n in names if "__pycache__" in n]
+          print(f"{len(tasks)} tasks, {len(scratch)} scratch, {len(pyc)} pycache")
+          fail = []
+          if len(tasks) != 2052:                      fail.append(f"{len(tasks)} tasks, expected 2052")
+          if scratch:                                 fail.append(f"scratch files shipped: {scratch[:3]}")
+          if pyc:                                     fail.append(f"__pycache__ shipped: {pyc[:3]}")
+          if "mlsys/task_list2.json" not in names:    fail.append("curriculum missing")
+          if fail:
+              sys.exit("\n".join(fail))
+          PY
+
+      - name: Install into a clean venv
+        run: |
+          python -m venv /tmp/venv
+          /tmp/venv/bin/pip install --quiet dist/*.whl
+          /tmp/venv/bin/mlsys --version
+
+      # From an unrelated directory, so the bank must resolve out of site-packages
+      # rather than out of the checkout.
+      - name: Grade one task per language, from outside the repo
+        run: |
+          mkdir -p /tmp/work && cd /tmp/work
+          /tmp/venv/bin/python - <<'PY'
+          import json, pathlib, shutil, subprocess, sys, sysconfig
+          PY_ = "/tmp/venv/bin/python"
+          bank = pathlib.Path(subprocess.run(
+              [PY_, "-c", "from mlsys import bank; print(bank.bank_root())"],
+              capture_output=True, text=True, check=True).stdout.strip())
+          assert "site-packages" in str(bank), f"resolved to the checkout: {bank}"
+
+          CASES = [("sys-one-pass-online-softmax-vector", None, "starter.py", "solution_ref.py", "solve.py"),
+                   ("cpp-move-ctor-forgets-to-null-double-free-fix", "cpp", "starter.cpp", "ref.cpp", "solve.cpp"),
+                   ("gpu-ex-cuda-coalesced-scale", "cuda", "starter.cu", "ref.cu", "solve.cu")]
+          bad = 0
+          for tid, nat, starter, ref, dst in CASES:
+              work = pathlib.Path("/tmp/work") / tid
+              work.mkdir(parents=True, exist_ok=True)
+              for label, src, want in (("starter", starter, False), ("reference", ref, True)):
+                  shutil.copy(bank / tid / src, work / dst)
+                  r = subprocess.run([PY_, "-m", "mlsys", "grade", tid, "--file", str(work / dst), "--json"],
+                                     capture_output=True, text=True, cwd="/tmp/work")
+                  try:
+                      got = json.loads(r.stdout)["passed"]
+                  except Exception:
+                      got = f"no JSON: {r.stdout[:120]} {r.stderr[:200]}"
+                  ok = got is want
+                  bad += 0 if ok else 1
+                  print(f"  {'ok  ' if ok else 'FAIL'} {nat or 'python':<6} {label:<9} passed={got} want={want}")
+              stray = [p.name for p in (bank / tid).iterdir() if p.name.startswith("solve.")]
+              if stray:
+                  bad += 1
+                  print(f"  FAIL wrote into the installed bank: {stray}")
+          sys.exit(bad)
+          PY
+
+      - name: mlsys start and list
+        run: |
+          mkdir -p /tmp/w2 && cd /tmp/w2
+          /tmp/venv/bin/mlsys start gpu-ex-cuda-coalesced-scale
+          test -f gpu-ex-cuda-coalesced-scale/solve.cu
+          test "$(/tmp/venv/bin/mlsys list | grep -c '^  ')" = 4104
+
+      # A user with a Homebrew or distro python cannot pip-install into it (PEP 668),
+      # and the extension has to recognise that exact failure to give useful advice.
+      # Ubuntu's own /usr/bin/python3 is externally managed, so the real message can
+      # be produced here. Note a venv cannot: pip inside a virtual environment
+      # ignores the EXTERNALLY-MANAGED marker by design, so faking it there proves
+      # nothing. If the runner's system python ever stops being managed, this fails
+      # loudly rather than passing vacuously.
+      - name: PEP 668 message is still what the extension matches on
+        run: |
+          marker=$(/usr/bin/python3 -c 'import sysconfig,os;print(os.path.join(sysconfig.get_path("stdlib"),"EXTERNALLY-MANAGED"))')
+          test -f "$marker" || { echo "runner's system python is not externally managed ($marker absent); this check can no longer verify anything"; exit 1; }
+          set +e
+          out=$(/usr/bin/python3 -m pip install mlsys-lab 2>&1)
+          code=$?
+          set -e
+          echo "$out" | tail -4
+          test "$code" -ne 0 || { echo "install unexpectedly succeeded into a managed python"; exit 1; }
+          echo "$out" | grep -qiE "externally-managed-environment|externally managed" \
+            || { echo "pip changed its wording; update the regex in editor/extension.js ensureLab()"; exit 1; }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/*
+
+  bank:
+    name: every task discriminates
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: python -m pip install --quiet -e .
+      - run: clang++ --version
+      - name: Verify the whole bank
+        run: python3 tools/verify_all.py
+      - name: The verifier must not litter the bank
+        run: |
+          n=$(find tasks -maxdepth 2 -name 'solve.*' | wc -l)
+          test "$n" -eq 0 || { echo "verifier left $n scratch files in the bank"; exit 1; }
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: verify-report
+          path: .internal/verify_report.json
+
+  extension:
+    name: extension host, both bank modes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+
+      - name: checkout mode
+        run: |
+          python -m pip install --quiet -e .
+          node editor/test-extension.js
+
+      # The path every Marketplace user takes: no repo in the workspace, so the
+      # host has to locate the bank by asking the interpreter.
+      - name: installed mode
+        run: |
+          python -m pip install --quiet build && python -m build --wheel
+          python -m venv /tmp/venv && /tmp/venv/bin/pip install --quiet dist/*.whl
+          cd /tmp
+          MLSYS_TEST_MODE=installed \
+          MLSYS_TEST_PYTHON=/tmp/venv/bin/python \
+          node "$GITHUB_WORKSPACE/editor/test-extension.js"
+
+      - name: package the extension
+        run: cd editor && npx --yes @vscode/vsce package
+
+  pages:
+    name: concept pages and statement maths
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: python3 tools/check_page.py
+      - name: KaTeX must parse every math span in every statement
+        run: node tools/check_latex.js

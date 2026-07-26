@@ -6,7 +6,7 @@ is obtained by rounding the product to the nearest integer.
 When the fractional part is exactly $\tfrac12$, the *banker’s rounding* rule,
 also called **round‑half‑to‑even**, chooses the even integer:
 
-$$Q(x) \;=\;\operatorname{round}_{\text{half‑to‑even}}\!\bigl(x\,2^{f}\bigr).$$
+$$Q(x) \;=\;\operatorname{round}_{\text{half-to-even}}\!\bigl(x\,2^{f}\bigr).$$
 
 This mode avoids a systematic bias that would otherwise accumulate in long
 computations.

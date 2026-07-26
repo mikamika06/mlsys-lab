@@ -3,7 +3,7 @@
 When two nearly equal numbers are subtracted, the significant digits of the result can be lost.  
 Let  
 
-$$x_{\text{float}} = a - b \quad\text{(computed in IEEE‑754 double precision)}$$  
+$$x_{\text{float}} = a - b \quad\text{(computed in IEEE-754 double precision)}$$  
 
 and  
 
