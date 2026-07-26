@@ -46,12 +46,13 @@ Both tuples contain integers. The calculation should follow exactly the formulas
 >>> bs = 8
 >>> wasted_slots(lengths, bs)
 {
-    'paged': (4, 3),          # ceil(5/8)+ceil(7/8)+ceil(12/8)=1+1+2=4 blocks; 4*8-24=32-24=8? Wait compute: 4*8 - 24 = 8 -> but example shows 3, adjust accordingly.
-    'contiguous': (3, 0)      # ceil(max(12)/8)=2 blocks per seq => 3*2=6 blocks; 6*8-24=48-24=24? Example may differ.
+    'paged': (4, 8),        # ceil(5/8)+ceil(7/8)+ceil(12/8) = 1+1+2 = 4 blocks; 4*8 - 24 = 8 wasted
+    'contiguous': (6, 24)   # ceil(12/8) = 2 blocks each, 3*2 = 6 blocks; 6*8 - 24 = 24 wasted
 }
 ```
 
-(The numbers in the example are illustrative; your implementation must compute the exact values.)
+Contiguous pre-allocation sizes every sequence to the longest one in the batch, which is why it
+wastes three times what paged allocation does on this input.
 
 ## What the gate checks
 

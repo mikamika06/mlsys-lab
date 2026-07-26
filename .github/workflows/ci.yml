@@ -200,7 +200,17 @@ jobs:
           PY
           )
           echo "page-declared deps: ${deps:-none}"
-          [ -n "$deps" ] && python -m pip install --quiet $deps || true
+          # torch resolves to the CUDA build by default on Linux — ~800 MB for pages that
+          # only need it on the CPU. Take it from the CPU index and install the rest normally.
+          rest=""
+          for d in $deps; do
+            case "$d" in
+              torch|torchvision|torchaudio)
+                python -m pip install --quiet "$d" --index-url https://download.pytorch.org/whl/cpu ;;
+              *) rest="$rest $d" ;;
+            esac
+          done
+          [ -n "$rest" ] && python -m pip install --quiet $rest || true
       - name: Structure, word count, and every link resolves
         run: python3 tools/check_page.py
       # The pages claim the reader can regenerate their numbers. This runs each page's

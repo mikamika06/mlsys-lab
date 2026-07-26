@@ -27,6 +27,7 @@ teacher than this bank, the page says so and links it.
 | [What is the int8 range?](integer-quantization-ranges.md) | levels and quantization error for int4 / int8 / int16 |
 | [What is gguf vs safetensors?](gguf-vs-safetensors.md) | bytes per weight *actual* vs nominal, once block metadata is counted |
 | [What is softmax vs sigmoid?](softmax-vs-sigmoid.md) | they are identical at two classes and diverge from three; plus both overflow points |
+| [What is softmax function?](softmax-function.md) | float64 shift invariance under a growing shift constant, the naive overflow boundary in float64 and float32, and entropy/max-probability against temperature |
 | [What is layer normalization, and how does RMSNorm differ?](rmsnorm-vs-layernorm.md) | parameters and ops for each, and what subtracting the mean actually buys |
 | [What is gradient checkpointing?](gradient-checkpointing.md) | retained activations and recomputations against segment count |
 | [What is continuous batching?](continuous-batching.md) | wasted decode slot-steps, static against continuous, as output length varies |

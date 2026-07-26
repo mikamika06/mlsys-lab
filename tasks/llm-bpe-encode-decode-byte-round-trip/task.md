@@ -35,6 +35,7 @@ The decoder must return exactly the input string.
 ```python
 >>> s = "aaabbbcc"
 >>> t = bpe_encode(s)
+>>> t
 [(97, 3), (98, 3), (99, 2)]
 >>> bpe_decode(t)
 'aaabbbcc'
@@ -45,6 +46,7 @@ For a string containing non‑ASCII characters the UTF‑8 bytes are used:
 ```python
 >>> s = "😀😃"
 >>> t = bpe_encode(s)
+>>> t
 [(240, 1), (159, 1), (152, 1), (128, 1), (240, 1), (159, 1), (152, 1), (131, 1)]
 >>> bpe_decode(t) == s
 True

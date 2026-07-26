@@ -74,10 +74,8 @@ The implementation should use only pure Python and NumPy; no loops over layers o
 
 ```python
 >>> arithmetic_intensity(12, 768, 12, 128)
-0.00012345678901234567
+0.25632329063683923
 ```
-
-(The numeric value above is illustrative.)
 
 ## What the gate checks
 

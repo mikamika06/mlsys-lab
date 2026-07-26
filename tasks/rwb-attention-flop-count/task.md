@@ -52,7 +52,7 @@ The function should return only the FLOP count. Do not include memory traffic, s
 
 ```python
 flops = attention_flops(2, 8, 1024, 1024, 64, False)
-# flops == 2147483648
+# flops == 4294967296
 ```
 
 ## What the gate checks

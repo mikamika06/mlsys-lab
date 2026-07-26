@@ -30,11 +30,11 @@ X = np.array([
     [[5.0, -6.0], [-7.0, 8.0]]
 ])  # shape (2, 2, 2)
 s = compute_activation_scale(X)
-print(s)   # array([3.5, 4.5])
+print(s)   # array([4., 5.])
 ```
 
 Explanation:  
-For channel 0: `(|-1|+|3|+|5|+|-7|)/(2*2)=12/4=3.0` (actually check: |-1|+|3|+|5|+|-7| = 16, /4 = 4.0? Wait compute correctly: values are -1,3,5,-7 → abs sum = 1+3+5+7=16 → /4 = 4.0).  
+For channel 0 the values are -1, 3, 5, -7: `(1+3+5+7)/(2*2) = 16/4 = 4.0`.  
 For channel 1: `(|2|+|-4|+|-6|+|8|)/(2*2)=20/4=5.0`.  
 Thus the output should be `[4.0, 5.0]`.
 

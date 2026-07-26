@@ -37,7 +37,7 @@ The function must use only integer arithmetic and return the two counts as Pytho
 
 ```python
 >>> pairwise_memory_access(5, 3, 2, 64)
-(50, 56)
+(50, 60)
 ```
 
 Explanation:  
@@ -56,7 +56,7 @@ Tiled loads:
 (2,1): 6
 (2,2): 4
 ```
-Sum = $56$.
+Sum = $60$.
 
 ## What the gate checks
 

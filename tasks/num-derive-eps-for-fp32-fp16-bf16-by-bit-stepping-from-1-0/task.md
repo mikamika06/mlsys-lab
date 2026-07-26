@@ -18,7 +18,7 @@ The computation should be performed by *bit stepping*: obtain the next represent
 ```python
 >>> eps32, eps16, epsbf16 = derive_eps()
 >>> eps32  # 2**-23 ≈ 1.1920929e‑07
-1.1920928955078125
+1.1920928955078125e-07
 >>> eps16  # 2**-10 ≈ 9.765625e‑04
 0.0009765625
 >>> epsbf16  # 2**-7 ≈ 7.8125e‑03

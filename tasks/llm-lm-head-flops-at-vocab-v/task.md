@@ -31,11 +31,11 @@ The function should use only pure Python arithmetic and return an integer.  No l
 
 ```python
 >>> lm_head_flops(1, 768, 50257)
-76492896
+77194752
 ```
 
 Explanation:  
-$2 \times 1 \times 768 \times 50257 = 76\,492\,896$ FLOPs.
+$2 \times 1 \times 768 \times 50257 = 77\,194\,752$ FLOPs.
 
 ## What the gate checks
 

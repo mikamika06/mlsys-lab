@@ -49,7 +49,7 @@ Both values should be returned as plain integers.
 ## Example
 
 ```python
->>> from cpu_serial_vs_tree_reduction_critical_path import critical_path_lengths
+>>> from your_module import critical_path_lengths
 >>> critical_path_lengths(8, 3)
 (21, 9)       # (7*3, ceil(log2 8)*3 = 3*3)
 

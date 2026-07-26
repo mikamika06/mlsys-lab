@@ -27,11 +27,11 @@ The function should return the exact number of bytes required to store the KV ca
 
 ```python
 >>> kv_cache_bytes(12, 16, 128, 2048, "float16")
-8388608
+201326592
 ```
 
 Explanation:  
-\(2 \times 12 \times 16 \times 2048 \times 128 \times 2 = 8\,388\,608\) bytes.
+\(2 \times 12 \times 16 \times 2048 \times 128 \times 2 = 201\,326\,592\) bytes.
 
 ## What the gate checks
 

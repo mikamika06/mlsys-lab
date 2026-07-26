@@ -30,14 +30,14 @@ The function must use only integer arithmetic and return floats.
 
 ```python
 >>> compute_8da4w_efficiency((128, 256), 32)
-(5.0, 1.25)
+(4.00390625, 3.9960975609756098)
 ```
 
 Explanation:  
 * 128 × 256 = 32768 weights → 16384 bytes of packed int4 (2 weights per byte).  
 * 256/32 = 8 groups → 16 bytes of FP16 scales.  
-* Total = 16400 bytes → 131200 bits → \(131200 / 32768 \approx 4\) bits per param? Wait calculation: 16400 bytes × 8 = 131200 bits; divide by 32768 gives 4 bits/param.  
-* Size ratio = (32768 × 2)/16400 ≈ 4.0.
+* Total = 16400 bytes = 131200 bits, so \(131200 / 32768 = 4.00390625\) bits per param — the 0.0039 above the nominal 4 is what the scales cost.  
+* Size ratio against fp16 = \((32768 \times 2)/16400 = 3.9960975609756098\).  
 
 (Your implementation should produce the exact numbers.)
 

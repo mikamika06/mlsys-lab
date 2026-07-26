@@ -66,16 +66,16 @@ The function must work for any positive integers where `d_model` is divisible by
 
 ```python
 >>> compare_mha_vs_single(64, 8, 32)
-((8192, 16384), (262144, 524288))
+((5632, 16384), (524288, 524288))
 ```
 
 Explanation:  
 $d_k = 64/8 = 8$;  
-$P_{\text{MHA}} = 3\times64\times8 + 64^2 = 8192$,  
+$P_{\text{MHA}} = 3\times64\times8 + 64^2 = 1536 + 4096 = 5632$,  
 $P_{\text{single}} = 4\times64^2 = 16384$.  
 With $n=32$:  
-$F_{\text{MHA}} = 8 \times 4 \times 32^2 \times 8 + 2 \times 32 \times 64^2 = 262144$,  
-$F_{\text{single}} = 4 \times 32^2 \times 64 + 2 \times 32 \times 64^2 = 524288$.
+$F_{\text{MHA}} = 8 \times 4 \times 32^2 \times 8 + 2 \times 32 \times 64^2 = 262144 + 262144 = 524288$,  
+$F_{\text{single}} = 4 \times 32^2 \times 64 + 2 \times 32 \times 64^2 = 262144 + 262144 = 524288$.
 
 ## What the gate checks
 

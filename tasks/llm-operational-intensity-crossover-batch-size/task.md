@@ -41,10 +41,10 @@ Use only the Python standard library (you may import `math`).
 ...                       peak_mem=25e9,
 ...                       compute_per_token=1.0,
 ...                       mem_per_token=4.0)
-2
+1024
 ```
 
-Here $\theta = 8$, $C/M = 0.25$ and the smallest integer $B$ with $0.25\sqrt{B}\ge 8$ is $B=2$.
+Here $\theta = 8$, $C/M = 0.25$ and the smallest integer $B$ with $0.25\sqrt{B}\ge 8$ is $B=1024$ (since $\sqrt{B}\ge 32$).
 
 ## What the gate checks
 

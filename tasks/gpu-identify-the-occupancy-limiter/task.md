@@ -97,13 +97,14 @@ The limiting resource is the one that yields the smallest value among
 # Since registers and thread cap tie, the function prefers 'register'.
 
 >>> identify_limiter(128, 32, 49152)   # each block uses all shared memory
-'thread'
+'shared'
 
 # Here blocks_by_shared = 1 → threads_by_shared = min(1*128,2048)=128,
-# which is far less than the register limit of 2048, so 'shared'
-# would be returned. Actually with shared_bytes_per_block equal to the
-# entire SM shared memory each block consumes all shared memory and only
-# one block can run, giving 128 threads total.
+# which is far less than the register limit of 2048 (and the thread cap
+# of 2048), so 'shared' is returned. With shared_bytes_per_block equal
+# to the entire SM shared memory, each block consumes all shared memory
+# and only one block can run, giving 128 threads total — the smallest
+# of the three limits.
 ```
 
 ## What the gate checks
