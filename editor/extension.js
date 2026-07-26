@@ -305,6 +305,7 @@ function openPanel(context, lab) {
     "mlsys.workspace", "mlsys-lab", vscode.ViewColumn.Active,
     { enableScripts: true, retainContextWhenHidden: true, localResourceRoots: [context.extensionUri] }
   );
+  panel.iconPath = vscode.Uri.joinPath(context.extensionUri, "icon.png");
   const nonce = getNonce();
   const p = path.join(context.extensionPath, "media", "workspace.html");
   let doc;
@@ -345,6 +346,7 @@ class BankTree {
   constructor(context) {
     this.context = context;
     this.lab = null;
+    this.redirectOnly = true;   // the sidebar is a doorway to the panel, not a menu
     this._onDidChange = new vscode.EventEmitter();
     this.onDidChangeTreeData = this._onDidChange.event;
   }
@@ -354,6 +356,15 @@ class BankTree {
   getTreeItem(e) { return e; }
 
   getChildren(node) {
+    // The container exists to put an icon in the activity bar; the roadmap in the
+    // panel is the real UI. A second, worse copy of it in a 250px sidebar is not
+    // worth maintaining, so the view holds one row and the reveal opens the panel.
+    if (this.redirectOnly) {
+      const it = new vscode.TreeItem("Open the roadmap", vscode.TreeItemCollapsibleState.None);
+      it.command = { command: "mlsys.open", title: "Open the roadmap" };
+      it.iconPath = new vscode.ThemeIcon("map");
+      return [it];
+    }
     if (!this.lab) {
       const lab = labFromCheckout() || probeInstalled();
       if (lab) this.lab = lab;
@@ -421,6 +432,16 @@ function activate(context) {
   // Opening a panel unasked hijacks the window, so that never happens either.
   const tree = new BankTree(context);
   const view = vscode.window.createTreeView("mlsys.bank", { treeDataProvider: tree });
+
+  // Clicking the activity-bar icon reveals this view; that is the only signal VS Code
+  // gives for "the user clicked our icon", so it is what opens the roadmap. Guarded on
+  // visibility going true, or hiding and showing the sidebar would fire it repeatedly.
+  let wasVisible = view.visible;
+  view.onDidChangeVisibility((e) => {
+    const nowVisible = e && typeof e.visible === "boolean" ? e.visible : view.visible;
+    if (nowVisible && !wasVisible) vscode.commands.executeCommand("mlsys.open");
+    wasVisible = nowVisible;
+  });
 
   const open = async () => {
     const lab = await ensureLab();

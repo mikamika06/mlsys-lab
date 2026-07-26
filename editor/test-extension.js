@@ -15,6 +15,7 @@ const fs = require("fs");
 const Module = require("module");
 
 const REPO = path.resolve(__dirname, "..");
+const executed = [];
 
 // MODE=installed drives the pip-installed path: no repo folder in the workspace,
 // so the extension has to locate the bank by asking the interpreter. That is the
@@ -29,7 +30,12 @@ let statusText = null, registered = {}, panel = null;
 // ---- the stub -------------------------------------------------------------
 const vscode = {
   window: {
-    createTreeView(id, opts) { treeProvider = opts.treeDataProvider; return { dispose() {} }; },
+    createTreeView(id, opts) {
+      treeProvider = opts.treeDataProvider;
+      treeView = { visible: false, dispose() {},
+                   onDidChangeVisibility: (fn) => { treeView._onVis = fn; return { dispose() {} }; } };
+      return treeView;
+    },
     createWebviewPanel(id, title) {
       panel = {
         title,
@@ -58,7 +64,8 @@ const vscode = {
       k === "workDir" ? WORK : k === "pythonPath" ? PY : d }),
   },
   commands: { registerCommand(id, fn) { registered[id] = fn; return { dispose() {} }; },
-              executeCommand() { return Promise.resolve(); } },
+              executeCommand(id, ...a) { executed.push(id);
+                return registered[id] ? Promise.resolve(registered[id](...a)) : Promise.resolve(); } },
   EventEmitter: class { constructor() { this.event = () => ({ dispose() {} }); } fire() {} },
   TreeItem: class { constructor(label, state) { this.label = label; this.collapsibleState = state; } },
   TreeItemCollapsibleState: { None: 0, Collapsed: 1, Expanded: 2 },
@@ -124,17 +131,27 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     return built + " tasks, " + m.payload.tiers.length + " areas";
   });
 
-  check("sidebar tree lists the bank", () => {
-    if (!treeProvider) throw new Error("no tree view was registered — no sidebar icon");
-    const areas = treeProvider.getChildren();
-    if (!areas || areas.length < 10) throw new Error("only " + (areas || []).length + " areas");
-    const tracks = treeProvider.getChildren(areas[0]);
-    if (!tracks || !tracks.length) throw new Error("area has no tracks");
-    const tasks = treeProvider.getChildren(tracks[0]);
-    if (!tasks || !tasks.length) throw new Error("track has no tasks");
-    if (!tasks[0].command || tasks[0].command.command !== "mlsys.openTask")
-      throw new Error("task row does not open anything");
-    return `${areas.length} areas, first has ${tracks.length} tracks, ${tasks.length} tasks`;
+  check("sidebar is registered", () => {
+    if (!treeProvider || !treeView) throw new Error("no tree view — no activity-bar icon");
+    const rows = treeProvider.getChildren();
+    if (!rows || rows.length !== 1) throw new Error(`sidebar shows ${(rows||[]).length} rows, want 1 doorway`);
+    if (rows[0].command.command !== "mlsys.open") throw new Error("the row does not open the roadmap");
+    return "one row: " + rows[0].label;
+  });
+
+  check("revealing the sidebar opens the roadmap", () => {
+    executed.length = 0;
+    treeView._onVis({ visible: true });
+    if (!executed.includes("mlsys.open"))
+      throw new Error("clicking the icon did not open the panel; fired: " + executed.join(","));
+    return "mlsys.open fired on reveal";
+  });
+
+  check("the panel tab carries the project icon", () => {
+    if (!panel.iconPath) throw new Error("no iconPath on the webview panel");
+    if (!String(panel.iconPath.fsPath || panel.iconPath).includes("icon.png"))
+      throw new Error("iconPath is not the project mark: " + JSON.stringify(panel.iconPath));
+    return "icon.png";
   });
 
   // Where the bank actually is in this mode — the reference/starter files are read
