@@ -370,6 +370,88 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     });
   }
 
+  // ---- typing aids ---------------------------------------------------------
+  // The decision half of the editor's key handling is a pure function, lifted out
+  // of the page and exercised here. Applying an edit needs a browser; deciding
+  // what the edit should be does not, and that is where the behaviour lives.
+  {
+    const src = panel.webview.html;
+    const m = src.match(/\/\* TYPING-AIDS-START \*\/([\s\S]*?)\/\* TYPING-AIDS-END \*\//);
+    let plan = null;
+    check("the typing aids are extractable and parse", () => {
+      if (!m) throw new Error("no TYPING-AIDS block in the page");
+      plan = new Function(m[1] + "; return planKey;")();
+      if (typeof plan !== "function") throw new Error("planKey is not a function");
+      return m[1].length + " bytes";
+    });
+
+    // Written as: description, [text, caret, key, language], what the result must be.
+    // "|" marks the caret in the expected text.
+    const CASES = [
+      ["indent survives a newline", "    x = 1", 9, "Enter", "py", "    x = 1\n    |"],
+      ["a python block indents", "def f():", 8, "Enter", "py", "def f():\n    |"],
+      ["a colon indents only python", "a ? b:", 6, "Enter", "cpp", "a ? b:\n|"],
+      ["an opening brace indents", "  if (x) {", 10, "Enter", "cpp", "  if (x) {\n      |"],
+      ["a plain line does not indent", "x = 1", 5, "Enter", "py", "x = 1\n|"],
+      ["[ closes itself", "a = ", 4, "[", "py", "a = [|]"],
+      ["( closes itself", "f", 1, "(", "py", "f(|)"],
+      ["{ closes itself", "s = ", 4, "{", "py", "s = {|}"],
+      ['" closes itself', "s = ", 4, '"', "py", 's = "|"'],
+      ["a quote in a word stays one quote", "don", 3, "'", "py", null],
+      ["nothing is closed in front of code", "= xs", 2, "[", "py", null],
+      ["a closer already there is stepped over", "f()", 2, ")", "py", "f()|"],
+      ["backspace removes both halves", "a = []", 5, "Backspace", "py", "a = |"],
+      ["backspace eats a whole indent level", "        x", 8, "Backspace", "py", "    |x"],
+      ["shift-tab dedents the line", "        x", 9, "Shift+Tab", "py", "    x|"],
+    ];
+
+    // Apply what plan() returned to the text, so the assertion is about the result
+    // a learner would see rather than the shape of the returned object.
+    const applied = (v, s, en, p) => {
+      if (!p) return null;
+      if (p.skip) return v.slice(0, s + p.skip) + "|" + v.slice(s + p.skip);
+      if (p.del) {
+        const [a, b] = p.del;
+        const at = s - (Math.min(s, b) - Math.min(s, a));   // the caret keeps its place
+        const out = v.slice(0, a) + v.slice(b);
+        return out.slice(0, at) + "|" + out.slice(at);
+      }
+      const out = v.slice(0, s) + p.text + v.slice(en);
+      const at = p.caret != null ? s + p.caret : s + p.text.length;
+      return out.slice(0, at) + "|" + out.slice(at);
+    };
+
+    for (const [name, text, caret, key, lang, want] of CASES) {
+      check("typing: " + name, () => {
+        const p = plan(text, caret, caret, key, lang);
+        const got = applied(text, caret, caret, p);
+        if (want === null) {
+          if (p !== null) throw new Error("expected the key to type normally, got " + JSON.stringify(got));
+          return "handled by the browser";
+        }
+        if (got !== want) throw new Error(`got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
+        return JSON.stringify(want);
+      });
+    }
+
+    check("typing: a pair wraps the selection", () => {
+      const p = plan("keep this", 0, 9, "(", "py");
+      if (!p || !p.wrap) throw new Error("selection was replaced instead of wrapped: " + JSON.stringify(p));
+      if (p.text !== "(keep this)") throw new Error(p.text);
+      return p.text;
+    });
+
+    check("typing: a closer splits onto its own line", () => {
+      const p = plan("f(", 2, 2, "Enter", "cpp");
+      // "f(|)" — the caret sits between the pair, so Enter must open a block
+      const p2 = plan("f()", 2, 2, "Enter", "cpp");
+      if (p.text !== "\n    ") throw new Error("a trailing ( should indent: " + JSON.stringify(p.text));
+      if (p2.text !== "\n    \n") throw new Error("between a pair, the closer needs its own line: " + JSON.stringify(p2.text));
+      if (p2.caret !== 5) throw new Error("caret lands at " + p2.caret + ", not on the indented middle line");
+      return JSON.stringify(p2.text);
+    });
+  }
+
   check("the button is in the toolbar next to Grade", () => {
     const h = panel.webview.html;
     const r = h.indexOf('id="runBtn"'), g = h.indexOf('id="gradeBtn"');

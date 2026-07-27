@@ -38,6 +38,22 @@ process group rather than orphaning the child. It is killed anyway after
 `mlsys.runTimeoutSeconds` (30 by default) or 200 KB of output, so a runaway loop
 cannot wedge the editor. Run needs `mlsys-lab >= 0.1.2`.
 
+## Typing
+
+The editor is a textarea, so the courtesies it does not come with are written by
+hand. Brackets and quotes close themselves — typing the closer that is already
+there steps over it, backspace between a pair removes both halves, and a
+selection is wrapped rather than replaced. A quote following a word character is
+left alone, so `don't` and a C++ char literal type normally.
+
+`Enter` keeps the indentation of the line you were on, and adds a level after a
+`{`, `(`, `[` or, in python, a `:`. With the caret between a pair the closer gets
+its own line. `Tab` indents, `⇧Tab` dedents, and backspace inside indentation
+removes a whole level.
+
+Every edit goes through `execCommand('insertText')` — deprecated, and the only
+way to modify a textarea without clearing the native undo stack.
+
 ## How grading is dispatched
 
 The extension shells out to the engine; the language comes from the task's

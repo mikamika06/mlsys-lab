@@ -2,7 +2,7 @@
   "name": "mlsys-lab",
   "displayName": "mlsys-lab — CUDA, C++ and LLM-systems exercises, auto-graded",
   "description": "Graded exercises in CUDA, C++, Python and LLM systems. Write real CUDA kernels with no NVIDIA GPU: a software GPU counts warps, coalescing transactions, shared-memory bank conflicts and divergence. Deterministic gates, identical score on any machine.",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "publisher": "mikamika06",
   "engines": {
     "vscode": "^1.85.0"

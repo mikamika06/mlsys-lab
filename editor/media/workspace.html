@@ -562,9 +562,106 @@
   ta.addEventListener('input',()=>{paint();});
   ta.addEventListener('keyup',paint); ta.addEventListener('click',paint);
   ta.addEventListener('scroll',()=>{hl.scrollTop=ta.scrollTop;hl.scrollLeft=ta.scrollLeft;gutter.scrollTop=ta.scrollTop;cwrap.scrollTop=ta.scrollTop;cwrap.scrollLeft=ta.scrollLeft;});
+  /* ---------- typing aids ----------
+     A textarea has none of an editor's ordinary courtesies, and they are missed
+     hardest in the two places code is actually typed: a bracket you have to close
+     by hand, and a newline that throws away the indentation you were already on —
+     in python that is not a convenience, it is the syntax.
+
+     The decision is a pure function of (text, selection, key, language) and the
+     handler only applies what it returns, so the behaviour is testable without a
+     browser. See the typing-aids checks in test-extension.js. */
+  /* TYPING-AIDS-START */
+  function planKey(v,s,en,key,lang){
+    const UNIT='    ';
+    const PAIR={'(':')','[':']','{':'}'};
+    const isQuote=c=>c==='"'||c==="'"||c==='`';
+    const lineStart=i=>v.lastIndexOf('\n',i-1)+1;
+    const nxt=v.slice(en,en+1), prv=v.slice(s-1,s);
+
+    if(key==='Enter'){
+      const head=v.slice(lineStart(s),s);
+      const ind=(head.match(/^[ \t]*/)||[''])[0];
+      const last=head.replace(/\s+$/,'').slice(-1);
+      // What opens a block: a bracket in any of the three languages, and in python
+      // a colon, which is the entire shape of the language.
+      const opens='([{'.indexOf(last)>=0||(lang==='py'&&last===':');
+      // Caret sitting between a pair puts the closer on its own line, the way it
+      // lands in a real editor.
+      if(opens&&PAIR[last]===nxt)return{text:'\n'+ind+UNIT+'\n'+ind,caret:1+ind.length+UNIT.length};
+      return{text:'\n'+ind+(opens?UNIT:''),caret:null};
+    }
+    if(key==='Tab')return{text:UNIT,caret:null};
+    if(key==='Shift+Tab'){
+      const ls=lineStart(s);
+      const m=v.slice(ls,ls+4).match(/^(\t| {1,4})/);
+      return m?{del:[ls,ls+m[0].length]}:null;
+    }
+    if(key==='Backspace'&&s===en){
+      if(prv&&((PAIR[prv]&&nxt===PAIR[prv])||(isQuote(prv)&&nxt===prv)))return{del:[s-1,s+1]};
+      const head=v.slice(lineStart(s),s);
+      // Inside indentation, backspace removes a level rather than one space of it.
+      if(head&&/^ +$/.test(head)&&head.length%4===0)return{del:[s-4,s]};
+      return null;
+    }
+    if(key.length!==1)return null;
+    // Typing the closer that is already sitting there walks over it instead of
+    // doubling it — otherwise auto-closing costs more keystrokes than it saves.
+    if(s===en&&nxt===key&&(isQuote(key)||')]}'.indexOf(key)>=0))return{skip:1};
+    const close=PAIR[key]||(isQuote(key)?key:null);
+    if(!close)return null;
+    if(s!==en)return{text:key+v.slice(s,en)+close,wrap:true};
+    // An apostrophe inside a word is an apostrophe: don't, it's, and a C++ char
+    // literal that follows one.
+    if(isQuote(key)&&/[\w"'`]/.test(prv))return null;
+    // Nothing is auto-closed where the closer would land in the middle of code.
+    if(nxt&&!/[\s)\]},;:.]/.test(nxt))return null;
+    return{text:key+close,caret:1};
+  }
+  /* TYPING-AIDS-END */
+
+  /* Every edit goes through execCommand — deprecated, and the only way to change a
+     textarea while keeping the native undo stack. Assigning to .value clears it,
+     so one ⌘Z used to wipe out a whole session of typing. */
+  function put(s){
+    if(!document.execCommand('insertText',false,s)){
+      const a=ta.selectionStart,b=ta.selectionEnd;
+      ta.value=ta.value.slice(0,a)+s+ta.value.slice(b);
+      ta.selectionStart=ta.selectionEnd=a+s.length;
+    }
+  }
+  function cut(a,b){
+    ta.selectionStart=a;ta.selectionEnd=b;
+    if(!document.execCommand('delete')){
+      ta.value=ta.value.slice(0,a)+ta.value.slice(b);ta.selectionStart=ta.selectionEnd=a;
+    }
+  }
+  function caretAt(i){ta.selectionStart=ta.selectionEnd=i;}
+  function applyPlan(p){
+    if(!p)return false;
+    if(p.skip){caretAt(ta.selectionStart+p.skip);paint();return true;}
+    if(p.del){
+      // The caret keeps its place in the text, moving back only by what was removed
+      // ahead of it — a dedent must not fling it to the start of the line.
+      const c=ta.selectionStart,a=p.del[0],b=p.del[1];
+      cut(a,b);
+      caretAt(c-(Math.min(c,b)-Math.min(c,a)));
+      paint();return true;
+    }
+    const s=ta.selectionStart,en=ta.selectionEnd;
+    put(p.text);
+    if(p.wrap){ta.selectionStart=s+1;ta.selectionEnd=s+1+(en-s);}
+    else if(p.caret!=null)caretAt(s+p.caret);
+    paint();return true;
+  }
   ta.addEventListener('keydown',e=>{
-    if(e.key==='Tab'){e.preventDefault();const s=ta.selectionStart,en=ta.selectionEnd;ta.value=ta.value.slice(0,s)+'    '+ta.value.slice(en);ta.selectionStart=ta.selectionEnd=s+4;paint();}
-    if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();e.shiftKey?doRun():doGrade();}
+    if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();e.shiftKey?doRun():doGrade();return;}
+    if(e.metaKey||e.ctrlKey||e.altKey||e.isComposing)return;
+    const key=(e.key==='Tab'&&e.shiftKey)?'Shift+Tab':e.key;
+    if(key!=='Tab'&&key!=='Shift+Tab'&&key!=='Enter'&&key!=='Backspace'&&key.length!==1)return;
+    const p=planKey(ta.value,ta.selectionStart,ta.selectionEnd,key,curLang);
+    if(p){e.preventDefault();applyPlan(p);}
+    else if(key==='Tab'||key==='Shift+Tab')e.preventDefault();   // Tab never leaves the editor
   });
 
   /* ---------- open task (-> work mode) ---------- */
