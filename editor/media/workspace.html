@@ -34,6 +34,9 @@
     font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:-.04em;
     color:#101216;line-height:1;user-select:none;}
   .wm{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;flex:0 0 auto;}
+  /* An installed update does nothing until the window reloads, and there was no way
+     to tell which build was on screen. Now there is. */
+  .ver{font-family:var(--mono);font-size:10px;color:var(--ink-faint);flex:0 0 auto;margin-left:-6px;align-self:flex-start;padding-top:11px;}
   .back{display:none;align-items:center;gap:6px;font-family:var(--mono);font-size:11.5px;color:var(--amber-2);cursor:pointer;padding:3px 8px;border-radius:6px;flex:0 0 auto;}
   .back:hover{background:var(--panel-2);}
   .crumb{font-family:var(--mono);font-size:11.5px;color:var(--ink-mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} .crumb b{color:var(--ink-dim);}
@@ -223,7 +226,7 @@
   <div class="app is-home" id="app">
     <div class="top">
       <span class="mark" aria-hidden="true">ML</span>
-      <span class="wm">mlsys-lab</span>
+      <span class="wm">mlsys-lab</span><span class="ver" title="Reload the window after an update: Developer: Reload Window">{{version}}</span>
       <span class="back" id="back">‹ <span data-t="roadmap">Roadmap</span></span>
       <span class="crumb" id="crumb"></span>
       <span class="spc"></span>
@@ -276,7 +279,7 @@
   const vscode=acquireVsCodeApi();
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  let mapData=null,curId=null,busy=false;
+  let mapData=null,mapPainted=null,curId=null,busy=false;
   /* Areas start folded. Fourteen areas expanded at once is several screens of
      scrolling before the first heading, and the roadmap's job is to let you see the
      shape of the bank and pick — not to render 2000 chips nobody asked for. The
@@ -393,7 +396,7 @@
   const LGN={py:'PY',cpp:'C++',cuda:'CUDA'};
 
   function renderMap(d){
-    mapData=d;
+    mapData=d; mapPainted=d;
     /* The renderer keys areas by position ('ti'+index), not by T.key. Folding with
        T.key silently did nothing, because collapsed.has() was asked a different
        question than the one answered. Same key space or no effect. */
@@ -459,7 +462,13 @@
     return i>0 ? id.slice(i+1) : id;
   }
 
-  function goHome(){$('app').className='app is-home'; curId=null;}
+  /* Passing a task arrives as fresh map data while the roadmap is off screen, and
+     nothing ever repainted it — the tick only appeared after the panel was closed
+     and reopened, which reads as progress not being saved at all. */
+  function goHome(){
+    if(mapData&&mapData!==mapPainted)renderMap(mapData);
+    $('app').className='app is-home'; curId=null;
+  }
   function goWork(){$('app').className='app is-work';}
 
   /* ---------- markdown ---------- */
@@ -623,16 +632,25 @@
   /* Every edit goes through execCommand — deprecated, and the only way to change a
      textarea while keeping the native undo stack. Assigning to .value clears it,
      so one ⌘Z used to wipe out a whole session of typing. */
+  /* execCommand is the only path that keeps undo, but it is deprecated and a host
+     is free to refuse it — or, worse, to return true and do nothing. The text
+     itself is the only proof, so the result is measured and the plain assignment
+     stands behind it. */
   function put(s){
-    if(!document.execCommand('insertText',false,s)){
-      const a=ta.selectionStart,b=ta.selectionEnd;
+    const a=ta.selectionStart,b=ta.selectionEnd,was=ta.value.length;
+    let ok=false;
+    try{ok=document.execCommand('insertText',false,s);}catch(_){ok=false;}
+    if(!ok||ta.value.length!==was-(b-a)+s.length){
       ta.value=ta.value.slice(0,a)+s+ta.value.slice(b);
       ta.selectionStart=ta.selectionEnd=a+s.length;
     }
   }
   function cut(a,b){
+    const was=ta.value.length;
     ta.selectionStart=a;ta.selectionEnd=b;
-    if(!document.execCommand('delete')){
+    let ok=false;
+    try{ok=document.execCommand('delete');}catch(_){ok=false;}
+    if(!ok||ta.value.length!==was-(b-a)){
       ta.value=ta.value.slice(0,a)+ta.value.slice(b);ta.selectionStart=ta.selectionEnd=a;
     }
   }

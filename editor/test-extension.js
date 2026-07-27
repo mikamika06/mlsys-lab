@@ -452,6 +452,26 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     });
   }
 
+  // An installed update does nothing until the window reloads, and with no version
+  // on screen "the fix does not work" and "you are looking at the old build" are
+  // indistinguishable. They cost an afternoon once.
+  check("a pass shows on the roadmap without reopening", () => {
+    const h = panel.webview.html;
+    // The pass arrives while the roadmap is off screen. Storing the new data and
+    // never repainting it made progress look like it was not being saved at all.
+    if (!/mapPainted/.test(h)) throw new Error("nothing tracks whether the painted roadmap is stale");
+    if (!/function goHome\(\)\{\s*if\(mapData&&mapData!==mapPainted\)renderMap\(mapData\);/.test(h))
+      throw new Error("returning to the roadmap does not repaint stale data");
+    return "repaints on return";
+  });
+
+  check("the panel says which build it is", () => {
+    const want = require(path.join(__dirname, "package.json")).version;
+    if (!panel.webview.html.includes(want))
+      throw new Error(`version ${want} is not shown anywhere in the panel`);
+    return want;
+  });
+
   check("the button is in the toolbar next to Grade", () => {
     const h = panel.webview.html;
     const r = h.indexOf('id="runBtn"'), g = h.indexOf('id="gradeBtn"');

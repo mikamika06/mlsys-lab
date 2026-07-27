@@ -416,9 +416,12 @@ function openPanel(context, lab) {
   let doc;
   try {
     const katexBase = panel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, "media", "katex")).toString() + "/";
+    let version = "";
+    try { version = JSON.parse(fs.readFileSync(path.join(context.extensionPath, "package.json"), "utf8")).version || ""; } catch (_) {}
     doc = fs.readFileSync(p, "utf8")
       .replace(/{{nonce}}/g, nonce)
       .replace(/{{katexBase}}/g, katexBase)
+      .replace(/{{version}}/g, version)
       .replace(/{{cspSource}}/g, panel.webview.cspSource);
     log("loaded workspace.html (" + doc.length + " bytes) from " + p);
   } catch (e) {
