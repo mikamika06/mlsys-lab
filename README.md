@@ -5,8 +5,9 @@
 <h1 align="center">mlsys-lab</h1>
 
 <p align="center">
-  <em>Auto-graded exercises in low-level ML systems.<br>
-  Write real C++ and real CUDA-C; a local grader checks a measured number, never a clock.</em>
+  <em>Auto-graded exercises in low-level ML systems: quantization, KV cache and attention,<br>
+  batching, numerics, CPU performance, CPython internals, GPU memory behaviour.<br>
+  Mostly Python, with real C++ and real CUDA-C. A measured number is the gate, never a clock.</em>
 </p>
 
 <p align="center">
