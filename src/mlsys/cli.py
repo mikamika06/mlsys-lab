@@ -114,6 +114,32 @@ def cmd_start(args) -> int:
     return 0
 
 
+def cmd_run(args) -> int:
+    """Execute the attempt and show what it does. No gates, no verdict, no scoring —
+    that is `mlsys grade`. This is the print, the traceback and the compiler
+    diagnostic, which grading deliberately does not show."""
+    try:
+        task = find_task(args.task, args.tasks_root)
+    except FileNotFoundError as e:
+        print(_c(RED, str(e)))
+        return 2
+    lack = bank.missing_pkgs(task.meta)
+    if lack:
+        print(_c(RED, f"{task.id} needs {', '.join(lack)}, which is not installed."))
+        print()
+        print(f"  {_c(STEEL, 'pip install ' + ' '.join(lack))}")
+        return 2
+    cand = _find_candidate(task, args.file)
+    if cand is None:
+        want = SRCFILE[_native(task)]
+        print(_c(RED, f"no {want} found for {task.id}."))
+        print()
+        print(f"  {_c(STEEL, 'mlsys start ' + task.id)}   {_c(DIM, 'writes the starter here to edit')}")
+        return 2
+    from .runners import run as runmod
+    return runmod.run(str(task.path), str(cand))
+
+
 def cmd_grade(args) -> int:
     try:
         task = find_task(args.task, args.tasks_root)
@@ -229,6 +255,12 @@ def build_parser() -> argparse.ArgumentParser:
     st.add_argument("--dir", default=".", help="where to create <task-id>/ (default: here)")
     st.add_argument("--force", action="store_true", help="overwrite an existing attempt")
     st.set_defaults(func=cmd_start)
+
+    r = sub.add_parser("run", help="execute your attempt and show its output (no grading)")
+    r.add_argument("task", help="task id, dir name, or path")
+    r.add_argument("--file", default=None,
+                   help="your solution file (default: ./<task-id>/solve.* or ./solve.*)")
+    r.set_defaults(func=cmd_run)
 
     g = sub.add_parser("grade", help="grade a solver against a task")
     g.add_argument("task", help="task id, dir name, or path")

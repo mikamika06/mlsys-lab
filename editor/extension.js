@@ -318,12 +318,20 @@ function runTimeoutMs() {
   return Math.max(1, Number.isFinite(s) ? s : 30) * 1000;
 }
 
+// Kill the group, not the process. What we spawn is a runner that itself spawns
+// the thing being run — a python script, or a compiled a.out. Killing only the
+// parent orphans the child, which keeps burning a core with nobody watching it.
 function stopRun(reason) {
   const p = runProc;
   if (!p) return;
   runProc = null;
   clearTimeout(p._mlsysTimer);
-  try { p.kill("SIGKILL"); } catch (_) {}
+  try {
+    if (process.platform === "win32") cp.spawn("taskkill", ["/pid", String(p.pid), "/T", "/F"]);
+    else process.kill(-p.pid, "SIGKILL");     // negative pid: the whole group
+  } catch (_) {
+    try { p.kill("SIGKILL"); } catch (__) {}
+  }
   log("run killed: " + (reason || "stopped"));
   postWS({ type: "runend", stopped: reason || "stopped" });
 }
@@ -333,28 +341,26 @@ function runCode(context, lab, id, file, code) {
   const taskDir = path.join(lab.tasksDir, id);
   let meta = {};
   try { meta = JSON.parse(fs.readFileSync(path.join(taskDir, "meta.json"), "utf8")); } catch (_) {}
-  if (meta.native) {
-    postWS({ type: "runend", stopped: "run supports python tasks only" });
-    return;
-  }
-  const srcfile = file || "solve.py";
+  const srcfile = SRCFILE[meta.native] || file || "solve.py";
   const solve = solvePath(id, srcfile);
   try {
     fs.mkdirSync(path.dirname(solve), { recursive: true });
     fs.writeFileSync(solve, code, "utf8");
   } catch (e) { postWS({ type: "runend", error: e.message }); return; }
 
-  // The task dir joins the path so a task-local helper imports by name, and
-  // unbuffered output is what makes streaming actually stream — python buffers
-  // stdout hard when it is a pipe, and a 4 KB buffer means a slow loop prints
-  // nothing until it exits.
+  // One command for all three tracks. The runner knows how each is actually run —
+  // a script, clang++ against the task's driver, or the software GPU — and prints
+  // the command it used, so nothing here has to know. Unbuffered because python
+  // buffers stdout hard when it is a pipe, and a 4 KB buffer means a slow loop
+  // shows nothing at all until it exits.
   const env = Object.assign({}, process.env, lab.pyEnv || {}, { PYTHONUNBUFFERED: "1" });
-  env.PYTHONPATH = [(lab.pyEnv || {}).PYTHONPATH, taskDir, env.PYTHONPATH]
-    .filter(Boolean).join(path.delimiter);
 
   let proc;
   try {
-    proc = cp.spawn(pythonPath(), [solve], { cwd: path.dirname(solve), env });
+    proc = cp.spawn(pythonPath(), ["-m", "mlsys.runners.run", taskDir, solve], {
+      cwd: path.dirname(solve), env,
+      detached: process.platform !== "win32",   // its own group, so Stop can kill all of it
+    });
   } catch (e) { postWS({ type: "runend", error: e.message }); return; }
   runProc = proc;
   log(`run ${id} → ${solve}`);
@@ -364,6 +370,12 @@ function runCode(context, lab, id, file, code) {
   const push = (d) => {
     if (capped) return;
     let s = d.toString();
+    // An installed bank older than the runner has no idea what Run is. The raw
+    // ImportError names a module the learner has never heard of, so it is
+    // translated into the one action that fixes it.
+    if (/No module named ['"]?mlsys\.runners\.run/.test(s)) {
+      s = `Run needs a newer mlsys-lab package.\n\n    ${pythonPath()} -m pip install --upgrade mlsys-lab\n`;
+    }
     if (sent + s.length > RUN_OUTPUT_CAP) { s = s.slice(0, RUN_OUTPUT_CAP - sent); capped = true; }
     sent += s.length;
     if (s) postWS({ type: "runout", chunk: s });

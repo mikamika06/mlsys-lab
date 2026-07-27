@@ -613,13 +613,13 @@
     $('cons').textContent=t('consIdle');
     $('chcmd').textContent='mlsys grade';
     $('gradeBtn').removeAttribute('disabled');
-    // Only the python track runs as a plain script today; a .cpp or .cu needs a
-    // compile step, so the button says why instead of failing when pressed.
-    runnable = (curLang==='py');
+    // Every track runs: a script, clang++ against the task's driver, or the
+    // software GPU. The runner decides which; the button is the same button.
+    runnable = true;
     setRunUI(false);
     const rb=$('runBtn');
-    if(runnable){rb.removeAttribute('disabled');rb.title='';}
-    else{rb.setAttribute('disabled','');rb.title='Run currently executes python tasks only';}
+    rb.removeAttribute('disabled');
+    rb.title={py:'Run the file',cpp:'Compile and run',cu:'Execute on the software GPU'}[curLang]||'';
     goWork(); ta.focus();
   }
   function renderResult(d){
@@ -657,8 +657,8 @@
     if(busy||!curId||!runnable)return;
     setRunUI(true);
     $('instSt').textContent='running';
-    $('chcmd').textContent='python '+curFile;
-    $('cons').textContent='> python '+curFile+'\n';
+    $('chcmd').textContent='mlsys run';
+    $('cons').textContent='';
     vscode.postMessage({type:'run',id:curId,file:curFile,code:ta.value});
   }
   $('runBtn').addEventListener('click',doRun);

@@ -303,14 +303,70 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     });
   }
 
+  // Stop must kill the process that is actually burning the CPU, not just the
+  // runner that spawned it. A killed parent with a live child is invisible in the
+  // UI and keeps a core busy until the machine is rebooted, so this proves the
+  // grandchild stopped writing.
+  const beacon = path.join(WORK, "beacon.txt");
+  fs.rmSync(beacon, { force: true });
   posted.length = 0;
-  panel._onMsg({ type: "run", id: "gpu-ex-cuda-coalesced-scale", file: "solve.cu", code: "int main(){}" });
+  panel._onMsg({ type: "run", id: PYTASK, file: "solve.py",
+                 code: `import time\nwhile True:\n    open(${JSON.stringify(beacon)}, 'a').write('x')\n    time.sleep(0.02)\n` });
+  await wait(1200);
+  panel._onMsg({ type: "stopRun" });
+  await untilRunEnd(8000);
   {
-    const end = await untilRunEnd(8000);
-    check("a native task refuses to run rather than misrun", () => {
+    await wait(400);
+    const before = fs.existsSync(beacon) ? fs.statSync(beacon).size : 0;
+    await wait(900);
+    const after = fs.existsSync(beacon) ? fs.statSync(beacon).size : 0;
+    check("Stop kills the child, not just the runner", () => {
+      if (!before) throw new Error("the loop never ran — the test proves nothing");
+      if (after !== before) throw new Error(`still writing after Stop (${before} → ${after} bytes)`);
+      return `stopped at ${before} bytes`;
+    });
+  }
+
+  posted.length = 0;
+  panel._onMsg({ type: "run", id: "cpp-move-ctor-forgets-to-null-double-free-fix", file: "solve.cpp",
+                 code: fs.readFileSync(path.join(BANK, "cpp-move-ctor-forgets-to-null-double-free-fix", "ref.cpp"), "utf8") });
+  {
+    const end = await untilRunEnd(120000);
+    check("a C++ task compiles and runs", () => {
       if (!end) throw new Error("no runend");
-      if (!/python/.test(end.stopped || "")) throw new Error("unclear refusal: " + JSON.stringify(end));
-      return end.stopped;
+      const o = runOut();
+      if (!/clang\+\+/.test(o)) throw new Error("the compile command was never shown: " + o.slice(0, 120));
+      if (!/move_ctor/.test(o)) throw new Error("the driver's output never arrived: " + o.slice(0, 200));
+      if (end.code !== 0) throw new Error("exit " + end.code + " " + JSON.stringify(end));
+      return "compiled, ran, exit 0";
+    });
+  }
+
+  posted.length = 0;
+  panel._onMsg({ type: "run", id: "gpu-ex-cuda-coalesced-scale", file: "solve.cu", code: "__global__ void scale( {" });
+  {
+    const end = await untilRunEnd(60000);
+    check("a CUDA parse error is shown, not swallowed", () => {
+      if (!end) throw new Error("no runend");
+      if (!/parse error|expected/i.test(runOut())) throw new Error("no diagnostic: " + runOut().slice(0, 160));
+      if (end.code === 0) throw new Error("a broken kernel reported success");
+      return "diagnostic surfaced";
+    });
+  }
+
+  posted.length = 0;
+  panel._onMsg({ type: "run", id: "gpu-ex-cuda-coalesced-scale", file: "solve.cu",
+                 code: fs.readFileSync(path.join(BANK, "gpu-ex-cuda-coalesced-scale", "ref.cu"), "utf8") });
+  {
+    const end = await untilRunEnd(60000);
+    check("a CUDA task runs on the software GPU", () => {
+      if (!end) throw new Error("no runend");
+      const o = runOut();
+      if (!/kernels:/.test(o)) throw new Error("the parsed kernels were never listed: " + o.slice(0, 160));
+      if (!/transactions/.test(o)) throw new Error("no counters: " + o.slice(0, 160));
+      if (/PASS|FAIL/.test(o)) throw new Error("running reported a verdict; that is grading");
+      if (end.code !== 0) throw new Error("exit " + end.code);
+      return "kernels listed, counters shown, no verdict";
     });
   }
 

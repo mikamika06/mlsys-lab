@@ -20,10 +20,23 @@ task's gates and is the only thing that marks a task solved. **Run** (`⇧⌘↵
 executes the file as a plain script and streams whatever it prints — the way to
 see a `print`, a shape, or a traceback while working.
 
-Run executes python tasks; a `.cpp` or `.cu` needs a compile step and the button
-says so rather than pretending. While a process is alive the button becomes
-**Stop**, and it is killed anyway after `mlsys.runTimeoutSeconds` (30 by default)
-or 200 KB of output, so a runaway loop cannot wedge the editor.
+One button, three tracks. `python -m mlsys.runners.run` decides how each is
+actually run and prints the command it used:
+
+| track | what Run does |
+|---|---|
+| python | executes `solve.py` as a script |
+| `cpp` | `clang++ -O2 -std=c++20` against the task's `main.cpp` driver, then the binary |
+| `cuda` | parses `solve.cu`, lists the kernels, executes it on the software GPU |
+
+A `.cpp` that defines its own `main()` is compiled alone; one that does not is
+linked against the task's driver, so a contract implementation still runs. CUDA
+shows the counters the grader measures and no verdict — gates are grading.
+
+While a process is alive the button becomes **Stop**, which kills the whole
+process group rather than orphaning the child. It is killed anyway after
+`mlsys.runTimeoutSeconds` (30 by default) or 200 KB of output, so a runaway loop
+cannot wedge the editor. Run needs `mlsys-lab >= 0.1.2`.
 
 ## How grading is dispatched
 

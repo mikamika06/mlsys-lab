@@ -87,6 +87,7 @@ pip install mlsys-lab                             # the engine and the whole tas
 
 mlsys list                                        # browse the bank
 mlsys start gpu-ex-cuda-coalesced-scale           # writes ./<task-id>/solve.cu to edit
+mlsys run   gpu-ex-cuda-coalesced-scale           # execute it, see what it does
 mlsys grade gpu-ex-cuda-coalesced-scale           # measure it
 ```
 
@@ -99,9 +100,15 @@ mlsys grade gpu-ex-cuda-coalesced-scale           # measure it
 
 The bank ships inside the package, so there is nothing to clone and nothing to
 download on first run. `mlsys start` copies the task's starter into a directory of
-yours; `mlsys grade` then finds it. Both work the same for Python, C++ and CUDA
-tasks — the file extension follows the task. The bank itself is never written to,
-so your work and the tasks never mix.
+yours; `mlsys run` and `mlsys grade` then find it. All three work the same for
+Python, C++ and CUDA tasks — the file extension follows the task. The bank itself
+is never written to, so your work and the tasks never mix.
+
+`run` and `grade` answer different questions. Grading applies the gates and is the
+only thing that marks a task solved; running just executes the file — the script,
+or `clang++` against the task's own driver, or the kernel on the software GPU —
+and shows the print, the traceback and the compiler diagnostic that a verdict
+deliberately hides.
 
 C++ tasks need a C++20 compiler (`clang++` or `g++`); everything else is Python
 plus NumPy. CUDA tasks need **no** NVIDIA hardware — the `.cu` is executed by the
