@@ -298,6 +298,99 @@ function gradeCode(context, lab, id, file, code) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// Run — execute the file, show what it prints.
+//
+// Grading answers "is this correct"; it says nothing about a print statement or a
+// stack trace halfway down. Running is the other half: the same file, executed as
+// a script, output streamed as it arrives. It never touches solved state.
+//
+// Three things make an in-editor runner safe to press: it streams (a long loop is
+// visible immediately), it is killable (the button becomes Stop), and it stops on
+// its own (a wall-clock limit and an output cap), so neither an infinite loop nor
+// an infinite print can wedge the extension host.
+// ---------------------------------------------------------------------------
+let runProc = null;
+const RUN_OUTPUT_CAP = 200000;      // bytes of combined stdout+stderr kept
+
+function runTimeoutMs() {
+  const s = Number(vscode.workspace.getConfiguration("mlsys").get("runTimeoutSeconds", 30));
+  return Math.max(1, Number.isFinite(s) ? s : 30) * 1000;
+}
+
+function stopRun(reason) {
+  const p = runProc;
+  if (!p) return;
+  runProc = null;
+  clearTimeout(p._mlsysTimer);
+  try { p.kill("SIGKILL"); } catch (_) {}
+  log("run killed: " + (reason || "stopped"));
+  postWS({ type: "runend", stopped: reason || "stopped" });
+}
+
+function runCode(context, lab, id, file, code) {
+  if (runProc) { postWS({ type: "runout", chunk: "\n[already running]\n" }); return; }
+  const taskDir = path.join(lab.tasksDir, id);
+  let meta = {};
+  try { meta = JSON.parse(fs.readFileSync(path.join(taskDir, "meta.json"), "utf8")); } catch (_) {}
+  if (meta.native) {
+    postWS({ type: "runend", stopped: "run supports python tasks only" });
+    return;
+  }
+  const srcfile = file || "solve.py";
+  const solve = solvePath(id, srcfile);
+  try {
+    fs.mkdirSync(path.dirname(solve), { recursive: true });
+    fs.writeFileSync(solve, code, "utf8");
+  } catch (e) { postWS({ type: "runend", error: e.message }); return; }
+
+  // The task dir joins the path so a task-local helper imports by name, and
+  // unbuffered output is what makes streaming actually stream — python buffers
+  // stdout hard when it is a pipe, and a 4 KB buffer means a slow loop prints
+  // nothing until it exits.
+  const env = Object.assign({}, process.env, lab.pyEnv || {}, { PYTHONUNBUFFERED: "1" });
+  env.PYTHONPATH = [(lab.pyEnv || {}).PYTHONPATH, taskDir, env.PYTHONPATH]
+    .filter(Boolean).join(path.delimiter);
+
+  let proc;
+  try {
+    proc = cp.spawn(pythonPath(), [solve], { cwd: path.dirname(solve), env });
+  } catch (e) { postWS({ type: "runend", error: e.message }); return; }
+  runProc = proc;
+  log(`run ${id} → ${solve}`);
+
+  const t0 = Date.now();
+  let sent = 0, capped = false;
+  const push = (d) => {
+    if (capped) return;
+    let s = d.toString();
+    if (sent + s.length > RUN_OUTPUT_CAP) { s = s.slice(0, RUN_OUTPUT_CAP - sent); capped = true; }
+    sent += s.length;
+    if (s) postWS({ type: "runout", chunk: s });
+    if (capped) {
+      postWS({ type: "runout", chunk: `\n… output capped at ${RUN_OUTPUT_CAP / 1000} KB` });
+      stopRun("output limit");
+    }
+  };
+  proc._mlsysTimer = setTimeout(() => {
+    postWS({ type: "runout", chunk: `\n… no exit after ${runTimeoutMs() / 1000}s` });
+    stopRun("timeout");
+  }, runTimeoutMs());
+
+  proc.stdout.on("data", push);
+  proc.stderr.on("data", push);
+  proc.on("error", (e) => {
+    if (runProc !== proc) return;
+    runProc = null; clearTimeout(proc._mlsysTimer);
+    postWS({ type: "runend", error: e.message });
+  });
+  proc.on("close", (c) => {
+    if (runProc !== proc) return;              // already killed; runend was sent then
+    runProc = null; clearTimeout(proc._mlsysTimer);
+    postWS({ type: "runend", code: c, ms: Date.now() - t0 });
+  });
+}
+
 function openPanel(context, lab) {
   if (panel) { try { panel.reveal(vscode.ViewColumn.Active, false); } catch (_) {} log("reveal existing panel"); return; }
   log("creating webview panel…");
@@ -328,8 +421,10 @@ function openPanel(context, lab) {
     else if (m.type === "diag") { log("DIAG: " + m.msg); }
     else if (m.type === "open" && m.id) sendTask(context, lab, m.id);
     else if (m.type === "grade" && m.id) gradeCode(context, lab, m.id, m.file, m.code || "");
+    else if (m.type === "run" && m.id) runCode(context, lab, m.id, m.file, m.code || "");
+    else if (m.type === "stopRun") stopRun("stopped");
   });
-  panel.onDidDispose(() => { panel = null; log("panel disposed"); });
+  panel.onDidDispose(() => { stopRun("panel closed"); panel = null; log("panel disposed"); });
 }
 
 

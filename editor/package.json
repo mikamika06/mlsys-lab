@@ -2,7 +2,7 @@
   "name": "mlsys-lab",
   "displayName": "mlsys-lab — CUDA, C++ and LLM-systems exercises, auto-graded",
   "description": "Graded exercises in CUDA, C++, Python and LLM systems. Write real CUDA kernels with no NVIDIA GPU: a software GPU counts warps, coalescing transactions, shared-memory bank conflicts and divergence. Deterministic gates, identical score on any machine.",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "publisher": "mikamika06",
   "engines": {
     "vscode": "^1.85.0"
@@ -50,6 +50,12 @@
           "type": "string",
           "default": "",
           "description": "Directory for your solutions, one folder per task. Empty means ~/mlsys-lab. The task bank itself is never written to."
+        },
+        "mlsys.runTimeoutSeconds": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "description": "How long Run lets your code execute before killing it. Grading is unaffected."
         }
       }
     },

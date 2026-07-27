@@ -62,7 +62,9 @@ const vscode = {
   workspace: {
     workspaceFolders: MODE === "installed" ? [] : [{ uri: { fsPath: REPO } }],
     getConfiguration: () => ({ get: (k, d) =>
-      k === "workDir" ? WORK : k === "pythonPath" ? PY : d }),
+      k === "workDir" ? WORK : k === "pythonPath" ? PY
+      : k === "runTimeoutSeconds" ? 3        // short, so the runaway-guard test is quick
+      : d }),
   },
   commands: { registerCommand(id, fn) { registered[id] = fn; return { dispose() {} }; },
               executeCommand(id, ...a) { executed.push(id);
@@ -236,6 +238,91 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
       if (!fs.existsSync(mine)) throw new Error("solution not written to the workspace: " + mine);
     });
   }
+
+  // ---- Run: execute the file, stream what it prints ------------------------
+  // Grading proves correctness and says nothing about a print or a traceback.
+  // These cover the three ways an in-editor runner goes wrong: output that never
+  // arrives, a process nobody can kill, and one that outlives the button.
+  const PYTASK = "sys-one-pass-online-softmax-vector";
+  const runOut = () => posted.filter((x) => x.type === "runout").map((x) => x.chunk).join("");
+  const untilRunEnd = async (ms) => {
+    const t0 = Date.now();
+    while (!posted.some((x) => x.type === "runend") && Date.now() - t0 < ms) await wait(80);
+    return posted.find((x) => x.type === "runend");
+  };
+
+  posted.length = 0;
+  panel._onMsg({ type: "run", id: PYTASK, file: "solve.py",
+                 code: "import sys\nprint('hello from run')\nprint('to stderr', file=sys.stderr)\n" });
+  {
+    const end = await untilRunEnd(30000);
+    check("run prints and exits 0", () => {
+      if (!end) throw new Error("no runend");
+      const o = runOut();
+      if (!o.includes("hello from run")) throw new Error("stdout missing: " + JSON.stringify(o.slice(0, 120)));
+      if (!o.includes("to stderr")) throw new Error("stderr missing: " + JSON.stringify(o.slice(0, 120)));
+      if (end.code !== 0) throw new Error("exit " + end.code + " " + (end.error || ""));
+      return `exit 0, ${end.ms} ms`;
+    });
+  }
+
+  posted.length = 0;
+  panel._onMsg({ type: "run", id: PYTASK, file: "solve.py", code: "raise ValueError('boom')\n" });
+  {
+    const end = await untilRunEnd(30000);
+    check("a traceback reaches the console", () => {
+      if (!end) throw new Error("no runend");
+      const o = runOut();
+      if (!/Traceback|ValueError/.test(o)) throw new Error("no traceback: " + JSON.stringify(o.slice(0, 120)));
+      if (end.code === 0) throw new Error("a raising script reported exit 0");
+      return "exit " + end.code;
+    });
+  }
+
+  posted.length = 0;
+  panel._onMsg({ type: "run", id: PYTASK, file: "solve.py", code: "while True: pass\n" });
+  await wait(400);
+  panel._onMsg({ type: "stopRun" });
+  {
+    const end = await untilRunEnd(8000);
+    check("Stop kills a runaway loop", () => {
+      if (!end) throw new Error("the process outlived Stop");
+      if (!end.stopped) throw new Error("ended without being stopped: " + JSON.stringify(end));
+      return end.stopped;
+    });
+  }
+
+  posted.length = 0;
+  panel._onMsg({ type: "run", id: PYTASK, file: "solve.py", code: "while True: pass\n" });
+  {
+    const end = await untilRunEnd(15000);      // the stub sets the limit to 3s
+    check("an unattended loop stops itself", () => {
+      if (!end) throw new Error("nothing killed it — the extension host would hold the process forever");
+      if (end.stopped !== "timeout") throw new Error("ended as " + JSON.stringify(end));
+      return "killed on the wall-clock limit";
+    });
+  }
+
+  posted.length = 0;
+  panel._onMsg({ type: "run", id: "gpu-ex-cuda-coalesced-scale", file: "solve.cu", code: "int main(){}" });
+  {
+    const end = await untilRunEnd(8000);
+    check("a native task refuses to run rather than misrun", () => {
+      if (!end) throw new Error("no runend");
+      if (!/python/.test(end.stopped || "")) throw new Error("unclear refusal: " + JSON.stringify(end));
+      return end.stopped;
+    });
+  }
+
+  check("the button is in the toolbar next to Grade", () => {
+    const h = panel.webview.html;
+    const r = h.indexOf('id="runBtn"'), g = h.indexOf('id="gradeBtn"');
+    if (r < 0) throw new Error("no Run button in the UI");
+    if (!(r < g)) throw new Error("Run is not left of Grade");
+    if (!/type:'run'/.test(h)) throw new Error("the button never asks the host to run");
+    if (!/type:'stopRun'/.test(h)) throw new Error("no way to stop a running process from the UI");
+    return "Run, then Grade";
+  });
 
   const bad = results.filter((r) => r[0] === "FAIL");
   for (const [st, name, info] of results) {

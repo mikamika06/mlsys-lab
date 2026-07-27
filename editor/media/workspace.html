@@ -49,7 +49,15 @@
   .grade .spin{width:12px;height:12px;border-radius:50%;border:2px solid rgba(23,19,10,.35);border-top-color:#17130a;animation:spin .7s linear infinite;display:none;}
   .grade.running .spin{display:inline-block;} .grade.running .gl{display:none;}
   @keyframes spin{to{transform:rotate(360deg);}}
-  .app.is-work .back{display:flex;} .app.is-work .grade{display:flex;} .app.is-work .roadmapTitle{display:none;}
+  /* Run is deliberately the quiet sibling of Grade: same shape, no fill. Grading is
+     the act that changes your progress; running is scratch work. */
+  .run{display:none;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--ink-dim);flex:0 0 auto;
+    border:1px solid var(--line-2);border-radius:8px;padding:7px 13px;background:var(--panel-2);}
+  .run:hover{background:var(--panel-3);color:var(--ink);} .run[disabled]{opacity:.45;pointer-events:none;}
+  .run kbd{font-family:var(--mono);font-size:10px;color:var(--ink-mut);background:rgba(255,255,255,.06);border:1px solid var(--line-2);border-radius:4px;padding:1px 5px;}
+  .run .spin{width:12px;height:12px;border-radius:50%;border:2px solid rgba(178,184,194,.28);border-top-color:var(--fail);animation:spin .7s linear infinite;display:none;}
+  .run.running{color:var(--fail);border-color:var(--fail-dim);} .run.running .spin{display:inline-block;} .run.running .gl{display:none;}
+  .app.is-work .back{display:flex;} .app.is-work .grade{display:flex;} .app.is-work .run{display:flex;} .app.is-work .roadmapTitle{display:none;}
   .app.is-home .crumb{display:none;}
 
   /* ================= HOME / ROADMAP ================= */
@@ -222,6 +230,7 @@
       <span class="prog" id="prog"></span>
       <span class="lang"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
         </span>
+      <div class="run" id="runBtn" disabled><span class="spin"></span><span class="gl">▶</span> <span id="runLabel" data-t="run">Run</span> <kbd>⇧⌘↵</kbd></div>
       <div class="grade" id="gradeBtn" disabled><span class="spin"></span><span class="gl">▷</span> <span data-t="grade">Grade</span> <kbd>⌘↵</kbd></div>
     </div>
 
@@ -257,7 +266,7 @@
           <div class="verdict" id="verdict"><span class="reticle tl"></span><span class="reticle tr"></span><span class="reticle bl"></span><span class="reticle br"></span><span class="sweep"></span>
             <div class="vst"><span class="bdg" id="vbadge">·</span><span id="vlabel">AWAITING</span></div><div class="vsub" id="vsub"></div></div>
           <div class="metrics" id="metrics"></div>
-          <div class="console"><div class="ch">[ <span data-t="output">output</span> ] mlsys grade</div><div class="cb" id="cons">—</div></div>
+          <div class="console"><div class="ch">[ <span data-t="output">output</span> ] <span id="chcmd">mlsys grade</span></div><div class="cb" id="cons">—</div></div>
         </div>
       </div>
     </div>
@@ -290,11 +299,11 @@
   /* The interface is English only. Statements are authored in English, which is
      also the working language of everything the learner will meet next — compiler
      errors, CUDA docs, papers — so nothing here is translated. */
-  const TXT={roadmap:'Roadmap',grade:'Grade',solved:'solved',available:'available',
+  const TXT={roadmap:'Roadmap',grade:'Grade',run:'Run',stop:'Stop',solved:'solved',available:'available',
     planned:'planned',task:'Task',instrument:'Instrument',output:'output',
     awaiting:'AWAITING',measuring:'MEASURING…',
     vsub:'deterministic · same-machine · local',running:'running locally',
-    consIdle:'— press Grade (⌘↵)',pass:'PASS',fail:'FAIL',error:'ERROR',
+    consIdle:'— Grade (⌘↵) · Run (⇧⌘↵)',pass:'PASS',fail:'FAIL',error:'ERROR',
     gatesGreen:'gates green',begin:'Choose a task on the roadmap →'};
   function t(k){return TXT[k]||k;}
   function initLang(){
@@ -555,7 +564,7 @@
   ta.addEventListener('scroll',()=>{hl.scrollTop=ta.scrollTop;hl.scrollLeft=ta.scrollLeft;gutter.scrollTop=ta.scrollTop;cwrap.scrollTop=ta.scrollTop;cwrap.scrollLeft=ta.scrollLeft;});
   ta.addEventListener('keydown',e=>{
     if(e.key==='Tab'){e.preventDefault();const s=ta.selectionStart,en=ta.selectionEnd;ta.value=ta.value.slice(0,s)+'    '+ta.value.slice(en);ta.selectionStart=ta.selectionEnd=s+4;paint();}
-    if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();doGrade();}
+    if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();e.shiftKey?doRun():doGrade();}
   });
 
   /* ---------- open task (-> work mode) ---------- */
@@ -602,7 +611,15 @@
     setVerdict('',t('awaiting'),t('vsub'));
     $('metrics').innerHTML=(t2.gates||[]).map(g=>`<div class="metric"><div class="m-top"><div class="m-name">${g.metric}<span class="kind">gate</span></div><div class="m-v">idle</div></div><div class="m-val">—</div><div class="m-gate">gate <span class="thr">${g.op} ${fmt(g.threshold)}</span></div></div>`).join('');
     $('cons').textContent=t('consIdle');
+    $('chcmd').textContent='mlsys grade';
     $('gradeBtn').removeAttribute('disabled');
+    // Only the python track runs as a plain script today; a .cpp or .cu needs a
+    // compile step, so the button says why instead of failing when pressed.
+    runnable = (curLang==='py');
+    setRunUI(false);
+    const rb=$('runBtn');
+    if(runnable){rb.removeAttribute('disabled');rb.title='';}
+    else{rb.setAttribute('disabled','');rb.title='Run currently executes python tasks only';}
     goWork(); ta.focus();
   }
   function renderResult(d){
@@ -615,8 +632,36 @@
     let log=`> mlsys grade ${curId}\n`;(d.gates||[]).forEach(g=>log+=`  ${g.ok?'✓':'✗'} ${g.metric} = ${fmt(g.value)}   gate ${g.op} ${fmt(g.threshold)}\n`);log+=`  ${d.verdict}`;
     $('cons').innerHTML=esc(log).replace(/✓/g,'<span class="ok">✓</span>').replace(/✗/g,'<span class="bad">✗</span>');
   }
-  function doGrade(){if(busy||!curId)return;busy=true;$('gradeBtn').classList.add('running');$('gradeBtn').setAttribute('disabled','');setVerdict('measuring',t('measuring'),t('running'));$('cons').textContent='> spawning grader …';vscode.postMessage({type:'grade',id:curId,file:curFile,code:ta.value});}
+  function doGrade(){if(busy||running||!curId)return;busy=true;$('gradeBtn').classList.add('running');$('gradeBtn').setAttribute('disabled','');$('runBtn').setAttribute('disabled','');$('chcmd').textContent='mlsys grade';setVerdict('measuring',t('measuring'),t('running'));$('cons').textContent='> spawning grader …';vscode.postMessage({type:'grade',id:curId,file:curFile,code:ta.value});}
+  function gradeDone(){busy=false;$('gradeBtn').classList.remove('running');$('gradeBtn').removeAttribute('disabled');if(curId&&runnable)$('runBtn').removeAttribute('disabled');}
   $('gradeBtn').addEventListener('click',doGrade);
+
+  /* ---------- run ----------
+     Running is not grading: it executes the file as a script and shows whatever it
+     prints. Nothing about progress changes, so the verdict panel is left alone and
+     only the console is taken over. While a process is alive the button is the way
+     to kill it — a print loop must not need a window reload to stop. */
+  let running=false, runnable=false;
+  function consAppend(s){const c=$('cons');c.textContent+=s;const sc=c.closest('.scroll');if(sc)sc.scrollTop=sc.scrollHeight;}
+  function setRunUI(on){
+    running=on;
+    const b=$('runBtn');
+    b.classList.toggle('running',on);
+    $('runLabel').textContent=on?t('stop'):t('run');
+    b.title=on?'Kill the running process':'';
+    if(on){$('gradeBtn').setAttribute('disabled','');}
+    else{if(curId)$('gradeBtn').removeAttribute('disabled');}
+  }
+  function doRun(){
+    if(running){vscode.postMessage({type:'stopRun'});return;}
+    if(busy||!curId||!runnable)return;
+    setRunUI(true);
+    $('instSt').textContent='running';
+    $('chcmd').textContent='python '+curFile;
+    $('cons').textContent='> python '+curFile+'\n';
+    vscode.postMessage({type:'run',id:curId,file:curFile,code:ta.value});
+  }
+  $('runBtn').addEventListener('click',doRun);
 
   /* ---------- resizers ---------- */
   function initResizers(){
@@ -662,8 +707,16 @@
     else if(m.type==='mapdata'){mapData=m.payload;if($('app').classList.contains('is-home'))renderMap(m.payload);}
     else if(m.type==='task'){openTask(m);}
     else if(m.type==='measuring'){setVerdict('measuring',t('measuring'),t('running'));}
-    else if(m.type==='result'){busy=false;$('gradeBtn').classList.remove('running');$('gradeBtn').removeAttribute('disabled');renderResult(m.data);}
-    else if(m.type==='error'){busy=false;$('gradeBtn').classList.remove('running');$('gradeBtn').removeAttribute('disabled');setVerdict('error',t('error'),'grader failed');$('cons').textContent=(m.message||'').slice(0,2000);}
+    else if(m.type==='result'){gradeDone();renderResult(m.data);}
+    else if(m.type==='error'){gradeDone();setVerdict('error',t('error'),'grader failed');$('cons').textContent=(m.message||'').slice(0,2000);}
+    else if(m.type==='runout'){consAppend(m.chunk||'');}
+    else if(m.type==='runend'){
+      setRunUI(false);
+      $('instSt').textContent='awaiting';
+      if(m.error)consAppend(`\n[could not start: ${m.error}]`);
+      else if(m.stopped)consAppend(`\n[${m.stopped}]`);
+      else consAppend(`\n[exit ${m.code}${m.ms!=null?' · '+m.ms+' ms':''}]`);
+    }
   });
 
   initLang(); initResizers();
