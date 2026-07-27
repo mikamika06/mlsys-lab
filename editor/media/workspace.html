@@ -60,6 +60,12 @@
   .run kbd{font-family:var(--mono);font-size:10px;color:var(--ink-mut);background:rgba(255,255,255,.06);border:1px solid var(--line-2);border-radius:4px;padding:1px 5px;}
   .run .spin{width:12px;height:12px;border-radius:50%;border:2px solid rgba(178,184,194,.28);border-top-color:var(--fail);animation:spin .7s linear infinite;display:none;}
   .run.running{color:var(--fail);border-color:var(--fail-dim);} .run.running .spin{display:inline-block;} .run.running .gl{display:none;}
+  /* Random is available from the roadmap too — "give me something to do" is the
+     question you have on the roadmap, not inside a task. */
+  .rnd{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12.5px;color:var(--ink-mut);flex:0 0 auto;
+    border:1px solid transparent;border-radius:8px;padding:7px 11px;}
+  .rnd:hover{background:var(--panel-2);color:var(--ink-dim);border-color:var(--line);}
+  .rnd[disabled]{opacity:.35;pointer-events:none;} .rnd .gl{font-size:14px;line-height:1;}
   .app.is-work .back{display:flex;} .app.is-work .grade{display:flex;} .app.is-work .run{display:flex;} .app.is-work .roadmapTitle{display:none;}
   .app.is-home .crumb{display:none;}
 
@@ -233,6 +239,7 @@
       <span class="prog" id="prog"></span>
       <span class="lang"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
         </span>
+      <div class="rnd" id="rndBtn"><span class="gl">⚄</span> <span data-t="random">Random</span></div>
       <div class="run" id="runBtn" disabled><span class="spin"></span><span class="gl">▶</span> <span id="runLabel" data-t="run">Run</span> <kbd>⇧⌘↵</kbd></div>
       <div class="grade" id="gradeBtn" disabled><span class="spin"></span><span class="gl">▷</span> <span data-t="grade">Grade</span> <kbd>⌘↵</kbd></div>
     </div>
@@ -302,7 +309,7 @@
   /* The interface is English only. Statements are authored in English, which is
      also the working language of everything the learner will meet next — compiler
      errors, CUDA docs, papers — so nothing here is translated. */
-  const TXT={roadmap:'Roadmap',grade:'Grade',run:'Run',stop:'Stop',solved:'solved',available:'available',
+  const TXT={roadmap:'Roadmap',grade:'Grade',run:'Run',stop:'Stop',random:'Random',solved:'solved',available:'available',
     planned:'planned',task:'Task',instrument:'Instrument',output:'output',
     awaiting:'AWAITING',measuring:'MEASURING…',
     vsub:'deterministic · same-machine · local',running:'running locally',
@@ -396,7 +403,7 @@
   const LGN={py:'PY',cpp:'C++',cuda:'CUDA'};
 
   function renderMap(d){
-    mapData=d; mapPainted=d;
+    mapData=d; mapPainted=d; syncRandom();
     /* The renderer keys areas by position ('ti'+index), not by T.key. Folding with
        T.key silently did nothing, because collapsed.has() was asked a different
        question than the one answered. Same key space or no effect. */
@@ -467,7 +474,7 @@
      and reopened, which reads as progress not being saved at all. */
   function goHome(){
     if(mapData&&mapData!==mapPainted)renderMap(mapData);
-    $('app').className='app is-home'; curId=null;
+    $('app').className='app is-home'; curId=null; syncRandom();
   }
   function goWork(){$('app').className='app is-work';}
 
@@ -735,6 +742,7 @@
     const rb=$('runBtn');
     rb.removeAttribute('disabled');
     rb.title={py:'Run the file',cpp:'Compile and run',cu:'Execute on the software GPU'}[curLang]||'';
+    syncRandom();
     goWork(); ta.focus();
   }
   function renderResult(d){
@@ -778,6 +786,28 @@
   }
   $('runBtn').addEventListener('click',doRun);
 
+  /* ---------- random unsolved task ----------
+     291 tracks is too many to choose from when what you want is simply the next
+     thing to do. Solved tasks are excluded, and so is the one already open —
+     landing back on the task you are looking at reads as a broken button. */
+  function unsolved(){
+    const out=[];
+    ((mapData||{}).tiers||[]).forEach(t=>t.tracks.forEach(tr=>tr.tasks.forEach(x=>{
+      if(!x.solved&&x.id!==curId)out.push(x.id);})));
+    return out;
+  }
+  function syncRandom(){
+    const pool=unsolved(), b=$('rndBtn');
+    if(pool.length){b.removeAttribute('disabled');b.title='Open a random unsolved task';}
+    else{b.setAttribute('disabled','');b.title='Nothing left unsolved';}
+  }
+  function doRandom(){
+    const pool=unsolved();
+    if(!pool.length)return;
+    vscode.postMessage({type:'open',id:pool[Math.floor(Math.random()*pool.length)]});
+  }
+  $('rndBtn').addEventListener('click',doRandom);
+
   /* ---------- resizers ---------- */
   function initResizers(){
     const st=vscode.getState()||{}; if(st.lw)document.documentElement.style.setProperty('--lw',st.lw); if(st.rw)document.documentElement.style.setProperty('--rw',st.rw);
@@ -819,7 +849,7 @@
   window.addEventListener('message',e=>{
     const m=e.data||{};
     if(m.type==='map'){renderMap(m.payload);goHome();}
-    else if(m.type==='mapdata'){mapData=m.payload;if($('app').classList.contains('is-home'))renderMap(m.payload);}
+    else if(m.type==='mapdata'){mapData=m.payload;syncRandom();if($('app').classList.contains('is-home'))renderMap(m.payload);}
     else if(m.type==='task'){openTask(m);}
     else if(m.type==='measuring'){setVerdict('measuring',t('measuring'),t('running'));}
     else if(m.type==='result'){gradeDone();renderResult(m.data);}

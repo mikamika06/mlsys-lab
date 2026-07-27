@@ -167,7 +167,10 @@ function curriculum(lab) {
     if (!lab.listFile) throw new Error("no curriculum file");
     const rows = JSON.parse(fs.readFileSync(lab.listFile, "utf8")).rows;
     for (const r of rows) {
-      const sub = ((r.method || r.concept || "other") + "").trim();
+      // A track with no name used to render as a group literally called "other",
+      // which reads as broken rather than as unclassified. The area's own name is
+      // both true and useful, so an unnamed track is absorbed into it.
+      const sub = ((r.method || r.concept || "") + "").trim() || AREA_TITLE[r.area] || r.area;
       _curriculum[r.id] = [r.area, sub];
     }
   } catch (_) { /* a checkout without the list still works, via the prefix */ }
@@ -177,7 +180,8 @@ function curriculum(lab) {
 function placeOf(lab, id) {
   const c = curriculum(lab)[id];
   if (c) return c;
-  return [PREFIX_AREA[id.split("-")[0]] || "other", "other"];
+  const area = PREFIX_AREA[id.split("-")[0]] || "llm-systems";
+  return [area, AREA_TITLE[area] || area];
 }
 
 function scanBuilt(lab) {

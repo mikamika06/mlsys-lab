@@ -136,6 +136,24 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     return built + " tasks, " + m.payload.tiers.length + " areas";
   });
 
+  // Nine tasks were missing from the curriculum list and fell into a group the UI
+  // literally labelled "other" — which reads as broken, not as unclassified.
+  check("every task sits in a named track", () => {
+    const m = posted.find((x) => x.type === "map" || x.type === "mapdata");
+    if (!m) throw new Error("no map to inspect");
+    const bad = [];
+    let tasks = 0;
+    for (const tier of m.payload.tiers) {
+      for (const tr of tier.tracks) {
+        tasks += tr.tasks.length;
+        const n = (tr.name || "").trim().toLowerCase();
+        if (!n || n === "other") bad.push(`${tier.name}/${tr.name} (${tr.tasks.length} tasks)`);
+      }
+    }
+    if (bad.length) throw new Error("unnamed tracks: " + bad.join(", "));
+    return `${tasks} tasks, no "other" bucket`;
+  });
+
   check("sidebar is registered", () => {
     if (!treeProvider || !treeView) throw new Error("no tree view — no activity-bar icon");
     const rows = treeProvider.getChildren();
@@ -470,6 +488,16 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     if (!panel.webview.html.includes(want))
       throw new Error(`version ${want} is not shown anywhere in the panel`);
     return want;
+  });
+
+  check("Random picks only unsolved work", () => {
+    const h = panel.webview.html;
+    const rn = h.indexOf('id="rndBtn"'), r = h.indexOf('id="runBtn"');
+    if (rn < 0) throw new Error("no Random button");
+    if (!(rn < r)) throw new Error("Random is not left of Run");
+    if (!/if\(!x\.solved&&x\.id!==curId\)out\.push\(x\.id\)/.test(h))
+      throw new Error("the pool is not filtered to unsolved-and-not-current");
+    return "left of Run, solved excluded";
   });
 
   check("the button is in the toolbar next to Grade", () => {

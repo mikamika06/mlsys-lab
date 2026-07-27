@@ -65,11 +65,25 @@ def _curriculum():
     if f.is_file():
         try:
             for r in json.loads(f.read_text())["rows"]:
-                sub = (r.get("method") or r.get("concept") or "other").strip()
+                # An unnamed track used to render as a group literally called
+                # "other", which reads as broken rather than as unclassified.
+                sub = (r.get("method") or r.get("concept") or "").strip() \
+                    or AREA_TITLE.get(r["area"], r["area"])
                 out[r["id"]] = (r["area"], sub)
         except Exception:
             pass
     return out
+
+
+def _place(tid):
+    """Where a task sits. An id the curriculum has never heard of still belongs to
+    an area, and showing it under that area's own name beats a bucket called
+    "other"."""
+    hit = CURRICULUM.get(tid)
+    if hit:
+        return hit
+    area = PREFIX_AREA.get(tid.split("-")[0], "llm-systems")
+    return area, AREA_TITLE.get(area, area)
 
 
 CURRICULUM = _curriculum()
@@ -102,7 +116,7 @@ def scan():
             continue
         tid = meta.get("id", d.name)
         meta_by_id[tid] = meta
-        area, sub = CURRICULUM.get(tid, (PREFIX_AREA.get(tid.split("-")[0], "other"), "other"))
+        area, sub = _place(tid)
         groups.setdefault(area, {}).setdefault(sub, []).append({
             "id": tid, "title": meta.get("title", tid), "difficulty": meta.get("difficulty"),
             "solved": tid in solved, "native": meta.get("native") or "",
@@ -143,7 +157,7 @@ def task_payload(tid):
             code = f.read_text(encoding="utf-8")
             break
 
-    area, sub = CURRICULUM.get(tid, (PREFIX_AREA.get(tid.split("-")[0], "other"), "other"))
+    area, sub = _place(tid)
     return {"file": srcfile, "code": code, "md": md,
             "task": {"id": tid, "title": meta.get("title", tid), "difficulty": meta.get("difficulty"),
                      "genre": meta.get("genre"), "platform": meta.get("platform"),
