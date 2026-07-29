@@ -1,0 +1,23 @@
+{
+  "id": "m-alibi-slope-generator",
+  "title": "Нахили ALiBi і точний softcap для логітів уваги",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "score-modifiers-softcap-alibi-scale",
+  "part": 2,
+  "difficulty": 2,
+  "edits": ["scoremod/alibi.py", "scoremod/softcap.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Генератор нахилів ALiBi для довільної кількості голів", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-9},
+               {"metric": "invariant_ok", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Softcap: forward і backward точно збігаються з оракулом", "check": "harness/m2.py",
+     "gates": [{"metric": "forward_rel_err", "op": "<=", "threshold": 1e-9},
+               {"metric": "backward_rel_err", "op": "<=", "threshold": 1e-9}]},
+    {"n": 3, "title": "Запобіжник: тест, що ловить зламану похідну softcap", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_backward", "op": "==", "threshold": 1}]}
+  ]
+}

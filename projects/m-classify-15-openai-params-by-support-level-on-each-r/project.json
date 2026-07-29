@@ -1,0 +1,24 @@
+{
+  "id": "m-classify-15-openai-params-by-support-level-on-each-r",
+  "title": "Хто з локальних раннерів насправді підтримує який параметр",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "openai-compatible-surface-and-portability",
+  "part": 2,
+  "difficulty": 3,
+  "edits": ["oaicompat/params.py", "oaicompat/counters.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Класифікація 15 параметрів на кожному раннері", "check": "harness/m1.py",
+     "gates": [{"metric": "runners_matched", "op": "==", "threshold": 5}]},
+    {"n": 2, "title": "Що нативний API показує, а шим ховає", "check": "harness/m2.py",
+     "gates": [{"metric": "native_match", "op": "==", "threshold": 1},
+               {"metric": "shim_match", "op": "==", "threshold": 1},
+               {"metric": "hidden_match", "op": "==", "threshold": 1},
+               {"metric": "subset_invariant", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Запобіжник: тест, що ловить витік прихованих лічильників у шимі", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_leak", "op": "==", "threshold": 1}]}
+  ]
+}

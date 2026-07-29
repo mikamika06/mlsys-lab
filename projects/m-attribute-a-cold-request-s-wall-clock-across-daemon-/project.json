@@ -1,0 +1,24 @@
+{
+  "id": "m-attribute-a-cold-request-s-wall-clock-across-daemon-",
+  "title": "Розклад часу холодного запиту: daemon, load, prefill, decode",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-local-runners",
+  "track": "runner-architecture-and-daemon",
+  "part": 2,
+  "difficulty": 3,
+  "edits": ["coldpath/phases.py", "coldpath/attribution.py", "coldpath/timeline.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Фази з логу подій", "check": "harness/m1.py",
+     "gates": [{"metric": "cases_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Скільки часу на що і чи нічого не губиться", "check": "harness/m2.py",
+     "gates": [{"metric": "breakdown_match", "op": "==", "threshold": 1},
+               {"metric": "classify_match", "op": "==", "threshold": 1},
+               {"metric": "unattributed_match", "op": "==", "threshold": 1},
+               {"metric": "timeline_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Запобіжник: тест, що ловить злиття daemon і load в одну фазу", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_merged_phases", "op": "==", "threshold": 1}]}
+  ]
+}
