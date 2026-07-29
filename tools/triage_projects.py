@@ -29,11 +29,27 @@ CAUSE = [
 
 
 def complete(pid):
+    """Complete means every checker the spec names is on disk. A builder mkdirs
+    harness/ before it writes into it, so "the directory exists" counted a unit that
+    was still being written as a failure — a false alarm that would have been two
+    hundred of them at full scale."""
+    import json
     d = os.path.join(PROJ, pid)
-    return (os.path.isfile(os.path.join(d, "project.json"))
-            and os.path.isdir(os.path.join(d, "harness"))
-            and os.path.isdir(os.path.join(d, "reference"))
-            and os.path.isdir(os.path.join(d, "skeleton")))
+    spec_path = os.path.join(d, "project.json")
+    if not os.path.isfile(spec_path):
+        return False
+    if not (os.path.isdir(os.path.join(d, "reference"))
+            and os.path.isdir(os.path.join(d, "skeleton"))):
+        return False
+    try:
+        with open(spec_path, encoding="utf-8") as f:
+            spec = json.load(f)
+    except Exception:  # noqa: BLE001 — a half-written project.json is not complete
+        return False
+    checks = [m.get("check") for m in spec.get("milestones") or []]
+    if not checks:
+        return False
+    return all(c and os.path.isfile(os.path.join(d, c)) for c in checks)
 
 
 def classify(msg):
