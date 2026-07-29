@@ -22,6 +22,8 @@ CAUSE = [
     (re.compile(r"reference clears \d+/"), "reference does not clear its own milestones"),
     (re.compile(r"missing checker"), "a milestone points at a checker that is not there"),
     (re.compile(r"no reference/"), "no reference at all"),
+    (re.compile(r"no brief\.md|brief\.md is \d+ words"), "no ticket for the learner"),
+    (re.compile(r"project\.json has no"), "project.json is missing metadata"),
     (re.compile(r"ModuleNotFoundError|ImportError"), "import fails in the checker"),
     (re.compile(r"KeyError|AttributeError|TypeError"), "checker crashes on its own metrics"),
     (re.compile(r"needs .* pip install|_note.*needs"), "declared package is absent here"),
@@ -39,7 +41,8 @@ def complete(pid):
     if not os.path.isfile(spec_path):
         return False
     if not (os.path.isdir(os.path.join(d, "reference"))
-            and os.path.isdir(os.path.join(d, "skeleton"))):
+            and os.path.isdir(os.path.join(d, "skeleton"))
+            and os.path.isfile(os.path.join(d, "brief.md"))):
         return False
     try:
         with open(spec_path, encoding="utf-8") as f:

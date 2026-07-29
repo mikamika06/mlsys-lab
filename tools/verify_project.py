@@ -30,6 +30,21 @@ def grade_copy(pdir: str, src: str) -> dict:
 def verify(pdir: str) -> tuple[bool, str]:
     spec = pr.load_spec(pdir)
     n = len(spec["milestones"])
+
+    # A unit without a ticket is not a unit. The panel shows nothing, the CLI shows
+    # nothing, and the learner is handed a skeleton with no statement of the problem
+    # — which the milestone check alone happily called green.
+    brief = os.path.join(pdir, "brief.md")
+    if not os.path.isfile(brief):
+        return False, "no brief.md"
+    with open(brief, encoding="utf-8") as f:
+        words = len(f.read().split())
+    if words < 80:
+        return False, f"brief.md is {words} words, too thin to be a ticket"
+    for key in ("id", "title", "area", "tier"):
+        if not spec.get(key):
+            return False, f"project.json has no {key}"
+
     ref_dir = os.path.join(pdir, "reference")
     if not os.path.isdir(ref_dir):
         return False, "no reference/"
