@@ -72,6 +72,47 @@ def curriculum_file() -> Path | None:
     return p if p.is_file() else None
 
 
+def projects_root(explicit: str | os.PathLike | None = None) -> Path | None:
+    """Where the Part-2 projects live, or None. Same resolution order as the bank:
+    an explicit path, then $MLSYS_PROJECTS, then ./projects upward from cwd, then
+    what shipped inside the package."""
+    def ok(p: Path) -> bool:
+        return p.is_dir() and any(c.joinpath("project.json").is_file() for c in p.iterdir()
+                                  if c.is_dir())
+
+    if explicit is not None:
+        p = Path(explicit).expanduser()
+        return p.resolve() if ok(p) else None
+    env = os.environ.get("MLSYS_PROJECTS")
+    if env:
+        p = Path(env).expanduser()
+        return p.resolve() if ok(p) else None
+    here = Path.cwd().resolve()
+    for d in (here, *here.parents):
+        cand = d / "projects"
+        if ok(cand):
+            return cand
+    b = Path(__file__).resolve().parent / "projects"
+    return b if ok(b) else None
+
+
+def find_project(name: str, explicit: str | os.PathLike | None = None) -> Path:
+    p = Path(name).expanduser()
+    if (p / "project.json").is_file():
+        return p.resolve()
+    root = projects_root(explicit)
+    if root is not None and (root / name / "project.json").is_file():
+        return (root / name).resolve()
+    raise FileNotFoundError(f"no project named {name}")
+
+
+def list_projects(explicit: str | os.PathLike | None = None) -> list[Path]:
+    root = projects_root(explicit)
+    if root is None:
+        return []
+    return sorted(c for c in root.iterdir() if (c / "project.json").is_file())
+
+
 def bank_root(explicit: str | os.PathLike | None = None) -> Path:
     """Locate the task bank. Raises FileNotFoundError with a fixable message."""
     if explicit is not None:

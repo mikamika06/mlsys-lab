@@ -1,0 +1,88 @@
+{
+  "id": "p-torch-compile-latency-regression",
+  "title": "Після compile p99 виріс",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "torch.compile stack",
+  "part": 2,
+  "difficulty": 4,
+  "requires_pkgs": ["torch"],
+  "edits": ["bench/bench.py", "tools/inventory.py", "tools/guards.py",
+            "service/model.py", "service/preprocess.py", "service/server.py",
+            "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Стенд вимірювання, якому можна вірити",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "warmup_untimed", "op": "==", "threshold": 1},
+        {"metric": "reps_honoured", "op": "==", "threshold": 1},
+        {"metric": "reports_median", "op": "==", "threshold": 1},
+        {"metric": "reports_spread", "op": "==", "threshold": 1},
+        {"metric": "syncs_after_each_rep", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Інвентар графів: скільки їх і де рветься",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "has_inventory", "op": "==", "threshold": 1},
+        {"metric": "graph_count_ok", "op": "==", "threshold": 1},
+        {"metric": "break_count_ok", "op": "==", "threshold": 1},
+        {"metric": "op_count_ok", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Атрибуція рекомпіляції до guard'а, що впав",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_module", "op": "==", "threshold": 1},
+        {"metric": "events_found", "op": "==", "threshold": 1},
+        {"metric": "guards_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Гарячий шлях без жодного розриву графа",
+      "check": "harness/m4.py",
+      "gates": [
+        {"metric": "break_count", "op": "==", "threshold": 0},
+        {"metric": "fullgraph_ok", "op": "==", "threshold": 1},
+        {"metric": "matches_eager", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Розклад розмірів батчу без вибуху рекомпіляцій",
+      "check": "harness/m5.py",
+      "gates": [
+        {"metric": "unique_graphs", "op": "<=", "threshold": 3},
+        {"metric": "outputs_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Виграш, відокремлений від шуму",
+      "check": "harness/m6.py",
+      "gates": [
+        {"metric": "speedup", "op": ">=", "threshold": 1.15},
+        {"metric": "separable", "op": "==", "threshold": 1},
+        {"metric": "outputs_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Запобіжник: тест, що ловить повернення розриву",
+      "check": "harness/m7.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_reintroduced_break", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

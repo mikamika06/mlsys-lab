@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mlsys-lab"
-version = "0.1.4"
+version = "0.2.0"
 description = "Auto-graded exercises in low-level ML systems: mostly Python, with real C++ via clang++ and real CUDA-C on a software GPU"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -58,5 +58,5 @@ exclude = ["**/solve.py", "**/solve.cpp", "**/solve.cu", "**/__pycache__", "**/*
 path = "hatch_build.py"
 
 [tool.hatch.build.targets.sdist]
-include = ["src/mlsys", "tasks", "tools", "docs", "README.md", "LICENSE", "pyproject.toml"]
+include = ["src/mlsys", "tasks", "projects", "tools", "concepts", "README.md", "LICENSE", "pyproject.toml", "hatch_build.py"]
 exclude = ["**/solve.py", "**/solve.cpp", "**/solve.cu", "**/__pycache__", "**/*.pyc"]

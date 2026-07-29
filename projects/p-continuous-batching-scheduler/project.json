@@ -1,0 +1,187 @@
+{
+  "id": "p-continuous-batching-scheduler",
+  "title": "Планувальник, який тримає обіцянку",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "continuous-batching-scheduler",
+  "part": 2,
+  "difficulty": 4,
+  "edits": [
+    "sched/allocator.py",
+    "sched/policy.py",
+    "sched/scheduler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Алокатор блоків: вільний список і лічильник посилань",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "api_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "freelist_order",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "refcount_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "double_free_safe",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "keys_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "exhaustion_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Допуск і prefill у межах токенного бюджету",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "budget_violations",
+          "op": "==",
+          "threshold": 0
+        },
+        {
+          "metric": "prefill_tokens_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "admitted_all",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Decode і ріст кешу: збіг з еталоном на трьох навантаженнях",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "cases_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Витіснення з гарантією прогресу",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "terminates",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "accounted",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "preemptions_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "rejected_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "swap_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Префіксний кеш: спільні блоки і чесний hit rate",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "cache_saves_prefill",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "hit_rate_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "mixed_tenants_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Збіг покрокового розкладу на небаченому навантаженні",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "schedule_match",
+          "op": ">=",
+          "threshold": 0.95
+        },
+        {
+          "metric": "metrics_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Запобіжник: тест, що ловить зламану політику",
+      "check": "harness/m7.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unbounded_admission",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_refcount",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

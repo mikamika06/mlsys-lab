@@ -1,0 +1,14 @@
+[0/0] torchdynamo start compiling forward /srv/service/model.py:14
+[0/1] Recompiling function forward in /srv/service/model.py:14
+    triggered by the following guard failure(s):
+    - 0/0: tensor 'L['x']' size mismatch at index 0. expected 1, actual 2
+[0/2] Recompiling function forward in /srv/service/model.py:14
+    triggered by the following guard failure(s):
+    - 0/1: tensor 'L['x']' size mismatch at index 0. expected 2, actual 3
+    - 0/0: tensor 'L['x']' size mismatch at index 0. expected 1, actual 3
+[0/3] Recompiling function forward in /srv/service/model.py:14
+    triggered by the following guard failure(s):
+    - 0/2: L['self'].scale == 1.0
+[0/4] Recompiling function forward in /srv/service/model.py:14
+    triggered by the following guard failure(s):
+    - 0/3: tensor 'L['x']' dtype mismatch. expected torch.float32, actual torch.float64

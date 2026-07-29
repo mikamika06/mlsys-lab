@@ -13,6 +13,7 @@ the contents of the repo rather than on whoever last ran the verifier.
 """
 from __future__ import annotations
 
+import json
 import shutil
 import tempfile
 from pathlib import Path
@@ -42,6 +43,21 @@ class CleanBankHook(BuildHookInterface):
         self.app.display_info(f"bank staged: {kept} tasks, {left} scratch files excluded")
 
         build_data.setdefault("force_include", {})[str(dst)] = "mlsys/tasks"
+
+        # Part-2 projects ship the same way and for the same reason. Their scratch is a
+        # learner's copy of the skeleton, which never belongs inside the project folder.
+        psrc = Path(self.root) / "projects"
+        if psrc.is_dir():
+            pdst = Path(self._tmp) / "projects"
+            shutil.copytree(
+                psrc, pdst,
+                ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store", ".pytest_cache"),
+            )
+            n = sum(1 for _ in pdst.glob("*/project.json"))
+            ms = sum(len(json.loads((p).read_text())["milestones"])
+                     for p in pdst.glob("*/project.json"))
+            self.app.display_info(f"projects staged: {n} projects, {ms} milestones")
+            build_data["force_include"][str(pdst)] = "mlsys/projects"
 
     def finalize(self, version, build_data, artifact_path):
         tmp = getattr(self, "_tmp", None)

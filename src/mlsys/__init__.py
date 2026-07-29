@@ -25,5 +25,5 @@ from . import probe, scorers
 from .sim import abi as cppabi          # historical names a task may still use
 from .sim import cache as cachesim
 
-__version__ = "0.1.4"
+__version__ = "0.2.0"
 __all__ = ["scorers", "probe", "cachesim", "cppabi", "__version__"]

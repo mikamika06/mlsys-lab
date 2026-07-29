@@ -114,6 +114,71 @@ def cmd_start(args) -> int:
     return 0
 
 
+def cmd_project(args) -> int:
+    """Part-2 projects: a real repo skeleton, several files to edit, and milestones
+    that are graded one at a time. `mlsys grade` answers a single question; a project
+    answers seven, in order."""
+    import json as _json
+
+    from .runners import project as pr
+
+    if args.action == "list":
+        rows = bank.list_projects(args.projects_root)
+        if not rows:
+            print(_c(AMBER, "no projects found."))
+            print(_c(DIM, "  run inside a checkout, or set MLSYS_PROJECTS"))
+            return 2
+        for p in rows:
+            spec = pr.load_spec(str(p))
+            print(f"  {_c(BOLD, spec['id'])}")
+            print(f"    {spec['title']}  {_c(DIM, spec.get('tier', '') + ' · ' + str(len(spec['milestones'])) + ' майлстоунів')}")
+        return 0
+
+    try:
+        pdir = bank.find_project(args.project, args.projects_root)
+    except FileNotFoundError as e:
+        print(_c(RED, str(e)))
+        return 2
+    spec = pr.load_spec(str(pdir))
+
+    if args.action == "start":
+        dest = pr.start(str(pdir), args.dir, force=args.force)
+        print(f"  {_c(BOLD, spec['title'])}")
+        print(f"  {_c(DIM, 'wrote')} {dest}")
+        print(f"  {_c(DIM, 'read')}  {Path(dest) / 'brief.md'}")
+        print()
+        for m in spec["milestones"]:
+            print(f"    {m['n']}. {m['title']}")
+        print()
+        print(f"  {_c(STEEL, 'mlsys project grade ' + spec['id'] + ' --milestone 1')}")
+        return 0
+
+    workdir = args.dir
+    if not (Path(workdir) / "sched").exists() and (Path(workdir) / spec["id"]).is_dir():
+        workdir = str(Path(workdir) / spec["id"])
+    res = pr.grade(str(pdir), workdir, args.milestone)
+    if args.json:
+        print(jsonsafe.dumps(res, indent=2))
+        return 0 if res.get("passed") else 1
+
+    if res.get("error"):
+        print(_c(RED, f"  ✗ {res['error']}"))
+    for g in res.get("gates", []):
+        mark = _c(GREEN, "✓") if g["ok"] else _c(RED, "✗")
+        val = _fmt(g["value"]) if isinstance(g["value"], (int, float)) else str(g["value"])
+        print(f"  {mark} {g['metric']:<32} {val:>12}   gate {g['op']} {_fmt(g['threshold'])}")
+    if args.milestone is None:
+        print()
+        for r in res.get("per_milestone", []):
+            mark = _c(GREEN, "✓") if r["passed"] else _c(RED, "✗")
+            print(f"  {mark} {r['n']}. {r['title']}")
+        print()
+        print(f"  {_c(BOLD, str(res['milestones_passed']))}/{res['milestones_total']} майлстоунів")
+    if res.get("note"):
+        print(_c(DIM, "  " + res["note"]))
+    return 0 if res.get("passed") else 1
+
+
 def cmd_run(args) -> int:
     """Execute the attempt and show what it does. No gates, no verdict, no scoring —
     that is `mlsys grade`. This is the print, the traceback and the compiler
@@ -255,6 +320,16 @@ def build_parser() -> argparse.ArgumentParser:
     st.add_argument("--dir", default=".", help="where to create <task-id>/ (default: here)")
     st.add_argument("--force", action="store_true", help="overwrite an existing attempt")
     st.set_defaults(func=cmd_start)
+
+    pj = sub.add_parser("project", help="Part-2 projects: multi-file work graded by milestone")
+    pj.add_argument("action", choices=["list", "start", "grade"])
+    pj.add_argument("project", nargs="?", default=None, help="project id or path")
+    pj.add_argument("--dir", default=".", help="where your copy lives (default: here)")
+    pj.add_argument("--milestone", type=int, default=None, help="grade one milestone")
+    pj.add_argument("--force", action="store_true", help="overwrite an existing copy")
+    pj.add_argument("--json", action="store_true", help="machine-readable output")
+    pj.add_argument("--projects-root", default=None, help="directory holding project folders")
+    pj.set_defaults(func=cmd_project)
 
     r = sub.add_parser("run", help="execute your attempt and show its output (no grading)")
     r.add_argument("task", help="task id, dir name, or path")
