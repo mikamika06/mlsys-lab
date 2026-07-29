@@ -27,3 +27,9 @@ a.out
 # unbuilt work is not something the repo should carry. tools/gen_part2_specs.py
 # regenerates it.
 tools/specs2/
+
+# `mlsys start <id>` writes ./<task-id>/solve.py where it is run, and the repo root
+# is where it usually gets run. That is the learner's scratch, not repo content.
+/*/solve.py
+/*/solve.cpp
+/*/solve.cu

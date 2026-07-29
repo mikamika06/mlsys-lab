@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mlsys-lab"
-version = "0.2.0"
+version = "0.2.1"
 description = "Auto-graded exercises in low-level ML systems: mostly Python, with real C++ via clang++ and real CUDA-C on a software GPU"
 readme = "README.md"
 requires-python = ">=3.10"
