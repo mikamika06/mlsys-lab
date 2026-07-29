@@ -22,3 +22,8 @@ a.out
 # generation queues, archives and one-off scripts stay out of the published repo
 .internal/
 *.vsix
+
+# The Part-2 build queue: generated from a private plan, and a public roadmap of
+# unbuilt work is not something the repo should carry. tools/gen_part2_specs.py
+# regenerates it.
+tools/specs2/
