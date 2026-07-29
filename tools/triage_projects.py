@@ -17,16 +17,21 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJ = os.path.join(ROOT, "projects")
 
+# Ordered: the specific signature has to be tried before the generic one. The
+# generic "reference clears 0/3" matches every failure, so with it first an
+# ImportError and a genuinely impossible milestone landed in the same bucket
+# despite needing different fixes.
 CAUSE = [
-    (re.compile(r"skeleton already clears"), "gate measures nothing (skeleton passes)"),
-    (re.compile(r"reference clears \d+/"), "reference does not clear its own milestones"),
-    (re.compile(r"missing checker"), "a milestone points at a checker that is not there"),
-    (re.compile(r"no reference/"), "no reference at all"),
+    (re.compile(r"ImportError|cannot import name"), "checker imports a name the reference does not export"),
+    (re.compile(r"ModuleNotFoundError"), "checker imports a module that is not there"),
+    (re.compile(r"KeyError|AttributeError|TypeError"), "checker crashes on its own metrics"),
     (re.compile(r"no brief\.md|brief\.md is \d+ words"), "no ticket for the learner"),
     (re.compile(r"project\.json has no"), "project.json is missing metadata"),
-    (re.compile(r"ModuleNotFoundError|ImportError"), "import fails in the checker"),
-    (re.compile(r"KeyError|AttributeError|TypeError"), "checker crashes on its own metrics"),
+    (re.compile(r"missing checker"), "a milestone points at a checker that is not there"),
+    (re.compile(r"no reference/"), "no reference at all"),
+    (re.compile(r"skeleton already clears"), "gate measures nothing (skeleton passes)"),
     (re.compile(r"needs .* pip install|_note.*needs"), "declared package is absent here"),
+    (re.compile(r"reference clears \d+/"), "reference does not clear its own milestones"),
 ]
 
 
