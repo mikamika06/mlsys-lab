@@ -47,11 +47,13 @@ function solvePath(id, srcfile) {
 function probeInstalled() {
   try {
     const r = cp.execFileSync(pythonPath(),
-      ["-c", "from mlsys import bank; print(bank.bank_root()); print(bank.curriculum_file() or '')"],
+      ["-c", "from mlsys import bank; print(bank.bank_root()); print(bank.curriculum_file() or ''); print(bank.projects_root() or '')"],
       { encoding: "utf8", timeout: 20000, stdio: ["ignore", "pipe", "pipe"] });
-    const [tasksDir, listFile] = r.trim().split("\n");
+    const [tasksDir, listFile, projDir] = r.trim().split("\n");
     if (!tasksDir || !fs.existsSync(tasksDir)) return null;
-    return { mode: "installed", tasksDir, listFile: listFile && fs.existsSync(listFile) ? listFile : null, pyEnv: {} };
+    return { mode: "installed", tasksDir,
+             listFile: listFile && fs.existsSync(listFile) ? listFile : null,
+             projectsDir: projDir && fs.existsSync(projDir) ? projDir : null, pyEnv: {} };
   } catch (e) {
     log("probeInstalled failed: " + (e.stderr || e.message || "").toString().slice(0, 300));
     return null;
@@ -62,9 +64,11 @@ function labFromCheckout() {
   const root = repoRoot();
   if (!root || !fs.existsSync(path.join(root, "tasks"))) return null;
   const listFile = path.join(root, "src", "mlsys", "task_list2.json");
+  const projDir = path.join(root, "projects");
   return {
     mode: "checkout", tasksDir: path.join(root, "tasks"),
     listFile: fs.existsSync(listFile) ? listFile : null,
+    projectsDir: fs.existsSync(projDir) ? projDir : null,
     pyEnv: { PYTHONPATH: path.join(root, "src") },   // src-layout: engine is not installed
   };
 }
@@ -201,6 +205,7 @@ function scanBuilt(lab) {
 
 function homeData(lab, context) {
   const built = scanBuilt(lab);
+  const projects = scanProjects(lab);
   const solved = new Set(context.globalState.get("mlsys.solved", []));
   const groups = {};
   for (const b of built) {
@@ -226,12 +231,131 @@ function homeData(lab, context) {
     tiers.push({ roman: "", key: area, name: AREA_TITLE[area] || area,
                  planned: n, builtCount: n, tracks });
   }
+  if (projects.length) {
+    const tracks = {};
+    for (const { spec } of projects) {
+      const done = new Set(context.globalState.get("mlsys.milestones." + spec.id, []));
+      const n = (spec.milestones || []).length;
+      const key = spec.area || "other";
+      (tracks[key] = tracks[key] || []).push({
+        id: PROJECT_PREFIX + spec.id, title: spec.title, difficulty: spec.difficulty,
+        solved: n > 0 && done.size >= n, native: (spec.tier || "T0").toLowerCase(),
+      });
+    }
+    tiers.unshift({
+      roman: "", key: "projects", name: "Проєкти · Part 2",
+      planned: projects.length, builtCount: projects.length,
+      tracks: Object.keys(tracks).sort().map((k) => ({
+        num: "", name: k, planned: tracks[k].length, tasks: tracks[k] })),
+    });
+    total += projects.length;
+  }
   return { totals: { solved: built.filter((b) => solved.has(b.id)).length,
                      built: total, planned: total }, tiers };
 }
 
 
 function postWS(msg) { try { panel && panel.webview.postMessage(msg); } catch (_) {} }
+
+// ---------------------------------------------------------------------------
+// Part-2 projects. A project is several files and a real repo layout, so the
+// editor for it is VS Code itself — the panel carries the ticket, the milestone
+// list and the verdicts, and the learner edits the copy in their own workspace.
+// ---------------------------------------------------------------------------
+const PROJECT_PREFIX = "project:";
+
+function scanProjects(lab) {
+  const dir = lab && lab.projectsDir;
+  const out = [];
+  if (!dir || !fs.existsSync(dir)) return out;
+  for (const d of fs.readdirSync(dir).sort()) {
+    const pf = path.join(dir, d, "project.json");
+    if (!fs.existsSync(pf)) continue;
+    try {
+      const spec = JSON.parse(fs.readFileSync(pf, "utf8"));
+      out.push({ dir: path.join(dir, d), spec });
+    } catch (_) { /* a malformed project is skipped, not fatal */ }
+  }
+  return out;
+}
+
+function projectWorkDir(id) { return path.join(workDir(), id); }
+
+// Settings Sync only carries keys that were declared, and a project's key does not
+// exist until its first milestone is cleared — declaring once at activation would
+// have synced task progress and silently dropped project progress.
+function declareSyncKeys(context) {
+  try {
+    const keys = ["mlsys.solved"];
+    for (const k of context.globalState.keys()) {
+      if (k.startsWith("mlsys.milestones.")) keys.push(k);
+    }
+    context.globalState.setKeysForSync(keys);
+  } catch (_) { /* an older VS Code without globalState.keys(): task progress still syncs */ }
+}
+
+function sendProject(context, lab, id) {
+  const found = scanProjects(lab).find((p) => p.spec.id === id);
+  if (!found) { postWS({ type: "error", message: "no project " + id }); return; }
+  const { dir, spec } = found;
+  let md = "";
+  try { md = fs.readFileSync(path.join(dir, "brief.md"), "utf8"); } catch (_) {}
+  const done = new Set(context.globalState.get("mlsys.milestones." + spec.id, []));
+  postWS({ type: "project", md, work: projectWorkDir(spec.id),
+    started: fs.existsSync(projectWorkDir(spec.id)),
+    project: {
+      id: spec.id, title: spec.title, tier: spec.tier, area: spec.area,
+      difficulty: spec.difficulty, edits: spec.edits || [],
+      milestones: (spec.milestones || []).map((m) => ({
+        n: m.n, title: m.title, gates: m.gates || [], done: done.has(m.n) })),
+    } });
+}
+
+function startProject(context, lab, id) {
+  const found = scanProjects(lab).find((p) => p.spec.id === id);
+  if (!found) return;
+  const py = pythonPath();
+  const env = Object.assign({}, process.env, lab.pyEnv || {});
+  const args = ["-c",
+    "import sys;from mlsys.runners import project as p;print(p.start(sys.argv[1], sys.argv[2]))",
+    found.dir, workDir()];
+  const r = cp.spawnSync(py, args, { encoding: "utf8", env });
+  const dest = (r.stdout || "").trim() || projectWorkDir(id);
+  log("project start -> " + dest + (r.stderr ? " :: " + r.stderr.slice(0, 200) : ""));
+  try {
+    const uri = vscode.Uri.file(path.join(dest, "brief.md"));
+    vscode.window.showTextDocument(uri, { preview: false, viewColumn: vscode.ViewColumn.Beside });
+  } catch (_) {}
+  sendProject(context, lab, id);
+}
+
+function gradeProject(context, lab, id, milestone) {
+  const found = scanProjects(lab).find((p) => p.spec.id === id);
+  if (!found) return;
+  const work = projectWorkDir(id);
+  if (!fs.existsSync(work)) { postWS({ type: "error", message: "start the project first" }); return; }
+  const env = Object.assign({}, process.env, lab.pyEnv || {});
+  const args = ["-m", "mlsys.runners.project", found.dir, work];
+  if (milestone) args.push(String(milestone));
+  const proc = cp.spawn(pythonPath(), args, { cwd: work, env });
+  let buf = "", eb = "";
+  proc.stdout.on("data", (d) => (buf += d.toString()));
+  proc.stderr.on("data", (d) => (eb += d.toString()));
+  proc.on("error", (e) => postWS({ type: "error", message: e.message }));
+  proc.on("close", () => {
+    let data = null;
+    try { data = JSON.parse(buf.slice(buf.indexOf("{"))); } catch (_) {}
+    if (!data) { postWS({ type: "error", message: (eb + buf).trim().slice(-800) || "no output" }); return; }
+    const key = "mlsys.milestones." + id;
+    const done = new Set(context.globalState.get(key, []));
+    if (milestone && data.passed) done.add(milestone);
+    for (const r of data.per_milestone || []) if (r.passed) done.add(r.n);
+    context.globalState.update(key, Array.from(done).sort((a, b) => a - b));
+    declareSyncKeys(context);
+    postWS({ type: "projectResult", data, milestone: milestone || null });
+    sendProject(context, lab, id);
+  });
+}
 
 // Every native track edits its own real source file. One table, used by both
 // sendTask and gradeCode, so the editor and the grader can never disagree.
@@ -438,7 +562,15 @@ function openPanel(context, lab) {
     if (!m) return;
     if (m.type === "ready") { log("webview ready → sending map"); postWS({ type: "map", payload: homeData(lab, context) }); }
     else if (m.type === "diag") { log("DIAG: " + m.msg); }
-    else if (m.type === "open" && m.id) sendTask(context, lab, m.id);
+    else if (m.type === "open" && m.id) {
+      if (String(m.id).startsWith(PROJECT_PREFIX)) sendProject(context, lab, String(m.id).slice(PROJECT_PREFIX.length));
+      else sendTask(context, lab, m.id);
+    }
+    else if (m.type === "startProject" && m.id) startProject(context, lab, m.id);
+    else if (m.type === "gradeProject" && m.id) gradeProject(context, lab, m.id, m.milestone);
+    else if (m.type === "openFile" && m.path) {
+      try { vscode.window.showTextDocument(vscode.Uri.file(m.path), { preview: false }); } catch (_) {}
+    }
     else if (m.type === "grade" && m.id) gradeCode(context, lab, m.id, m.file, m.code || "");
     else if (m.type === "run" && m.id) runCode(context, lab, m.id, m.file, m.code || "");
     else if (m.type === "stopRun") stopRun("stopped");
@@ -535,7 +667,7 @@ function activate(context) {
   // and not shared with anyone. Declaring the key for sync means VS Code's own Settings
   // Sync carries it between that person's machines; without it, a second machine starts
   // from zero, which is not what "your progress is saved" should mean.
-  try { context.globalState.setKeysForSync(["mlsys.solved"]); } catch (_) {}
+  declareSyncKeys(context);
   log("=== mlsys-lab activated ===");
   log("extensionPath = " + context.extensionPath);
 

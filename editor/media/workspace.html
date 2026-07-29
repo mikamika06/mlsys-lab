@@ -68,6 +68,28 @@
   .rnd[disabled]{opacity:.35;pointer-events:none;} .rnd .gl{font-size:14px;line-height:1;}
   .app.is-work .back{display:flex;} .app.is-work .grade{display:flex;} .app.is-work .run{display:flex;} .app.is-work .roadmapTitle{display:none;}
   .app.is-home .crumb{display:none;}
+  /* A project is edited in VS Code itself, so the panel drops the code column and
+     gives the brief the room. */
+  .app.is-proj .center,.app.is-proj .rz{display:none;}
+  .app.is-proj .work{display:flex;} .app.is-proj .left{flex:1 1 auto;max-width:none;}
+  .app.is-proj .grade,.app.is-proj .run,.app.is-proj .rnd{display:none;}
+  .app.is-proj .back{display:flex;}
+  .pstart{display:none;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:12.5px;color:#17130a;flex:0 0 auto;
+    border:1px solid #b8862f;border-radius:8px;padding:7px 15px;background:linear-gradient(180deg,var(--amber-2),var(--amber));}
+  .app.is-proj .pstart{display:flex;} .pstart:hover{filter:brightness(1.05);}
+  .ms{border:1px solid var(--line);border-radius:10px;margin:0 0 10px;background:var(--panel);overflow:hidden;}
+  .ms-h{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;}
+  .ms-n{font-family:var(--mono);font-size:11px;color:var(--ink-faint);flex:0 0 auto;width:16px;}
+  .ms-t{flex:1;font-size:12.5px;}
+  .ms-b{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-mut);flex:0 0 auto;}
+  .ms.done .ms-b{color:var(--pass);border-color:var(--pass-dim);} .ms.done .ms-t{color:var(--ink-dim);}
+  .ms.run .ms-b{color:var(--amber);border-color:var(--amber-dim);}
+  .ms.bad .ms-b{color:var(--fail);border-color:var(--fail-dim);}
+  .ms-g{display:none;padding:0 12px 10px;} .ms.open .ms-g{display:block;}
+  .ms-row{display:flex;gap:8px;font-family:var(--mono);font-size:11px;padding:3px 0;color:var(--ink-mut);}
+  .ms-row b{color:var(--ink-dim);font-weight:500;flex:1;}
+  .pfiles{font-family:var(--mono);font-size:11.5px;color:var(--steel);cursor:pointer;padding:2px 0;}
+  .pfiles:hover{text-decoration:underline;}
 
   /* ================= HOME / ROADMAP ================= */
   .home{flex:1 1 auto;min-height:0;overflow-y:auto;display:none;}
@@ -239,6 +261,7 @@
       <span class="prog" id="prog"></span>
       <span class="lang"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
         </span>
+      <div class="pstart" id="pstartBtn"><span class="gl">▣</span> <span id="pstartLabel">Start</span></div>
       <div class="rnd" id="rndBtn"><span class="gl">⚄</span> <span data-t="random">Random</span></div>
       <div class="run" id="runBtn" disabled><span class="spin"></span><span class="gl">▶</span> <span id="runLabel" data-t="run">Run</span> <kbd>⇧⌘↵</kbd></div>
       <div class="grade" id="gradeBtn" disabled><span class="spin"></span><span class="gl">▷</span> <span data-t="grade">Grade</span> <kbd>⌘↵</kbd></div>
@@ -276,6 +299,7 @@
           <div class="verdict" id="verdict"><span class="reticle tl"></span><span class="reticle tr"></span><span class="reticle bl"></span><span class="reticle br"></span><span class="sweep"></span>
             <div class="vst"><span class="bdg" id="vbadge">·</span><span id="vlabel">AWAITING</span></div><div class="vsub" id="vsub"></div></div>
           <div class="metrics" id="metrics"></div>
+          <div id="msList"></div>
           <div class="console"><div class="ch">[ <span data-t="output">output</span> ] <span id="chcmd">mlsys grade</span></div><div class="cb" id="cons">—</div></div>
         </div>
       </div>
@@ -808,6 +832,66 @@
   }
   $('rndBtn').addEventListener('click',doRandom);
 
+  /* ---------- projects ----------
+     A project has no single file to grade, so the panel shows the ticket, the
+     milestone list and the verdict of whichever milestone was last run. The code
+     itself is edited in VS Code, where a multi-file change belongs. */
+  let curProject=null, msOpen=new Set(), msState={};
+  function goProject(){$('app').className='app is-proj';}
+  function renderMilestones(){
+    if(!curProject)return;
+    $('msList').innerHTML=curProject.milestones.map(m=>{
+      const st=msState[m.n]||(m.done?'done':'');
+      const badge=st==='run'?'…':st==='done'||m.done?'✓':st==='bad'?'✗':'grade';
+      const gates=(msState['g'+m.n]||m.gates||[]).map(g=>
+        `<div class="ms-row"><b>${esc(g.metric)}</b>`+
+        (('value' in g)?`<span>${esc(fmt(num(g.value)))}</span>`:'')+
+        `<span>${esc(g.op)} ${esc(fmt(num(g.threshold)))}</span>`+
+        (('ok' in g)?`<span class="${g.ok?'ok':'bad'}">${g.ok?'✓':'✗'}</span>`:'')+`</div>`).join('');
+      const note=msState['n'+m.n]?`<div class="ms-row" style="color:var(--ink-faint)">${esc(msState['n'+m.n])}</div>`:'';
+      return `<div class="ms ${st}${m.done?' done':''}${msOpen.has(m.n)?' open':''}" data-ms="${m.n}">`+
+             `<div class="ms-h" data-msopen="${m.n}"><span class="ms-n">${m.n}</span>`+
+             `<span class="ms-t">${esc(m.title)}</span><span class="ms-b" data-msgrade="${m.n}">${badge}</span></div>`+
+             `<div class="ms-g">${gates}${note}</div></div>`;}).join('');
+    const done=curProject.milestones.filter(m=>m.done).length;
+    $('instSt').textContent=`${done}/${curProject.milestones.length}`;
+  }
+  function openProject(m){
+    curProject=m.project; curId=null; msState={};
+    curTask={id:m.project.id,title:m.project.title}; curTags=[m.project.tier||'T0'];
+    if(m.project.difficulty!=null)curTags.push('d'+m.project.difficulty);
+    if(m.project.area)curTags.push(m.project.area);
+    curMd=(m.md||'')+(m.project.edits&&m.project.edits.length?
+      '\n\n## Файли, які ти редагуєш\n\n'+m.project.edits.map(f=>'- `'+f+'`').join('\n')+'\n':'');
+    renderBrief();
+    $('crumb').innerHTML=`<b>Part 2</b> › ${esc(m.project.id)}`;
+    $('pstartLabel').textContent=m.started?'Reopen':'Start';
+    $('metrics').innerHTML=m.started?'':
+      '<div class="ms-row" style="padding:8px 0">натисни Start — скелет скопіюється у твою робочу теку</div>';
+    setVerdict('', m.started?'READY':'NOT STARTED','');
+    $('cons').textContent=m.work?('workdir: '+m.work):'—';
+    $('chcmd').textContent='mlsys project grade';
+    const done=m.project.milestones.filter(x=>x.done).length;
+    if(done&&done===m.project.milestones.length)setVerdict('pass','PASS','усі майлстоуни закриті');
+    renderMilestones(); goProject();
+  }
+  function gradeMilestone(n){
+    if(!curProject)return;
+    msState[n]='run'; delete msState['g'+n]; delete msState['n'+n];
+    msOpen.add(n); renderMilestones();
+    setVerdict('measuring',t('measuring'),'майлстоун '+n);
+    vscode.postMessage({type:'gradeProject',id:curProject.id,milestone:n});
+  }
+  $('pstartBtn').addEventListener('click',()=>{
+    if(!curProject)return; vscode.postMessage({type:'startProject',id:curProject.id});});
+  document.addEventListener('click',e=>{
+    const g=e.target.closest('[data-msgrade]');
+    if(g){e.stopPropagation();gradeMilestone(+g.getAttribute('data-msgrade'));return;}
+    const o=e.target.closest('[data-msopen]');
+    if(o){const n=+o.getAttribute('data-msopen');
+      msOpen.has(n)?msOpen.delete(n):msOpen.add(n); renderMilestones();}
+  });
+
   /* ---------- resizers ---------- */
   function initResizers(){
     const st=vscode.getState()||{}; if(st.lw)document.documentElement.style.setProperty('--lw',st.lw); if(st.rw)document.documentElement.style.setProperty('--rw',st.rw);
@@ -851,6 +935,16 @@
     if(m.type==='map'){renderMap(m.payload);goHome();}
     else if(m.type==='mapdata'){mapData=m.payload;syncRandom();if($('app').classList.contains('is-home'))renderMap(m.payload);}
     else if(m.type==='task'){openTask(m);}
+    else if(m.type==='project'){openProject(m);}
+    else if(m.type==='projectResult'){
+      const d=m.data, n=m.milestone||d.milestone;
+      if(n){msState[n]=d.passed?'done':'bad'; msState['g'+n]=d.gates||[];
+            if(d.error)msState['n'+n]=d.error; else if(d.note)msState['n'+n]=d.note;}
+      (d.per_milestone||[]).forEach(r=>{if(r.passed)msState[r.n]='done';});
+      setVerdict(d.passed?'pass':'fail',d.passed?t('pass'):t('fail'),
+                 n?('майлстоун '+n):(d.milestones_passed+'/'+d.milestones_total));
+      renderMilestones();
+    }
     else if(m.type==='measuring'){setVerdict('measuring',t('measuring'),t('running'));}
     else if(m.type==='result'){gradeDone();renderResult(m.data);}
     else if(m.type==='error'){gradeDone();setVerdict('error',t('error'),'grader failed');$('cons').textContent=(m.message||'').slice(0,2000);}

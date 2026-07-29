@@ -54,6 +54,16 @@ removes a whole level.
 Every edit goes through `execCommand('insertText')` — deprecated, and the only
 way to modify a textarea without clearing the native undo stack.
 
+## Projects
+
+Part-2 projects are multi-file, so the panel does not try to be their editor: it
+shows the ticket, the file list and the milestones, and the code is edited in VS
+Code itself. **Start** copies the skeleton into `mlsys.workDir` and opens the brief;
+each milestone grades on its own and remembers what it cleared. Progress is stored
+per project and declared for Settings Sync when the first milestone is cleared —
+the key does not exist before that, so declaring it once at activation would have
+dropped it.
+
 ## How grading is dispatched
 
 The extension shells out to the engine; the language comes from the task's

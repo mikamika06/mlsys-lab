@@ -92,6 +92,7 @@ const ctx = {
   subscriptions: [],
   globalState: { _s: {}, _sync: null, get(k, d) { return this._s[k] ?? d; },
                  update(k, v) { this._s[k] = v; return Promise.resolve(); },
+                 keys() { return Object.keys(this._s); },
                  setKeysForSync(keys) { this._sync = keys; } },
   extensionUri: vscode.Uri.file(__dirname),
   extensionPath: __dirname,
@@ -482,6 +483,80 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
       throw new Error("returning to the roadmap does not repaint stale data");
     return "repaints on return";
   });
+
+  // ---- Part-2 projects -----------------------------------------------------
+  {
+    const REPO = path.resolve(__dirname, "..");
+    const PID = "p-continuous-batching-scheduler";
+
+    posted.length = 0;
+    panel._onMsg({ type: "ready" });
+    await wait(600);
+    check("projects appear on the roadmap", () => {
+      const m = posted.find((x) => x.type === "map" || x.type === "mapdata");
+      const tier = (m ? m.payload.tiers : []).find((t) => t.key === "projects");
+      if (!tier) throw new Error("no projects tier on the roadmap");
+      const ids = tier.tracks.flatMap((tr) => tr.tasks.map((x) => x.id));
+      if (!ids.includes("project:" + PID)) throw new Error("ids: " + ids.join(","));
+      return `${ids.length} projects, first tier is "${tier.name}"`;
+    });
+
+    posted.length = 0;
+    panel._onMsg({ type: "open", id: "project:" + PID });
+    check("opening a project sends its brief and milestones", () => {
+      const p = posted.find((x) => x.type === "project");
+      if (!p) throw new Error("no project message: " + posted.map((x) => x.type).join(","));
+      if (!p.md || p.md.length < 200) throw new Error("brief missing");
+      if ((p.project.milestones || []).length !== 7) throw new Error("milestones: " + p.project.milestones.length);
+      if (!p.project.edits.length) throw new Error("no files listed to edit");
+      return `${p.project.milestones.length} milestones, ${p.project.edits.length} files`;
+    });
+
+    // Grade the reference copy through the host: put it where a learner's copy goes.
+    const work = path.join(WORK, PID);
+    fs.rmSync(work, { recursive: true, force: true });
+    fs.mkdirSync(path.dirname(work), { recursive: true });
+    fs.cpSync(path.join(REPO, "projects", PID, "reference"), work, { recursive: true });
+
+    posted.length = 0;
+    panel._onMsg({ type: "gradeProject", id: PID, milestone: 1 });
+    {
+      const t0 = Date.now();
+      while (!posted.some((x) => x.type === "projectResult" || x.type === "error")
+             && Date.now() - t0 < 120000) await wait(200);
+      check("grading one milestone of a project", () => {
+        const err = posted.find((x) => x.type === "error");
+        if (err) throw new Error(err.message.slice(0, 160));
+        const r = posted.find((x) => x.type === "projectResult");
+        if (!r) throw new Error("timed out");
+        if (!r.data.passed) throw new Error("the reference failed milestone 1: "
+          + JSON.stringify(r.data.gates || r.data.error).slice(0, 160));
+        return r.data.gates.length + " gates green";
+      });
+    }
+
+    check("a cleared milestone is remembered", () => {
+      const done = ctx.globalState.get("mlsys.milestones." + PID, []);
+      if (!done.includes(1)) throw new Error("progress not stored: " + JSON.stringify(done));
+      return "milestone 1 stored";
+    });
+
+    check("project progress follows the user across machines", () => {
+      const keys = ctx.globalState._sync || [];
+      if (!keys.some((k) => k.startsWith("mlsys.milestones.")))
+        throw new Error("milestone keys are not declared for Settings Sync: " + keys.join(","));
+      return keys.filter((k) => k.startsWith("mlsys.milestones.")).length + " project keys synced";
+    });
+
+    check("the panel has a project view, not a code editor", () => {
+      const h = panel.webview.html;
+      for (const marker of ["is-proj", "pstartBtn", "msList", "gradeProject", "startProject"])
+        if (!h.includes(marker)) throw new Error("missing " + marker);
+      if (!/\.app\.is-proj \.center,\.app\.is-proj \.rz\{display:none;\}/.test(h))
+        throw new Error("the code column is not hidden for projects");
+      return "brief + milestones, editor hidden";
+    });
+  }
 
   check("the panel says which build it is", () => {
     const want = require(path.join(__dirname, "package.json")).version;

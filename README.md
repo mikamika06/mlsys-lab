@@ -63,6 +63,27 @@ resources found that **six of those fourteen have no automatically graded materi
 anywhere** — the survey is in [`RESOURCES.md`](RESOURCES.md), and it says where other
 people teach something better than this does.
 
+## Projects
+
+A task is one function. A project is a repo: a ticket that names a symptom rather
+than the defect, several files to edit, and milestones graded one at a time so
+progress is visible before the whole thing is finished.
+
+| | task | project |
+|---|---|---|
+| you edit | one file | 4–8 files in a real layout |
+| the statement | names the defect | names the symptom |
+| the gate | a measured number | an invariant, a ratio against your own baseline, or a recorded run |
+| finishing | pass or fail | 7 milestones, each with its own gates |
+
+The last milestone of every project is the same shape: you write a regression test,
+we inject a fault into your own code, and your test has to catch it.
+
+`mlsys.sim.server` makes this work without hardware — a deterministic model of
+continuous batching over a paged KV cache (reference-counted blocks, chunked
+prefill, prefix caching, preemption by recompute or swap) on an integer clock, so
+a scheduler you write scores the same on any machine.
+
 ## Why the numbers are trustworthy
 
 Wall-clock timing is never a gate. Instead the engine models the hardware and
@@ -90,6 +111,10 @@ mlsys list                                        # browse the bank
 mlsys start gpu-ex-cuda-coalesced-scale           # writes ./<task-id>/solve.cu to edit
 mlsys run   gpu-ex-cuda-coalesced-scale           # execute it, see what it does
 mlsys grade gpu-ex-cuda-coalesced-scale           # measure it
+
+mlsys project list                                # multi-file projects
+mlsys project start p-continuous-batching-scheduler
+mlsys project grade p-continuous-batching-scheduler --milestone 1
 ```
 
 ```
