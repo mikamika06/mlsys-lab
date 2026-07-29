@@ -5,10 +5,10 @@ without the second half a project can look green while grading nothing at all.
 
     python3 tools/verify_project.py [project-id ...]
 """
+import concurrent.futures as cf
 import json
 import os
 import shutil
-import subprocess
 import sys
 import tempfile
 
@@ -49,17 +49,39 @@ def verify(pdir: str) -> tuple[bool, str]:
     return True, f"reference {n}/{n}, skeleton 0/{n}"
 
 
+def _one(pid):
+    """A project is verified in its own process: a checker imports the learner's
+    modules, and 1100 of those in one interpreter would collide on module names and
+    leak state between units."""
+    pdir = os.path.join(ROOT, "projects", pid)
+    try:
+        ok, msg = verify(pdir)
+    except Exception as e:  # noqa: BLE001
+        ok, msg = False, f"{type(e).__name__}: {e}"
+    return pid, ok, msg
+
+
 def main(argv):
+    jobs = 0
+    args = []
+    for a in argv:
+        if a.startswith("-j"):
+            jobs = int(a[2:] or 0)
+        else:
+            args.append(a)
     root = os.path.join(ROOT, "projects")
-    ids = argv or sorted(d for d in os.listdir(root)
+    ids = args or sorted(d for d in os.listdir(root)
                          if os.path.isfile(os.path.join(root, d, "project.json")))
+    if not jobs:
+        jobs = min(8, max(1, (os.cpu_count() or 2) - 2)) if len(ids) > 2 else 1
+
     bad = 0
-    for pid in ids:
-        pdir = os.path.join(root, pid)
-        try:
-            ok, msg = verify(pdir)
-        except Exception as e:  # noqa: BLE001
-            ok, msg = False, f"{type(e).__name__}: {e}"
+    if jobs == 1:
+        results = [_one(p) for p in ids]
+    else:
+        with cf.ProcessPoolExecutor(max_workers=jobs) as ex:
+            results = list(ex.map(_one, ids))
+    for pid, ok, msg in results:
         mark = f"{GREEN}ok  {OFF}" if ok else f"{RED}FAIL{OFF}"
         print(f"  {mark} {pid:<44} {DIM}{msg}{OFF}")
         bad += 0 if ok else 1
