@@ -77,9 +77,14 @@ def grade_milestone(projdir: str, workdir: str, m: dict) -> dict:
         for p in (os.path.abspath(workdir), harness_dir):
             if p in sys.path:
                 sys.path.remove(p)
-        for name in [n for n, mo in sys.modules.items()
+        # Both the learner's code and the harness helpers are purged. Two projects
+        # may each ship a `harness/w.py`, and the import cache is keyed by module
+        # name: without this the second project silently gets the first one's
+        # helpers, which fails as a missing attribute far from its cause.
+        roots = (os.path.abspath(workdir), harness_dir)
+        for name in [n for n, mo in list(sys.modules.items())
                      if getattr(mo, "__file__", None)
-                     and os.path.abspath(workdir) in str(getattr(mo, "__file__", ""))]:
+                     and str(getattr(mo, "__file__", "")).startswith(roots)]:
             del sys.modules[name]
 
     note = metrics.pop("_note", None)
