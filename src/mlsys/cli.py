@@ -128,10 +128,29 @@ def cmd_project(args) -> int:
             print(_c(AMBER, "no projects found."))
             print(_c(DIM, "  run inside a checkout, or set MLSYS_PROJECTS"))
             return 2
+        shown = 0
+        by_area = {}
         for p in rows:
             spec = pr.load_spec(str(p))
-            print(f"  {_c(BOLD, spec['id'])}")
-            print(f"    {spec['title']}  {_c(DIM, spec.get('tier', '') + ' · ' + str(len(spec['milestones'])) + ' майлстоунів')}")
+            n = len(spec["milestones"])
+            if args.area and args.area not in (spec.get("area") or ""):
+                continue
+            if args.kind == "m" and n > 4:
+                continue
+            if args.kind == "l" and n <= 4:
+                continue
+            by_area.setdefault(spec.get("area") or "—", []).append((spec, n))
+            shown += 1
+        for area in sorted(by_area):
+            print(f"  {_c(DIM, area)}")
+            for spec, n in sorted(by_area[area], key=lambda x: x[0]["id"]):
+                size = "L" if n > 4 else "M"
+                print(f"    {_c(BOLD, spec['id'])}")
+                print(f"      {spec['title']}  {_c(DIM, f'{size} · ' + (spec.get('tier') or '') + f' · {n} майлстоунів')}")
+        if not shown:
+            print(_c(AMBER, "  nothing matched that filter"))
+        else:
+            print(f"\n  {_c(BOLD, str(shown))} of {len(rows)}")
         return 0
 
     try:
@@ -329,6 +348,9 @@ def build_parser() -> argparse.ArgumentParser:
     pj.add_argument("--force", action="store_true", help="overwrite an existing copy")
     pj.add_argument("--json", action="store_true", help="machine-readable output")
     pj.add_argument("--projects-root", default=None, help="directory holding project folders")
+    pj.add_argument("--area", default=None, help="list only this area (substring match)")
+    pj.add_argument("--kind", choices=["m", "l", "all"], default="all",
+                    help="M is up to 4 milestones, L is more")
     pj.set_defaults(func=cmd_project)
 
     r = sub.add_parser("run", help="execute your attempt and show its output (no grading)")

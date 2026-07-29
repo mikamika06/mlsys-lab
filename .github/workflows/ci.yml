@@ -148,6 +148,22 @@ jobs:
           name: dist
           path: dist/*
 
+  projects:
+    name: every project reference clears its milestones
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      # A project is only real if both halves hold: the reference clears every
+      # milestone and the shipped skeleton clears none. Half of that check passing
+      # is a project that grades nothing.
+      - name: verify
+        run: |
+          python -m pip install --quiet numpy
+          python tools/verify_project.py
+
   extension:
     name: extension host, both bank modes
     runs-on: ubuntu-latest
