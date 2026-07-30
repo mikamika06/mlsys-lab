@@ -1,0 +1,138 @@
+#!/usr/bin/env node
+/**
+ * Run the panel's own script against a DOM stub and assert the roadmap paints.
+ *
+ * Every earlier test grepped the HTML for markers, which proves a string is
+ * present and nothing about whether the page works. Splitting renderMap into
+ * paintMap/drawMap for search shipped a roadmap that rendered nothing, and not one
+ * of seventy-three checks noticed, because they were all looking at source text.
+ *
+ *     node editor/test-render.js
+ */
+const fs = require("fs");
+const path = require("path");
+
+const { ids, sent } = require("./test-dom.js");
+const HTML = fs.readFileSync(path.join(__dirname, "media", "workspace.html"), "utf8");
+
+// ---- run the page's script ------------------------------------------------
+const script = HTML.match(/<script nonce="\{\{nonce\}\}">([\s\S]*?)<\/script>/)[1];
+const results = [];
+const check = (name, fn) => {
+  try { results.push(["ok", name, fn() || ""]); }
+  catch (e) { results.push(["FAIL", name, (e.message || String(e)).slice(0, 160)]); }
+};
+
+let api = null;
+check("the panel script runs without throwing", () => {
+  const factory = new Function(script + "\n;return {renderMap, paintMap, drawMap, filterMap, openTask};");
+  api = factory();
+  if (typeof api.renderMap !== "function") throw new Error("renderMap is not exported");
+  return "loaded";
+});
+
+const MAP = {
+  totals: { solved: 2, built: 6, planned: 6 },
+  tiers: [
+    { key: "gpu-cuda", name: "GPU / CUDA", planned: 3, builtCount: 3, roman: "", tracks: [
+      { num: "", name: "Shared-memory bank conflicts", planned: 3, tasks: [
+        { id: "gpu-pad-tile", title: "Pad the tile", difficulty: 3, solved: true, native: "cuda" },
+        { id: "gpu-swizzle-index", title: "Swizzle the index", difficulty: 4, solved: false, native: "cuda" },
+        { id: "gpu-broadcast-lane", title: "Broadcast lane", difficulty: 2, solved: false, native: "cuda" }]}]},
+    { key: "python-core", name: "Deep Python", planned: 3, builtCount: 3, roman: "", tracks: [
+      { num: "", name: "The GIL and what actually scales", planned: 2, tasks: [
+        { id: "pyt-modeled-gil-count", title: "Modeled GIL acquire/release count", difficulty: 4, solved: true, native: "" },
+        { id: "pyt-atomic-bytecode", title: "Atomic vs non-atomic bytecode", difficulty: 4, solved: false, native: "" }]},
+      { num: "", name: "Generational GC & cycle collection", planned: 1, tasks: [
+        { id: "pyt-read-gc-get-count", title: "Read gc.get_count()", difficulty: 1, solved: false, native: "" }]}]},
+  ],
+};
+
+check("the roadmap paints every task", () => {
+  api.renderMap(JSON.parse(JSON.stringify(MAP)));
+  const html = ids.map.innerHTML;
+  if (!html || html.length < 200) throw new Error(`#map holds ${html.length} bytes`);
+  const missing = ["gpu-pad-tile", "gpu-swizzle-index", "gpu-broadcast-lane",
+                   "pyt-modeled-gil-count", "pyt-atomic-bytecode", "pyt-read-gc-get-count"]
+    .filter((id) => !html.includes(id));
+  if (missing.length) throw new Error("not rendered: " + missing.join(", "));
+  return `${html.length} bytes, 6 tasks`;
+});
+
+check("both areas and all three tracks are on the page", () => {
+  const html = ids.map.innerHTML;
+  for (const name of ["GPU / CUDA", "Deep Python", "Shared-memory bank conflicts",
+                      "The GIL and what actually scales", "Generational GC"]) {
+    if (!html.includes(name)) throw new Error("missing " + name);
+  }
+  return "2 areas, 3 tracks";
+});
+
+check("the counters read the whole bank", () => {
+  if (!/6/.test(ids.prog.innerHTML)) throw new Error("prog: " + ids.prog.innerHTML);
+  if (!/2/.test(ids.hsub.innerHTML) && !/6/.test(ids.hsub.innerHTML))
+    throw new Error("hsub: " + ids.hsub.innerHTML);
+  return ids.prog.innerHTML.replace(/<[^>]+>/g, "");
+});
+
+// the filter is debounced, so drive it directly rather than racing a timer
+check("filtering keeps only the matches", () => {
+  const before = ids.map.innerHTML;
+  const filtered = api.filterMap(MAP, "swizzle");
+  api.drawMap(filtered, true);
+  const html = ids.map.innerHTML;
+  if (!html.includes("gpu-swizzle-index")) throw new Error("the match is not shown");
+  if (html.includes("pyt-read-gc-get-count")) throw new Error("a non-match survived");
+  if (before === html) throw new Error("nothing changed");
+  return "1 of 6";
+});
+
+check("painting the full map again brings everything back", () => {
+  api.drawMap(MAP, false);
+  const html = ids.map.innerHTML;
+  const missing = ["gpu-pad-tile", "pyt-read-gc-get-count"].filter((i) => !html.includes(i));
+  if (missing.length) throw new Error("lost: " + missing.join(", "));
+  return "6 tasks";
+});
+
+// The host puts Part-2 projects on the roadmap with their execution tier in the
+// same field a task uses for its language. An unknown key reached
+// LGN[n].toLowerCase() and threw inside the render loop, so the counters painted
+// and the map came out empty: one project erased 2054 tasks.
+const WITH_PROJECTS = {
+  totals: { solved: 2, built: 8, planned: 8 },
+  tiers: [
+    { key: "projects", name: "Проєкти · Part 2", planned: 2, builtCount: 2, roman: "", tracks: [
+      { num: "", name: "rw2-vllm-serving", planned: 1, tasks: [
+        { id: "project:p-continuous-batching-scheduler", title: "Планувальник", difficulty: 4, solved: false, native: "t0" }]},
+      { num: "", name: "rw2-pytorch-applied", planned: 1, tasks: [
+        { id: "project:p-torch-compile-latency-regression", title: "p99 виріс", difficulty: 4, solved: false, native: "t1" }]}]},
+    ...MAP.tiers,
+  ],
+};
+
+check("a project tier does not take the roadmap down with it", () => {
+  api.renderMap(JSON.parse(JSON.stringify(WITH_PROJECTS)));
+  const html = ids.map.innerHTML;
+  if (!html.includes("gpu-pad-tile")) throw new Error("the tasks are gone: " + html.length + " bytes");
+  if (!html.includes("p-continuous-batching-scheduler")) throw new Error("the project is not shown");
+  return `${html.length} bytes, projects and tasks together`;
+});
+
+check("an unrecognised chip label never throws", () => {
+  const odd = JSON.parse(JSON.stringify(MAP));
+  odd.tiers[0].tracks[0].tasks[0].native = "wat";
+  odd.tiers[0].tracks[0].tasks[1].native = undefined;
+  api.renderMap(odd);
+  const html = ids.map.innerHTML;
+  if (!html.includes("gpu-pad-tile") || !html.includes("gpu-swizzle-index"))
+    throw new Error("an unknown label removed the task");
+  return "unknown and missing labels both survive";
+});
+
+const bad = results.filter((r) => r[0] === "FAIL");
+for (const [st, name, info] of results) {
+  console.log(`  ${st === "ok" ? "ok  " : "FAIL"} ${name.padEnd(46)} ${info}`);
+}
+console.log(`\n${results.length - bad.length}/${results.length} passed`);
+process.exit(bad.length ? 1 : 0);

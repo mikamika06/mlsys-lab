@@ -20,6 +20,7 @@ run "concept pages: every snippet reproduces its table"     python3 tools/verify
 run "task statements: examples agree with their reference"  python3 tools/check_examples.py
 run "statements: KaTeX parses every math span"              node tools/check_latex.js
 run "extension host: both bank modes"                       node editor/test-extension.js
+run "panel: the roadmap actually paints"                     node editor/test-render.js
 run "projects: reference clears every milestone, skeleton none" python3 tools/verify_project.py
 
 printf '\n\033[1mno scratch files left in the bank\033[0m\n'

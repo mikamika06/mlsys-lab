@@ -439,7 +439,13 @@
   };
   function areaInfo(k){return AREA_INFO[k]||null;}
 
-  const LGN={py:'PY',cpp:'C++',cuda:'CUDA'};
+  /* Chips are labelled from this table, and the host also sends units that are not
+     a language at all: a Part-2 project carries its execution tier. An unknown key
+     used to reach LGN[n].toLowerCase() and throw inside the render loop, which left
+     the counters painted and the whole roadmap blank — one project took out 2054
+     tasks. Unknown keys now fall back to the key itself. */
+  const LGN={py:'PY',cpp:'C++',cuda:'CUDA',t0:'T0',t1:'T1',t2:'T2',t3:'T3'};
+  const lgn=k=>LGN[k]||String(k||'').toUpperCase()||'?';
 
   /* ---------- search ----------
      The roadmap holds thousands of units, so finding one by scrolling is not a
@@ -508,7 +514,7 @@
       const cls=[built?'':'locked', shut?'collapsed':'', aboutOpen.has(key)?'about-on':''].join(' ');
       const mix={}; all.forEach(x=>{const k=x.native||'py'; mix[k]=(mix[k]||0)+1;});
       const langs=Object.keys(mix).sort((a,b)=>mix[b]-mix[a]).filter(k=>k!=='py'||Object.keys(mix).length===1)
-        .map(k=>`<span class="lg ${k}">${LGN[k]||k} ${mix[k]}</span>`).join('');
+        .map(k=>`<span class="lg ${k}">${lgn(k)} ${mix[k]}</span>`).join('');
 
       h+=`<section class="tier ${cls}" data-k="${key}">
         <button class="tier-h" data-tg="${key}" aria-expanded="${!shut}">
@@ -541,7 +547,7 @@
               return `<button class="chip ${x.solved?'solved':''} ${n}" data-open="${esc(x.id)}"
                         title="${esc(x.title||x.id)}">${mark(shortId(x.id),query)}
                         <span class="d">d${x.difficulty??'?'}</span>
-                        <span class="lang">${LGN[n].toLowerCase()}</span></button>`;
+                        <span class="lang">${esc(lgn(n).toLowerCase())}</span></button>`;
             }).join('')+`</div>`;
         } else h+=`<div class="plan">${tr.planned} ${t('planned')}</div>`;
         h+=`</div>`;
