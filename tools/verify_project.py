@@ -48,6 +48,8 @@ def verify(pdir: str) -> tuple[bool, str]:
     ref_dir = os.path.join(pdir, "reference")
     if not os.path.isdir(ref_dir):
         return False, "no reference/"
+    if not any(f.endswith(".py") for _, _, fs in os.walk(ref_dir) for f in fs):
+        return False, "reference/ is empty"
 
     ref = grade_copy(pdir, ref_dir)
     if ref["milestones_passed"] != n:

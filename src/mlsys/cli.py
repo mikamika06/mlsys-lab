@@ -114,6 +114,112 @@ def cmd_start(args) -> int:
     return 0
 
 
+def _curriculum_index() -> dict:
+    """id -> (area, track), for search to match on more than the id."""
+    f = bank.curriculum_file()
+    if not f:
+        return {}
+    try:
+        rows = json.loads(f.read_text(encoding="utf-8"))["rows"]
+    except Exception:  # noqa: BLE001 — search still works on ids and titles
+        return {}
+    return {r["id"]: (r.get("area") or "", (r.get("method") or r.get("concept") or ""))
+            for r in rows}
+
+
+def cmd_search(args) -> int:
+    """Find a unit by name. The bank is past two thousand tasks and a project queue
+    on top; `mlsys list` prints all of it, which is a way of finding nothing."""
+    terms = [w.lower() for w in args.query if w.strip()]
+    if not terms:
+        print(_c(RED, "nothing to search for"))
+        return 2
+
+    index = _curriculum_index()
+    hits = []
+
+    def score(tid, title, area, track):
+        """Where a word lands decides how good the hit is: a term in the id or the
+        title is what was searched for, a term in the track or the area is context
+        that happens to contain it. Without this, "gil" answered with C-API tasks
+        whose track name mentions the GIL, ahead of the GIL track itself."""
+        tid_l, title_l = tid.lower(), (title or "").lower()
+        track_l, area_l = (track or "").lower(), (area or "").lower()
+        s_ = 0
+        for w in terms:
+            if w in tid_l.split("-"):
+                s_ += 8
+            elif w in tid_l:
+                s_ += 5
+            if w in title_l.split():
+                s_ += 6
+            elif w in title_l:
+                s_ += 3
+            if w in track_l:
+                s_ += 2
+            if w in area_l:
+                s_ += 1
+        joined = " ".join(terms)
+        if joined in tid_l or joined in title_l:
+            s_ += 4
+        return -s_
+
+    try:
+        root = bank_root(args.tasks_root)
+    except FileNotFoundError as e:
+        print(_c(RED, str(e)))
+        return 2
+    for t in list_tasks(root):
+        tid = t.meta.get("id", t.path.name)
+        area, track = index.get(tid, ("", ""))
+        hay = f"{tid} {t.meta.get('title','')} {area} {track}".lower()
+        if all(w in hay for w in terms):
+            hits.append((score(tid, t.meta.get("title", ""), area, track),
+                         "task", tid, t.meta.get("title", ""), area, track,
+                         t.meta.get("difficulty"), t.meta.get("native") or "py"))
+
+    from .runners import project as pr
+    for p in bank.list_projects(args.projects_root):
+        try:
+            spec = pr.load_spec(str(p))
+        except Exception:  # noqa: BLE001
+            continue
+        hay = (f"{spec.get('id','')} {spec.get('title','')} {spec.get('area','')} "
+               f"{spec.get('track','')}").lower()
+        if all(w in hay for w in terms):
+            n = len(spec.get("milestones") or [])
+            hits.append((score(spec["id"], spec.get("title", ""), spec.get("area", ""),
+                               spec.get("track", "")) - 2,
+                         "L" if n > 4 else "M", spec["id"], spec.get("title", ""),
+                         spec.get("area", ""), spec.get("track", ""),
+                         spec.get("difficulty"), spec.get("tier", "")))
+
+    if args.area:
+        hits = [h for h in hits if args.area in (h[4] or "")]
+    if args.kind:
+        want = {"task": {"task"}, "project": {"M", "L"}, "m": {"M"}, "l": {"L"}}[args.kind]
+        hits = [h for h in hits if h[1] in want]
+    hits.sort(key=lambda h: (h[0], h[2]))
+
+    if not hits:
+        print(_c(AMBER, f"nothing matched {' '.join(terms)!r}"))
+        return 1
+
+    shown = hits[:args.limit] if args.limit else hits
+    for _rank, kind, hid, title, area, track, diff, lang in shown:
+        badge = _c(STEEL, "task") if kind == "task" else _c(AMBER, kind + "   ")
+        meta = " · ".join(x for x in (area, track) if x)
+        print(f"  {badge} {_c(BOLD, hid)}")
+        print(f"         {title}")
+        if meta:
+            print(f"         {_c(DIM, meta)}  {_c(DIM, (f'd{diff} · ' if diff is not None else '') + str(lang))}")
+    if len(hits) > len(shown):
+        print(f"\n  {_c(DIM, f'{len(shown)} of {len(hits)} — narrow it, or pass --limit 0')}")
+    else:
+        print(f"\n  {_c(BOLD, str(len(hits)))} found")
+    return 0
+
+
 def cmd_project(args) -> int:
     """Part-2 projects: a real repo skeleton, several files to edit, and milestones
     that are graded one at a time. `mlsys grade` answers a single question; a project
@@ -339,6 +445,14 @@ def build_parser() -> argparse.ArgumentParser:
     st.add_argument("--dir", default=".", help="where to create <task-id>/ (default: here)")
     st.add_argument("--force", action="store_true", help="overwrite an existing attempt")
     st.set_defaults(func=cmd_start)
+
+    se = sub.add_parser("search", help="find a task or project by name")
+    se.add_argument("query", nargs="+", help="words that must all appear in id, title, area or track")
+    se.add_argument("--area", default=None, help="restrict to an area (substring)")
+    se.add_argument("--kind", choices=["task", "project", "m", "l"], default=None)
+    se.add_argument("--limit", type=int, default=20, help="0 for all (default 20)")
+    se.add_argument("--projects-root", default=None)
+    se.set_defaults(func=cmd_search)
 
     pj = sub.add_parser("project", help="Part-2 projects: multi-file work graded by milestone")
     pj.add_argument("action", choices=["list", "start", "grade"])

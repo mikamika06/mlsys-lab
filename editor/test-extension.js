@@ -558,6 +558,107 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     });
   }
 
+  // ---- roadmap search ------------------------------------------------------
+  {
+    const src = panel.webview.html;
+    const m = src.match(/\/\* SEARCH-CORE-START \*\/([\s\S]*?)\/\* SEARCH-CORE-END \*\//);
+    let filterMap = null, mark = null;
+    check("the search core is extractable", () => {
+      if (!m) throw new Error("no SEARCH-CORE block in the page");
+      const mk = new Function("esc", m[1] + "; return {filterMap, mark};");
+      const api = mk((x) => String(x == null ? "" : x));
+      filterMap = api.filterMap; mark = api.mark;
+      if (typeof filterMap !== "function") throw new Error("filterMap missing");
+      return m[1].length + " bytes";
+    });
+
+    const MAP = {
+      totals: { solved: 1, built: 5, planned: 5 },
+      tiers: [
+        { key: "gpu-cuda", name: "GPU / CUDA", tracks: [
+          { name: "Shared-memory bank conflicts", tasks: [
+            { id: "gpu-pad-tile-to-kill-bank-conflicts", title: "Pad the tile", solved: false },
+            { id: "gpu-swizzle-index", title: "Swizzle the index", solved: true }]}]},
+        { key: "python-core", name: "Deep Python", tracks: [
+          { name: "The GIL and what actually scales", tasks: [
+            { id: "pyt-modeled-gil-acquire-release-count", title: "Modeled GIL acquire/release count", solved: false }]},
+          { name: "Generational GC & cycle collection", tasks: [
+            { id: "pyt-read-gc-get-count", title: "Read gc.get_count()", solved: false },
+            { id: "pyt-fix-a-finalizer-blocked-cycle", title: "Fix a finalizer-blocked cycle", solved: false }]}]},
+      ],
+    };
+
+    const ids = (q) => filterMap(MAP, q).tiers.flatMap((t) => t.tracks.flatMap((tr) => tr.tasks.map((x) => x.id)));
+
+    check("search matches a task id", () => {
+      const got = ids("swizzle");
+      if (got.length !== 1 || got[0] !== "gpu-swizzle-index") throw new Error(got.join(","));
+      return got[0];
+    });
+
+    check("search matches a title", () => {
+      const got = ids("finalizer");
+      if (got.length !== 1) throw new Error(got.join(","));
+      return got[0];
+    });
+
+    check("search matches a track name and keeps its tasks", () => {
+      const got = ids("gil");
+      if (!got.includes("pyt-modeled-gil-acquire-release-count")) throw new Error(got.join(","));
+      return got.length + " tasks under the matching track";
+    });
+
+    check("search matches an area name", () => {
+      const got = ids("cuda");
+      if (got.length !== 2) throw new Error("expected both GPU tasks, got " + got.join(","));
+      return "2 tasks";
+    });
+
+    check("two words must both match", () => {
+      const both = ids("gc count");
+      const one = ids("count");
+      if (both.length !== 1 || both[0] !== "pyt-read-gc-get-count")
+        throw new Error("AND semantics broken: " + both.join(","));
+      if (one.length < 2) throw new Error("single term should be broader, got " + one.join(","));
+      return "AND, not OR";
+    });
+
+    check("an empty query returns the map untouched", () => {
+      if (filterMap(MAP, "") !== MAP) throw new Error("empty query rebuilt the map");
+      return "same object";
+    });
+
+    check("no match yields no tiers, and the map is not mutated", () => {
+      const r = filterMap(MAP, "zzzzz");
+      if (r.tiers.length !== 0) throw new Error("expected nothing");
+      if (MAP.tiers[0].tracks[0].tasks.length !== 2) throw new Error("the source map was mutated");
+      return "0 hits, source intact";
+    });
+
+    check("the count reflects hits, not the whole bank", () => {
+      const r = filterMap(MAP, "pyt");
+      if (r._hits !== 3 || r.totals.built !== 3) throw new Error(JSON.stringify(r.totals));
+      return "3/5";
+    });
+
+    check("matches are highlighted, and a regex character cannot break it", () => {
+      const h = mark("gpu-swizzle-index", "swizzle");
+      if (!/<span class="hit">swizzle<\/span>/.test(h)) throw new Error(h);
+      const safe = mark("a.b+c", "b+c");
+      if (safe.indexOf("hit") < 0) throw new Error("special characters were treated as a pattern: " + safe);
+      return "highlighted";
+    });
+
+    check("the toolbar carries the box and the shortcut", () => {
+      const h = panel.webview.html;
+      for (const marker of ['id="find"', "findn", "paintMap()", "e.key==='/'"])
+        if (!h.includes(marker)) throw new Error("missing " + marker);
+      if (!/\.app\.is-home \.find\{display:flex;\}/.test(h))
+        throw new Error("the box is not shown on the roadmap");
+      return "box, count, slash-to-focus";
+    });
+  }
+
   check("the panel says which build it is", () => {
     const want = require(path.join(__dirname, "package.json")).version;
     if (!panel.webview.html.includes(want))

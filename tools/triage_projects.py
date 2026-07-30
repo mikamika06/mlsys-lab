@@ -45,9 +45,15 @@ def complete(pid):
     spec_path = os.path.join(d, "project.json")
     if not os.path.isfile(spec_path):
         return False
-    if not (os.path.isdir(os.path.join(d, "reference"))
-            and os.path.isdir(os.path.join(d, "skeleton"))
-            and os.path.isfile(os.path.join(d, "brief.md"))):
+    # An empty directory is not content. A killed builder leaves reference/ created
+    # and unfilled, and "the directory is there" called that complete — the same
+    # mistake as counting harness/ by its existence, one level down.
+    def has_code(sub):
+        root = os.path.join(d, sub)
+        return any(f.endswith(".py") for _, _, fs in os.walk(root) for f in fs)
+
+    if not (os.path.isfile(os.path.join(d, "brief.md"))
+            and has_code("reference") and has_code("skeleton")):
         return False
     try:
         with open(spec_path, encoding="utf-8") as f:

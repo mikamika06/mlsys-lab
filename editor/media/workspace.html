@@ -41,6 +41,18 @@
   .back:hover{background:var(--panel-2);}
   .crumb{font-family:var(--mono);font-size:11.5px;color:var(--ink-mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} .crumb b{color:var(--ink-dim);}
   .top .spc{flex:1;}
+  /* 2053 tasks and a thousand projects do not fit on a roadmap you scroll. */
+  .find{display:none;align-items:center;gap:7px;flex:0 1 260px;min-width:120px;
+    background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:5px 9px;}
+  .find:focus-within{border-color:var(--line-2);}
+  .find svg{width:13px;height:13px;flex:0 0 auto;fill:none;stroke:var(--ink-faint);stroke-width:2;stroke-linecap:round;}
+  .find input{flex:1;min-width:0;background:none;border:0;outline:none;color:var(--ink);font-family:var(--mono);font-size:11.5px;}
+  .find input::placeholder{color:var(--ink-faint);}
+  .find input::-webkit-search-cancel-button{-webkit-appearance:none;}
+  .findn{font-family:var(--mono);font-size:10px;color:var(--ink-faint);flex:0 0 auto;}
+  .app.is-home .find{display:flex;}
+  .nohit{font-family:var(--mono);font-size:12px;color:var(--ink-mut);padding:26px 4px;}
+  .hit{background:rgba(244,185,78,.22);border-radius:3px;color:var(--ink);}
   .prog{font-family:var(--mono);font-size:11px;color:var(--ink-mut);flex:0 0 auto;} .prog b{color:var(--amber);}
   .lang{flex:0 0 auto;display:flex;align-items:center;gap:6px;}
   .lang svg{width:14px;height:14px;fill:none;stroke:var(--ink-mut);stroke-width:1.5;}
@@ -258,6 +270,9 @@
       <span class="back" id="back">‹ <span data-t="roadmap">Roadmap</span></span>
       <span class="crumb" id="crumb"></span>
       <span class="spc"></span>
+      <label class="find" id="findWrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
+        <input id="find" type="search" placeholder="знайти задачу" autocomplete="off" spellcheck="false">
+        <span class="findn" id="findn"></span></label>
       <span class="prog" id="prog"></span>
       <span class="lang"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
         </span>
@@ -426,12 +441,61 @@
 
   const LGN={py:'PY',cpp:'C++',cuda:'CUDA'};
 
+  /* ---------- search ----------
+     The roadmap holds thousands of units, so finding one by scrolling is not a
+     plan. The filter runs over the map the host already sent: no round trip, and
+     the full set stays in mapData so clearing the box restores it exactly. */
+  let query='';
+  /* SEARCH-CORE-START */
+  function matches(text,terms){const t=(text||'').toLowerCase();return terms.every(w=>t.includes(w));}
+  function filterMap(d,q){
+    const terms=q.toLowerCase().split(/\s+/).filter(Boolean);
+    if(!terms.length)return d;
+    let hits=0;
+    const tiers=[];
+    d.tiers.forEach(T=>{
+      const areaHay=`${T.name} ${T.key||''}`;
+      const tracks=[];
+      T.tracks.forEach(tr=>{
+        const trackHay=`${areaHay} ${tr.name||''}`;
+        const tasks=tr.tasks.filter(x=>matches(`${trackHay} ${x.id} ${x.title}`,terms));
+        if(tasks.length){tracks.push(Object.assign({},tr,{tasks,planned:tasks.length}));hits+=tasks.length;}
+      });
+      if(tracks.length)tiers.push(Object.assign({},T,{tracks,planned:tracks.reduce((a,x)=>a+x.tasks.length,0)}));
+    });
+    return {totals:{solved:d.totals.solved,built:hits,planned:hits},tiers,_hits:hits,_query:q};
+  }
+  function mark(text,q){
+    const e=esc(text); if(!q)return e;
+    const terms=q.toLowerCase().split(/\s+/).filter(Boolean).sort((a,b)=>b.length-a.length);
+    let out=e;
+    terms.forEach(w=>{
+      const rx=new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+      out=out.replace(rx,'<span class="hit">$1</span>');
+    });
+    return out;
+  }
+  /* SEARCH-CORE-END */
+  function paintMap(){
+    if(!mapData)return;
+    const d=query?filterMap(mapData,query):mapData;
+    const total=mapData.totals.built;
+    $('findn').textContent=query?(d._hits?`${d._hits}/${total}`:'0'):'';
+    if(query&&!d.tiers.length){
+      $('map').innerHTML=`<div class="nohit">нічого не знайшлось на «${esc(query)}»</div>`;
+      return;
+    }
+    drawMap(d,!!query);
+  }
   function renderMap(d){
     mapData=d; mapPainted=d; syncRandom();
     /* The renderer keys areas by position ('ti'+index), not by T.key. Folding with
        T.key silently did nothing, because collapsed.has() was asked a different
        question than the one answered. Same key space or no effect. */
     if(!foldedOnce){ d.tiers.forEach((_,i)=>collapsed.add('ti'+i)); foldedOnce=true; persistFolds(); }
+    paintMap();
+  }
+  function drawMap(d,expandAll){
     $('prog').innerHTML=`<b>${d.totals.solved}</b>/${d.totals.built} · ${d.totals.planned} ${t('planned')}`;
     $('hsub').innerHTML=`${d.tiers.length} · <b>${d.totals.built}</b> ${t('available')} · ${d.totals.planned} ${t('planned')}`;
     let h='';
@@ -440,13 +504,14 @@
       const solved=all.filter(x=>x.solved).length, built=all.length;
       const pct=built?Math.round(100*solved/built):0;
       const key='ti'+ti, info=areaInfo(T.key||'');
-      const cls=[built?'':'locked', collapsed.has(key)?'collapsed':'', aboutOpen.has(key)?'about-on':''].join(' ');
+      const shut=!expandAll&&collapsed.has(key);
+      const cls=[built?'':'locked', shut?'collapsed':'', aboutOpen.has(key)?'about-on':''].join(' ');
       const mix={}; all.forEach(x=>{const k=x.native||'py'; mix[k]=(mix[k]||0)+1;});
       const langs=Object.keys(mix).sort((a,b)=>mix[b]-mix[a]).filter(k=>k!=='py'||Object.keys(mix).length===1)
         .map(k=>`<span class="lg ${k}">${LGN[k]||k} ${mix[k]}</span>`).join('');
 
       h+=`<section class="tier ${cls}" data-k="${key}">
-        <button class="tier-h" data-tg="${key}" aria-expanded="${!collapsed.has(key)}">
+        <button class="tier-h" data-tg="${key}" aria-expanded="${!shut}">
           <span class="tw">${CHEV}</span>
           <span class="tring" style="--p:${pct}"></span>
           <span class="t-main"><span class="tier-nm">${esc(T.name)}</span>${
@@ -467,14 +532,14 @@
         const b=tr.tasks.length, sv=tr.tasks.filter(x=>x.solved).length;
         const act=b>0, done=act&&sv===b, p=act?Math.round(100*sv/b):0;
         h+=`<div class="node ${act?'active':'locked'} ${done?'done':''}">
-          <div class="n-top"><span class="n-nm">${esc(tr.name)}</span>
+          <div class="n-top"><span class="n-nm">${mark(tr.name,query)}</span>
             <span class="n-fr">${act?sv+'/'+b:''}</span></div>`;
         if(act){
           h+=`<div class="bar"><span class="f" style="width:${p}%"></span></div><div class="chips">`+
             tr.tasks.map(x=>{
               const n=x.native||'py';
               return `<button class="chip ${x.solved?'solved':''} ${n}" data-open="${esc(x.id)}"
-                        title="${esc(x.title||x.id)}">${esc(shortId(x.id))}
+                        title="${esc(x.title||x.id)}">${mark(shortId(x.id),query)}
                         <span class="d">d${x.difficulty??'?'}</span>
                         <span class="lang">${LGN[n].toLowerCase()}</span></button>`;
             }).join('')+`</div>`;
@@ -930,6 +995,24 @@
   let rzT=null;
   window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(mapData)renderMap(mapData);},120);});
   $('back').addEventListener('click',goHome);
+  let findT=null;
+  $('find').addEventListener('input',e=>{
+    const v=e.target.value;
+    clearTimeout(findT);
+    findT=setTimeout(()=>{ query=v.trim(); paintMap(); }, v.length<3?160:60);
+  });
+  $('find').addEventListener('keydown',e=>{
+    if(e.key==='Escape'){e.target.value='';query='';paintMap();e.target.blur();}
+    if(e.key==='Enter'){
+      const first=$('map').querySelector('[data-open]');
+      if(first){vscode.postMessage({type:'open',id:first.getAttribute('data-open')});}
+    }
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='/'&&$('app').classList.contains('is-home')&&document.activeElement!==$('find')){
+      e.preventDefault(); $('find').focus(); $('find').select();
+    }
+  });
   window.addEventListener('message',e=>{
     const m=e.data||{};
     if(m.type==='map'){renderMap(m.payload);goHome();}

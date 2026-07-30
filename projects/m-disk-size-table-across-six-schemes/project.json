@@ -1,0 +1,23 @@
+{
+  "id": "m-disk-size-table-across-six-schemes",
+  "title": "Таблиця розміру моделі на диску для шести схем квантування",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Quantization scheme taxonomy (WxAy)",
+  "part": 2,
+  "difficulty": 2,
+  "edits": ["diskplan/schemes.py", "diskplan/hardware.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Розмір на диску для кожної з шести схем", "check": "harness/m1.py",
+     "gates": [{"metric": "size_ratio", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Чи потягне залізо, і де програє менший розмір", "check": "harness/m2.py",
+     "gates": [{"metric": "gate_matches", "op": ">=", "threshold": 1},
+               {"metric": "best_matches", "op": ">=", "threshold": 1},
+               {"metric": "always_found", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "Запобіжник: тест, що ловить квантування того, що квантувати не можна", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_quantized_norms", "op": "==", "threshold": 1}]}
+  ]
+}
