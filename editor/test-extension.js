@@ -492,13 +492,24 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     posted.length = 0;
     panel._onMsg({ type: "ready" });
     await wait(600);
-    check("projects appear on the roadmap", () => {
+    // The roadmap is a map of the task bank. A tier of multi-file projects at the
+    // top of it pushed two thousand tasks below the fold for something a learner
+    // reaches on purpose, so projects are opened by id and live behind the CLI.
+    check("the roadmap is tasks only", () => {
       const m = posted.find((x) => x.type === "map" || x.type === "mapdata");
       const tier = (m ? m.payload.tiers : []).find((t) => t.key === "projects");
-      if (!tier) throw new Error("no projects tier on the roadmap");
-      const ids = tier.tracks.flatMap((tr) => tr.tasks.map((x) => x.id));
-      if (!ids.includes("project:" + PID)) throw new Error("ids: " + ids.join(","));
-      return `${ids.length} projects, first tier is "${tier.name}"`;
+      if (tier) throw new Error("a projects tier is back on the roadmap");
+      const names = (m ? m.payload.tiers : []).map((t) => t.name);
+      if (!names.length) throw new Error("no tiers at all");
+      return `${names.length} areas, first is "${names[0]}"`;
+    });
+
+    check("area names are Ukrainian", () => {
+      const m = posted.find((x) => x.type === "map" || x.type === "mapdata");
+      const names = (m ? m.payload.tiers : []).map((t) => t.name);
+      const latin = names.filter((n) => !/[\u0400-\u04FF]/.test(n));
+      if (latin.length) throw new Error("still in English: " + latin.join(", "));
+      return names.slice(0, 3).join(" · ");
     });
 
     posted.length = 0;

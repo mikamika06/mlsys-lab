@@ -146,12 +146,14 @@ function fmtNum(v) {
 // earlier hardcoded copy of an old plan hid 135 tasks from the editor while the
 // browser showed all of them.
 const AREA_TITLE = {
-  "python-core": "Deep Python", "cpp-core": "Deep C++", "cpu-perf": "CPU-perf",
-  "numeric-tensors": "Numeric & tensors", "algorithms-scratch": "Algorithms (ML)",
-  "llm-internals": "LLM internals", "gpu-cuda": "GPU / CUDA", "llm-systems": "LLM systems",
-  "rw-applied-quantization": "RW · Quantization", "rw-attention-and-kv": "RW · Attention/KV",
-  "rw-compilation-and-export": "RW · Compile/Export", "rw-batching-and-serving": "RW · Batching/Serving",
-  "rw-memory-and-offload": "RW · Memory/Offload", "rw-sparsity-pruning-distillation": "RW · Sparsity/Distill",
+  "python-core": "Python зсередини", "cpp-core": "C++ як системна мова",
+  "cpu-perf": "Продуктивність CPU і пам'ять",
+  "numeric-tensors": "Числа і тензори", "algorithms-scratch": "Алгоритми ML з нуля",
+  "llm-internals": "Устрій LLM", "gpu-cuda": "GPU і CUDA", "llm-systems": "Системи LLM",
+  "rw-applied-quantization": "Квантизація на практиці", "rw-attention-and-kv": "Увага і KV-кеш",
+  "rw-compilation-and-export": "Компіляція та експорт", "rw-batching-and-serving": "Батчування і сервінг",
+  "rw-memory-and-offload": "Пам'ять і вивантаження",
+  "rw-sparsity-pruning-distillation": "Розрідження і дистиляція",
 };
 const AREA_ORDER = Object.keys(AREA_TITLE);
 const PREFIX_AREA = {
@@ -205,7 +207,6 @@ function scanBuilt(lab) {
 
 function homeData(lab, context) {
   const built = scanBuilt(lab);
-  const projects = scanProjects(lab);
   const solved = new Set(context.globalState.get("mlsys.solved", []));
   const groups = {};
   for (const b of built) {
@@ -231,25 +232,9 @@ function homeData(lab, context) {
     tiers.push({ roman: "", key: area, name: AREA_TITLE[area] || area,
                  planned: n, builtCount: n, tracks });
   }
-  if (projects.length) {
-    const tracks = {};
-    for (const { spec } of projects) {
-      const done = new Set(context.globalState.get("mlsys.milestones." + spec.id, []));
-      const n = (spec.milestones || []).length;
-      const key = spec.area || "other";
-      (tracks[key] = tracks[key] || []).push({
-        id: PROJECT_PREFIX + spec.id, title: spec.title, difficulty: spec.difficulty,
-        solved: n > 0 && done.size >= n, native: (spec.tier || "T0").toLowerCase(),
-      });
-    }
-    tiers.unshift({
-      roman: "", key: "projects", name: "Проєкти · Part 2",
-      planned: projects.length, builtCount: projects.length,
-      tracks: Object.keys(tracks).sort().map((k) => ({
-        num: "", name: k, planned: tracks[k].length, tasks: tracks[k] })),
-    });
-    total += projects.length;
-  }
+  // Projects are not on the roadmap. It is a map of the task bank, and a tier of
+  // multi-file work at the top of it pushed two thousand tasks below the fold for
+  // something a learner reaches deliberately. They live behind `mlsys project`.
   return { totals: { solved: built.filter((b) => solved.has(b.id)).length,
                      built: total, planned: total }, tiers };
 }

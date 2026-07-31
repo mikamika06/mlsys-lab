@@ -159,9 +159,12 @@ jobs:
       # A project is only real if both halves hold: the reference clears every
       # milestone and the shipped skeleton clears none. Half of that check passing
       # is a project that grades nothing.
+      # numpy covers every T0 unit; gguf is small and unlocks the container project.
+      # torch is not installed here — the units that declare it skip by name rather
+      # than failing, because a missing library is a fact about the runner.
       - name: verify
         run: |
-          python -m pip install --quiet numpy
+          python -m pip install --quiet numpy gguf
           python tools/verify_project.py
 
   extension:

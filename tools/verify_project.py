@@ -15,9 +15,10 @@ import tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 
+from mlsys import bank  # noqa: E402
 from mlsys.runners import project as pr  # noqa: E402
 
-GREEN, RED, DIM, OFF = "\033[32m", "\033[31m", "\033[2m", "\033[0m"
+GREEN, RED, AMBER, DIM, OFF = "\033[32m", "\033[31m", "\033[33m", "\033[2m", "\033[0m"
 
 
 def grade_copy(pdir: str, src: str) -> dict:
@@ -27,9 +28,19 @@ def grade_copy(pdir: str, src: str) -> dict:
         return pr.grade(pdir, work)
 
 
+class Skipped(Exception):
+    """A T1 unit needs a real library. Absent, its reference cannot clear its own
+    milestones — which is a fact about the machine, not about the unit. Reporting
+    that as a failure trains everyone to ignore a red check."""
+
+
 def verify(pdir: str) -> tuple[bool, str]:
     spec = pr.load_spec(pdir)
     n = len(spec["milestones"])
+
+    lack = bank.missing_pkgs(spec)
+    if lack:
+        raise Skipped(", ".join(lack))
 
     # A unit without a ticket is not a unit. The panel shows nothing, the CLI shows
     # nothing, and the learner is handed a skeleton with no statement of the problem
@@ -73,9 +84,11 @@ def _one(pid):
     pdir = os.path.join(ROOT, "projects", pid)
     try:
         ok, msg = verify(pdir)
+        return pid, "ok" if ok else "fail", msg
+    except Skipped as e:
+        return pid, "skip", f"needs {e}"
     except Exception as e:  # noqa: BLE001
-        ok, msg = False, f"{type(e).__name__}: {e}"
-    return pid, ok, msg
+        return pid, "fail", f"{type(e).__name__}: {e}"
 
 
 def main(argv):
@@ -92,17 +105,20 @@ def main(argv):
     if not jobs:
         jobs = min(8, max(1, (os.cpu_count() or 2) - 2)) if len(ids) > 2 else 1
 
-    bad = 0
     if jobs == 1:
         results = [_one(p) for p in ids]
     else:
         with cf.ProcessPoolExecutor(max_workers=jobs) as ex:
             results = list(ex.map(_one, ids))
-    for pid, ok, msg in results:
-        mark = f"{GREEN}ok  {OFF}" if ok else f"{RED}FAIL{OFF}"
+    bad = skipped = 0
+    for pid, state, msg in results:
+        mark = {"ok": f"{GREEN}ok  {OFF}", "skip": f"{AMBER}skip{OFF}"}.get(state, f"{RED}FAIL{OFF}")
         print(f"  {mark} {pid:<44} {DIM}{msg}{OFF}")
-        bad += 0 if ok else 1
-    print(f"\n{len(ids) - bad}/{len(ids)} projects verified")
+        bad += state == "fail"
+        skipped += state == "skip"
+    done = len(ids) - bad - skipped
+    tail = f", {skipped} skipped for a missing package" if skipped else ""
+    print(f"\n{done}/{len(ids) - skipped} projects verified{tail}")
     return 1 if bad else 0
 
 
