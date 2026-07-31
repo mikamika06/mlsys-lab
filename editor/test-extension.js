@@ -504,11 +504,17 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
       return `${names.length} areas, first is "${names[0]}"`;
     });
 
-    check("area names are Ukrainian", () => {
+    // The product is English throughout — README, 2053 task statements, the
+    // Marketplace listing. A Ukrainian string in the panel is an inconsistency, not
+    // a localisation, because nothing else is translated.
+    check("nothing in the panel is Ukrainian", () => {
       const m = posted.find((x) => x.type === "map" || x.type === "mapdata");
       const names = (m ? m.payload.tiers : []).map((t) => t.name);
-      const latin = names.filter((n) => !/[\u0400-\u04FF]/.test(n));
-      if (latin.length) throw new Error("still in English: " + latin.join(", "));
+      const cyr = names.filter((n) => /[\u0400-\u04FF]/.test(n));
+      if (cyr.length) throw new Error("Cyrillic area names: " + cyr.join(", "));
+      const html = panel.webview.html;
+      const lines = html.split("\n").filter((l) => /[\u0400-\u04FF]/.test(l));
+      if (lines.length) throw new Error(lines.length + " Cyrillic lines, first: " + lines[0].trim().slice(0, 80));
       return names.slice(0, 3).join(" · ");
     });
 

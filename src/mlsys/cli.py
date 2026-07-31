@@ -252,7 +252,7 @@ def cmd_project(args) -> int:
             for spec, n in sorted(by_area[area], key=lambda x: x[0]["id"]):
                 size = "L" if n > 4 else "M"
                 print(f"    {_c(BOLD, spec['id'])}")
-                print(f"      {spec['title']}  {_c(DIM, f'{size} · ' + (spec.get('tier') or '') + f' · {n} майлстоунів')}")
+                print(f"      {spec['title']}  {_c(DIM, f'{size} · ' + (spec.get('tier') or '') + f' · {n} milestones')}")
         if not shown:
             print(_c(AMBER, "  nothing matched that filter"))
         else:
@@ -298,7 +298,7 @@ def cmd_project(args) -> int:
             mark = _c(GREEN, "✓") if r["passed"] else _c(RED, "✗")
             print(f"  {mark} {r['n']}. {r['title']}")
         print()
-        print(f"  {_c(BOLD, str(res['milestones_passed']))}/{res['milestones_total']} майлстоунів")
+        print(f"  {_c(BOLD, str(res['milestones_passed']))}/{res['milestones_total']} milestones")
     if res.get("note"):
         print(_c(DIM, "  " + res["note"]))
     return 0 if res.get("passed") else 1

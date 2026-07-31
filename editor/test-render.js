@@ -102,11 +102,11 @@ check("painting the full map again brings everything back", () => {
 const WITH_PROJECTS = {
   totals: { solved: 2, built: 8, planned: 8 },
   tiers: [
-    { key: "projects", name: "Проєкти · Part 2", planned: 2, builtCount: 2, roman: "", tracks: [
+    { key: "projects", name: "Projects · Part 2", planned: 2, builtCount: 2, roman: "", tracks: [
       { num: "", name: "rw2-vllm-serving", planned: 1, tasks: [
-        { id: "project:p-continuous-batching-scheduler", title: "Планувальник", difficulty: 4, solved: false, native: "t0" }]},
+        { id: "project:p-continuous-batching-scheduler", title: "Scheduler", difficulty: 4, solved: false, native: "t0" }]},
       { num: "", name: "rw2-pytorch-applied", planned: 1, tasks: [
-        { id: "project:p-torch-compile-latency-regression", title: "p99 виріс", difficulty: 4, solved: false, native: "t1" }]}]},
+        { id: "project:p-torch-compile-latency-regression", title: "p99 went up", difficulty: 4, solved: false, native: "t1" }]}]},
     ...MAP.tiers,
   ],
 };

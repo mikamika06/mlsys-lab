@@ -488,7 +488,7 @@
     const total=mapData.totals.built;
     $('findn').textContent=query?(d._hits?`${d._hits}/${total}`:'0'):'';
     if(query&&!d.tiers.length){
-      $('map').innerHTML=`<div class="nohit">нічого не знайшлось на «${esc(query)}»</div>`;
+      $('map').innerHTML=`<div class="nohit">nothing matches &ldquo;${esc(query)}&rdquo;</div>`;
       return;
     }
     drawMap(d,!!query);
@@ -933,24 +933,24 @@
     if(m.project.difficulty!=null)curTags.push('d'+m.project.difficulty);
     if(m.project.area)curTags.push(m.project.area);
     curMd=(m.md||'')+(m.project.edits&&m.project.edits.length?
-      '\n\n## Файли, які ти редагуєш\n\n'+m.project.edits.map(f=>'- `'+f+'`').join('\n')+'\n':'');
+      '\n\n## Files you edit\n\n'+m.project.edits.map(f=>'- `'+f+'`').join('\n')+'\n':'');
     renderBrief();
     $('crumb').innerHTML=`<b>Part 2</b> › ${esc(m.project.id)}`;
     $('pstartLabel').textContent=m.started?'Reopen':'Start';
     $('metrics').innerHTML=m.started?'':
-      '<div class="ms-row" style="padding:8px 0">натисни Start — скелет скопіюється у твою робочу теку</div>';
+      '<div class="ms-row" style="padding:8px 0">press Start — the skeleton is copied into your work directory</div>';
     setVerdict('', m.started?'READY':'NOT STARTED','');
     $('cons').textContent=m.work?('workdir: '+m.work):'—';
     $('chcmd').textContent='mlsys project grade';
     const done=m.project.milestones.filter(x=>x.done).length;
-    if(done&&done===m.project.milestones.length)setVerdict('pass','PASS','усі майлстоуни закриті');
+    if(done&&done===m.project.milestones.length)setVerdict('pass','PASS','every milestone cleared');
     renderMilestones(); goProject();
   }
   function gradeMilestone(n){
     if(!curProject)return;
     msState[n]='run'; delete msState['g'+n]; delete msState['n'+n];
     msOpen.add(n); renderMilestones();
-    setVerdict('measuring',t('measuring'),'майлстоун '+n);
+    setVerdict('measuring',t('measuring'),'milestone '+n);
     vscode.postMessage({type:'gradeProject',id:curProject.id,milestone:n});
   }
   $('pstartBtn').addEventListener('click',()=>{
@@ -1031,7 +1031,7 @@
             if(d.error)msState['n'+n]=d.error; else if(d.note)msState['n'+n]=d.note;}
       (d.per_milestone||[]).forEach(r=>{if(r.passed)msState[r.n]='done';});
       setVerdict(d.passed?'pass':'fail',d.passed?t('pass'):t('fail'),
-                 n?('майлстоун '+n):(d.milestones_passed+'/'+d.milestones_total));
+                 n?('milestone '+n):(d.milestones_passed+'/'+d.milestones_total));
       renderMilestones();
     }
     else if(m.type==='measuring'){setVerdict('measuring',t('measuring'),t('running'));}

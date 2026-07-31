@@ -1,68 +1,75 @@
-# Як будується одиниця Part 2
+# How a Part-2 unit is built
 
-Одна одиниця — це тека `projects/<id>/`. M і L відрізняються лише розміром:
-M — 2-3 майлстоуни і 3-6 файлів, L — 7 майлстоунів і 8-30 файлів.
+A unit is one directory under `projects/<id>/`. M and L differ only in size:
+M is 2-3 milestones and 3-6 files the learner edits, L is 7 milestones and 8-30.
 
 ```
 projects/<id>/
-  project.json     мета + майлстоуни + гейти
-  brief.md         тікет: симптом, а не діагноз
-  skeleton/        те, що отримує учень; кожна функція кидає NotImplementedError
-  reference/       наше робоче рішення (та сама структура, що й skeleton)
-  harness/mN.py    по чекеру на майлстоун: check(workdir) -> dict метрик
+  project.json     metadata, milestones, gates
+  brief.md         the ticket: a symptom, not a diagnosis
+  skeleton/        what the learner gets; every function raises NotImplementedError
+  reference/       our working solution, same layout as skeleton/
+  harness/mN.py    one checker per milestone: check(workdir) -> dict of metrics
 ```
 
-## Контракт, який перевіряється машиною
+Everything is written in **English**. The README, the 2053 task statements and the
+Marketplace listing are English; a translated unit is an inconsistency, not a
+localisation.
 
-`python3 tools/verify_project.py <id>` мусить сказати
-`reference N/N, skeleton 0/N`. Обидві половини обов'язкові:
+## The contract, which a machine checks
 
-- **еталон проходить усі майлстоуни** — інакше задача непроходжувана;
-- **скелет не проходить жодного** — інакше гейт нічого не міряє.
+`python3 tools/verify_project.py <id>` must print
+`reference N/N, skeleton 0/N`. Both halves are required:
 
-## Правила
+- **the reference clears every milestone** — otherwise the work is impossible;
+- **the skeleton clears none** — otherwise the gate measures nothing.
 
-**Гейт не може бути абсолютним часом.** Дозволено: інваріант (щось не кидає, лічильник
-нуль, вихід збігається в межах толерансу), відношення до власного базлайну учня,
-аналіз записаного артефакту. Заборонено: `time.time()` у гейті, пороги, підібрані під
-конкретну машину.
+## Rules
 
-**Еталон рахує грейдер сам.** Ніяких зашитих очікуваних відповідей: або оракул
-(справжня бібліотека, `mlsys.sim.*`), або перерахунок із тих самих вхідних даних.
+**A gate is never wall-clock time.** Allowed: an invariant (something does not
+raise, a counter is zero, output matches within a tolerance), a ratio against the
+learner's own baseline, or the analysis of a recorded artifact. Forbidden:
+`time.time()` in a gate, or a threshold tuned to one machine.
 
-**Умова називає симптом, а не дефект.** «p99 виріс після ввімкнення X», а не «прибери
-розрив графа у forward».
+**The grader computes its own reference.** No hard-coded expected answers: either
+an oracle (a real library, `mlsys.sim.*`) or a recomputation from the same inputs.
 
-**Нуль коментарів у коді.** Пояснення — у `brief.md`.
+**The brief states a symptom, not the defect.** "p99 went up after we enabled X",
+not "remove the graph break in forward()".
 
-**Детермінізм.** Фіксований seed, цілочисельний час, жодного мережевого доступу.
-Якщо потрібна фікстура — генеруй її в `harness/`, не клади бінарники в репозиторій.
+**No comments in code.** Explanation belongs in `brief.md`.
 
-**Тир.** T0 — чистий python/numpy, працює скрізь. T1 — потрібна реальна бібліотека;
-її назви перелічи в `project.json` як `requires_pkgs`, а чекер має чесно сказати
-`_note`, якщо її нема, замість падіння.
+**Determinism.** Fixed seed, integer time, no network. Generate fixtures in
+`harness/`; never commit binaries.
 
-**Останній майлстоун M і L — запобіжник**: учень пише тест, чекер підміняє щось у
-його ж коді на явно зламане і вимагає, щоб тест впав. Ін'єкція має ламати
-**інваріант**, а не бути іншою валідною реалізацією.
+**Tier.** T0 is pure python/numpy and runs anywhere. T1 needs a real library:
+list it in `project.json` as `requires_pkgs`, and have the checker return a `_note`
+saying so rather than crashing. The verifier skips a unit whose declared package is
+absent, so an honest declaration is what keeps CI green.
 
-## Форма чекера
+**The last milestone is always a guardrail**: the learner writes a test, the checker
+replaces something in their own code with a broken version, and the test has to
+fail. The injected fault must break an **invariant** — not merely be a different
+valid implementation. An injection that is arguably better than the original is not
+a fault, and the milestone will pass for the wrong reason or never pass at all.
+
+## Checker shape
 
 ```python
 def check(workdir):
-    return {"metric_name": 1.0, "_note": "необов'язкове пояснення для учня"}
+    return {"metric_name": 1.0, "_note": "optional explanation shown to the learner"}
 ```
 
-Гейти в `project.json`:
+Gates in `project.json`:
 
 ```json
 {"metric": "metric_name", "op": "==", "threshold": 1}
 ```
 
-`op` — один із `== <= >= < >`. Метрика, якої чекер не повернув, вважається проваленою.
+`op` is one of `== <= >= < >`. A metric the checker did not return counts as failed.
 
-## Що дає spec
+## What the spec gives you
 
-`tools/specs2/<id>.json` містить `area`, `track`, `tier`, `gate_metric` і `ideas` —
-ідеї з ресьорчу, з яких склеєна одиниця. Їх треба покрити майлстоунами, а не
-винаходити тему заново.
+`tools/specs2/<id>.json` carries `area`, `track`, `tier`, `gate_metric` and the
+`ideas` the unit is assembled from. Cover those ideas with the milestones rather
+than inventing a different topic.
