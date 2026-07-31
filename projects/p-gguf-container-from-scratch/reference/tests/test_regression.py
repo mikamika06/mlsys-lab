@@ -12,7 +12,7 @@ from gguf_lab import read_header, read_tensor_data, read_tensor_info
 def _write_sample(path):
     tensors = [{"name": "x.weight", "data": np.arange(12, dtype=np.float32).reshape(3, 4)},
                {"name": "y.bias", "data": (np.arange(5) * 1.5).astype(np.float32)}]
-    writer.write(path, "labarch", {"lab.count": 3, "lab.name": "перевірка"},
+    writer.write(path, "labarch", {"lab.count": 3, "lab.name": "check"},
                  tensors, alignment=32)
     return tensors
 

@@ -1,37 +1,37 @@
-# Звіт про повторення й бюджет num_predict
+# Repetition report and num_predict budget
 
-У логах локального ранера скарги йдуть парами. Перша: генерація обривається з
-поміткою "стоп: повторення", а коли інженер підтримки дивиться на сирі token
-id відповіді — жодного очевидного повтору немає, доводиться вручну рахувати
-токени в дампі, щоб зрозуміти, чи спрацювання було справедливим. Друга: хтось
-поставив `num_predict=-1` ("не зупинятись, поки модель сама не скаже досить")
-і отримав відповідь у три токени, а хтось інший поставив `num_predict=-2`
-("заповнити контекст") і отримав відповідь, яка з'їла в сотні разів більше
-токенів, ніж є в моделі контексту. Схоже, десь у ранері ці два прапорці
-порахували однією формулою.
+In the local runner's logs, complaints come in pairs. First: generation cuts
+off tagged "stop: repetition", and when a support engineer looks at the raw
+response token ids, there's no obvious repeat — they end up manually counting
+tokens in the dump to figure out whether the trigger was fair. Second:
+someone set `num_predict=-1` ("don't stop until the model itself says
+enough") and got a three-token reply, while someone else set
+`num_predict=-2` ("fill the context") and got a reply that ate up hundreds of
+times more tokens than the model's context holds. Looks like somewhere in
+the runner these two flags got computed with the same formula.
 
-Треба, щоб звіт про повторення пояснював сам себе цифрами з гістограми
-токенів, і порахувати правильний бюджет генерації для всіх варіантів
-`num_predict`, включно з -1 і -2.
+The repetition report needs to explain itself with numbers from the token
+histogram, and the generation budget needs to be computed correctly for
+every `num_predict` variant, including -1 and -2.
 
-## Що ти пишеш
+## What you write
 
-`rundiag/histogram.py` — `build_histogram(tokens) -> dict[int, int]`, частота
-кожного token id у послідовності.
+`rundiag/histogram.py` — `build_histogram(tokens) -> dict[int, int]`,
+frequency of each token id in the sequence.
 
 `rundiag/report.py` — `repetition_report(tokens, window, threshold) -> dict`.
-Дивишся лише на хвіст — останні `window` токенів (або всі, якщо їх менше).
-Якщо в цьому хвості якийсь token id зустрічається `>= threshold` разів — це
-спрацювання; серед токенів з максимальною кількістю в хвості береш той, що з
-найменшим id (детермінізм при нічиї). Повертаєш:
+Look only at the tail — the last `window` tokens (or all of them, if there
+are fewer). If some token id occurs `>= threshold` times in that tail, it's
+a trigger; among the tokens with the highest count in the tail, take the one
+with the smallest id (determinism on ties). Return:
 
 ```python
 {
   "triggered": bool,
   "token": int | None,
   "window_count": int,
-  "positions": [...],   # усі індекси token у ПОВНІЙ послідовності, відсортовані; [] якщо не спрацювало
-  "histogram": {...},   # гістограма по всій послідовності, token -> count
+  "positions": [...],   # all indices of token in the FULL sequence, sorted; [] if not triggered
+  "histogram": {...},   # histogram over the full sequence, token -> count
   "total_tokens": int,
   "unique_tokens": int,
 }
@@ -40,24 +40,25 @@ id відповіді — жодного очевидного повтору н�
 `rundiag/predict.py` — `num_predict_budget(num_predict, prompt_tokens, context_size, hard_cap) -> int`.
 `remaining = max(context_size - prompt_tokens, 0)`.
 
-- `num_predict >= 0` — явний ліміт, але не більше, ніж лишилось контексту:
-  `min(num_predict, remaining)`.
-- `num_predict == -2` (заповнити контекст) — рівно `remaining`, ні токеном
-  більше.
-- `num_predict == -1` (нескінченна генерація) — НЕ обмежена контекстом: межа
-  лише `hard_cap`, окрема й зазвичай набагато більша стеля:
+- `num_predict >= 0` — explicit limit, but no more than what's left of the
+  context: `min(num_predict, remaining)`.
+- `num_predict == -2` (fill the context) — exactly `remaining`, not a token
+  more.
+- `num_predict == -1` (infinite generation) — NOT bounded by context: the
+  only limit is `hard_cap`, a separate and usually much higher ceiling:
   `max(hard_cap - prompt_tokens, 0)`.
 
-`-1` і `-2` дають різні числа, коли `hard_cap != context_size`. Порахувати їх
-однією гілкою коду — це і є той баг, який зламав користувачів вище.
+`-1` and `-2` give different numbers whenever `hard_cap != context_size`.
+Computing them with a single code branch is exactly the bug that broke the
+users above.
 
-## Як перевіряється
+## How it's graded
 
-Грейдер рахує еталон сам, з тих самих вхідних даних: набір послідовностей
-токенів для звіту про повторення, набір `(num_predict, prompt_tokens,
-context_size, hard_cap)` для бюджету. Третій майлстоун — твій: пишеш тест, а
-ми підміняємо `num_predict_budget` на версію, що зливає `-1` в ту саму гілку,
-що й `-2`. Твій тест має це побачити.
+The grader computes the reference itself, from the same inputs: a set of
+token sequences for the repetition report, a set of `(num_predict,
+prompt_tokens, context_size, hard_cap)` for the budget. The third milestone
+is yours: you write a test, and we swap `num_predict_budget` for a version
+that collapses `-1` into the same branch as `-2`. Your test has to catch it.
 
 ```
 mlsys project start m-explain-a-repetition-report-by-inspecting-the-emitte

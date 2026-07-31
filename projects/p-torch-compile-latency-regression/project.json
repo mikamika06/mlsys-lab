@@ -1,6 +1,6 @@
 {
   "id": "p-torch-compile-latency-regression",
-  "title": "Після compile p99 виріс",
+  "title": "p99 went up after compile",
   "kind": "project",
   "tier": "T1",
   "area": "rw2-pytorch-applied",
@@ -14,7 +14,7 @@
   "milestones": [
     {
       "n": 1,
-      "title": "Стенд вимірювання, якому можна вірити",
+      "title": "A measurement rig you can trust",
       "check": "harness/m1.py",
       "gates": [
         {"metric": "warmup_untimed", "op": "==", "threshold": 1},
@@ -26,7 +26,7 @@
     },
     {
       "n": 2,
-      "title": "Інвентар графів: скільки їх і де рветься",
+      "title": "Graph inventory: how many, and where it breaks",
       "check": "harness/m2.py",
       "gates": [
         {"metric": "has_inventory", "op": "==", "threshold": 1},
@@ -37,7 +37,7 @@
     },
     {
       "n": 3,
-      "title": "Атрибуція рекомпіляції до guard'а, що впав",
+      "title": "Attributing a recompilation to the guard that failed",
       "check": "harness/m3.py",
       "gates": [
         {"metric": "has_module", "op": "==", "threshold": 1},
@@ -47,7 +47,7 @@
     },
     {
       "n": 4,
-      "title": "Гарячий шлях без жодного розриву графа",
+      "title": "Hot path with zero graph breaks",
       "check": "harness/m4.py",
       "gates": [
         {"metric": "break_count", "op": "==", "threshold": 0},
@@ -57,7 +57,7 @@
     },
     {
       "n": 5,
-      "title": "Розклад розмірів батчу без вибуху рекомпіляцій",
+      "title": "A batch-size schedule without a recompilation blowup",
       "check": "harness/m5.py",
       "gates": [
         {"metric": "unique_graphs", "op": "<=", "threshold": 3},
@@ -66,7 +66,7 @@
     },
     {
       "n": 6,
-      "title": "Виграш, відокремлений від шуму",
+      "title": "A speedup separated from noise",
       "check": "harness/m6.py",
       "gates": [
         {"metric": "speedup", "op": ">=", "threshold": 1.15},
@@ -76,7 +76,7 @@
     },
     {
       "n": 7,
-      "title": "Запобіжник: тест, що ловить повернення розриву",
+      "title": "A safety net: a test that catches a reintroduced break",
       "check": "harness/m7.py",
       "gates": [
         {"metric": "has_tests", "op": "==", "threshold": 1},

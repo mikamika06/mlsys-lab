@@ -1,33 +1,33 @@
-# Пакування нібблів для 4-бітних вагів (round trip)
+# Nibble packing for 4-bit weights (round trip)
 
-Ми переводимо частину вагів моделі на 4-бітний формат зберігання — той самий
-принцип, що в bitsandbytes NF4/FP4: кожен ваг замінюється на 4-бітний код
-(0..15), два коди пакуються в один байт, а для всього блоку зберігається один
-float — `absmax`, на який код треба домножити назад, щоб отримати наближену
-вагу.
+We're moving part of the model's weights to a 4-bit storage format — the same
+idea as bitsandbytes NF4/FP4: each weight is replaced with a 4-bit code
+(0..15), two codes are packed into one byte, and one float is kept per block
+— `absmax` — which the code needs to be multiplied by to get back an
+approximate weight.
 
-Колега вже написав пакувальник. Файл виходить рівно вдвічі менший — начебто
-все працює. Але коли ваги розпаковують назад для звірки з оригіналом, сусідні
-числа іноді "їдуть": там, де мало бути `[3, 10]`, зринає `[10, 3]`. А на
-блоці непарної довжини розпакування або падає, або мовчки губить останній
-елемент.
+A colleague already wrote the packer. The file comes out exactly half the
+size — looks like it works. But when the weights are unpacked again to check
+against the original, neighboring values sometimes "swap": where `[3, 10]`
+should be, `[10, 3]` shows up instead. And on a block of odd length,
+unpacking either crashes or silently drops the last element.
 
-## Що ти пишеш
+## What you write
 
 `nibblepack/pack.py`:
 
 ```python
-pack_nibbles(codes) -> np.ndarray[uint8]        # довжина = ceil(n / 2)
-unpack_nibbles(packed, n) -> np.ndarray[uint8]  # довжина = n
+pack_nibbles(codes) -> np.ndarray[uint8]        # length = ceil(n / 2)
+unpack_nibbles(packed, n) -> np.ndarray[uint8]  # length = n
 ```
 
-`codes` — масив 4-бітних кодів (кожен 0..15), довжина `n` (може бути
-непарною). У кожному байті молодший ніббл (біти 0-3) зберігає код з парним
-індексом (`codes[2*i]`), старший ніббл (біти 4-7) — код з непарним індексом
-(`codes[2*i+1]`). Якщо `n` непарне, старший ніббл останнього байта — нуль
-(не сміття). `unpack_nibbles` — точна зворотна операція: для будь-якого `n`
-і будь-яких кодів `unpack_nibbles(pack_nibbles(codes), n)` має повернути ті
-самі коди в тому самому порядку.
+`codes` is an array of 4-bit codes (each 0..15), of length `n` (which may be
+odd). In each byte, the low nibble (bits 0-3) holds the code at the even
+index (`codes[2*i]`), and the high nibble (bits 4-7) holds the code at the
+odd index (`codes[2*i+1]`). If `n` is odd, the high nibble of the last byte
+is zero (not garbage). `unpack_nibbles` is the exact inverse: for any `n` and
+any codes, `unpack_nibbles(pack_nibbles(codes), n)` must return the same
+codes in the same order.
 
 `nibblepack/dequant.py`:
 
@@ -35,21 +35,23 @@ unpack_nibbles(packed, n) -> np.ndarray[uint8]  # довжина = n
 dequantize_block(packed, n, absmax, codebook=CODEBOOK) -> np.ndarray[float64]
 ```
 
-`CODEBOOK` — масив із 16 чисел, уже лежить у файлі, чіпати не треба. Розпакуй
-ніббли через `unpack_nibbles`, за кожним кодом візьми відповідне значення з
-`CODEBOOK` і помнож на `absmax`. Довжина результату — `n`. Якщо `absmax == 0`,
-результат — блок нулів, незалежно від кодів.
+`CODEBOOK` is an array of 16 numbers, already in the file — no need to touch
+it. Unpack the nibbles via `unpack_nibbles`, look up the matching value in
+`CODEBOOK` for each code, and multiply by `absmax`. The result has length
+`n`. If `absmax == 0`, the result is a block of zeros regardless of the
+codes.
 
-## Як перевіряється
+## How it's graded
 
-Грейдер рахує еталон сам — незалежна реалізація на наборі згенерованих блоків
-різної довжини (парної й непарної, включно з порожнім і однонібловим) і різних
-`absmax`, включно з нулем.
+The grader computes the reference itself — an independent implementation run
+over a set of generated blocks of varying length (even and odd, including
+empty and single-nibble) and varying `absmax`, including zero.
 
-Третій майлстоун — твій: пишеш тест, який перевіряє, що
-`unpack_nibbles(pack_nibbles(codes), n) == codes` для кількох масивів (бажано
-таких, де сусідні коди різні). Ми підміняємо `unpack_nibbles` на таку, що
-плутає місцями молодший і старший ніббл. Твій тест має це впіймати.
+The third milestone is yours: you write a test that checks
+`unpack_nibbles(pack_nibbles(codes), n) == codes` for several arrays
+(preferably ones where neighboring codes differ). We swap in an
+`unpack_nibbles` that mixes up the low and high nibble. Your test needs to
+catch it.
 
 ```
 mlsys project start m-nibble-packing-round-trip

@@ -1,6 +1,6 @@
 {
   "id": "m-build-kv-cache-groups-from-a-hybrid-model-config",
-  "title": "План KV-кешу для гібридної моделі",
+  "title": "KV cache plan for a hybrid model",
   "kind": "project",
   "tier": "T0",
   "area": "rw2-kv-cache-serving",
@@ -9,14 +9,14 @@
   "difficulty": 3,
   "edits": ["kvplan/groups.py", "kvplan/memory.py", "kvplan/schedule.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Групи кешу з конфігурації моделі", "check": "harness/m1.py",
+    {"n": 1, "title": "Cache groups from the model config", "check": "harness/m1.py",
      "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
-    {"n": 2, "title": "Скільки це коштує в байтах і що звільняється з кроками", "check": "harness/m2.py",
+    {"n": 2, "title": "How many bytes it costs, and what frees up over time", "check": "harness/m2.py",
      "gates": [{"metric": "bytes_match", "op": "==", "threshold": 1},
                {"metric": "uniform_match", "op": "==", "threshold": 1},
                {"metric": "saves_memory", "op": "==", "threshold": 1},
                {"metric": "schedule_match", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Запобіжник: тест, що ловить злиття різних вікон", "check": "harness/m3.py",
+    {"n": 3, "title": "Safety net: a test that catches merged windows", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
                {"metric": "catches_merged_windows", "op": "==", "threshold": 1}]}

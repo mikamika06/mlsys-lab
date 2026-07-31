@@ -1,6 +1,6 @@
 {
   "id": "m-nibble-packing-round-trip",
-  "title": "Пакування нібблів для 4-бітних вагів",
+  "title": "Nibble packing for 4-bit weights",
   "kind": "project",
   "tier": "T0",
   "area": "rw2-quant-libs",
@@ -9,12 +9,12 @@
   "difficulty": 2,
   "edits": ["nibblepack/pack.py", "nibblepack/dequant.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Пакування і розпакування нібблів", "check": "harness/m1.py",
+    {"n": 1, "title": "Packing and unpacking nibbles", "check": "harness/m1.py",
      "gates": [{"metric": "byte_exact_fraction", "op": ">=", "threshold": 1.0}]},
-    {"n": 2, "title": "Відновлення блоку з байтів і absmax", "check": "harness/m2.py",
+    {"n": 2, "title": "Reconstructing a block from bytes and absmax", "check": "harness/m2.py",
      "gates": [{"metric": "values_match", "op": ">=", "threshold": 1.0},
                {"metric": "zero_absmax_is_zero", "op": "==", "threshold": 1.0}]},
-    {"n": 3, "title": "Запобіжник: тест, що ловить переплутаний порядок нібблів", "check": "harness/m3.py",
+    {"n": 3, "title": "Safeguard: a test that catches swapped nibble order", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
                {"metric": "catches_swapped_nibbles", "op": "==", "threshold": 1}]}

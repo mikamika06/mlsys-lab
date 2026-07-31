@@ -40,15 +40,14 @@ STARTER  = {"cpp": "starter.cpp", "cuda": "starter.cu"}   # what ships with the 
 # Grouping for the roadmap. Falls back to the id prefix when a task is not in the
 # curriculum list, so a freshly generated task still shows up somewhere sensible.
 AREA_TITLE = {
-    "python-core": "Python зсередини", "cpp-core": "C++ як системна мова",
-    "cpu-perf": "Продуктивність CPU і пам'ять",
-    "numeric-tensors": "Числа і тензори", "algorithms-scratch": "Алгоритми ML з нуля",
-    "llm-internals": "Устрій LLM", "gpu-cuda": "GPU і CUDA", "llm-systems": "Системи LLM",
-    "rw-applied-quantization": "Квантизація на практиці", "rw-attention-and-kv": "Увага і KV-кеш",
-    "rw-compilation-and-export": "Компіляція та експорт",
-    "rw-batching-and-serving": "Батчування і сервінг",
-    "rw-memory-and-offload": "Пам'ять і вивантаження",
-    "rw-sparsity-pruning-distillation": "Розрідження і дистиляція",
+    "python-core": "Deep Python", "cpp-core": "Deep C++", "cpu-perf": "CPU-perf",
+    "numeric-tensors": "Numeric & tensors", "algorithms-scratch": "Algorithms (ML)",
+    "llm-internals": "LLM internals", "gpu-cuda": "GPU / CUDA", "llm-systems": "LLM systems",
+    "rw-applied-quantization": "RW · Quantization", "rw-attention-and-kv": "RW · Attention/KV",
+    "rw-compilation-and-export": "RW · Compile/Export",
+    "rw-batching-and-serving": "RW · Batching/Serving",
+    "rw-memory-and-offload": "RW · Memory/Offload",
+    "rw-sparsity-pruning-distillation": "RW · Sparsity/Distill",
 }
 AREA_ORDER = list(AREA_TITLE)
 PREFIX_AREA = {

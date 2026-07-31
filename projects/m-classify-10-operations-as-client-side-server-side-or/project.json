@@ -1,6 +1,6 @@
 {
   "id": "m-classify-10-operations-as-client-side-server-side-or",
-  "title": "Клієнт, сервер чи раннер: куди йде кожна операція",
+  "title": "Client, server, or runner: where does each operation belong",
   "kind": "project",
   "tier": "T0",
   "area": "rw3-local-runners",
@@ -9,13 +9,13 @@
   "difficulty": 2,
   "edits": ["opside/classify.py", "opside/pipeline.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Класифікація операцій за конфігурацією", "check": "harness/m1.py",
+    {"n": 1, "title": "Classify operations from a config", "check": "harness/m1.py",
      "gates": [{"metric": "cases_matched", "op": ">=", "threshold": 4}]},
-    {"n": 2, "title": "Скільки перетинів межі й чи легальний маршрут запиту", "check": "harness/m2.py",
+    {"n": 2, "title": "How many boundary crossings, and whether the request's route is legal", "check": "harness/m2.py",
      "gates": [{"metric": "sequence_match", "op": "==", "threshold": 1},
                {"metric": "hops_match", "op": "==", "threshold": 1},
                {"metric": "legality_match", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Запобіжник: тест, що ловить витік чужого коду з раннера", "check": "harness/m3.py",
+    {"n": 3, "title": "Safety net: a test that catches untrusted code leaking out of the runner", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
                {"metric": "catches_trust_leak", "op": "==", "threshold": 1}]}

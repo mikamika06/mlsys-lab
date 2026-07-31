@@ -31,14 +31,14 @@ PREFIX_AREA = {"pyt": "python-core", "cpp": "cpp-core", "cpu": "cpu-perf", "num"
 # id -> (area, subcategory) from the v2 list
 id2 = {}
 for r in json.load(open(os.path.join(ROOT, "src/mlsys/task_list2.json")))["rows"]:
-    sub = (r.get("method") or r.get("concept") or "інше").strip() if r["part"] == 2 else (r.get("concept") or "інше").strip()
+    sub = (r.get("method") or r.get("concept") or "other").strip() if r["part"] == 2 else (r.get("concept") or "other").strip()
     id2[r["id"]] = (r["area"], sub)
 
 
 def area_sub(tid):
     if tid in id2:
         return id2[tid]
-    return PREFIX_AREA.get(tid.split("-")[0], "?"), "інше"
+    return PREFIX_AREA.get(tid.split("-")[0], "?"), "other"
 
 
 tasks = {}

@@ -1,6 +1,6 @@
 {
   "id": "p-continuous-batching-scheduler",
-  "title": "Планувальник, який тримає обіцянку",
+  "title": "A scheduler that keeps its promise",
   "kind": "project",
   "tier": "T0",
   "area": "rw2-vllm-serving",
@@ -16,7 +16,7 @@
   "milestones": [
     {
       "n": 1,
-      "title": "Алокатор блоків: вільний список і лічильник посилань",
+      "title": "Block allocator: free list and refcounting",
       "check": "harness/m1.py",
       "gates": [
         {
@@ -53,7 +53,7 @@
     },
     {
       "n": 2,
-      "title": "Допуск і prefill у межах токенного бюджету",
+      "title": "Admission and prefill within the token budget",
       "check": "harness/m2.py",
       "gates": [
         {
@@ -75,7 +75,7 @@
     },
     {
       "n": 3,
-      "title": "Decode і ріст кешу: збіг з еталоном на трьох навантаженнях",
+      "title": "Decode and cache growth: matches the reference on three workloads",
       "check": "harness/m3.py",
       "gates": [
         {
@@ -87,7 +87,7 @@
     },
     {
       "n": 4,
-      "title": "Витіснення з гарантією прогресу",
+      "title": "Preemption with a progress guarantee",
       "check": "harness/m4.py",
       "gates": [
         {
@@ -119,7 +119,7 @@
     },
     {
       "n": 5,
-      "title": "Префіксний кеш: спільні блоки і чесний hit rate",
+      "title": "Prefix cache: shared blocks and an honest hit rate",
       "check": "harness/m5.py",
       "gates": [
         {
@@ -141,7 +141,7 @@
     },
     {
       "n": 6,
-      "title": "Збіг покрокового розкладу на небаченому навантаженні",
+      "title": "Step-by-step schedule match on an unseen workload",
       "check": "harness/m6.py",
       "gates": [
         {
@@ -158,7 +158,7 @@
     },
     {
       "n": 7,
-      "title": "Запобіжник: тест, що ловить зламану політику",
+      "title": "Safety net: a test that catches a broken policy",
       "check": "harness/m7.py",
       "gates": [
         {

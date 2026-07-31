@@ -28,7 +28,7 @@ def fixture(tmp, name="fx.gguf", alignment=None, rich=False):
     path = os.path.join(tmp, name)
     w = gguf.GGUFWriter(path, "labarch")
     w.add_uint32("lab.count", 7)
-    w.add_string("lab.name", "привіт")
+    w.add_string("lab.name", "hello")
     w.add_array("lab.list", [3, 1, 4, 1, 5])
     if rich:
         w.add_float32("lab.ratio", 0.25)

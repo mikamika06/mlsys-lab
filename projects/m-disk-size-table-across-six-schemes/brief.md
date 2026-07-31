@@ -1,20 +1,20 @@
-# Таблиця розміру моделі на диску для шести схем квантування
+# Disk-size table for a model across six quantization schemes
 
-Хтось порахував розмір чекпоїнтів вручну в Excel і за цими цифрами вибрав
-W4A4 для старих інференс-нод: мало влізти на диск і бути найдешевшим варіантом
-з усіх шести підтримуваних схем. Влізло. Але видача на цих нодах стала
-повільнішою, ніж коли там просто лежав fp16, і ніхто не може пояснити чому,
-дивлячись тільки на розмір у байтах. Та ж таблиця в Excel каже, що W4A16 і
-W4A8 важать по-різному, хоча на диску вони — той самий файл того самого
-розміру.
+Someone computed checkpoint sizes by hand in Excel and picked W4A4 for the
+old inference nodes based on those numbers: it had to fit on disk and be the
+cheapest of all six supported schemes. It fit. But serving on those nodes
+got slower than when they were just running fp16, and nobody can explain
+why by looking only at the byte count. That same Excel sheet claims W4A16
+and W4A8 weigh different amounts, even though on disk they're the exact
+same file at the exact same size.
 
-Треба порахувати розмір на диску для шести схем квантування з конфігурації
-моделі, а не руками, і поруч перевірити, чи залізо взагалі має нативний шлях
-для обраної розрядності — бо саме там ховається розрив між "менше байтів" і
-"швидше": без нативного ядра "4-біт" означає розпакування назад у fp16 перед
-кожним матмулом.
+We need to compute disk size for the six quantization schemes from the
+model config instead of by hand, and alongside that check whether the
+hardware even has a native path for the chosen bit-width — because that's
+where the gap between "fewer bytes" and "faster" hides: without a native
+kernel, "4-bit" means unpacking back to fp16 before every matmul.
 
-## Що ти пишеш
+## What you write
 
 `diskplan/schemes.py`:
 
@@ -24,24 +24,26 @@ disk_size(model, scheme) -> int
 size_table(model, schemes) -> list[row]
 ```
 
-`tensor` — це `{"name", "kind", "count"}`, де `kind` це `"linear"`,
-`"embed"` або `"norm"`, а `count` — кількість елементів. `scheme` — це
-`{"name", "bits", "group_size"}`, де `group_size` — розмір групи, що ділить
-один скейл-фактор, або `None`/`0`, якщо скейл один на весь тензор.
+`tensor` is `{"name", "kind", "count"}`, where `kind` is `"linear"`,
+`"embed"`, or `"norm"`, and `count` is the element count. `scheme` is
+`{"name", "bits", "group_size"}`, where `group_size` is the size of the
+group sharing one scale factor, or `None`/`0` if there's a single scale
+for the whole tensor.
 
-Тензори `"embed"` і `"norm"` завжди зберігаються у fp16 (`count * 2` байти),
-незалежно від схеми — ваги ембедингів і нормалізації не квантують. Якщо
-`scheme["bits"] >= 16` — теж просто `count * 2` для будь-якого тензора.
-Інакше: скільки байтів займають самі ваги — це `count * bits` бітів,
-округлені вгору до байта; кількість груп — `1`, якщо `group_size` порожній,
-інакше `count`, округлене вгору до `group_size`; кожна група додає 2 байти
-під fp16-скейл. Разом: `weight_bytes + groups * 2`.
+`"embed"` and `"norm"` tensors are always stored in fp16 (`count * 2`
+bytes), regardless of scheme — embedding and normalization weights don't
+get quantized. If `scheme["bits"] >= 16`, it's also just `count * 2` for
+any tensor. Otherwise: the weights themselves take `count * bits` bits,
+rounded up to a byte; the number of groups is `1` if `group_size` is
+empty, otherwise `count` rounded up to `group_size`; each group adds 2
+bytes for its fp16 scale. Total: `weight_bytes + groups * 2`.
 
-`model` — це `{"tensors": [tensor, ...]}`. `disk_size` — сума `tensor_bytes`
-по всіх тензорах моделі. `size_table(model, schemes)` повертає список у
-ТОМУ Ж порядку, що й вхідний `schemes` (перша схема в списку — базова,
-зазвичай fp16), без сортування: `{"scheme", "bits", "bytes", "ratio"}`, де
-`ratio` — це `bytes` цієї схеми, поділені на `bytes` базової схеми.
+`model` is `{"tensors": [tensor, ...]}`. `disk_size` is the sum of
+`tensor_bytes` over all tensors in the model. `size_table(model, schemes)`
+returns a list in the SAME order as the input `schemes` (the first scheme
+in the list is the baseline, usually fp16), unsorted:
+`{"scheme", "bits", "bytes", "ratio"}`, where `ratio` is this scheme's
+`bytes` divided by the baseline scheme's `bytes`.
 
 `diskplan/hardware.py`:
 
@@ -51,20 +53,21 @@ gate_table(model, hardware, schemes) -> list[row]
 best_native_scheme(model, hardware, schemes) -> str | None
 ```
 
-`hardware` — це `{"native_bits": [int, ...]}` — розрядності, які залізо
-рахує нативним ядром, без розпаковки в fp16 перед матмулом. `hardware_native`
-перевіряє, чи `scheme["bits"]` серед них. `gate_table` — те саме, що
-`size_table`, плюс поле `"native"` у кожному рядку, в тому ж порядку.
-`best_native_scheme` серед нативних схем повертає `"name"` тієї, що дає
-найменший `disk_size`; при рівності байтів — ту, що стоїть раніше у списку
-`schemes`; якщо жодна схема не нативна — `None`.
+`hardware` is `{"native_bits": [int, ...]}` — the bit-widths the hardware
+handles with a native kernel, without unpacking to fp16 before the matmul.
+`hardware_native` checks whether `scheme["bits"]` is among them.
+`gate_table` is the same as `size_table`, plus a `"native"` field on each
+row, in the same order. `best_native_scheme` returns the `"name"` of
+whichever native scheme gives the smallest `disk_size`; ties go to the
+one earlier in the `schemes` list; if no scheme is native, `None`.
 
-## Як перевіряється
+## How it's graded
 
-Грейдер рахує еталон сам, із тієї ж конфігурації, на кількох моделях, наборах
-схем і профілях заліза. Третій майлстоун — твій: пишеш тест, а ми підміняємо
-`tensor_bytes` на версію, що квантує геть усе, включно з `embed` і `norm`.
-Твій тест має це побачити.
+The grader computes the reference itself, from the same config, across
+several models, scheme sets, and hardware profiles. The third milestone is
+yours: you write a test, and we swap in a version of `tensor_bytes` that
+quantizes absolutely everything, `embed` and `norm` included. Your test
+needs to catch that.
 
 ```
 mlsys project start m-disk-size-table-across-six-schemes

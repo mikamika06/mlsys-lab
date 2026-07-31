@@ -1,49 +1,52 @@
-# GQA-групування в scaled_dot_product_attention
+# GQA grouping in scaled_dot_product_attention
 
-Профілювали інференс і побачили: у новій моделі query-голів у кілька разів
-більше, ніж kv-голів (grouped-query attention). Замість того щоб фізично
-дублювати K/V-кеш під кожну query-голову, ввімкнули прапорець `enable_gqa` в
-атеншені — кожна query-голова просто ділить кеш зі своєю групою, і пам'ять під
-KV-кеш справді впала в кілька разів.
+Profiled inference and noticed: the new model has several times more query
+heads than kv heads (grouped-query attention). Instead of physically
+duplicating the K/V cache for every query head, we turned on the `enable_gqa`
+flag in attention — each query head just shares the cache with its group, and
+KV-cache memory really did drop by several times.
 
-Але регресія на довгих діалогах (десь від сотні токенів контексту) погіршилась:
-модель місцями відповідає так, ніби переплутала, хто з ким у групі. На коротких
-промптах і на конфігураціях, де кожна query-голова має власну kv-голову (без
-групування), різниці немає взагалі. Схоже, ламається саме розкладання
-query-голів по групах, коли групування реально щось групує.
+But regression on long dialogues (somewhere past a hundred tokens of context)
+got worse: the model sometimes answers as if it mixed up who belongs to which
+group. On short prompts, and on configs where every query head has its own kv
+head (no grouping), there's no difference at all. Looks like it's specifically
+the decomposition of query heads into groups that breaks, whenever grouping
+actually groups something.
 
-## Що ти пишеш
+## What you write
 
-`gqa/expand.py` — `repeat_kv(x, n_rep) -> np.ndarray`. `x` має форму
-`(batch, kv_heads, seq, head_dim)`. Кожну kv-голову треба розкласти в `n_rep`
-послідовних query-голів: голова `i` результату бере дані рівно з kv-голови
-`i // n_rep`. Результат — форма `(batch, kv_heads * n_rep, seq, head_dim)`.
-При `n_rep == 1` це тотожність.
+`gqa/expand.py` — `repeat_kv(x, n_rep) -> np.ndarray`. `x` has shape
+`(batch, kv_heads, seq, head_dim)`. Each kv head needs to be expanded into
+`n_rep` consecutive query heads: output head `i` must take its data from
+exactly kv head `i // n_rep`. Result shape: `(batch, kv_heads * n_rep, seq, head_dim)`.
+At `n_rep == 1` this is the identity.
 
-`gqa/mask.py` — `causal_bias(q_len, kv_len, dtype) -> np.ndarray`, форма
-`(q_len, kv_len)`. Причинна маска визначена лише для `q_len == kv_len`
-(заповнення контексту, не інкрементальний декодинг). Позиція `(i, j)` дорівнює
-`0.0`, якщо `j <= i` (можна дивитись на цей ключ), інакше `-inf`.
+`gqa/mask.py` — `causal_bias(q_len, kv_len, dtype) -> np.ndarray`, shape
+`(q_len, kv_len)`. The causal mask is defined only for `q_len == kv_len`
+(context prefill, not incremental decoding). Position `(i, j)` equals `0.0`
+if `j <= i` (that key can be attended to), otherwise `-inf`.
 
 `gqa/core.py` — `scaled_dot_product_attention(query, key, value, is_causal=False, scale=None, enable_gqa=False) -> np.ndarray`.
-`query` має форму `(batch, q_heads, L, head_dim)`, `key`/`value` —
-`(batch, kv_heads, S, head_dim)`. Якщо `enable_gqa=True`, `q_heads` ділиться на
-`kv_heads` без остачі; перед рахунком `key` і `value` розкладаються через
-`repeat_kv` до `q_heads` голів. Далі — звичайна увага:
-`softmax(query @ key.transpose(-1, -2) * scale + bias) @ value`, де `scale` за
-замовчуванням `1 / sqrt(head_dim)`, а `bias` береться з `causal_bias`, якщо
-`is_causal`, інакше нульова. Ключова вимога: голови, яким призначена інша
-kv-голова, не повинні одна на одну впливати — зміна вмісту конкретної kv-голови
-має міняти вихід рівно тих query-голів, що на неї призначені, і жодних інших.
+`query` has shape `(batch, q_heads, L, head_dim)`, `key`/`value` —
+`(batch, kv_heads, S, head_dim)`. If `enable_gqa=True`, `q_heads` must divide
+evenly by `kv_heads`; before the computation, `key` and `value` are expanded
+via `repeat_kv` to `q_heads` heads. After that it's ordinary attention:
+`softmax(query @ key.transpose(-1, -2) * scale + bias) @ value`, where `scale`
+defaults to `1 / sqrt(head_dim)`, and `bias` comes from `causal_bias` if
+`is_causal`, otherwise zero. Key requirement: heads assigned to different
+kv heads must not affect one another — changing the contents of one kv head
+must change the output of exactly the query heads assigned to it, and no
+others.
 
-## Як перевіряється
+## How it's graded
 
-Грейдер рахує еталон сам — незалежна numpy-реалізація тієї ж формули на
-кількох конфігураціях (різні batch/heads/довжини, з причинністю і без).
-Третій майлстоун — твій: пишеш тест у `tests/test_regression.py`, а ми
-підміняємо розкладання голів на таке, де query-голови йдуть до kv-голів не
-послідовними блоками, а впереміш (кожна n-та голова — своїй kv-голові). Твій
-тест має це виявити.
+The grader computes the reference itself — an independent numpy
+implementation of the same formula across several configs (different
+batch/heads/lengths, with and without causality). The third milestone is
+yours: write a test in `tests/test_regression.py`, and we'll swap in a
+head-expansion where query heads map to kv heads not in consecutive blocks
+but interleaved (every n-th head belongs to the same kv head). Your test
+needs to catch that.
 
 ```
 mlsys project start m-enable-gqa-correctness

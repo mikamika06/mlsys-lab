@@ -1,6 +1,6 @@
 {
   "id": "m-compare-lms-load-estimate-only-against-real-resident",
-  "title": "Реальна пам'ять моделі проти estimate-only",
+  "title": "Real model memory vs. estimate-only",
   "kind": "project",
   "tier": "T1",
   "area": "rw3-local-runners",
@@ -9,13 +9,13 @@
   "difficulty": 3,
   "edits": ["lmsmem/estimate.py", "lmsmem/resident.py", "lmsmem/offload.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Порахувати те, що обіцяє estimate-only", "check": "harness/m1.py",
+    {"n": 1, "title": "Compute what estimate-only promises", "check": "harness/m1.py",
      "gates": [{"metric": "estimates_matched", "op": ">=", "threshold": 12}]},
-    {"n": 2, "title": "Порахувати реальний resident і розрив між ними", "check": "harness/m2.py",
+    {"n": 2, "title": "Compute the real resident size and the gap between them", "check": "harness/m2.py",
      "gates": [{"metric": "resident_matched", "op": ">=", "threshold": 12},
                {"metric": "rel_err", "op": "<=", "threshold": 1e-9},
                {"metric": "offload_invariant", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Запобіжник: тест, що ловить приховану різницю", "check": "harness/m3.py",
+    {"n": 3, "title": "Safety net: a test that catches the hidden discrepancy", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
                {"metric": "catches_fake_resident", "op": "==", "threshold": 1}]}

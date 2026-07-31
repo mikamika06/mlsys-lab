@@ -1,6 +1,6 @@
 {
   "id": "m-enable-gqa-correctness",
-  "title": "GQA-групування в scaled_dot_product_attention",
+  "title": "GQA grouping in scaled_dot_product_attention",
   "kind": "project",
   "tier": "T1",
   "area": "rw2-flashattention",
@@ -9,13 +9,13 @@
   "difficulty": 3,
   "edits": ["gqa/expand.py", "gqa/mask.py", "gqa/core.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Коректний вивід атеншена з enable_gqa", "check": "harness/m1.py",
+    {"n": 1, "title": "Correct attention output with enable_gqa", "check": "harness/m1.py",
      "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 0.0001}]},
-    {"n": 2, "title": "Розкладання голів і причинна маска під капотом", "check": "harness/m2.py",
+    {"n": 2, "title": "Head expansion and causal mask under the hood", "check": "harness/m2.py",
      "gates": [{"metric": "expand_match", "op": "==", "threshold": 1},
                {"metric": "no_op_match", "op": "==", "threshold": 1},
                {"metric": "causal_gqa_match", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Запобіжник: тест, що ловить неправильне групування голів", "check": "harness/m3.py",
+    {"n": 3, "title": "Safety net: a test that catches incorrect head grouping", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
                {"metric": "catches_bad_grouping", "op": "==", "threshold": 1}]}

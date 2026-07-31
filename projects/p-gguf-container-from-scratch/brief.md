@@ -1,35 +1,36 @@
-# Свій конвертер у GGUF
+# A homegrown GGUF converter
 
-Ми випускаємо модель нестандартної архітектури. Готовий конвертер її не знає, а
-патчити чужий репозиторій під кожен реліз ми не будемо. Треба свій запис контейнера
-— такий, щоб файл читали всі рушії, які цей формат розуміють, без жодного винятку.
+We're shipping a model with a nonstandard architecture. No off-the-shelf converter
+knows it, and we're not going to patch someone else's repo for every release. We
+need our own container writer — one that produces files every engine that
+understands the format can read, no exceptions.
 
-Заразом треба читач: без нього неможливо ні перевірити свій же вихід, ні розібратись,
-чому чужий файл не вантажиться.
+We also need a reader alongside it: without one there's no way to check our own
+output, let alone figure out why someone else's file won't load.
 
-## Формат
+## Format
 
-Файл складається з чотирьох частин підряд: заголовок, метадані, таблиця тензорів,
-секція даних.
+A file is four parts back to back: header, metadata, tensor table, data section.
 
-**Заголовок.** `GGUF` (4 байти), версія `uint32`, кількість тензорів `uint64`,
-кількість пар метаданих `uint64`. Усе little-endian.
+**Header.** `GGUF` (4 bytes), version `uint32`, tensor count `uint64`,
+metadata pair count `uint64`. All little-endian.
 
-**Метадані.** Кожна пара: ключ як рядок, потім тип `uint32`, потім значення.
-Рядок — це довжина `uint64` і стільки ж байтів UTF-8. Типи за номерами:
+**Metadata.** Each pair: a string key, then a `uint32` type, then the value.
+A string is a `uint64` length followed by that many bytes of UTF-8. Type numbers:
 `0 uint8, 1 int8, 2 uint16, 3 int16, 4 uint32, 5 int32, 6 float32, 7 bool,
-8 string, 9 array, 10 uint64, 11 int64, 12 float64`. Масив — це тип елемента
-`uint32`, кількість `uint64`, далі елементи підряд.
+8 string, 9 array, 10 uint64, 11 int64, 12 float64`. An array is an element
+type `uint32`, a count `uint64`, then the elements back to back.
 
-**Таблиця тензорів.** На кожен тензор: ім'я-рядок, кількість вимірів `uint32`,
-самі виміри по `uint64`, тип ggml `uint32`, зсув `uint64`. Виміри лежать у
-зворотному порядку відносно звичного для numpy.
+**Tensor table.** Per tensor: a name string, number of dimensions `uint32`,
+the dimensions themselves as `uint64`, ggml type `uint32`, offset `uint64`.
+Dimensions are stored in the reverse order from what numpy expects.
 
-**Секція даних** починається після вирівнювання кінця таблиці до межі
-`general.alignment` (за замовчуванням 32). Зсув кожного тензора рахується
-**від початку цієї секції**, а не від початку файлу, і теж кратний вирівнюванню.
+**The data section** starts after the end of the table is padded up to a
+`general.alignment` boundary (default 32). Each tensor's offset is counted
+**from the start of this section**, not from the start of the file, and is
+also a multiple of the alignment.
 
-## Що ти пишеш
+## What you write
 
 `gguf_lab/reader.py`:
 
@@ -46,16 +47,17 @@ read_tensor_data(path, name) -> numpy array
 write(path, arch, metadata: dict, tensors: [{"name", "data"}], alignment=32) -> path
 ```
 
-Файл, у якому магія не `GGUF`, має бути відхилений, а не прочитаний як сміття.
-Запит неіснуючого тензора — теж помилка, а не порожній масив.
+A file whose magic isn't `GGUF` must be rejected, not read as garbage.
+Requesting a tensor that doesn't exist is also an error, not an empty array.
 
-## Як перевіряється
+## How it's graded
 
-Оракул — **справжня бібліотека `gguf`**, не наша реалізація. Спершу вона пише
-файли, які читаєш ти. Потім навпаки: пишеш ти, читає вона, і всі метадані й тензори
-мають дожити без жодної зміни. Останній майлстоун: ми ламаємо твій запис двома
-способами — обрізаємо хвіст файлу і брешемо в заголовку про кількість тензорів —
-і твій валідатор має обидва рази впасти.
+The oracle is the **real `gguf` library**, not our own implementation. First
+it writes files, and you read them. Then the other way round: you write, it
+reads, and every piece of metadata and every tensor must survive unchanged.
+On the last milestone we break your own output two ways — truncating the
+tail of the file and lying in the header about the tensor count — and your
+validator has to catch both.
 
 ```
 mlsys project start p-gguf-container-from-scratch

@@ -1,20 +1,21 @@
-# План KV-кешу для гібридної моделі
+# KV cache plan for a hybrid model
 
-Нова модель у нас гібридна: частина шарів дивиться на весь контекст, частина —
-лише на вікно останніх токенів. Сервер про це не знає й виділяє кожному шару кеш
-на повний контекст. У результаті машина тримає вдвічі менше сесій, ніж мала б, а
-на 8k контексту падає по пам'яті там, де на 4k працювала.
+Our new model is hybrid: some layers attend to the whole context, others only
+to a window of the most recent tokens. The server doesn't know this and
+allocates every layer a cache sized for the full context. As a result, the
+box holds half as many sessions as it should, and at 8k context it OOMs
+where it used to run fine at 4k.
 
-Треба порахувати, скільки насправді потрібно, і показати це числом.
+We need to figure out how much is actually needed and put a number on it.
 
-## Що ти пишеш
+## What you write
 
-`kvplan/groups.py` — `build_groups(config) -> list[group]`. Конфігурація — це
-`{"layers": [{"index", "kind", "window", "kv_heads", "head_dim"}, ...]}`, де
-`kind` це `"full"` або `"sliding"`. Шари, яким потрібен однаковий кеш, ідуть в
-одну групу. Група — це `{"kind", "window", "kv_heads", "head_dim", "layers"}`,
-де `layers` — відсортовані індекси, а `window` для повної уваги дорівнює 0.
-Групи впорядковані за своїм ключем.
+`kvplan/groups.py` — `build_groups(config) -> list[group]`. The config is
+`{"layers": [{"index", "kind", "window", "kv_heads", "head_dim"}, ...]}`, where
+`kind` is `"full"` or `"sliding"`. Layers that need the same cache go into
+one group. A group is `{"kind", "window", "kv_heads", "head_dim", "layers"}`,
+where `layers` is the sorted list of indices, and `window` for full attention
+is 0. Groups are ordered by their key.
 
 `kvplan/memory.py`:
 
@@ -24,20 +25,22 @@ plan_bytes(config, max_context, block_size, bytes_per_element)
 uniform_bytes(config, max_context, block_size, bytes_per_element)
 ```
 
-На токен шар тримає ключі **і** значення: `2 · kv_heads · head_dim · bytes_per_element`.
-Пам'ять береться блоками, тобто округлюється вгору до `block_size`. Шар з вікном
-не може потребувати більше, ніж повний контекст.
+Per token, a layer holds keys **and** values:
+`2 · kv_heads · head_dim · bytes_per_element`. Memory is allocated in blocks,
+i.e. rounded up to `block_size`. A windowed layer can't need more than the
+full context would.
 
-`kvplan/schedule.py` — `free_schedule(window, block_size, steps)`. На кожному
-кроці `t` від 1 до `steps` поверни, **скільки блоків уже можна звільнити**: усе,
-що вийшло за вікно. Число не може зменшуватись із кроками.
+`kvplan/schedule.py` — `free_schedule(window, block_size, steps)`. At each
+step `t` from 1 to `steps`, return **how many blocks can already be freed**:
+everything that has fallen outside the window. The number can't decrease as
+steps go on.
 
-## Як перевіряється
+## How it's graded
 
-Грейдер рахує еталон сам, із тієї ж конфігурації, на трьох різних моделях і двох
-розмірах контексту. Третій майлстоун — твій: пишеш тест, а ми підміняємо
-групування на таке, що зливає шари з різними вікнами в одну групу. Твій тест має
-це побачити.
+The grader computes the reference itself, from the same config, across three
+different models and two context sizes. The third milestone is yours: you
+write a test, and we swap in a grouping implementation that merges layers
+with different windows into a single group. Your test needs to catch it.
 
 ```
 mlsys project start m-build-kv-cache-groups-from-a-hybrid-model-config

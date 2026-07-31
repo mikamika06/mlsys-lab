@@ -19,11 +19,12 @@ PLAN = os.path.expanduser("~/compression-arena/docs/research2/PART2-PLAN.md")
 OUT = os.path.join(ROOT, "tools", "specs2")
 
 AREA = re.compile(r"^# (rw[23]-[a-z0-9-]+)\s*$", re.M)
-MSEC = re.compile(r"^## M — задачі \((\d+)\)\s*$", re.M)
-LSEC = re.compile(r"^## L — проєкти \((\d+)\)\s*$", re.M)
+MSEC = re.compile(r"^## M\b.*\((\d+)\)\s*$", re.M)
+LSEC = re.compile(r"^## L\b.*\((\d+)\)\s*$", re.M)
 MROW = re.compile(r"^- `(m-[a-z0-9-]+)` · (T\d(?:\+T\d)?) · `([^`]+)` — (.+)$", re.M)
 LHEAD = re.compile(r"^### \d+\. `(p-[a-z0-9-]+)` · (T\d(?:\+T\d)?)\s*$", re.M)
 TRACK = re.compile(r"^\*\*(.+?)\*\* — \d+\s*$", re.M)
+CONT = "; \u0434\u0430\u043b\u0456: "
 
 
 def sections(text):
@@ -49,7 +50,10 @@ def parse_m(body):
                 track = name
             else:
                 break
-        head, _, rest = row.group(4).partition("; далі: ")
+        # The plan document is a private file written in Ukrainian; this literal is
+        # its list separator, not user-facing text, and changing it here would only
+        # stop the parser from finding anything.
+        head, _, rest = row.group(4).partition(CONT)
         ideas = [head] + ([x.strip() for x in rest.split("; ") if x.strip()] if rest else [])
         out.append({"id": row.group(1), "tier": row.group(2), "gate_metric": row.group(3),
                     "track": track, "ideas": ideas})

@@ -1,6 +1,6 @@
 {
   "id": "m-implement-context-shift-bookkeeping-when-the-window-",
-  "title": "Бухгалтерія зсуву контексту, коли вікно переповнюється",
+  "title": "Context-shift bookkeeping when the window overflows",
   "kind": "project",
   "tier": "T0",
   "area": "rw3-local-runners",
@@ -9,14 +9,14 @@
   "difficulty": 3,
   "edits": ["ctxshift/bookkeeping.py", "ctxshift/memory.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Зсув вікна: хто виживає, коли контекст переповнюється", "check": "harness/m1.py",
+    {"n": 1, "title": "Window shift: who survives when the context overflows", "check": "harness/m1.py",
      "gates": [{"metric": "cases_matched", "op": ">=", "threshold": 5}]},
-    {"n": 2, "title": "MHA проти GQA: байти кешу на тому самому контексті", "check": "harness/m2.py",
+    {"n": 2, "title": "MHA vs GQA: cache bytes on the same context", "check": "harness/m2.py",
      "gates": [{"metric": "bytes_match", "op": "==", "threshold": 1},
                {"metric": "ratio_match", "op": "==", "threshold": 1},
                {"metric": "savings_nonneg", "op": "==", "threshold": 1},
                {"metric": "mha_is_noop", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Запобіжник: тест, що ловить витік захищеного префікса", "check": "harness/m3.py",
+    {"n": 3, "title": "Safety net: a test that catches a leaked protected prefix", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
                {"metric": "catches_leaked_keep", "op": "==", "threshold": 1}]}

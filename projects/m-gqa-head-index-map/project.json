@@ -1,6 +1,6 @@
 {
   "id": "m-gqa-head-index-map",
-  "title": "Мапа індексів голів для GQA",
+  "title": "Head Index Map for GQA",
   "kind": "project",
   "tier": "T0",
   "area": "rw2-flashattention",
@@ -9,13 +9,13 @@
   "difficulty": 2,
   "edits": ["gqa/mapping.py", "gqa/attention.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Індекс-мапа query-голова -> kv-голова", "check": "harness/m1.py",
+    {"n": 1, "title": "Index map: query-head -> kv-head", "check": "harness/m1.py",
      "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 6}]},
-    {"n": 2, "title": "Референсна GQA-увага на цій мапі", "check": "harness/m2.py",
+    {"n": 2, "title": "Reference GQA attention on this map", "check": "harness/m2.py",
      "gates": [{"metric": "expand_matched", "op": ">=", "threshold": 4},
                {"metric": "attn_matched", "op": ">=", "threshold": 4},
                {"metric": "causal_respected", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Запобіжник: repeat vs repeat_interleave", "check": "harness/m3.py",
+    {"n": 3, "title": "Regression guard: repeat vs repeat_interleave", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
                {"metric": "catches_wrong_mapping", "op": "==", "threshold": 1}]}

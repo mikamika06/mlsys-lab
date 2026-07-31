@@ -14,7 +14,7 @@ def check(workdir):
 
     tmp = w.tmpdir()
     p = os.path.join(tmp, "mine.gguf")
-    meta = {"my.count": 42, "my.name": "тест", "my.list": [3, 1, 4]}
+    meta = {"my.count": 42, "my.name": "test", "my.list": [3, 1, 4]}
     tensors = [{"name": "x.weight", "data": np.arange(6, dtype=np.float32).reshape(2, 3)},
                {"name": "y.bias", "data": (np.arange(4) * 1.5).astype(np.float32)}]
     write(p, "labarch", meta, tensors, alignment=32)
@@ -29,7 +29,7 @@ def check(workdir):
     fields = {k: f.contents() for k, f in r.fields.items() if not k.startswith("GGUF.")}
     ok = (fields.get("general.architecture") == "labarch"
           and fields.get("my.count") == 42
-          and fields.get("my.name") == "тест"
+          and fields.get("my.name") == "test"
           and list(fields.get("my.list") or []) == [3, 1, 4])
     out["metadata_survives"] = 1.0 if ok else 0.0
     if not ok:

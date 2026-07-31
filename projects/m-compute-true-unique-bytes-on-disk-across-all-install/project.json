@@ -1,6 +1,6 @@
 {
   "id": "m-compute-true-unique-bytes-on-disk-across-all-install",
-  "title": "Скільки насправді байтів займають встановлені моделі",
+  "title": "How many bytes do installed models actually take up",
   "kind": "project",
   "tier": "T1",
   "area": "rw3-local-runners",
@@ -9,14 +9,14 @@
   "difficulty": 3,
   "edits": ["blobstore/index.py", "blobstore/cost.py", "blobstore/gc.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Індекс унікальних блобів з маніфестів усіх тегів", "check": "harness/m1.py",
+    {"n": 1, "title": "Index of unique blobs built from every tag's manifest", "check": "harness/m1.py",
      "gates": [{"metric": "index_matched", "op": ">=", "threshold": 3}]},
-    {"n": 2, "title": "Реальний розмір на диску, ціна довантаження кванту і осиротілі блоби", "check": "harness/m2.py",
+    {"n": 2, "title": "Actual on-disk size, cost of pulling a quant, and orphaned blobs", "check": "harness/m2.py",
      "gates": [{"metric": "unique_match", "op": "==", "threshold": 1},
                {"metric": "naive_match", "op": "==", "threshold": 1},
                {"metric": "incremental_match", "op": "==", "threshold": 1},
                {"metric": "orphan_match", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Запобіжник: тест, що ловить злиття різних блобів в один запис", "check": "harness/m3.py",
+    {"n": 3, "title": "Safety net: a test that catches distinct blobs merged into one record", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
                {"metric": "catches_merged_blobs", "op": "==", "threshold": 1}]}

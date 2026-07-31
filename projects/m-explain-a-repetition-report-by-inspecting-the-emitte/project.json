@@ -1,6 +1,6 @@
 {
   "id": "m-explain-a-repetition-report-by-inspecting-the-emitte",
-  "title": "Звіт про повторення й бюджет num_predict",
+  "title": "Repetition report and num_predict budget",
   "kind": "project",
   "tier": "T0",
   "area": "rw3-local-runners",
@@ -9,13 +9,13 @@
   "difficulty": 2,
   "edits": ["rundiag/histogram.py", "rundiag/report.py", "rundiag/predict.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Звіт про повторення з гістограми токенів", "check": "harness/m1.py",
+    {"n": 1, "title": "Repetition report from the token histogram", "check": "harness/m1.py",
      "gates": [{"metric": "cases_matched", "op": ">=", "threshold": 7}]},
-    {"n": 2, "title": "Бюджет num_predict, включно з -1 і -2", "check": "harness/m2.py",
+    {"n": 2, "title": "num_predict budget, including -1 and -2", "check": "harness/m2.py",
      "gates": [{"metric": "budget_matched", "op": "==", "threshold": 1},
                {"metric": "bounded_by_context", "op": "==", "threshold": 1},
                {"metric": "infinite_ge_fill", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Запобіжник: тест, що ловить плутанину -1 і -2", "check": "harness/m3.py",
+    {"n": 3, "title": "Safety net: a test that catches -1/-2 confusion", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
                {"metric": "catches_confused_modes", "op": "==", "threshold": 1}]}
