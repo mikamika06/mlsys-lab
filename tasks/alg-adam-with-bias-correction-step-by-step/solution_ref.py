@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def adam_trajectory(
@@ -31,15 +32,25 @@ def adam_trajectory(
     ndarray, shape (T+1, d)
         Parameter trajectory: first row is params0, subsequent rows are updated parameters.
     """
-    m = np.zeros_like(params0, dtype=np.float64)
-    v = np.zeros_like(params0, dtype=np.float64)
-    traj = [params0.astype(np.float64).copy()]
-    for t, g in enumerate(grads, start=1):
-        g = g.astype(np.float64)
-        m = beta1 * m + (1 - beta1) * g
-        v = beta2 * v + (1 - beta2) * (g ** 2)
-        m_hat = m / (1 - beta1**t)
-        v_hat = v / (1 - beta2**t)
-        new_params = traj[-1] - lr * m_hat / (np.sqrt(v_hat) + eps)
-        traj.append(new_params)
-    return np.stack(traj, axis=0)
+    T, d = grads.shape
+    out = np.zeros((T + 1, d), dtype=np.float64)
+    m = [0.0] * d
+    v = [0.0] * d
+    
+    current_params = [float(params0[i]) for i in range(d)]
+    for i in range(d):
+        out[0, i] = current_params[i]
+
+    for t in range(1, T + 1):
+        bc1 = 1.0 - beta1 ** t
+        bc2 = 1.0 - beta2 ** t
+        for i in range(d):
+            g = float(grads[t - 1, i])
+            m[i] = beta1 * m[i] + (1.0 - beta1) * g
+            v[i] = beta2 * v[i] + (1.0 - beta2) * (g * g)
+            m_hat = m[i] / bc1
+            v_hat = v[i] / bc2
+            current_params[i] = current_params[i] - lr * m_hat / (math.sqrt(v_hat) + eps)
+            out[t, i] = current_params[i]
+
+    return out

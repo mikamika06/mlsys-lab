@@ -17,14 +17,54 @@ def knn_majority_vote(Xtr: np.ndarray,
     -------
     preds : (n_test,) array of predicted integer labels
     """
-    # Compute all pairwise squared Euclidean distances
-    dists = np.sum((Xte[:, None] - Xtr[None]) ** 2, axis=2)
-    # For each test point find indices of the k smallest distances
-    knn_idx = np.argpartition(dists, kth=k-1, axis=1)[:, :k]
+    n_train = Xtr.shape[0]
+    n_test = Xte.shape[0]
+    d = Xtr.shape[1]
+    
     preds = []
-    for idx in knn_idx:
-        labels, counts = np.unique(ytr[idx], return_counts=True)
-        max_count = counts.max()
-        best_labels = labels[counts == max_count]
-        preds.append(best_labels.min())  # deterministic tie‑break
+    for i in range(n_test):
+        dists = []
+        for j in range(n_train):
+            sq_dist = 0.0
+            for f in range(d):
+                diff = Xte[i, f] - Xtr[j, f]
+                sq_dist += diff * diff
+            dists.append(sq_dist)
+        
+        top_k_idx = []
+        for _ in range(k):
+            min_val = None
+            min_idx = -1
+            for j in range(n_train):
+                is_used = False
+                for used_idx in top_k_idx:
+                    if j == used_idx:
+                        is_used = True
+                        break
+                if not is_used:
+                    if min_val is None or dists[j] < min_val:
+                        min_val = dists[j]
+                        min_idx = j
+            top_k_idx.append(min_idx)
+        
+        counts = {}
+        for idx in top_k_idx:
+            lbl = ytr[idx]
+            if lbl not in counts:
+                counts[lbl] = 0
+            counts[lbl] += 1
+            
+        max_c = -1
+        for lbl, c in counts.items():
+            if c > max_c:
+                max_c = c
+                
+        best_lbl = None
+        for lbl, c in counts.items():
+            if c == max_c:
+                if best_lbl is None or lbl < best_lbl:
+                    best_lbl = lbl
+                    
+        preds.append(best_lbl)
+        
     return np.array(preds, dtype=np.int64)
