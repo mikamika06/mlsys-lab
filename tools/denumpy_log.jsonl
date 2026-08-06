@@ -169,3 +169,124 @@
 {"id": "llm-tile-size-invariance-block-1-vs-n", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
 {"id": "llm-stable-softmax-survives-300-logits", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
 {"id": "llm-stack-n-blocks-final-norm-forward", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:solution_ref.py: SyntaxError line 3"}
+{"id": "llm-split-merge-round-trip-identity", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
+{"id": "llm-top-p-nucleus-filter", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-top-k-filter-kept-set-exact", "ok": true, "model": "3-1-pro", "turn": 4, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1", "3-6-flash:rence does not pass gates | raised: AttributeError: 'list' object has no attribute 'shape'", "3-1-pro:no files"]}
+{"id": "llm-trace-decode-writes-o-1-rows-not-o-s", "ok": false, "why": "3-6-flash:s gates | max_abs_err=1.11022e-16 (gate <=1e-09) | op_count=10291 (gate <=200)  <-- FAILED; 3-1-pro:no files; 3-1-pro:s gates | max_abs_err=1.11022e-16 (gate <=1e-09) | op_count=16431 (gate <=200)  <-- FAILED"}
+{"id": "llm-vanilla-ffn-up-act-down-match", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:no files"]}
+{"id": "llm-weight-absorbed-rmsnorm-fold-gamma-into-next-matmul", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-uptrain-mha-gqa-by-kv-mean-pool-bounded-kl", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-yarn-ramp-attention-temperature", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "llm-why-1-sqrt-d-entropy-inflation-derivation", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "llm-vectorize-a-loopy-student-sdpa", "ok": false, "why": "3-6-flash:ss gates | max_abs_err=1.66533e-16 (gate <=1e-06) | line_events=411 (gate <20)  <-- FAILED; 3-1-pro:no files; 3-1-pro:s gates | max_abs_err=1.66533e-16 (gate <=1e-06) | line_events=2082 (gate <20)  <-- FAILED"}
+{"id": "llm-vectorized-rope-no-python-loop", "ok": true, "model": "3-1-pro", "turn": 4, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3", "3-6-flash:oes not pass gates | max_abs_err=0 (gate <=1e-06) | line_count=731 (gate <=40)  <-- FAILED", "3-1-pro:no files"]}
+{"id": "num-classify-c-f-neither-contiguity", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "num-central-difference-gradient-check-scalar", "ok": false, "why": "3-6-flash:solution_ref.py: SyntaxError line 1; 3-1-pro:defaults changed {'h': '1e-05'} -> {}; 3-1-pro:function renamed central_diff -> derivative"}
+{"id": "llm-z-loss-logit-norm-regularization", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:no files"]}
+{"id": "alg-prove-logsumexp-shift-invariance", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:parameters changed ['x'] -> ['x', 'y', 'grid', 'k', 'num_classes']; 3-1-pro:no files"}
+{"id": "cpu-scatter-with-duplicate-indices-byte-exact-accumulate", "ok": false, "why": "3-6-flash:solution_ref.py: SyntaxError line 1; 3-1-pro:parameters changed ['dst', 'idx', 'src', 'out'] -> ['input', 'dim', 'index', 'src']; 3-1-pro:defaults changed {} -> {'out': 'None'}"}
+{"id": "alg-count-distance-computations-brute-vs-kd-tree", "ok": false, "why": "3-6-flash:no files; 3-1-pro:no files; 3-1-pro:solution_ref.py: SyntaxError line 3"}
+{"id": "alg-prove-expansion-identity-is-exact", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:solution_ref.py: SyntaxError line 1"}
+{"id": "llm-debug-ce-reduction-mean-over-tokens-vs-sum", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-broadcast-reconstruct-full-k-v-from-gqa-heads", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no files; 3-1-pro:solution_ref.py: SyntaxError line 1"}
+{"id": "llm-compare-penalty-before-vs-after-temperature-kl", "ok": false, "why": "3-6-flash:TASK_FAIL: reference does not pass gates | rel_err=7.92795e-05 (gate <=1e-09)  <-- FAILED; 3-1-pro:parameters changed ['logits', 'penalty_fn', 'temperature'] -> ['logits', 'ref_logits', 'temperature']; 3-1-pro:defaults changed {} -> {'temperature': '1.0'}"}
+{"id": "llm-debug-interleaved-vs-half-split-rope-convention", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "llm-fuse-wq-wk-wv-into-one-qkv-matmul", "ok": false, "why": "3-6-flash: | max_abs_err=Infinity (gate <=1e-06)  <-- FAILED | matmul_calls=0 (gate ==1)  <-- FAILED; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-fused-qkv-rope-kv-cache-write-in-one-pass", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:no files"]}
+{"id": "llm-debug-repeat-vs-repeat-interleave-grouping", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-perplexity-from-cross-entropy", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "llm-kv-cache-append-decode-step-matches-full-recompute", "ok": false, "why": "3-6-flash:function renamed decode_steps -> _softmax; 3-1-pro:no files; 3-1-pro:solution_ref.py: SyntaxError line 3"}
+{"id": "llm-debug-mha-missing-transpose-head-seq-mix", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:numpy still in task.md; 3-1-pro:numpy still in task.md"}
+{"id": "llm-pre-norm-block-wiring-match", "ok": false, "why": "3-6-flash:function renamed pre_norm_block -> _matmul; 3-1-pro:no files; 3-1-pro:function renamed pre_norm_block -> _matmul"}
+{"id": "llm-prefill-decode-equivalence-to-no-cache", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
+{"id": "llm-prove-block-rescaling-equals-monolithic-softmax", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:parameters changed ['logits', 'block_size'] -> ['x', 'block_size']; 3-1-pro:defaults changed {} -> {'block_size': '1'}"}
+{"id": "llm-seeded-reproducible-sampling-sequence", "ok": false, "why": "3-6-flash:numpy still in starter.py; 3-1-pro:function renamed sample_sequence -> process_array; 3-1-pro:parameters changed ['logits', 'temperature', 'seed'] -> ['matrix']"}
+{"id": "llm-split-merge-round-trip-identity", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
+{"id": "num-batched-matmul-from-scratch", "ok": false, "why": "3-6-flash:solution_ref.py: SyntaxError line 1; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
+{"id": "llm-uptrain-mha-gqa-by-kv-mean-pool-bounded-kl", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-stable-softmax-survives-300-logits", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
+{"id": "num-cross-entropy-gradient-softmax-onehot", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "num-central-difference-gradient-check-scalar", "ok": false, "why": "3-6-flash:solution_ref.py: SyntaxError line 1; 3-1-pro:function renamed central_diff -> derivative; 3-1-pro:no files"}
+{"id": "num-fix-bad-pivot-selection", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no files; 3-1-pro:TASK_FAIL: reference does not pass gates | raised: SyntaxError: 'return' outside function"}
+{"id": "num-complex-step-differentiation", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
+{"id": "num-expm1-for-tiny-x", "ok": false, "why": "3-6-flash:numpy still in starter.py; 3-1-pro:no files; 3-1-pro:solution_ref.py: SyntaxError line 3"}
+{"id": "num-fix-negative-variance-naive-formula", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "num-fix-transposed-index-matmul-bug", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "num-fix-nan-cross-entropy-via-fusion", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "num-fix-wrong-transpose-vjp", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "alg-adam-with-bias-correction-step-by-step", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "alg-naive-softmax-overflow-max-subtraction-fix", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "alg-brute-force-knn-majority-vote", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "alg-mini-batch-k-means-deterministic", "ok": true, "model": "3-1-pro", "turn": 4, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:check.py: SyntaxError line 1", "3-6-flash:defaults changed {'seed': '0'} -> {}", "3-1-pro:no files"]}
+{"id": "alg-count-distance-computations-brute-vs-kd-tree", "ok": false, "why": "3-6-flash:function renamed count_distance_computations -> _sort_indices; 3-1-pro:no files; 3-1-pro:solution_ref.py: SyntaxError line 3"}
+{"id": "alg-stable-softmax-on-large-logits", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "cpu-csr-sparse-matvec-vs-dense-reference", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "alg-vectorized-pairwise-l2-matrix-no-cdist", "ok": false, "why": "3-6-flash:solution_ref.py: SyntaxError line 1; 3-1-pro:solution_ref.py: SyntaxError line 3; 3-1-pro:no signature in reference"}
+{"id": "gpu-1d-launch-index-table", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "alg-prove-logsumexp-shift-invariance", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:parameters changed ['x'] -> ['x', 'y', 'grid', 'k', 'num_classes']; 3-1-pro:no files"}
+{"id": "alg-prove-expansion-identity-is-exact", "ok": false, "why": "3-6-flash:function renamed sq_dist_expansion -> calculate_dot_product; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
+{"id": "cpu-scatter-with-duplicate-indices-byte-exact-accumulate", "ok": false, "why": "3-6-flash:solution_ref.py: SyntaxError line 1; 3-1-pro:defaults changed {} -> {'out': 'None'}; 3-1-pro:defaults changed {} -> {'out': 'None'}"}
+{"id": "llm-apply-logit-bias-map", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "alg-brute-force-knn-majority-vote", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "alg-vectorized-pairwise-l2-matrix-no-cdist", "ok": false, "why": "3-6-flash:no files; 3-1-pro:statement shows numpy-printed output; 3-1-pro:statement shows numpy-printed output"}
+{"id": "alg-count-distance-computations-brute-vs-kd-tree", "ok": false, "why": "3-6-flash:no files; 3-1-pro:eference does not pass gates | raised: ModuleNotFoundError: No module named 'solution_ref'; 3-1-pro:function renamed count_distance_computations -> _sort_indices"}
+{"id": "alg-prove-expansion-identity-is-exact", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:parameters changed ['a', 'b'] -> ['x', 'y']"}
+{"id": "alg-prove-logsumexp-shift-invariance", "ok": false, "why": "3-6-flash:function renamed logsumexp -> calculate_statistics; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-additive-inf-vs-multiplicative-0-1-mask-kl", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "llm-causal-alibi-applied-before-softmax", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no files; 3-1-pro:function renamed causal_alibi_logits -> solve"}
+{"id": "llm-causal-additive-mask-applied-before-softmax", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:function renamed causal_masked_softmax -> calculate_stats"}
+{"id": "cpu-scatter-with-duplicate-indices-byte-exact-accumulate", "ok": false, "why": "3-6-flash:no files; 3-1-pro:function renamed scatter_add -> main; 3-1-pro:parameters changed ['dst', 'idx', 'src', 'out'] -> ['input', 'dim', 'index', 'src']"}
+{"id": "llm-broadcast-reconstruct-full-k-v-from-gqa-heads", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:function renamed expand_gqa_kv -> process_items"}
+{"id": "llm-compare-penalty-before-vs-after-temperature-kl", "ok": false, "why": "3-6-flash:TASK_FAIL: reference does not pass gates | rel_err=7.92795e-05 (gate <=1e-09)  <-- FAILED; 3-1-pro:no files; 3-1-pro:solution_ref.py: SyntaxError line 3"}
+{"id": "llm-debug-accidental-mean-centering-in-rmsnorm", "ok": false, "why": "3-6-flash:defaults changed {'eps': '1e-05'} -> {}; 3-1-pro:no files; 3-1-pro:function renamed rms_norm -> layer_norm"}
+{"id": "llm-causal-streaming-softmax-with-block-skipping", "ok": false, "why": "3-6-flash:statement shows numpy-printed output; 3-1-pro:no files; 3-1-pro:statement shows numpy-printed output"}
+{"id": "llm-debug-swapped-gate-up-projections-in-swiglu", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "llm-frequency-presence-penalty-openai-formula", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-debug-off-by-one-causal-mask-future-leak", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:function renamed create_causal_mask -> calculate_mean"}
+{"id": "llm-debug-repeat-vs-repeat-interleave-grouping", "ok": false, "why": "3-6-flash:solution_ref.py: SyntaxError line 1; 3-1-pro:function renamed expand_kv_heads -> solve; 3-1-pro:parameters changed ['kv', 'num_q_heads'] -> ['keys', 'values', 'factor']"}
+{"id": "llm-gqa-each-kv-head-serves-g-query-heads", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-geglu-ffn-match", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-debug-mha-missing-transpose-head-seq-mix", "ok": false, "why": "3-6-flash:no files; 3-1-pro:numpy still in task.md; 3-1-pro:numpy still in task.md"}
+{"id": "llm-fuse-wq-wk-wv-into-one-qkv-matmul", "ok": false, "why": "3-6-flash:function renamed fused_qkv_projection -> matmul; 3-1-pro:no files; 3-1-pro:function renamed fused_qkv_projection -> matmul"}
+{"id": "llm-kv-cache-append-decode-step-matches-full-recompute", "ok": false, "why": "3-6-flash:function renamed decode_steps -> _softmax; 3-1-pro:no files; 3-1-pro:parameters changed ['x', 'Wq', 'Wk', 'Wv'] -> ['x', 'axis']"}
+{"id": "llm-layernorm-forward-from-scratch", "ok": false, "why": "3-6-flash:solution_ref.py: SyntaxError line 3; 3-1-pro:no files; 3-1-pro:function renamed layer_norm -> solution"}
+{"id": "llm-identify-salient-channels-by-activation-magnitude", "ok": false, "why": "3-6-flash:TASK_FAIL: reference does not pass gates | exact_match=0 (gate ==1)  <-- FAILED; 3-1-pro:no files; 3-1-pro:function renamed salient_channels -> identify_salient_channels"}
+{"id": "llm-mqa-is-the-gqa-limit-n-kv-1", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-naive-softmax-then-log-vs-log-softmax-stability", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:TASK_FAIL: reference does not pass gates | max_abs_err=3304.53 (gate <=1e-09)  <-- FAILED"]}
+{"id": "llm-lm-head-projection-to-logits", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:solution_ref.py: SyntaxError line 3"}
+{"id": "llm-ntk-aware-base-scaling", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-pre-norm-block-wiring-match", "ok": false, "why": "3-6-flash:function renamed pre_norm_block -> _matmul; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-perplexity-from-cross-entropy", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "llm-recover-sublayer-contribution-from-residual-write", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1"]}
+{"id": "llm-reconstruct-rotation-angle-from-rotated-vs-original", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "llm-prefill-decode-equivalence-to-no-cache", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:function renamed prefill_decode_equiv -> solve"}
+{"id": "llm-repetition-penalty-applied-to-logits", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "llm-single-head-sdpa-vectorized-match", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "llm-prove-block-rescaling-equals-monolithic-softmax", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:defaults changed {} -> {'block_size': '1'}; 3-1-pro:defaults changed {} -> {'block_size': '1'}"}
+{"id": "llm-rmsnorm-from-scratch-llama-style", "ok": false, "why": "3-6-flash:rence does not pass gates | raised: AttributeError: 'list' object has no attribute 'dtype'; 3-1-pro:no files; 3-1-pro:defaults changed {'eps': '1e-06'} -> {}"}
+{"id": "llm-temperature-scaling-distribution", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-seeded-reproducible-sampling-sequence", "ok": false, "why": "3-6-flash:numpy still in starter.py; 3-1-pro:parameters changed ['logits', 'temperature', 'seed'] -> ['matrix']; 3-1-pro:defaults changed {} -> {'temperature': '1.0', 'seed': 'None'}"}
+{"id": "llm-split-merge-round-trip-identity", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-stable-softmax-survives-300-logits", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:function renamed stable_softmax -> solve"}
+{"id": "num-branchless-stable-sigmoid", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-uptrain-mha-gqa-by-kv-mean-pool-bounded-kl", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:function renamed uptrain_mha_to_gqa -> lane_reduce_sum; 3-1-pro:parameters changed ['q', 'k', 'v', 'groups'] -> ['lanes']"}
+{"id": "num-central-difference-gradient-check-scalar", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "num-batched-matmul-from-scratch", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
+{"id": "num-fix-bad-pivot-selection", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:TASK_FAIL: reference does not pass gates | raised: SyntaxError: 'return' outside function"]}
+{"id": "num-complex-step-differentiation", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:numpy still in task.md"}
+{"id": "num-expm1-for-tiny-x", "ok": false, "why": "3-6-flash:numpy still in starter.py; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "num-fix-nan-cross-entropy-via-fusion", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no files"}
+{"id": "num-fix-missing-axis-sum-after-broadcast", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:function renamed broadcast_add -> adam_step; 3-1-pro:parameters changed ['a', 'b'] -> ['param', 'grad', 'm', 'v', 't', 'lr', 'beta1', 'beta2', 'eps']"}
+{"id": "num-fully-fused-forward-backward-log-softmax-nll", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "num-fused-cross-entropy-from-logits", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "num-fused-streaming-log-softmax-matching-flash-numerics", "ok": false, "why": "3-6-flash:no files; 3-1-pro:function renamed streaming_log_softmax -> solve; 3-1-pro:parameters changed ['x'] -> ['x', 'dim']"}
+{"id": "num-general-unbroadcast-leading-size-1-dims", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "num-fix-underflowing-log-likelihood", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:function renamed log_likelihood -> calculate_dot_product"}
+{"id": "num-fix-one-pass-variance-that-returns-negatives", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:function renamed stable_variance -> calculate_stats; 3-1-pro:parameters changed ['x'] -> ['data', 'ddof']"}
+{"id": "num-hillis-steele-inclusive-scan", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "num-gradient-accumulation-on-reused-node", "ok": false, "why": "3-6-flash:function renamed tape_grad -> _forward; 3-1-pro:no files; 3-1-pro:Error: module 'mlsys_task_num_gradient_accumulation_on_reused_node_check' has no attribute"}
+{"id": "num-kahan-vs-neumaier-when-running-sum-addend", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 17"]}
+{"id": "num-label-smoothed-fused-ce", "ok": false, "why": "3-6-flash:defaults changed {'eps': '0.1'} -> {}; 3-1-pro:no files; 3-1-pro:function renamed label_smoothed_fused_ce -> solution"}
+{"id": "num-log-softmax-via-lse", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "num-jacobian-by-finite-differences", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "num-lu-with-partial-pivoting-check-pa-lu", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}

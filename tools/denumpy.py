@@ -37,6 +37,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import threading
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -55,6 +56,19 @@ SUBJECT = re.compile(
     r"frombuffer|\.view\(\s*np|memmap|np\.einsum|finfo|iinfo|int8|uint8|\bqint|"
     r"packbits|unpackbits|byteswap|ascontiguous|\.tobytes\(|np\.linalg")
 NUMPY = re.compile(r"\bnumpy\b|\bnp\s*\.|\bnp\b\s*=")
+# Some tasks exist to make the learner vectorise. Their gate counts executed
+# Python lines, or their statement forbids loops outright, and rewriting them
+# into loops inverts exactly what they teach: one such reference came back with
+# op_count=22278 against a gate of 50. numpy is the subject there, not the bag.
+# The gate that counts executed Python lines, or a statement that forbids loops
+# in words. The bare word "vectorize" is not the signal: it appears in prose all
+# over the bank, and excluding on it costs real coverage.
+VECTOR_GATE = re.compile(
+    r"op_count|settrace|setprofile|f_lineno|line execution|"
+    r"vectori[sz]ation gate|python_lines|line_events")
+VECTOR_STMT = re.compile(
+    r"must be vectori[sz]ed|do not use python loops?|"
+    r"without (?:a )?python loop|no python loops?", re.I)
 
 LEARNER_FILES = ("starter.py", "solution_ref.py", "task.md")
 ALL_FILES = ("task.md", "starter.py", "solution_ref.py", "check.py")
@@ -102,9 +116,30 @@ def classify(tid):
     blob = "\n".join(v for v in files.values() if v)
     if not NUMPY.search(learner):
         return "clean", files
-    if SUBJECT.search(blob):
+    if (SUBJECT.search(blob)
+            or VECTOR_GATE.search(files.get("check.py") or "")
+            or VECTOR_STMT.search(files.get("task.md") or "")):
         return "subject", files
     return "container", files
+
+
+def output_is_regenerable(md):
+    """Can the shown output be replaced by running the example, structurally.
+
+    Cheap check, no execution: there has to be an Example section with a python
+    fence, and either a labelled output fence or exactly one print whose result
+    is written beside it.
+    """
+    head = re.search(r"^#+\s*Example", md or "", re.M | re.I)
+    if not head:
+        return False
+    start = head.start()
+    m = EXAMPLE.search(md, start)
+    if not m:
+        return False
+    if OUTPUT_FENCE.search(md, start):
+        return True
+    return m.group(1).count("print(") == 1
 
 
 def queue(include_printed=False):
@@ -121,7 +156,8 @@ def queue(include_printed=False):
         kind, files = classify(tid)
         if kind != "container":
             continue
-        if not include_printed and NPPRINT.search(files.get("task.md") or ""):
+        md = files.get("task.md") or ""
+        if not include_printed and NPPRINT.search(md) and not output_is_regenerable(md):
             deferred.append(tid)
             continue
         out.append(tid)
@@ -400,6 +436,103 @@ followed by the complete Markdown in a fenced block. No commentary.
 """
 
 
+EXAMPLE = re.compile(r"```python\n(.*?)```", re.S)
+OUTPUT_FENCE = re.compile(r"(\n(?:Output|Result)[^\n]*\n+```[a-z]*\n)(.*?)(```)", re.S | re.I)
+
+
+def refresh_output(md, reference_src, tid):
+    """Replace the illustrative output with what the example actually prints.
+
+    These statements show an array the way numpy prints one. After the rewrite
+    the code returns a list, so the block is no longer describing anything that
+    happens. Running it is the only honest way to say what it prints now.
+    """
+    # The first python fence in a statement is the signature block, not the
+    # example; searching from the top runs `def f(...): ...` and gets an
+    # IndentationError instead of an output.
+    head = re.search(r"^#+\s*Example", md, re.M | re.I)
+    start = head.start() if head else 0
+    m = EXAMPLE.search(md, start)
+    om = OUTPUT_FENCE.search(md, start)
+    if not m or not om:
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        rp = os.path.join(tmp, "reference.py")
+        ep = os.path.join(tmp, "example.py")
+        with open(rp, "w", encoding="utf-8") as f:
+            f.write(reference_src)
+        with open(ep, "w", encoding="utf-8") as f:
+            f.write(m.group(1))
+        try:
+            r = subprocess.run(
+                [sys.executable, os.path.join(ROOT, "tools", "run_example.py"), rp, ep],
+                capture_output=True, text=True, timeout=30)
+        except subprocess.TimeoutExpired:
+            return None
+    if "OK" not in r.stderr or not r.stdout.strip():
+        return None
+    return md[:om.start(2)] + r.stdout.rstrip() + "\n" + md[om.end(2):]
+
+
+def _run_example(reference_src, code):
+    with tempfile.TemporaryDirectory() as tmp:
+        rp = os.path.join(tmp, "reference.py")
+        ep = os.path.join(tmp, "example.py")
+        with open(rp, "w", encoding="utf-8") as f:
+            f.write(reference_src)
+        with open(ep, "w", encoding="utf-8") as f:
+            f.write(code)
+        try:
+            r = subprocess.run(
+                [sys.executable, os.path.join(ROOT, "tools", "run_example.py"), rp, ep],
+                capture_output=True, text=True, timeout=30)
+        except subprocess.TimeoutExpired:
+            return None
+    if "OK" not in r.stderr:
+        return None
+    return r.stdout
+
+
+def refresh_inline_output(md, reference_src, tid):
+    """Rewrite the output a statement shows as a comment beside its print.
+
+    Most of these statements do not label the output at all: they write
+    `print(preds)  # [1 1]`, or follow the print with a block of `#` lines. Once
+    the code returns lists those comments describe an array that no longer
+    exists, and the only honest replacement is what the example now prints.
+    Handled for a single print, which is the shape they all use; anything else
+    is left alone rather than guessed at.
+    """
+    head = re.search(r"^#+\s*Example", md, re.M | re.I)
+    start = head.start() if head else 0
+    m = EXAMPLE.search(md, start)
+    if not m:
+        return None
+    code = m.group(1)
+    if code.count("print(") != 1:
+        return None
+    out = _run_example(reference_src, code)
+    if not out or not out.strip():
+        return None
+    lines = out.rstrip("\n").split("\n")
+
+    src = code.split("\n")
+    idx = next((i for i, ln in enumerate(src) if "print(" in ln), None)
+    if idx is None:
+        return None
+    src[idx] = re.sub(r"\s*#.*$", "", src[idx]).rstrip()
+    tail = idx + 1
+    while tail < len(src) and src[tail].lstrip().startswith("#"):
+        tail += 1
+    comment = ["# " + ln if ln else "#" for ln in lines]
+    if len(lines) == 1:
+        src[idx] = src[idx] + "  " + comment[0]
+        new = src[:idx + 1] + src[tail:]
+    else:
+        new = src[:idx + 1] + comment + src[tail:]
+    return md[:m.start(1)] + "\n".join(new) + md[m.end(1):]
+
+
 def statement_intact(before, after):
     """Fences balanced and the mathematics still there."""
     if before.count("```") != after.count("```"):
@@ -451,6 +584,7 @@ def one(tid, turns):
     if kind != "container":
         return {"id": tid, "ok": True, "skipped": True, "why": kind}
     history = []
+    nudged = False
     prompt = contract(tid, files)
     conv = "mlsys-denumpy-" + tid
     for turn in range(turns):
@@ -477,9 +611,19 @@ def one(tid, turns):
                       % (name, broken, name))
             continue
         if not got:
+            # The contract is already in this chat. A nudge costs two lines; a
+            # fresh conversation costs the whole contract again, so that is the
+            # second answer to an empty reply, not the first.
             history.append("%s:no files" % model)
-            conv = "mlsys-denumpy-%s-r%d" % (tid, turn)
-            prompt = contract(tid, files)
+            if nudged:
+                conv = "mlsys-denumpy-%s-r%d" % (tid, turn)
+                prompt = contract(tid, files)
+                nudged = False
+            else:
+                nudged = True
+                prompt = ("Send the files now: solution_ref.py and check.py, each "
+                          "as `FILE: <name>` followed by a fenced block. "
+                          "No commentary.")
             continue
 
         drift = signature_drift(files.get("starter.py"), got.get("solution_ref.py"))
@@ -500,21 +644,37 @@ def one(tid, turns):
         # starter that was just written, so the two cannot disagree.
         before = files["task.md"] or ""
         after = rewrite_statement(before, signature_of(got.get("solution_ref.py", "")))
-        if LEFTOVER.search(after):
-            # Substitution got as far as it can. The gateway preserves fences,
-            # indentation and LaTeX now, so the rest is worth asking for — under
-            # the same integrity checks, which is what makes it safe to ask.
+        # Substitution got as far as it can. The gateway preserves fences,
+        # indentation and LaTeX now, so the rest is worth asking for — under the
+        # same integrity checks, which is what makes it safe to ask. Two rounds,
+        # because what survives is usually one sentence comparing the result to
+        # numpy, and naming that line is what gets it rewritten.
+        for attempt in range(2):
+            if not LEFTOVER.search(after):
+                break
+            stubborn = [ln.strip() for ln in after.split("\n") if LEFTOVER.search(ln)]
+            body = after
+            if attempt:
+                body = ("These lines still mention numpy and must be rewritten in "
+                        "plain Python without changing what they say:\n  "
+                        + "\n  ".join(stubborn[:6]) + "\n\n" + after)
             try:
                 reply = bu.ask(model, STATEMENT_PROMPT.format(
                     signature=signature_of(got.get("solution_ref.py", "")),
-                    body=after), conv + "-md")
+                    body=body), "%s-md%d" % (conv, attempt))
                 md = bu.parse_files(reply).get("task.md")
             except Exception:  # noqa: BLE001
                 md = None
-            if md and not LEFTOVER.search(md) and not statement_intact(before, md):
+            if md and not statement_intact(before, md):
                 after = md
 
         broke = statement_intact(before, after)
+        if not broke and NPPRINT.search(after):
+            fresh = (refresh_output(after, got.get("solution_ref.py", ""), tid)
+                     or refresh_inline_output(after, got.get("solution_ref.py", ""), tid))
+            if fresh and not NPPRINT.search(fresh):
+                after = fresh
+                broke = statement_intact(before, after)
         if not broke and NPPRINT.search(after):
             # The statement shows an array printed the way numpy prints one.
             # Rewriting that honestly means running the reference, which is a

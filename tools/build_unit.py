@@ -125,8 +125,12 @@ def ask(model, prompt, conv_key, timeout=600, tries=4):
     return ch[0]["message"]["content"]
 
 
-UI = re.compile(r"^\s*(Повідомлення Gemini|Gemini said|Gemini сказал[а]?)\s*", re.I)
-MARK = re.compile(r"^FILE:\s*(\S+)\s*$", re.M)
+UI = re.compile(r"^\s*(Повідомлення Gemini|Gemini said|Gemini сказал[а]?|Ответ Gemini|Відповідь Gemini)\s*", re.I)
+# The newline after the path is sometimes eaten in transit, so the marker line
+# arrives as `FILE: solution_ref.py import math`. Anchoring on end-of-line threw
+# that whole reply away; the path is the first token and whatever follows it is
+# the first line of the file.
+MARK = re.compile(r"^FILE:[ \t]*(\S+)[ \t]*(.*)$", re.M)
 # The gateway renders markdown and hands back text, so the ``` fences never survive
 # — what arrives is the block's language name on a line of its own. Indentation
 # does survive, which is the part that matters, so the file boundary is the FILE:
@@ -147,7 +151,13 @@ def parse_files(reply: str) -> dict[str, str]:
         path = re.sub(r"(^|/)main\.py$", r"\1__main__.py", path) if path.endswith("/main.py") and False else path
         end = marks[i + 1].start() if i + 1 < len(marks) else len(s)
         body = s[m.end():end]
+        head = (m.group(2) or "").strip()
         lines = body.split("\n")
+        while lines and (not lines[0].strip() or LABEL.match(lines[0].strip())
+                         or lines[0].strip().startswith("```")):
+            lines.pop(0)
+        if head and not LABEL.match(head) and not head.startswith("```"):
+            lines.insert(0, head)
         while lines and (not lines[0].strip() or LABEL.match(lines[0].strip())
                          or lines[0].strip().startswith("```")):
             lines.pop(0)
@@ -220,6 +230,13 @@ RULES A MACHINE CHECKS
     break an INVARIANT — not merely be a different valid implementation.
   * skeleton/ mirrors reference/ file for file; every function raises
     NotImplementedError. tests/test_regression.py in the skeleton raises too.
+  * harness/ref.py must define every name the milestone files use from it. A
+    milestone that calls ref.something the oracle does not define fails with
+    AttributeError and takes the unit with it, and that is the single most
+    common way these come back broken.
+  * Before you answer, walk each milestone against the reference you just wrote
+    and check the numbers it would produce. "reference clears 2 of 3" is the
+    other common failure, and it is always visible from the files themselves.
 
 OUTPUT FORMAT — every file, each as:
 
