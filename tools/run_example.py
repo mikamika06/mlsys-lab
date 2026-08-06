@@ -6,14 +6,18 @@ timeout rather than the pipeline.
 
     python3 tools/run_example.py <reference.py> <example.py>
 """
-import io
 import contextlib
+import io
+import os
 import runpy
 import sys
 
 
 def main():
     ref, ex = sys.argv[1], sys.argv[2]
+    # Examples import the reference by module name — `from solution_ref import f`
+    # — so its directory has to be importable, not merely readable.
+    sys.path.insert(0, os.path.dirname(os.path.abspath(ref)))
     ns = runpy.run_path(ref)
     ns = {k: v for k, v in ns.items() if not k.startswith("__")}
     with open(ex, encoding="utf-8") as f:

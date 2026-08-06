@@ -488,7 +488,7 @@ def refresh_output(md, reference_src, tid):
     if not m or not om:
         return None
     with tempfile.TemporaryDirectory() as tmp:
-        rp = os.path.join(tmp, "reference.py")
+        rp = os.path.join(tmp, "solution_ref.py")
         ep = os.path.join(tmp, "example.py")
         with open(rp, "w", encoding="utf-8") as f:
             f.write(reference_src)
@@ -507,7 +507,7 @@ def refresh_output(md, reference_src, tid):
 
 def _run_example(reference_src, code):
     with tempfile.TemporaryDirectory() as tmp:
-        rp = os.path.join(tmp, "reference.py")
+        rp = os.path.join(tmp, "solution_ref.py")
         ep = os.path.join(tmp, "example.py")
         with open(rp, "w", encoding="utf-8") as f:
             f.write(reference_src)
