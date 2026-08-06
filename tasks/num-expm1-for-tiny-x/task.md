@@ -6,7 +6,7 @@ $$
 e^{x} - 1 = x + \frac{x^2}{2} + \frac{x^3}{6} + \dots \approx x .
 $$
 
-But the obvious code `np.exp(x) - 1.0` destroys that. In float64, $e^x$ rounds to exactly $1.0$
+But the obvious code `[math.exp(v) - 1.0 for v in x]` destroys that. In float64, $e^x$ rounds to exactly $1.0$
 whenever $|x| < \varepsilon/2 \approx 1.1\times10^{-16}$, so the subtraction returns $0$ and the
 relative error is $100\%$. Even at $x = 10^{-9}$ the leading digits cancel and roughly half the
 mantissa is lost — this is catastrophic cancellation.
@@ -37,7 +37,7 @@ $$
 Implement `exp_minus_one` in `solve.py`:
 
 ```python
-def exp_minus_one(x: np.ndarray) -> np.ndarray:
+def exp_minus_one(x: list[float]) -> list[float]:
     ...
 ```
 
@@ -45,30 +45,29 @@ def exp_minus_one(x: np.ndarray) -> np.ndarray:
 $x$ over $[-30, 30]$, including a logarithmic sweep down to $10^{-18}$, both signs, exact zero, and
 subnormals.
 
-Any library `expm1` (`np.expm1`, `math.expm1`, …) is blocked: the grader rejects a solution whose
-source mentions `expm1`, and additionally raises if `np.expm1` / `math.expm1` is called during
-grading. Use `np.exp` and `np.log`.
+Any library `expm1` (`math.expm1`, …) is blocked: the grader rejects a solution whose
+source mentions `expm1`, and additionally raises if `math.expm1` is called during
+grading. Use `math.exp` and `math.log`.
 
 Guard the division so no `inf`/`NaN` leaks into the result.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1e-17, 1e-9, 1.0, -30.0, 0.0])
+x = [1e-17, 1e-9, 1.0, -30.0, 0.0]
 
 exp_minus_one(x)
 # array([ 1.00000000e-17,  1.00000000e-09,  1.71828183e+00, -1.00000000e+00,  0.0])
 
-np.exp(x) - 1.0
+[math.exp(v) - 1.0 for v in x]
 # array([ 0.00000000e+00,  1.00000008e-09,  1.71828183e+00, -1.00000000e+00,  0.0])
 #          ^ all digits lost      ^ ~8 digits lost
 ```
 
 ## What the gate checks
 
-The reference is `np.expm1` evaluated on the same grid (a live NumPy oracle, nothing hardcoded).
+The reference is `math.expm1` evaluated on the same grid (a live Python oracle, nothing hardcoded).
 
 * `rel_err` — the **maximum elementwise** relative error
 
@@ -77,7 +76,7 @@ $$
 $$
 
   must be $\le 10^{-14}$. A global L2 error would hide the tiny-$x$ failure; this one does not.
-  The naive `np.exp(x) - 1.0` scores $1.0$ here.
+The naive `[math.exp(v) - 1.0 for v in x]` scores $1.0$ here.
 * `exact_zero_fraction` — where $\operatorname{expm1}(x)$ is exactly $0$, your output must be exactly
   $0$ too; must be $1.0$.
 

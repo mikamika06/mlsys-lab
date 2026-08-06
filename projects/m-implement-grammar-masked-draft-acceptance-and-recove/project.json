@@ -1,0 +1,44 @@
+{
+  "id": "m-implement-grammar-masked-draft-acceptance-and-recove",
+  "title": "Grammar-masked draft acceptance and recovery",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Speculative decoding with structured output",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "speculative/acceptance.py",
+    "speculative/metrics.py",
+    "speculative/diagnostics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Grammar-masked draft acceptance and length recovery",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "acceptance_rate", "op": ">=", "threshold": 0.85}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure real acceptance loss from unmasked drafts",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "loss_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test catching grammar mismatch collapse",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_collapsed_acceptance", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

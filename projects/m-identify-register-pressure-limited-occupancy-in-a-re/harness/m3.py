@@ -22,7 +22,7 @@ def _survives(path):
 
 
 def check(workdir):
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_occupancy": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_invariant": 0.0}
     path = os.path.join(workdir, "tests", "test_regression.py")
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
@@ -31,7 +31,7 @@ def check(workdir):
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {str(e)[:120]}"
+        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}"
         return out
     if first is None:
         out["_note"] = "no test_* functions found"
@@ -39,20 +39,17 @@ def check(workdir):
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import profiler.occupancy as o
-    good = o.compute_occupancy
+    import triton_prof.ncu as ncu_mod
+    good_occ = ncu_mod.analyze_occupancy
 
-    def broken(regs_per_thread, shmem_per_block, block_size, device_specs):
-        res = good(regs_per_thread, shmem_per_block, block_size, device_specs)
-        res["occupancy"] = 1.0
+    def broken_occ(profile_data):
+        res = good_occ(profile_data)
+        res["bottleneck"] = "smem"
         return res
 
-    o.compute_occupancy = broken
-    import profiler
-    profiler.compute_occupancy = broken
+    ncu_mod.analyze_occupancy = broken_occ
     try:
-        out["catches_broken_occupancy"] = 0.0 if _survives(path) else 1.0
+        out["catches_broken_invariant"] = 0.0 if _survives(path) else 1.0
     finally:
-        o.compute_occupancy = good
-        profiler.compute_occupancy = good
+        ncu_mod.analyze_occupancy = good_occ
     return out

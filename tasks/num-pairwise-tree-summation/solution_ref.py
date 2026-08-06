@@ -1,8 +1,5 @@
-import numpy as np
-
-def pairwise_sum(arr):
-    arr = np.asarray(arr, dtype=np.float64)
-    n = arr.size
+def pairwise_sum(arr: list[float]) -> float:
+    n = len(arr)
     if n == 0:
         return 0.0
 

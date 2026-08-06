@@ -2,18 +2,16 @@ import ref
 
 
 def check(workdir):
-    from nmvalidate.validator import validate_nm_sparsity
-    out = {"validations_matched": 0.0, "total": float(len(ref.TEST_CASES))}
+    from nmval.validator import validate_nm_constraint
+
+    out = {"validators_matched": 0.0, "total": float(len(ref.CONFIGS))}
     ok = 0
-    for i, tc in enumerate(ref.TEST_CASES):
-        try:
-            got = validate_nm_sparsity(tc["weight"], tc["n"], tc["m"], tc["dim"])
-            if got == tc["valid"]:
-                ok += 1
-            elif "_note" not in out:
-                out["_note"] = f"case {i}: got {got}, expected {tc['valid']}"
-        except Exception as e:
-            if "_note" not in out:
-                out["_note"] = f"case {i} raised {type(e).__name__}"
-    out["validations_matched"] = float(ok)
+    for i, cfg in enumerate(ref.CONFIGS):
+        want_valid, want_counts = ref.validate_nm(cfg, 2, 4)
+        got_valid, got_counts = validate_nm_constraint(cfg, 2, 4)
+        if got_valid == want_valid and got_counts == want_counts:
+            ok += 1
+        elif "_note" not in out:
+            out["_note"] = f"case {i}: got ({got_valid}, {got_counts}), reference ({want_valid}, {want_counts})"
+    out["validators_matched"] = float(ok)
     return out

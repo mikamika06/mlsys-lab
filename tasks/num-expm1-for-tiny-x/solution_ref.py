@@ -1,14 +1,11 @@
 import math
-import numpy as np
 
 
-def exp_minus_one(x):
+def exp_minus_one(x: list[float]) -> list[float]:
     """Accurate e**x - 1, including for |x| far below the fp64 epsilon."""
-    x_arr = np.asarray(x, dtype=np.float64)
-    out = np.empty_like(x_arr, dtype=np.float64)
+    out = []
 
-    for i in range(x_arr.size):
-        xi = float(x_arr.flat[i])
+    for xi in x:
         try:
             u = math.exp(xi)
         except OverflowError:
@@ -27,6 +24,6 @@ def exp_minus_one(x):
                 lu = float("nan")
             val = d * (xi / lu)
 
-        out.flat[i] = val
+        out.append(val)
 
     return out

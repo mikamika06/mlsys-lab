@@ -1,0 +1,22 @@
+{
+  "id": "m-implement-a-paged-kv-block-allocator-alloc-append-fr",
+  "title": "Paged KV Block Allocator with CoW and Slot Mapping",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "paged-attention-block-management",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["pagedkv/allocator.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Block allocation, append, and free with LRU free list", "check": "harness/m1.py",
+     "gates": [{"metric": "alloc_free_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Copy-on-write for forked sequences and slot mapping", "check": "harness/m2.py",
+     "gates": [{"metric": "cow_match", "op": "==", "threshold": 1},
+               {"metric": "slot_mapping_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches broken reference counting or allocation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

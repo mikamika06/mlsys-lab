@@ -34,8 +34,8 @@ precision ($\sim\!10^{-15}$) — orders of magnitude better than any finite-diff
 scheme.
 
 The trade-off: $f$ must accept a complex argument and be analytic (no branch cuts,
-no `abs`, no non-differentiable kinks on the real axis). NumPy's universal
-functions (`np.sin`, `np.exp`, `np.log`, etc.) satisfy this.
+no `abs`, no non-differentiable kinks on the real axis). Python's universal
+functions (`cmath.sin`, `cmath.exp`, `cmath.log`, etc.) satisfy this.
 
 ## Task
 
@@ -49,7 +49,7 @@ def complex_step_diff(f, x, h=1e-20):
     ----------
     f : callable
         A real-valued function that accepts a *complex* argument and returns
-        a real or complex result.  (NumPy ufuncs and lambdas using NumPy
+        a real or complex result.  (Python ufuncs and lambdas using Python
         arithmetic all qualify.)
     x : float
         The real point at which to differentiate.
@@ -70,10 +70,9 @@ the complex-step formula above.
 ## Example
 
 ```python
-import numpy as np
 
-approx = complex_step_diff(np.sin, 1.0)
-analytic = np.cos(1.0)
+approx = complex_step_diff(cmath.sin, 1.0)
+analytic = cmath.cos(1.0)
 print(abs(approx - analytic))  # ≈ 1e-16
 ```
 

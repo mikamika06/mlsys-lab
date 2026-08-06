@@ -1,1 +1,64 @@
-{ "id": "m-implement-a-general-n-m-constraint-validator-and-che", "title": "General N:M constraint validator and check real masks", "kind": "project", "tier": "T0", "area": "rw3-pruning-distill", "track": "N:M semi-structured (2:4) sparsity mechanics", "part": 1, "difficulty": 3, "edits": ["nmvalidate/validator.py", "nmvalidate/masks.py", "tests/test_regression.py"], "milestones": [ {"n": 1, "title": "Validate N:M sparsity constraints on weight matrices", "check": "harness/m1.py", "gates": [{"metric": "validations_matched", "op": ">=", "threshold": 3}]}, {"n": 2, "title": "Extract and verify real operational masks", "check": "harness/m2.py", "gates": [{"metric": "masks_matched", "op": ">=", "threshold": 3}]}, {"n": 3, "title": "Safety net: regression tests catching invalid sparse blocks", "check": "harness/m3.py", "gates": [{"metric": "has_tests", "op": "", "threshold": 1}, {"metric": "passes_on_good", "op": "", "threshold": 1}, {"metric": "catches_invalid_blocks", "op": "==", "threshold": 1}]} ] }
+{
+  "id": "m-implement-a-general-n-m-constraint-validator-and-che",
+  "title": "General N:M constraint validator and mask checker",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-pruning-distill",
+  "track": "N:M semi-structured (2:4) sparsity mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "nmval/validator.py",
+    "nmval/maskcheck.py",
+    "nmval/utils.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Validate general N:M tensor sparsity constraints",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "validators_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Check real execution masks and index layouts",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "masks_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching relaxed or invalid mask structures",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_masks",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

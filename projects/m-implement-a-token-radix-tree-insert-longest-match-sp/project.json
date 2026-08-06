@@ -1,0 +1,21 @@
+{
+  "id": "m-implement-a-token-radix-tree-insert-longest-match-sp",
+  "title": "Token radix tree, prefix caching, and matching schedule",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "radix-tree-prefix-caching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["radix/tree.py", "radix/cache.py", "radix/schedule.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Token radix tree insert, longest match, and split", "check": "harness/m1.py",
+     "gates": [{"metric": "tree_matched", "op": ">=", "threshold": 1.0}]},
+    {"n": 2, "title": "Radix tree vs flat cache on branching agent traces", "check": "harness/m2.py",
+     "gates": [{"metric": "radix_beats_flat", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: regression test for scheduling and matching", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_broken_schedule", "op": "==", "threshold": 1.0}]}
+  ]
+}

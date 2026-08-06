@@ -1,0 +1,64 @@
+{
+  "id": "m-implement-gkd-training-step-with-trl-gkdconfig",
+  "title": "GKD training step and divergence analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Sequence-level & on-policy LLM distillation (GKD)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gkd/step.py",
+    "gkd/toy.py",
+    "gkd/drift.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "GKD training step computation with config",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "steps_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Toy distributions and divergence modes",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "divergences_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catching incorrect GKD step behavior",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_step",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

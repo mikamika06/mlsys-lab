@@ -23,7 +23,7 @@ def _survives(path):
 
 
 def check(workdir):
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_invalid_blocks": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_invalid_masks": 0.0}
     path = os.path.join(workdir, "tests", "test_regression.py")
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
@@ -32,7 +32,7 @@ def check(workdir):
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}"
+        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {str(e)[:120]}"
         return out
     if first is None:
         out["_note"] = "no test_* functions found"
@@ -40,21 +40,15 @@ def check(workdir):
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import nmvalidate.validator as v_mod
-    good_validator = v_mod.validate_nm_sparsity
+    import nmval.validator as v
+    good = v.validate_nm_constraint
 
-    def always_true(weight, n, m, dim=-1):
-        return True
+    def broken(tensor, n=2, m=4):
+        return True, [0] * (tensor.size // m)
 
-    v_mod.validate_nm_sparsity = always_true
-    import nmvalidate
-    if hasattr(nmvalidate, "validator"):
-        nmvalidate.validator.validate_nm_sparsity = always_true
-
+    v.validate_nm_constraint = broken
     try:
-        out["catches_invalid_blocks"] = 0.0 if _survives(path) else 1.0
+        out["catches_invalid_masks"] = 0.0 if _survives(path) else 1.0
     finally:
-        v_mod.validate_nm_sparsity = good_validator
-        if hasattr(nmvalidate, "validator"):
-            nmvalidate.validator.validate_nm_sparsity = good_validator
+        v.validate_nm_constraint = good
     return out

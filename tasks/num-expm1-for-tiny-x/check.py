@@ -46,7 +46,7 @@ def grade(sol, fx) -> dict:
     np.expm1 = _blocked
     math.expm1 = _blocked
     try:
-        got = sol.exp_minus_one(x.copy())
+        got = sol.exp_minus_one(x.tolist())
     except Exception:
         return dict(FAIL)
     finally:

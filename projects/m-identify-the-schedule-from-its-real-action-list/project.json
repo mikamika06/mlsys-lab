@@ -1,0 +1,21 @@
+{
+  "id": "m-identify-the-schedule-from-its-real-action-list",
+  "title": "Identify pipeline schedules and compute empirical bubble fractions from Megatron logs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Pipeline parallelism scheduling (GPipe / 1F1B / interleaved / zero-bubble)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["pipesched/schedule.py", "pipesched/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify the schedule from its real action list", "check": "harness/m1.py",
+     "gates": [{"metric": "schedules_matched", "op": ">=", "threshold": 12}]},
+    {"n": 2, "title": "Empirical bubble fraction and zero-bubble analysis", "check": "harness/m2.py",
+     "gates": [{"metric": "bubble_rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: regression test for schedule classifier", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_classifier", "op": "==", "threshold": 1}]}
+  ]
+}
