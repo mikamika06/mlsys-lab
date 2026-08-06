@@ -1,9 +1,9 @@
 {
   "id": "sys-fix-missing-cross-rank-rescale-in-ring-merge",
   "title": "Fix missing cross-rank rescale in ring merge",
-  "track": "04 Systems ML",
+  "track": "04 Systems for ML",
   "tier": "II",
-  "module": "M2attn",
+  "module": "M4cp",
   "difficulty": 4,
   "genre": "debug",
   "platform": "cross-platform",

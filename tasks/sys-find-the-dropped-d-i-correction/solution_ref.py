@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 
@@ -17,64 +16,15 @@ def flash_attention_backward(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
     L = np.asarray(L, dtype=np.float64)
     dO = np.asarray(dO, dtype=np.float64)
 
-    n, d = Q.shape
-    n_k, d_k = K.shape
+    S = (Q @ K.T) * scale
+    P = np.exp(S - L[:, None])          # recomputed attention weights
 
-    S = np.zeros((n, n_k), dtype=np.float64)
-    for i in range(n):
-        for j in range(n_k):
-            s_val = 0.0
-            for k_idx in range(d):
-                s_val += Q[i, k_idx] * K[j, k_idx]
-            S[i, j] = s_val * scale
+    dV = P.T @ dO
+    dP = dO @ V.T
 
-    P = np.zeros((n, n_k), dtype=np.float64)
-    for i in range(n):
-        for j in range(n_k):
-            P[i, j] = math.exp(S[i, j] - L[i])
+    D = np.sum(dO * O, axis=1)          # the correction term: rowsum(dO * O)
+    dS = P * (dP - D[:, None])          # correct softmax VJP
 
-    dV = np.zeros((n_k, d), dtype=np.float64)
-    for i in range(n_k):
-        for j in range(d):
-            val = 0.0
-            for k_idx in range(n):
-                val += P[k_idx, i] * dO[k_idx, j]
-            dV[i, j] = val
-
-    dP = np.zeros((n, n_k), dtype=np.float64)
-    for i in range(n):
-        for j in range(n_k):
-            val = 0.0
-            for k_idx in range(d):
-                val += dO[i, k_idx] * V[j, k_idx]
-            dP[i, j] = val
-
-    D = np.zeros(n, dtype=np.float64)
-    for i in range(n):
-        val = 0.0
-        for k_idx in range(d):
-            val += dO[i, k_idx] * O[i, k_idx]
-        D[i] = val
-
-    dS = np.zeros((n, n_k), dtype=np.float64)
-    for i in range(n):
-        for j in range(n_k):
-            dS[i, j] = P[i, j] * (dP[i, j] - D[i])
-
-    dQ = np.zeros((n, d), dtype=np.float64)
-    for i in range(n):
-        for j in range(d):
-            val = 0.0
-            for k_idx in range(n_k):
-                val += dS[i, k_idx] * K[k_idx, j]
-            dQ[i, j] = val * scale
-
-    dK = np.zeros((n_k, d), dtype=np.float64)
-    for i in range(n_k):
-        for j in range(d):
-            val = 0.0
-            for k_idx in range(n):
-                val += dS[k_idx, i] * Q[k_idx, j]
-            dK[i, j] = val * scale
-
+    dQ = (dS @ K) * scale
+    dK = (dS.T @ Q) * scale
     return dQ, dK, dV

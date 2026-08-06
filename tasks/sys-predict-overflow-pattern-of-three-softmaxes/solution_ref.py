@@ -4,16 +4,53 @@ import numpy as np
 
 
 def _naive(z):
-    with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
-        ez = np.exp(z)
-        return ez / np.sum(ez)
+    ez_list = []
+    s = 0.0
+    for x in z:
+        try:
+            val = math.exp(x)
+        except OverflowError:
+            val = math.inf
+        ez_list.append(val)
+        s += val
+    res = []
+    for val in ez_list:
+        if s == 0.0:
+            res_val = math.nan if val == 0.0 else math.inf
+        else:
+            try:
+                res_val = val / s
+            except ZeroDivisionError:
+                res_val = math.nan
+        res.append(res_val)
+    return np.array(res, dtype=np.float64)
 
 
 def _lse(z):
-    with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
-        m = np.max(z)
-        ez = np.exp(z - m)
-        return ez / np.sum(ez)
+    m = -math.inf
+    for x in z:
+        if x > m:
+            m = x
+    ez_list = []
+    s = 0.0
+    for x in z:
+        try:
+            val = math.exp(x - m)
+        except OverflowError:
+            val = math.inf
+        ez_list.append(val)
+        s += val
+    res = []
+    for val in ez_list:
+        if s == 0.0:
+            res_val = math.nan if val == 0.0 else math.inf
+        else:
+            try:
+                res_val = val / s
+            except ZeroDivisionError:
+                res_val = math.nan
+        res.append(res_val)
+    return np.array(res, dtype=np.float64)
 
 
 def _online(z):
@@ -21,14 +58,38 @@ def _online(z):
     s = 0.0
     for x in z:
         new_m = max(m, x)
-        s = s * math.exp(m - new_m) + math.exp(x - new_m)
+        try:
+            exp_diff_m = math.exp(m - new_m)
+        except OverflowError:
+            exp_diff_m = 0.0
+        try:
+            exp_diff_x = math.exp(x - new_m)
+        except OverflowError:
+            exp_diff_x = 0.0
+        s = s * exp_diff_m + exp_diff_x
         m = new_m
-    with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
-        return np.exp(z - m) / s
+    res = []
+    for x in z:
+        try:
+            num = math.exp(x - m)
+        except OverflowError:
+            num = math.inf
+        if s == 0.0:
+            res_val = math.nan if num == 0.0 else math.inf
+        else:
+            try:
+                res_val = num / s
+            except ZeroDivisionError:
+                res_val = math.nan
+        res.append(res_val)
+    return np.array(res, dtype=np.float64)
 
 
 def _overflowed(p):
-    return bool(np.any(~np.isfinite(p)))
+    for x in p:
+        if not math.isfinite(x):
+            return True
+    return False
 
 
 def classify_softmax_overflow(z) -> tuple:

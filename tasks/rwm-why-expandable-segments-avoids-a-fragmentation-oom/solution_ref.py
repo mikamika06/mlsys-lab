@@ -38,14 +38,16 @@ def replay_trace(trace, capacity, expandable=False):
             break
         if op[0] == "alloc":
             _, name, size = op
-            cands = []
+            best_sz = None
+            best_sid = None
+            best_s = None
             for sid, seg in segments.items():
                 for s, sz in seg["free_starts"].items():
                     if sz >= size:
-                        cands.append((sz, sid, s))
-            if cands:
-                cands.sort()
-                sz, sid, s = cands[0]
+                        if best_sz is None or (sz, sid, s) < (best_sz, best_sid, best_s):
+                            best_sz, best_sid, best_s = sz, sid, s
+            if best_sz is not None:
+                sz, sid, s = best_sz, best_sid, best_s
                 seg = segments[sid]
                 end = s + sz
                 del seg["free_starts"][s]
@@ -53,7 +55,8 @@ def replay_trace(trace, capacity, expandable=False):
                 if sz > size:
                     add_free(sid, s + size, sz - size)
                 live[name] = (sid, s, size)
-                peak = max(peak, reserved)
+                if reserved > peak:
+                    peak = reserved
             elif expandable:
                 if reserved + size > capacity:
                     oom = True
@@ -61,7 +64,8 @@ def replay_trace(trace, capacity, expandable=False):
                 start = reserved
                 reserved += size
                 live[name] = (single_sid, start, size)
-                peak = max(peak, reserved)
+                if reserved > peak:
+                    peak = reserved
             else:
                 if reserved + size > capacity:
                     oom = True
@@ -69,7 +73,8 @@ def replay_trace(trace, capacity, expandable=False):
                 sid = new_segment()
                 reserved += size
                 live[name] = (sid, 0, size)
-                peak = max(peak, reserved)
+                if reserved > peak:
+                    peak = reserved
         else:
             _, name = op
             sid, s, sz = live.pop(name)

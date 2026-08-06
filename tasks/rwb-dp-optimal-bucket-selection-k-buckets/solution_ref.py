@@ -36,7 +36,6 @@ def select_buckets(size_histogram, k):
 
     total_waste = int(dp[k_eff][M - 1])
 
-    # backtrack to recover the chosen bucket boundaries
     buckets = []
     j = M - 1
     kk = k_eff
@@ -45,6 +44,17 @@ def select_buckets(size_histogram, k):
         i = choice[kk][j]
         j = i
         kk -= 1
-    buckets.sort()
+    
+    sorted_buckets = []
+    for x in buckets:
+        inserted = False
+        for idx in range(len(sorted_buckets)):
+            if x < sorted_buckets[idx]:
+                sorted_buckets.insert(idx, x)
+                inserted = True
+                break
+        if not inserted:
+            sorted_buckets.append(x)
+    buckets = sorted_buckets
 
     return buckets, total_waste

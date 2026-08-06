@@ -1,8 +1,15 @@
 import numpy as np
 
 def unpack_dequant_qint4(packed: np.ndarray, scale: float) -> np.ndarray:
-    lo = packed & 0xF
-    hi = (packed >> 4) & 0xF
-    vals = np.concatenate([lo, hi], axis=0).astype(np.int16)
-    vals = np.where(vals > 7, vals - 16, vals)
-    return scale * vals.astype(np.float32)
+    res = []
+    for x in packed:
+        v = int(x) & 0xF
+        if v > 7:
+            v -= 16
+        res.append(v)
+    for x in packed:
+        v = (int(x) >> 4) & 0xF
+        if v > 7:
+            v -= 16
+        res.append(v)
+    return scale * np.array(res, dtype=np.float32)

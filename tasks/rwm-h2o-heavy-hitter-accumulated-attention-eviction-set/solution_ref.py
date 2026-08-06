@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -17,26 +18,80 @@ def h2o_eviction_set(attn_scores: np.ndarray, budget: int, recent_window: int):
     S = np.asarray(attn_scores, dtype=np.float64)
     n = S.shape[0]
 
-    # Causal mask: token i may only attend to j <= i.
-    mask = np.triu(np.ones((n, n), dtype=bool), k=1)
-    S_masked = np.where(mask, -np.inf, S)
-    S_masked = S_masked - np.max(S_masked, axis=1, keepdims=True)
-    P = np.exp(S_masked)
-    P = P / np.sum(P, axis=1, keepdims=True)
+    P = [[0.0] * n for _ in range(n)]
 
-    # Accumulated importance per token (column sums).
-    h = P.sum(axis=0)
+    for i in range(n):
+        row_max = S[i, 0]
+        for j in range(1, i + 1):
+            if S[i, j] > row_max:
+                row_max = S[i, j]
 
-    recent = set(range(max(0, n - recent_window), n))
-    n_heavy = budget - len(recent)
+        row_sum = 0.0
+        row_exps = [0.0] * (i + 1)
+        for j in range(i + 1):
+            val = math.exp(S[i, j] - row_max)
+            row_exps[j] = val
+            row_sum += val
 
-    candidates = [j for j in range(n) if j not in recent]
-    # Sort candidates by descending score, tie-break by smaller index.
-    candidates.sort(key=lambda j: (-h[j], j))
+        for j in range(i + 1):
+            P[i][j] = row_exps[j] / row_sum
+
+    h = [0.0] * n
+    for j in range(n):
+        col_sum = 0.0
+        for i in range(n):
+            col_sum += P[i][j]
+        h[j] = col_sum
+
+    start_recent = n - recent_window
+    if start_recent < 0:
+        start_recent = 0
+
+    recent_set = set(range(start_recent, n))
+    n_heavy = budget - len(recent_set)
+
+    candidates = [j for j in range(n) if j not in recent_set]
+
+    cand_len = len(candidates)
+    for i in range(1, cand_len):
+        key_j = candidates[i]
+        key_h = h[key_j]
+        j = i - 1
+        while j >= 0:
+            cj = candidates[j]
+            hj = h[cj]
+            if (key_h > hj) or (key_h == hj and key_j < cj):
+                candidates[j + 1] = candidates[j]
+                j -= 1
+            else:
+                break
+        candidates[j + 1] = key_j
+
     heavy = candidates[:n_heavy]
 
-    retained = sorted(set(heavy) | recent)
+    retained_set = set(heavy)
+    for j in range(start_recent, n):
+        retained_set.add(j)
+
+    retained = list(retained_set)
+    ret_len = len(retained)
+    for i in range(1, ret_len):
+        key = retained[i]
+        j = i - 1
+        while j >= 0 and retained[j] > key:
+            retained[j + 1] = retained[j]
+            j -= 1
+        retained[j + 1] = key
+
     retained_idx = np.array(retained, dtype=np.int64)
 
-    preserved_mass = float(h[retained_idx].sum() / h.sum())
+    retained_mass = 0.0
+    for idx in retained:
+        retained_mass += h[idx]
+
+    total_h = 0.0
+    for j in range(n):
+        total_h += h[j]
+
+    preserved_mass = float(retained_mass / total_h)
     return retained_idx, preserved_mass

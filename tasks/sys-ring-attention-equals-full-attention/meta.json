@@ -1,21 +1,27 @@
 {
   "id": "sys-ring-attention-equals-full-attention",
   "title": "Ring attention equals full attention",
-  "track": "03 Systems for ML",
+  "track": "04 Systems for ML",
   "tier": "II",
-  "module": "M3sys",
-  "difficulty": 4,
+  "module": "M4cp",
+  "difficulty": 5,
   "genre": "implement",
   "platform": "cross-platform",
   "provides": [
-    "ring_attention"
+    "ring_step",
+    "ring_output"
   ],
   "fixtures": [],
   "gates": [
     {
       "metric": "max_abs_err",
       "op": "<",
-      "threshold": 1e-5
+      "threshold": 1e-9
+    },
+    {
+      "metric": "state_bytes_ratio",
+      "op": "<=",
+      "threshold": 1.25
     }
   ],
   "info": []

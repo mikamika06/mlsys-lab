@@ -19,7 +19,6 @@ def kv_cache_quantize(keys_fp16: np.ndarray, values_fp16: np.ndarray):
     scales   : np.ndarray of shape (n,), dtype=float32
         The per-row scale factors used for reconstruction.
     """
-    # Ensure input is float16 and has two dimensions
     if keys_fp16.dtype != np.float16:
         raise TypeError("keys_fp16 must be float16")
     if keys_fp16.ndim != 2:
@@ -27,15 +26,35 @@ def kv_cache_quantize(keys_fp16: np.ndarray, values_fp16: np.ndarray):
 
     n, d = keys_fp16.shape
 
-    # Compute per-row max absolute value
-    abs_max = np.max(np.abs(keys_fp16), axis=1)          # shape (n,)
-    # Avoid division by zero: if a row is all zeros, set scale to 1.0
-    eps = 1e-12
-    scales = np.where(abs_max > eps, abs_max / 127.0, 1.0).astype(np.float32)  # shape (n,)
+    abs_max = np.zeros(n, dtype=np.float32)
+    for i in range(n):
+        row_max = 0.0
+        for j in range(d):
+            val = keys_fp16[i, j]
+            if val < 0.0:
+                val = -val
+            if val > row_max:
+                row_max = float(val)
+        abs_max[i] = row_max
 
-    # Quantize keys: divide by scale and round to nearest int
-    scaled = keys_fp16.astype(np.float32) / scales[:, None]   # broadcast over columns
-    rounded = np.rint(scaled)
-    clipped = np.clip(rounded, -127, 127).astype(np.int8)
+    eps = 1e-12
+    scales = np.zeros(n, dtype=np.float32)
+    for i in range(n):
+        if abs_max[i] > eps:
+            scales[i] = abs_max[i] / 127.0
+        else:
+            scales[i] = 1.0
+
+    clipped = np.zeros((n, d), dtype=np.int8)
+    for i in range(n):
+        scale = scales[i]
+        for j in range(d):
+            val = float(keys_fp16[i, j]) / scale
+            rounded = round(val)
+            if rounded < -127:
+                rounded = -127
+            elif rounded > 127:
+                rounded = 127
+            clipped[i, j] = int(rounded)
 
     return clipped, scales

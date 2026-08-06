@@ -46,6 +46,18 @@ def grade(sol, fx) -> dict:
                 rng.normal(size=(4, 3)),
             ],
         ),
+        (
+            [
+                rng.normal(700, 2.0, size=(5, 6)),
+                rng.normal(-100, 2.0, size=(5, 1)),
+                rng.normal(690, 2.0, size=(5, 4)),
+            ],
+            [
+                rng.normal(size=(6, 2)),
+                rng.normal(size=(1, 2)),
+                rng.normal(size=(4, 2)),
+            ],
+        ),
     ]
 
     worst = 0.0
@@ -55,6 +67,8 @@ def grade(sol, fx) -> dict:
         try:
             got = np.asarray(sol.ring_merge(partials), dtype=np.float64)
         except Exception:
+            return {"rel_err": float("inf")}
+        if got.shape != ref.shape or not np.all(np.isfinite(got)):
             return {"rel_err": float("inf")}
         err = np.linalg.norm(got - ref) / (np.linalg.norm(ref) + 1e-12)
         worst = max(worst, float(err))

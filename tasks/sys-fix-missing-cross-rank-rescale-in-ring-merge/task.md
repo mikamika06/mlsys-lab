@@ -10,27 +10,17 @@ $$
 
 where $m=\max_j s_j$ is used for numerical stability.
 
-Each rank computes local values using its own maximum $m_r$:
+A rank only sees its own slice of the logits, so it can only shift by its own
+local maximum $m_r$. What it ships to the merge is
 
 $$
 l_r=\sum_j e^{s_j-m_r}, \qquad
 a_r=\sum_j e^{s_j-m_r}V_j .
 $$
 
-When combining ranks, the maximum can change. If
-
-$$
-m=\max_r m_r,
-$$
-
-then every rank contribution must be rescaled:
-
-$$
-l=\sum_r l_r e^{m_r-m}, \qquad
-a=\sum_r a_r e^{m_r-m}.
-$$
-
-The final output is $a/l$. Omitting the factor $e^{m_r-m}$ gives incorrect results when ranks have different logit ranges.
+Every rank's numbers are therefore expressed on a different scale, and the merge
+has to put them on one scale before it may add them. The shipped implementation
+below adds them as they arrive.
 
 ## Task
 
@@ -51,7 +41,8 @@ Each item contains:
 
 Return the merged attention output as a NumPy array of shape $(n, d)$ with dtype `float64`.
 
-The implementation must correctly merge all ranks using the cross-rank rescaling factor.
+The result must equal what you would get by concatenating every rank's logits
+and values first and taking one softmax over the whole row.
 
 ## Example
 
@@ -87,4 +78,6 @@ $$
 \frac{\lVert x-\hat{x}\rVert_2}{\lVert x\rVert_2+10^{-12}}
 $$
 
-must be at most $10^{-5}$. A merge that forgets the cross-rank rescaling fails on inputs where ranks have different local maximum logits.
+must be at most $10^{-5}$. The cases deliberately give the ranks logits drawn
+from different means, so any merge that treats the per-rank numbers as already
+comparable is wrong by a factor that grows with the spread between $m_r$ values.

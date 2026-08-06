@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 def sdpa(query: np.ndarray,
@@ -34,35 +33,11 @@ def sdpa(query: np.ndarray,
         raise ValueError("Incompatible shapes.")
 
     if scale is None:
-        scale = 1.0 / math.sqrt(dk)
+        scale = 1.0 / np.sqrt(dk)
 
-    output = np.empty((B, Nq, dv), dtype=query.dtype)
+    scores = query @ key.transpose(0, 2, 1) * scale
+    # softmax over the key dimension (last axis)
+    exp_scores = np.exp(scores - np.max(scores, axis=-1, keepdims=True))
+    probs = exp_scores / np.sum(exp_scores, axis=-1, keepdims=True)
 
-    for b in range(B):
-        for i in range(Nq):
-            scores = []
-            max_score = -float('inf')
-            for j in range(Nk):
-                score = 0.0
-                for k in range(dk):
-                    score += query[b, i, k] * key[b, j, k]
-                score *= scale
-                scores.append(score)
-                if score > max_score:
-                    max_score = score
-
-            exp_sum = 0.0
-            exp_scores = []
-            for j in range(Nk):
-                e = math.exp(scores[j] - max_score)
-                exp_scores.append(e)
-                exp_sum += e
-
-            for d in range(dv):
-                out_val = 0.0
-                for j in range(Nk):
-                    prob = exp_scores[j] / exp_sum
-                    out_val += prob * value[b, j, d]
-                output[b, i, d] = out_val
-
-    return output
+    return probs @ value

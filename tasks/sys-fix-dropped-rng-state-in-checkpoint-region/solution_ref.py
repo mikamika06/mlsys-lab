@@ -17,94 +17,24 @@ def checkpointed_dropout_block(x, W, p, seed, n_pre, n_between):
     for _ in range(n_pre):
         rng.random(3)
 
+    # -- checkpoint entry: snapshot the RNG state before this block draws
+    # any of its own randomness (mirrors torch.utils.checkpoint saving the
+    # RNG state before invoking the wrapped function).
     entry_state = rng.bit_generator.state
 
-    shape_x = x.shape
-    shape_W = W.shape
-    rows_x = shape_x[0]
-    cols_x = shape_x[1]
-    cols_W = shape_W[1]
-
-    flat_size = rows_x * cols_W
-    rand_vals = rng.random(flat_size)
-
-    mask_list = []
-    for i in range(flat_size):
-        val = 1.0 if rand_vals[i] >= p else 0.0
-        mask_list.append(val)
-
-    mask = np.zeros((rows_x, cols_W), dtype=np.float64)
-    idx = 0
-    for i in range(rows_x):
-        for j in range(cols_W):
-            mask[i, j] = mask_list[idx]
-            idx += 1
-
-    h = np.zeros((rows_x, cols_W), dtype=np.float64)
-    for i in range(rows_x):
-        for j in range(cols_W):
-            acc = 0.0
-            for k in range(cols_x):
-                acc += x[i, k] * W[k, j]
-            if acc > 0.0:
-                h[i, j] = acc
-            else:
-                h[i, j] = 0.0
-
-    y_forward_list = []
-    scale = 1.0 / (1.0 - p)
-    for i in range(rows_x):
-        row_vals = []
-        for j in range(cols_W):
-            val = h[i, j] * mask[i, j] * scale
-            row_vals.append(val)
-        y_forward_list.append(row_vals)
-
-    y_forward = np.zeros((rows_x, cols_W), dtype=np.float64)
-    for i in range(rows_x):
-        for j in range(cols_W):
-            y_forward[i, j] = y_forward_list[i][j]
+    mask = (rng.random(x.shape[0] * W.shape[1]).reshape(x.shape[0], W.shape[1]) >= p).astype(np.float64)
+    h = np.maximum(x @ W, 0.0)
+    y_forward = h * mask / (1.0 - p)
+    # mask/h are "discarded" here -- only y_forward survives forward.
 
     for _ in range(n_between):
-        rng.random(3)
+        rng.random(3)  # rest of the network runs here, consuming the shared RNG
 
+    # -- backward: recompute the block under the SAME dropout mask by
+    # restoring the RNG to its state at checkpoint entry first.
     rng.bit_generator.state = entry_state
-    rand_vals2 = rng.random(flat_size)
-
-    mask_list2 = []
-    for i in range(flat_size):
-        val = 1.0 if rand_vals2[i] >= p else 0.0
-        mask_list2.append(val)
-
-    mask2 = np.zeros((rows_x, cols_W), dtype=np.float64)
-    idx = 0
-    for i in range(rows_x):
-        for j in range(cols_W):
-            mask2[i, j] = mask_list2[idx]
-            idx += 1
-
-    h2 = np.zeros((rows_x, cols_W), dtype=np.float64)
-    for i in range(rows_x):
-        for j in range(cols_W):
-            acc = 0.0
-            for k in range(cols_x):
-                acc += x[i, k] * W[k, j]
-            if acc > 0.0:
-                h2[i, j] = acc
-            else:
-                h2[i, j] = 0.0
-
-    y_recomputed_list = []
-    for i in range(rows_x):
-        row_vals = []
-        for j in range(cols_W):
-            val = h2[i, j] * mask2[i, j] * scale
-            row_vals.append(val)
-        y_recomputed_list.append(row_vals)
-
-    y_recomputed = np.zeros((rows_x, cols_W), dtype=np.float64)
-    for i in range(rows_x):
-        for j in range(cols_W):
-            y_recomputed[i, j] = y_recomputed_list[i][j]
+    mask2 = (rng.random(x.shape[0] * W.shape[1]).reshape(x.shape[0], W.shape[1]) >= p).astype(np.float64)
+    h2 = np.maximum(x @ W, 0.0)
+    y_recomputed = h2 * mask2 / (1.0 - p)
 
     return y_forward, y_recomputed

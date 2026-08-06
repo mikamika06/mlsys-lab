@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 
@@ -15,43 +14,16 @@ def packed_attention_with_reset_mask(Q: np.ndarray, K: np.ndarray, V: np.ndarray
     position ids at each packed-document boundary). Returns (n, d).
     """
     n, d = Q.shape
-    out = np.zeros((n, d), dtype=np.float64)
-    sqrt_d = math.sqrt(d)
+    scores = (Q.astype(np.float64) @ K.astype(np.float64).T) / np.sqrt(d)
 
-    for i in range(n):
-        scores_row = []
-        seg_i = segment_ids[i]
-        for j in range(n):
-            if j <= i and segment_ids[j] == seg_i:
-                dot = 0.0
-                for k in range(d):
-                    dot += float(Q[i, k]) * float(K[j, k])
-                scores_row.append(dot / sqrt_d)
-            else:
-                scores_row.append(-float("inf"))
+    row = np.arange(n)[:, None]
+    col = np.arange(n)[None, :]
+    same_seg = segment_ids[:, None] == segment_ids[None, :]
+    causal = col <= row
+    allowed = same_seg & causal
 
-        max_score = -float("inf")
-        for j in range(n):
-            if scores_row[j] > max_score:
-                max_score = scores_row[j]
-
-        probs_row = []
-        sum_exp = 0.0
-        for j in range(n):
-            if scores_row[j] == -float("inf"):
-                val = 0.0
-            else:
-                val = math.exp(scores_row[j] - max_score)
-            probs_row.append(val)
-            sum_exp += val
-
-        for j in range(n):
-            probs_row[j] /= sum_exp
-
-        for k in range(d):
-            val = 0.0
-            for j in range(n):
-                val += probs_row[j] * float(V[j, k])
-            out[i, k] = val
-
-    return out
+    scores = np.where(allowed, scores, -np.inf)
+    scores = scores - np.max(scores, axis=1, keepdims=True)
+    probs = np.exp(scores)
+    probs = probs / np.sum(probs, axis=1, keepdims=True)
+    return probs @ V.astype(np.float64)

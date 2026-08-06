@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -24,9 +25,48 @@ def fuse_layernorm_subgraph(nodes, inputs):
     beta = np.asarray(inputs["beta"], dtype=np.float64)
     eps = float(inputs.get("epsilon", 1e-5))
 
-    mean = np.mean(x, axis=-1, keepdims=True)
-    var = np.mean((x - mean) ** 2, axis=-1, keepdims=True)
-    output = gamma * (x - mean) / np.sqrt(var + eps) + beta
+    shape = x.shape
+    output = np.empty(shape, dtype=np.float64)
+
+    if x.ndim == 1:
+        n_features = shape[0]
+        acc = 0.0
+        for j in range(n_features):
+            acc += x[j]
+        mean_val = acc / n_features
+
+        acc_var = 0.0
+        for j in range(n_features):
+            diff = x[j] - mean_val
+            acc_var += diff * diff
+        var_val = acc_var / n_features
+
+        sqrt_val = math.sqrt(var_val + eps)
+
+        for j in range(n_features):
+            output[j] = gamma[j] * (x[j] - mean_val) / sqrt_val + beta[j]
+    else:
+        *batch_dims, n_features = shape
+        flat_x = x.reshape(-1, n_features)
+        flat_out = output.reshape(-1, n_features)
+        n_batches = flat_x.shape[0]
+
+        for i in range(n_batches):
+            acc = 0.0
+            for j in range(n_features):
+                acc += flat_x[i, j]
+            mean_val = acc / n_features
+
+            acc_var = 0.0
+            for j in range(n_features):
+                diff = flat_x[i, j] - mean_val
+                acc_var += diff * diff
+            var_val = acc_var / n_features
+
+            sqrt_val = math.sqrt(var_val + eps)
+
+            for j in range(n_features):
+                flat_out[i, j] = gamma[j] * (flat_x[i, j] - mean_val) / sqrt_val + beta[j]
 
     return {
         "fused_span": _detect_span(nodes),

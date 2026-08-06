@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -9,15 +10,64 @@ def flash_attention_backward(q, k, v, do, m, l):
     m = np.asarray(m, dtype=np.float64)
     l = np.asarray(l, dtype=np.float64)
 
-    scores = q @ k.T
-    p = np.exp(scores - m) / l
+    N_q, D = q.shape
+    N_k, _ = k.shape
 
-    dp = do @ v.T
-    rowsum = np.sum(dp * p, axis=1, keepdims=True)
-    ds = p * (dp - rowsum)
+    scores = np.empty((N_q, N_k), dtype=np.float64)
+    for i in range(N_q):
+        for j in range(N_k):
+            acc = 0.0
+            for d in range(D):
+                acc += q[i, d] * k[j, d]
+            scores[i, j] = acc
 
-    dq = ds @ k
-    dk = ds.T @ q
-    dv = p.T @ do
+    p = np.empty((N_q, N_k), dtype=np.float64)
+    for i in range(N_q):
+        for j in range(N_k):
+            p[i, j] = math.exp(scores[i, j] - m[i, 0]) / l[i, 0]
+
+    dp = np.empty((N_q, N_k), dtype=np.float64)
+    for i in range(N_q):
+        for j in range(N_k):
+            acc = 0.0
+            for d in range(D):
+                acc += do[i, d] * v[j, d]
+            dp[i, j] = acc
+
+    rowsum = np.empty((N_q, 1), dtype=np.float64)
+    for i in range(N_q):
+        acc = 0.0
+        for j in range(N_k):
+            acc += dp[i, j] * p[i, j]
+        rowsum[i, 0] = acc
+
+    ds = np.empty((N_q, N_k), dtype=np.float64)
+    for i in range(N_q):
+        for j in range(N_k):
+            ds[i, j] = p[i, j] * (dp[i, j] - rowsum[i, 0])
+
+    dq = np.empty((N_q, D), dtype=np.float64)
+    for i in range(N_q):
+        for d in range(D):
+            acc = 0.0
+            for j in range(N_k):
+                acc += ds[i, j] * k[j, d]
+            dq[i, d] = acc
+
+    dk = np.empty((N_k, D), dtype=np.float64)
+    for j in range(N_k):
+        for d in range(D):
+            acc = 0.0
+            for i in range(N_q):
+                acc += ds[i, j] * q[i, d]
+            dk[j, d] = acc
+
+    dv = np.empty((N_k, D), dtype=np.float64)
+    for j in range(N_k):
+        for d in range(D):
+            acc = 0.0
+            for i in range(N_q):
+                acc += p[i, j] * do[i, d]
+            dv[j, d] = acc
 
     return dq, dk, dv

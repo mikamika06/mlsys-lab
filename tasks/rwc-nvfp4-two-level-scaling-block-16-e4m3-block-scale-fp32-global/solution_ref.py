@@ -25,35 +25,80 @@ _E2 = np.array(
 
 
 def _encode_e4m3(x):
-    return np.argmin(np.abs(np.asarray(x).reshape(-1, 1) - _E4), axis=1).astype(np.uint8)
+    x_arr = np.asarray(x, dtype=np.float64)
+    out = np.empty(x_arr.shape, dtype=np.uint8)
+    for idx_flat in range(x_arr.size):
+        val = x_arr.flat[idx_flat]
+        best_i = 0
+        min_diff = abs(val - _E4[0])
+        for i in range(1, len(_E4)):
+            diff = abs(val - _E4[i])
+            if diff < min_diff:
+                min_diff = diff
+                best_i = i
+        out.flat[idx_flat] = best_i
+    return out
 
 
 def _decode_e4m3(c):
-    return _E4[np.asarray(c, dtype=np.uint8)]
+    c_arr = np.asarray(c, dtype=np.uint8)
+    out = np.empty(c_arr.shape, dtype=np.float64)
+    for idx_flat in range(c_arr.size):
+        out.flat[idx_flat] = _E4[c_arr.flat[idx_flat]]
+    return out
 
 
 def quantize_nvfp4(x):
     x = np.asarray(x, dtype=np.float32)
     n = len(x)
-    blocks = np.asarray(
-        [np.max(np.abs(x[i:i + 16])) for i in range(0, n, 16)],
-        dtype=np.float64,
-    )
-    global_scale = float(np.max(blocks) / 448.0) if np.max(blocks) != 0 else 1.0
-    block_scales = _encode_e4m3(blocks / global_scale)
+    
+    blocks_list = []
+    for i in range(0, n, 16):
+        chunk = x[i:i + 16]
+        m = 0.0
+        for val in chunk:
+            abs_val = float(val) if val >= 0 else -float(val)
+            if abs_val > m:
+                m = abs_val
+        blocks_list.append(m)
+    blocks = np.asarray(blocks_list, dtype=np.float64)
+
+    max_block = 0.0
+    for b_val in blocks:
+        if b_val > max_block:
+            max_block = b_val
+
+    global_scale = float(max_block / 448.0) if max_block != 0 else 1.0
+    
+    raw = np.empty(blocks.shape, dtype=np.float64)
+    for idx_flat in range(blocks.size):
+        raw.flat[idx_flat] = blocks.flat[idx_flat] / global_scale
+    
+    block_scales = _encode_e4m3(raw)
     decoded = _decode_e4m3(block_scales)
 
     codes = np.empty(n, dtype=np.uint8)
     reconstruction = np.empty(n, dtype=np.float32)
+    
     for b in range(len(decoded)):
         start = b * 16
         end = min(n, start + 16)
-        values = x[start:end].astype(np.float64) / (decoded[b] * global_scale)
-        codes[start:end] = np.argmin(
-            np.abs(values.reshape(-1, 1) - _E2.reshape(1, -1)),
-            axis=1,
-        )
-        reconstruction[start:end] = (
-            _E2[codes[start:end]] * decoded[b] * global_scale
-        ).astype(np.float32)
+        
+        dec_val = decoded[b]
+        denom = dec_val * global_scale
+        
+        for j in range(start, end):
+            q_val = float(x[j]) / denom
+            
+            best_i = 0
+            min_diff = abs(q_val - _E2[0])
+            for i in range(1, len(_E2)):
+                diff = abs(q_val - _E2[i])
+                if diff < min_diff:
+                    min_diff = diff
+                    best_i = i
+            
+            codes[j] = best_i
+            reconstruction[j] = np.float32(_E2[best_i] * denom)
+            
     return codes, block_scales, global_scale, reconstruction

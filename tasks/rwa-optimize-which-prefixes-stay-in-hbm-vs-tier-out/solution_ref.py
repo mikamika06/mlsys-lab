@@ -8,7 +8,22 @@ def optimize_hbm_prefixes(prefixes, budget):
         density = value / bytes_used if bytes_used else float("inf")
         ranked.append((density, index, bytes_used, value))
 
-    ranked.sort(key=lambda x: (-x[0], x[1]))
+    n = 0
+    for _ in ranked:
+        n += 1
+
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            d1, idx1, b1, v1 = ranked[j]
+            d2, idx2, b2, v2 = ranked[j + 1]
+            swap = False
+            if d1 < d2:
+                swap = True
+            elif d1 == d2:
+                if idx1 > idx2:
+                    swap = True
+            if swap:
+                ranked[j], ranked[j + 1] = ranked[j + 1], ranked[j]
 
     kept = []
     used = 0

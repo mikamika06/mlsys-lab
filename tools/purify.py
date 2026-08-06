@@ -171,9 +171,9 @@ def verify(tid: str) -> tuple[bool, str]:
     return "TASK_OK" in r.stdout, last[:160]
 
 
-def one(tid: str, tries: int) -> dict:
+def one(tid: str, tries: int, extra: str = "") -> dict:
     try:
-        return _one(tid, tries)
+        return _one(tid, tries, extra)
     except Exception as e:  # noqa: BLE001 — one bad task must never take the pool down
         src = os.path.join(ROOT, "tasks", tid, "solution_ref.py")
         if os.path.exists(src + ".bak"):
@@ -181,9 +181,21 @@ def one(tid: str, tries: int) -> dict:
         return {"id": tid, "ok": False, "why": f"{type(e).__name__}: {str(e)[:80]}"}
 
 
-def _one(tid: str, tries: int) -> dict:
+def _one(tid: str, tries: int, extra: str = "") -> dict:
     src = os.path.join(ROOT, "tasks", tid, "solution_ref.py")
     chk = os.path.join(ROOT, "tasks", tid, "check.py")
+    meta = os.path.join(ROOT, "tasks", tid, "meta.json")
+
+    # A debug task ships a broken program and asks what is wrong with it. Its
+    # reference has to be the minimally corrected version, so the difference reads
+    # as the defect; replacing it with a from-scratch implementation answers a
+    # question nobody asked and hides the one that was.
+    try:
+        with open(meta, encoding="utf-8") as f:
+            if json.load(f).get("genre") == "debug":
+                return {"id": tid, "ok": True, "skipped": True, "why": "debug task"}
+    except Exception:  # noqa: BLE001
+        pass
     if not os.path.isfile(src):
         return {"id": tid, "ok": False, "why": "no solution_ref.py"}
     original = open(src, encoding="utf-8").read()
@@ -195,7 +207,7 @@ def _one(tid: str, tries: int) -> dict:
     for i in range(tries):
         model = LADDER[min(i, len(LADDER) - 1)]
         try:
-            reply = ask(model, PROMPT.format(ref=original, chk=context))
+            reply = ask(model, PROMPT.format(ref=original, chk=context) + (("\n\n" + extra) if extra else ""))
         except RateLimited as e:
             attempts.append(f"{model}:rate_limited")
             time.sleep(min(e.retry_after, 60))
@@ -247,6 +259,7 @@ def main():
     ap.add_argument("--all", action="store_true")
     ap.add_argument("-j", type=int, default=8, help="concurrent accounts (max 10)")
     ap.add_argument("--tries", type=int, default=3)
+    ap.add_argument("--extra", default="", help="extra instruction appended to the prompt")
     a = ap.parse_args()
 
     if a.ids:
@@ -273,7 +286,7 @@ def main():
     done = fail = 0
     t0 = time.time()
     with cf.ThreadPoolExecutor(max_workers=min(a.j, 10)) as ex:
-        futs = {ex.submit(one, t, a.tries): t for t in queue}
+        futs = {ex.submit(one, t, a.tries, a.extra): t for t in queue}
         for fut in cf.as_completed(futs):
             try:
                 r = fut.result()

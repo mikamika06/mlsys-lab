@@ -20,31 +20,41 @@ def knn_grid_labels(
     -------
     logits : (M, C) one‑hot encoded predictions.
     """
-    # Ensure inputs are float64 for consistency
     train_points = np.asarray(train_points, dtype=np.float64)
     grid_points  = np.asarray(grid_points,  dtype=np.float64)
 
     N, d = train_points.shape
     M     = grid_points.shape[0]
-    C     = int(train_labels.max()) + 1
+    C     = int(max(train_labels)) + 1
 
-    # Compute squared Euclidean distances: (M, N)
-    dists = ((grid_points[:, None, :] - train_points[None, :, :]) ** 2).sum(axis=2)
+    logits_list = []
+    for i in range(M):
+        row_dists = []
+        for j in range(N):
+            s = 0.0
+            for l in range(d):
+                diff = grid_points[i, l] - train_points[j, l]
+                s += diff * diff
+            row_dists.append(s)
 
-    # Indices of the k nearest neighbours for each query point
-    idx = np.argpartition(dists, kth=k-1, axis=1)[:, :k]   # shape (M, k)
+        indexed_dists = sorted(enumerate(row_dists), key=lambda x: x[1])
+        idx = [indexed_dists[t][0] for t in range(k)]
 
-    # Gather neighbour labels: (M, k)
-    neigh_labels = train_labels[idx]
+        counts_row = [0] * C
+        for t in range(k):
+            label = int(train_labels[idx[t]])
+            counts_row[label] += 1
 
-    # Majority vote per row; ties resolved to the smallest label
-    counts = np.apply_along_axis(
-        lambda x: np.bincount(x, minlength=C),
-        axis=1,
-        arr=neigh_labels
-    )
-    preds = counts.argmax(axis=1)   # shape (M,)
+        max_count = -1
+        best_label = 0
+        for label in range(C):
+            if counts_row[label] > max_count:
+                max_count = counts_row[label]
+                best_label = label
 
-    # One‑hot encode predictions
-    logits = np.eye(C)[preds].astype(np.float64)
+        row_logit = [0.0] * C
+        row_logit[best_label] = 1.0
+        logits_list.append(row_logit)
+
+    logits = np.asarray(logits_list, dtype=np.float64)
     return logits

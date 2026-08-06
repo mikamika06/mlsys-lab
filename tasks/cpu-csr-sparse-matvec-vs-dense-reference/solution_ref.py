@@ -10,6 +10,8 @@ def csr_matvec(data, indices, indptr, x):
     for i in range(n):
         start = indptr[i]
         end = indptr[i + 1]
-        # dot product of the i‑th row with x
-        y[i] = np.dot(data[start:end], x[indices[start:end]])
+        total = 0.0
+        for j in range(start, end):
+            total += data[j] * x[indices[j]]
+        y[i] = total
     return y

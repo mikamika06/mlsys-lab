@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def scaled_dot_product_attention(
@@ -28,16 +29,51 @@ def scaled_dot_product_attention(
     K = np.asarray(K, dtype=np.float64)
     V = np.asarray(V, dtype=np.float64)
 
-    d_k = Q.shape[-1]
-    scores = Q @ K.transpose(0, 2, 1) / np.sqrt(d_k)
+    B, N, d_k = Q.shape
+    d_v = V.shape[-1]
+
+    scores = np.empty((B, N, N), dtype=np.float64)
+    scale = math.sqrt(d_k)
+
+    for b in range(B):
+        for i in range(N):
+            for j in range(N):
+                acc = 0.0
+                for k in range(d_k):
+                    acc += Q[b, i, k] * K[b, j, k]
+                scores[b, i, j] = acc / scale
 
     if causal:
-        seq_len = scores.shape[1]
-        mask = np.triu(np.full((seq_len, seq_len), -np.inf), k=1)
-        scores += mask
+        for b in range(B):
+            for i in range(N):
+                for j in range(N):
+                    if j > i:
+                        scores[b, i, j] = -float("inf")
 
-    # Softmax along the last axis
-    exp_scores = np.exp(scores - np.max(scores, axis=-1, keepdims=True))
-    attn_weights = exp_scores / np.sum(exp_scores, axis=-1, keepdims=True)
+    attn_weights = np.empty((B, N, N), dtype=np.float64)
+    for b in range(B):
+        for i in range(N):
+            max_val = scores[b, i, 0]
+            for j in range(1, N):
+                if scores[b, i, j] > max_val:
+                    max_val = scores[b, i, j]
 
-    return attn_weights @ V
+            sum_exp = 0.0
+            for j in range(N):
+                val = math.exp(scores[b, i, j] - max_val)
+                attn_weights[b, i, j] = val
+                sum_exp += val
+
+            for j in range(N):
+                attn_weights[b, i, j] /= sum_exp
+
+    out = np.empty((B, N, d_v), dtype=np.float64)
+    for b in range(B):
+        for i in range(N):
+            for j in range(d_v):
+                acc = 0.0
+                for k in range(N):
+                    acc += attn_weights[b, i, k] * V[b, k, j]
+                out[b, i, j] = acc
+
+    return out

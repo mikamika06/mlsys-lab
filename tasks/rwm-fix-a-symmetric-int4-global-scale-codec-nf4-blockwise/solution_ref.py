@@ -16,30 +16,14 @@ def nf4_blockwise_dequant(w: np.ndarray, block_size: int = 64) -> np.ndarray:
     w = np.asarray(w, dtype=np.float64)
     n = w.shape[0]
     nb = n // block_size
+    wb = w.reshape(nb, block_size)
 
-    scales = []
-    for i in range(nb):
-        max_val = 0.0
-        for j in range(block_size):
-            val = abs(w[i * block_size + j])
-            if val > max_val:
-                max_val = val
-        if max_val == 0.0:
-            max_val = 1.0
-        scales.append(max_val)
+    scales = np.max(np.abs(wb), axis=1)
+    scales = np.where(scales == 0, 1.0, scales)
 
-    xhat_list = []
-    for i in range(nb):
-        scale = scales[i]
-        for j in range(block_size):
-            normalized_val = w[i * block_size + j] / scale
-            min_diff = float("inf")
-            best_idx = 0
-            for k in range(16):
-                diff = abs(normalized_val - NF4_LEVELS[k])
-                if diff < min_diff:
-                    min_diff = diff
-                    best_idx = k
-            xhat_list.append(NF4_LEVELS[best_idx] * scale)
+    normalized = wb / scales[:, None]  # (nb, block_size), in [-1, 1]
+    diffs = np.abs(normalized[:, :, None] - NF4_LEVELS[None, None, :])  # (nb, block_size, 16)
+    idx = np.argmin(diffs, axis=-1)
 
-    return np.array(xhat_list, dtype=np.float64)
+    xhat = (NF4_LEVELS[idx] * scales[:, None]).reshape(n)
+    return xhat

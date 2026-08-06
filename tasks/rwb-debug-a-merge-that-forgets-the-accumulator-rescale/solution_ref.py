@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 
@@ -17,28 +16,14 @@ def merge_split_kv(partials):
     partials are expressed on the same (numerically stable) scale before
     being combined.
     """
-    m = partials[0][0]
-    for p in partials:
-        if p[0] > m:
-            m = p[0]
+    m = max(p[0] for p in partials)
 
     l = 0.0
-    numerator_list = None
-    arr_shape = None
+    numerator = None
     for m_i, l_i, o_i in partials:
-        scale = math.exp(m_i - m)
+        scale = np.exp(m_i - m)
         l += scale * l_i
-        arr = np.asarray(o_i, dtype=np.float64)
-        if arr_shape is None:
-            arr_shape = arr.shape
-        flat_arr = arr.ravel()
-        if numerator_list is None:
-            numerator_list = [0.0] * len(flat_arr)
-            for idx in range(len(flat_arr)):
-                numerator_list[idx] = scale * flat_arr[idx]
-        else:
-            for idx in range(len(flat_arr)):
-                numerator_list[idx] += scale * flat_arr[idx]
+        term = scale * np.asarray(o_i, dtype=np.float64)
+        numerator = term if numerator is None else numerator + term
 
-    final_list = [val / l for val in numerator_list]
-    return np.asarray(final_list, dtype=np.float64).reshape(arr_shape)
+    return numerator / l

@@ -1,10 +1,10 @@
 {
   "id": "sys-model-ring-attention-comm-volume",
   "title": "Model ring-attention communication volume",
-  "track": "04 Systems Modeling",
+  "track": "04 Systems for ML",
   "tier": "II",
-  "module": "M4sys",
-  "difficulty": 4,
+  "module": "M4cp",
+  "difficulty": 3,
   "genre": "implement",
   "platform": "cross-platform",
   "provides": [

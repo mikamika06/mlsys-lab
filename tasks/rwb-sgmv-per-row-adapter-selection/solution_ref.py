@@ -27,13 +27,36 @@ def sgmv_apply(x: np.ndarray, adapter_id: np.ndarray,
     scale = np.asarray(scale, dtype=np.float64)
 
     N = x.shape[0]
+    d_in = x.shape[1]
     d_out = B_bank.shape[2]
+    r = A_bank.shape[2]
+
     out = np.empty((N, d_out), dtype=np.float64)
 
-    for aid in np.unique(adapter_id):
-        rows = np.nonzero(adapter_id == aid)[0]
-        xg = x[rows]  # (n_rows, d_in)
-        delta = (xg @ A_bank[aid]) @ B_bank[aid]  # (n_rows, d_out)
-        out[rows] = scale[aid] * delta
+    for i in range(N):
+        aid = int(adapter_id[i])
+        
+        intermediate = 0.0
+        # x[i] @ A_bank[aid]: shape (r,)
+        # x[i] is (d_in,), A_bank[aid] is (d_in, r)
+        inter_vec = np.empty((r,), dtype=np.float64)
+        for k in range(r):
+            acc = 0.0
+            for j in range(d_in):
+                acc += x[i, j] * A_bank[aid, j, k]
+            inter_vec[k] = acc
+
+        # inter_vec @ B_bank[aid]: shape (d_out,)
+        # inter_vec is (r,), B_bank[aid] is (r, d_out)
+        delta = np.empty((d_out,), dtype=np.float64)
+        for k in range(d_out):
+            acc = 0.0
+            for j in range(r):
+                acc += inter_vec[j] * B_bank[aid, j, k]
+            delta[k] = acc
+
+        s = scale[aid]
+        for k in range(d_out):
+            out[i, k] = s * delta[k]
 
     return out

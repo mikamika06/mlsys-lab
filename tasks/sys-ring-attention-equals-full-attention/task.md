@@ -1,94 +1,91 @@
 ## Context
 
-Attention over a sequence of query vectors $Q$, key vectors $K$, and value vectors $V$ is normally computed by forming the complete score matrix:
+Full attention forms the entire score matrix at once:
 
 $$
-S = \frac{QK^\top}{\sqrt{d}},
+O = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d}}\right)V .
 $$
 
-then applying a row-wise softmax and multiplying by the values:
+That matrix is $n \times n$. Ring attention exists because at long context you
+cannot hold it — or even all of $K$ and $V$ — on one device. Instead each rank
+owns one key/value block, the blocks rotate around the ring, and every rank
+folds each arriving block into a **running state** and then drops the block.
 
-$$
-O = \mathrm{softmax}(S)V .
-$$
+So the property that makes ring attention work is not that it produces the right
+number. It is that it produces the right number while the state stays the same
+size no matter how many blocks arrive. A version that stores the blocks as they
+pass and runs full attention at the end returns the same matrix and misses the
+entire point.
 
-For a long context, systems often split the sequence across multiple devices. Ring attention simulates this by distributing blocks of keys and values across ranks. Each rank rotates key/value blocks around a ring and incrementally merges the partial attention results.
+Two things break a naive accumulator:
 
-The online softmax merge keeps a running maximum $m$, normalization value $l$, and output accumulator $o$:
+- summing $\sum_j e^{s_j}$ across blocks overflows once scores get large, and
+- the normalisation from earlier blocks is wrong as soon as a later block
+  contains a bigger score.
 
-$$
-m_{\text{new}} = \max(m, m_{\text{block}}),
-$$
-
-$$
-l_{\text{new}} =
-e^{m-m_{\text{new}}}l +
-\sum_j e^{s_j-m_{\text{new}}},
-$$
-
-$$
-o_{\text{new}} =
-\frac{
-e^{m-m_{\text{new}}}l\,o +
-\sum_j e^{s_j-m_{\text{new}}}v_j
-}{
-l_{\text{new}}}.
-$$
-
-After all key/value blocks have visited each rank, the result should equal ordinary full attention.
+Both are fixed by carrying a running maximum alongside the running sum, and
+rescaling what you already have whenever that maximum moves.
 
 ## Task
 
-Implement `ring_attention(Q, K, V, ranks)`.
-
-The inputs are NumPy arrays:
+Implement two functions.
 
 ```python
-def ring_attention(
-    Q: np.ndarray,
-    K: np.ndarray,
-    V: np.ndarray,
-    ranks: int,
-) -> np.ndarray:
+def ring_step(state, Q, K_block, V_block, scale):
+    ...
+
+def ring_output(state) -> np.ndarray:
     ...
 ```
 
-`Q`, `K`, and `V` have shapes $(n, d)$, $(n, d)$, and $(n, d_v)$.
-The sequence is split into `ranks` contiguous key/value blocks. Simulate the ring by rotating these blocks and using online softmax merging. Do not call a full attention helper that directly computes all $QK^\top$ scores at once.
+`ring_step` folds one arriving key/value block into the state and returns the
+new state. It is called once per block, in ring order, and receives:
 
-Return the final output matrix with shape $(n, d_v)$ and dtype `float64`.
+- `state` — whatever you returned last time; `None` on the first call.
+- `Q` — the query matrix, shape $(n, d)$, the same object every call.
+- `K_block`, `V_block` — one block, shapes $(b, d)$ and $(b, d_v)$. Block sizes
+  are not necessarily equal.
+- `scale` — the factor the logits must be multiplied by, i.e. $1/\sqrt{d}$.
+
+`ring_output` turns the final state into the attention output, shape
+$(n, d_v)$, dtype `float64`.
+
+You never see more than one block per call, and the driver does not keep them
+for you. Do not store `Q`, `K_block`, or `V_block` in the state, and do not
+accumulate anything in module-level variables.
 
 ## Example
 
+The driver runs this loop:
+
 ```python
-import numpy as np
-
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0, 3.0], [4.0, 5.0]])
-
-O = ring_attention(Q, K, V, 2)
+state = None
+for K_block, V_block in blocks:
+    state = ring_step(state, Q, K_block, V_block, scale)
+O = ring_output(state)
 ```
 
-The result matches:
-
-$$
-\mathrm{softmax}\left(\frac{QK^\top}{\sqrt{2}}\right)V .
-$$
+With one single block covering the whole sequence, the result is plain
+attention. With eight blocks it must be the same matrix.
 
 ## What the gate checks
 
-The gate computes a NumPy full-attention oracle independently:
+`max_abs_err` — the output against an independent NumPy full-attention oracle,
+over several shapes, several block counts including uneven splits, and one case
+whose logits reach roughly $700$, where an accumulator without a running maximum
+overflows to `inf` and then `nan`. Must be below $10^{-9}$.
+
+Every case is run twice from a fresh `state`. If the two runs disagree, the
+implementation is keeping something between calls and both metrics fail.
+
+`state_bytes_ratio` — the largest state observed during the loop, divided by the
+$n(d_v + 2) \cdot 8$ bytes that a running $(m, l, o)$ needs in float64:
 
 $$
-O_{\mathrm{ref}} =
-\mathrm{softmax}\left(\frac{QK^\top}{\sqrt{d}}\right)V .
+\text{state\_bytes\_ratio} =
+\frac{\max_{\text{steps}} \text{bytes}(\text{state})}{8\,n\,(d_v+2)} .
 $$
 
-The returned matrix is compared using the maximum absolute element error:
-
-$$
-\max_i |O_i - O_{\mathrm{ref},i}|.
-$$
-
-The error must be below $10^{-5}$. A solution that only attends to the local key/value block will fail because it ignores the rotated ring blocks.
+It must be at most $1.25$. The cases use $d \gg d_v$, so a state that keeps the
+blocks — or keeps `Q` — lands above $6.0$ and fails even though its
+`max_abs_err` is perfect. That gate is the task.

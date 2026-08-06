@@ -1,61 +1,79 @@
 ## Context
 
-Sequence parallelism divides a long sequence into chunks processed by multiple ranks. In causal attention, a chunk near the end of the sequence has more work because it can attend to all previous chunks.
-
-For $n$ sequence chunks, chunk $i$ has causal work weight
-
-$$
-w_i = i + 1
-$$
-
-because it attends to chunks $0, 1, \dots, i$. The total causal work is
+Context parallelism splits one long sequence across $p$ ranks. Under a causal
+mask, chunk $i$ attends to chunks $0, 1, \dots, i$, so its work weight is
 
 $$
-W = \sum_{i=0}^{n-1} w_i .
+w_i = i + 1 .
 $$
 
-A balanced assignment tries to distribute these weights across $r$ ranks so that no rank receives much more causal work than another. A greedy zig-zag strategy first considers chunks from largest causal load to smallest, then assigns each chunk to the currently lightest rank. When multiple ranks have the same current load, the tie is broken by the zig-zag rank order.
+The obvious split — one contiguous chunk per rank — is badly imbalanced: the
+last rank does $p$ times the work of the first, and at every step boundary the
+other $p-1$ ranks wait for it.
+
+Zig-zag (striped) assignment fixes this by cutting the sequence into $2p$ chunks
+instead of $p$, then giving each rank one early chunk and one late chunk. The
+two weights are complementary, so every rank ends up with exactly the same
+causal work.
 
 ## Task
 
-Implement `zig_zag_causal_assignment(num_chunks, num_ranks)`:
+Implement `zigzag_assignment(num_ranks)`:
 
 ```python
-def zig_zag_causal_assignment(num_chunks: int, num_ranks: int) -> list[int]:
+def zigzag_assignment(num_ranks: int) -> list[int]:
     ...
 ```
 
-Return a list of length `num_chunks`. The value at index `i` is the rank that should process chunk `i`.
+The sequence is cut into $2 \cdot \texttt{num\_ranks}$ chunks. Return a list of
+length $2 \cdot \texttt{num\_ranks}$ whose element $i$ is the rank that owns
+chunk $i$.
 
-The assignment algorithm is:
+The assignment must satisfy all three:
 
-1. Compute causal weights $w_i = i + 1$.
-2. Visit chunks in descending weight order.
-3. Maintain each rank's accumulated work.
-4. For each chunk, choose the rank with the smallest accumulated work. If several ranks are tied, use the current zig-zag tie order.
-5. After each assignment, reverse the tie order direction.
+1. Every rank owns exactly two chunks.
+2. Rank $r$ owns chunk $r$ — the first $p$ chunks go to ranks $0 \dots p-1$ in
+   order.
+3. The per-rank causal work $\sum_{i \in \text{rank } r} (i+1)$ is the same for
+   every rank.
 
-Ranks are numbered from $0$ to `num_ranks - 1`.
-
-The function should return only the rank list. It should not return work totals.
+Ranks are numbered $0$ to `num_ranks - 1`. `num_ranks` is at least $1$.
 
 ## Example
 
 ```python
-assignment = zig_zag_causal_assignment(5, 2)
-print(assignment)
+zigzag_assignment(4)
 ```
-
-One valid output from the specified algorithm is:
 
 ```text
-[0, 1, 0, 1, 1]
+[0, 1, 2, 3, 3, 2, 1, 0]
 ```
 
-The returned value maps chunks to ranks. Chunk `4` is assigned first because it has the largest causal work.
+Rank $0$ owns chunks $0$ and $7$: work $1 + 8 = 9$. Rank $1$ owns chunks $1$ and
+$6$: $2 + 7 = 9$. Every rank gets $9$.
+
+A contiguous split of the same $8$ chunks into $4$ consecutive pairs gives
+per-rank work $3, 7, 11, 15$ — the last rank does $5\times$ the first.
 
 ## What the gate checks
 
-The gate computes the reference assignment with the same causal balancing algorithm and compares the returned list exactly.
+Two metrics.
 
-The oracle verifies the complete placement behavior, including descending causal loads, least-loaded rank selection, and zig-zag tie handling. A solution that only assigns chunks round-robin or balances the number of chunks instead of the causal work will fail.
+`exact_match` is $1.0$ only when the returned list equals the oracle assignment
+for every tested `num_ranks`: correct length, rank $r$ on chunk $r$, and the
+matching pairing in the second half.
+
+`imbalance` is computed by the gate from **your** assignment — it is not a
+number you return:
+
+$$
+\text{imbalance} =
+\frac{\max_r \sum_{i \in \text{rank } r}(i+1)}
+     {\min_r \sum_{i \in \text{rank } r}(i+1)} .
+$$
+
+It must be exactly $1.0$.
+
+A contiguous split scores `exact_match` $=0$ and `imbalance` $=5.0$ at $p=4$.
+Balancing the *chunk count* instead of the *causal work* also fails: two chunks
+per rank is necessary but not sufficient.

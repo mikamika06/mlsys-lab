@@ -1,54 +1,59 @@
-def _ref(num_chunks, num_ranks):
-    weights = [i + 1 for i in range(num_chunks)]
-    order = sorted(range(num_chunks), key=lambda i: weights[i], reverse=True)
+def _oracle(num_ranks):
+    total = 2 * num_ranks
+    out = [-1] * total
+    for r in range(num_ranks):
+        out[r] = r
+        out[total - 1 - r] = r
+    return out
 
+
+def _loads(assignment, num_ranks):
     loads = [0] * num_ranks
-    direction = 1
-    tie_start = 0
-    out = [-1] * num_chunks
+    for i, r in enumerate(assignment):
+        loads[r] += i + 1
+    return loads
 
-    for chunk in order:
-        minimum = min(loads)
-        tied = [r for r, load in enumerate(loads) if load == minimum]
 
-        if len(tied) == 1:
-            rank = tied[0]
-        else:
-            sequence = list(range(num_ranks))
-            if direction < 0:
-                sequence.reverse()
-            sequence = sequence[tie_start:] + sequence[:tie_start]
-            rank = next(r for r in sequence if r in tied)
-
-        out[chunk] = rank
-        loads[rank] += weights[chunk]
-        direction *= -1
-        tie_start = (tie_start + 1) % num_ranks
-
+def _as_rank_list(got, num_ranks):
+    out = []
+    for r in got:
+        value = int(r)
+        if value != r or value < 0 or value >= num_ranks:
+            return None
+        out.append(value)
     return out
 
 
 def grade(sol, fx) -> dict:
-    cases = [
-        (1, 1),
-        (5, 2),
-        (8, 3),
-        (16, 4),
-        (25, 5),
-        (31, 7),
-    ]
+    cases = [1, 2, 3, 4, 5, 8, 13]
+    bad = {"exact_match": 0.0, "imbalance": float("inf")}
 
-    ok = 1.0
-    for num_chunks, num_ranks in cases:
+    exact = 1.0
+    worst_imbalance = 1.0
+
+    for num_ranks in cases:
         try:
-            got = sol.zig_zag_causal_assignment(num_chunks, num_ranks)
-            got = list(got)
+            got = list(sol.zigzag_assignment(num_ranks))
         except Exception:
-            ok = 0.0
-            break
+            return bad
 
-        if got != _ref(num_chunks, num_ranks):
-            ok = 0.0
-            break
+        ref = _oracle(num_ranks)
+        if len(got) != len(ref):
+            return bad
 
-    return {"exact_match": ok}
+        try:
+            ranks = _as_rank_list(got, num_ranks)
+        except (TypeError, ValueError):
+            return bad
+        if ranks is None:
+            return bad
+
+        if ranks != ref:
+            exact = 0.0
+
+        loads = _loads(ranks, num_ranks)
+        if min(loads) <= 0:
+            return bad
+        worst_imbalance = max(worst_imbalance, max(loads) / min(loads))
+
+    return {"exact_match": exact, "imbalance": float(worst_imbalance)}

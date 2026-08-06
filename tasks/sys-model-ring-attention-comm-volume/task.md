@@ -1,28 +1,25 @@
 ## Context
 
-Ring attention distributes a long sequence across $p$ devices. Each device owns a local query block and a local key/value block. During computation, key/value blocks are rotated around a ring so every device can attend to every context partition.
+Ring attention spreads a long sequence over $p$ devices. Device $r$ permanently
+owns query block $r$ and key/value block $r$. On each step every device hands
+its current key/value block to its right-hand neighbour and receives one from
+the left, so after $p-1$ steps every block has visited every device.
 
-Assume each device stores a key/value block containing $s$ tokens. Each token has hidden width $d$ and both key and value tensors use $b$ bytes per element. The bytes in one key/value block are
+A block holds $s$ tokens of width $d$; keys and values are separate tensors of
+$b$ bytes per element. Counting bytes on the wire is the whole model here — no
+bandwidth, no latency, no overlap with compute.
 
-$$
-B_{\mathrm{KV}} = 2 \cdot s \cdot d \cdot b ,
-$$
+Under a **causal** mask the schedule is cheaper than it first looks. Query block
+$r$ only attends to key/value blocks $0 \dots r$; anything later is fully
+masked, so those arrivals compute nothing. A block therefore does not need to
+finish the loop — it only needs to reach the last device that still has unmasked
+work for it, and the hop after that carries bytes nobody reads.
 
-where the factor of $2$ accounts for the key and value tensors.
-
-For $p$ devices, a ring schedule performs $p-1$ rotations. Each rotation sends one key/value block from every device to its neighbor. The communication volume per device is therefore
-
-$$
-C_{\mathrm{device}} = (p-1) B_{\mathrm{KV}},
-$$
-
-and the total bytes moved across all links are
-
-$$
-C_{\mathrm{total}} = p(p-1)B_{\mathrm{KV}} .
-$$
-
-The task models communication volume, not execution time or bandwidth.
+Dropping those hops does two things. It changes the cluster total by a constant
+factor, and — less obvious, and the reason this task asks for it — it stops
+spreading the traffic evenly. In the dense schedule every device puts the same
+number of bytes on the wire. Under the causal mask they do not, and the device
+that forwards the most is not the device that computes the most.
 
 ## Task
 
@@ -30,53 +27,50 @@ Implement `ring_attention_comm`:
 
 ```python
 def ring_attention_comm(num_devices: int, seq_per_device: int,
-                        hidden_dim: int, bytes_per_element: int) -> tuple[int, int]:
+                        hidden_dim: int, bytes_per_element: int
+                        ) -> tuple[int, int, int, tuple[int, ...]]:
     ...
 ```
 
-Return a tuple:
+Return four things:
 
-1. `bytes_per_step`: the KV bytes transmitted by one device during one ring rotation.
-2. `total_bytes`: the total bytes transferred across all devices for the complete ring schedule.
+1. `bytes_per_step` — the key/value bytes one device puts on the wire during one
+   rotation.
+2. `total_dense` — bytes moved by the whole cluster over the full schedule when
+   every block completes the ring, i.e. no mask.
+3. `total_causal` — bytes moved when every block stops as soon as no device
+   downstream of it has unmasked work left.
+4. `per_device_causal` — a tuple of length `num_devices`. Element $i$ is the
+   number of bytes device $i$ *sends* over the whole causal schedule. Forwarding
+   a block someone else originated counts as sending it. The elements must sum
+   to `total_causal`.
 
-Use integer arithmetic only.
-
-The inputs satisfy:
-
-- $num\_devices \ge 2$
-- $seq\_per\_device > 0$
-- $hidden\_dim > 0$
-- $bytes\_per\_element > 0$
+Use integer arithmetic only; every result is exact. Inputs satisfy $p \ge 2$,
+$s > 0$, $d > 0$, $b > 0$.
 
 ## Example
 
 ```python
-bytes_per_step, total = ring_attention_comm(4, 1024, 4096, 2)
-
-# bytes_per_step = 16777216
-# total = 201326592
+ring_attention_comm(4, 1024, 4096, 2)
 ```
 
-The example uses a KV block of
+```text
+(16777216, 201326592, 100663296, (16777216, 33554432, 50331648, 0))
+```
 
-$$
-2 \cdot 1024 \cdot 4096 \cdot 2 = 16777216
-$$
-
-bytes. There are $3$ rotations and $4$ devices, so
-
-$$
-4 \cdot 3 \cdot 16777216 = 201326592 .
-$$
+One block is $2 \cdot 1024 \cdot 4096 \cdot 2 = 16777216$ bytes. In the dense
+schedule four devices each send it across three rotations. Under the causal mask
+block $0$ still has to travel to every later device, block $3$ travels nowhere,
+and the traffic piles up towards the far end of the line — the last device sends
+nothing at all, while its neighbour sends three blocks' worth.
 
 ## What the gate checks
 
-The gate builds an independent oracle from the ring communication model and compares the returned values exactly for several parameter combinations.
+`modeled_mem_access` is $1.0$ only when all four results match an independently
+derived oracle, for every tested $(p, s, d, b)$ — including $p = 2$, an odd
+device count, and a case where $s$ is not a power of two. Both the tuple length
+and every element are compared exactly, and non-integers fail.
 
-The `modeled_mem_access` score is $1.0$ only when the implementation returns the exact pair
-
-$$
-(B_{\mathrm{KV}}, p(p-1)B_{\mathrm{KV}})
-$$
-
-computed by the oracle. No approximations or bandwidth assumptions are used.
+Returning `total_causal == total_dense` fails. So does a `per_device_causal`
+that is flat: the sum can be right while the distribution is wrong, and the
+distribution is what the last two tasks in this module build on.

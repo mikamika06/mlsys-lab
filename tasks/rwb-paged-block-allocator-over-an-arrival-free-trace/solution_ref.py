@@ -7,7 +7,13 @@ def _simulate(arrive_t, depart_t, seq_len, n_blocks, cost_fn):
     for i in range(n):
         events.append((int(arrive_t[i]), 0, i))
         events.append((int(depart_t[i]), -1, i))
-    events.sort(key=lambda e: (e[0], e[1]))
+    
+    for i in range(len(events)):
+        for j in range(0, len(events) - i - 1):
+            e1 = events[j]
+            e2 = events[j + 1]
+            if (e1[0] > e2[0]) or (e1[0] == e2[0] and e1[1] > e2[1]):
+                events[j], events[j + 1] = events[j + 1], events[j]
 
     free = n_blocks
     used = 0
@@ -29,7 +35,8 @@ def _simulate(arrive_t, depart_t, seq_len, n_blocks, cost_fn):
                 admitted[i] = True
                 cost[i] = c
                 admitted_count += 1
-                peak = max(peak, used)
+                if used > peak:
+                    peak = used
 
     return peak, admitted_count
 

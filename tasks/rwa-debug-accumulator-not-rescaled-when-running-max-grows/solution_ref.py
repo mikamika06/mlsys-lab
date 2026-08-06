@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 
@@ -13,49 +12,23 @@ def tiled_online_softmax_attention(q: np.ndarray, K: np.ndarray, V: np.ndarray, 
     """
     d = K.shape[1]
     n = K.shape[0]
-    m = -float("inf")
+    m = -np.inf
     l = 0.0
     O = np.zeros(d, dtype=np.float64)
 
-    sqrt_d = math.sqrt(d)
-
     for start in range(0, n, block_size):
         end = min(start + block_size, n)
+        Kb = K[start:end]
+        Vb = V[start:end]
 
-        scores = []
-        for i in range(start, end):
-            score = 0.0
-            for j in range(d):
-                score += q[j] * K[i, j]
-            scores.append(score / sqrt_d)
+        scores = (q @ Kb.T) / np.sqrt(d)
+        m_new = max(m, float(np.max(scores)))
+        correction = np.exp(m - m_new)  # 0.0 on the first block (m == -inf)
 
-        m_new = m
-        for s in scores:
-            if s > m_new:
-                m_new = s
-
-        correction = math.exp(m - m_new)
-
-        p = []
-        sum_p = 0.0
-        for s in scores:
-            val = math.exp(s - m_new)
-            p.append(val)
-            sum_p += val
-
-        l = l * correction + sum_p
-
-        block_len = end - start
-        for j in range(d):
-            v_acc = 0.0
-            for k in range(block_len):
-                v_acc += p[k] * V[start + k, j]
-            O[j] = O[j] * correction + v_acc
+        p = np.exp(scores - m_new)
+        l = l * correction + float(np.sum(p))
+        O = O * correction + p @ Vb  # <-- the accumulator rescale
 
         m = m_new
 
-    out = np.zeros(d, dtype=np.float64)
-    for j in range(d):
-        out[j] = O[j] / l
-
-    return out
+    return O / l

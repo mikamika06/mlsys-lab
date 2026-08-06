@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def block_influence_ranking(
     x_in: np.ndarray,
@@ -21,21 +22,34 @@ def block_influence_ranking(
     ranking : list[int]
         Layer indices sorted in descending order of influence.
     """
-    # Normalise to avoid division by zero
+    batch = x_in.shape[0]
+    layers = x_in.shape[1]
+    features = x_in.shape[2]
     eps = 1e-12
-    norms_in = np.linalg.norm(x_in, axis=2) + eps
-    norms_out = np.linalg.norm(x_out, axis=2) + eps
 
-    # Cosine similarity per sample and layer
-    cos = (x_in * x_out).sum(axis=2) / (norms_in * norms_out)
+    influences_list = []
+    for l in range(layers):
+        sum_cos = 0.0
+        for b in range(batch):
+            sum_sq_in = 0.0
+            sum_sq_out = 0.0
+            dot_val = 0.0
+            for f in range(features):
+                val_in = x_in[b, l, f]
+                val_out = x_out[b, l, f]
+                sum_sq_in += val_in * val_in
+                sum_sq_out += val_out * val_out
+                dot_val += val_in * val_out
+            
+            norm_in = math.sqrt(sum_sq_in) + eps
+            norm_out = math.sqrt(sum_sq_out) + eps
+            cos_val = dot_val / (norm_in * norm_out)
+            sum_cos += cos_val
+        
+        mean_cos = sum_cos / batch
+        influences_list.append(1.0 - mean_cos)
 
-    # Expected cosine over the batch
-    mean_cos = cos.mean(axis=0)
-
-    # Block influence
-    influences = 1.0 - mean_cos
-
-    # Ranking: indices sorted by descending influence
-    ranking = list(np.argsort(-influences))
+    influences = np.array(influences_list, dtype=np.float64)
+    ranking = sorted(range(layers), key=lambda i: influences[i], reverse=True)
 
     return influences, ranking

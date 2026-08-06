@@ -9,10 +9,22 @@ def calibration_params(tensor):
     If the tensor is constant, returns (0.0, 0).
     """
     t = np.asarray(tensor, dtype=np.float64)
-    mn = float(t.min())
-    mx = float(t.max())
+    iterator = t.flat
+    mn = float(next(iterator))
+    mx = mn
+    for val in iterator:
+        if val < mn:
+            mn = float(val)
+        if val > mx:
+            mx = float(val)
     scale = (mx - mn) / 255.0
     if scale == 0.0:
         return 0.0, 0
-    zero_point = int(np.clip(np.round(-mn / scale), 0, 255))
+    val_rounded = round(-mn / scale)
+    if val_rounded < 0:
+        zero_point = 0
+    elif val_rounded > 255:
+        zero_point = 255
+    else:
+        zero_point = int(val_rounded)
     return scale, zero_point

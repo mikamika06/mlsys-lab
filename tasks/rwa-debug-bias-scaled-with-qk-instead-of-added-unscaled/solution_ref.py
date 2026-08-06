@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 
@@ -17,41 +16,9 @@ def sdpa_with_additive_bias(
     q: (n_q, d), k: (n_k, d), v: (n_k, d_v), bias: (n_q, n_k).
     Returns (n_q, d_v).
     """
-    n_q, d = q.shape
-    n_k, _ = k.shape
-    _, d_v = v.shape
-
-    logits = np.zeros((n_q, n_k), dtype=q.dtype)
-    for i in range(n_q):
-        for j in range(n_k):
-            dot = 0.0
-            for l in range(d):
-                dot += q[i, l] * k[j, l]
-            logits[i, j] = dot * scale + bias[i, j]
-
-    w = np.zeros((n_q, n_k), dtype=q.dtype)
-    for i in range(n_q):
-        max_val = logits[i, 0]
-        for j in range(1, n_k):
-            if logits[i, j] > max_val:
-                max_val = logits[i, j]
-        
-        row_sum = 0.0
-        row_exp = []
-        for j in range(n_k):
-            val = math.exp(logits[i, j] - max_val)
-            row_exp.append(val)
-            row_sum += val
-        
-        for j in range(n_k):
-            w[i, j] = row_exp[j] / row_sum
-
-    out = np.zeros((n_q, d_v), dtype=q.dtype)
-    for i in range(n_q):
-        for j in range(d_v):
-            val = 0.0
-            for l in range(n_k):
-                val += w[i, l] * v[l, j]
-            out[i, j] = val
-
-    return out
+    logits = (q @ k.T) * scale
+    logits = logits + bias
+    logits = logits - np.max(logits, axis=-1, keepdims=True)
+    w = np.exp(logits)
+    w = w / np.sum(w, axis=-1, keepdims=True)
+    return w @ v

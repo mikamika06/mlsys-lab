@@ -1,3 +1,16 @@
+def manual_sort(items, key_fn):
+    arr = list(items)
+    for i in range(1, len(arr)):
+        curr = arr[i]
+        curr_key = key_fn(curr)
+        j = i - 1
+        while j >= 0 and key_fn(arr[j]) > curr_key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = curr
+    return arr
+
+
 def lookahead_pool_update_verify(trace, n, lookahead, pool_size):
     counts = {}
 
@@ -27,9 +40,9 @@ def lookahead_pool_update_verify(trace, n, lookahead, pool_size):
                     choices.append((freq, t))
             if not choices:
                 break
-            choices.sort(key=lambda x: (-x[0], x[1]))
-            current.append(choices[0][1])
-            proposals.append(choices[0][1])
+            sorted_choices = manual_sort(choices, lambda x: (-x[0], x[1]))
+            current.append(sorted_choices[0][1])
+            proposals.append(sorted_choices[0][1])
 
         matched = 0
         for off, token in enumerate(proposals):
@@ -39,11 +52,16 @@ def lookahead_pool_update_verify(trace, n, lookahead, pool_size):
             else:
                 break
 
-        for j in range(i, min(i + max(1, matched), len(trace))):
+        m = matched if matched > 1 else 1
+        limit = i + m
+        if len(trace) < limit:
+            limit = len(trace)
+
+        for j in range(i, limit):
             add_ngram(j)
 
-        i += max(1, matched)
+        i += m
 
     entries = list(counts.items())
-    entries.sort(key=lambda kv: (-kv[1], kv[0][0], kv[0][1]))
-    return verified, [key for key, _ in entries[:pool_size]]
+    sorted_entries = manual_sort(entries, lambda kv: (-kv[1], kv[0][0], kv[0][1]))
+    return verified, [key for key, _ in sorted_entries[:pool_size]]

@@ -1,20 +1,25 @@
 {
   "id": "sys-zig-zag-causal-load-balancing",
   "title": "Zig-zag causal load balancing",
-  "track": "04 Systems and Parallelism",
+  "track": "04 Systems for ML",
   "tier": "II",
-  "module": "M4sys",
-  "difficulty": 5,
+  "module": "M4cp",
+  "difficulty": 3,
   "genre": "implement",
   "platform": "cross-platform",
   "provides": [
-    "zig_zag_causal_assignment"
+    "zigzag_assignment"
   ],
   "fixtures": [],
   "gates": [
     {
       "metric": "exact_match",
       "op": "==",
+      "threshold": 1.0
+    },
+    {
+      "metric": "imbalance",
+      "op": "<=",
       "threshold": 1.0
     }
   ],

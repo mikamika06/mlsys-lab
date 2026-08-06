@@ -2,8 +2,7 @@ import numpy as np
 
 
 def constrained_free_argmax_divergence(logits, trace, allowed) -> int:
-    """
-    logits: (T, vocab_size) array of per-step logits.
+    """logits: (T, vocab_size) array of per-step logits.
     trace: length-T list of FSM state ids active at each step.
     allowed: dict mapping FSM state id -> list of token ids allowed in
         that state.
@@ -23,12 +22,24 @@ def constrained_free_argmax_divergence(logits, trace, allowed) -> int:
     count = 0
     for t, state in enumerate(trace):
         row = logits[t]
-        free = int(np.argmax(row))
 
-        allowed_tokens = sorted(set(int(tok) for tok in allowed[state]))
-        mask = np.full(vocab_size, -np.inf, dtype=np.float64)
-        mask[allowed_tokens] = row[allowed_tokens]
-        constrained = int(np.argmax(mask))
+        free = 0
+        max_val = float("-inf")
+        for i in range(vocab_size):
+            val = row[i]
+            if val > max_val:
+                max_val = val
+                free = i
+
+        allowed_set = set(int(tok) for tok in allowed[state])
+        constrained = 0
+        max_val_c = float("-inf")
+        for i in range(vocab_size):
+            if i in allowed_set:
+                val = row[i]
+                if val > max_val_c:
+                    max_val_c = val
+                    constrained = i
 
         if free != constrained:
             count += 1
