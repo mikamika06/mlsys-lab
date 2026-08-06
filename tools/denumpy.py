@@ -467,6 +467,103 @@ def rewrite_numpy_lines(after, signature, ask_one):
     return "\n".join(out)
 
 
+EXAMPLE = re.compile(r"```python\n(.*?)```", re.S)
+OUTPUT_FENCE = re.compile(r"(\n(?:Output|Result)[^\n]*\n+```[a-z]*\n)(.*?)(```)", re.S | re.I)
+
+
+def refresh_output(md, reference_src, tid):
+    """Replace the illustrative output with what the example actually prints.
+
+    These statements show an array the way numpy prints one. After the rewrite
+    the code returns a list, so the block is no longer describing anything that
+    happens. Running it is the only honest way to say what it prints now.
+    """
+    # The first python fence in a statement is the signature block, not the
+    # example; searching from the top runs `def f(...): ...` and gets an
+    # IndentationError instead of an output.
+    head = re.search(r"^#+\s*Example", md, re.M | re.I)
+    start = head.start() if head else 0
+    m = EXAMPLE.search(md, start)
+    om = OUTPUT_FENCE.search(md, start)
+    if not m or not om:
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        rp = os.path.join(tmp, "reference.py")
+        ep = os.path.join(tmp, "example.py")
+        with open(rp, "w", encoding="utf-8") as f:
+            f.write(reference_src)
+        with open(ep, "w", encoding="utf-8") as f:
+            f.write(m.group(1))
+        try:
+            r = subprocess.run(
+                [sys.executable, os.path.join(ROOT, "tools", "run_example.py"), rp, ep],
+                capture_output=True, text=True, timeout=30)
+        except subprocess.TimeoutExpired:
+            return None
+    if "OK" not in r.stderr or not r.stdout.strip():
+        return None
+    return md[:om.start(2)] + r.stdout.rstrip() + "\n" + md[om.end(2):]
+
+
+def _run_example(reference_src, code):
+    with tempfile.TemporaryDirectory() as tmp:
+        rp = os.path.join(tmp, "reference.py")
+        ep = os.path.join(tmp, "example.py")
+        with open(rp, "w", encoding="utf-8") as f:
+            f.write(reference_src)
+        with open(ep, "w", encoding="utf-8") as f:
+            f.write(code)
+        try:
+            r = subprocess.run(
+                [sys.executable, os.path.join(ROOT, "tools", "run_example.py"), rp, ep],
+                capture_output=True, text=True, timeout=30)
+        except subprocess.TimeoutExpired:
+            return None
+    if "OK" not in r.stderr:
+        return None
+    return r.stdout
+
+
+def refresh_inline_output(md, reference_src, tid):
+    """Rewrite the output a statement shows as a comment beside its print.
+
+    Most of these statements do not label the output at all: they write
+    `print(preds)  # [1 1]`, or follow the print with a block of `#` lines. Once
+    the code returns lists those comments describe an array that no longer
+    exists, and the only honest replacement is what the example now prints.
+    Handled for a single print, which is the shape they all use; anything else
+    is left alone rather than guessed at.
+    """
+    head = re.search(r"^#+\s*Example", md, re.M | re.I)
+    start = head.start() if head else 0
+    m = EXAMPLE.search(md, start)
+    if not m:
+        return None
+    code = m.group(1)
+    if code.count("print(") != 1:
+        return None
+    out = _run_example(reference_src, code)
+    if not out or not out.strip():
+        return None
+    lines = out.rstrip("\n").split("\n")
+
+    src = code.split("\n")
+    idx = next((i for i, ln in enumerate(src) if "print(" in ln), None)
+    if idx is None:
+        return None
+    src[idx] = re.sub(r"\s*#.*$", "", src[idx]).rstrip()
+    tail = idx + 1
+    while tail < len(src) and src[tail].lstrip().startswith("#"):
+        tail += 1
+    comment = ["# " + ln if ln else "#" for ln in lines]
+    if len(lines) == 1:
+        src[idx] = src[idx] + "  " + comment[0]
+        new = src[:idx + 1] + src[tail:]
+    else:
+        new = src[:idx + 1] + comment + src[tail:]
+    return md[:m.start(1)] + "\n".join(new) + md[m.end(1):]
+
+
 def statement_intact(before, after):
     """Fences balanced and the mathematics still there."""
     if before.count("```") != after.count("```"):
