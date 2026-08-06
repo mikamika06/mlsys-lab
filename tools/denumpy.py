@@ -477,6 +477,29 @@ it back unchanged.
 """
 
 
+def _numbered(reply, count):
+    """Split a numbered reply that may have lost its line breaks.
+
+    The separators come back as spaces often enough that the answers arrive as
+    `1 first line 2 second line` on one physical line. Splitting on newlines
+    took the first item and dropped the rest, so the whole rewrite was thrown
+    away. Markers are found in order instead: only a `2` that follows item 1
+    starts item 2, which a stray number in the prose cannot fake.
+    """
+    out = {}
+    pos = 0
+    for n in range(1, count + 1):
+        m = re.compile(r"(?:^|\s)%d(?:\t|\.\s|\)\s|\s)" % n).search(reply, pos)
+        if not m:
+            return out
+        start = m.end()
+        nxt = re.compile(r"(?:^|\s)%d(?:\t|\.\s|\)\s|\s)" % (n + 1)).search(reply, start)
+        end = nxt.start() if nxt else len(reply)
+        out[n] = reply[start:end].strip("\n").rstrip()
+        pos = end
+    return out
+
+
 def rewrite_numpy_lines(after, signature, ask_one):
     """Rewrite only the lines that still mention numpy, and splice them back.
 
@@ -495,14 +518,7 @@ def rewrite_numpy_lines(after, signature, ask_one):
         reply = ask_one(LINES_PROMPT.format(signature=signature, lines=numbered))
     except Exception:  # noqa: BLE001
         return after
-    got = {}
-    for raw in reply.split("\n"):
-        # The tab in the reply comes back as a space, so the separator has to
-        # be any of them; anchoring on the tab alone threw away answers that
-        # were otherwise exactly right.
-        m = re.match(r"\s*(\d+)(?:\t|\.\s|\)\s|\s)(.*)$", raw)
-        if m:
-            got[int(m.group(1))] = m.group(2)
+    got = _numbered(reply, len(idx))
     if len(got) != len(idx):
         return after
     out = list(lines)

@@ -404,3 +404,29 @@
 {"id": "llm-fuse-wq-wk-wv-into-one-qkv-matmul", "ok": false, "why": "3-6-flash:function renamed fused_qkv_projection -> solve; 3-1-pro:parameters changed ['X', 'Wq', 'Wk', 'Wv'] -> ['hidden_states', 'weight', 'bias']; 3-1-pro: | max_abs_err=Infinity (gate <=1e-06)  <-- FAILED | matmul_calls=0 (gate ==1)  <-- FAILED"}
 {"id": "llm-layernorm-forward-from-scratch", "ok": false, "why": "3-1-pro:statement shows numpy-printed output; 3-1-pro:output run: ModuleNotFoundError: No module named 'your_module'; 3-1-pro:statement shows numpy-printed output"}
 {"id": "llm-debug-accidental-mean-centering-in-rmsnorm", "ok": false, "why": "3-1-pro:statement shows numpy-printed output; 3-1-pro:output run: SyntaxError: 'return' outside function; 3-1-pro:statement shows numpy-printed output"}
+{"id": "alg-vectorized-pairwise-l2-matrix-no-cdist", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-debug-accidental-mean-centering-in-rmsnorm", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-compare-penalty-before-vs-after-temperature-kl", "ok": false, "why": "3-6-flash:TASK_FAIL: reference does not pass gates | rel_err=0.00015454 (gate <=1e-09)  <-- FAILED; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-causal-streaming-softmax-with-block-skipping", "ok": false, "why": "3-6-flash:reference does not define streaming_causal_softmax; 3-1-pro:parameters changed ['logits', 'mask', 'block_size'] -> ['x']; 3-1-pro:defaults changed {} -> {'mask': 'None', 'block_size': 'None'}"}
+{"id": "llm-layernorm-forward-from-scratch", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "alg-prove-logsumexp-shift-invariance", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:solution_ref.py: SyntaxError line 1; 3-1-pro:reference does not define logsumexp"}
+{"id": "llm-fuse-wq-wk-wv-into-one-qkv-matmul", "ok": false, "why": "3-6-flash:no files; 3-1-pro:eference does not pass gates | raised: ModuleNotFoundError: No module named 'solution_ref'; 3-1-pro:L: reference does not pass gates | raised: ModuleNotFoundError: No module named 'solution'"}
+{"id": "llm-stable-softmax-survives-300-logits", "ok": false, "why": "3-6-flash:reference does not define stable_softmax; 3-1-pro:parameters changed ['logits'] -> ['x']; 3-1-pro:numpy still in task.md"}
+{"id": "llm-seeded-reproducible-sampling-sequence", "ok": false, "why": "3-6-flash:function renamed sample_sequence -> compute_statistics; 3-1-pro:no files; 3-1-pro:function renamed sample_sequence -> solve"}
+{"id": "num-expm1-for-tiny-x", "ok": false, "why": "3-6-flash:numpy still in starter.py; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "num-batched-matmul-from-scratch", "ok": false, "why": "3-6-flash:no files; 3-1-pro:numpy still in task.md; 3-1-pro:numpy still in task.md"}
+{"id": "num-fix-missing-axis-sum-after-broadcast", "ok": false, "why": "3-6-flash:no files; 3-1-pro:numpy still in task.md; 3-1-pro:numpy still in task.md"}
+{"id": "num-fix-one-pass-variance-that-returns-negatives", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1"]}
+{"id": "num-complex-step-differentiation", "ok": false, "why": "3-6-flash:no choices: {\"id\": \"370b956b-61a6-4740-b67f-806aa0bddcdb\", \"; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "num-fused-streaming-log-softmax-matching-flash-numerics", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "num-fix-underflowing-log-likelihood", "ok": false, "why": "3-6-flash:no files; 3-1-pro:function renamed log_likelihood -> calculate_dot_product; 3-1-pro:parameters changed ['probs'] -> ['vector_a', 'vector_b']"}
+{"id": "num-jacobian-by-finite-differences", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "num-general-unbroadcast-leading-size-1-dims", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:TASK_FAIL: reference does not pass gates | max_abs_err=Infinity (gate <=1e-09)  <-- FAILED"]}
+{"id": "num-log-softmax-via-lse", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "num-label-smoothed-fused-ce", "ok": false, "why": "3-6-flash:defaults changed {'eps': '0.1'} -> {}; 3-1-pro:parameters changed ['logits', 'targets', 'eps'] -> ['eps']; 3-1-pro:defaults changed {'eps': '0.1'} -> {'eps': \"'0.1'\"}"}
+{"id": "num-fix-nan-cross-entropy-via-fusion", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:parameters changed ['logits', 'target'] -> ['y_true', 'y_pred']; 3-1-pro:numpy still in task.md"}
+{"id": "num-gradient-accumulation-on-reused-node", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:no choices: {\"id\": \"84c6701b-ed74-483f-bd3e-3547c9754a78\", \""]}
+{"id": "num-log-softmax-x-lse-identity", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "num-log1p-for-tiny-x", "ok": false, "why": "3-1-pro:parameters changed ['x'] -> ['n']; 3-1-pro:output run: SyntaxError: 'return' outside function; 3-1-pro:statement shows numpy-printed output"}
+{"id": "num-naive-triple-loop-matmul", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:parameters changed ['A', 'B'] -> ['a', 'b']; 3-1-pro:numpy still in task.md"}
+{"id": "num-logsumexp-with-max-shift", "ok": false, "why": "3-6-flash:numpy still in starter.py; 3-1-pro:parameters changed ['x', 'axis'] -> ['x']; 3-1-pro:defaults changed {'axis': '-1'} -> {'axis': 'None'}"}
