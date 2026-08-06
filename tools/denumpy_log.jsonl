@@ -386,3 +386,14 @@
 {"id": "num-expm1-for-tiny-x", "ok": false, "why": "3-6-flash:no files; 3-1-pro:function renamed exp_minus_one -> solve; 3-1-pro:function renamed exp_minus_one -> solve"}
 {"id": "llm-causal-streaming-softmax-with-block-skipping", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
 {"id": "alg-prove-logsumexp-shift-invariance", "ok": false, "why": "3-6-flash:function renamed logsumexp -> solve; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "alg-count-distance-computations-brute-vs-kd-tree", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "alg-vectorized-pairwise-l2-matrix-no-cdist", "ok": false, "why": "3-1-pro:statement shows numpy-printed output; 3-1-pro:output run: ModuleNotFoundError: No module named 'pairwise_l2_matrix'; 3-1-pro:statement shows numpy-printed output"}
+{"id": "alg-prove-logsumexp-shift-invariance", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:function renamed logsumexp -> solution"}
+{"id": "llm-causal-streaming-softmax-with-block-skipping", "ok": false, "why": "3-6-flash:no choices: {\"id\": \"ce4ded17-b15a-4690-8379-8b83515b7d6e\", \"; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "llm-debug-mha-missing-transpose-head-seq-mix", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-compare-penalty-before-vs-after-temperature-kl", "ok": false, "why": "3-6-flash:TASK_FAIL: reference does not pass gates | rel_err=Infinity (gate <=1e-09)  <-- FAILED; 3-1-pro:no choices: {\"id\": \"f5526877-3307-49a0-b8d1-2e6733f7c091\", \"; 3-1-pro:no files"}
+{"id": "llm-debug-accidental-mean-centering-in-rmsnorm", "ok": false, "why": "3-6-flash:defaults changed {'eps': '1e-05'} -> {}; 3-1-pro:check.py: IndentationError line 7; 3-1-pro:no choices: {\"id\": \"cf5beacf-f93b-4aa2-83e9-8dbf2491306a\", \""}
+{"id": "llm-kv-cache-append-decode-step-matches-full-recompute", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-pre-norm-block-wiring-match", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-fuse-wq-wk-wv-into-one-qkv-matmul", "ok": false, "why": "3-6-flash:no files; 3-1-pro:function renamed fused_qkv_projection -> solve; 3-1-pro:no choices: {\"id\": \"d760e35a-d9f5-44db-bf46-96d29666853d\", \""}
+{"id": "llm-layernorm-forward-from-scratch", "ok": false, "why": "3-6-flash:no choices: {\"id\": \"10fcc482-774f-4065-b1de-3079c95ee2b2\", \"; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}

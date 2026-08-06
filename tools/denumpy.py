@@ -206,6 +206,8 @@ FILE: <name>
 
 followed by its complete new contents. No commentary before or after.
 
+=== the function is named `{entry}` and must keep that exact name
+
 === task id: {tid}
 
 {files}
@@ -218,7 +220,8 @@ def contract(tid, files):
         if files.get(name) is None:
             continue
         parts.append("FILE: %s\n```\n%s\n```" % (name, files[name]))
-    return PROMPT.format(tid=tid, files="\n\n".join(parts))
+    return PROMPT.format(tid=tid, entry=entry_name(files.get("starter.py")) or "?",
+                         files="\n\n".join(parts))
 
 
 def verify(tid):
@@ -430,12 +433,22 @@ def _arglist(source, want=None):
 
 
 def signature_of(source, want=None):
+    """The def line, rebuilt from the syntax tree.
+
+    Reading it back out of the source with a regular expression missed the
+    multi-line declarations these references like to use, and a missing
+    signature is reported as "no signature in reference" — a rewrite thrown
+    away over the way it was formatted.
+    """
     node = _func(source, want)
     if node is None:
         return ""
-    m = re.search(r"^def\s+" + re.escape(node.name) + r"\s*\(.*?\)\s*(?:->[^:]+)?:",
-                  source, re.S | re.M)
-    return m.group(0)[:-1] if m else ""
+    try:
+        args = ast.unparse(node.args)
+        ret = " -> " + ast.unparse(node.returns) if node.returns is not None else ""
+    except Exception:  # noqa: BLE001
+        return ""
+    return "def %s(%s)%s" % (node.name, args, ret)
 
 
 LINES_PROMPT = """Rewrite these lines so they do not mention numpy.
