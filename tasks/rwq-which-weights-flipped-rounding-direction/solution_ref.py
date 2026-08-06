@@ -20,9 +20,16 @@ def classify_rounding(W: np.ndarray, V: np.ndarray, s: float) -> np.ndarray:
         Integer array with values -1 (rounded down), 0 (no change),
         or +1 (rounded up).
     """
-    # Compute rounded values before and after adding V
-    r0 = np.round(W / s)
-    r1 = np.round((W + V) / s)
-
-    # Classify differences: >0 -> up, <0 -> down, ==0 -> nearest
-    return (r1 > r0).astype(np.int8) - (r1 < r0).astype(np.int8)
+    out = np.empty(W.shape, dtype=np.int8)
+    it = np.nditer([W, V, out], flags=['external_loop', 'buffered'], op_flags=[['readonly'], ['readonly'], ['writeonly']])
+    for w_chunk, v_chunk, out_chunk in it:
+        for i in range(w_chunk.shape[0]):
+            r0 = round(w_chunk[i] / s)
+            r1 = round((w_chunk[i] + v_chunk[i]) / s)
+            if r1 > r0:
+                out_chunk[i] = 1
+            elif r1 < r0:
+                out_chunk[i] = -1
+            else:
+                out_chunk[i] = 0
+    return out

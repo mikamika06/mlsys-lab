@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def zero_one_adam(params, grads, num_ranks, lr=0.001, beta1=0.9, beta2=0.999, eps=1e-8):
@@ -12,14 +13,12 @@ def zero_one_adam(params, grads, num_ranks, lr=0.001, beta1=0.9, beta2=0.999, ep
     N = len(params)
     T = len(grads)
 
-    # --- contiguous shard boundaries ---
     base = N // num_ranks
     remainder = N % num_ranks
     starts = [0]
     for r in range(num_ranks):
         starts.append(starts[-1] + base + (1 if r < remainder else 0))
 
-    # --- per-rank optimizer states ---
     m_shards = [np.zeros(starts[r + 1] - starts[r], dtype=np.float64)
                 for r in range(num_ranks)]
     v_shards = [np.zeros(starts[r + 1] - starts[r], dtype=np.float64)
@@ -30,15 +29,31 @@ def zero_one_adam(params, grads, num_ranks, lr=0.001, beta1=0.9, beta2=0.999, ep
             s, e = starts[r], starts[r + 1]
             g = grads[t - 1][s:e]
 
-            # first and second moment update (shard-local)
-            m_shards[r] = beta1 * m_shards[r] + (1.0 - beta1) * g
-            v_shards[r] = beta2 * v_shards[r] + (1.0 - beta2) * g * g
+            m_shard = m_shards[r]
+            v_shard = v_shards[r]
+            
+            m_new = np.empty_like(m_shard)
+            v_new = np.empty_like(v_shard)
+            
+            for i in range(len(m_shard)):
+                m_new[i] = beta1 * m_shard[i] + (1.0 - beta1) * g[i]
+                v_new[i] = beta2 * v_shard[i] + (1.0 - beta2) * g[i] * g[i]
+            
+            m_shards[r] = m_new
+            v_shards[r] = v_new
 
-            # bias correction
-            m_hat = m_shards[r] / (1.0 - beta1 ** t)
-            v_hat = v_shards[r] / (1.0 - beta2 ** t)
+            m_hat = np.empty_like(m_new)
+            v_hat = np.empty_like(v_new)
+            
+            bias1 = 1.0 - beta1 ** t
+            bias2 = 1.0 - beta2 ** t
 
-            # parameter update on shard only
-            params[s:e] -= lr * m_hat / (np.sqrt(v_hat) + eps)
+            for i in range(len(m_new)):
+                m_hat[i] = m_new[i] / bias1
+                v_hat[i] = v_new[i] / bias2
+
+            for i in range(e - s):
+                idx = s + i
+                params[idx] -= lr * m_hat[i] / (math.sqrt(v_hat[i]) + eps)
 
     return params

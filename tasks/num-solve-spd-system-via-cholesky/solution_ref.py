@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -15,7 +16,7 @@ def solve_spd(A: np.ndarray, b: np.ndarray) -> np.ndarray:
                 s -= L[i, k] * L[j, k]
 
             if i == j:
-                L[i, j] = np.sqrt(s)
+                L[i, j] = math.sqrt(s)
             else:
                 L[i, j] = s / L[j, j]
 

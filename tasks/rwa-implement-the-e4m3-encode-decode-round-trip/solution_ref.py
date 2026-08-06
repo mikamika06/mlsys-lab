@@ -1,20 +1,35 @@
+import math
 import numpy as np
 
 
 def _decode_bits(code: np.ndarray) -> np.ndarray:
     code = np.asarray(code, dtype=np.uint8)
-    sign = np.where((code & 0x80) != 0, -1.0, 1.0)
-    e = ((code >> 3) & 0x0F).astype(np.int64)
-    m = (code & 0x07).astype(np.int64)
-    normal = sign * (1.0 + m / 8.0) * np.exp2((e - 7).astype(np.float64))
-    subnormal = sign * (m / 8.0) * np.exp2(-6.0)
-    val = np.where(e == 0, subnormal, normal)
-    val = np.where((e == 15) & (m == 7), np.nan, val)
-    return val
+    out = np.empty(code.shape, dtype=np.float64)
+    flat_code = code.ravel()
+    flat_out = out.ravel()
+
+    for i in range(flat_code.shape[0]):
+        c = int(flat_code[i])
+        sign = -1.0 if (c & 0x80) != 0 else 1.0
+        e = (c >> 3) & 0x0F
+        m = c & 0x07
+
+        if e == 15 and m == 7:
+            val = float('nan')
+        elif e == 0:
+            subnormal = sign * (m / 8.0) * math.exp2(-6.0)
+            val = subnormal
+        else:
+            normal = sign * (1.0 + m / 8.0) * math.exp2(float(e - 7))
+            val = normal
+
+        flat_out[i] = val
+
+    return out
 
 
-_NONNEG_CODES = np.arange(0, 127, dtype=np.uint8)  # excludes 0x7F (NaN)
-_NONNEG_GRID = _decode_bits(_NONNEG_CODES)          # ascending, grid[-1] == 448
+_NONNEG_CODES = np.arange(0, 127, dtype=np.uint8)
+_NONNEG_GRID = _decode_bits(_NONNEG_CODES)
 _MAX_E4M3 = float(_NONNEG_GRID[-1])
 
 
@@ -27,19 +42,65 @@ def e4m3_round_trip(x: np.ndarray) -> np.ndarray:
     - preserve the sign of zero.
     """
     x = np.asarray(x, dtype=np.float64)
-    sign = np.where(np.signbit(x), -1.0, 1.0)
-    av = np.clip(np.abs(x), 0.0, _MAX_E4M3)
+    out = np.empty(x.shape, dtype=np.float32)
+    flat_x = x.ravel()
+    flat_out = out.ravel()
 
-    idx = np.searchsorted(_NONNEG_GRID, av)
-    idx = np.clip(idx, 1, len(_NONNEG_GRID) - 1)
-    lo_idx, hi_idx = idx - 1, idx
-    lo, hi = _NONNEG_GRID[lo_idx], _NONNEG_GRID[hi_idx]
+    grid = _NONNEG_GRID
+    codes = _NONNEG_CODES
+    grid_len = grid.shape[0]
 
-    d_lo, d_hi = av - lo, hi - av
-    hi_code_even = (_NONNEG_CODES[hi_idx] & 1) == 0
-    choose_hi = np.where(d_hi == d_lo, hi_code_even, d_hi < d_lo)
+    for i in range(flat_x.shape[0]):
+        val = flat_x[i]
 
-    chosen = np.where(choose_hi, hi, lo)
-    result = sign * chosen
-    result = np.where(x == 0, np.copysign(0.0, x), result)
-    return result.astype(np.float32)
+        # signbit check
+        if math.copysign(1.0, val) < 0.0 or (val == 0.0 and 1.0 / val < 0.0):
+            sign = -1.0
+        else:
+            sign = 1.0
+
+        # abs and clamp
+        av = abs(val)
+        if av > _MAX_E4M3:
+            av = _MAX_E4M3
+
+        # searchsorted equivalent
+        idx = grid_len
+        for j in range(grid_len):
+            if grid[j] >= av:
+                idx = j
+                break
+
+        # clip idx
+        if idx < 1:
+            idx = 1
+        elif idx > grid_len - 1:
+            idx = grid_len - 1
+
+        lo_idx = idx - 1
+        hi_idx = idx
+        lo = grid[lo_idx]
+        hi = grid[hi_idx]
+
+        d_lo = av - lo
+        d_hi = hi - av
+
+        hi_code_even = (int(codes[hi_idx]) & 1) == 0
+
+        if d_hi == d_lo:
+            choose_hi = hi_code_even
+        else:
+            choose_hi = d_hi < d_lo
+
+        chosen = hi if choose_hi else lo
+        result = sign * chosen
+
+        if val == 0.0:
+            if sign < 0.0:
+                result = -0.0
+            else:
+                result = 0.0
+
+        flat_out[i] = np.float32(result)
+
+    return out

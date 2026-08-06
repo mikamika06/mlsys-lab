@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -6,10 +7,28 @@ def cross_entropy_backward(logits: np.ndarray, labels: np.ndarray) -> np.ndarray
     z = np.asarray(logits, dtype=np.float64)
     y = np.asarray(labels, dtype=np.int64)
     n = z.shape[0]
+    c = z.shape[1]
 
-    m = np.max(z, axis=-1, keepdims=True)
-    e = np.exp(z - m)
-    p = e / np.sum(e, axis=-1, keepdims=True)
+    out = np.zeros((n, c), dtype=np.float64)
 
-    p[np.arange(n), y] -= 1.0
-    return p / n
+    for i in range(n):
+        row_max = float(z[i, 0])
+        for j in range(1, c):
+            val = float(z[i, j])
+            if val > row_max:
+                row_max = val
+
+        e_sum = 0.0
+        for j in range(c):
+            val = math.exp(float(z[i, j]) - row_max)
+            out[i, j] = val
+            e_sum += val
+
+        target = int(y[i])
+        for j in range(c):
+            p = out[i, j] / e_sum
+            if j == target:
+                p -= 1.0
+            out[i, j] = p / float(n)
+
+    return out

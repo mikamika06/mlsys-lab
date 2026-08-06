@@ -2,10 +2,22 @@ import numpy as np
 
 
 def _naive_group_dequant(seg, qmax):
-    amax = float(np.max(np.abs(seg)))
+    amax = 0.0
+    for val in seg:
+        abs_val = val if val >= 0 else -val
+        if abs_val > amax:
+            amax = abs_val
+    amax = float(amax)
     scale = amax / qmax if amax > 0 else 1.0
-    dequant = scale * np.clip(np.round(seg / scale), -qmax, qmax)
-    return scale, dequant
+    dq_list = []
+    for val in seg:
+        r = round(val / scale)
+        if r < -qmax:
+            r = -qmax
+        elif r > qmax:
+            r = qmax
+        dq_list.append(scale * r)
+    return scale, np.array(dq_list, dtype=np.float64)
 
 
 def optimal_group_scales_under_mask(W: np.ndarray, M: np.ndarray, X: np.ndarray,
@@ -41,16 +53,39 @@ def optimal_group_scales_under_mask(W: np.ndarray, M: np.ndarray, X: np.ndarray,
         for g in range(n_groups):
             sl = slice(g * group_size, (g + 1) * group_size)
             seg = row_target[sl]
-            amax = float(np.max(np.abs(seg)))
-            best_err = np.inf
+            amax = 0.0
+            for val in seg:
+                abs_val = val if val >= 0 else -val
+                if abs_val > amax:
+                    amax = abs_val
+            amax = float(amax)
+            best_err = float('inf')
             best_scale = None
             best_dq = None
             for alpha in alphas:
                 scale = (alpha * amax / qmax) if amax > 0 else 1.0
-                dq = scale * np.clip(np.round(seg / scale), -qmax, qmax)
+                dq_list = []
+                for val in seg:
+                    r = round(val / scale)
+                    if r < -qmax:
+                        r = -qmax
+                    elif r > qmax:
+                        r = qmax
+                    dq_list.append(scale * r)
+                dq = np.array(dq_list, dtype=np.float64)
                 trial = row_what.copy()
                 trial[sl] = dq
-                err = float(np.sum((X @ (row_target - trial)) ** 2))
+                
+                diff = row_target - trial
+                N = X.shape[0]
+                err_sum = 0.0
+                for n in range(N):
+                    dot_val = 0.0
+                    for i_idx in range(I):
+                        dot_val += X[n, i_idx] * diff[i_idx]
+                    err_sum += dot_val * dot_val
+                err = float(err_sum)
+                
                 if err < best_err:
                     best_err = err
                     best_scale = scale
@@ -59,8 +94,19 @@ def optimal_group_scales_under_mask(W: np.ndarray, M: np.ndarray, X: np.ndarray,
             group_scales[o, g] = best_scale
         what[o] = row_what
 
-    Y = X @ Wm.T
-    Yhat = X @ what.T
-    mse = float(np.mean((Y - Yhat) ** 2))
+    N = X.shape[0]
+    total_squared_diff = 0.0
+    total_elements = N * O
+    for n in range(N):
+        for o in range(O):
+            y_val = 0.0
+            for i_idx in range(I):
+                y_val += X[n, i_idx] * Wm[o, i_idx]
+            yhat_val = 0.0
+            for i_idx in range(I):
+                yhat_val += X[n, i_idx] * what[o, i_idx]
+            diff_val = y_val - yhat_val
+            total_squared_diff += diff_val * diff_val
+    mse = float(total_squared_diff / total_elements)
 
     return group_scales, mse

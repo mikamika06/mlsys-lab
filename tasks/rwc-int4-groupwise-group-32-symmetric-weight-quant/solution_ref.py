@@ -21,11 +21,40 @@ def int4_groupwise_quant(W: np.ndarray, group_size: int = 32):
     W = np.asarray(W, dtype=np.float64)
     rows, cols = W.shape
     n_groups = cols // group_size
-    Wg = W.reshape(rows, n_groups, group_size)
 
-    amax = np.max(np.abs(Wg), axis=-1)
-    scales = np.where(amax == 0, 1.0, amax / 8.0)
+    scales_list = []
+    codes_list = []
 
-    codes_g = np.clip(np.round(Wg / scales[:, :, None]), -8, 7).astype(np.int64)
-    codes = codes_g.reshape(rows, cols)
+    for r in range(rows):
+        row_scales = []
+        row_codes = []
+        for g in range(n_groups):
+            start = g * group_size
+            end = start + group_size
+
+            max_val = 0.0
+            for i in range(start, end):
+                val = W[r, i]
+                abs_val = val if val >= 0 else -val
+                if abs_val > max_val:
+                    max_val = abs_val
+
+            if max_val == 0.0:
+                scale = 1.0
+            else:
+                scale = max_val / 8.0
+            row_scales.append(scale)
+
+            for i in range(start, end):
+                val = W[r, i]
+                divided = val / scale
+                rounded = round(divided)
+                clipped = -8 if rounded < -8 else (7 if rounded > 7 else rounded)
+                row_codes.append(int(clipped))
+
+        scales_list.append(row_scales)
+        codes_list.append(row_codes)
+
+    scales = np.array(scales_list, dtype=np.float64)
+    codes = np.array(codes_list, dtype=np.int64)
     return codes, scales

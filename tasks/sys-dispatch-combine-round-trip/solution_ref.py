@@ -14,24 +14,69 @@ def moe_dispatch_combine(X: np.ndarray, expert_idx: np.ndarray,
     W = np.asarray(W, dtype=np.float64)
     n, d = X.shape
 
-    # --- dispatch: sort tokens by expert so each expert's tokens are contiguous
-    order = np.argsort(expert_idx, kind="stable")
-    sorted_idx = expert_idx[order]
-    X_sorted = X[order]
+    order = []
+    for i in range(n):
+        order.append(i)
+    
+    for i in range(1, n):
+        key = order[i]
+        key_val = expert_idx[key]
+        j = i - 1
+        while j >= 0 and expert_idx[order[j]] > key_val:
+            order[j + 1] = order[j]
+            j -= 1
+        order[j + 1] = key
 
-    # --- expert compute: one batched matmul per contiguous expert group
-    out_sorted = np.empty_like(X_sorted)
+    sorted_idx = []
+    for i in range(n):
+        sorted_idx.append(expert_idx[order[i]])
+
+    X_sorted = []
+    for i in range(n):
+        X_sorted.append(X[order[i]])
+
+    out_sorted = []
+    for i in range(n):
+        row = []
+        for _ in range(d):
+            row.append(0.0)
+        out_sorted.append(row)
+
     start = 0
     while start < n:
         e = int(sorted_idx[start])
         end = start
         while end < n and sorted_idx[end] == e:
             end += 1
-        out_sorted[start:end] = X_sorted[start:end] @ W[e]
+        
+        for i in range(start, end):
+            for j in range(d):
+                acc = 0.0
+                for k in range(d):
+                    acc += X_sorted[i][k] * W[e][k][j]
+                out_sorted[i][j] = acc
         start = end
 
-    # --- combine: scatter back to original order, then scale by gate weight
-    Y = np.empty_like(X)
-    Y[order] = out_sorted
-    Y = Y * gate_weight[:, None]
+    Y_list = []
+    for _ in range(n):
+        row = []
+        for _ in range(d):
+            row.append(0.0)
+        Y_list.append(row)
+
+    for i in range(n):
+        orig_idx = order[i]
+        for j in range(d):
+            Y_list[orig_idx][j] = out_sorted[i][j]
+
+    for i in range(n):
+        g = gate_weight[i]
+        for j in range(d):
+            Y_list[i][j] *= g
+
+    Y = np.empty((n, d), dtype=np.float64)
+    for i in range(n):
+        for j in range(d):
+            Y[i, j] = Y_list[i][j]
+
     return Y

@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def fixed_budget_kv(keys: np.ndarray, values: np.ndarray, budget: int) -> dict:
     """
@@ -9,7 +10,13 @@ def fixed_budget_kv(keys: np.ndarray, values: np.ndarray, budget: int) -> dict:
     T = len(keys)
     if budget >= T:
         return {int(k): v for k, v in zip(keys, values)}
-    norms = np.linalg.norm(values, axis=1)
-    idx_sorted = np.argsort(norms)[::-1]  # descending order
+    norms = []
+    for i in range(T):
+        row = values[i]
+        s = 0.0
+        for val in row:
+            s += val * val
+        norms.append(math.sqrt(s))
+    idx_sorted = sorted(range(T), key=lambda i: norms[i], reverse=True)
     selected_idx = idx_sorted[:budget]
     return {int(keys[i]): values[i] for i in selected_idx}

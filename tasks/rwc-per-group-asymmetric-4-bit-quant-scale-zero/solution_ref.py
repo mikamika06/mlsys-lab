@@ -24,15 +24,36 @@ def quantize_group_affine_uint4(W, group_size):
     zeros = []
 
     for start in range(0, n, group_size):
-        g = flat[start:start + group_size]
-        gmax = float(g.max())
-        gmin = float(g.min())
+        end = start + group_size
+        if end > n:
+            end = n
+        gmin = float('inf')
+        gmax = float('-inf')
+        for i in range(start, end):
+            val = flat[i]
+            if val < gmin:
+                gmin = val
+            if val > gmax:
+                gmax = val
         span = gmax - gmin
         scale = 1.0 if span == 0.0 else span / 15.0
-        zero = float(np.clip(np.rint(-gmin / scale), 0, 15))
-        code = np.clip(np.rint(g / scale) + zero, 0, 15).astype(np.uint8)
-        codes[start:start + len(g)] = code
+        raw_zero = round(-gmin / scale)
+        if raw_zero < 0.0:
+            zero = 0.0
+        elif raw_zero > 15.0:
+            zero = 15.0
+        else:
+            zero = float(raw_zero)
         scales.append(scale)
         zeros.append(zero)
+        for i in range(start, end):
+            raw_code = round(flat[i] / scale) + zero
+            if raw_code < 0.0:
+                code = 0
+            elif raw_code > 15.0:
+                code = 15
+            else:
+                code = int(raw_code)
+            codes[i] = code
 
     return codes.reshape(shape), np.asarray(scales, dtype=np.float64), np.asarray(zeros, dtype=np.float64)

@@ -7,5 +7,7 @@ def lane_reduce_sum(a: np.ndarray) -> np.ndarray:
     """
     if a.ndim != 1 or not np.issubdtype(a.dtype, np.integer):
         raise ValueError("Input must be a one‑dimensional integer array.")
-    total = np.sum(a, dtype=a.dtype)
+    total = 0
+    for i in range(len(a)):
+        total += a[i]
     return np.array(total, dtype=a.dtype)

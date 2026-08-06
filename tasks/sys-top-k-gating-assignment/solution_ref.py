@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -22,13 +23,25 @@ def topk_gating(logits: np.ndarray, k: int):
     logits = np.asarray(logits, dtype=np.float64)
     N, E = logits.shape
 
-    order = np.argsort(-logits, axis=1, kind="stable")
-    indices = order[:, :k]
+    indices_rows = []
+    weights_rows = []
 
-    rows = np.arange(N)[:, None]
-    top_logits = logits[rows, indices]
-    m = np.max(top_logits, axis=1, keepdims=True)
-    e = np.exp(top_logits - m)
-    weights = e / np.sum(e, axis=1, keepdims=True)
+    for i in range(N):
+        row = logits[i]
+        sorted_items = sorted(enumerate(row), key=lambda x: (-x[1], x[0]))
 
-    return indices.astype(np.int64), weights
+        top_indices = [item[0] for item in sorted_items[:k]]
+        top_vals = [item[1] for item in sorted_items[:k]]
+
+        m = max(top_vals)
+        e_vals = [math.exp(val - m) for val in top_vals]
+        s = sum(e_vals)
+        w_vals = [ev / s for ev in e_vals]
+
+        indices_rows.append(top_indices)
+        weights_rows.append(w_vals)
+
+    indices = np.array(indices_rows, dtype=np.int64)
+    weights = np.array(weights_rows, dtype=np.float64)
+
+    return indices, weights

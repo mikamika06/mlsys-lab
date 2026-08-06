@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -5,19 +6,51 @@ def fused_log_softmax_nll(logits: np.ndarray, targets: np.ndarray):
     """Fused stable log-softmax forward + backward: mean NLL loss and its gradient."""
     logits = np.asarray(logits, dtype=np.float64)
     targets = np.asarray(targets, dtype=np.int64)
-    n = logits.shape[0]
+    n, c = logits.shape
 
-    m = np.max(logits, axis=1, keepdims=True)
-    shifted = logits - m
-    lse = m[:, 0] + np.log(np.sum(np.exp(shifted), axis=1))
-    log_probs = logits - lse[:, None]
+    m = np.zeros((n, 1), dtype=np.float64)
+    for i in range(n):
+        mx = logits[i, 0]
+        for j in range(1, c):
+            if logits[i, j] > mx:
+                mx = logits[i, j]
+        m[i, 0] = mx
 
-    idx = np.arange(n)
-    loss = -float(np.mean(log_probs[idx, targets]))
+    shifted = np.zeros((n, c), dtype=np.float64)
+    for i in range(n):
+        for j in range(c):
+            shifted[i, j] = logits[i, j] - m[i, 0]
 
-    probs = np.exp(log_probs)
-    dlogits = probs.copy()
-    dlogits[idx, targets] -= 1.0
-    dlogits /= n
+    lse = np.zeros(n, dtype=np.float64)
+    for i in range(n):
+        s = 0.0
+        for j in range(c):
+            s += math.exp(shifted[i, j])
+        lse[i] = m[i, 0] + math.log(s)
+
+    log_probs = np.zeros((n, c), dtype=np.float64)
+    for i in range(n):
+        for j in range(c):
+            log_probs[i, j] = logits[i, j] - lse[i]
+
+    sum_loss = 0.0
+    for i in range(n):
+        sum_loss += log_probs[i, targets[i]]
+    loss = -float(sum_loss / n)
+
+    probs = np.zeros((n, c), dtype=np.float64)
+    for i in range(n):
+        for j in range(c):
+            probs[i, j] = math.exp(log_probs[i, j])
+
+    dlogits = np.zeros((n, c), dtype=np.float64)
+    for i in range(n):
+        for j in range(c):
+            dlogits[i, j] = probs[i, j]
+    for i in range(n):
+        dlogits[i, targets[i]] -= 1.0
+    for i in range(n):
+        for j in range(c):
+            dlogits[i, j] /= n
 
     return loss, dlogits

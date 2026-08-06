@@ -7,7 +7,14 @@ def _kv(token):
 
 
 def _decode(k_cache, v_cache, token):
-    score = float(np.sum(k_cache) + np.sum(v_cache) + token)
+    score = 0.0
+    for row in k_cache:
+        for val in row:
+            score += float(val)
+    for row in v_cache:
+        for val in row:
+            score += float(val)
+    score += float(token)
     return int(score) % 100
 
 
@@ -26,9 +33,7 @@ def chunked_prefill_decode(prompt, chunk_sizes, decode_tokens):
         pos += size
 
         if chunk_index != len(chunk_sizes) - 1:
-            k_arr = np.stack(k_cache, axis=0)
-            v_arr = np.stack(v_cache, axis=0)
-            emitted.append(_decode(k_arr, v_arr, int(decode_tokens[decode_pos])))
+            emitted.append(_decode(k_cache, v_cache, int(decode_tokens[decode_pos])))
             decode_pos += 1
 
     return (

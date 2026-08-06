@@ -1,76 +1,162 @@
+import math
 import numpy as np
 
 
 def _hadamard(n):
     h = np.array([[1.0]], dtype=np.float64)
     while h.shape[0] < n:
-        h = np.block([[h, h], [h, -h]])
-    return h / np.sqrt(n)
+        h11 = h
+        h12 = h
+        h21 = h
+        h22 = -h
+        rows_top = []
+        for r in range(h11.shape[0]):
+            row = []
+            for c in range(h11.shape[1]):
+                row.append(h11[r, c])
+            for c in range(h12.shape[1]):
+                row.append(h12[r, c])
+            rows_top.append(row)
+        rows_bot = []
+        for r in range(h21.shape[0]):
+            row = []
+            for c in range(h21.shape[1]):
+                row.append(h21[r, c])
+            for c in range(h22.shape[1]):
+                row.append(h22[r, c])
+            rows_bot.append(row)
+        h = np.array(rows_top + rows_bot, dtype=np.float64)
+    
+    scale = math.sqrt(float(n))
+    res = np.empty_like(h)
+    for i in range(h.shape[0]):
+        for j in range(h.shape[1]):
+            res[i, j] = h[i, j] / scale
+    return res
 
 
 def _quantize_int4(x):
     """Symmetric per-tensor absmax int4 round-trip (quant then immediate dequant)."""
     x = np.asarray(x, dtype=np.float64)
     qmax = 2 ** (4 - 1) - 1  # 7
-    scale = float(np.max(np.abs(x)))
+    
+    max_val = 0.0
+    for i in range(x.shape[0]):
+        for j in range(x.shape[1]):
+            val = x[i, j]
+            if val < 0.0:
+                val = -val
+            if val > max_val:
+                max_val = val
+    scale = float(max_val)
     scale = scale / qmax if scale > 0 else 1.0
-    code = np.clip(np.round(x / scale), -qmax, qmax)
-    return code * scale
+    
+    code = np.empty_like(x)
+    for i in range(x.shape[0]):
+        for j in range(x.shape[1]):
+            v = x[i, j] / scale
+            if v >= 0.0:
+                r = math.floor(v + 0.5)
+            else:
+                r = math.ceil(v - 0.5)
+            if r > qmax:
+                r = qmax
+            elif r < -qmax:
+                r = -qmax
+            code[i, j] = r
+            
+    out = np.empty_like(x)
+    for i in range(x.shape[0]):
+        for j in range(x.shape[1]):
+            out[i, j] = code[i, j] * scale
+    return out
 
 
 def rotate_and_quantize_matmul(X, W):
-    """QuaRot-style rotation invariance and its quantization payoff.
-
-    An orthogonal rotation H (a normalized Sylvester-Hadamard matrix) folded
-    into both operands of a matmul leaves the product exactly unchanged,
-    because H^T H = I:
-
-        X' = X @ H^T,   W' = H @ W   =>   X' @ W' = X @ (H^T H) @ W = X @ W.
-
-    But the rotation mixes every output channel of X into every rotated
-    channel, so a handful of huge outlier activation channels get spread
-    across all d channels instead of dominating one. A per-tensor int4
-    quantizer -- whose single scale is set by the single largest-magnitude
-    element -- benefits enormously: rotate first, quantize second.
-
-    Parameters
-    ----------
-    X : np.ndarray, shape (n, d)
-        Activations. `d` must be a power of two.
-    W : np.ndarray, shape (d, m)
-        Weights.
-
-    Returns
-    -------
-    out_rotated : np.ndarray, float64, shape (n, m)
-        `X' @ W'`, the matmul computed entirely in the rotated basis. Equal
-        to `X @ W` up to floating point error.
-    mse_unrotated : float
-        Mean squared error between `X @ W` and `Xq @ Wq`, where `Xq`, `Wq`
-        are symmetric per-tensor int4 round-tripped versions of the
-        *unrotated* `X`, `W`.
-    mse_rotated : float
-        Mean squared error between `X @ W` and `Xq' @ Wq'`, where `Xq'`,
-        `Wq'` are symmetric per-tensor int4 round-tripped versions of the
-        *rotated* `X'`, `W'`.
-    """
+    """QuaRot-style rotation invariance and its quantization payoff."""
     X = np.asarray(X, dtype=np.float64)
     W = np.asarray(W, dtype=np.float64)
     d = X.shape[1]
     H = _hadamard(d)
 
-    ref = X @ W
+    n_rows_X = X.shape[0]
+    n_cols_W = W.shape[1]
+    
+    ref = np.zeros((n_rows_X, n_cols_W), dtype=np.float64)
+    for i in range(n_rows_X):
+        for j in range(n_cols_W):
+            acc = 0.0
+            for k in range(d):
+                acc += X[i, k] * W[k, j]
+            ref[i, j] = acc
 
-    Xr = X @ H.T
-    Wr = H @ W
-    out_rotated = Xr @ Wr
+    Ht = np.empty_like(H)
+    for i in range(H.shape[0]):
+        for j in range(H.shape[1]):
+            Ht[i, j] = H[j, i]
+
+    Xr = np.zeros((n_rows_X, d), dtype=np.float64)
+    for i in range(n_rows_X):
+        for j in range(d):
+            acc = 0.0
+            for k in range(d):
+                acc += X[i, k] * Ht[k, j]
+            Xr[i, j] = acc
+
+    Wr = np.zeros((d, n_cols_W), dtype=np.float64)
+    for i in range(d):
+        for j in range(n_cols_W):
+            acc = 0.0
+            for k in range(d):
+                acc += H[i, k] * W[k, j]
+            Wr[i, j] = acc
+
+    out_rotated = np.zeros((n_rows_X, n_cols_W), dtype=np.float64)
+    for i in range(n_rows_X):
+        for j in range(n_cols_W):
+            acc = 0.0
+            for k in range(d):
+                acc += Xr[i, k] * Wr[k, j]
+            out_rotated[i, j] = acc
 
     Xq = _quantize_int4(X)
     Wq = _quantize_int4(W)
-    mse_unrotated = float(np.mean((ref - Xq @ Wq) ** 2))
+    
+    Xq_Wq = np.zeros((n_rows_X, n_cols_W), dtype=np.float64)
+    for i in range(n_rows_X):
+        for j in range(n_cols_W):
+            acc = 0.0
+            for k in range(d):
+                acc += Xq[i, k] * Wq[k, j]
+            Xq_Wq[i, j] = acc
+
+    mse_unrotated_acc = 0.0
+    count_unrotated = 0
+    for i in range(n_rows_X):
+        for j in range(n_cols_W):
+            diff = ref[i, j] - Xq_Wq[i, j]
+            mse_unrotated_acc += diff * diff
+            count_unrotated += 1
+    mse_unrotated = float(mse_unrotated_acc / count_unrotated)
 
     Xrq = _quantize_int4(Xr)
     Wrq = _quantize_int4(Wr)
-    mse_rotated = float(np.mean((ref - Xrq @ Wrq) ** 2))
+    
+    Xrq_Wrq = np.zeros((n_rows_X, n_cols_W), dtype=np.float64)
+    for i in range(n_rows_X):
+        for j in range(n_cols_W):
+            acc = 0.0
+            for k in range(d):
+                acc += Xrq[i, k] * Wrq[k, j]
+            Xrq_Wrq[i, j] = acc
+
+    mse_rotated_acc = 0.0
+    count_rotated = 0
+    for i in range(n_rows_X):
+        for j in range(n_cols_W):
+            diff = ref[i, j] - Xrq_Wrq[i, j]
+            mse_rotated_acc += diff * diff
+            count_rotated += 1
+    mse_rotated = float(mse_rotated_acc / count_rotated)
 
     return out_rotated, mse_unrotated, mse_rotated

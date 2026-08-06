@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def cross_entropy(logits: np.ndarray, target: int) -> float:
@@ -18,6 +19,14 @@ def cross_entropy(logits: np.ndarray, target: int) -> float:
     float
         Scalar cross-entropy loss.
     """
-    m = np.max(logits)
-    log_sum_exp = m + np.log(np.sum(np.exp(logits - m)))
+    m = logits[0]
+    for x in logits:
+        if x > m:
+            m = x
+
+    total = 0.0
+    for x in logits:
+        total += math.exp(x - m)
+
+    log_sum_exp = m + math.log(total)
     return float(-(logits[target] - log_sum_exp))

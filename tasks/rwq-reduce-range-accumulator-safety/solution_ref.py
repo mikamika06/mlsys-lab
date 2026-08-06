@@ -6,17 +6,34 @@ def reduce_range_accumulator_safety(X: np.ndarray) -> tuple[np.ndarray, np.ndarr
     and the maximum intermediate partial sum when using the reduced range.
     All outputs are int32 arrays of shape (C,).
     """
-    # Full‑range accumulation
-    full_accum = np.sum(X, axis=0, dtype=np.int32)
-
-    # Reduced‑range: clamp to 63
-    reduced_X = np.minimum(X, 63).astype(np.uint8)
-    reduced_accum = np.sum(reduced_X, axis=0, dtype=np.int32)
-
-    # Peak intermediate partial sum per column (reduced range)
-    peak_per_col = np.max(
-        np.cumsum(reduced_X.astype(np.int64), axis=0),
-        axis=0
-    ).astype(np.int32)
-
+    R, C = X.shape
+    
+    full_accum = np.zeros(C, dtype=np.int32)
+    reduced_accum = np.zeros(C, dtype=np.int32)
+    peak_per_col = np.zeros(C, dtype=np.int32)
+    
+    for c in range(C):
+        full_sum = 0
+        red_sum = 0
+        max_peak = -2147483648
+        current_cumsum = 0
+        
+        for r in range(R):
+            val = X[r, c]
+            full_sum += int(val)
+            
+            if val < 63:
+                red_val = val
+            else:
+                red_val = 63
+                
+            red_sum += int(red_val)
+            current_cumsum += int(red_val)
+            if current_cumsum > max_peak:
+                max_peak = current_cumsum
+                
+        full_accum[c] = full_sum
+        reduced_accum[c] = red_sum
+        peak_per_col[c] = max_peak
+        
     return full_accum, reduced_accum, peak_per_col

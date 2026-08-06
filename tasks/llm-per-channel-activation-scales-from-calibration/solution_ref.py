@@ -1,4 +1,6 @@
+import math
 import numpy as np
+
 
 def per_channel_scales(X: np.ndarray) -> np.ndarray:
     """
@@ -15,5 +17,12 @@ def per_channel_scales(X: np.ndarray) -> np.ndarray:
         1‑D float64 array of length C containing the RMS magnitude of each channel.
     """
     X = np.asarray(X, dtype=np.float64)
-    # Root‑mean‑square over the sample dimension
-    return np.linalg.norm(X, axis=0) / np.sqrt(X.shape[0])
+    N, C = X.shape
+    scales = np.zeros(C, dtype=np.float64)
+    for j in range(C):
+        acc = 0.0
+        for i in range(N):
+            val = float(X[i, j])
+            acc += val * val
+        scales[j] = math.sqrt(acc) / math.sqrt(N)
+    return scales

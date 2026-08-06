@@ -11,4 +11,16 @@ def _bf16_round(x):
 def bf16_matmul_fp32_accum(A, B):
     a = _bf16_round(A)
     b = _bf16_round(B)
-    return np.matmul(a, b).astype(np.float32)
+    
+    m, k = a.shape
+    _, n = b.shape
+    
+    out = np.zeros((m, n), dtype=np.float32)
+    for i in range(m):
+        for j in range(n):
+            s = np.float32(0.0)
+            for r in range(k):
+                s = np.float32(s + np.float32(a[i, r] * b[r, j]))
+            out[i, j] = s
+            
+    return out

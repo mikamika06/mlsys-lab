@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def masked_softmax(logits: np.ndarray, mask: np.ndarray) -> np.ndarray:
@@ -16,14 +17,27 @@ def masked_softmax(logits: np.ndarray, mask: np.ndarray) -> np.ndarray:
     probs : np.ndarray
         Softmax probabilities with masked entries set to zero and each row summing to one.
     """
-    mask_bool = mask.astype(bool)
-    # Additive -inf masking
-    masked_logits = np.where(mask_bool, logits, -np.inf)
+    batch, seq_len = logits.shape
+    probs = np.empty((batch, seq_len), dtype=logits.dtype)
 
-    # Numerical stability: subtract per‑row max before exp
-    max_per_row = np.max(masked_logits, axis=-1, keepdims=True)
-    exp_vals = np.exp(masked_logits - max_per_row)
+    for i in range(batch):
+        max_val = -float('inf')
+        for j in range(seq_len):
+            val = float(logits[i, j]) if mask[i, j] else -float('inf')
+            if val > max_val:
+                max_val = val
 
-    sum_exp = np.sum(exp_vals, axis=-1, keepdims=True)
-    probs = exp_vals / sum_exp
+        sum_exp = 0.0
+        exp_vals = []
+        for j in range(seq_len):
+            if mask[i, j]:
+                e = math.exp(float(logits[i, j]) - max_val)
+            else:
+                e = math.exp(-float('inf') - max_val)
+            exp_vals.append(e)
+            sum_exp += e
+
+        for j in range(seq_len):
+            probs[i, j] = exp_vals[j] / sum_exp
+
     return probs

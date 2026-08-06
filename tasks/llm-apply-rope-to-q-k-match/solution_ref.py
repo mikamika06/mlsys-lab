@@ -1,4 +1,6 @@
+import math
 import numpy as np
+
 
 def apply_rope(x: np.ndarray, pos: int) -> np.ndarray:
     """
@@ -20,15 +22,26 @@ def apply_rope(x: np.ndarray, pos: int) -> np.ndarray:
     n, d = x.shape
     if d % 2 != 0:
         raise ValueError("Dimension must be even for RoPE.")
-    omega = np.linspace(0.01, 0.99, d // 2)
-    theta = pos * omega
-    cos = np.cos(theta)
-    sin = np.sin(theta)
-    even = x[:, ::2]
-    odd = x[:, 1::2]
-    new_even = even * cos - odd * sin
-    new_odd = even * sin + odd * cos
-    out = np.empty_like(x)
-    out[:, ::2] = new_even
-    out[:, 1::2] = new_odd
+
+    out = np.empty((n, d), dtype=np.float64)
+    half_d = d // 2
+
+    for j in range(half_d):
+        if half_d == 1:
+            omega_j = 0.01
+        else:
+            omega_j = 0.01 + j * (0.99 - 0.01) / (half_d - 1)
+        theta_j = pos * omega_j
+        cos_j = math.cos(theta_j)
+        sin_j = math.sin(theta_j)
+
+        even_idx = 2 * j
+        odd_idx = 2 * j + 1
+
+        for i in range(n):
+            even_val = x[i, even_idx]
+            odd_val = x[i, odd_idx]
+            out[i, even_idx] = even_val * cos_j - odd_val * sin_j
+            out[i, odd_idx] = even_val * sin_j + odd_val * cos_j
+
     return out

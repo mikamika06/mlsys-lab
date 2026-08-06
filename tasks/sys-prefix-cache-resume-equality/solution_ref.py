@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -36,22 +37,72 @@ def run_with_cache(Wq, Wk, Wv, X, kv_cache=None):
         V_prefix = np.asarray(kv_cache["V"], dtype=np.float64)
     P = K_prefix.shape[0]
 
-    Q_new = X @ Wq
-    K_new = X @ Wk
-    V_new = X @ Wv
+    L = X.shape[0]
+
+    Q_new = np.zeros((L, d), dtype=np.float64)
+    for i in range(L):
+        for j in range(d):
+            acc = 0.0
+            for k in range(d):
+                acc += X[i, k] * Wq[k, j]
+            Q_new[i, j] = acc
+
+    K_new = np.zeros((L, d), dtype=np.float64)
+    for i in range(L):
+        for j in range(d):
+            acc = 0.0
+            for k in range(d):
+                acc += X[i, k] * Wk[k, j]
+            K_new[i, j] = acc
+
+    V_new = np.zeros((L, d), dtype=np.float64)
+    for i in range(L):
+        for j in range(d):
+            acc = 0.0
+            for k in range(d):
+                acc += X[i, k] * Wv[k, j]
+            V_new[i, j] = acc
 
     K_all = np.concatenate([K_prefix, K_new], axis=0)
     V_all = np.concatenate([V_prefix, V_new], axis=0)
 
-    L = X.shape[0]
     out = np.zeros((L, d), dtype=np.float64)
+    scale = math.sqrt(d)
+
     for i in range(L):
-        end = P + i + 1  # attend over global positions [0, P+i]
-        scores = (Q_new[i] @ K_all[:end].T) / np.sqrt(d)
-        scores = scores - np.max(scores)
-        w = np.exp(scores)
-        w = w / np.sum(w)
-        out[i] = w @ V_all[:end]
+        end = P + i + 1
+        scores = []
+        for j in range(end):
+            dot_val = 0.0
+            for k in range(d):
+                dot_val += Q_new[i, k] * K_all[j, k]
+            scores.append(dot_val / scale)
+
+        max_score = scores[0]
+        for s in scores[1:]:
+            if s > max_score:
+                max_score = s
+
+        shifted_scores = []
+        for s in scores:
+            shifted_scores.append(s - max_score)
+
+        exp_scores = []
+        sum_exp = 0.0
+        for s in shifted_scores:
+            val = math.exp(s)
+            exp_scores.append(val)
+            sum_exp += val
+
+        w = []
+        for val in exp_scores:
+            w.append(val / sum_exp)
+
+        for j in range(d):
+            acc = 0.0
+            for k in range(end):
+                acc += w[k] * V_all[k, j]
+            out[i, j] = acc
 
     new_cache = {"K": K_all, "V": V_all}
     return out, new_cache

@@ -1,20 +1,68 @@
+import math
 import numpy as np
 
 
 def flash_backward(Q, K, V, dO, lse):
+    n = Q.shape[0]
     d = Q.shape[1]
-    scale = 1.0 / np.sqrt(d)
+    dv = V.shape[1]
+    scale = 1.0 / math.sqrt(d)
 
-    scores = (Q @ K.T) * scale
-    P = np.exp(scores - lse[:, None])
+    scores = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            dot = 0.0
+            for k in range(d):
+                dot += Q[i, k] * K[j, k]
+            scores[i][j] = dot * scale
 
-    dV = P.T @ dO
+    P = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            P[i][j] = math.exp(scores[i][j] - lse[i])
 
-    dP = dO @ V.T
-    correction = np.sum(dP * P, axis=1, keepdims=True)
-    dS = P * (dP - correction)
+    dV = [[0.0] * dv for _ in range(n)]
+    for a in range(n):
+        for b in range(dv):
+            acc = 0.0
+            for c in range(n):
+                acc += P[c][a] * dO[c, b]
+            dV[a][b] = acc
 
-    dQ = (dS @ K) * scale
-    dK = (dS.T @ Q) * scale
+    dP = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            acc = 0.0
+            for c in range(dv):
+                acc += dO[i, c] * V[j, c]
+            dP[i][j] = acc
 
-    return dQ, dK, dV
+    correction = [[0.0] for _ in range(n)]
+    for i in range(n):
+        acc = 0.0
+        for j in range(n):
+            acc += dP[i][j] * P[i][j]
+        correction[i][0] = acc
+
+    dS = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            dS[i][j] = P[i][j] * (dP[i][j] - correction[i][0])
+
+    dQ = [[0.0] * d for _ in range(n)]
+    for i in range(n):
+        for k in range(d):
+            acc = 0.0
+            for j in range(n):
+                acc += dS[i][j] * K[j, k]
+            dQ[i][k] = acc * scale
+
+    dK = [[0.0] * d for _ in range(n)]
+    for j in range(n):
+        for k in range(d):
+            acc = 0.0
+            for i in range(n):
+                acc += dS[i][j] * Q[i, k]
+            dK[j][k] = acc * scale
+
+    return np.array(dQ), np.array(dK), np.array(dV)

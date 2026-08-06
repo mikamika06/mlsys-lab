@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -26,8 +27,21 @@ def reconstruct_global_weights(
     chunk_scores = np.asarray(chunk_scores, dtype=np.float64)
     chunk_lse = np.asarray(chunk_lse, dtype=np.float64)
 
-    global_max = chunk_lse.max()
-    global_lse = global_max + np.log(np.sum(np.exp(chunk_lse - global_max)))
+    C = chunk_lse.shape[0]
+    global_max = chunk_lse[0]
+    for i in range(1, C):
+        if chunk_lse[i] > global_max:
+            global_max = chunk_lse[i]
 
-    weights = np.exp(chunk_scores - global_lse)
+    sum_exp = 0.0
+    for i in range(C):
+        sum_exp += math.exp(chunk_lse[i] - global_max)
+    global_lse = global_max + math.log(sum_exp)
+
+    C_scores, chunk_size = chunk_scores.shape
+    weights = np.empty((C_scores, chunk_size), dtype=np.float64)
+    for i in range(C_scores):
+        for j in range(chunk_size):
+            weights[i, j] = math.exp(chunk_scores[i, j] - global_lse)
+
     return weights.reshape(-1)

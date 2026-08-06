@@ -2,4 +2,10 @@ import numpy as np
 
 def classify_bound(ai: np.ndarray, balance: float) -> np.ndarray:
     ai = np.asarray(ai)
-    return np.where(ai > balance, 'compute-bound', 'memory-bound')
+    res = []
+    for x in ai.flat:
+        if x > balance:
+            res.append('compute-bound')
+        else:
+            res.append('memory-bound')
+    return np.array(res).reshape(ai.shape)

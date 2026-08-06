@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 _EPS = np.finfo(np.float64).eps
@@ -5,8 +6,13 @@ _EPS = np.finfo(np.float64).eps
 
 def _offdiag_norm(A: np.ndarray) -> float:
     n = A.shape[0]
-    mask = ~np.eye(n, dtype=bool)
-    return float(np.sqrt(np.sum(A[mask] ** 2)))
+    total = 0.0
+    for i in range(n):
+        for j in range(n):
+            if i != j:
+                val = float(A[i, j])
+                total += val * val
+    return float(math.sqrt(total))
 
 
 def _jacobi_sweep(A: np.ndarray) -> np.ndarray:
@@ -16,25 +22,27 @@ def _jacobi_sweep(A: np.ndarray) -> np.ndarray:
     n = A.shape[0]
     for p in range(n - 1):
         for q in range(p + 1, n):
-            apq = A[p, q]
-            # Already negligible relative to the diagonal scale: skip.
-            # (Prevents dividing by a residual near-zero entry left over
-            # from earlier rotations in this or prior sweeps.)
-            if abs(apq) <= _EPS * (abs(A[p, p]) + abs(A[q, q])):
+            apq = float(A[p, q])
+            app_val = float(A[p, p])
+            aqq_val = float(A[q, q])
+
+            if abs(apq) <= _EPS * (abs(app_val) + abs(aqq_val)):
                 A[p, q] = 0.0
                 A[q, p] = 0.0
                 continue
 
-            theta = (A[q, q] - A[p, p]) / (2.0 * apq)
+            theta = (aqq_val - app_val) / (2.0 * apq)
             if theta == 0.0:
                 t = 1.0
             else:
-                t = np.sign(theta) / (abs(theta) + np.sqrt(theta * theta + 1.0))
-            c = 1.0 / np.sqrt(t * t + 1.0)
+                sgn = 1.0 if theta > 0.0 else (-1.0 if theta < 0.0 else 0.0)
+                t = sgn / (abs(theta) + math.sqrt(theta * theta + 1.0))
+
+            c = 1.0 / math.sqrt(t * t + 1.0)
             s = t * c
 
-            app = A[p, p] - t * apq
-            aqq = A[q, q] + t * apq
+            app = app_val - t * apq
+            aqq = aqq_val + t * apq
             A[p, p] = app
             A[q, q] = aqq
             A[p, q] = 0.0
@@ -43,8 +51,8 @@ def _jacobi_sweep(A: np.ndarray) -> np.ndarray:
             for i in range(n):
                 if i == p or i == q:
                     continue
-                aip = A[i, p]
-                aiq = A[i, q]
+                aip = float(A[i, p])
+                aiq = float(A[i, q])
                 new_ip = c * aip - s * aiq
                 new_iq = s * aip + c * aiq
                 A[i, p] = new_ip

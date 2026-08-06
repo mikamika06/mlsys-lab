@@ -8,15 +8,18 @@ def static_batch_steps(request_lengths: np.ndarray, batch_size: int) -> np.ndarr
     if n == 0:
         return np.array([0], dtype=np.int64)
     num_batches = (n + batch_size - 1) // batch_size
-    padded_len = num_batches * batch_size
-    pad_needed = padded_len - n
-    if pad_needed > 0:
-        arr_padded = np.concatenate(
-            [arr, np.full(pad_needed, -np.iinfo(np.int64).max, dtype=np.int64)]
-        )
-    else:
-        arr_padded = arr
-    reshaped = arr_padded.reshape(num_batches, batch_size)
-    max_per_batch = reshaped.max(axis=1)
-    total_steps = int(max_per_batch.sum())
+    pad_val = -np.iinfo(np.int64).max
+    total_steps = 0
+    for i in range(num_batches):
+        batch_max = pad_val
+        start = i * batch_size
+        for j in range(batch_size):
+            idx = start + j
+            if idx < n:
+                val = arr[idx]
+            else:
+                val = pad_val
+            if val > batch_max:
+                batch_max = val
+        total_steps += batch_max
     return np.array([total_steps], dtype=np.int64)

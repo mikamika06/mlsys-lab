@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -21,34 +22,55 @@ def offloaded_decode_attention(Q, K_new, V_new):
     K_new = np.asarray(K_new, dtype=np.float64)
     V_new = np.asarray(V_new, dtype=np.float64)
     L, T, H, d = Q.shape
-    scale = 1.0 / np.sqrt(d)
+    scale = 1.0 / math.sqrt(d)
     out = np.zeros_like(Q)
 
     for l in range(L):
-        # The offload store: plain Python lists standing in for a CPU-side
-        # buffer, indexed by decode step. New (k, v) pairs are pushed here
-        # as they arrive; nothing that has ever been pushed is dropped.
         cpu_k_store = []
         cpu_v_store = []
         for t in range(T):
-            # step t's own key/value pair is produced and pushed to the
-            # offload store first...
-            cpu_k_store.append(K_new[l, t])   # shape (H, d)
+            cpu_k_store.append(K_new[l, t])
             cpu_v_store.append(V_new[l, t])
 
-            # ...then, to compute this step's attention output, the FULL
-            # history 0..t is gathered back from the offload store.
-            k_hist = np.stack(cpu_k_store, axis=0)   # (t+1, H, d)
-            v_hist = np.stack(cpu_v_store, axis=0)   # (t+1, H, d)
+            k_hist = np.stack(cpu_k_store, axis=0)
+            v_hist = np.stack(cpu_v_store, axis=0)
 
             for h in range(H):
-                q = Q[l, t, h, :]              # (d,)
-                k = k_hist[:, h, :]             # (t+1, d)
-                v = v_hist[:, h, :]             # (t+1, d)
-                scores = (k @ q) * scale        # (t+1,)
-                scores = scores - np.max(scores)
-                w = np.exp(scores)
-                w = w / np.sum(w)
-                out[l, t, h, :] = w @ v
+                q = Q[l, t, h, :]
+                k = k_hist[:, h, :]
+                v = v_hist[:, h, :]
+
+                num_steps = t + 1
+                scores = [0.0] * num_steps
+                for step_idx in range(num_steps):
+                    dot_val = 0.0
+                    for dim_idx in range(d):
+                        dot_val += k[step_idx, dim_idx] * q[dim_idx]
+                    scores[step_idx] = dot_val * scale
+
+                max_score = scores[0]
+                for step_idx in range(1, num_steps):
+                    if scores[step_idx] > max_score:
+                        max_score = scores[step_idx]
+
+                w = [0.0] * num_steps
+                sum_w = 0.0
+                for step_idx in range(num_steps):
+                    val = math.exp(scores[step_idx] - max_score)
+                    w[step_idx] = val
+                    sum_w += val
+
+                for step_idx in range(num_steps):
+                    w[step_idx] /= sum_w
+
+                out_vec = [0.0] * d
+                for dim_idx in range(d):
+                    acc = 0.0
+                    for step_idx in range(num_steps):
+                        acc += w[step_idx] * v[step_idx, dim_idx]
+                    out_vec[dim_idx] = acc
+
+                for dim_idx in range(d):
+                    out[l, t, h, dim_idx] = out_vec[dim_idx]
 
     return out

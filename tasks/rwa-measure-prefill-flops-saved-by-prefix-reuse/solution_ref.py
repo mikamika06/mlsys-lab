@@ -3,7 +3,11 @@ import numpy as np
 
 def _cost(L: np.ndarray) -> np.ndarray:
     L = np.asarray(L, dtype=np.float64)
-    return L * (L + 1) / 2.0
+    n = len(L)
+    out = np.zeros(n, dtype=np.float64)
+    for i in range(n):
+        out[i] = L[i] * (L[i] + 1.0) / 2.0
+    return out
 
 
 def prefill_flops_saved_fraction(
@@ -32,8 +36,19 @@ def prefill_flops_saved_fraction(
     reused_prefix = np.asarray(reused_prefix, dtype=np.float64)
 
     full_cost = _cost(lengths)
-    reuse_cost = full_cost - _cost(reused_prefix)
+    prefix_cost = _cost(reused_prefix)
 
-    total_full = float(np.sum(full_cost))
-    total_reuse = float(np.sum(reuse_cost))
+    n = len(lengths)
+    reuse_cost = np.zeros(n, dtype=np.float64)
+    for i in range(n):
+        reuse_cost[i] = full_cost[i] - prefix_cost[i]
+
+    total_full = 0.0
+    for i in range(n):
+        total_full += full_cost[i]
+
+    total_reuse = 0.0
+    for i in range(n):
+        total_reuse += reuse_cost[i]
+
     return 1.0 - total_reuse / total_full

@@ -10,7 +10,16 @@ def merge_partials(partials):
     indexed = sorted(enumerate(arrays), key=lambda item: item[0])
     ordered = [x for _, x in indexed]
 
-    stacked = np.stack(ordered, axis=0).astype(np.float64, copy=False)
-    merged = np.sum(stacked, axis=0, dtype=np.float64)
+    num_rows = len(ordered)
+    num_cols = len(ordered[0])
+
+    merged_list = []
+    for j in range(num_cols):
+        col_sum = 0.0
+        for i in range(num_rows):
+            col_sum += float(ordered[i][j])
+        merged_list.append(col_sum)
+
+    merged = np.array(merged_list, dtype=np.float64)
 
     return merged.copy(), merged.copy()

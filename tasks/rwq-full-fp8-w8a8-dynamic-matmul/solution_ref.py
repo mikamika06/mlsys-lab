@@ -9,11 +9,11 @@ def _e4m3_grid_pos() -> np.ndarray:
     for exp in range(16):
         for mant in range(8):
             if exp == 15 and mant == 7:
-                continue  # NaN code point
+                continue
             if exp == 0:
-                v = (2.0 ** -6) * (mant / 8.0)  # subnormal
+                v = (2.0 ** -6) * (mant / 8.0)
             else:
-                v = (2.0 ** (exp - 7)) * (1.0 + mant / 8.0)  # normal
+                v = (2.0 ** (exp - 7)) * (1.0 + mant / 8.0)
             vals.add(v)
     return np.array(sorted(vals), dtype=np.float64)
 
@@ -24,14 +24,32 @@ _GRID = _e4m3_grid_pos()
 def _cast_e4m3(x: np.ndarray) -> np.ndarray:
     """Round each element to the nearest representable E4M3 value (clamped to +-448)."""
     x = np.asarray(x, dtype=np.float64)
-    sign = np.sign(x)
-    absx = np.clip(np.abs(x), 0.0, E4M3_MAX)
-    idx = np.searchsorted(_GRID, absx)
-    idx = np.clip(idx, 1, len(_GRID) - 1)
-    lo = _GRID[idx - 1]
-    hi = _GRID[idx]
-    snapped = np.where((hi - absx) < (absx - lo), hi, lo)
-    return sign * snapped
+
+    def cast_scalar(val):
+        sign = 1.0 if val > 0 else (-1.0 if val < 0 else 0.0)
+        absx = min(max(abs(val), 0.0), E4M3_MAX)
+        low = 0
+        high = len(_GRID)
+        while low < high:
+            mid = (low + high) // 2
+            if _GRID[mid] < absx:
+                low = mid + 1
+            else:
+                high = mid
+        idx = low
+        idx = max(1, min(idx, len(_GRID) - 1))
+        lo = _GRID[idx - 1]
+        hi = _GRID[idx]
+        snapped = hi if (hi - absx) < (absx - lo) else lo
+        return sign * snapped
+
+    def process_sub(arr):
+        if arr.ndim == 0:
+            return cast_scalar(float(arr))
+        return [process_sub(arr[i]) for i in range(arr.shape[0])]
+
+    nested = process_sub(x)
+    return np.array(nested, dtype=np.float64)
 
 
 def fp8_dynamic_matmul(W: np.ndarray, X: np.ndarray) -> np.ndarray:
@@ -50,14 +68,54 @@ def fp8_dynamic_matmul(W: np.ndarray, X: np.ndarray) -> np.ndarray:
     W64 = np.asarray(W, dtype=np.float64)
     X64 = np.asarray(X, dtype=np.float64)
 
-    amax_w = float(np.max(np.abs(W64)))
+    M = W64.shape[0]
+    K = W64.shape[1]
+    N = X64.shape[1]
+
+    amax_w = 0.0
+    for i in range(M):
+        for k in range(K):
+            val = abs(W64[i, k])
+            if val > amax_w:
+                amax_w = val
     scale_w = amax_w / E4M3_MAX if amax_w > 0 else 1.0
 
-    amax_x = np.max(np.abs(X64), axis=0)  # per-token (per-column of X)
-    scale_x = np.where(amax_x > 0, amax_x / E4M3_MAX, 1.0)
+    amax_x = []
+    for j in range(N):
+        max_col = 0.0
+        for k in range(K):
+            val = abs(X64[k, j])
+            if val > max_col:
+                max_col = val
+        amax_x.append(max_col)
 
-    Wq = _cast_e4m3(W64 / scale_w)
-    Xq = _cast_e4m3(X64 / scale_x[None, :])
+    scale_x = [(val / E4M3_MAX if val > 0 else 1.0) for val in amax_x]
 
-    Y = (Wq @ Xq) * scale_w * scale_x[None, :]
+    Wq_list = []
+    for i in range(M):
+        row = []
+        for k in range(K):
+            row.append(W64[i, k] / scale_w)
+        Wq_list.append(row)
+    Wq = _cast_e4m3(np.array(Wq_list, dtype=np.float64))
+
+    Xq_list = []
+    for k in range(K):
+        row = []
+        for j in range(N):
+            row.append(X64[k, j] / scale_x[j])
+        Xq_list.append(row)
+    Xq = _cast_e4m3(np.array(Xq_list, dtype=np.float64))
+
+    Y_list = []
+    for i in range(M):
+        row = []
+        for j in range(N):
+            acc = 0.0
+            for k in range(K):
+                acc += Wq[i, k] * Xq[k, j]
+            row.append(acc * scale_w * scale_x[j])
+        Y_list.append(row)
+
+    Y = np.array(Y_list, dtype=np.float64)
     return Y.astype(np.float32)

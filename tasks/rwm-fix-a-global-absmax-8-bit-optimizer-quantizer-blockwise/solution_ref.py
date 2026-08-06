@@ -8,11 +8,22 @@ def blockwise_quantize_dequantize(x: np.ndarray, block_size: int) -> np.ndarray:
     for start in range(0, len(x), block_size):
         end = min(start + block_size, len(x))
         block = x[start:end]
-        scale = np.max(np.abs(block)) / 127.0
-        if scale == 0:
-            out[start:end] = 0.0
+        max_abs = 0.0
+        for val in block:
+            abs_val = val if val >= 0.0 else -val
+            if abs_val > max_abs:
+                max_abs = abs_val
+        scale = max_abs / 127.0
+        if scale == 0.0:
+            for i in range(start, end):
+                out[i] = 0.0
         else:
-            q = np.clip(np.rint(block / scale), -127, 127).astype(np.int8)
-            out[start:end] = q.astype(np.float64) * scale
+            for i in range(start, end):
+                q = round(x[i] / scale)
+                if q < -127:
+                    q = -127
+                elif q > 127:
+                    q = 127
+                out[i] = float(q) * scale
 
     return out

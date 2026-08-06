@@ -20,8 +20,21 @@ def compute_padding_stats(lengths):
     """
     lengths = np.asarray(lengths, dtype=np.int64)
     batch = lengths.size
-    max_len = int(np.max(lengths)) if batch > 0 else 0
+    
+    max_len = 0
+    if batch > 0:
+        max_len = int(lengths[0])
+        for i in range(1, batch):
+            val = int(lengths[i])
+            if val > max_len:
+                max_len = val
+
     padded_tokens = batch * max_len
-    packed_tokens = int(np.sum(lengths))
+    
+    packed_tokens = 0
+    for i in range(batch):
+        packed_tokens += int(lengths[i])
+        
     waste_fraction = (padded_tokens - packed_tokens) / padded_tokens if padded_tokens > 0 else 0.0
+    
     return padded_tokens, packed_tokens, waste_fraction

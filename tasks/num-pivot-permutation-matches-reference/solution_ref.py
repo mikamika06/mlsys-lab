@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -9,14 +10,26 @@ def lu_pivot_indices(A: np.ndarray) -> np.ndarray:
     piv = np.zeros(n, dtype=np.int64)
     for k in range(n):
         if k < n - 1:
-            p = k + int(np.argmax(np.abs(A[k:, k])))
+            max_val = -1.0
+            p = k
+            for i in range(k, n):
+                val = math.fabs(A[i, k])
+                if val > max_val:
+                    max_val = val
+                    p = i
         else:
             p = k
         piv[k] = p
         if p != k:
-            A[[k, p], :] = A[[p, k], :]
+            for j in range(n):
+                tmp = A[k, j]
+                A[k, j] = A[p, j]
+                A[p, j] = tmp
         if k < n - 1 and A[k, k] != 0.0:
-            factors = A[k + 1:, k] / A[k, k]
-            A[k + 1:, k] = factors
-            A[k + 1:, k + 1:] -= np.outer(factors, A[k, k + 1:])
+            akk = A[k, k]
+            for i in range(k + 1, n):
+                factor = A[i, k] / akk
+                A[i, k] = factor
+                for j in range(k + 1, n):
+                    A[i, j] -= factor * A[k, j]
     return piv

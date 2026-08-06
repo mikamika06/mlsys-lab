@@ -1,10 +1,40 @@
+import itertools
+import math
 import numpy as np
 
 
 def _softmax(x, axis=-1):
-    x = x - np.max(x, axis=axis, keepdims=True)
-    e = np.exp(x)
-    return e / np.sum(e, axis=axis, keepdims=True)
+    shape = x.shape
+    ndim = len(shape)
+    axis = axis % ndim
+    out = np.empty(shape, dtype=np.float64)
+
+    outer_shapes = shape[:axis] + shape[axis + 1 :]
+
+    for outer_idx in itertools.product(*[range(s) for s in outer_shapes]):
+        idx_prefix = outer_idx[:axis]
+        idx_suffix = outer_idx[axis:]
+
+        first_full_idx = idx_prefix + (0,) + idx_suffix
+        max_val = x[first_full_idx]
+        for c in range(1, shape[axis]):
+            full_idx = idx_prefix + (c,) + idx_suffix
+            val = x[full_idx]
+            if val > max_val:
+                max_val = val
+
+        sum_exp = 0.0
+        for c in range(shape[axis]):
+            full_idx = idx_prefix + (c,) + idx_suffix
+            e = math.exp(x[full_idx] - max_val)
+            out[full_idx] = e
+            sum_exp += e
+
+        for c in range(shape[axis]):
+            full_idx = idx_prefix + (c,) + idx_suffix
+            out[full_idx] /= sum_exp
+
+    return out
 
 
 def mha_gqa_mqa_reconstruct(Q: np.ndarray, K: np.ndarray, V: np.ndarray, group_sizes):
@@ -19,23 +49,59 @@ def mha_gqa_mqa_reconstruct(Q: np.ndarray, K: np.ndarray, V: np.ndarray, group_s
     """
     batch, seq_q, n_heads, d = Q.shape
     seq_k = K.shape[1]
+    sqrt_d = math.sqrt(d)
 
     results = []
     for g in group_sizes:
         n_kv = n_heads // g
 
-        Kg = K.reshape(batch, seq_k, n_kv, g, d).mean(axis=3)
-        Vg = V.reshape(batch, seq_k, n_kv, g, d).mean(axis=3)
-        K_bc = np.repeat(Kg, g, axis=2)
-        V_bc = np.repeat(Vg, g, axis=2)
+        Kg = np.empty((batch, seq_k, n_kv, d), dtype=np.float64)
+        Vg = np.empty((batch, seq_k, n_kv, d), dtype=np.float64)
 
-        Qh = Q.transpose(0, 2, 1, 3)
-        Kh = K_bc.transpose(0, 2, 1, 3)
-        Vh = V_bc.transpose(0, 2, 1, 3)
+        for b in range(batch):
+            for sk in range(seq_k):
+                for kv in range(n_kv):
+                    head_start = kv * g
+                    for di in range(d):
+                        s_k = 0.0
+                        s_v = 0.0
+                        for gi in range(g):
+                            s_k += K[b, sk, head_start + gi, di]
+                            s_v += V[b, sk, head_start + gi, di]
+                        Kg[b, sk, kv, di] = s_k / g
+                        Vg[b, sk, kv, di] = s_v / g
 
-        scores = (Qh @ Kh.swapaxes(-2, -1)) / np.sqrt(d)
-        weights = _softmax(scores, axis=-1)
-        out = (weights @ Vh).transpose(0, 2, 1, 3)
+        out = np.empty((batch, seq_q, n_heads, d), dtype=np.float64)
+        weights_sk = [0.0] * seq_k
+
+        for b in range(batch):
+            for h in range(n_heads):
+                kv = h // g
+                for sq in range(seq_q):
+                    max_score = 0.0
+                    for sk in range(seq_k):
+                        score = 0.0
+                        for di in range(d):
+                            score += Q[b, sq, h, di] * Kg[b, sk, kv, di]
+                        score /= sqrt_d
+                        weights_sk[sk] = score
+                        if sk == 0 or score > max_score:
+                            max_score = score
+
+                    sum_exp = 0.0
+                    for sk in range(seq_k):
+                        e = math.exp(weights_sk[sk] - max_score)
+                        weights_sk[sk] = e
+                        sum_exp += e
+
+                    for sk in range(seq_k):
+                        weights_sk[sk] /= sum_exp
+
+                    for di in range(d):
+                        val = 0.0
+                        for sk in range(seq_k):
+                            val += weights_sk[sk] * Vg[b, sk, kv, di]
+                        out[b, sq, h, di] = val
 
         size_ratio = n_kv / n_heads
         results.append((out, size_ratio))

@@ -17,8 +17,31 @@ def per_token_int8_quant(A: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     scales : np.ndarray
         Per‑row scale factors, dtype=float64.
     """
-    amax = np.max(np.abs(A), axis=1)
-    # Avoid division by zero: if amax is 0, set scale to 1.0 (codes will be all zeros).
-    scales = np.where(amax == 0, 1.0, amax / 127.0)
-    codes = np.round(A / scales[:, None]).clip(-128, 127).astype(np.int8)
+    n, d = A.shape
+    scales = np.empty(n, dtype=np.float64)
+    codes = np.empty((n, d), dtype=np.int8)
+
+    for i in range(n):
+        row = A[i]
+        max_abs = 0.0
+        for j in range(d):
+            val = row[j]
+            abs_val = val if val >= 0.0 else -val
+            if abs_val > max_abs:
+                max_abs = abs_val
+        
+        scale = 1.0 if max_abs == 0.0 else max_abs / 127.0
+        scales[i] = scale
+
+        for j in range(d):
+            val = row[j] / scale
+            rounded = round(val)
+            if rounded < -128.0:
+                clipped = -128
+            elif rounded > 127.0:
+                clipped = 127
+            else:
+                clipped = int(rounded)
+            codes[i, j] = clipped
+
     return codes, scales

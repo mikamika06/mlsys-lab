@@ -24,8 +24,19 @@ def static_batching_makespan(output_lens: np.ndarray, batch_size: int):
     """
     output_lens = np.asarray(output_lens, dtype=np.int64)
     counts = []
-    for i in range(0, len(output_lens), batch_size):
-        chunk = output_lens[i:i + batch_size]
-        counts.append(int(np.max(chunk)))
-    makespan = int(sum(counts))
+    n = len(output_lens)
+    for i in range(0, n, batch_size):
+        end = i + batch_size
+        if end > n:
+            end = n
+        max_val = output_lens[i]
+        for j in range(i + 1, end):
+            val = output_lens[j]
+            if val > max_val:
+                max_val = val
+        counts.append(int(max_val))
+    makespan = 0
+    for c in counts:
+        makespan += c
+    makespan = int(makespan)
     return makespan, counts

@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def lr_schedule(total_steps: int,
                 warmup_steps: int,
@@ -23,22 +24,14 @@ def lr_schedule(total_steps: int,
     np.ndarray
         Array of shape (total_steps,) containing the learning rate for each step.
     """
-    steps = np.arange(total_steps, dtype=np.int64)
     lrs = np.empty(total_steps, dtype=np.float64)
 
-    # Linear warm‑up
-    if warmup_steps > 0:
-        mask_warm = steps < warmup_steps
-        t_w = steps[mask_warm]
-        lrs[mask_warm] = base_lr * (t_w + 1) / warmup_steps
-
-    # Cosine decay after warm‑up
-    if total_steps > warmup_steps:
-        mask_cos = steps >= warmup_steps
-        t_c = steps[mask_cos] - warmup_steps
-        T = total_steps - warmup_steps
-        lrs[mask_cos] = min_lr + (base_lr - min_lr) * (
-            1 + np.cos(np.pi * t_c / T)
-        ) / 2
+    for step in range(total_steps):
+        if warmup_steps > 0 and step < warmup_steps:
+            lrs[step] = base_lr * (step + 1) / warmup_steps
+        elif total_steps > warmup_steps:
+            t_c = step - warmup_steps
+            T = total_steps - warmup_steps
+            lrs[step] = min_lr + (base_lr - min_lr) * (1 + math.cos(math.pi * t_c / T)) / 2
 
     return lrs

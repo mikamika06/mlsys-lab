@@ -4,9 +4,13 @@ def gqa_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, g: int) -> np.nda
     """
     Vectorised implementation of grouped‑query attention.
     """
-    n_q = Q.shape[0]
-    j_indices = np.arange(n_q) // g
-    K_sel = K[j_indices]          # shape (n_q, d)
-    V_sel = V[j_indices]          # shape (n_q, d)
-    scores = np.sum(Q * K_sel, axis=1)  # dot product per query
-    return scores[:, None] * V_sel
+    n_q, d = Q.shape
+    out = np.zeros((n_q, d), dtype=Q.dtype)
+    for i in range(n_q):
+        j = i // g
+        score = 0.0
+        for k in range(d):
+            score += Q[i, k] * K[j, k]
+        for k in range(d):
+            out[i, k] = score * V[j, k]
+    return out

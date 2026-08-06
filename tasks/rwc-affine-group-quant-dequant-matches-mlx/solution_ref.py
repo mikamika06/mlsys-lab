@@ -19,25 +19,50 @@ def affine_group_quant_dequant(weights: np.ndarray, group_size: int = 64):
         Dequantized weights of dtype float64.
     """
     weights = np.asarray(weights, dtype=np.float64)
-    n_groups = (weights.shape[0] + group_size - 1) // group_size
+    n_rows = weights.shape[0]
+    n_cols = weights.shape[1]
+    n_groups = (n_rows + group_size - 1) // group_size
 
     q_codes = np.empty_like(weights, dtype=np.int8)
     recon = np.empty_like(weights, dtype=np.float64)
 
     for g in range(n_groups):
         start = g * group_size
-        end = min(start + group_size, weights.shape[0])
-        group = weights[start:end]
+        end = min(start + group_size, n_rows)
 
-        bias = group.min()
-        scale = (group.max() - bias) / 255.0 if group.max() != bias else 1.0
+        min_val = 0.0
+        max_val = 0.0
+        first = True
+        for r in range(start, end):
+            for c in range(n_cols):
+                val = weights[r, c]
+                if first:
+                    min_val = val
+                    max_val = val
+                    first = False
+                else:
+                    if val < min_val:
+                        min_val = val
+                    if val > max_val:
+                        max_val = val
 
-        q = np.round((group - bias) / scale)
-        q_clipped = np.clip(q, -128, 127).astype(np.int8)
+        if max_val != min_val:
+            scale = (max_val - min_val) / 255.0
+        else:
+            scale = 1.0
 
-        recon_group = scale * q_clipped + bias
+        for r in range(start, end):
+            for c in range(n_cols):
+                q_val = (weights[r, c] - min_val) / scale
+                rounded = round(q_val)
+                if rounded < -128:
+                    q_c = -128
+                elif rounded > 127:
+                    q_c = 127
+                else:
+                    q_c = int(rounded)
 
-        q_codes[start:end] = q_clipped
-        recon[start:end] = recon_group
+                q_codes[r, c] = q_c
+                recon[r, c] = scale * q_c + min_val
 
     return q_codes, recon

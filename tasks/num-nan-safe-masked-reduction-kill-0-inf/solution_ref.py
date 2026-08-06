@@ -7,4 +7,10 @@ def masked_sum(data, mask):
     """
     data = np.asarray(data, dtype=np.float64)
     mask = np.asarray(mask, dtype=bool)
-    return float(np.sum(np.where(mask, data, 0.0)))
+    
+    total = 0.0
+    for i in range(len(data)):
+        if mask[i]:
+            total += data[i]
+            
+    return float(total)

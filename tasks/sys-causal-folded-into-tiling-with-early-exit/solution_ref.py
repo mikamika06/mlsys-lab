@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -15,22 +16,69 @@ def tiled_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
     n_q_tiles = S // tile_q
     n_kv_tiles = S // tile_kv
 
-    scores = np.full((S, S), -np.inf)
+    scores = [[float('-inf')] * S for _ in range(S)]
+    sqrt_d = math.sqrt(d)
+
     for qi in range(n_q_tiles):
         q0, q1 = qi * tile_q, (qi + 1) * tile_q
         for kj in range(n_kv_tiles):
             k0, k1 = kj * tile_kv, (kj + 1) * tile_kv
             if k0 > q1 - 1:
-                continue  # fully-future KV tile: skip entirely
+                continue
             if on_tile is not None:
                 on_tile(qi, kj)
-            block = (Q[q0:q1] @ K[k0:k1].T) / np.sqrt(d)
-            q_idx = np.arange(q0, q1)[:, None]
-            k_idx = np.arange(k0, k1)[None, :]
-            block = np.where(k_idx > q_idx, -np.inf, block)
-            scores[q0:q1, k0:k1] = block
+            for i_local in range(tile_q):
+                i = q0 + i_local
+                for j_local in range(tile_kv):
+                    j = k0 + j_local
+                    if j > i:
+                        scores[i][j] = float('-inf')
+                    else:
+                        dot = 0.0
+                        for dim in range(d):
+                            dot += Q[i, dim] * K[j, dim]
+                        scores[i][j] = dot / sqrt_d
 
-    m = np.max(scores, axis=1, keepdims=True)
-    e = np.exp(scores - m)
-    probs = e / np.sum(e, axis=1, keepdims=True)
-    return probs @ V
+    m = []
+    for i in range(S):
+        row_max = float('-inf')
+        for j in range(S):
+            if scores[i][j] > row_max:
+                row_max = scores[i][j]
+        m.append(row_max)
+
+    e = [[0.0] * S for _ in range(S)]
+    for i in range(S):
+        row_m = m[i]
+        for j in range(S):
+            val = scores[i][j]
+            if val == float('-inf'):
+                e[i][j] = 0.0
+            else:
+                e[i][j] = math.exp(val - row_m)
+
+    sum_e = []
+    for i in range(S):
+        s_val = 0.0
+        for j in range(S):
+            s_val += e[i][j]
+        sum_e.append(s_val)
+
+    probs = [[0.0] * S for _ in range(S)]
+    for i in range(S):
+        s_val = sum_e[i]
+        for j in range(S):
+            if s_val == 0.0:
+                probs[i][j] = 0.0
+            else:
+                probs[i][j] = e[i][j] / s_val
+
+    result = [[0.0] * d for _ in range(S)]
+    for i in range(S):
+        for col in range(d):
+            val = 0.0
+            for k in range(S):
+                val += probs[i][k] * V[k, col]
+            result[i][col] = val
+
+    return np.array(result, dtype=np.float64)

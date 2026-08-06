@@ -1,31 +1,61 @@
 import numpy as np
 
 def compare_quantization(W):
-    # Per‑tensor quantisation
-    min_t = W.min()
-    max_t = W.max()
+    rows, cols = W.shape
+
+    min_t = float(W[0, 0])
+    max_t = float(W[0, 0])
+    for r in range(rows):
+        for c in range(cols):
+            val = float(W[r, c])
+            if val < min_t:
+                min_t = val
+            if val > max_t:
+                max_t = val
+
     range_t = max_t - min_t
-    if range_t == 0:
-        dq_t = np.full_like(W, min_t, dtype=np.float64)
+    dq_t = np.empty((rows, cols), dtype=np.float64)
+    if range_t == 0.0:
+        for r in range(rows):
+            for c in range(cols):
+                dq_t[r, c] = min_t
     else:
         scale_t = range_t / 255.0
-        q_t = np.clip(np.round((W - min_t) / scale_t), 0, 255).astype(np.uint8)
-        dq_t = q_t.astype(np.float64) * scale_t + min_t
+        for r in range(rows):
+            for c in range(cols):
+                q_val = round((float(W[r, c]) - min_t) / scale_t)
+                if q_val < 0:
+                    q = 0
+                elif q_val > 255:
+                    q = 255
+                else:
+                    q = q_val
+                dq_t[r, c] = float(q) * scale_t + min_t
 
-    # Per‑channel quantisation
-    min_c = W.min(axis=0)
-    max_c = W.max(axis=0)
-    range_c = max_c - min_c
-    dq_c = np.empty_like(W, dtype=np.float64)
-
-    zero_mask = range_c == 0
-    if np.any(zero_mask):
-        dq_c[:, zero_mask] = min_c[zero_mask]
-
-    non_zero_mask = ~zero_mask
-    if np.any(non_zero_mask):
-        scale_c = range_c[non_zero_mask] / 255.0
-        q_c = np.clip(np.round((W[:, non_zero_mask] - min_c[non_zero_mask]) / scale_c), 0, 255).astype(np.uint8)
-        dq_c[:, non_zero_mask] = q_c.astype(np.float64) * scale_c + min_c[non_zero_mask]
+    dq_c = np.empty((rows, cols), dtype=np.float64)
+    for c in range(cols):
+        min_c = float(W[0, c])
+        max_c = float(W[0, c])
+        for r in range(1, rows):
+            val = float(W[r, c])
+            if val < min_c:
+                min_c = val
+            if val > max_c:
+                max_c = val
+        range_c = max_c - min_c
+        if range_c == 0.0:
+            for r in range(rows):
+                dq_c[r, c] = min_c
+        else:
+            scale_c = range_c / 255.0
+            for r in range(rows):
+                q_val = round((float(W[r, c]) - min_c) / scale_c)
+                if q_val < 0:
+                    q = 0
+                elif q_val > 255:
+                    q = 255
+                else:
+                    q = q_val
+                dq_c[r, c] = float(q) * scale_c + min_c
 
     return dq_t, dq_c

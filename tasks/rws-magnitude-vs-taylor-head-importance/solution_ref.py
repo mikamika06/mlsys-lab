@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -6,8 +7,20 @@ def rank_heads_by_importance(weights: np.ndarray, grads: np.ndarray):
     flat_w = weights.reshape(h, -1)
     flat_g = grads.reshape(h, -1)
 
-    mag_scores = np.sqrt(np.sum(flat_w * flat_w, axis=1))
-    taylor_scores = np.sum(np.abs(flat_g * flat_w), axis=1)
+    d = flat_w.shape[1]
+    mag_scores = np.empty(h, dtype=np.float64)
+    taylor_scores = np.empty(h, dtype=np.float64)
+
+    for i in range(h):
+        sum_sq = 0.0
+        sum_taylor = 0.0
+        for j in range(d):
+            w_val = flat_w[i, j]
+            g_val = flat_g[i, j]
+            sum_sq += w_val * w_val
+            sum_taylor += abs(g_val * w_val)
+        mag_scores[i] = math.sqrt(sum_sq)
+        taylor_scores[i] = sum_taylor
 
     magnitude_ranking = sorted(
         range(h),

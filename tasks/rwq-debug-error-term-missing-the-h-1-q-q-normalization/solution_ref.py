@@ -18,15 +18,34 @@ def gptq_quantize(W: np.ndarray, Hinv: np.ndarray, scales: np.ndarray, bits: int
     codes = np.zeros((r, d), dtype=np.int64)
 
     for q in range(d):
-        w_q = Wc[:, q]
-        c_q = np.clip(np.round(w_q / scales), -L, L)
-        codes[:, q] = c_q.astype(np.int64)
-        deq = c_q * scales
-        err = w_q - deq
-        Wc[:, q] = deq
+        c_q_list = []
+        deq_list = []
+        err_list = []
+
+        for i in range(r):
+            val = Wc[i, q] / scales[i]
+            rounded = round(val)
+            if rounded < -L:
+                clipped = -L
+            elif rounded > L:
+                clipped = L
+            else:
+                clipped = rounded
+
+            c_q_list.append(int(clipped))
+            codes[i, q] = int(clipped)
+
+            deq_val = clipped * scales[i]
+            deq_list.append(deq_val)
+            err_val = Wc[i, q] - deq_val
+            err_list.append(err_val)
+            Wc[i, q] = deq_val
 
         if q + 1 < d:
-            factor = err / Hinv[q, q]
-            Wc[:, q + 1:] -= np.outer(factor, Hinv[q, q + 1:])
+            h_qq = Hinv[q, q]
+            for i in range(r):
+                factor_i = err_list[i] / h_qq
+                for j in range(q + 1, d):
+                    Wc[i, j] -= factor_i * Hinv[q, j]
 
     return {"codes": codes, "W_hat": Wc}

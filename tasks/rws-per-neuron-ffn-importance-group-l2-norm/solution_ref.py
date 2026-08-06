@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def per_neuron_importance(up_proj: np.ndarray,
@@ -17,9 +18,19 @@ def per_neuron_importance(up_proj: np.ndarray,
     importance : np.ndarray, shape (h,)
         L2 norm of the concatenated incoming and outgoing weights for each neuron.
     """
-    # Sum of squares of incoming weights per neuron
-    row_norm_sq = np.sum(up_proj**2, axis=1)
-    # Sum of squares of outgoing weights per neuron
-    col_norm_sq = np.sum(down_proj**2, axis=0)
-    # Group L2 norm: sqrt(row^2 + col^2)
-    return np.sqrt(row_norm_sq + col_norm_sq)
+    h = up_proj.shape[0]
+    d_in = up_proj.shape[1]
+    d_out = down_proj.shape[0]
+    
+    importance = np.empty(h, dtype=np.float64)
+    for i in range(h):
+        row_sum_sq = 0.0
+        for j in range(d_in):
+            val = up_proj[i, j]
+            row_sum_sq += val * val
+        col_sum_sq = 0.0
+        for k in range(d_out):
+            val = down_proj[k, i]
+            col_sum_sq += val * val
+        importance[i] = math.sqrt(row_sum_sq + col_sum_sq)
+    return importance

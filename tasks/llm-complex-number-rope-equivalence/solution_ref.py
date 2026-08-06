@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def rope_complex(x: np.ndarray, pos: np.ndarray) -> np.ndarray:
@@ -8,16 +9,26 @@ def rope_complex(x: np.ndarray, pos: np.ndarray) -> np.ndarray:
     pos = np.asarray(pos, dtype=np.float64)
     batch, seq_len, dim = x.shape
     assert dim % 2 == 0, "Dimension must be even"
-    freqs = 10000 ** (-np.arange(0, dim // 2) / (dim / 2))
-    theta = pos[:, None] * freqs[None, :]
 
-    a = x[..., ::2]
-    b = x[..., 1::2]
-    z = a + 1j * b
-    rot = np.exp(1j * theta)
-    z_rot = z * rot
-
+    half_dim = dim // 2
     out = np.empty_like(x)
-    out[..., ::2] = z_rot.real
-    out[..., 1::2] = z_rot.imag
+
+    freqs = [0.0] * half_dim
+    for i in range(half_dim):
+        freqs[i] = 10000.0 ** (-(i / (dim / 2)))
+
+    for b in range(batch):
+        for s in range(seq_len):
+            p = float(pos[s])
+            for i in range(half_dim):
+                theta = p * freqs[i]
+                cos_t = math.cos(theta)
+                sin_t = math.sin(theta)
+
+                a = float(x[b, s, 2 * i])
+                b_val = float(x[b, s, 2 * i + 1])
+
+                out[b, s, 2 * i] = a * cos_t - b_val * sin_t
+                out[b, s, 2 * i + 1] = a * sin_t + b_val * cos_t
+
     return out

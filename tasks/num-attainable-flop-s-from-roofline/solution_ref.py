@@ -8,7 +8,24 @@ def roofline_attainable(flops, bytes_moved, peak_flops, bandwidth):
     P = float(peak_flops)
     B = float(bandwidth)
 
-    ai = W / Q
-    attainable = np.minimum(P, ai * B)
+    n = W.shape[0]
+    ai_list = []
+    attainable_list = []
+
+    for i in range(n):
+        w_val = W[i]
+        q_val = Q[i]
+        ai_val = w_val / q_val
+        ai_list.append(ai_val)
+
+        prod = ai_val * B
+        if P < prod:
+            att_val = P
+        else:
+            att_val = prod
+        attainable_list.append(att_val)
+
+    ai = np.array(ai_list, dtype=np.float64)
+    attainable = np.array(attainable_list, dtype=np.float64)
     ridge = P / B
     return ai, attainable, ridge

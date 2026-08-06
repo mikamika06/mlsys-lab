@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -5,13 +6,27 @@ def streaming_logsumexp(chunks):
     chunks = [np.asarray(c, dtype=np.float64) for c in chunks]
     N = chunks[0].shape[0]
 
-    m = np.full(N, -np.inf)
-    ell = np.zeros(N)
+    m = np.full(N, -float("inf"), dtype=np.float64)
+    ell = np.zeros(N, dtype=np.float64)
 
     for c in chunks:
-        c_max = np.max(c, axis=1)
-        m_new = np.maximum(m, c_max)
-        ell = ell * np.exp(m - m_new) + np.sum(np.exp(c - m_new[:, None]), axis=1)
-        m = m_new
+        nrows = c.shape[0]
+        ncols = c.shape[1]
+        for i in range(nrows):
+            c_max = -float("inf")
+            for j in range(ncols):
+                val = c[i, j]
+                if val > c_max:
+                    c_max = val
+            m_old = m[i]
+            m_new = m_old if m_old > c_max else c_max
+            term = 0.0
+            for j in range(ncols):
+                term += math.exp(c[i, j] - m_new)
+            ell[i] = ell[i] * math.exp(m_old - m_new) + term
+            m[i] = m_new
 
-    return m + np.log(ell)
+    res = np.empty(N, dtype=np.float64)
+    for i in range(N):
+        res[i] = m[i] + math.log(ell[i])
+    return res

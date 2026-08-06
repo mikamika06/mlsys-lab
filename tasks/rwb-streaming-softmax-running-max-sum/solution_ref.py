@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -11,14 +12,24 @@ def streaming_softmax(scores: np.ndarray, chunk_size: int) -> np.ndarray:
     x = np.asarray(scores, dtype=np.float64)
     n = x.shape[0]
 
-    m = -np.inf
+    m = -float("inf")
     l = 0.0
     for start in range(0, n, chunk_size):
-        chunk = x[start : start + chunk_size]
-        chunk_max = chunk.max()
+        end = min(start + chunk_size, n)
+        chunk_max = -float("inf")
+        for i in range(start, end):
+            val = x[i]
+            if val > chunk_max:
+                chunk_max = val
         m_new = max(m, chunk_max)
-        alpha = 0.0 if np.isneginf(m) else np.exp(m - m_new)
-        l = l * alpha + np.exp(chunk - m_new).sum()
+        alpha = 0.0 if m == -float("inf") else math.exp(m - m_new)
+        chunk_sum = 0.0
+        for i in range(start, end):
+            chunk_sum += math.exp(x[i] - m_new)
+        l = l * alpha + chunk_sum
         m = m_new
 
-    return np.exp(x - m) / l
+    result = np.empty(n, dtype=np.float64)
+    for i in range(n):
+        result[i] = math.exp(x[i] - m) / l
+    return result

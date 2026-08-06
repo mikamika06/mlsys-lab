@@ -1,6 +1,6 @@
-"""Reference solution for `num-fix-cholesky-missing-diagonal-sqrt`."""
 from __future__ import annotations
 
+import math
 import numpy as np
 
 
@@ -14,9 +14,11 @@ def cholesky(A: np.ndarray) -> np.ndarray:
     L = np.zeros((n, n), dtype=np.float64)
     for i in range(n):
         for j in range(i + 1):
-            s = np.dot(L[i, :j], L[j, :j])
+            s = 0.0
+            for k in range(j):
+                s += L[i, k] * L[j, k]
             if i == j:
-                L[i, j] = np.sqrt(A[i, i] - s)
+                L[i, j] = math.sqrt(A[i, i] - s)
             else:
                 L[i, j] = (A[i, j] - s) / L[j, j]
     return L

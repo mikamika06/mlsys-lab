@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -12,16 +13,56 @@ def gqa_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.ndarray:
     n_q, n, d = Q.shape
     n_kv = K.shape[0]
     g = n_q // n_kv
-    scale = 1.0 / np.sqrt(d)
+    scale = 1.0 / math.sqrt(d)
 
-    # Broadcast each KV head across its group of g query heads (blocked,
-    # not interleaved: query head h uses KV head h // g).
-    K_rep = np.repeat(K, g, axis=0)   # (n_q, n, d)
-    V_rep = np.repeat(V, g, axis=0)   # (n_q, n, d)
+    O = np.zeros_like(Q)
 
-    S = np.einsum("hnd,hmd->hnm", Q, K_rep) * scale
-    S = S - np.max(S, axis=-1, keepdims=True)
-    P = np.exp(S)
-    P = P / np.sum(P, axis=-1, keepdims=True)
-    O = np.einsum("hnm,hmd->hnd", P, V_rep)
+    for h in range(n_q):
+        kv = h // g
+        Q_h = Q[h]
+        K_kv = K[kv]
+        V_kv = V[kv]
+
+        S = np.zeros((n, n), dtype=np.float64)
+        for i in range(n):
+            for j in range(n):
+                acc = 0.0
+                for k in range(d):
+                    acc += Q_h[i, k] * K_kv[j, k]
+                S[i, j] = acc * scale
+
+        max_S = np.zeros((n, 1), dtype=np.float64)
+        for i in range(n):
+            m = S[i, 0]
+            for j in range(1, n):
+                if S[i, j] > m:
+                    m = S[i, j]
+            max_S[i, 0] = m
+
+        P = np.zeros((n, n), dtype=np.float64)
+        for i in range(n):
+            for j in range(n):
+                P[i, j] = math.exp(S[i, j] - max_S[i, 0])
+
+        sum_P = np.zeros((n, 1), dtype=np.float64)
+        for i in range(n):
+            s_acc = 0.0
+            for j in range(n):
+                s_acc += P[i, j]
+            sum_P[i, 0] = s_acc
+
+        for i in range(n):
+            for j in range(n):
+                P[i, j] /= sum_P[i, 0]
+
+        O_h = np.zeros((n, d), dtype=np.float64)
+        for i in range(n):
+            for k in range(d):
+                acc = 0.0
+                for j in range(n):
+                    acc += P[i, j] * V_kv[j, k]
+                O_h[i, k] = acc
+
+        O[h] = O_h
+
     return O

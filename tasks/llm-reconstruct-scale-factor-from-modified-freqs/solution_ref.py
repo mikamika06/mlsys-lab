@@ -9,5 +9,8 @@ def recover_scale_factor(orig_freqs: np.ndarray,
     """
     orig = np.asarray(orig_freqs, dtype=np.float64)
     mod  = np.asarray(mod_freqs, dtype=np.float64)
-    ratios = mod / orig
-    return float(np.mean(ratios))
+    n = orig.shape[0]
+    total = 0.0
+    for i in range(n):
+        total += mod[i] / orig[i]
+    return float(total / n)

@@ -17,11 +17,17 @@ def removed_and_remaining(param_counts, k):
     """
     import numpy as np
 
-    total = param_counts.sum()
+    total = 0
+    n = len(param_counts)
+    for i in range(n):
+        total += param_counts[i]
+
     if k <= 0:
         removed = 0
     else:
-        # Clamp k to the number of layers to avoid out‑of‑bounds.
-        k_clamped = min(k, len(param_counts))
-        removed = param_counts[:k_clamped].sum()
+        k_clamped = k if k < n else n
+        removed = 0
+        for i in range(k_clamped):
+            removed += param_counts[i]
+
     return (removed / total, (total - removed) / total)

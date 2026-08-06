@@ -1,17 +1,29 @@
+import math
 import numpy as np
 
 
 def quantile_keep_mask(w: np.ndarray, s: float):
     flat = np.asarray(w).reshape(-1)
-    mags = np.abs(flat).astype(np.float64)
+    n = len(flat)
+    mags = [float(abs(flat[i])) for i in range(n)]
 
-    threshold = float(np.quantile(mags, s))
-    k = int(np.ceil((1.0 - s) * len(mags)))
+    idx_float = s * (float(n) - 1.0)
+    lower = math.floor(idx_float)
+    upper = math.ceil(idx_float)
+    weight = idx_float - float(lower)
 
-    indices = np.arange(len(mags))
-    order = np.lexsort((indices, -mags))
+    sorted_mags = sorted(mags)
+    threshold = sorted_mags[lower] * (1.0 - weight) + sorted_mags[upper] * weight
 
-    mask = np.zeros(len(mags), dtype=bool)
-    mask[order[:k]] = True
+    k = int(math.ceil((1.0 - s) * float(n)))
 
-    return threshold, mask.reshape(np.asarray(w).shape)
+    order_items = sorted(((mags[i], i) for i in range(n)), key=lambda x: (-x[0], x[1]))
+    order = [item[1] for item in order_items]
+
+    mask_list = [False] * n
+    for i in range(k):
+        mask_list[order[i]] = True
+
+    mask = np.array(mask_list, dtype=bool)
+
+    return float(threshold), mask.reshape(np.asarray(w).shape)

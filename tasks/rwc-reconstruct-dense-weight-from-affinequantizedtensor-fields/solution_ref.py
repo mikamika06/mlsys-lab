@@ -16,7 +16,10 @@ def reconstruct_dense_from_affine_quantized(int_data_packed, scale, zero_point, 
     Dequant per element: (code - zero_point[group]) * scale[group].
     Returns a float64 array of `shape`.
     """
-    n = int(np.prod(shape))
+    n = 1
+    for dim in shape:
+        n *= dim
+
     packed = np.asarray(int_data_packed, dtype=np.uint8)
 
     codes = np.empty(n, dtype=np.uint8)
@@ -33,6 +36,9 @@ def reconstruct_dense_from_affine_quantized(int_data_packed, scale, zero_point, 
     for gi in range(len(scale)):
         start = gi * group_size
         end = min(n, start + group_size)
-        out[start:end] = (codes[start:end].astype(np.float64) - zero_point[gi]) * scale[gi]
+        s = float(scale[gi])
+        z = float(zero_point[gi])
+        for j in range(start, end):
+            out[j] = (float(codes[j]) - z) * s
 
     return out.reshape(shape)

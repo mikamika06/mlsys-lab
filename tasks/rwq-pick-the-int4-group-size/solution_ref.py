@@ -4,12 +4,27 @@ import numpy as np
 def _group_quant_mse(W: np.ndarray, group_size: int, bits: int) -> float:
     qmax = (1 << (bits - 1)) - 1
     n = W.shape[0]
-    blocks = W.reshape(n // group_size, group_size)
-    amax = np.max(np.abs(blocks), axis=1, keepdims=True)
-    scale = np.where(amax > 0, amax / qmax, 1.0)
-    codes = np.clip(np.round(blocks / scale), -qmax, qmax)
-    recon = codes * scale
-    return float(np.mean((recon - blocks) ** 2))
+    num_blocks = n // group_size
+    total_sq_err = 0.0
+    for i in range(num_blocks):
+        start = i * group_size
+        block = W[start : start + group_size]
+        amax_b = 0.0
+        for x in block:
+            ax = abs(x)
+            if ax > amax_b:
+                amax_b = ax
+        scale_b = amax_b / qmax if amax_b > 0 else 1.0
+        for x in block:
+            code = round(x / scale_b)
+            if code < -qmax:
+                code = -qmax
+            elif code > qmax:
+                code = qmax
+            recon = code * scale_b
+            diff = recon - x
+            total_sq_err += diff * diff
+    return float(total_sq_err / n)
 
 
 def pick_int4_group_size(W: np.ndarray, group_sizes=(32, 64, 128, 256),
@@ -20,11 +35,18 @@ def pick_int4_group_size(W: np.ndarray, group_sizes=(32, 64, 128, 256),
     `group_sizes` order.
     """
     W = np.asarray(W, dtype=np.float64)
-    costs = np.zeros(len(group_sizes), dtype=np.float64)
-    for i, gs in enumerate(group_sizes):
+    costs_list = []
+    for gs in group_sizes:
         mse = _group_quant_mse(W, gs, bits)
         overhead = 16.0 / gs
-        costs[i] = mse + lam * overhead
+        costs_list.append(mse + lam * overhead)
 
-    best_idx = int(np.argmin(costs))
-    return int(group_sizes[best_idx]), float(costs[best_idx]), costs
+    costs = np.array(costs_list, dtype=np.float64)
+    best_idx = 0
+    best_cost = costs_list[0]
+    for i in range(1, len(costs_list)):
+        if costs_list[i] < best_cost:
+            best_cost = costs_list[i]
+            best_idx = i
+
+    return int(group_sizes[best_idx]), float(best_cost), costs

@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -22,15 +23,40 @@ def varlen_block_diagonal_attention(q: np.ndarray, k: np.ndarray, v: np.ndarray,
     cu_seqlens = np.asarray(cu_seqlens, dtype=np.int64)
 
     N, d = q.shape
-    boundaries = cu_seqlens[1:]  # end (exclusive) of each segment
-    seq_id = np.searchsorted(boundaries, np.arange(N), side="right")
+    out = np.zeros((N, d), dtype=np.float64)
+    sqrt_d = math.sqrt(d)
 
-    same_seq = seq_id[:, None] == seq_id[None, :]  # (N, N)
+    n_seqs = len(cu_seqlens) - 1
+    for seq_idx in range(n_seqs):
+        start = int(cu_seqlens[seq_idx])
+        end = int(cu_seqlens[seq_idx + 1])
 
-    scores = (q @ k.T) / np.sqrt(d)
-    scores = np.where(same_seq, scores, -np.inf)
+        for i in range(start, end):
+            scores = []
+            for j in range(start, end):
+                dot_val = 0.0
+                for c in range(d):
+                    dot_val += float(q[i, c]) * float(k[j, c])
+                scores.append(dot_val / sqrt_d)
 
-    scores = scores - np.max(scores, axis=1, keepdims=True)
-    probs = np.exp(scores)
-    probs = probs / np.sum(probs, axis=1, keepdims=True)
-    return probs @ v
+            max_score = scores[0]
+            for score in scores:
+                if score > max_score:
+                    max_score = score
+
+            exp_scores = []
+            sum_exp = 0.0
+            for score in scores:
+                e = math.exp(score - max_score)
+                exp_scores.append(e)
+                sum_exp += e
+
+            probs = [e / sum_exp for e in exp_scores]
+
+            for c in range(d):
+                v_val = 0.0
+                for j_idx, j in enumerate(range(start, end)):
+                    v_val += probs[j_idx] * float(v[j, c])
+                out[i, c] = v_val
+
+    return out

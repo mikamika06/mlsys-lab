@@ -19,14 +19,56 @@ def padding_waste_fraction(lens: np.ndarray, batch_ids: np.ndarray) -> float:
     lens = np.asarray(lens, dtype=np.float64)
     batch_ids = np.asarray(batch_ids)
 
+    unique_batches = []
+    i = 0
+    while i < batch_ids.shape[0]:
+        val = batch_ids[i]
+        found = False
+        j = 0
+        while j < len(unique_batches):
+            if unique_batches[j] == val:
+                found = True
+                break
+            j += 1
+        if not found:
+            unique_batches.append(val)
+        i += 1
+
     total_slots = 0.0
     total_wasted = 0.0
-    for b in np.unique(batch_ids):
-        batch_lens = lens[batch_ids == b]
-        max_len = float(np.max(batch_lens))
-        batch_size = float(batch_lens.shape[0])
+    
+    b_idx = 0
+    while b_idx < len(unique_batches):
+        b = unique_batches[b_idx]
+        
+        batch_lens_list = []
+        k = 0
+        while k < batch_ids.shape[0]:
+            if batch_ids[k] == b:
+                batch_lens_list.append(lens[k])
+            k += 1
+
+        max_len = 0.0
+        if len(batch_lens_list) > 0:
+            max_len = batch_lens_list[0]
+            m = 1
+            while m < len(batch_lens_list):
+                if batch_lens_list[m] > max_len:
+                    max_len = batch_lens_list[m]
+                m += 1
+
+        batch_size = float(len(batch_lens_list))
+        
+        sum_lens = 0.0
+        m = 0
+        while m < len(batch_lens_list):
+            sum_lens += batch_lens_list[m]
+            m += 1
+
         slots = max_len * batch_size
         total_slots += slots
-        total_wasted += slots - float(np.sum(batch_lens))
+        total_wasted += slots - sum_lens
+
+        b_idx += 1
 
     return total_wasted / total_slots

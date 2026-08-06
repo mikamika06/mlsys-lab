@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def streaming_softmax(scores: np.ndarray, acc=None):
     """
@@ -21,18 +22,20 @@ def streaming_softmax(scores: np.ndarray, acc=None):
     """
     scores = np.asarray(scores, dtype=np.float64)
     if acc is None:
-        m = -np.inf
+        m = -float('inf')
         S = 0.0
     else:
         m, S = acc
 
     for x in scores:
         if x > m:
-            # rescale previous sum to the new maximum
-            if m != -np.inf:
-                S *= np.exp(m - x)
+            if m != -float('inf'):
+                S *= math.exp(m - x)
             m = x
-        S += np.exp(x - m)
+        S += math.exp(x - m)
 
-    probs = np.exp(scores - m) / S
+    probs = np.empty_like(scores, dtype=np.float64)
+    for i in range(len(scores)):
+        probs[i] = math.exp(scores[i] - m) / S
+
     return probs, (m, S)

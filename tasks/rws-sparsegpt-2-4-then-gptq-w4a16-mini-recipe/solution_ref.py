@@ -1,25 +1,59 @@
 import numpy as np
 
 
+def _invert_matrix(A):
+    n = len(A)
+    M = [row[:] + [1.0 if i == j else 0.0 for j in range(n)] for i, row in enumerate(A)]
+    for i in range(n):
+        max_el = abs(M[i][i])
+        max_row = i
+        for k in range(i + 1, n):
+            if abs(M[k][i]) > max_el:
+                max_el = abs(M[k][i])
+                max_row = k
+        if max_row != i:
+            M[i], M[max_row] = M[max_row], M[i]
+        pivot = M[i][i]
+        for j in range(2 * n):
+            M[i][j] /= pivot
+        for k in range(n):
+            if k != i:
+                factor = M[k][i]
+                for j in range(2 * n):
+                    M[k][j] -= factor * M[i][j]
+    return [row[n:] for row in M]
+
+
 def _sparsegpt_2_4(W, X, lam_prune):
     W = np.asarray(W, dtype=np.float64).copy()
     m, n = W.shape
-    H = 2.0 * X @ X.T + lam_prune * np.eye(n)
-    Hinv = np.linalg.inv(H)
+    H = [[0.0] * n for _ in range(n)]
+    s_dim = X.shape[1]
+    for i in range(n):
+        for j in range(n):
+            dot = 0.0
+            for k in range(s_dim):
+                dot += X[i, k] * X[j, k]
+            val = 2.0 * dot
+            if i == j:
+                val += lam_prune
+            H[i][j] = val
+    Hinv = _invert_matrix(H)
 
     for r in range(m):
         for start in range(0, n, 4):
             cols = list(range(start, start + 4))
-            scores = [(W[r, c] ** 2) / Hinv[c, c] for c in cols]
+            scores = [(W[r, c] ** 2) / Hinv[c][c] for c in cols]
             keep = set(cols)
-            for c, _ in sorted(zip(cols, scores), key=lambda x: x[1])[:2]:
+            paired = sorted(zip(cols, scores), key=lambda x: x[1])
+            for c, _ in paired[:2]:
                 keep.remove(c)
             pruned = [c for c in cols if c not in keep]
             for c in pruned:
                 old = W[r, c]
                 for k in cols:
                     if k in keep:
-                        W[r, k] -= old * Hinv[k, c] / Hinv[c, c]
+                        W[r, k] -= old * Hinv[k][c] / Hinv[c][c]
                 W[r, c] = 0.0
     return W
 
@@ -27,22 +61,58 @@ def _sparsegpt_2_4(W, X, lam_prune):
 def _gptq_quantize(W, X, bits, damp):
     W = np.asarray(W, dtype=np.float64).copy()
     m, n = W.shape
-    H = X @ X.T
-    H = H + np.eye(n) * damp * np.mean(np.diag(H))
-    Hinv = np.linalg.inv(H)
+    H = [[0.0] * n for _ in range(n)]
+    s_dim = X.shape[1]
+    for i in range(n):
+        for j in range(n):
+            dot = 0.0
+            for k in range(s_dim):
+                dot += X[i, k] * X[j, k]
+            H[i][j] = dot
+
+    diag_sum = 0.0
+    for i in range(n):
+        diag_sum += H[i][i]
+    mean_diag = diag_sum / n
+
+    damp_val = damp * mean_diag
+    for i in range(n):
+        H[i][i] += damp_val
+
+    Hinv = _invert_matrix(H)
 
     maxq = (1 << (bits - 1)) - 1
-    row_scale = np.max(np.abs(W), axis=1) / maxq
-    row_scale = np.where(row_scale == 0.0, 1.0, row_scale)
+    row_scale = []
+    for r in range(m):
+        max_val = 0.0
+        for c in range(n):
+            val = abs(W[r, c])
+            if val > max_val:
+                max_val = val
+        s = max_val / maxq
+        if s == 0.0:
+            s = 1.0
+        row_scale.append(s)
 
     W_q = np.zeros_like(W)
     for i in range(n):
-        q = np.clip(np.round(W[:, i] / row_scale), -maxq, maxq) * row_scale
-        W_q[:, i] = q
-        err = q - W[:, i]
+        q = []
+        for r in range(m):
+            val = W[r, i] / row_scale[r]
+            rounded = round(val)
+            clipped = max(-maxq, min(maxq, rounded))
+            q_val = clipped * row_scale[r]
+            q.append(q_val)
+            W_q[r, i] = q_val
+        
+        err = [q[r] - W[r, i] for r in range(m)]
         if i + 1 < n:
-            coeff = Hinv[i, i + 1:] / Hinv[i, i]
-            W[:, i + 1:] -= np.outer(err, coeff)
+            h_inv_ii = Hinv[i][i]
+            coeff = [Hinv[i][j] / h_inv_ii for j in range(i + 1, n)]
+            for r in range(m):
+                e_r = err[r]
+                for idx, j in enumerate(range(i + 1, n)):
+                    W[r, j] -= e_r * coeff[idx]
     return W_q
 
 

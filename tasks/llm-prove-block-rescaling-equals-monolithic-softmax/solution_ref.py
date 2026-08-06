@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def block_rescale_softmax(logits: np.ndarray, block_size: int) -> np.ndarray:
@@ -9,16 +10,39 @@ def block_rescale_softmax(logits: np.ndarray, block_size: int) -> np.ndarray:
     n = logits.size
     if block_size <= 0:
         raise ValueError("block_size must be positive")
-    # Global maximum for numerical stability
-    M = np.max(logits)
+    
+    if n == 0:
+        M = float('-inf')
+    else:
+        M = float(logits[0])
+        for i in range(1, n):
+            val = float(logits[i])
+            if val > M:
+                M = val
+
     exp_scaled = np.empty_like(logits)
     denom = 0.0
+
     for start in range(0, n, block_size):
         end = min(start + block_size, n)
-        block = logits[start:end]
-        m_b = np.max(block)
-        scale_factor = np.exp(m_b - M)          # exp(local_max - global_max)
-        exp_block = np.exp(block - m_b) * scale_factor
-        exp_scaled[start:end] = exp_block
-        denom += exp_block.sum()
-    return exp_scaled / denom
+        
+        m_b = float(logits[start])
+        for i in range(start + 1, end):
+            val = float(logits[i])
+            if val > m_b:
+                m_b = val
+
+        scale_factor = math.exp(m_b - M)
+
+        block_sum = 0.0
+        for i in range(start, end):
+            val = math.exp(float(logits[i]) - m_b) * scale_factor
+            exp_scaled[i] = val
+            block_sum += val
+
+        denom += block_sum
+
+    for i in range(n):
+        exp_scaled[i] /= denom
+
+    return exp_scaled

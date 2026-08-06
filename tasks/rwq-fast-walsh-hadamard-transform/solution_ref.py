@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -16,12 +17,18 @@ def fwht(x: np.ndarray) -> np.ndarray:
 
     h = 1
     while h < n:
-        x = x.reshape(-1, 2, h)
-        a = x[:, 0, :].copy()
-        b = x[:, 1, :].copy()
-        x[:, 0, :] = a + b
-        x[:, 1, :] = a - b
-        x = x.reshape(n)
+        for i in range(0, n, 2 * h):
+            for j in range(h):
+                idx0 = i + j
+                idx1 = i + j + h
+                a = x[idx0]
+                b = x[idx1]
+                x[idx0] = a + b
+                x[idx1] = a - b
         h *= 2
 
-    return x / np.sqrt(n)
+    inv_sqrt_n = 1.0 / math.sqrt(n)
+    for i in range(n):
+        x[i] *= inv_sqrt_n
+
+    return x

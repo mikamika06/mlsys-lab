@@ -1,17 +1,29 @@
+import math
 import numpy as np
 
 
 def _quantize(x, block_size):
-    codes = np.zeros(len(x), dtype=np.int8)
+    x = np.asarray(x, dtype=np.float32)
+    codes = np.zeros(x.shape, dtype=np.int8)
     scales = []
     for start in range(0, len(x), block_size):
         block = x[start:start + block_size]
-        scale = float(np.max(np.abs(block)) / 127.0)
+        max_val = 0.0
+        for val in block:
+            abs_val = val if val >= 0 else -val
+            if abs_val > max_val:
+                max_val = abs_val
+        scale = float(max_val / 127.0) if len(block) else 1.0
         if scale == 0:
             scale = 1.0
-        codes[start:start + len(block)] = np.round(
-            block / scale
-        ).clip(-127, 127).astype(np.int8)
+        for j in range(len(block)):
+            val = block[j]
+            q = round(val / scale)
+            if q > 127:
+                q = 127
+            elif q < -127:
+                q = -127
+            codes[start + j] = int(q)
         scales.append(scale)
     return codes, np.asarray(scales, dtype=np.float32)
 
@@ -21,7 +33,8 @@ def _dequantize(codes, scales, block_size):
     for i, scale in enumerate(scales):
         start = i * block_size
         end = min(len(codes), start + block_size)
-        out[start:end] = codes[start:end].astype(np.float32) * scale
+        for j in range(start, end):
+            out[j] = float(codes[j]) * scale
     return out
 
 
@@ -30,27 +43,43 @@ def adamw_8bit_step(params, grads, state, lr, beta1, beta2, eps, weight_decay, b
     grads = np.asarray(grads, dtype=np.float32)
 
     if state is None:
-        m = np.zeros_like(params)
-        v = np.zeros_like(params)
+        m = np.zeros(len(params), dtype=np.float32)
+        v = np.zeros(len(params), dtype=np.float32)
         step = 0
     else:
         m = _dequantize(state["m_codes"], state["m_scales"], block_size)
         v = _dequantize(state["v_codes"], state["v_scales"], block_size)
-        step = state["step"]
+        step = int(state["step"])
 
     step += 1
-    m = beta1 * m + (1 - beta1) * grads
-    v = beta2 * v + (1 - beta2) * grads * grads
+    beta1_pow = beta1 ** step
+    beta2_pow = beta2 ** step
 
-    m_hat = m / (1 - beta1 ** step)
-    v_hat = v / (1 - beta2 ** step)
-    params = params - lr * m_hat / (np.sqrt(v_hat) + eps)
-    params = params - lr * weight_decay * params
+    new_params = np.zeros(len(params), dtype=np.float32)
+    m_new = np.zeros(len(params), dtype=np.float32)
+    v_new = np.zeros(len(params), dtype=np.float32)
 
-    mc, ms = _quantize(m, block_size)
-    vc, vs = _quantize(v, block_size)
+    for i in range(len(params)):
+        p = params[i]
+        g = grads[i]
+        mi = m[i]
+        vi = v[i]
 
-    return params, {
+        mi_next = beta1 * mi + (1.0 - beta1) * g
+        vi_next = beta2 * vi + (1.0 - beta2) * g * g
+
+        m_new[i] = mi_next
+        v_new[i] = vi_next
+
+        mh = mi_next / (1.0 - beta1_pow)
+        vh = vi_next / (1.0 - beta2_pow)
+
+        new_params[i] = p - lr * mh / (math.sqrt(vh) + eps) - lr * weight_decay * p
+
+    mc, ms = _quantize(m_new, block_size)
+    vc, vs = _quantize(v_new, block_size)
+
+    return new_params, {
         "m_codes": mc,
         "m_scales": ms,
         "v_codes": vc,

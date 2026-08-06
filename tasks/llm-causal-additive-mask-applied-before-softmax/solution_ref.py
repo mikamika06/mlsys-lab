@@ -1,9 +1,19 @@
+import math
 import numpy as np
 
 def causal_masked_softmax(scores: np.ndarray) -> np.ndarray:
-    mask = np.tril(np.ones_like(scores, dtype=bool))
-    masked_scores = scores.copy()
-    masked_scores[~mask] = -np.inf
-    exp_scores = np.exp(masked_scores)
-    row_sums = exp_scores.sum(axis=-1, keepdims=True)
-    return (exp_scores / row_sums).astype(np.float64)
+    n_rows, n_cols = scores.shape
+    out = np.zeros((n_rows, n_cols), dtype=np.float64)
+    for i in range(n_rows):
+        row_sum = 0.0
+        row_exps = []
+        for j in range(n_cols):
+            if j <= i:
+                val = math.exp(scores[i, j])
+            else:
+                val = math.exp(-float('inf'))
+            row_exps.append(val)
+            row_sum += val
+        for j in range(n_cols):
+            out[i, j] = row_exps[j] / row_sum
+    return out

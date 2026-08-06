@@ -8,8 +8,12 @@ def mark_activations(num_layers: int, seg_lengths) -> np.ndarray:
     """
     if sum(seg_lengths) != num_layers:
         raise ValueError("segment lengths must sum to num_layers")
-    # cumulative sums give the start index of each segment
-    boundaries = np.cumsum([0] + list(seg_lengths))[:-1]
+    boundaries = []
+    current = 0
+    for length in seg_lengths:
+        boundaries.append(current)
+        current += length
     labels = np.zeros(num_layers, dtype=int)
-    labels[boundaries] = 1
+    for b in boundaries:
+        labels[b] = 1
     return labels

@@ -1,22 +1,74 @@
+import math
 import numpy as np
 
 
 def compare_q4_errors(block: np.ndarray) -> dict:
     x = np.asarray(block, dtype=np.float64)
 
-    amax = np.max(np.abs(x))
-    s_sym = 2 * amax / 15
-    q_sym = np.clip(np.round(x / s_sym), -8, 7)
-    recon_sym = s_sym * q_sym
-    err_sym = np.linalg.norm(recon_sym - x) / (np.linalg.norm(x) + 1e-12)
+    amax = 0.0
+    for val in x:
+        v_abs = math.fabs(val)
+        if v_abs > amax:
+            amax = v_abs
 
-    xmin = np.min(x)
-    xmax = np.max(x)
-    s_aff = (xmax - xmin) / 15
-    z = np.round(-xmin / s_aff)
-    q_aff = np.clip(np.round(x / s_aff + z), 0, 15)
-    recon_aff = s_aff * (q_aff - z)
-    err_aff = np.linalg.norm(recon_aff - x) / (np.linalg.norm(x) + 1e-12)
+    s_sym = 2.0 * amax / 15.0
+
+    sum_sq_diff_sym = 0.0
+    sum_sq_x = 0.0
+
+    for val in x:
+        if s_sym == 0.0:
+            q = 0.0
+        else:
+            div = val / s_sym
+            r = round(div)
+            if r < -8:
+                q = -8.0
+            elif r > 7:
+                q = 7.0
+            else:
+                q = float(r)
+        recon = s_sym * q
+        diff = recon - val
+        sum_sq_diff_sym += diff * diff
+        sum_sq_x += val * val
+
+    err_sym = math.sqrt(sum_sq_diff_sym) / (math.sqrt(sum_sq_x) + 1e-12)
+
+    xmin = float('inf')
+    xmax = float('-inf')
+    for val in x:
+        if val < xmin:
+            xmin = val
+        if val > xmax:
+            xmax = val
+
+    s_aff = (xmax - xmin) / 15.0
+
+    if s_aff == 0.0:
+        z = 0.0
+    else:
+        z = float(round(-xmin / s_aff))
+
+    sum_sq_diff_aff = 0.0
+
+    for val in x:
+        if s_aff == 0.0:
+            q = 0.0
+        else:
+            div = (val / s_aff) + z
+            r = round(div)
+            if r < 0:
+                q = 0.0
+            elif r > 15:
+                q = 15.0
+            else:
+                q = float(r)
+        recon = s_aff * (q - z)
+        diff = recon - val
+        sum_sq_diff_aff += diff * diff
+
+    err_aff = math.sqrt(sum_sq_diff_aff) / (math.sqrt(sum_sq_x) + 1e-12)
 
     return {
         "q4_0_error": float(err_sym),

@@ -25,28 +25,78 @@ _NAMES = ["NF4", "FP4", "INT4"]
 
 def _nearest_reconstruct(x, codebook):
     x = np.asarray(x, dtype=np.float64)
-    idx = np.argmin(np.abs(x[:, None] - codebook[None, :]), axis=1)
-    return codebook[idx]
+    out = np.empty_like(x)
+    for i in range(len(x)):
+        val = x[i]
+        best_diff = None
+        best_val = codebook[0]
+        for c in codebook:
+            diff = val - c
+            if diff < 0.0:
+                diff = -diff
+            if best_diff is None or diff < best_diff:
+                best_diff = diff
+                best_val = c
+        out[i] = best_val
+    return out
 
 
 def _codebook_mse(w, codebook):
-    scale = np.max(np.abs(w))
-    if scale == 0:
+    max_abs = 0.0
+    for val in w:
+        abs_val = val if val >= 0.0 else -val
+        if abs_val > max_abs:
+            max_abs = abs_val
+    scale = max_abs
+    if scale == 0.0:
         scale = 1.0
-    reconstructed = _nearest_reconstruct(w / scale, codebook) * scale
-    return float(np.mean((w - reconstructed) ** 2))
+
+    w_scaled = np.empty_like(w)
+    for i in range(len(w)):
+        w_scaled[i] = w[i] / scale
+
+    reconstructed_sub = _nearest_reconstruct(w_scaled, codebook)
+    reconstructed = np.empty_like(reconstructed_sub)
+    for i in range(len(reconstructed_sub)):
+        reconstructed[i] = reconstructed_sub[i] * scale
+
+    total = 0.0
+    n = len(w)
+    for i in range(n):
+        diff = w[i] - reconstructed[i]
+        total += diff * diff
+    return float(total / n)
 
 
 def _int4_affine_mse(w):
-    lo = np.min(w)
-    hi = np.max(w)
+    lo = w[0]
+    hi = w[0]
+    for val in w:
+        if val < lo:
+            lo = val
+        if val > hi:
+            hi = val
+
     scale = (hi - lo) / 15.0
-    if scale == 0:
+    if scale == 0.0:
         scale = 1.0
     zero = lo
-    q = np.clip(np.round((w - zero) / scale), 0, 15)
-    reconstructed = q * scale + zero
-    return float(np.mean((w - reconstructed) ** 2))
+
+    n = len(w)
+    reconstructed = np.empty_like(w)
+    for i in range(n):
+        q = round((w[i] - zero) / scale)
+        if q < 0.0:
+            q = 0.0
+        elif q > 15.0:
+            q = 15.0
+        reconstructed[i] = q * scale + zero
+
+    total = 0.0
+    for i in range(n):
+        diff = w[i] - reconstructed[i]
+        total += diff * diff
+    return float(total / n)
 
 
 def nf4_fp4_int4_best(w: np.ndarray):
@@ -76,5 +126,13 @@ def nf4_fp4_int4_best(w: np.ndarray):
         ],
         dtype=np.float64,
     )
-    best = _NAMES[int(np.argmin(errs))]
+    
+    min_err = errs[0]
+    min_idx = 0
+    for i in range(1, len(errs)):
+        if errs[i] < min_err:
+            min_err = errs[i]
+            min_idx = i
+
+    best = _NAMES[int(min_idx)]
     return errs, best

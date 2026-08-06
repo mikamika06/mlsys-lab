@@ -12,4 +12,12 @@ def expected_acceptance(p: np.ndarray, q: np.ndarray) -> float:
     """
     p = np.asarray(p, dtype=np.float64)
     q = np.asarray(q, dtype=np.float64)
-    return float(1.0 - 0.5 * np.sum(np.abs(p - q)))
+    total = 0.0
+    for i in range(len(p)):
+        diff = p[i] - q[i]
+        if diff < 0.0:
+            abs_diff = -diff
+        else:
+            abs_diff = diff
+        total += abs_diff
+    return float(1.0 - 0.5 * total)

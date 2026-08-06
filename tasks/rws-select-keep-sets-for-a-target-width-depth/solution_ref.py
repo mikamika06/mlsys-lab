@@ -8,6 +8,20 @@ def select_keep_sets(width_importance: np.ndarray,
     Return indices of the top‑d_target widths and top‑L_target layers.
     Indices are sorted in descending order of importance.
     """
-    w_idx = np.argsort(-width_importance)[:d_target]
-    l_idx = np.argsort(-layer_importance)[:L_target]
-    return w_idx.astype(np.int64), l_idx.astype(np.int64)
+    w_pairs = []
+    for i in range(len(width_importance)):
+        w_pairs.append((width_importance[i], i))
+    w_sorted = sorted(w_pairs, key=lambda x: x[0], reverse=True)
+    w_idx_list = []
+    for i in range(d_target):
+        w_idx_list.append(w_sorted[i][1])
+
+    l_pairs = []
+    for i in range(len(layer_importance)):
+        l_pairs.append((layer_importance[i], i))
+    l_sorted = sorted(l_pairs, key=lambda x: x[0], reverse=True)
+    l_idx_list = []
+    for i in range(L_target):
+        l_idx_list.append(l_sorted[i][1])
+
+    return np.array(w_idx_list, dtype=np.int64), np.array(l_idx_list, dtype=np.int64)

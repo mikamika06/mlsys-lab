@@ -31,5 +31,10 @@ def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates):
         waste = tile_area - M * N
         costs[i] = waves + waste / tile_area
 
-    best_idx = int(np.argmin(costs))
+    best_idx = 0
+    min_cost = costs[0]
+    for i in range(1, n):
+        if costs[i] < min_cost:
+            min_cost = costs[i]
+            best_idx = i
     return best_idx, costs

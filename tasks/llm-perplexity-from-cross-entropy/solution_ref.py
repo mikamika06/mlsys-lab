@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def perplexity_from_cross_entropy(logits: np.ndarray,
@@ -17,16 +18,29 @@ def perplexity_from_cross_entropy(logits: np.ndarray,
     float
         The perplexity value as a scalar Python float.
     """
-    # Numerically stable softmax
-    max_logits = np.max(logits, axis=1, keepdims=True)
-    exp_shifted = np.exp(logits - max_logits)
-    probs = exp_shifted / np.sum(exp_shifted, axis=1, keepdims=True)
+    N, V = logits.shape
+    total_ce = 0.0
 
-    # Cross‑entropy per sample
-    log_probs = np.log(probs + 1e-12)          # avoid log(0)
-    ce_per_sample = -log_probs[np.arange(len(targets)), targets]
+    for i in range(N):
+        row = logits[i]
+        target_idx = targets[i]
 
-    # Mean cross‑entropy and perplexity
-    mean_ce = np.mean(ce_per_sample)
-    perplexity = float(np.exp(mean_ce))
-    return perplexity
+        max_val = row[0]
+        for j in range(1, V):
+            if row[j] > max_val:
+                max_val = row[j]
+
+        sum_exp = 0.0
+        target_exp = 0.0
+        for j in range(V):
+            val = math.exp(row[j] - max_val)
+            sum_exp += val
+            if j == target_idx:
+                target_exp = val
+
+        prob = target_exp / sum_exp
+        log_prob = math.log(prob + 1e-12)
+        total_ce += -log_prob
+
+    mean_ce = total_ce / N
+    return float(math.exp(mean_ce))

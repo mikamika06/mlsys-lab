@@ -19,6 +19,20 @@ def mha_to_gqa_pool(K: np.ndarray, V: np.ndarray, n_kv_heads: int) -> tuple[np.n
     B, H, T, D = K.shape
     r = H // n_kv_heads
 
-    K_gqa = K.reshape(B, n_kv_heads, r, T, D).mean(axis=2)
-    V_gqa = V.reshape(B, n_kv_heads, r, T, D).mean(axis=2)
+    K_gqa = np.empty((B, n_kv_heads, T, D), dtype=np.float64)
+    V_gqa = np.empty((B, n_kv_heads, T, D), dtype=np.float64)
+
+    for b in range(B):
+        for g in range(n_kv_heads):
+            for t in range(T):
+                for d in range(D):
+                    k_sum = 0.0
+                    v_sum = 0.0
+                    for i in range(r):
+                        h = g * r + i
+                        k_sum += K[b, h, t, d]
+                        v_sum += V[b, h, t, d]
+                    K_gqa[b, g, t, d] = k_sum / r
+                    V_gqa[b, g, t, d] = v_sum / r
+
     return K_gqa, V_gqa

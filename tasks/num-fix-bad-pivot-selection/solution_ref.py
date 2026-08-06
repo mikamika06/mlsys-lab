@@ -18,24 +18,44 @@ def lu_partial_pivot(A: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]
     """
     A = np.asarray(A, dtype=np.float64).copy()
     n = A.shape[0]
-    perm = np.arange(n)
+    perm = list(range(n))
     L = np.zeros((n, n), dtype=np.float64)
 
     for k in range(n - 1):
-        # partial pivoting: largest-magnitude entry in column k, rows k..n-1
-        p = k + int(np.argmax(np.abs(A[k:, k])))
+        max_val = abs(A[k, k])
+        p = k
+        for i in range(k + 1, n):
+            val = abs(A[i, k])
+            if val > max_val:
+                max_val = val
+                p = i
+
         if p != k:
-            A[[k, p], :] = A[[p, k], :]
-            L[[k, p], :k] = L[[p, k], :k]
-            perm[[k, p]] = perm[[p, k]]
+            for col in range(n):
+                temp = A[k, col]
+                A[k, col] = A[p, col]
+                A[p, col] = temp
+            for col in range(k):
+                temp = L[k, col]
+                L[k, col] = L[p, col]
+                L[p, col] = temp
+            temp_perm = perm[k]
+            perm[k] = perm[p]
+            perm[p] = temp_perm
 
         pivot = A[k, k]
         for i in range(k + 1, n):
             m = A[i, k] / pivot if pivot != 0.0 else 0.0
             L[i, k] = m
-            A[i, k:] -= m * A[k, k:]
+            for j in range(k, n):
+                A[i, j] -= m * A[k, j]
 
-    np.fill_diagonal(L, 1.0)
+    for i in range(n):
+        L[i, i] = 1.0
+
     U = A
-    P = np.eye(n, dtype=np.float64)[perm]
+    P = np.zeros((n, n), dtype=np.float64)
+    for i in range(n):
+        P[i, perm[i]] = 1.0
+
     return P, L, U

@@ -6,10 +6,20 @@ def q4_0_dequantize(x: np.ndarray) -> np.ndarray:
     out = np.empty_like(x)
     for start in range(0, x.size, 32):
         block = x[start:start + 32]
-        scale = np.max(np.abs(block)) / 7.0
+        max_abs = 0.0
+        for i in range(block.size):
+            val = block[i]
+            abs_val = -val if val < 0.0 else val
+            if abs_val > max_abs:
+                max_abs = abs_val
+        scale = max_abs / 7.0
         if scale == 0:
-            out[start:start + 32] = 0.0
+            for i in range(block.size):
+                out[start + i] = 0.0
         else:
-            q = np.clip(np.round(block / scale), -8, 7)
-            out[start:start + 32] = q * scale
+            for i in range(block.size):
+                val = block[i] / scale
+                rounded = round(val)
+                clipped = -8.0 if rounded < -8.0 else (7.0 if rounded > 7.0 else rounded)
+                out[start + i] = clipped * scale
     return out

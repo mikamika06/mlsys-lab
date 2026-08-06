@@ -14,14 +14,23 @@ def infer_auto_device_map(modules, max_memory, no_split_modules):
             continue
         if name in group_of:
             names = list(group_of[name])
-            total = sum(sizes[item] for item in names)
+            total = 0
+            for item in names:
+                total += sizes[item]
             blocks.append((index, names, total))
-            seen.update(names)
+            for item in names:
+                seen.add(item)
         else:
             blocks.append((index, [name], size))
             seen.add(name)
 
-    blocks.sort(key=lambda item: item[0])
+    n_blocks = len(blocks)
+    for i in range(n_blocks):
+        for j in range(0, n_blocks - i - 1):
+            if blocks[j][0] > blocks[j + 1][0]:
+                temp = blocks[j]
+                blocks[j] = blocks[j + 1]
+                blocks[j + 1] = temp
 
     remaining = dict(max_memory)
     result = {}

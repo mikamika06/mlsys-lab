@@ -1,10 +1,30 @@
+import math
 import numpy as np
 
 
 def _softmax(z):
-    z = z - np.max(z, axis=-1, keepdims=True)
-    e = np.exp(z)
-    return e / np.sum(e, axis=-1, keepdims=True)
+    shape = z.shape
+    flat_z = z.reshape(-1, shape[-1])
+    out_flat = np.zeros_like(flat_z)
+    
+    for i in range(flat_z.shape[0]):
+        row = flat_z[i]
+        max_val = row[0]
+        for val in row:
+            if val > max_val:
+                max_val = val
+        
+        sum_e = 0.0
+        row_e = np.zeros_like(row)
+        for j in range(row.shape[0]):
+            val = math.exp(row[j] - max_val)
+            row_e[j] = val
+            sum_e += val
+            
+        for j in range(row.shape[0]):
+            out_flat[i, j] = row_e[j] / sum_e
+            
+    return out_flat.reshape(shape)
 
 
 def ste_argmax(logits, upstream_grad):
@@ -48,12 +68,37 @@ def ste_argmax(logits, upstream_grad):
     logits = np.asarray(logits, dtype=np.float64)
     upstream_grad = np.asarray(upstream_grad, dtype=np.float64)
 
-    idx = np.argmax(logits, axis=-1)
-    y_hard = np.zeros_like(logits)
-    np.put_along_axis(y_hard, idx[..., None], 1.0, axis=-1)
+    shape = logits.shape
+    C = shape[-1]
+    flat_logits = logits.reshape(-1, C)
+    flat_ug = upstream_grad.reshape(-1, C)
 
-    y_soft = _softmax(logits)
-    dot = np.sum(upstream_grad * y_soft, axis=-1, keepdims=True)
-    grad_logits = y_soft * (upstream_grad - dot)
+    y_hard_flat = np.zeros_like(flat_logits)
+    grad_logits_flat = np.zeros_like(flat_logits)
+
+    y_soft_flat = _softmax(flat_logits)
+
+    for i in range(flat_logits.shape[0]):
+        row = flat_logits[i]
+        best_j = 0
+        max_val = row[0]
+        for j in range(1, C):
+            if row[j] > max_val:
+                max_val = row[j]
+                best_j = j
+        y_hard_flat[i, best_j] = 1.0
+
+        ug_row = flat_ug[i]
+        ys_row = y_soft_flat[i]
+        
+        dot_sum = 0.0
+        for j in range(C):
+            dot_sum += ug_row[j] * ys_row[j]
+            
+        for j in range(C):
+            grad_logits_flat[i, j] = ys_row[j] * (ug_row[j] - dot_sum)
+
+    y_hard = y_hard_flat.reshape(shape)
+    grad_logits = grad_logits_flat.reshape(shape)
 
     return y_hard, grad_logits

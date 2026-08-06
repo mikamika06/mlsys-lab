@@ -46,28 +46,72 @@ def q4k_quantize_row(x):
             mm = []
             for i in range(8):
                 sub = block[i * 32:(i + 1) * 32]
-                ss.append((float(sub.max()) - float(sub.min())) / 63)
-                mm.append(-float(sub.min()) / 63)
-            ds = max(ss)
-            dm = max(mm)
+                mx = float(sub[0])
+                mn = float(sub[0])
+                for val in sub:
+                    v_f = float(val)
+                    if v_f > mx:
+                        mx = v_f
+                    if v_f < mn:
+                        mn = v_f
+                ss.append((mx - mn) / 63)
+                mm.append(-mn / 63)
+            ds = ss[0]
+            for val in ss:
+                if val > ds:
+                    ds = val
+            dm = mm[0]
+            for val in mm:
+                if val > dm:
+                    dm = val
             d[r, b] = ds
             dmin[r, b] = dm
             scs = []
             mcs = []
             for i in range(8):
-                sc = 0 if ds == 0 else int(np.clip(round(ss[i] / ds * 63), 0, 63))
-                mc = 0 if dm == 0 else int(np.clip(round(mm[i] / dm * 63), 0, 63))
+                if ds == 0:
+                    sc = 0
+                else:
+                    rc = round(ss[i] / ds * 63)
+                    if rc < 0:
+                        sc = 0
+                    elif rc > 63:
+                        sc = 63
+                    else:
+                        sc = int(rc)
+                if dm == 0:
+                    mc = 0
+                else:
+                    rc = round(mm[i] / dm * 63)
+                    if rc < 0:
+                        mc = 0
+                    elif rc > 63:
+                        mc = 63
+                    else:
+                        mc = int(rc)
                 scs.append(sc)
                 mcs.append(mc)
                 sub = block[i * 32:(i + 1) * 32]
                 step = float(d[r, b]) * sc
                 off = float(dmin[r, b]) * mc
-                q = np.zeros(32, dtype=np.uint8) if step == 0 else np.clip(
-                    np.round((sub + off) / step), 0, 15
-                ).astype(np.uint8)
-                codes[r, b * 128 + i * 16:b * 128 + i * 16 + 16] = (
-                    q[::2] | (q[1::2] << 4)
-                )
+                if step == 0:
+                    q = [0] * 32
+                else:
+                    q = []
+                    for val in sub:
+                        rq = round((float(val) + off) / step)
+                        if rq < 0:
+                            q.append(0)
+                        elif rq > 15:
+                            q.append(15)
+                        else:
+                            q.append(int(rq))
+                packed_bytes = []
+                for j in range(16):
+                    low = q[2 * j]
+                    high = q[2 * j + 1]
+                    packed_bytes.append(int(low | (high << 4)))
+                codes[r, b * 128 + i * 16:b * 128 + i * 16 + 16] = packed_bytes
             sm[r, b * 12:(b + 1) * 12] = _pack(scs + mcs)
     return codes, sm, d, dmin
 
@@ -82,11 +126,16 @@ def q4k_dequantize_row(codes, scales_mins, d, dmin):
             vals = _unpack(scales_mins[r, b * 12:(b + 1) * 12])
             for i in range(8):
                 qbytes = codes[r, b * 128 + i * 16:b * 128 + i * 16 + 16]
-                q = np.empty(32, dtype=np.uint8)
-                q[::2] = qbytes & 15
-                q[1::2] = qbytes >> 4
-                out[r, b * 256 + i * 32:b * 256 + i * 32 + 32] = (
-                    float(d[r, b]) * vals[i] * q
-                    - float(dmin[r, b]) * vals[8 + i]
-                )
+                q = []
+                for bval in qbytes:
+                    q.append(int(bval) & 15)
+                    q.append(int(bval) >> 4)
+                sub_out = []
+                scale_val = vals[i]
+                min_val = vals[8 + i]
+                d_val = float(d[r, b])
+                dmin_val = float(dmin[r, b])
+                for qi in q:
+                    sub_out.append(d_val * scale_val * qi - dmin_val * min_val)
+                out[r, b * 256 + i * 32:b * 256 + i * 32 + 32] = sub_out
     return out

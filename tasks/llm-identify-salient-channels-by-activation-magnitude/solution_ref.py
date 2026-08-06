@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def salient_channels(X: np.ndarray, fraction: float = 0.1) -> np.ndarray:
@@ -6,11 +7,40 @@ def salient_channels(X: np.ndarray, fraction: float = 0.1) -> np.ndarray:
     """
     if not (0 <= fraction <= 1):
         raise ValueError("fraction must be in [0, 1]")
-    n_channels = X.shape[1]
-    k = int(np.ceil(fraction * n_channels))
+    n_samples, n_channels = X.shape
+    k = math.ceil(fraction * n_channels)
     if k == 0:
         return np.array([], dtype=np.int64)
-    mean_abs = np.mean(np.abs(X), axis=0)
-    idx_desc = np.argsort(-mean_abs)
-    topk = idx_desc[:k]
-    return np.sort(topk).astype(np.int64)
+
+    mean_abs = [0.0] * n_channels
+    for c in range(n_channels):
+        s = 0.0
+        for r in range(n_samples):
+            v = X[r, c]
+            if v < 0:
+                v = -v
+            s += v
+        mean_abs[c] = s / n_samples
+
+    idx = list(range(n_channels))
+    for i in range(1, n_channels):
+        key = idx[i]
+        j = i - 1
+        while j >= 0:
+            if mean_abs[key] > mean_abs[idx[j]] or (mean_abs[key] == mean_abs[idx[j]] and key < idx[j]):
+                idx[j + 1] = idx[j]
+                j -= 1
+            else:
+                break
+        idx[j + 1] = key
+
+    topk = idx[:k]
+    for i in range(1, k):
+        key = topk[i]
+        j = i - 1
+        while j >= 0 and topk[j] > key:
+            topk[j + 1] = topk[j]
+            j -= 1
+        topk[j + 1] = key
+
+    return np.array(topk, dtype=np.int64)

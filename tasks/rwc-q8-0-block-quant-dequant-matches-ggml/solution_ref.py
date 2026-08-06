@@ -10,13 +10,27 @@ def q8_0_quantize(x):
     for b in range(num_blocks):
         start = b * block_size
         end = start + block_size
-        block = x[start:end]
-        absmax = np.max(np.abs(block))
+        absmax = 0.0
+        for i in range(start, end):
+            val = x[i]
+            if val < 0.0:
+                val = -val
+            if val > absmax:
+                absmax = val
         d = absmax / 127.0 if absmax != 0 else 0.0
         scales[b] = np.float16(d)
-        c = np.round(block / d) if d != 0 else np.zeros_like(block)
-        c = np.clip(c, -127, 127).astype(np.int8)
-        codes[start:end] = c
+        for i in range(start, end):
+            if d != 0:
+                rounded = round(x[i] / d)
+                if rounded < -127:
+                    c = -127
+                elif rounded > 127:
+                    c = 127
+                else:
+                    c = int(rounded)
+            else:
+                c = 0
+            codes[i] = c
     return codes, scales
 
 def q8_0_dequantize(codes, scales):
@@ -26,7 +40,7 @@ def q8_0_dequantize(codes, scales):
     for b in range(num_blocks):
         start = b * block_size
         end = start + block_size
-        c_block = codes[start:end].astype(np.int8).astype(np.float32)
-        d = scales[b].astype(np.float32)
-        x_hat[start:end] = c_block * d
+        d = float(scales[b])
+        for i in range(start, end):
+            x_hat[i] = float(codes[i]) * d
     return x_hat

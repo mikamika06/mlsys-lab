@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -7,17 +8,32 @@ def det_from_lu(A: np.ndarray) -> float:
     swaps = 0
 
     for k in range(n):
-        pivot = k + int(np.argmax(np.abs(M[k:, k])))
+        max_val = -1.0
+        pivot = k
+        for i in range(k, n):
+            val = math.fabs(float(M[i, k]))
+            if val > max_val:
+                max_val = val
+                pivot = i
+
         if pivot != k:
-            M[[k, pivot]] = M[[pivot, k]]
+            for j in range(n):
+                tmp = float(M[k, j])
+                M[k, j] = M[pivot, j]
+                M[pivot, j] = tmp
             swaps += 1
 
         if M[k, k] == 0:
             return 0.0
 
         for i in range(k + 1, n):
-            factor = M[i, k] / M[k, k]
-            M[i, k + 1:] -= factor * M[k, k + 1:]
+            factor = float(M[i, k]) / float(M[k, k])
+            for j in range(k + 1, n):
+                M[i, j] -= factor * float(M[k, j])
 
     sign = -1.0 if swaps % 2 else 1.0
-    return float(sign * np.prod(np.diag(M)))
+    prod = 1.0
+    for i in range(n):
+        prod *= float(M[i, i])
+
+    return float(sign * prod)

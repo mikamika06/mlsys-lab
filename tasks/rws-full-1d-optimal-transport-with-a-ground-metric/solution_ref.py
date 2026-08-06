@@ -10,13 +10,33 @@ def ot_cost_1d(positions: np.ndarray, p: np.ndarray, q: np.ndarray) -> float:
     p = np.asarray(p, dtype=np.float64)
     q = np.asarray(q, dtype=np.float64)
 
-    order = np.argsort(positions)
-    x = positions[order]
-    p_sorted = p[order]
-    q_sorted = q[order]
+    n = positions.shape[0]
+    order = sorted(range(n), key=lambda i: positions[i])
 
-    P = np.cumsum(p_sorted)
-    Q = np.cumsum(q_sorted)
+    x = np.empty(n, dtype=np.float64)
+    p_sorted = np.empty(n, dtype=np.float64)
+    q_sorted = np.empty(n, dtype=np.float64)
 
-    gaps = x[1:] - x[:-1]
-    return float(np.sum(np.abs(P[:-1] - Q[:-1]) * gaps))
+    for i in range(n):
+        idx = order[i]
+        x[i] = positions[idx]
+        p_sorted[i] = p[idx]
+        q_sorted[i] = q[idx]
+
+    P = np.empty(n, dtype=np.float64)
+    Q = np.empty(n, dtype=np.float64)
+    curr_p = 0.0
+    curr_q = 0.0
+    for i in range(n):
+        curr_p += p_sorted[i]
+        curr_q += q_sorted[i]
+        P[i] = curr_p
+        Q[i] = curr_q
+
+    total = 0.0
+    for i in range(n - 1):
+        gap = x[i + 1] - x[i]
+        diff = P[i] - Q[i]
+        total += abs(diff) * gap
+
+    return float(total)

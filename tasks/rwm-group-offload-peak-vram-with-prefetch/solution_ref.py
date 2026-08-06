@@ -15,8 +15,25 @@ def offload_peak_vram(group_sizes: np.ndarray, leaf_sizes: np.ndarray) -> dict:
     """
     group_sizes = np.asarray(group_sizes, dtype=np.float64)
     leaf_sizes = np.asarray(leaf_sizes, dtype=np.float64)
+
+    max_group = group_sizes[0]
+    for i in range(1, group_sizes.shape[0]):
+        val = group_sizes[i]
+        if val > max_group:
+            max_group = val
+
+    max_leaf = leaf_sizes[0]
+    for i in range(1, leaf_sizes.shape[0]):
+        val = leaf_sizes[i]
+        if val > max_leaf:
+            max_leaf = val
+
+    sum_group = 0.0
+    for i in range(group_sizes.shape[0]):
+        sum_group += group_sizes[i]
+
     return {
-        "group": float(2.0 * np.max(group_sizes)),
-        "sequential": float(np.max(leaf_sizes)),
-        "model": float(np.sum(group_sizes)),
+        "group": float(2.0 * max_group),
+        "sequential": float(max_leaf),
+        "model": float(sum_group),
     }

@@ -5,9 +5,17 @@ def classify_mask(mask, L, H, d_ff, target_heads, target_ff):
     arr = np.asarray(mask, dtype=bool)
     if arr.shape != (L, H + d_ff):
         return False
-    head_counts = np.sum(arr[:, :H], axis=1)
-    ff_counts = np.sum(arr[:, H:], axis=1)
-    return bool(
-        np.all(head_counts == target_heads)
-        and np.all(ff_counts == target_ff)
-    )
+    for i in range(L):
+        head_count = 0
+        for j in range(H):
+            if arr[i, j]:
+                head_count += 1
+        if head_count != target_heads:
+            return False
+        ff_count = 0
+        for j in range(d_ff):
+            if arr[i, H + j]:
+                ff_count += 1
+        if ff_count != target_ff:
+            return False
+    return True

@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -7,39 +8,86 @@ def flash_attention_forward(Q, K, V, block_size=2):
     V = np.asarray(V, dtype=np.float64)
 
     n, d = Q.shape
-    scale = 1.0 / np.sqrt(float(d))
+    scale = 1.0 / math.sqrt(float(d))
     O = np.zeros((n, d), dtype=np.float64)
 
     for qs in range(0, n, block_size):
-        qe = min(qs + block_size, n)
-        q_block = Q[qs:qe]
+        qe = qs + block_size
+        if qe > n:
+            qe = n
 
         rows = qe - qs
-        m = np.full(rows, -np.inf, dtype=np.float64)
-        l = np.zeros(rows, dtype=np.float64)
-        acc = np.zeros((rows, d), dtype=np.float64)
+        m = [-float("inf")] * rows
+        l = [0.0] * rows
+        acc = [[0.0] * d for _ in range(rows)]
 
         for ks in range(0, n, block_size):
-            ke = min(ks + block_size, n)
-            k_block = K[ks:ke]
-            v_block = V[ks:ke]
+            ke = ks + block_size
+            if ke > n:
+                ke = n
 
-            scores = q_block @ k_block.T * scale
+            cols = ke - ks
 
-            row_ids = np.arange(qs, qe)[:, None]
-            col_ids = np.arange(ks, ke)[None, :]
-            scores = np.where(col_ids > row_ids, -np.inf, scores)
+            scores = [[0.0] * cols for _ in range(rows)]
+            for i in range(rows):
+                r_idx = qs + i
+                for j in range(cols):
+                    c_idx = ks + j
+                    if c_idx > r_idx:
+                        scores[i][j] = -float("inf")
+                    else:
+                        dot = 0.0
+                        for k_dim in range(d):
+                            dot += Q[r_idx, k_dim] * K[c_idx, k_dim]
+                        scores[i][j] = dot * scale
 
-            block_max = np.max(scores, axis=1)
-            new_m = np.maximum(m, block_max)
+            block_max = [-float("inf")] * rows
+            for i in range(rows):
+                b_max = -float("inf")
+                for j in range(cols):
+                    val = scores[i][j]
+                    if val > b_max:
+                        b_max = val
+                block_max[i] = b_max
 
-            old_scale = np.exp(m - new_m)
-            exp_scores = np.exp(scores - new_m[:, None])
+            new_m = [0.0] * rows
+            for i in range(rows):
+                if m[i] > block_max[i]:
+                    new_m[i] = m[i]
+                else:
+                    new_m[i] = block_max[i]
 
-            l = old_scale * l + np.sum(exp_scores, axis=1)
-            acc = old_scale[:, None] * acc + exp_scores @ v_block
+            old_scale = [0.0] * rows
+            for i in range(rows):
+                old_scale[i] = math.exp(m[i] - new_m[i])
+
+            exp_scores = [[0.0] * cols for _ in range(rows)]
+            for i in range(rows):
+                for j in range(cols):
+                    exp_scores[i][j] = math.exp(scores[i][j] - new_m[i])
+
+            new_l = [0.0] * rows
+            for i in range(rows):
+                s_sum = 0.0
+                for j in range(cols):
+                    s_sum += exp_scores[i][j]
+                new_l[i] = old_scale[i] * l[i] + s_sum
+            l = new_l
+
+            new_acc = [[0.0] * d for _ in range(rows)]
+            for i in range(rows):
+                for k_dim in range(d):
+                    matmul_val = 0.0
+                    for j in range(cols):
+                        matmul_val += exp_scores[i][j] * V[ks + j, k_dim]
+                    new_acc[i][k_dim] = old_scale[i] * acc[i][k_dim] + matmul_val
+            acc = new_acc
+
             m = new_m
 
-        O[qs:qe] = acc / l[:, None]
+        for i in range(rows):
+            inv_l = 1.0 / l[i]
+            for k_dim in range(d):
+                O[qs + i, k_dim] = acc[i][k_dim] * inv_l
 
     return O

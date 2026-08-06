@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -6,43 +7,93 @@ def chunked_causal_prefill(q, k, v, chunk_sizes):
     k = np.asarray(k, dtype=np.float64)
     v = np.asarray(v, dtype=np.float64)
     n, d = q.shape
-    scale = 1.0 / np.sqrt(d)
+    scale = 1.0 / math.sqrt(d)
 
-    starts = np.cumsum([0] + list(chunk_sizes))
+    starts = [0]
+    curr = 0
+    for size in chunk_sizes:
+        curr += size
+        starts.append(curr)
     num_chunks = len(chunk_sizes)
-    out = np.zeros((n, d), dtype=np.float64)
+    
+    out = [[0.0] * d for _ in range(n)]
 
     for t in range(num_chunks):
-        s, e = int(starts[t]), int(starts[t + 1])
-        q_chunk = q[s:e]
+        s, e = starts[t], starts[t + 1]
         cs = e - s
 
-        m = np.full(cs, -np.inf, dtype=np.float64)
-        l = np.zeros(cs, dtype=np.float64)
-        acc = np.zeros((cs, d), dtype=np.float64)
-
-        rows = np.arange(cs)[:, None]
-        cols = np.arange(cs)[None, :]
-        diag_mask = cols > rows
+        m = [-float('inf')] * cs
+        l = [0.0] * cs
+        acc = [[0.0] * d for _ in range(cs)]
 
         for u in range(t + 1):
-            ks, ke = int(starts[u]), int(starts[u + 1])
-            k_blk = k[ks:ke]
-            v_blk = v[ks:ke]
+            ks, ke = starts[u], starts[u + 1]
+            ks_len = ke - ks
 
-            scores = (q_chunk @ k_blk.T) * scale
-            if u == t:
-                scores = np.where(diag_mask, -np.inf, scores)
+            scores = []
+            for i in range(cs):
+                row_scores = []
+                for j in range(ks_len):
+                    dot = 0.0
+                    for c in range(d):
+                        dot += q[s + i, c] * k[ks + j, c]
+                    sc = dot * scale
+                    if u == t and j > i:
+                        sc = -float('inf')
+                    row_scores.append(sc)
+                scores.append(row_scores)
 
-            blk_max = np.max(scores, axis=1)
-            m_new = np.maximum(m, blk_max)
-            correction = np.exp(m - m_new)
-            p = np.exp(scores - m_new[:, None])
+            blk_max = []
+            for i in range(cs):
+                mx = -float('inf')
+                for j in range(ks_len):
+                    if scores[i][j] > mx:
+                        mx = scores[i][j]
+                blk_max.append(mx)
 
-            l = l * correction + np.sum(p, axis=1)
-            acc = acc * correction[:, None] + p @ v_blk
+            m_new = []
+            for i in range(cs):
+                if m[i] > blk_max[i]:
+                    m_new.append(m[i])
+                else:
+                    m_new.append(blk_max[i])
+
+            correction = []
+            for i in range(cs):
+                correction.append(math.exp(m[i] - m_new[i]))
+
+            p = []
+            for i in range(cs):
+                p_row = []
+                for j in range(ks_len):
+                    p_row.append(math.exp(scores[i][j] - m_new[i]))
+                p.append(p_row)
+
+            l_new = []
+            for i in range(cs):
+                sum_p = 0.0
+                for j in range(ks_len):
+                    sum_p += p[i][j]
+                l_new.append(l[i] * correction[i] + sum_p)
+            l = l_new
+
+            acc_new = []
+            for i in range(cs):
+                acc_row = []
+                for c in range(d):
+                    pv_sum = 0.0
+                    for j in range(ks_len):
+                        pv_sum += p[i][j] * v[ks + j, c]
+                    val = acc[i][c] * correction[i] + pv_sum
+                    acc_row.append(val)
+                acc_new.append(acc_row)
+            acc = acc_new
+
             m = m_new
 
-        out[s:e] = acc / l[:, None]
+        for i in range(cs):
+            inv_l = 1.0 / l[i]
+            for c in range(d):
+                out[s + i][c] = acc[i][c] * inv_l
 
-    return out
+    return np.array(out, dtype=np.float64)

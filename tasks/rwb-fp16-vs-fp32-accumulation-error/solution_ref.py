@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -15,7 +16,7 @@ def _attention_precision(Q, K, V, dtype):
 
     n, d = Q.shape
     m, dv = V.shape
-    scale = dtype(1.0 / np.sqrt(d))
+    scale = dtype(1.0 / math.sqrt(d))
 
     O = np.zeros((n, dv), dtype=np.float64)
     for i in range(n):
@@ -24,11 +25,15 @@ def _attention_precision(Q, K, V, dtype):
             s = _dot_acc(Q[i], K[j], dtype)
             S[j] = dtype(s * scale)
 
-        m_i = dtype(np.max(S))
+        m_i = dtype(S[0])
+        for j in range(1, m):
+            if S[j] > m_i:
+                m_i = dtype(S[j])
+
         exp_vals = np.empty(m, dtype=dtype)
         for j in range(m):
             shifted = dtype(S[j] - m_i)
-            exp_vals[j] = dtype(np.exp(np.float64(shifted)))
+            exp_vals[j] = dtype(math.exp(float(shifted)))
 
         l_i = dtype(0.0)
         for j in range(m):
@@ -51,7 +56,13 @@ def _attention_precision(Q, K, V, dtype):
 def _rel_err(a, b):
     a = np.asarray(a, dtype=np.float64).ravel()
     b = np.asarray(b, dtype=np.float64).ravel()
-    return float(np.linalg.norm(b - a) / (np.linalg.norm(a) + 1e-12))
+    diff_sq_acc = 0.0
+    a_sq_acc = 0.0
+    for x, y in zip(a, b):
+        diff = float(y) - float(x)
+        diff_sq_acc += diff * diff
+        a_sq_acc += float(x) * float(x)
+    return float(math.sqrt(diff_sq_acc) / (math.sqrt(a_sq_acc) + 1e-12))
 
 
 def fp16_vs_fp32_attention_error(Q, K, V):

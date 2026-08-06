@@ -1,9 +1,25 @@
+import math
 import numpy as np
 
 def cross_entropy_from_logits(logits: np.ndarray, targets: np.ndarray) -> float:
-    m = np.max(logits, axis=1, keepdims=True)
-    exp_shifted = np.exp(logits - m)
-    sum_exp = np.sum(exp_shifted, axis=1, keepdims=True)
-    log_probs = logits - m - np.log(sum_exp)
-    ce = -log_probs[np.arange(len(targets)), targets]
-    return float(np.mean(ce))
+    n_samples, n_classes = logits.shape
+    ce_sum = 0.0
+
+    for i in range(n_samples):
+        row = logits[i]
+        
+        m = row[0]
+        for j in range(1, n_classes):
+            val = row[j]
+            if val > m:
+                m = val
+
+        sum_exp = 0.0
+        for j in range(n_classes):
+            sum_exp += math.exp(row[j] - m)
+
+        target_idx = targets[i]
+        log_prob_target = row[target_idx] - m - math.log(sum_exp)
+        ce_sum += -log_prob_target
+
+    return ce_sum / n_samples

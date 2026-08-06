@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def measure_kept_tokens_and_memory(compression_ratio: float,
                                    seq_len: int,
@@ -23,8 +24,7 @@ def measure_kept_tokens_and_memory(compression_ratio: float,
     memory_saved : float64
         Amount of KV memory saved: r * full_bytes.
     """
-    # Compute kept token count using NumPy's rounding (banker's rounding)
-    kept = int(np.round((1.0 - compression_ratio) * seq_len))
-    # Compute memory saved as a float64
+    val = (1.0 - compression_ratio) * seq_len
+    kept = int(round(val))
     saved = np.float64(compression_ratio * full_bytes)
     return kept, saved

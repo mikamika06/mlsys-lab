@@ -14,14 +14,37 @@ def ste_block_mse_grad_wrt_v(X: np.ndarray, W: np.ndarray, V: np.ndarray,
     scale = np.asarray(scale, dtype=np.float64)
     qmax = (1 << (bits - 1)) - 1
 
-    r = V / scale[:, None]
-    mask = (np.abs(r) <= qmax + 0.5).astype(np.float64)
-    codes = np.clip(np.round(r), -qmax, qmax)
-    Wq = scale[:, None] * codes
+    B, I = X.shape
+    O, _ = W.shape
 
-    B, O = X.shape[0], W.shape[0]
-    pred = X @ Wq.T
-    target = X @ W.T
-    diff = pred - target
+    mask_list = []
+    Wq_list = []
+    for o in range(O):
+        s = scale[o]
+        mask_row = []
+        Wq_row = []
+        for i in range(I):
+            val = V[o, i]
+            r_val = val / s
+            if abs(r_val) <= qmax + 0.5:
+                mask_row.append(1.0)
+            else:
+                mask_row.append(0.0)
+            
+            rounded = round(r_val)
+            clipped = max(-qmax, min(qmax, rounded))
+            Wq_row.append(s * clipped)
+        mask_list.append(mask_row)
+        Wq_list.append(Wq_row)
 
-    return mask * (2.0 / (B * O)) * (diff.T @ X)
+    pred = [[sum(X[b, i] * Wq_list[o][i] for i in range(I)) for o in range(O)] for b in range(B)]
+    target = [[sum(X[b, i] * W[o, i] for i in range(I)) for o in range(O)] for b in range(B)]
+
+    diff = [[pred[b][o] - target[b][o] for o in range(O)] for b in range(B)]
+
+    term = [[sum(diff[b][o] * X[b, i] for b in range(B)) for i in range(I)] for o in range(O)]
+
+    factor = 2.0 / (B * O)
+    res = [[mask_list[o][i] * factor * term[o][i] for i in range(I)] for o in range(O)]
+
+    return np.array(res, dtype=np.float64)

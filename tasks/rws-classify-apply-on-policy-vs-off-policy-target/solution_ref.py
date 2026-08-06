@@ -6,7 +6,6 @@ def route_and_apply(tags: np.ndarray,
     """
     Correct implementation of routing tokens to the appropriate target set.
     """
-    # Ensure inputs are NumPy arrays with correct dtypes
     tags = np.asarray(tags, dtype=bool)
     on_policy_targets = np.asarray(on_policy_targets, dtype=np.float64)
     off_policy_targets = np.asarray(off_policy_targets, dtype=np.float64)
@@ -18,11 +17,16 @@ def route_and_apply(tags: np.ndarray,
     d = on_policy_targets.shape[1]
     routed = np.empty((m, d), dtype=np.float64)
 
-    # Indices where tags are True (on‑policy) and False (off‑policy)
-    on_idx = np.where(tags)[0]
-    off_idx = np.where(~tags)[0]
-
-    routed[on_idx] = on_policy_targets[:len(on_idx)]
-    routed[off_idx] = off_policy_targets[:len(off_idx)]
+    on_count = 0
+    off_count = 0
+    for i in range(m):
+        if tags[i]:
+            for j in range(d):
+                routed[i, j] = on_policy_targets[on_count, j]
+            on_count += 1
+        else:
+            for j in range(d):
+                routed[i, j] = off_policy_targets[off_count, j]
+            off_count += 1
 
     return tags.copy(), routed

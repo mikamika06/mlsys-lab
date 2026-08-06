@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def score_importance(activations: np.ndarray) -> np.ndarray:
     """
@@ -14,8 +15,21 @@ def score_importance(activations: np.ndarray) -> np.ndarray:
     importance : np.ndarray
         1‑D float64 array of length ``units`` containing the mean absolute activation for each unit.
     """
-    # Ensure we work with a NumPy array and use float64 precision
     activations = np.asarray(activations, dtype=np.float64)
-    # Compute mean of absolute values along the batch axis (axis=0)
-    importance = np.mean(np.abs(activations), axis=0)
+    batch_size = activations.shape[0]
+    units = activations.shape[1]
+    
+    importance = np.zeros(units, dtype=np.float64)
+    for j in range(units):
+        total = 0.0
+        for i in range(batch_size):
+            val = activations[i, j]
+            if val < 0.0:
+                val = -val
+            total += val
+        if batch_size > 0:
+            importance[j] = total / batch_size
+        else:
+            importance[j] = 0.0
+            
     return importance.astype(np.float64)

@@ -13,12 +13,28 @@ def imatrix_best_scale(x: np.ndarray, w: np.ndarray, scale_grid: np.ndarray, qmi
     grid = np.asarray(scale_grid, dtype=np.float64)
 
     best_i = 0
-    best_err = np.inf
-    for i, s in enumerate(grid):
-        q = np.clip(np.round(x / s), qmin, qmax)
-        xhat = q * s
-        err = float(np.sum(w * (x - xhat) ** 2))
+    best_err = float("inf")
+    n = x.shape[0]
+
+    for i in range(grid.shape[0]):
+        s = grid[i]
+        err = 0.0
+        for j in range(n):
+            val = x[j] / s
+            if val >= 0.0:
+                q = int(val + 0.5)
+            else:
+                q = int(val - 0.5)
+            if q < qmin:
+                q = qmin
+            elif q > qmax:
+                q = qmax
+            xhat = q * s
+            diff = x[j] - xhat
+            err += w[j] * (diff * diff)
+
         if err < best_err:
             best_err = err
             best_i = i
+
     return best_i

@@ -37,11 +37,25 @@ def _quant_dequant_raw(x, fmt):
     grid = _GRIDS[fmt]
     fmax = _FP8_MAX[fmt]
     x = np.asarray(x, dtype=np.float64)
-    clipped = np.clip(x, -fmax, fmax)
-    flat = clipped.ravel()
-    diffs = np.abs(flat[:, None] - grid[None, :])
-    idx = np.argmin(diffs, axis=1)
-    return grid[idx].reshape(x.shape)
+    out = []
+    for val in x.flat:
+        if val > fmax:
+            v = fmax
+        elif val < -fmax:
+            v = -fmax
+        else:
+            v = float(val)
+        best_diff = float("inf")
+        best_g = grid[0]
+        for g in grid:
+            diff = v - g
+            if diff < 0:
+                diff = -diff
+            if diff < best_diff:
+                best_diff = diff
+                best_g = g
+        out.append(best_g)
+    return np.array(out, dtype=np.float64).reshape(x.shape)
 
 
 def fp8_format_errors(x: np.ndarray) -> tuple[float, float]:
@@ -54,6 +68,18 @@ def fp8_format_errors(x: np.ndarray) -> tuple[float, float]:
     x = np.asarray(x, dtype=np.float64)
     e4 = _quant_dequant_raw(x, "e4m3")
     e5 = _quant_dequant_raw(x, "e5m2")
-    e4m3_max_abs_err = float(np.max(np.abs(e4 - x)))
-    e5m2_max_abs_err = float(np.max(np.abs(e5 - x)))
-    return e4m3_max_abs_err, e5m2_max_abs_err
+    e4m3_max_abs_err = 0.0
+    for q, orig in zip(e4.flat, x.flat):
+        err = q - orig
+        if err < 0:
+            err = -err
+        if err > e4m3_max_abs_err:
+            e4m3_max_abs_err = err
+    e5m2_max_abs_err = 0.0
+    for q, orig in zip(e5.flat, x.flat):
+        err = q - orig
+        if err < 0:
+            err = -err
+        if err > e5m2_max_abs_err:
+            e5m2_max_abs_err = err
+    return float(e4m3_max_abs_err), float(e5m2_max_abs_err)

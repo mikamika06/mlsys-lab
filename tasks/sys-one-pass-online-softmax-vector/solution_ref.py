@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -11,23 +12,47 @@ def online_softmax_weighted_sum(scores: np.ndarray, V: np.ndarray, block_size: i
     n = scores.shape[0]
     d = V.shape[1]
 
-    m = -np.inf
+    m = -float('inf')
     l = 0.0
     o = np.zeros(d, dtype=np.float64)
 
     for start in range(0, n, block_size):
         end = min(start + block_size, n)
-        chunk = scores[start:end]
-        v_chunk = V[start:end]
+        
+        m_block = -float('inf')
+        for i in range(start, end):
+            val = float(scores[i])
+            if val > m_block:
+                m_block = val
 
-        m_block = float(np.max(chunk))
-        m_new = max(m, m_block)
+        m_new = m if m > m_block else m_block
 
-        correction = np.exp(m - m_new) if np.isfinite(m) else 0.0
-        p = np.exp(chunk - m_new)
+        if math.isfinite(m):
+            correction = math.exp(m - m_new)
+        else:
+            correction = 0.0
 
-        l = l * correction + float(np.sum(p))
-        o = o * correction + p @ v_chunk
+        sum_p = 0.0
+        p_list = []
+        for i in range(start, end):
+            val = math.exp(float(scores[i]) - m_new)
+            p_list.append(val)
+            sum_p += val
+
+        l = l * correction + sum_p
+
+        for j in range(d):
+            o[j] = o[j] * correction
+
+        for i_idx, i in enumerate(range(start, end)):
+            p_val = p_list[i_idx]
+            for j in range(d):
+                o[j] += p_val * float(V[i, j])
+
         m = m_new
 
-    return o / l
+    result = np.empty(d, dtype=np.float64)
+    for j in range(d):
+        result[j] = o[j] / l
+
+    return result

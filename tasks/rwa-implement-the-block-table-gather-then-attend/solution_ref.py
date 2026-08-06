@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -34,8 +35,34 @@ def paged_attention(q, k_pool, v_pool, block_table, seq_len, block_size):
         K[pos] = k_pool[phys, slot]
         V[pos] = v_pool[phys, slot]
 
-    scores = (K @ q) / np.sqrt(d)
-    scores = scores - np.max(scores)
-    probs = np.exp(scores)
-    probs = probs / np.sum(probs)
-    return probs @ V
+    inv_sqrt_d = 1.0 / math.sqrt(d)
+    scores = np.empty(seq_len, dtype=np.float64)
+    for i in range(seq_len):
+        dot = 0.0
+        for j in range(d):
+            dot += K[i, j] * q[j]
+        scores[i] = dot * inv_sqrt_d
+
+    max_score = scores[0]
+    for i in range(1, seq_len):
+        if scores[i] > max_score:
+            max_score = scores[i]
+
+    probs = np.empty(seq_len, dtype=np.float64)
+    sum_exp = 0.0
+    for i in range(seq_len):
+        val = math.exp(scores[i] - max_score)
+        probs[i] = val
+        sum_exp += val
+
+    for i in range(seq_len):
+        probs[i] /= sum_exp
+
+    out = np.zeros(d, dtype=np.float64)
+    for j in range(d):
+        acc = 0.0
+        for i in range(seq_len):
+            acc += probs[i] * V[i, j]
+        out[j] = acc
+
+    return out

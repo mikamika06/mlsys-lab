@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -9,11 +10,23 @@ def classical_gram_schmidt_qr(A):
     R = np.zeros((n, n), dtype=np.float64)
 
     for j in range(n):
-        u = A[:, j].copy()
+        u = np.zeros(m, dtype=np.float64)
+        for k in range(m):
+            u[k] = A[k, j]
         for i in range(j):
-            R[i, j] = np.dot(Q[:, i], A[:, j])
-            u = u - R[i, j] * Q[:, i]
-        R[j, j] = np.linalg.norm(u)
-        Q[:, j] = u / R[j, j]
+            dot_val = 0.0
+            for k in range(m):
+                dot_val += Q[k, i] * A[k, j]
+            R[i, j] = dot_val
+            rij = R[i, j]
+            for k in range(m):
+                u[k] = u[k] - rij * Q[k, i]
+        sum_sq = 0.0
+        for k in range(m):
+            sum_sq += u[k] * u[k]
+        R[j, j] = math.sqrt(sum_sq)
+        norm_val = R[j, j]
+        for k in range(m):
+            Q[k, j] = u[k] / norm_val
 
     return Q, R

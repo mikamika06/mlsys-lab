@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -6,16 +7,36 @@ def _row_group_quant_err(X, nbits, group_size):
     if n == 0:
         return 0.0, 0
     g = d // group_size
-    Xr = X.reshape(n, g, group_size).astype(np.float64)
-    mn = Xr.min(axis=2, keepdims=True)
-    mx = Xr.max(axis=2, keepdims=True)
     levels = (1 << nbits) - 1
-    scale = (mx - mn) / levels
-    scale = np.where(scale == 0, 1.0, scale)
-    codes = np.clip(np.round((Xr - mn) / scale), 0, levels)
-    recon = codes * scale + mn
-    err_sq = float(np.sum((recon - Xr) ** 2))
-    return err_sq, int(Xr.size)
+    err_sq = 0.0
+    total_size = n * g * group_size
+    for i in range(n):
+        for j in range(g):
+            group = X[i, j * group_size : (j + 1) * group_size]
+            mn = group[0]
+            mx = group[0]
+            for val in group:
+                if val < mn:
+                    mn = val
+                if val > mx:
+                    mx = val
+            scale = (mx - mn) / levels
+            if scale == 0.0:
+                scale = 1.0
+            for k in range(group_size):
+                val = group[k]
+                div = (val - mn) / scale
+                rounded = round(div)
+                if rounded < 0:
+                    code = 0
+                elif rounded > levels:
+                    code = levels
+                else:
+                    code = rounded
+                recon = code * scale + mn
+                diff = recon - val
+                err_sq += diff * diff
+    return float(err_sq), int(total_size)
 
 
 def _bytes_for_quant(n_rows, dim, nbits, group_size):
@@ -23,7 +44,7 @@ def _bytes_for_quant(n_rows, dim, nbits, group_size):
         return 0
     g = dim // group_size
     code_bits = n_rows * g * group_size * nbits
-    code_bytes = int(np.ceil(code_bits / 8.0))
+    code_bytes = int(math.ceil(code_bits / 8.0))
     overhead_bytes = n_rows * g * 2 * 4
     return code_bytes + overhead_bytes
 

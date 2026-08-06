@@ -1,6 +1,5 @@
 import numpy as np
 
-# OCP MX FP4 (E2M1) magnitude grid: 1 sign bit, 2 exponent bits, 1 mantissa bit.
 GRID = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0])
 
 
@@ -23,8 +22,22 @@ def e2m1_classify(x: np.ndarray) -> np.ndarray:
     codes : np.ndarray, same shape as `x`, dtype int64, values in [0, 15].
     """
     x = np.asarray(x, dtype=np.float64)
-    absx = np.abs(x)
-    dist = np.abs(absx[..., None] - GRID)
-    idx = np.argmin(dist, axis=-1)
-    sign_bit = (x < 0).astype(np.int64)
-    return (sign_bit * 8 + idx).astype(np.int64)
+    out = np.zeros(x.shape, dtype=np.int64)
+    it = np.nditer(x, flags=["multi_index"])
+    while not it.finished:
+        idx_tuple = it.multi_index
+        val = x[idx_tuple]
+        absval = -val if val < 0 else val
+        min_dist = float("inf")
+        best_idx = 0
+        for i in range(8):
+            g = GRID[i]
+            diff = absval - g
+            dist = -diff if diff < 0 else diff
+            if dist < min_dist:
+                min_dist = dist
+                best_idx = i
+        sign_bit = 1 if val < 0 else 0
+        out[idx_tuple] = sign_bit * 8 + best_idx
+        it.iternext()
+    return out

@@ -10,6 +10,9 @@ def masked_block_sum(x: np.ndarray, block_size: int) -> np.ndarray:
     for k in range(blocks):
         start = k * block_size
         end = min(start + block_size, n)
-        out[k] = np.sum(x[start:end], dtype=np.float64)
+        total = 0.0
+        for i in range(start, end):
+            total += x[i]
+        out[k] = total
 
     return out

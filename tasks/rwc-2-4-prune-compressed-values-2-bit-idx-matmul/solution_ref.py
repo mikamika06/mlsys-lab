@@ -30,6 +30,7 @@ def prune24_compress_and_matmul(W: np.ndarray, X: np.ndarray):
     X = np.asarray(X, dtype=np.float64)
     m, n = W.shape
     groups = n // 4
+    p = X.shape[1]
 
     mask = np.zeros((m, n), dtype=np.int64)
     values = np.zeros((m, groups * 2), dtype=np.float64)
@@ -38,13 +39,33 @@ def prune24_compress_and_matmul(W: np.ndarray, X: np.ndarray):
     for i in range(m):
         for g in range(groups):
             grp = W[i, g * 4:(g + 1) * 4]
-            order = np.argsort(-np.abs(grp), kind="stable")
-            keep = np.sort(order[:2])
-            mask[i, g * 4 + keep] = 1
-            values[i, g * 2:(g + 1) * 2] = grp[keep]
-            indices[i, g * 2:(g + 1) * 2] = keep.astype(np.uint8)
+            
+            abs_vals = [abs(grp[k]) for k in range(4)]
+            order = []
+            for k in range(4):
+                best_idx = -1
+                best_val = -1.0
+                for idx in range(4):
+                    if idx not in order:
+                        val = abs_vals[idx]
+                        if best_idx == -1 or val > best_val:
+                            best_val = val
+                            best_idx = idx
+                order.append(best_idx)
+            
+            kept_unsorted = order[:2]
+            keep = []
+            for k in range(4):
+                if k in kept_unsorted:
+                    keep.append(k)
+            
+            for idx in keep:
+                mask[i, g * 4 + idx] = 1
+            
+            for s_idx, idx in enumerate(keep):
+                values[i, g * 2 + s_idx] = grp[idx]
+                indices[i, g * 2 + s_idx] = np.uint8(idx)
 
-    # reconstruct the pruned matrix purely from the compressed form
     pruned = np.zeros((m, n), dtype=np.float64)
     for i in range(m):
         for g in range(groups):
@@ -52,5 +73,12 @@ def prune24_compress_and_matmul(W: np.ndarray, X: np.ndarray):
                 col = g * 4 + int(indices[i, g * 2 + slot])
                 pruned[i, col] = values[i, g * 2 + slot]
 
-    output = pruned @ X
+    output = np.zeros((m, p), dtype=np.float64)
+    for i in range(m):
+        for j in range(p):
+            acc = 0.0
+            for k in range(n):
+                acc += pruned[i, k] * X[k, j]
+            output[i, j] = acc
+
     return mask, values, indices, output

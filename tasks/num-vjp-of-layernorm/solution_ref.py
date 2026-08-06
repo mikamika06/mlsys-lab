@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -5,12 +6,36 @@ def layernorm_vjp(x: np.ndarray, grad_y: np.ndarray, eps: float = 1e-5) -> np.nd
     x = np.asarray(x, dtype=np.float64)
     grad_y = np.asarray(grad_y, dtype=np.float64)
 
-    mean = np.mean(x, axis=1, keepdims=True)
-    var = np.mean((x - mean) ** 2, axis=1, keepdims=True)
-    inv_std = 1.0 / np.sqrt(var + eps)
-    x_hat = (x - mean) * inv_std
+    N, D = x.shape
+    out = np.empty((N, D), dtype=np.float64)
 
-    mean_grad = np.mean(grad_y, axis=1, keepdims=True)
-    mean_grad_hat = np.mean(grad_y * x_hat, axis=1, keepdims=True)
+    for i in range(N):
+        mean_s = 0.0
+        for j in range(D):
+            mean_s += float(x[i, j])
+        mean = mean_s / D
 
-    return inv_std * (grad_y - mean_grad - x_hat * mean_grad_hat)
+        var_s = 0.0
+        for j in range(D):
+            diff = float(x[i, j]) - mean
+            var_s += diff * diff
+        var = var_s / D
+
+        inv_std = 1.0 / math.sqrt(var + eps)
+
+        mean_grad_s = 0.0
+        for j in range(D):
+            mean_grad_s += float(grad_y[i, j])
+        mean_grad = mean_grad_s / D
+
+        mean_grad_hat_s = 0.0
+        for j in range(D):
+            x_hat_j = (float(x[i, j]) - mean) * inv_std
+            mean_grad_hat_s += float(grad_y[i, j]) * x_hat_j
+        mean_grad_hat = mean_grad_hat_s / D
+
+        for j in range(D):
+            x_hat_j = (float(x[i, j]) - mean) * inv_std
+            out[i, j] = inv_std * (float(grad_y[i, j]) - mean_grad - x_hat_j * mean_grad_hat)
+
+    return out

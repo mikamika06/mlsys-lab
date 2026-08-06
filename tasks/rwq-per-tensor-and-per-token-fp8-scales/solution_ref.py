@@ -16,15 +16,27 @@ def fp8_scales(W: np.ndarray, X: np.ndarray):
     tuple[float, np.ndarray]
         Per‑tensor scale and per‑token scales.
     """
-    # per‑tensor scale
-    tensor_scale = np.max(np.abs(W)) / 448.0
+    max_w = -float('inf')
+    for i in range(W.shape[0]):
+        for j in range(W.shape[1]):
+            val = abs(W[i, j])
+            if val > max_w:
+                max_w = val
+    tensor_scale = max_w / 448.0
 
-    # compute token max over feature dimension
     if X.ndim == 2:
-        token_max = np.max(np.abs(X), axis=1)
+        X_2d = X
     else:
-        # collapse all but last axis into one dimension of tokens
-        token_max = np.max(np.abs(X.reshape(-1, X.shape[-1])), axis=1)
+        X_2d = X.reshape(-1, X.shape[-1])
 
-    token_scales = token_max / 448.0
+    token_scales_list = []
+    for i in range(X_2d.shape[0]):
+        max_x = -float('inf')
+        for j in range(X_2d.shape[1]):
+            val = abs(X_2d[i, j])
+            if val > max_x:
+                max_x = val
+        token_scales_list.append(max_x / 448.0)
+
+    token_scales = np.array(token_scales_list, dtype=X.dtype)
     return tensor_scale, token_scales

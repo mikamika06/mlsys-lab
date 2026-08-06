@@ -26,21 +26,54 @@ def rejection_sample_block(P: np.ndarray, Q: np.ndarray, n_draws: int, seed: int
         p = P[k]
         q = Q[k]
 
-        residual = np.maximum(p - q, 0.0)
-        rsum = residual.sum()
-        residual = residual / rsum if rsum > 0 else q.copy()
+        residual = np.empty(V, dtype=np.float64)
+        rsum = 0.0
+        for v in range(V):
+            diff = p[v] - q[v]
+            val = diff if diff > 0.0 else 0.0
+            residual[v] = val
+            rsum += val
+
+        if rsum > 0.0:
+            for v in range(V):
+                residual[v] /= rsum
+        else:
+            residual = q.copy()
 
         tokens = rng.choice(V, size=n_draws, p=q)
         u = rng.random(n_draws)
-        accept_prob = np.minimum(1.0, p[tokens] / np.maximum(q[tokens], 1e-300))
-        accept = u < accept_prob
 
-        out = np.where(accept, tokens, -1)
-        n_reject = int(np.sum(~accept))
+        accept_prob = np.empty(n_draws, dtype=np.float64)
+        accept = np.empty(n_draws, dtype=bool)
+        for i in range(n_draws):
+            t = tokens[i]
+            q_val = q[t]
+            denom = q_val if q_val >= 1e-300 else 1e-300
+            ratio = p[t] / denom
+            ap = 1.0 if 1.0 < ratio else ratio
+            accept_prob[i] = ap
+            accept[i] = u[i] < ap
+
+        out = np.empty(n_draws, dtype=np.int64)
+        n_reject = 0
+        for i in range(n_draws):
+            if accept[i]:
+                out[i] = tokens[i]
+            else:
+                out[i] = -1
+                n_reject += 1
+
         if n_reject > 0:
             resampled = rng.choice(V, size=n_reject, p=residual)
-            out[~accept] = resampled
+            res_idx = 0
+            for i in range(n_draws):
+                if not accept[i]:
+                    out[i] = resampled[res_idx]
+                    res_idx += 1
 
-        counts[k] = np.bincount(out, minlength=V)
+        row_counts = np.zeros(V, dtype=np.int64)
+        for i in range(n_draws):
+            row_counts[out[i]] += 1
+        counts[k] = row_counts
 
     return counts.astype(np.float64) / n_draws

@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def predict_knn(
@@ -7,16 +8,35 @@ def predict_knn(
     k: int
 ) -> np.ndarray:
     """Correct implementation of k‑Nearest Neighbours with smallest‑label tie‑break."""
-    # Compute pairwise Euclidean distances (test × train)
-    dists = np.linalg.norm(X_train[None] - X_test[:, None], axis=2)
-    # Indices of the k nearest neighbours for each test point
-    idxs = np.argsort(dists, axis=1)[:, :k]
+    n_train = X_train.shape[0]
+    n_test = X_test.shape[0]
+    n_features = X_train.shape[1]
+
     preds = []
-    max_label = int(y_train.max())
-    for i in range(X_test.shape[0]):
-        labels = y_train[idxs[i]]
-        counts = np.bincount(labels, minlength=max_label + 1)
-        # np.argmax returns the first index of the maximum value,
-        # which is exactly the smallest label when there is a tie.
-        preds.append(int(np.argmax(counts)))
+    for i in range(n_test):
+        dists = []
+        for j in range(n_train):
+            sum_sq = 0.0
+            for d in range(n_features):
+                diff = X_train[j, d] - X_test[i, d]
+                sum_sq += diff * diff
+            dists.append((math.sqrt(sum_sq), j))
+
+        sorted_dists = sorted(dists)
+
+        counts = {}
+        for idx in range(k):
+            j = sorted_dists[idx][1]
+            lbl = int(y_train[j])
+            counts[lbl] = counts.get(lbl, 0) + 1
+
+        best_label = None
+        max_count = -1
+        for lbl in sorted(counts.keys()):
+            if counts[lbl] > max_count:
+                max_count = counts[lbl]
+                best_label = lbl
+
+        preds.append(best_label)
+
     return np.array(preds)

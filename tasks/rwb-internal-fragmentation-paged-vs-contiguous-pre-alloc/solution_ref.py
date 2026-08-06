@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def internal_fragmentation(seqlens, block_size, max_len):
     """Return (paged_waste, contig_waste) as a tuple of two numbers.
@@ -7,8 +8,10 @@ def internal_fragmentation(seqlens, block_size, max_len):
     Contig waste: sum_i ( L - l_i )
     """
     seqlens = np.asarray(seqlens, dtype=np.int64)
-    # Number of full blocks per sequence (ceiling division)
-    num_blocks = np.ceil(seqlens / np.float64(block_size)).astype(np.int64)
-    paged_waste = int(np.sum(num_blocks * block_size - seqlens))
-    contig_waste = int(np.sum(max_len - seqlens))
+    paged_waste = 0
+    contig_waste = 0
+    for l_i in seqlens:
+        num_blocks = math.ceil(l_i / float(block_size))
+        paged_waste += int(num_blocks * block_size - l_i)
+        contig_waste += int(max_len - l_i)
     return paged_waste, contig_waste

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import numpy as np
 
 SYM_TOL = 1e-10
@@ -10,20 +11,31 @@ def cholesky_spd(A: np.ndarray, sym_tol: float = SYM_TOL) -> np.ndarray | None:
     A = np.asarray(A, dtype=np.float64)
     if A.ndim != 2 or A.shape[0] != A.shape[1]:
         return None
-    if float(np.max(np.abs(A - A.T))) > sym_tol:
-        return None
 
     n = A.shape[0]
+    max_diff = 0.0
+    for i in range(n):
+        for j in range(n):
+            diff = abs(float(A[i, j]) - float(A[j, i]))
+            if diff > max_diff:
+                max_diff = diff
+
+    if max_diff > sym_tol:
+        return None
+
     L = np.zeros((n, n), dtype=np.float64)
     for i in range(n):
         for j in range(i + 1):
-            s = float(A[i, j] - L[i, :j] @ L[j, :j])
+            dot = 0.0
+            for k in range(j):
+                dot += float(L[i, k]) * float(L[j, k])
+            s = float(A[i, j]) - dot
             if i == j:
-                if s <= 0.0:            # non-positive pivot -> not positive definite
+                if s <= 0.0:
                     return None
-                L[i, j] = np.sqrt(s)
+                L[i, j] = math.sqrt(s)
             else:
-                L[i, j] = s / L[j, j]
+                L[i, j] = s / float(L[j, j])
     return L
 
 

@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def mqa_single_kv_broadcast(Q: np.ndarray,
@@ -20,14 +21,50 @@ def mqa_single_kv_broadcast(Q: np.ndarray,
     out : ndarray, shape (n_q, h, d_v)
         Attention output broadcasted across all queries and heads.
     """
-    d_k = Q.shape[-1]
-    # Compute scores for each head: (n_q, h)
-    scores = np.einsum('qhd,hd->qh', Q, K) / np.sqrt(d_k)
+    n_q, h, d_k = Q.shape
+    d_v = V.shape[1]
+    
+    scores = np.empty((n_q, h), dtype=Q.dtype)
+    inv_sqrt_dk = 1.0 / math.sqrt(d_k)
+    
+    for q in range(n_q):
+        for head in range(h):
+            dot_val = 0.0
+            for d in range(d_k):
+                dot_val += Q[q, head, d] * K[0, d]
+            scores[q, head] = dot_val * inv_sqrt_dk
 
-    # Softmax over the single key dimension
-    weights = np.exp(scores - np.max(scores, axis=-1, keepdims=True))
-    weights /= np.sum(weights, axis=-1, keepdims=True)
+    max_scores = np.empty((n_q, 1), dtype=Q.dtype)
+    for q in range(n_q):
+        m = scores[q, 0]
+        for head in range(1, h):
+            if scores[q, head] > m:
+                m = scores[q, head]
+        max_scores[q, 0] = m
 
-    # Broadcast V across heads and queries: (n_q, h, d_v)
-    out = weights[..., None] * V[0]
+    weights = np.empty((n_q, h), dtype=Q.dtype)
+    for q in range(n_q):
+        m = max_scores[q, 0]
+        for head in range(h):
+            weights[q, head] = math.exp(scores[q, head] - m)
+
+    sum_weights = np.empty((n_q, 1), dtype=Q.dtype)
+    for q in range(n_q):
+        s = 0.0
+        for head in range(h):
+            s += weights[q, head]
+        sum_weights[q, 0] = s
+
+    for q in range(n_q):
+        s = sum_weights[q, 0]
+        for head in range(h):
+            weights[q, head] /= s
+
+    out = np.empty((n_q, h, d_v), dtype=Q.dtype)
+    for q in range(n_q):
+        for head in range(h):
+            w = weights[q, head]
+            for dv in range(d_v):
+                out[q, head, dv] = w * V[0, dv]
+
     return out

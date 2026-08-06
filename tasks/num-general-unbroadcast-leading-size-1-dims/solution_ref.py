@@ -15,17 +15,42 @@ def unbroadcast(grad, shape):
     Returns a float64 array with exactly `len(shape)` dimensions, equal to
     `shape`.
     """
-    grad = np.asarray(grad, dtype=np.float64)
+    grad_arr = np.asarray(grad, dtype=np.float64)
+    out = np.zeros(shape, dtype=np.float64)
 
-    # 1) sum out extra leading dims that `shape` does not have
-    n_extra = grad.ndim - len(shape)
-    for _ in range(n_extra):
-        grad = grad.sum(axis=0)
+    g_shape = grad_arr.shape
+    g_size = grad_arr.size
+    g_rank = len(g_shape)
 
-    # 2) sum (with keepdims) every remaining axis where shape[i] == 1 but
-    #    grad grew wider there
-    for i, dim in enumerate(shape):
-        if dim == 1 and grad.shape[i] != 1:
-            grad = grad.sum(axis=i, keepdims=True)
+    g_strides = []
+    acc = 1
+    for dim in reversed(g_shape):
+        g_strides.append(acc)
+        acc *= dim
+    g_strides.reverse()
 
-    return grad.reshape(shape)
+    target_shape = (1,) * (g_rank - len(shape)) + tuple(shape)
+
+    target_strides = []
+    acc = 1
+    for dim in reversed(target_shape):
+        target_strides.append(acc)
+        acc *= dim
+    target_strides.reverse()
+
+    flat_grad = grad_arr.ravel()
+    flat_out = out.ravel()
+
+    for idx in range(g_size):
+        rem = idx
+        out_idx = 0
+        for r in range(g_rank):
+            dim_size = g_shape[r]
+            coord = rem // g_strides[r]
+            rem %= g_strides[r]
+            if target_shape[r] != 1:
+                out_idx += coord * target_strides[r]
+
+        flat_out[out_idx] += flat_grad[idx]
+
+    return out

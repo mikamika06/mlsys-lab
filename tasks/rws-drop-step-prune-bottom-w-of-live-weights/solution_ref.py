@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def drop_step_prune(weights: np.ndarray, mask: np.ndarray, drop_frac: float) -> np.ndarray:
@@ -19,24 +20,33 @@ def drop_step_prune(weights: np.ndarray, mask: np.ndarray, drop_frac: float) -> 
         New boolean mask with the specified fraction of smallest‑magnitude live
         weights removed.  The input mask is not modified.
     """
-    # Ensure we work on a copy so inputs are untouched
     new_mask = mask.copy()
     if drop_frac <= 0:
         return new_mask.astype(bool)
     
-    live_indices = np.nonzero(mask)[0]
+    live_indices = []
+    for i in range(len(mask)):
+        if mask[i]:
+            live_indices.append(i)
+            
     n_live = len(live_indices)
     if n_live == 0:
         return new_mask.astype(bool)
 
-    k = int(np.floor(n_live * drop_frac))
+    k = int(math.floor(n_live * drop_frac))
     if k == 0:
         return new_mask.astype(bool)
 
-    # Find the indices of the k smallest magnitudes among live weights
-    live_abs = np.abs(weights[live_indices])
-    sorted_idx = np.argsort(live_abs)
-    indices_to_drop = live_indices[sorted_idx[:k]]
+    live_abs = []
+    for idx in live_indices:
+        val = weights[idx]
+        if val < 0:
+            live_abs.append(-val)
+        else:
+            live_abs.append(val)
+
+    sorted_idx = sorted(range(n_live), key=lambda i: live_abs[i])
+    indices_to_drop = [live_indices[sorted_idx[i]] for i in range(k)]
 
     new_mask[indices_to_drop] = False
     return new_mask.astype(bool)

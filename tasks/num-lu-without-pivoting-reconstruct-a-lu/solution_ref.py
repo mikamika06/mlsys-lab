@@ -10,11 +10,15 @@ def lu_no_pivot(A: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
     for k in range(n):
         for j in range(k, n):
-            U[k, j] = A[k, j] - np.dot(L[k, :k], U[:k, j])
+            dot_product = 0.0
+            for m in range(k):
+                dot_product += L[k, m] * U[m, j]
+            U[k, j] = A[k, j] - dot_product
 
         for i in range(k + 1, n):
-            L[i, k] = (
-                A[i, k] - np.dot(L[i, :k], U[:k, k])
-            ) / U[k, k]
+            dot_product = 0.0
+            for m in range(k):
+                dot_product += L[i, m] * U[m, k]
+            L[i, k] = (A[i, k] - dot_product) / U[k, k]
 
     return L, U

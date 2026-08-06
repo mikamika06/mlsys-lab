@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -12,14 +13,34 @@ def sliding_window_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, w: int
     V = np.asarray(V, dtype=np.float64)
     n, d = Q.shape
 
-    scores = Q @ K.T / np.sqrt(d)
+    scale = math.sqrt(d)
+    out = np.zeros((n, d), dtype=np.float64)
 
-    rows = np.arange(n).reshape(-1, 1)
-    cols = np.arange(n).reshape(1, -1)
-    allowed = (cols <= rows) & (rows - cols < w)  # i - w < j <= i
+    for i in range(n):
+        scores = [float("-inf")] * n
+        max_val = float("-inf")
+        for j in range(n):
+            if j <= i and (i - j) < w:
+                dot = 0.0
+                for k in range(d):
+                    dot += Q[i, k] * K[j, k]
+                score = dot / scale
+                scores[j] = score
+                if score > max_val:
+                    max_val = score
 
-    scores = np.where(allowed, scores, -np.inf)
-    scores = scores - np.max(scores, axis=-1, keepdims=True)
-    e = np.exp(scores)
-    p = e / np.sum(e, axis=-1, keepdims=True)
-    return p @ V
+        sum_e = 0.0
+        p = [0.0] * n
+        for j in range(n):
+            if j <= i and (i - j) < w:
+                e = math.exp(scores[j] - max_val)
+                p[j] = e
+                sum_e += e
+
+        for j in range(n):
+            if j <= i and (i - j) < w:
+                p_val = p[j] / sum_e
+                for k in range(d):
+                    out[i, k] += p_val * V[j, k]
+
+    return out

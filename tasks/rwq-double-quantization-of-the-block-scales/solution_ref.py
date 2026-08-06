@@ -1,6 +1,6 @@
 import numpy as np
 
-FIRST_LEVEL_BLOCK_SIZE = 64  # NF4 weight-quantization block size these absmax values came from
+FIRST_LEVEL_BLOCK_SIZE = 64
 
 
 def double_quantize_absmax(absmax, block_size=256):
@@ -40,10 +40,17 @@ def double_quantize_absmax(absmax, block_size=256):
     """
     absmax = np.asarray(absmax, dtype=np.float64)
     n = absmax.shape[0]
-    mean = float(np.mean(absmax))
-    centered = absmax - mean
 
-    n_blocks2 = -(-n // block_size)  # ceil division
+    total_sum = 0.0
+    for i in range(n):
+        total_sum += absmax[i]
+    mean = total_sum / n
+
+    centered = np.zeros(n, dtype=np.float64)
+    for i in range(n):
+        centered[i] = absmax[i] - mean
+
+    n_blocks2 = -(-n // block_size)
     codes = np.zeros(n, dtype=np.int8)
     scales = np.zeros(n_blocks2, dtype=np.float64)
     recon = np.zeros(n, dtype=np.float64)
@@ -51,16 +58,31 @@ def double_quantize_absmax(absmax, block_size=256):
     for b in range(n_blocks2):
         lo = b * block_size
         hi = min(lo + block_size, n)
-        seg = centered[lo:hi]
-        amax = float(np.max(np.abs(seg)))
-        scale = amax / 127.0 if amax > 0 else 1.0
-        c = np.clip(np.round(seg / scale), -127, 127).astype(np.int8)
-        codes[lo:hi] = c
-        scales[b] = scale
-        recon[lo:hi] = c.astype(np.float64) * scale + mean
+
+        amax = 0.0
+        for i in range(lo, hi):
+            val = centered[i]
+            abs_val = val if val >= 0.0 else -val
+            if abs_val > amax:
+                amax = abs_val
+
+        scale = amax / 127.0 if amax > 0.0 else 1.0
+
+        for i in range(lo, hi):
+            val = centered[i] / scale
+            rounded = round(val)
+            if rounded < -127.0:
+                c_val = -127
+            elif rounded > 127.0:
+                c_val = 127
+            else:
+                c_val = int(rounded)
+            codes[i] = c_val
+            scales[b] = scale
+            recon[i] = float(c_val) * scale + mean
 
     original_bits = 32.0 * n
-    new_bits = 8.0 * n + 32.0 * n_blocks2 + 32.0  # +32 for the stored global mean
+    new_bits = 8.0 * n + 32.0 * n_blocks2 + 32.0
     total_params = float(n) * FIRST_LEVEL_BLOCK_SIZE
     bits_saved_per_param = (original_bits - new_bits) / total_params
 

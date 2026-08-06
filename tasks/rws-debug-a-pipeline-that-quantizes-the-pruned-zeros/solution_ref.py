@@ -33,25 +33,34 @@ def compound_prune_quantize_2_4(W, nbits=4):
     """
     W = np.asarray(W, dtype=np.float64)
     shape = W.shape
-    blocks = W.reshape(*shape[:-1], -1, 4)
-    abs_blocks = np.abs(blocks)
-
-    # Indices of the two largest-magnitude elements per block.
-    order = np.argsort(abs_blocks, axis=-1)
-    keep_mask = np.zeros_like(blocks, dtype=bool)
-    np.put_along_axis(keep_mask, order[..., 2:], True, axis=-1)
-
-    pruned = np.where(keep_mask, blocks, 0.0)
-    survivor_abs = np.where(keep_mask, abs_blocks, 0.0)
-
-    # Scale from the survivors ONLY: sum of survivor magnitudes divided by
-    # the number of actual survivors in that block (normally 2).
-    count = keep_mask.sum(axis=-1, keepdims=True).astype(np.float64)
-    sum_abs = survivor_abs.sum(axis=-1, keepdims=True)
-    scale = np.where(count > 0, sum_abs / np.maximum(count, 1.0), 1.0)
-
+    flat_W = W.reshape(-1, 4)
+    out_flat = np.empty_like(flat_W)
     qmax = 2 ** (nbits - 1) - 1
-    code = np.clip(np.round(pruned / scale), -qmax, qmax)
-    dequant = np.where(keep_mask, code * scale, 0.0)
 
-    return dequant.reshape(shape)
+    for i in range(flat_W.shape[0]):
+        block = flat_W[i]
+        abs_block = [abs(block[0]), abs(block[1]), abs(block[2]), abs(block[3])]
+        indexed = [(0, abs_block[0]), (1, abs_block[1]), (2, abs_block[2]), (3, abs_block[3])]
+        sorted_indexed = sorted(indexed, key=lambda x: x[1])
+        survivor_indices = {sorted_indexed[2][0], sorted_indexed[3][0]}
+
+        sum_abs = 0.0
+        for j in range(4):
+            if j in survivor_indices:
+                sum_abs += abs_block[j]
+
+        scale = sum_abs / 2.0
+
+        for j in range(4):
+            if j in survivor_indices:
+                v = block[j]
+                c = round(v / scale)
+                if c > qmax:
+                    c = qmax
+                elif c < -qmax:
+                    c = -qmax
+                out_flat[i, j] = c * scale
+            else:
+                out_flat[i, j] = 0.0
+
+    return out_flat.reshape(shape)

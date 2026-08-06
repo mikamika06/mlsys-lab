@@ -10,5 +10,9 @@ def compute_goodput(timestamps, latencies, admitted, slo_threshold, window):
     latencies = np.asarray(latencies, dtype=np.float64)
     admitted = np.asarray(admitted, dtype=bool)
 
-    mask = admitted & (latencies <= slo_threshold)
-    return float(np.sum(mask) / window)
+    count = 0.0
+    for i in range(len(admitted)):
+        if admitted[i] and latencies[i] <= slo_threshold:
+            count += 1.0
+            
+    return float(count / window)

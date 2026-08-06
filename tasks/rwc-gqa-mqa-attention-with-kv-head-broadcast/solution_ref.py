@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def gqa_attention(Q, K, V):
@@ -16,25 +17,40 @@ def gqa_attention(Q, K, V):
     group_size = n_heads // n_kv_heads
     scale = head_dim ** -0.5
 
-    # Expand K, V: repeat each KV head group_size times along axis 2
-    K_exp = np.repeat(K, group_size, axis=2)   # (batch, seq_k, n_heads, head_dim)
-    V_exp = np.repeat(V, group_size, axis=2)
+    out = np.zeros((batch, seq_q, n_heads, head_dim), dtype=np.float64)
 
-    # Transpose to (batch, n_heads, seq, head_dim) for batched matmul
-    Q_h = Q.transpose(0, 2, 1, 3)
-    K_h = K_exp.transpose(0, 2, 1, 3)
-    V_h = V_exp.transpose(0, 2, 1, 3)
+    for b in range(batch):
+        for i in range(seq_q):
+            for h in range(n_heads):
+                kv_h = h // group_size
+                
+                scores = [0.0] * K.shape[1]
+                for k_idx in range(K.shape[1]):
+                    dot = 0.0
+                    for d in range(head_dim):
+                        dot += Q[b, i, h, d] * K[b, k_idx, kv_h, d]
+                    scores[k_idx] = dot * scale
 
-    # Scaled dot-product scores: (batch, n_heads, seq_q, seq_k)
-    scores = (Q_h @ K_h.swapaxes(-2, -1)) * scale
+                max_score = scores[0]
+                for k_idx in range(1, len(scores)):
+                    if scores[k_idx] > max_score:
+                        max_score = scores[k_idx]
 
-    # Numerically stable softmax over key dimension
-    scores_max = np.max(scores, axis=-1, keepdims=True)
-    exp_scores = np.exp(scores - scores_max)
-    weights = exp_scores / np.sum(exp_scores, axis=-1, keepdims=True)
+                exp_scores = [0.0] * len(scores)
+                sum_exp = 0.0
+                for k_idx in range(len(scores)):
+                    val = math.exp(scores[k_idx] - max_score)
+                    exp_scores[k_idx] = val
+                    sum_exp += val
 
-    # Weighted sum: (batch, n_heads, seq_q, head_dim)
-    out = weights @ V_h
+                weights = [0.0] * len(scores)
+                for k_idx in range(len(scores)):
+                    weights[k_idx] = exp_scores[k_idx] / sum_exp
 
-    # Back to (batch, seq_q, n_heads, head_dim)
-    return out.transpose(0, 2, 1, 3)
+                for d in range(head_dim):
+                    weighted_sum = 0.0
+                    for k_idx in range(K.shape[1]):
+                        weighted_sum += weights[k_idx] * V[b, k_idx, kv_h, d]
+                    out[b, i, h, d] = weighted_sum
+
+    return out

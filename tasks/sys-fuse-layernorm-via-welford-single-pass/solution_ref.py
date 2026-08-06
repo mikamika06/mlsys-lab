@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -17,17 +18,28 @@ def layer_norm_welford(x: np.ndarray, gamma: np.ndarray, beta: np.ndarray, eps: 
     beta = np.asarray(beta, dtype=np.float64)
 
     B, D = x.shape
-    mean = np.zeros(B, dtype=np.float64)
-    M2 = np.zeros(B, dtype=np.float64)
+    out = []
 
-    for j in range(D):
-        xj = x[:, j]
-        count = j + 1
-        delta = xj - mean
-        mean = mean + delta / count
-        delta2 = xj - mean
-        M2 = M2 + delta * delta2
+    for i in range(B):
+        mean = 0.0
+        M2 = 0.0
+        for j in range(D):
+            xj = x[i, j]
+            count = j + 1
+            delta = xj - mean
+            mean = mean + delta / count
+            delta2 = xj - mean
+            M2 = M2 + delta * delta2
 
-    var = M2 / D
-    x_hat = (x - mean[:, None]) / np.sqrt(var[:, None] + eps)
-    return gamma * x_hat + beta
+        var = M2 / D
+        denom = math.sqrt(var + eps)
+
+        row_out = []
+        for j in range(D):
+            xj = x[i, j]
+            x_hat = (xj - mean) / denom
+            val = gamma[j] * x_hat + beta[j]
+            row_out.append(val)
+        out.append(row_out)
+
+    return np.array(out, dtype=np.float64)

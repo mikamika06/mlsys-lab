@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def softmax_stats(logits: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -11,9 +12,18 @@ def softmax_stats(logits: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
     for i in range(n_rows):
         row = logits[i]
-        m = row.max()
+        n_cols = row.shape[0]
+        
+        m = row[0]
+        for j in range(1, n_cols):
+            val = row[j]
+            if val > m:
+                m = val
         row_max[i] = m
-        exp_shifted = np.exp(row - m)
-        row_sum_exp[i] = exp_shifted.sum()
+
+        s = 0.0
+        for j in range(n_cols):
+            s += math.exp(row[j] - m)
+        row_sum_exp[i] = s
 
     return row_max, row_sum_exp

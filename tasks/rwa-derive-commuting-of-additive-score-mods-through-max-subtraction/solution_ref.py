@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -5,17 +6,39 @@ def fused_attention_scores(scores, alibi, window, soft_cap):
     scores = np.asarray(scores, dtype=np.float64)
     alibi = np.asarray(alibi, dtype=np.float64)
 
-    x = scores + alibi
-    x = soft_cap * np.tanh(x / soft_cap)
+    n = scores.shape[0]
+    out_list = []
 
-    n = x.shape[0]
-    rows = np.arange(n)[:, None]
-    cols = np.arange(n)[None, :]
-    x = x.copy()
-    x[np.abs(rows - cols) > window] = -np.inf
+    for i in range(n):
+        row_vals = []
+        for j in range(n):
+            val = float(scores[i, j]) + float(alibi[i, j])
+            val = soft_cap * math.tanh(val / soft_cap)
+            if abs(i - j) > window:
+                val = float('-inf')
+            row_vals.append(val)
 
-    row_max = np.max(x, axis=1, keepdims=True)
-    exp_x = np.exp(x - row_max)
-    exp_x[~np.isfinite(x)] = 0.0
+        max_val = row_vals[0]
+        for v in row_vals:
+            if v > max_val:
+                max_val = v
 
-    return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+        exp_row = []
+        for v in row_vals:
+            if not math.isfinite(v):
+                exp_row.append(0.0)
+            else:
+                exp_row.append(math.exp(v - max_val))
+
+        sum_val = 0.0
+        for v in exp_row:
+            sum_val += v
+
+        if sum_val == 0.0:
+            norm_row = [0.0 for _ in exp_row]
+        else:
+            norm_row = [v / sum_val for v in exp_row]
+
+        out_list.append(norm_row)
+
+    return np.array(out_list, dtype=np.float64)

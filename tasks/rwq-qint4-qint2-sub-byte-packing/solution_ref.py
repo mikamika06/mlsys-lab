@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -27,19 +28,69 @@ def pack_sub_byte(W: np.ndarray, nbits: int):
     per_byte = 8 // nbits
     n_bytes = d_in // per_byte
 
-    amax = np.max(np.abs(W), axis=1)
-    s = np.where(amax > 0, amax / qmax, 1.0)
-    codes = np.clip(np.round(W / s[:, None]), -qmax, qmax).astype(np.int64)
-    u = (codes + qmax).astype(np.uint8)
+    s_list = []
+    packed_list = []
+    dequant_list = []
 
-    packed = np.zeros((d_out, n_bytes), dtype=np.uint8)
-    for k in range(per_byte):
-        packed |= (u[:, k::per_byte] << (k * nbits)).astype(np.uint8)
+    for i in range(d_out):
+        row = W[i]
+        
+        max_abs = 0.0
+        for j in range(d_in):
+            val = row[j]
+            if val < 0.0:
+                val = -val
+            if val > max_abs:
+                max_abs = val
+        
+        if max_abs > 0.0:
+            s_val = max_abs / qmax
+        else:
+            s_val = 1.0
+        s_list.append(s_val)
 
-    mask = (1 << nbits) - 1
-    unpacked = np.zeros((d_out, d_in), dtype=np.uint8)
-    for k in range(per_byte):
-        unpacked[:, k::per_byte] = (packed >> (k * nbits)) & mask
-    dequant = (unpacked.astype(np.int64) - qmax) * s[:, None]
+        row_codes = []
+        row_u = []
+        for j in range(d_in):
+            div = row[j] / s_val
+            rounded = round(div)
+            if rounded < -qmax:
+                clipped = -qmax
+            elif rounded > qmax:
+                clipped = qmax
+            else:
+                clipped = rounded
+            
+            code = int(clipped)
+            row_codes.append(code)
+            u_val = code + qmax
+            row_u.append(u_val)
+
+        row_packed = []
+        for b in range(n_bytes):
+            byte_val = 0
+            for k in range(per_byte):
+                idx = b * per_byte + k
+                byte_val |= (row_u[idx] << (k * nbits))
+            row_packed.append(byte_val & 0xFF)
+        packed_list.append(row_packed)
+
+        row_unpacked = []
+        mask = (1 << nbits) - 1
+        for b in range(n_bytes):
+            byte_val = row_packed[b]
+            for k in range(per_byte):
+                unpacked_val = (byte_val >> (k * nbits)) & mask
+                row_unpacked.append(unpacked_val)
+
+        row_dequant = []
+        for j in range(d_in):
+            dq = (row_unpacked[j] - qmax) * s_val
+            row_dequant.append(dq)
+        dequant_list.append(row_dequant)
+
+    packed = np.array(packed_list, dtype=np.uint8)
+    s = np.array(s_list, dtype=np.float64)
+    dequant = np.array(dequant_list, dtype=np.float64)
 
     return packed, s, dequant

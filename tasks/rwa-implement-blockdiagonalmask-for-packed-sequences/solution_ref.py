@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -13,23 +14,50 @@ def block_diagonal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, seq_le
 
     Returns (N, d).
     """
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
     N, d = Q.shape
-
-    seq_id = np.empty(N, dtype=np.int64)
+    sqrt_d = math.sqrt(d)
+    outs = []
     pos = 0
-    for i, L in enumerate(seq_lens):
-        seq_id[pos:pos + L] = i
+    for L in seq_lens:
+        Qs = Q[pos:pos + L]
+        Ks = K[pos:pos + L]
+        Vs = V[pos:pos + L]
+        
+        scores = []
+        for i in range(L):
+            row = []
+            for j in range(L):
+                dot = 0.0
+                for k in range(d):
+                    dot += Qs[i, k] * Ks[j, k]
+                row.append(dot / sqrt_d)
+            scores.append(row)
+        
+        probs = []
+        for i in range(L):
+            max_val = max(scores[i])
+            row_probs = []
+            row_sum = 0.0
+            for j in range(L):
+                val = math.exp(scores[i][j] - max_val)
+                row_probs.append(val)
+                row_sum += val
+            normalized_row = []
+            for val in row_probs:
+                normalized_row.append(val / row_sum)
+            probs.append(normalized_row)
+        
+        block_out = []
+        for i in range(L):
+            out_row = []
+            for c in range(d):
+                acc = 0.0
+                for j in range(L):
+                    acc += probs[i][j] * Vs[j, c]
+                out_row.append(acc)
+            block_out.append(out_row)
+        
+        outs.extend(block_out)
         pos += L
-
-    same_seq = seq_id[:, None] == seq_id[None, :]  # (N, N)
-
-    scores = (Q @ K.T) / np.sqrt(d)
-    scores = np.where(same_seq, scores, -np.inf)
-
-    scores = scores - np.max(scores, axis=1, keepdims=True)
-    probs = np.exp(scores)
-    probs = probs / np.sum(probs, axis=1, keepdims=True)
-    return probs @ V
+        
+    return np.array(outs, dtype=np.float64)

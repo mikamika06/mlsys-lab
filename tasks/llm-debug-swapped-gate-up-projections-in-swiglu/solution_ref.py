@@ -1,8 +1,11 @@
+import math
 import numpy as np
+
 
 def _silu(x):
     """Sigmoid‑linear unit."""
-    return x / (1.0 + np.exp(-x))
+    return x / (1.0 + math.exp(-x))
+
 
 def swiglu(
     X: np.ndarray,
@@ -24,6 +27,26 @@ def swiglu(
     -------
     Y : (n, d_out) array of SwiGLU outputs.
     """
-    gate = X @ W_gate + (b_gate if b_gate is not None else 0.0)
-    up   = X @ W_up   + (b_up   if b_up   is not None else 0.0)
-    return gate * _silu(up)
+    n = X.shape[0]
+    d_in = X.shape[1]
+    d_out = W_gate.shape[1]
+
+    Y = np.zeros((n, d_out))
+
+    for i in range(n):
+        for j in range(d_out):
+            gate_val = 0.0
+            for k in range(d_in):
+                gate_val += float(X[i, k]) * float(W_gate[k, j])
+            if b_gate is not None:
+                gate_val += float(b_gate[j])
+
+            up_val = 0.0
+            for k in range(d_in):
+                up_val += float(X[i, k]) * float(W_up[k, j])
+            if b_up is not None:
+                up_val += float(b_up[j])
+
+            Y[i, j] = gate_val * _silu(up_val)
+
+    return Y

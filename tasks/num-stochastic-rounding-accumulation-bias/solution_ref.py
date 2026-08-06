@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -13,7 +14,7 @@ def accumulate_stochastic(start: float, c: float, n_steps: int, q: float,
     a = float(start)
     for _ in range(n_steps):
         v = a + c
-        lo = np.floor(v / q) * q
+        lo = math.floor(v / q) * q
         t = (v - lo) / q
         if rng.random() < t:
             a = lo + q

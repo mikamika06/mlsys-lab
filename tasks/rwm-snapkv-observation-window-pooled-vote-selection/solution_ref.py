@@ -5,9 +5,17 @@ def _pool1d(scores, kernel_size):
     """1D average pool, stride 1, zero-padded to the same output length
     (count_include_pad=True, matching torch.nn.functional.avg_pool1d)."""
     pad = kernel_size // 2
-    padded = np.concatenate([np.zeros(pad), scores, np.zeros(pad)])
-    kernel = np.ones(kernel_size) / kernel_size
-    return np.convolve(padded, kernel, mode="valid")
+    L_prefix = len(scores)
+    padded = np.zeros(L_prefix + 2 * pad)
+    for i in range(L_prefix):
+        padded[pad + i] = scores[i]
+    out = np.zeros(L_prefix)
+    for i in range(L_prefix):
+        acc = 0.0
+        for j in range(kernel_size):
+            acc += padded[i + j]
+        out[i] = acc / kernel_size
+    return out
 
 
 def snapkv_select(attn, window_size, kernel_size, capacity):
@@ -37,8 +45,11 @@ def snapkv_select(attn, window_size, kernel_size, capacity):
     attn = np.asarray(attn, dtype=np.float64)
     H, W, L_prefix = attn.shape
 
-    # aggregate votes: sum over heads and over the window's query positions
-    scores = attn.sum(axis=(0, 1))  # shape (L_prefix,)
+    scores = np.zeros(L_prefix)
+    for h in range(H):
+        for w in range(W):
+            for l in range(L_prefix):
+                scores[l] += attn[h, w, l]
 
     pooled = _pool1d(scores, kernel_size)
 

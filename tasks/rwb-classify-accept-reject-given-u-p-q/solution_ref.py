@@ -19,6 +19,17 @@ def classify_accept(u: float, p: np.ndarray, q: np.ndarray) -> np.ndarray:
     """
     p = np.asarray(p, dtype=np.float64)
     q = np.asarray(q, dtype=np.float64)
-    ratio = np.where(q == 0.0, 0.0, p / q)
-    ratio_clamped = np.minimum(ratio, 1.0)
-    return u <= ratio_clamped
+    n = p.shape[0]
+    out = np.empty(n, dtype=bool)
+    for i in range(n):
+        qi = q[i]
+        if qi == 0.0:
+            ratio = 0.0
+        else:
+            ratio = p[i] / qi
+        if ratio < 1.0:
+            ratio_clamped = ratio
+        else:
+            ratio_clamped = 1.0
+        out[i] = u <= ratio_clamped
+    return out

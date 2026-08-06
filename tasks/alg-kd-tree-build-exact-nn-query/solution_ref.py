@@ -3,8 +3,8 @@ import numpy as np
 class KDNode:
     __slots__ = ("idx", "split_dim", "left", "right")
     def __init__(self, idx, split_dim):
-        self.idx = idx          # index of the point stored at this node
-        self.split_dim = split_dim  # dimension used for splitting
+        self.idx = idx
+        self.split_dim = split_dim
         self.left = None
         self.right = None
 
@@ -21,15 +21,14 @@ def build_kd_tree(points: np.ndarray) -> KDTree:
             return None
         k = points.shape[1]
         axis = depth % k
-        # sort indices by the chosen axis and pick median
-        sorted_idx = indices[np.argsort(points[indices, axis])]
+        sorted_idx = sorted(indices, key=lambda i: points[i, axis])
         median = len(sorted_idx) // 2
         node = KDNode(sorted_idx[median], axis)
         node.left = _build(sorted_idx[:median], depth + 1)
-        node.right = _build(sorted_idx[median+1:], depth + 1)
+        node.right = _build(sorted_idx[median + 1:], depth + 1)
         return node
 
-    all_indices = np.arange(points.shape[0])
+    all_indices = list(range(points.shape[0]))
     root = _build(all_indices, 0)
     return KDTree(root, points)
 
@@ -43,7 +42,10 @@ def query_kd_tree(tree: KDTree, point: np.ndarray) -> int:
         if node is None:
             return
         pt = tree.points[node.idx]
-        dist_sq = np.sum((pt - point) ** 2)
+        dist_sq = 0.0
+        for i in range(point.shape[0]):
+            d = pt[i] - point[i]
+            dist_sq += d * d
         if (dist_sq < best_dist_sq or
                 (dist_sq == best_dist_sq and node.idx < best_idx)):
             best_dist_sq = dist_sq

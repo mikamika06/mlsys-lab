@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 f16 = np.float16
@@ -30,7 +31,7 @@ def _two_pass_mean_var(x16):
 
 
 def _normalize(x16, mean, var, g16, b16, eps):
-    denom = f16(np.sqrt(f16(var + f16(eps))))
+    denom = f16(math.sqrt(f16(var + f16(eps))))
     inv = f16(f16(1.0) / denom)
     out = np.empty(len(x16), dtype=f16)
     for i in range(len(x16)):

@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 _UNARY = {"sin"}
@@ -22,7 +23,7 @@ def _forward(tape, x):
             val[idx] = val[a] * val[b]
         elif op == "sin":
             (a,) = ins
-            val[idx] = np.sin(val[a])
+            val[idx] = math.sin(val[a])
         else:
             raise ValueError(f"unknown op {op!r}")
     return val
@@ -49,7 +50,7 @@ def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: np.ndarray) -> np.ndar
     n_nodes = val.shape[0]
 
     adj = np.zeros(n_nodes, dtype=np.float64)
-    adj[-1] = 1.0  # seed: d(output)/d(output) = 1
+    adj[-1] = 1.0
 
     for i in reversed(range(len(tape))):
         op, ins = tape[i]
@@ -69,7 +70,7 @@ def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: np.ndarray) -> np.ndar
             adj[b] += g * val[a]
         elif op == "sin":
             (a,) = ins
-            adj[a] += g * np.cos(val[a])
+            adj[a] += g * math.cos(val[a])
         else:
             raise ValueError(f"unknown op {op!r}")
 

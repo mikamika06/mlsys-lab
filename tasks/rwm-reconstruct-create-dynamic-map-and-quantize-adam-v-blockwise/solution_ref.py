@@ -31,21 +31,56 @@ def quantize_dequantize_v_blockwise(v: np.ndarray, blocksize: int):
     """
     v = np.asarray(v, dtype=np.float64)
     n = v.shape[0]
-    n_blocks = int(np.ceil(n / blocksize)) if n > 0 else 0
-    codes = np.zeros(n, dtype=np.uint8)
-    absmax = np.zeros(n_blocks, dtype=np.float32)
-    v_hat = np.zeros(n, dtype=np.float64)
+    
+    if n > 0:
+        n_blocks = (n + blocksize - 1) // blocksize
+    else:
+        n_blocks = 0
+
+    codes_list = []
+    absmax_list = []
+    v_hat_list = []
 
     for b in range(n_blocks):
-        lo, hi = b * blocksize, min((b + 1) * blocksize, n)
-        block = v[lo:hi]
-        amax = float(np.max(np.abs(block))) if block.size > 0 else 0.0
-        amax = amax if amax > 0 else 1.0
-        absmax[b] = amax
-        normed = block / amax
-        diffs = np.abs(normed[:, None] - _MAP[None, :])
-        idx = np.argmin(diffs, axis=1).astype(np.uint8)
-        codes[lo:hi] = idx
-        v_hat[lo:hi] = _MAP[idx] * amax
+        lo = b * blocksize
+        hi = min((b + 1) * blocksize, n)
+        
+        amax = 0.0
+        for i in range(lo, hi):
+            val = v[i]
+            if val < 0.0:
+                val = -val
+            if val > amax:
+                amax = val
+
+        if amax == 0.0:
+            amax = 1.0
+
+        absmax_list.append(amax)
+
+        for i in range(lo, hi):
+            normed = v[i] / amax
+            
+            best_idx = 0
+            best_diff = -1.0
+            
+            for j in range(256):
+                map_val = _MAP[j]
+                diff = normed - map_val
+                if diff < 0.0:
+                    diff = -diff
+                
+                if j == 0 or diff < best_diff:
+                    best_diff = diff
+                    best_idx = j
+                elif diff == best_diff:
+                    pass
+
+            codes_list.append(best_idx)
+            v_hat_list.append(_MAP[best_idx] * amax)
+
+    codes = np.array(codes_list, dtype=np.uint8)
+    absmax = np.array(absmax_list, dtype=np.float32)
+    v_hat = np.array(v_hat_list, dtype=np.float64)
 
     return v_hat, codes, absmax

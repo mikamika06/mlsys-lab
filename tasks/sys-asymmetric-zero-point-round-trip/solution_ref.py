@@ -9,10 +9,36 @@ def affine_quant_dequant(x: np.ndarray, qmin: int, qmax: int) -> np.ndarray:
     be clamped away from its natural value.
     """
     x = np.asarray(x, dtype=np.float64)
-    mn = min(0.0, float(np.min(x)))
-    mx = max(0.0, float(np.max(x)))
+    
+    min_val = 0.0
+    max_val = 0.0
+    for val in x:
+        if val < min_val:
+            min_val = val
+        if val > max_val:
+            max_val = val
+            
+    mn = min(0.0, min_val)
+    mx = max(0.0, max_val)
+    
     scale = (mx - mn) / (qmax - qmin) if mx > mn else 1.0
-    zp = int(np.clip(round(qmin - mn / scale), qmin, qmax))
+    
+    zp_float = round(qmin - mn / scale)
+    if zp_float < qmin:
+        zp = qmin
+    elif zp_float > qmax:
+        zp = qmax
+    else:
+        zp = int(zp_float)
 
-    codes = np.clip(np.round(x / scale + zp), qmin, qmax)
-    return (codes - zp) * scale
+    out_list = []
+    for val in x:
+        c = round(val / scale + zp)
+        if c < qmin:
+            c = qmin
+        elif c > qmax:
+            c = qmax
+        deq_val = (c - zp) * scale
+        out_list.append(deq_val)
+        
+    return np.array(out_list, dtype=np.float64)

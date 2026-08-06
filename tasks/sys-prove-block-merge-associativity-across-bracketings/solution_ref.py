@@ -1,13 +1,17 @@
+import math
 import numpy as np
 
 
 def _merge(a, b):
     m1, s1 = a
     m2, s2 = b
-    m = max(m1, m2)
+    if m1 > m2:
+        m = m1
+    else:
+        m = m2
     return (
         m,
-        s1 * np.exp(m1 - m) + s2 * np.exp(m2 - m),
+        s1 * math.exp(m1 - m) + s2 * math.exp(m2 - m),
     )
 
 
@@ -27,9 +31,24 @@ def _right(parts):
 def _check(parts):
     vals = [_left(parts), _right(parts)]
     if len(parts) >= 3:
-        vals.append(_merge(_merge(parts[0], parts[1]), _merge(*parts[2:4]) if len(parts) > 3 else parts[2]))
+        if len(parts) > 3:
+            m_sub = _merge(_merge(parts[0], parts[1]), _merge(parts[2], parts[3]))
+        else:
+            m_sub = _merge(_merge(parts[0], parts[1]), parts[2])
+        vals.append(m_sub)
     a = vals[0]
-    return all(abs(a[0] - b[0]) <= 1e-6 and abs(a[1] - b[1]) <= 1e-6 for b in vals[1:])
+    all_ok = True
+    for b in vals[1:]:
+        diff0 = a[0] - b[0]
+        if diff0 < 0:
+            diff0 = -diff0
+        diff1 = a[1] - b[1]
+        if diff1 < 0:
+            diff1 = -diff1
+        if diff0 > 1e-6 or diff1 > 1e-6:
+            all_ok = False
+            break
+    return all_ok
 
 
 def check_block_merge_associativity(rows):
@@ -37,14 +56,22 @@ def check_block_merge_associativity(rows):
     answer = []
     for row in rows:
         valid = True
+        n = len(row)
         for count in range(2, 6):
-            cuts = np.linspace(0, len(row), count + 1, dtype=int)
+            cuts = np.linspace(0, n, count + 1, dtype=int)
             blocks = []
             for i in range(count):
                 block = row[cuts[i]:cuts[i + 1]]
-                m = np.max(block)
-                s = np.sum(np.exp(block - m))
+                m = block[0]
+                for val in block[1:]:
+                    if val > m:
+                        m = val
+                s = 0.0
+                for val in block:
+                    s += math.exp(val - m)
                 blocks.append((float(m), float(s)))
-            valid = valid and _check(blocks)
+            if not _check(blocks):
+                valid = False
+                break
         answer.append(valid)
     return np.asarray(answer, dtype=bool)

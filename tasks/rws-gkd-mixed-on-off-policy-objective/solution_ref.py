@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -6,11 +7,25 @@ def gkd_mixed_loss(student_logits, on_policy_targets, off_policy_targets, lam):
     on = np.asarray(on_policy_targets, dtype=np.int64)
     off = np.asarray(off_policy_targets, dtype=np.int64)
 
-    shifted = x - np.max(x, axis=1, keepdims=True)
-    log_probs = shifted - np.log(np.sum(np.exp(shifted), axis=1, keepdims=True))
+    num_rows = x.shape[0]
+    num_cols = x.shape[1]
 
-    rows = np.arange(x.shape[0])
-    on_ce = -log_probs[rows, on]
-    off_ce = -log_probs[rows, off]
+    total = 0.0
+    for i in range(num_rows):
+        m = x[i, 0]
+        for j in range(1, num_cols):
+            if x[i, j] > m:
+                m = x[i, j]
 
-    return float(np.mean(lam * on_ce + (1.0 - lam) * off_ce))
+        s = 0.0
+        for j in range(num_cols):
+            s += math.exp(x[i, j] - m)
+
+        log_z = m + math.log(s)
+
+        on_ce = log_z - x[i, on[i]]
+        off_ce = log_z - x[i, off[i]]
+
+        total += lam * on_ce + (1.0 - lam) * off_ce
+
+    return float(total / num_rows)

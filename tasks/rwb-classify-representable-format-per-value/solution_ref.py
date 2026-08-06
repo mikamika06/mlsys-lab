@@ -36,9 +36,22 @@ _GRIDS = {"e4m3": _e4m3_grid(), "e5m2": _e5m2_grid()}
 def _round_trip_err(v, fmt):
     grid = _GRIDS[fmt]
     fmax = _FP8_MAX[fmt]
-    vc = np.clip(v, -fmax, fmax)
-    idx = int(np.argmin(np.abs(grid - vc)))
-    return abs(grid[idx] - v)
+    if v < -fmax:
+        vc = -fmax
+    elif v > fmax:
+        vc = fmax
+    else:
+        vc = v
+    
+    best_idx = 0
+    min_abs_diff = abs(grid[0] - vc)
+    for i in range(1, len(grid)):
+        diff = abs(grid[i] - vc)
+        if diff < min_abs_diff:
+            min_abs_diff = diff
+            best_idx = i
+            
+    return abs(grid[best_idx] - v)
 
 
 def classify_better_format(values: np.ndarray) -> np.ndarray:
@@ -60,4 +73,9 @@ def classify_better_format(values: np.ndarray) -> np.ndarray:
         e4 = _round_trip_err(v, "e4m3")
         e5 = _round_trip_err(v, "e5m2")
         out[i] = 0 if e4 <= e5 else 1
-    return out.reshape(values.shape)
+    
+    res = np.empty(values.shape, dtype=np.int64)
+    flat_res = res.ravel()
+    for i in range(len(out)):
+        flat_res[i] = out[i]
+    return res

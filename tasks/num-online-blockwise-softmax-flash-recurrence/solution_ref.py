@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def blockwise_softmax(logits: np.ndarray, block_size: int) -> np.ndarray:
@@ -9,20 +10,24 @@ def blockwise_softmax(logits: np.ndarray, block_size: int) -> np.ndarray:
     logits = np.asarray(logits, dtype=np.float64)
     n = logits.shape[0]
 
-    # --- Pass 1: accumulate global m and d ---
-    m_prev = -np.inf
+    m_prev = -float('inf')
     d_prev = 0.0
 
     for start in range(0, n, block_size):
         block = logits[start:start + block_size]
-        m_block = np.max(block)
+        m_block = -float('inf')
+        for val in block:
+            if val > m_block:
+                m_block = val
         m_new = m_prev if m_prev > m_block else m_block
-        sum_exp = np.sum(np.exp(block - m_new))
-        d_new = d_prev * np.exp(m_prev - m_new) + sum_exp
+        sum_exp = 0.0
+        for val in block:
+            sum_exp += math.exp(val - m_new)
+        d_new = d_prev * math.exp(m_prev - m_new) + sum_exp
         m_prev = m_new
         d_prev = d_new
 
-    # --- Pass 2: normalise ---
     m_final = m_prev
     d_final = d_prev
-    return np.exp(logits - m_final) / d_final
+    res = [math.exp(val - m_final) / d_final for val in logits]
+    return np.array(res, dtype=np.float64)

@@ -4,15 +4,27 @@ import numpy as np
 def _qd_1d(x, bits):
     x = np.asarray(x, dtype=np.float64)
     qmax = (1 << bits) - 1
-    xmin = float(np.min(x))
-    xmax = float(np.max(x))
+    xmin = float("inf")
+    xmax = float("-inf")
+    for val in x:
+        if val < xmin:
+            xmin = val
+        if val > xmax:
+            xmax = val
     if xmax <= xmin:
-        return x.copy()
+        return np.array(x, dtype=np.float64)
     scale = (xmax - xmin) / qmax
     zero = round(-xmin / scale)
     zero = min(max(zero, 0), qmax)
-    codes = np.clip(np.round(x / scale) + zero, 0, qmax)
-    return (codes - zero) * scale
+    out_list = []
+    for val in x:
+        code = round(val / scale) + zero
+        if code < 0:
+            code = 0
+        elif code > qmax:
+            code = qmax
+        out_list.append((code - zero) * scale)
+    return np.array(out_list, dtype=np.float64)
 
 
 def _group_quant(x, axis, group_size, bits):

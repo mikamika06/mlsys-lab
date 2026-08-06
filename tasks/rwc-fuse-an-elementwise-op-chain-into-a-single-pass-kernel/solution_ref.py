@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -27,5 +28,16 @@ def fused_elementwise_chain(X: np.ndarray, bias: np.ndarray, residual: np.ndarra
     bias = np.asarray(bias, dtype=np.float64)
     residual = np.asarray(residual, dtype=np.float64)
 
-    z = X + bias
-    return (0.5 * z * (1.0 + np.tanh(np.sqrt(2.0 / np.pi) * (z + 0.044715 * z ** 3))) + residual) * scale
+    batch_size, dim = X.shape
+    out = np.empty((batch_size, dim), dtype=np.float64)
+
+    sqrt_factor = math.sqrt(2.0 / math.pi)
+
+    for i in range(batch_size):
+        for j in range(dim):
+            z = X[i, j] + bias[j]
+            term = z + 0.044715 * (z ** 3)
+            gelu = 0.5 * z * (1.0 + math.tanh(sqrt_factor * term))
+            out[i, j] = (gelu + residual[i, j]) * scale
+
+    return out

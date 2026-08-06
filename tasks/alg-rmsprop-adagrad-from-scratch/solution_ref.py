@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def rmsprop_trajectory(
@@ -27,11 +28,13 @@ def rmsprop_trajectory(
     """
     grads = np.asarray(grads, dtype=np.float64)
     T, d = grads.shape
-    theta = np.zeros(d, dtype=np.float64)
-    v = np.zeros(d, dtype=np.float64)
-    traj = [theta.copy()]
-    for g in grads:
-        v = decay_rate * v + (1 - decay_rate) * g**2
-        theta -= lr * g / (np.sqrt(v) + eps)
-        traj.append(theta.copy())
-    return np.stack(traj, axis=0)
+    traj = np.zeros((T + 1, d), dtype=np.float64)
+    v = [0.0] * d
+    theta = [0.0] * d
+    for t in range(T):
+        for j in range(d):
+            g = grads[t, j]
+            v[j] = decay_rate * v[j] + (1.0 - decay_rate) * (g * g)
+            theta[j] -= lr * g / (math.sqrt(v[j]) + eps)
+            traj[t + 1, j] = theta[j]
+    return traj

@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 _EPS = 1e-12
@@ -36,17 +37,37 @@ def kd_divergence_family(p, students):
     p = np.asarray(p, dtype=np.float64)
     Q = np.asarray(students, dtype=np.float64)
 
-    def kl(a, b):
-        return np.sum(a * (np.log(a + _EPS) - np.log(b + _EPS)), axis=-1)
+    n_candidates, G = Q.shape
 
-    forward = kl(p[None, :], Q)
-    reverse = kl(Q, p[None, :])
+    def kl_single(a, b):
+        total = 0.0
+        for x_idx in range(G):
+            total += a[x_idx] * (math.log(a[x_idx] + _EPS) - math.log(b[x_idx] + _EPS))
+        return total
 
-    m = 0.5 * (p[None, :] + Q)
-    jsd = 0.5 * kl(p[None, :], m) + 0.5 * kl(Q, m)
+    forward_list = []
+    reverse_list = []
+    jsd_list = []
+
+    for i in range(n_candidates):
+        q = Q[i]
+        forward_list.append(kl_single(p, q))
+        reverse_list.append(kl_single(q, p))
+        m = 0.5 * (p + q)
+        jsd_list.append(0.5 * kl_single(p, m) + 0.5 * kl_single(q, m))
+
+    def process_vals(vals_list):
+        vals = np.array(vals_list, dtype=np.float64)
+        min_val = vals[0]
+        min_idx = 0
+        for idx in range(1, len(vals)):
+            if vals[idx] < min_val:
+                min_val = vals[idx]
+                min_idx = idx
+        return vals, int(min_idx)
 
     out = {}
-    for name, vals in (("forward_kl", forward), ("reverse_kl", reverse), ("jsd", jsd)):
-        vals = np.asarray(vals, dtype=np.float64)
-        out[name] = (vals, int(np.argmin(vals)))
+    out["forward_kl"] = process_vals(forward_list)
+    out["reverse_kl"] = process_vals(reverse_list)
+    out["jsd"] = process_vals(jsd_list)
     return out

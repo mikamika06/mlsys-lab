@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def pyramidkv_allocation(total_budget: int, num_layers: int) -> np.ndarray:
@@ -21,13 +22,20 @@ def pyramidkv_allocation(total_budget: int, num_layers: int) -> np.ndarray:
     if total_budget < 0 or num_layers <= 0:
         raise ValueError("Both arguments must be positive integers")
 
-    weights = np.arange(1, num_layers + 1)          # bottom layer gets largest weight
-    S = int(weights.sum())
-    base = (total_budget * weights) // S           # floor division gives integer array
-    remainder = total_budget - int(base.sum())
+    S = 0
+    for i in range(1, num_layers + 1):
+        S += i
 
-    # Distribute remaining slots starting from the bottom layer
+    base_list = []
+    base_sum = 0
+    for i in range(1, num_layers + 1):
+        val = (total_budget * i) // S
+        base_list.append(val)
+        base_sum += val
+
+    remainder = total_budget - base_sum
+
     for i in range(remainder):
-        base[num_layers - 1 - i] += 1
+        base_list[num_layers - 1 - i] += 1
 
-    return base.astype(np.int64)
+    return np.array(base_list, dtype=np.int64)

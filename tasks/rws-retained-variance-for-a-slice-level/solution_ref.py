@@ -19,13 +19,29 @@ def retained_variance_for_slice(eigenvalues, s):
         The actual cumulative variance fraction after k components.
     """
     ev = np.asarray(eigenvalues, dtype=np.float64)
-    ev = np.sort(ev)[::-1]
-    total = float(ev.sum())
+    ev = np.asarray(sorted(ev), dtype=np.float64)[::-1]
+    
+    total = 0.0
+    for val in ev:
+        total += float(val)
+        
     if total <= 0.0:
         return (0, 0.0)
-    cumsum = np.cumsum(ev)
-    fractions = cumsum / total
-    idx = int(np.searchsorted(fractions, s, side="left"))
+        
+    cumsum = []
+    current = 0.0
+    for val in ev:
+        current += float(val)
+        cumsum.append(current)
+        
+    fractions = [c / total for c in cumsum]
+    
+    idx = len(fractions)
+    for i, f in enumerate(fractions):
+        if f >= s:
+            idx = i
+            break
+            
     k = min(idx + 1, len(ev))
     retained = float(cumsum[k - 1] / total)
     return (k, retained)

@@ -16,8 +16,14 @@ def dynamic_activation_scale_zero_point(x: np.ndarray):
     zero_point : int
         Integer in [0,255] such that the value 0 maps to this index.
     """
-    min_val = np.min(x)
-    max_val = np.max(x)
+    min_val = x[0]
+    max_val = x[0]
+    for i in range(1, len(x)):
+        val = x[i]
+        if val < min_val:
+            min_val = val
+        if val > max_val:
+            max_val = val
 
     if max_val == min_val:
         scale = 1.0
@@ -25,6 +31,9 @@ def dynamic_activation_scale_zero_point(x: np.ndarray):
     else:
         scale = (max_val - min_val) / 255.0
         zero_point = int(round(-min_val / scale))
-        zero_point = np.clip(zero_point, 0, 255)
+        if zero_point < 0:
+            zero_point = 0
+        elif zero_point > 255:
+            zero_point = 255
 
     return float(scale), int(zero_point)

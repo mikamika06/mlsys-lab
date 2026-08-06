@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -13,28 +14,69 @@ def erk_layer_densities(shapes, global_density: float, erk_power_scale: float = 
     """
     shapes = [tuple(s) for s in shapes]
     n_layers = len(shapes)
-    n_params = np.array([float(np.prod(s)) for s in shapes], dtype=np.float64)
-    raw = np.array([(sum(s) / np.prod(s)) ** erk_power_scale for s in shapes], dtype=np.float64)
-    total_params = n_params.sum()
+    
+    n_params_list = []
+    for s in shapes:
+        prod_s = 1.0
+        for dim in s:
+            prod_s *= float(dim)
+        n_params_list.append(prod_s)
+    n_params = np.array(n_params_list, dtype=np.float64)
+
+    raw_list = []
+    for s in shapes:
+        sum_s = float(sum(s))
+        prod_s = 1.0
+        for dim in s:
+            prod_s *= float(dim)
+        raw_list.append((sum_s / prod_s) ** erk_power_scale)
+    raw = np.array(raw_list, dtype=np.float64)
+
+    total_params = 0.0
+    for val in n_params_list:
+        total_params += val
     target_kept = global_density * total_params
 
-    is_dense = np.zeros(n_layers, dtype=bool)
-    density = np.zeros(n_layers, dtype=np.float64)
+    is_dense = [False] * n_layers
+    density = [0.0] * n_layers
 
     for _ in range(n_layers + 2):
-        denom = np.sum(raw[~is_dense] * n_params[~is_dense])
-        kept_dense = np.sum(n_params[is_dense])
+        denom = 0.0
+        for i in range(n_layers):
+            if not is_dense[i]:
+                denom += raw[i] * n_params[i]
+
+        kept_dense = 0.0
+        for i in range(n_layers):
+            if is_dense[i]:
+                kept_dense += n_params[i]
+
         remaining_budget = target_kept - kept_dense
         if denom <= 0:
             break
-        eps = remaining_budget / denom
-        cand = eps * raw
-        newly_dense = (~is_dense) & (cand > 1.0)
-        if not np.any(newly_dense):
-            density[~is_dense] = cand[~is_dense]
-            density[is_dense] = 1.0
-            break
-        is_dense = is_dense | newly_dense
-        density[is_dense] = 1.0
 
-    return density
+        eps = remaining_budget / denom
+        
+        cand = [eps * r for r in raw]
+        
+        newly_dense = [False] * n_layers
+        any_newly_dense = False
+        for i in range(n_layers):
+            if (not is_dense[i]) and (cand[i] > 1.0):
+                newly_dense[i] = True
+                any_newly_dense = True
+
+        if not any_newly_dense:
+            for i in range(n_layers):
+                if not is_dense[i]:
+                    density[i] = cand[i]
+                else:
+                    density[i] = 1.0
+            break
+
+        for i in range(n_layers):
+            is_dense[i] = is_dense[i] or newly_dense[i]
+            if is_dense[i]:
+                density[i] = 1.0
+
+    return np.array(density, dtype=np.float64)

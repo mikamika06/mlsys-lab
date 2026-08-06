@@ -9,11 +9,17 @@ def derive_affine_qparams(x: np.ndarray, nbits: int) -> tuple:
     """
     x = np.asarray(x, dtype=np.float64)
     qmax = (1 << nbits) - 1
-    mn = min(0.0, float(np.min(x)))
-    mx = max(0.0, float(np.max(x)))
+    mn = 0.0
+    mx = 0.0
+    for i in range(x.shape[0]):
+        val = float(x[i])
+        if val < mn:
+            mn = val
+        if val > mx:
+            mx = val
     if mx == mn:
         scale = 1.0
     else:
         scale = (mx - mn) / qmax
-    zero_point = int(np.clip(round(-mn / scale), 0, qmax))
+    zero_point = int(max(0, min(qmax, round(-mn / scale))))
     return float(scale), zero_point

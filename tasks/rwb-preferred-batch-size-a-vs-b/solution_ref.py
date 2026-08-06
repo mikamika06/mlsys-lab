@@ -47,7 +47,8 @@ def _simulate(arrivals: np.ndarray, P: int, cap: int, D: float, T: float):
 
         batch_end = pos + take
         finish_time = dispatch_time + T
-        lat_sum += float(np.sum(finish_time - arrivals[pos:batch_end]))
+        for idx in range(pos, batch_end):
+            lat_sum += finish_time - arrivals[idx]
         count += take
         last_finish = finish_time
         server_free = finish_time

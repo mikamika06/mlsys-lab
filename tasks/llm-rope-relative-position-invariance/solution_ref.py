@@ -1,23 +1,26 @@
+import math
 import numpy as np
 
 def rope_relative_dot(q, k, pos_q, pos_k):
     d = q.shape[0]
     if d % 2 != 0:
         raise ValueError("q and k must have even length")
-    inv_freq = 1 / (10000 ** (np.arange(0, d, 2) / d))
-    pos_q_vec = pos_q * inv_freq
-    pos_k_vec = pos_k * inv_freq
-    sin_q = np.sin(pos_q_vec)
-    cos_q = np.cos(pos_q_vec)
-    sin_k = np.sin(pos_k_vec)
-    cos_k = np.cos(pos_k_vec)
-
     q_rot = np.empty_like(q)
-    q_rot[0::2] = q[0::2] * cos_q - q[1::2] * sin_q
-    q_rot[1::2] = q[0::2] * sin_q + q[1::2] * cos_q
-
     k_rot = np.empty_like(k)
-    k_rot[0::2] = k[0::2] * cos_k - k[1::2] * sin_k
-    k_rot[1::2] = k[0::2] * sin_k + k[1::2] * cos_k
+    for i in range(0, d, 2):
+        inv_freq = 1.0 / (10000.0 ** (i / d))
+        pos_q_val = pos_q * inv_freq
+        pos_k_val = pos_k * inv_freq
+        sin_q = math.sin(pos_q_val)
+        cos_q = math.cos(pos_q_val)
+        sin_k = math.sin(pos_k_val)
+        cos_k = math.cos(pos_k_val)
+        q_rot[i] = q[i] * cos_q - q[i + 1] * sin_q
+        q_rot[i + 1] = q[i] * sin_q + q[i + 1] * cos_q
+        k_rot[i] = k[i] * cos_k - k[i + 1] * sin_k
+        k_rot[i + 1] = k[i] * sin_k + k[i + 1] * cos_k
 
-    return float(np.dot(q_rot, k_rot))
+    acc = 0.0
+    for j in range(d):
+        acc += q_rot[j] * k_rot[j]
+    return float(acc)

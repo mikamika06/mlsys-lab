@@ -9,7 +9,10 @@ def pairwise_sum(arr):
     def rec(start, end):
         length = end - start
         if length <= 1024:
-            return float(np.sum(arr[start:end], dtype=np.float64))
+            total = 0.0
+            for i in range(start, end):
+                total += float(arr[i])
+            return total
         mid = (start + end) // 2
         left = rec(start, mid)
         right = rec(mid, end)

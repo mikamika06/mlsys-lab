@@ -6,14 +6,36 @@ def obq_single_weight_update(w, Hinv, grid):
     Hinv = np.asarray(Hinv, dtype=np.float64)
     grid = np.asarray(grid, dtype=np.float64)
 
-    nearest = grid[np.argmin(np.abs(w[:, None] - grid[None, :]), axis=1)]
-    costs = ((nearest - w) ** 2) / np.diag(Hinv)
-    k = int(np.argmin(costs))
+    n = len(w)
+    m = len(grid)
 
-    q = nearest[k]
-    err = q - w[k]
+    nearest = np.empty(n, dtype=np.float64)
+    for i in range(n):
+        w_i = w[i]
+        best_idx = 0
+        min_diff = abs(w_i - grid[0])
+        for j in range(1, m):
+            diff = abs(w_i - grid[j])
+            if diff < min_diff:
+                min_diff = diff
+                best_idx = j
+        nearest[i] = grid[best_idx]
 
-    out = w.copy()
-    out -= err * Hinv[:, k] / Hinv[k, k]
-    out[k] = q
+    min_cost = ((nearest[0] - w[0]) ** 2) / Hinv[0, 0]
+    best_k = 0
+    for i in range(1, n):
+        cost = ((nearest[i] - w[i]) ** 2) / Hinv[i, i]
+        if cost < min_cost:
+            min_cost = cost
+            best_k = i
+
+    q = nearest[best_k]
+    err = q - w[best_k]
+    scale = err / Hinv[best_k, best_k]
+
+    out = np.empty(n, dtype=np.float64)
+    for i in range(n):
+        out[i] = w[i] - scale * Hinv[i, best_k]
+
+    out[best_k] = q
     return out

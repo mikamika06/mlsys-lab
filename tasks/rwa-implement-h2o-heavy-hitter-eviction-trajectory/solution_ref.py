@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -37,7 +38,7 @@ def h2o_eviction_trajectory(K: np.ndarray, Q: np.ndarray, prompt_len: int,
     d = K.shape[1]
     T = Q.shape[0]
 
-    resident = list(range(prompt_len))  # insertion order == ascending position
+    resident = list(range(prompt_len))
     score = {i: 0.0 for i in resident}
 
     trajectory: list[list[int]] = []
@@ -45,10 +46,16 @@ def h2o_eviction_trajectory(K: np.ndarray, Q: np.ndarray, prompt_len: int,
         q = Q[t]
         idx = sorted(resident)
         Kc = K[idx]
-        logits = (q @ Kc.T) / np.sqrt(d)
-        logits = logits - np.max(logits)
-        w = np.exp(logits)
-        w = w / np.sum(w)
+        sqrt_d = math.sqrt(d)
+        logits = [
+            sum(q[k] * Kc[j][k] for k in range(d)) / sqrt_d
+            for j in range(len(idx))
+        ]
+        max_logit = max(logits)
+        logits = [l - max_logit for l in logits]
+        w = [math.exp(l) for l in logits]
+        sum_w = sum(w)
+        w = [val / sum_w for val in w]
         for j, i in enumerate(idx):
             score[i] += float(w[j])
 

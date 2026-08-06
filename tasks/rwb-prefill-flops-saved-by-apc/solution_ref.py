@@ -17,5 +17,7 @@ def flops_saved_by_apc(reused_counts: np.ndarray, per_token_flop: float) -> floa
         Total FLOPs saved.
     """
     counts = np.asarray(reused_counts, dtype=np.int64)
-    total_reuses = np.sum(counts)
+    total_reuses = 0
+    for i in range(len(counts)):
+        total_reuses += counts[i]
     return float(total_reuses * per_token_flop)

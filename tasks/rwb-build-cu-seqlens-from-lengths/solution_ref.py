@@ -15,4 +15,10 @@ def build_cu_seqlens(lengths: np.ndarray) -> np.ndarray:
         1‑D int32 array of length len(lengths)+1 containing the offsets.
     """
     lengths = np.asarray(lengths, dtype=np.int32)
-    return np.concatenate([[0], np.cumsum(lengths)]).astype(np.int32)
+    n = len(lengths)
+    out = np.zeros(n + 1, dtype=np.int32)
+    current_sum = 0
+    for i in range(n):
+        current_sum += lengths[i]
+        out[i + 1] = current_sum
+    return out

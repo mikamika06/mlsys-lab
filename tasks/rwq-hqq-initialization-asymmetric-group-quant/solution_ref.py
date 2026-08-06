@@ -44,15 +44,33 @@ def hqq_init(W, group_size=64, nbits=4):
 
     for start in range(0, n, group_size):
         g = flat[start:start + group_size]
-        gmax = float(g.max())
-        gmin = float(g.min())
+        gmax = g[0]
+        gmin = g[0]
+        for i in range(1, len(g)):
+            val = g[i]
+            if val > gmax:
+                gmax = val
+            if val < gmin:
+                gmin = val
+        gmax = float(gmax)
+        gmin = float(gmin)
         span = gmax - gmin
         scale = 1.0 if span == 0.0 else span / qmax
-        zero = float(np.round(-gmin / scale))
-        code = np.clip(np.round(g / scale) + zero, 0, qmax).astype(np.uint8)
+        zero = float(round(-gmin / scale))
 
-        codes[start:start + len(g)] = code
-        dequant[start:start + len(g)] = (code.astype(np.float64) - zero) * scale
+        for i in range(len(g)):
+            val = g[i]
+            r = round((val / scale) + zero)
+            if r < 0:
+                c = 0
+            elif r > qmax:
+                c = qmax
+            else:
+                c = r
+            idx = start + i
+            codes[idx] = c
+            dequant[idx] = (float(c) - zero) * scale
+
         scales.append(scale)
         zeros.append(zero)
 

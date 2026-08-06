@@ -14,4 +14,17 @@ def hessian_saliency(W: np.ndarray, A: np.ndarray) -> np.ndarray:
     h : ndarray, shape (n_in,)
         Salience scores for each input dimension.
     """
-    return np.sum(A**2, axis=0) * np.sum(W**2, axis=0)
+    n_out, n_in = W.shape
+    batch_size = A.shape[0]
+    h = np.empty(n_in, dtype=W.dtype)
+    for j in range(n_in):
+        sum_a2 = 0.0
+        for i in range(batch_size):
+            v = A[i, j]
+            sum_a2 += v * v
+        sum_w2 = 0.0
+        for k in range(n_out):
+            w = W[k, j]
+            sum_w2 += w * w
+        h[j] = sum_a2 * sum_w2
+    return h

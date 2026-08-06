@@ -4,15 +4,43 @@ import numpy as np
 def _qd_1d(x, bits=4):
     x = np.asarray(x, dtype=np.float64)
     qmax = (1 << bits) - 1
-    xmin = float(np.min(x))
-    xmax = float(np.max(x))
+    
+    n = len(x)
+    if n == 0:
+        return x.copy()
+    
+    xmin = float(x[0])
+    xmax = float(x[0])
+    for i in range(1, n):
+        val = float(x[i])
+        if val < xmin:
+            xmin = val
+        if val > xmax:
+            xmax = val
+
     if xmax <= xmin:
         return x.copy()
+
     scale = (xmax - xmin) / qmax
     zero = round(-xmin / scale)
-    zero = min(max(zero, 0), qmax)
-    codes = np.clip(np.round(x / scale + zero), 0, qmax)
-    return (codes - zero) * scale
+    if zero < 0:
+        zero = 0
+    elif zero > qmax:
+        zero = qmax
+
+    out = np.empty(n, dtype=np.float64)
+    for i in range(n):
+        val = float(x[i])
+        val_code = round(val / scale + zero)
+        if val_code < 0:
+            c = 0
+        elif val_code > qmax:
+            c = qmax
+        else:
+            c = val_code
+        out[i] = (c - zero) * scale
+
+    return out
 
 
 def quantize_dequantize_int4_grouped(x, group_size):

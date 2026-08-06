@@ -1,0 +1,57 @@
+{"id": "alg-1-nn-single-query", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 24, "at": "00:55:17"}
+{"id": "alg-adam-with-bias-correction-step-by-step", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 56, "at": "00:55:36"}
+{"id": "alg-brute-force-knn-majority-vote", "ok": true, "model": "3-1-pro", "attempt": 3, "attempts": ["3-6-flash:still uses .sort", "3-1-pro:syntax L1"], "lines": 70, "at": "00:56:41"}
+{"id": "alg-approximate-nn-recall-gate-lsh-random-hyperplane", "ok": true, "model": "3-1-pro", "attempt": 2, "attempts": ["3-6-flash:still uses .sort"], "lines": 94, "at": "00:56:42"}
+{"id": "alg-debug-cosine-missing-normalization-div-by-zero", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 39, "at": "00:58:06"}
+{"id": "alg-debug-empty-cluster-crash-nan-centroid", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 57, "at": "00:58:27"}
+{"id": "alg-cosine-schedule-with-linear-warmup", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 37, "at": "01:17:54"}
+{"id": "alg-count-distance-computations-brute-vs-kd-tree", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 90, "at": "01:17:55"}
+{"id": "alg-debug-softmax-wrong-axis-no-shift", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 35, "at": "01:19:17"}
+{"id": "alg-debug-missing-centering-wrong-normalization", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 52, "at": "01:19:50"}
+{"id": "alg-debug-off-by-one-k-wrong-tie-break", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 42, "at": "01:19:55"}
+{"id": "alg-derive-verify-convergence-rate-l2-l1-t", "ok": true, "model": "3-1-pro", "attempt": 2, "attempts": ["3-6-flash:TimeoutError"], "lines": 69, "at": "01:27:42"}
+{"id": "alg-expansion-trick-pairwise-forced-vectorized", "ok": true, "model": "3-1-pro", "attempt": 2, "attempts": ["3-6-flash:TimeoutError"], "lines": 29, "at": "01:28:11"}
+{"id": "alg-covariance-eig-vs-svd-on-ill-conditioned-x", "ok": false, "why": "3-6-flash:gates {\"max_abs_err\": 8.385819596640198e-06}; 3-1-pro:TimeoutError; 3-1-pro:TimeoutError", "at": "01:28:58"}
+{"id": "alg-fused-cross-entropy-from-logits", "ok": true, "model": "3-1-pro", "attempt": 2, "attempts": ["3-6-flash:syntax L1"], "lines": 28, "at": "01:29:22"}
+{"id": "alg-eckart-young-error-sum-of-dropped-sigma-2", "ok": false, "why": "3-6-flash:still uses np.linalg; 3-1-pro:TimeoutError; 3-1-pro:TimeoutError", "at": "01:30:00"}
+{"id": "alg-decision-boundary-labels-on-a-grid", "ok": false, "why": "3-6-flash:still uses .sort; 3-1-pro:TimeoutError; 3-1-pro:TimeoutError", "at": "01:30:21"}
+{"id": "alg-hamming-jaccard-on-binary-vectors", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 27, "at": "01:31:04"}
+{"id": "alg-iterations-to-tolerance-vs-eigen-gap", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 50, "at": "01:31:57"}
+{"id": "alg-full-adamw-wd-warmup-clip-single-step", "ok": false, "why": "3-6-flash:TimeoutError; 3-1-pro:TimeoutError; 3-1-pro:syntax L1", "at": "01:32:06"}
+{"id": "alg-debug-u-v-transpose-or-component-ordering", "ok": false, "why": "3-6-flash:TimeoutError; 3-1-pro:still uses .sort; 3-1-pro:gates {\"channel_rel_err\": 1.9999999999992928}", "at": "01:32:48"}
+{"id": "alg-full-lloyd-with-fixed-init", "ok": true, "model": "3-1-pro", "attempt": 3, "attempts": ["3-6-flash:TimeoutError", "3-1-pro:syntax L1"], "lines": 71, "at": "01:32:51"}
+{"id": "alg-k-means-seeding-from-given-random-stream", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 52, "at": "01:33:02"}
+{"id": "alg-k-means-assignment-step-only", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 19, "at": "01:33:13"}
+{"id": "alg-kahan-neumaier-compensated-summation", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 16, "at": "01:33:22"}
+{"id": "alg-global-norm-gradient-clipping", "ok": true, "model": "3-1-pro", "attempt": 3, "attempts": ["3-6-flash:TimeoutError", "3-1-pro:TimeoutError"], "lines": 22, "at": "01:33:36"}
+{"id": "alg-kd-tree-build-exact-nn-query", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 63, "at": "01:34:01"}
+{"id": "alg-l2-vs-cosine-neighbor-set-divergence", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 54, "at": "01:34:22"}
+{"id": "alg-logsumexp-with-max-shift", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 50, "at": "01:34:48"}
+{"id": "alg-mahalanobis-distance-with-given-covariance", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 33, "at": "01:35:14"}
+{"id": "alg-mini-batch-k-means-deterministic", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 82, "at": "01:35:24"}
+{"id": "alg-naive-softmax-overflow-max-subtraction-fix", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 28, "at": "01:35:44"}
+{"id": "alg-low-rank-round-trip-a-weight-matrix", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 102, "at": "01:36:09"}
+{"id": "alg-knn-regression-averaging", "ok": true, "model": "3-1-pro", "attempt": 2, "attempts": ["3-6-flash:still uses .sort"], "lines": 44, "at": "01:36:47"}
+{"id": "alg-pairwise-l1-manhattan-matrix", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 34, "at": "01:36:56"}
+{"id": "alg-optimal-momentum-on-a-quadratic-vs-kappa", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 78, "at": "01:37:20"}
+{"id": "alg-log1p-expm1-for-small-x", "ok": true, "model": "3-1-pro", "attempt": 2, "attempts": ["3-6-flash:gates {\"log_rel_err\": \"Infinity\", \"expm1_rel_err\": \"Infinity\"}"], "lines": 44, "at": "01:37:50"}
+{"id": "alg-pca-via-svd-center-decompose-project", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 92, "at": "01:37:59"}
+{"id": "alg-power-iteration-vs-numpy-svd-components", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 92, "at": "01:38:25"}
+{"id": "alg-predict-convergence-iteration-final-labels", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 69, "at": "01:38:36"}
+{"id": "alg-prove-expansion-identity-is-exact", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 20, "at": "01:38:47"}
+{"id": "alg-prove-inertia-non-increasing", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 75, "at": "01:39:33"}
+{"id": "alg-prove-logsumexp-shift-invariance", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 16, "at": "01:39:41"}
+{"id": "alg-leave-one-out-knn-accuracy-without-leakage", "ok": false, "why": "3-6-flash:syntax L1; 3-1-pro:syntax L1; 3-1-pro:syntax L1", "at": "01:39:51"}
+{"id": "alg-random-init-vs-k-means-final-inertia", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 98, "at": "01:41:17"}
+{"id": "alg-recover-centroids-from-assignments-data", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 22, "at": "01:42:40"}
+{"id": "alg-recover-embedding-from-distances-classical-mds", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 116, "at": "01:44:13"}
+{"id": "alg-rmsprop-adagrad-from-scratch", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 40, "at": "01:44:21"}
+{"id": "alg-sgd-vs-adam-steps-to-tolerance-ill-conditioned", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 120, "at": "01:44:38"}
+{"id": "alg-shifted-inverse-iteration-for-interior-eigenvalue", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 83, "at": "01:45:26"}
+{"id": "alg-randomized-svd-halko-from-scratch", "ok": true, "model": "3-1-pro", "attempt": 2, "attempts": ["3-6-flash:still uses .sort"], "lines": 141, "at": "01:46:05"}
+{"id": "alg-read-singular-values-variance-explained", "ok": true, "model": "3-1-pro", "attempt": 2, "attempts": ["3-6-flash:still uses np.linalg"], "lines": 91, "at": "01:46:53"}
+{"id": "alg-stable-log-softmax", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 59, "at": "01:47:01"}
+{"id": "alg-stable-sigmoid-branch-on-sign", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 16, "at": "01:47:25"}
+{"id": "alg-pick-rank-for-90-energy-report-footprint", "ok": false, "why": "3-6-flash:TimeoutError; 3-1-pro:syntax L1; 3-1-pro:gates {\"exact_match\": 0.0, \"rel_err\": 0.6874999999993658}", "at": "01:49:15"}
+{"id": "alg-rank-k-project-reconstruct", "ok": false, "why": "3-6-flash:verify TASK_FAIL: reference grade is non-deterministic; 3-1-pro:verify TASK_FAIL: reference grade is non-deterministic; 3-1-pro:verify TASK_FAIL: reference grade is non-deterministic", "at": "01:50:16"}
+{"id": "alg-vectorized-pairwise-l2-matrix-no-cdist", "ok": true, "model": "3-6-flash", "attempt": 1, "attempts": [], "lines": 33, "at": "01:50:38"}

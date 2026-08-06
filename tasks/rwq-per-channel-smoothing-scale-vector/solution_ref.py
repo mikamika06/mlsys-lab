@@ -18,6 +18,22 @@ def per_channel_scale(X: np.ndarray, W: np.ndarray, alpha: float) -> np.ndarray:
     s : np.ndarray
         Scale vector of shape (n_channels,) with dtype float64.
     """
-    max_X = np.max(np.abs(X), axis=0)
-    max_W = np.max(np.abs(W), axis=0)
-    return (max_X ** alpha) / (max_W ** (1 - alpha))
+    n_samples, n_channels = X.shape
+    scales = []
+    for j in range(n_channels):
+        max_x = abs(X[0, j])
+        for i in range(1, n_samples):
+            val = abs(X[i, j])
+            if val > max_x:
+                max_x = val
+        
+        max_w = abs(W[0, j])
+        for i in range(1, n_samples):
+            val = abs(W[i, j])
+            if val > max_w:
+                max_w = val
+        
+        scale = (max_x ** alpha) / (max_w ** (1.0 - alpha))
+        scales.append(scale)
+        
+    return np.array(scales, dtype=np.float64)

@@ -2,13 +2,20 @@ import numpy as np
 
 
 def _accepted_tokens(alpha, k):
-    max_k = int(np.max(k))
+    max_k = 0
+    for val in k:
+        if val > max_k:
+            max_k = int(val)
+
     total = np.zeros_like(alpha)
     term = np.ones_like(alpha)
+    
     for i in range(max_k + 1):
-        active = i <= k
-        total = total + np.where(active, term, 0.0)
-        term = term * alpha
+        for idx in range(len(alpha)):
+            if i <= k[idx]:
+                total[idx] = total[idx] + term[idx]
+            term[idx] = term[idx] * alpha[idx]
+            
     return total
 
 
@@ -17,16 +24,28 @@ def break_even_alpha(configs: np.ndarray) -> np.ndarray:
     c = configs[:, 0]
     k = configs[:, 1].astype(np.int64)
 
-    target = 1.0 + k * c
+    target = np.zeros_like(c)
+    for i in range(len(c)):
+        target[i] = 1.0 + k[i] * c[i]
 
     lo = np.zeros_like(c)
     hi = np.ones_like(c)
 
     for _ in range(200):
-        mid = (lo + hi) / 2.0
-        val = _accepted_tokens(mid, k)
-        go_up = val < target
-        lo = np.where(go_up, mid, lo)
-        hi = np.where(go_up, hi, mid)
+        mid = np.zeros_like(c)
+        for i in range(len(c)):
+            mid[i] = (lo[i] + hi[i]) / 2.0
 
-    return (lo + hi) / 2.0
+        val = _accepted_tokens(mid, k)
+
+        for i in range(len(c)):
+            if val[i] < target[i]:
+                lo[i] = mid[i]
+            else:
+                hi[i] = mid[i]
+
+    result = np.zeros_like(c)
+    for i in range(len(c)):
+        result[i] = (lo[i] + hi[i]) / 2.0
+
+    return result

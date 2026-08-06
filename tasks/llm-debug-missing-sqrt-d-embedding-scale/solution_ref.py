@@ -1,4 +1,6 @@
+import math
 import numpy as np
+
 
 def normalize_embeddings(embeddings: np.ndarray) -> np.ndarray:
     """
@@ -6,5 +8,10 @@ def normalize_embeddings(embeddings: np.ndarray) -> np.ndarray:
     The result is always float64 regardless of input dtype.
     """
     emb = np.asarray(embeddings, dtype=np.float64)
-    d = emb.shape[1]
-    return emb / np.sqrt(d)
+    rows, cols = emb.shape
+    scale = math.sqrt(cols)
+    out = np.empty((rows, cols), dtype=np.float64)
+    for i in range(rows):
+        for j in range(cols):
+            out[i, j] = emb[i, j] / scale
+    return out

@@ -12,14 +12,34 @@ def nf4_quantize_dequantize(w: np.ndarray, block_size: int = 64):
     w = np.asarray(w, dtype=np.float64)
     n = w.shape[0]
     nb = n // block_size
-    wb = w.reshape(nb, block_size)
-
-    absmax = np.max(np.abs(wb), axis=1)
-    absmax_safe = np.where(absmax == 0, 1.0, absmax)
-    normalized = wb / absmax_safe[:, None]
-
-    diffs = np.abs(normalized[:, :, None] - NF4_LEVELS[None, None, :])
-    idx = np.argmin(diffs, axis=-1).astype(np.uint8)
-
-    deq = (NF4_LEVELS[idx] * absmax_safe[:, None]).reshape(n)
-    return idx.reshape(n), deq
+    
+    idx_list = []
+    deq_list = []
+    
+    for i in range(nb):
+        block = w[i * block_size : (i + 1) * block_size]
+        
+        max_val = 0.0
+        for val in block:
+            abs_val = val if val >= 0.0 else -val
+            if abs_val > max_val:
+                max_val = abs_val
+                
+        absmax_safe = 1.0 if max_val == 0.0 else max_val
+        
+        for val in block:
+            normalized = val / absmax_safe
+            
+            best_idx = 0
+            min_diff = float("inf")
+            for j in range(16):
+                diff = normalized - NF4_LEVELS[j]
+                abs_diff = diff if diff >= 0.0 else -diff
+                if abs_diff < min_diff:
+                    min_diff = abs_diff
+                    best_idx = j
+                    
+            idx_list.append(best_idx)
+            deq_list.append(NF4_LEVELS[best_idx] * absmax_safe)
+            
+    return np.array(idx_list, dtype=np.uint8), np.array(deq_list, dtype=np.float64)

@@ -1,42 +1,90 @@
+import math
 import numpy as np
 
 
-def ring_attention(Q, K, V, ranks):
+def ring_step(state, Q, K_block, V_block, scale):
     Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
+    K_block = np.asarray(K_block, dtype=np.float64)
+    V_block = np.asarray(V_block, dtype=np.float64)
 
     n = Q.shape[0]
-    d = Q.shape[1]
-    dv = V.shape[1]
+    dk = K_block.shape[1]
+    dv = V_block.shape[1]
+    m_block = K_block.shape[0]
 
-    blocks_k = np.array_split(K, ranks)
-    blocks_v = np.array_split(V, ranks)
+    if state is None:
+        m = np.full(n, -float("inf"), dtype=np.float64)
+        l = np.zeros(n, dtype=np.float64)
+        o = np.zeros((n, dv), dtype=np.float64)
+    else:
+        m, l, o = state
 
-    m = np.full(n, -np.inf, dtype=np.float64)
-    l = np.zeros(n, dtype=np.float64)
-    o = np.zeros((n, dv), dtype=np.float64)
+    scores = np.empty((n, m_block), dtype=np.float64)
+    for i in range(n):
+        for j in range(m_block):
+            dot = 0.0
+            for d in range(dk):
+                dot += Q[i, d] * K_block[j, d]
+            scores[i, j] = dot * scale
 
-    for step in range(ranks):
-        block_index = (np.arange(ranks) + step) % ranks
-        for idx in block_index[:1]:
-            Kb = blocks_k[int(idx)]
-            Vb = blocks_v[int(idx)]
+    block_max = np.empty(n, dtype=np.float64)
+    for i in range(n):
+        mx = -float("inf")
+        for j in range(m_block):
+            val = scores[i, j]
+            if val > mx:
+                mx = val
+        block_max[i] = mx
 
-            scores = (Q @ Kb.T) / np.sqrt(d)
-            mb = np.max(scores, axis=1)
+    new_m = np.empty(n, dtype=np.float64)
+    for i in range(n):
+        val_m = m[i]
+        val_bm = block_max[i]
+        if val_bm > val_m:
+            new_m[i] = val_bm
+        else:
+            new_m[i] = val_m
 
-            new_m = np.maximum(m, mb)
-            old_scale = np.exp(m - new_m)
-            block_exp = np.exp(scores - new_m[:, None])
+    carry = np.empty(n, dtype=np.float64)
+    for i in range(n):
+        val_m = m[i]
+        if not math.isfinite(val_m):
+            carry[i] = 0.0
+        else:
+            carry[i] = math.exp(val_m - new_m[i])
 
-            new_l = old_scale * l + np.sum(block_exp, axis=1)
-            o = (
-                old_scale[:, None] * l[:, None] * o
-                + block_exp @ Vb
-            ) / new_l[:, None]
+    block_exp = np.empty((n, m_block), dtype=np.float64)
+    for i in range(n):
+        nm = new_m[i]
+        for j in range(m_block):
+            block_exp[i, j] = math.exp(scores[i, j] - nm)
 
-            l = new_l
-            m = new_m
+    new_l = np.empty(n, dtype=np.float64)
+    for i in range(n):
+        sum_exp = 0.0
+        for j in range(m_block):
+            sum_exp += block_exp[i, j]
+        new_l[i] = carry[i] * l[i] + sum_exp
 
-    return o
+    new_o = np.empty((n, dv), dtype=np.float64)
+    for i in range(n):
+        c = carry[i]
+        for col in range(dv):
+            s = 0.0
+            for j in range(m_block):
+                s += block_exp[i, j] * V_block[j, col]
+            new_o[i, col] = c * o[i, col] + s
+
+    return new_m, new_l, new_o
+
+
+def ring_output(state) -> np.ndarray:
+    _, l, o = state
+    n = o.shape[0]
+    dv = o.shape[1]
+    res = np.empty((n, dv), dtype=np.float64)
+    for i in range(n):
+        inv_l = 1.0 / l[i]
+        for col in range(dv):
+            res[i, col] = o[i, col] * inv_l
+    return res

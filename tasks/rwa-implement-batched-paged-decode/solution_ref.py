@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -17,24 +18,46 @@ def batched_paged_decode(
 
     batch, d = q.shape
     out = np.zeros((batch, d), dtype=np.float64)
-    scale = np.sqrt(float(d))
+    scale = math.sqrt(float(d))
 
     for b in range(batch):
-        k_tokens = []
-        v_tokens = []
-        for t in range(int(seq_lens[b])):
-            physical_block = int(block_tables[b, t // block_size])
+        length = int(seq_lens[b])
+        k_list = []
+        v_list = []
+        for t in range(length):
+            logical_block = t // block_size
             offset = t % block_size
-            k_tokens.append(k_cache[physical_block, offset])
-            v_tokens.append(v_cache[physical_block, offset])
+            physical_block = int(block_tables[b, logical_block])
+            k_list.append(k_cache[physical_block, offset])
+            v_list.append(v_cache[physical_block, offset])
 
-        k = np.asarray(k_tokens, dtype=np.float64)
-        v = np.asarray(v_tokens, dtype=np.float64)
+        scores = []
+        for t in range(length):
+            dot_val = 0.0
+            for j in range(d):
+                dot_val += k_list[t][j] * q[b, j]
+            scores.append(dot_val / scale)
 
-        scores = (k @ q[b]) / scale
-        scores -= np.max(scores)
-        weights = np.exp(scores)
-        weights /= np.sum(weights)
-        out[b] = weights @ v
+        max_score = scores[0]
+        for t in range(1, length):
+            if scores[t] > max_score:
+                max_score = scores[t]
+
+        weights = []
+        sum_weights = 0.0
+        for t in range(length):
+            w = math.exp(scores[t] - max_score)
+            weights.append(w)
+            sum_weights += w
+
+        normalized_weights = []
+        for t in range(length):
+            normalized_weights.append(weights[t] / sum_weights)
+
+        for j in range(d):
+            val = 0.0
+            for t in range(length):
+                val += normalized_weights[t] * v_list[t][j]
+            out[b, j] = val
 
     return out

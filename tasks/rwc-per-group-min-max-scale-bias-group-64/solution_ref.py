@@ -5,9 +5,20 @@ def compute_group_params(weights: np.ndarray,
                          bits: int = 4) -> tuple[np.ndarray, np.ndarray]:
     w = np.asarray(weights, dtype=np.float64)
     n_groups = len(w) // group_size
-    reshaped = w.reshape(n_groups, group_size)
-    mins = reshaped.min(axis=1)
-    maxs = reshaped.max(axis=1)
-    scale = (maxs - mins) / (2**bits - 1)
-    bias = mins
-    return scale.astype(np.float64), bias.astype(np.float64)
+    denom = (2 ** bits) - 1
+    scales = []
+    biases = []
+    for i in range(n_groups):
+        start = i * group_size
+        end = start + group_size
+        min_val = w[start]
+        max_val = w[start]
+        for j in range(start + 1, end):
+            val = w[j]
+            if val < min_val:
+                min_val = val
+            if val > max_val:
+                max_val = val
+        scales.append((max_val - min_val) / denom)
+        biases.append(min_val)
+    return np.asarray(scales, dtype=np.float64), np.asarray(biases, dtype=np.float64)

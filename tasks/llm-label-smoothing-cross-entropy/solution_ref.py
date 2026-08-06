@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def label_smoothed_cross_entropy(logits: np.ndarray,
@@ -5,33 +6,33 @@ def label_smoothed_cross_entropy(logits: np.ndarray,
                                  eps: float = 0.1) -> float:
     """
     Compute the average label‑smoothed cross‑entropy loss.
-
-    Parameters
-    ----------
-    logits : np.ndarray, shape (N, K)
-        Raw model outputs for N examples and K classes.
-    targets : np.ndarray, shape (N,)
-        Integer class indices in [0, K-1].
-    eps : float, default 0.1
-        Label‑smoothing factor.
-
-    Returns
-    -------
-    loss : float
-        Mean smoothed cross‑entropy over the batch.
     """
     N, K = logits.shape
+    eps_over_K = eps / K
+    one_minus_eps = 1.0 - eps
 
-    # stable log‑softmax computation
-    logits_max = np.max(logits, axis=1, keepdims=True)
-    exp_shifted = np.exp(logits - logits_max)
-    sum_exp = np.sum(exp_shifted, axis=1, keepdims=True)
-    log_softmax = logits - logits_max - np.log(sum_exp)
+    total_loss = 0.0
+    for i in range(N):
+        target_i = targets[i]
 
-    # smoothed target distribution
-    y_onehot = np.zeros_like(logits)
-    y_onehot[np.arange(N), targets] = 1.0
-    y_smooth = (1 - eps) * y_onehot + eps / K
+        max_logit = float(logits[i, 0])
+        for k in range(1, K):
+            val = float(logits[i, k])
+            if val > max_logit:
+                max_logit = val
 
-    loss_per_sample = -np.sum(y_smooth * log_softmax, axis=1)
-    return float(np.mean(loss_per_sample))
+        sum_exp = 0.0
+        for k in range(K):
+            sum_exp += math.exp(float(logits[i, k]) - max_logit)
+
+        log_sum_exp = math.log(sum_exp)
+
+        sample_loss_sum = 0.0
+        for k in range(K):
+            y_s = (one_minus_eps + eps_over_K) if k == target_i else eps_over_K
+            log_sm = (float(logits[i, k]) - max_logit) - log_sum_exp
+            sample_loss_sum += y_s * log_sm
+
+        total_loss += -sample_loss_sum
+
+    return float(total_loss / N)

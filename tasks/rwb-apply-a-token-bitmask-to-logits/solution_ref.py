@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def masked_greedy(logits: np.ndarray,
                   allowed_sets) -> np.ndarray:
@@ -18,8 +19,18 @@ def masked_greedy(logits: np.ndarray,
         The index of the chosen token for each step.
     """
     n_steps, vocab_size = logits.shape
-    mask = np.zeros_like(logits, dtype=bool)
+    result = np.zeros(n_steps, dtype=logits.dtype)
     for i, allowed in enumerate(allowed_sets):
-        mask[i, list(allowed)] = True
-    masked_logits = np.where(mask, logits, -np.inf)
-    return np.argmax(masked_logits, axis=1)
+        allowed_set = set(allowed)
+        best_val = -math.inf
+        best_idx = 0
+        first = True
+        for j in range(vocab_size):
+            if j in allowed_set:
+                val = logits[i, j]
+                if first or val > best_val:
+                    best_val = val
+                    best_idx = j
+                    first = False
+        result[i] = best_idx
+    return result

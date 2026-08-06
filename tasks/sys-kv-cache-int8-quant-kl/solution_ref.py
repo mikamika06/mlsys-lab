@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -8,14 +9,51 @@ def _quantize_int8_per_token(a: np.ndarray):
     Returns (codes, scale): codes is (n, d) int8, scale is (n, 1) float32
     such that ``codes[i].astype(float32) * scale[i] ~= a[i]``.
     """
-    scale = np.max(np.abs(a), axis=-1, keepdims=True) / 127.0
-    scale = np.where(scale == 0, 1.0, scale).astype(np.float32)
-    codes = np.clip(np.round(a / scale), -127, 127).astype(np.int8)
+    n = a.shape[0]
+    d = a.shape[1]
+    scale_list = []
+    for i in range(n):
+        max_val = 0.0
+        for j in range(d):
+            val = a[i, j]
+            if val < 0:
+                val = -val
+            if val > max_val:
+                max_val = val
+        s = max_val / 127.0
+        if s == 0.0:
+            s = 1.0
+        scale_list.append([s])
+    scale = np.array(scale_list, dtype=np.float32)
+
+    codes_list = []
+    for i in range(n):
+        row_codes = []
+        s = scale[i, 0]
+        for j in range(d):
+            r = round(a[i, j] / s)
+            if r < -127:
+                r = -127
+            elif r > 127:
+                r = 127
+            row_codes.append(int(r))
+        codes_list.append(row_codes)
+    codes = np.array(codes_list, dtype=np.int8)
+
     return codes, scale
 
 
 def _dequantize_int8(codes: np.ndarray, scale: np.ndarray) -> np.ndarray:
-    return codes.astype(np.float32) * scale
+    n = codes.shape[0]
+    d = codes.shape[1]
+    res_list = []
+    for i in range(n):
+        row = []
+        s = scale[i, 0]
+        for j in range(d):
+            row.append(float(codes[i, j]) * s)
+        res_list.append(row)
+    return np.array(res_list, dtype=np.float32)
 
 
 def kv_cache_int8_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray):
@@ -52,10 +90,56 @@ def kv_cache_int8_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray):
     K_hat = _dequantize_int8(K_codes, K_scale)
     V_hat = _dequantize_int8(V_codes, V_scale)
 
-    logits = (Q.astype(np.float64) @ K_hat.astype(np.float64).T) / np.sqrt(d)
-    z = logits - np.max(logits, axis=-1, keepdims=True)
-    w = np.exp(z)
-    w = w / np.sum(w, axis=-1, keepdims=True)
-    out = w @ V_hat.astype(np.float64)
+    m = Q.shape[0]
+    n = K_hat.shape[0]
+    sqrt_d = math.sqrt(d)
+
+    logits_list = []
+    for i in range(m):
+        row = []
+        for j in range(n):
+            acc = 0.0
+            for k_idx in range(d):
+                acc += float(Q[i, k_idx]) * float(K_hat[j, k_idx])
+            row.append(acc / sqrt_d)
+        logits_list.append(row)
+    logits = np.array(logits_list, dtype=np.float64)
+
+    z_list = []
+    for i in range(m):
+        max_val = logits[i, 0]
+        for j in range(1, n):
+            val = logits[i, j]
+            if val > max_val:
+                max_val = val
+        row = []
+        for j in range(n):
+            row.append(logits[i, j] - max_val)
+        z_list.append(row)
+
+    w_list = []
+    for i in range(m):
+        row_exp = []
+        sum_exp = 0.0
+        for j in range(n):
+            e = math.exp(z_list[i][j])
+            row_exp.append(e)
+            sum_exp += e
+        row_w = []
+        for j in range(n):
+            row_w.append(row_exp[j] / sum_exp)
+        w_list.append(row_w)
+
+    v_d = V_hat.shape[1]
+    out_list = []
+    for i in range(m):
+        row = []
+        for j in range(v_d):
+            acc = 0.0
+            for k_idx in range(n):
+                acc += w_list[i][k_idx] * float(V_hat[k_idx, j])
+            row.append(acc)
+        out_list.append(row)
+    out = np.array(out_list, dtype=np.float64)
 
     return logits, out

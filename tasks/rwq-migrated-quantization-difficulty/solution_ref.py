@@ -34,13 +34,58 @@ def channel_peakiness_before_after(X, W, alpha=0.5):
     X = np.asarray(X, dtype=np.float64)
     W = np.asarray(W, dtype=np.float64)
 
-    amax_X = np.max(np.abs(X), axis=0)
-    amax_W = np.max(np.abs(W), axis=0)
+    n_tokens, C = X.shape
+    n_out = W.shape[0]
 
-    ratio_before = amax_X / max(float(np.mean(amax_X)), _EPS)
+    amax_X_list = []
+    for j in range(C):
+        m = abs(X[0, j])
+        for i in range(1, n_tokens):
+            val = abs(X[i, j])
+            if val > m:
+                m = val
+        amax_X_list.append(m)
 
-    s = (np.maximum(amax_X, _EPS) ** alpha) / (np.maximum(amax_W, _EPS) ** (1.0 - alpha))
-    amax_X_smoothed = amax_X / s
-    ratio_after = amax_X_smoothed / max(float(np.mean(amax_X_smoothed)), _EPS)
+    amax_W_list = []
+    for j in range(C):
+        m = abs(W[0, j])
+        for i in range(1, n_out):
+            val = abs(W[i, j])
+            if val > m:
+                m = val
+        amax_W_list.append(m)
+
+    sum_amax_X = 0.0
+    for val in amax_X_list:
+        sum_amax_X += val
+    mean_amax_X = sum_amax_X / C
+    denom_before = max(mean_amax_X, _EPS)
+
+    ratio_before_list = []
+    for val in amax_X_list:
+        ratio_before_list.append(val / denom_before)
+
+    s_list = []
+    for j in range(C):
+        num = max(amax_X_list[j], _EPS) ** alpha
+        den = max(amax_W_list[j], _EPS) ** (1.0 - alpha)
+        s_list.append(num / den)
+
+    amax_X_smoothed_list = []
+    for j in range(C):
+        amax_X_smoothed_list.append(amax_X_list[j] / s_list[j])
+
+    sum_smoothed = 0.0
+    for val in amax_X_smoothed_list:
+        sum_smoothed += val
+    mean_smoothed = sum_smoothed / C
+    denom_after = max(mean_smoothed, _EPS)
+
+    ratio_after_list = []
+    for val in amax_X_smoothed_list:
+        ratio_after_list.append(val / denom_after)
+
+    ratio_before = np.asarray(ratio_before_list, dtype=np.float64)
+    ratio_after = np.asarray(ratio_after_list, dtype=np.float64)
 
     return ratio_before, ratio_after

@@ -1,46 +1,49 @@
+import math
 import numpy as np
 
 
 def _softmax_rows(x: np.ndarray) -> np.ndarray:
-    x = x - np.max(x, axis=-1, keepdims=True)
-    e = np.exp(x)
-    return e / np.sum(e, axis=-1, keepdims=True)
+    rows, cols = x.shape
+    out = np.zeros((rows, cols), dtype=np.float64)
+    for i in range(rows):
+        m = x[i, 0]
+        for j in range(1, cols):
+            if x[i, j] > m:
+                m = x[i, j]
+        s = 0.0
+        exps = [0.0] * cols
+        for j in range(cols):
+            v = math.exp(x[i, j] - m)
+            exps[j] = v
+            s += v
+        for j in range(cols):
+            out[i, j] = exps[j] / s
+    return out
 
 
 def _attend(q: np.ndarray, K: np.ndarray, V: np.ndarray, d: int) -> np.ndarray:
-    scores = (q @ K.T) / np.sqrt(d)
-    weights = _softmax_rows(scores[None, :])[0]
-    return weights @ V
+    n_keys = K.shape[0]
+    scores = np.zeros((1, n_keys), dtype=np.float64)
+    sqrt_d = math.sqrt(d)
+    for j in range(n_keys):
+        s = 0.0
+        for k in range(d):
+            s += q[k] * K[j, k]
+        scores[0, j] = s / sqrt_d
+    weights = _softmax_rows(scores)[0]
+    out = np.zeros(d, dtype=np.float64)
+    for k in range(d):
+        s = 0.0
+        for j in range(n_keys):
+            s += weights[j] * V[j, k]
+        out[k] = s
+    return out
 
 
 def snapkv_pooled_selection(K: np.ndarray, V: np.ndarray, Q_obs: np.ndarray, Q_new: np.ndarray,
                              budget: int, pool_size: int) -> dict:
     """SnapKV KV-cache compression, applied independently per attention
     head (each head may keep a different subset of positions).
-
-    K, V   : (H, n, d) cached keys/values, per head.
-    Q_obs  : (H, w, d) the last w queries issued while this context was
-             cached (the 'observation window'), per head.
-    Q_new  : (H, d) a new query per head, attended AFTER compression.
-    budget : positions kept per head (>= w = Q_obs.shape[1]).
-    pool_size : odd int, average-pooling kernel width over the token axis.
-
-    For each head h:
-      1. raw_score[i] = sum over the w observation-window queries of the
-         softmax attention weight head h puts on position i.
-      2. pooled_score = average-pool raw_score with `pool_size`
-         (mode="edge" padding, output length n).
-      3. Always keep the last w positions (the observation window
-         itself). Fill the remaining budget - w slots with the top
-         pooled_score positions OUTSIDE the window (ties broken by
-         smaller index, via a stable descending sort).
-      4. kept_idx[h] = sorted union of the window and the top picks.
-
-    Returns a dict:
-      "kept_idx": list of H sorted 1-D int arrays, kept[h] has length
-                  budget (or w if budget <= w).
-      "output":   (H, d) attention output of Q_new against the
-                  compressed (kept-only) K/V, per head.
     """
     K = np.asarray(K, dtype=np.float64)
     V = np.asarray(V, dtype=np.float64)
@@ -50,29 +53,55 @@ def snapkv_pooled_selection(K: np.ndarray, V: np.ndarray, Q_obs: np.ndarray, Q_n
     H, n, d = K.shape
     w = Q_obs.shape[1]
     pad = pool_size // 2
-    kernel = np.ones(pool_size) / pool_size
 
     kept_idx = []
     outputs = np.zeros((H, d), dtype=np.float64)
+    sqrt_d = math.sqrt(d)
 
     for h in range(H):
-        attn = _softmax_rows((Q_obs[h] @ K[h].T) / np.sqrt(d))  # (w, n)
-        raw_score = attn.sum(axis=0)  # (n,)
+        mat = np.zeros((w, n), dtype=np.float64)
+        for i in range(w):
+            for j in range(n):
+                s = 0.0
+                for k in range(d):
+                    s += Q_obs[h, i, k] * K[h, j, k]
+                mat[i, j] = s / sqrt_d
 
-        padded = np.pad(raw_score, (pad, pad), mode="edge")
-        pooled = np.convolve(padded, kernel, mode="valid")  # (n,)
+        attn = _softmax_rows(mat)
 
-        win = np.arange(n - w, n)
+        raw_score = [0.0] * n
+        for j in range(n):
+            s = 0.0
+            for i in range(w):
+                s += attn[i, j]
+            raw_score[j] = s
+
+        padded = [0.0] * (n + 2 * pad)
+        for i in range(pad):
+            padded[i] = raw_score[0]
+        for i in range(n):
+            padded[pad + i] = raw_score[i]
+        for i in range(pad):
+            padded[pad + n + i] = raw_score[n - 1]
+
+        pooled = [0.0] * n
+        inv_pool = 1.0 / pool_size
+        for j in range(n):
+            s = 0.0
+            for m in range(pool_size):
+                s += padded[j + m] * inv_pool
+            pooled[j] = s
+
+        win = list(range(n - w, n))
         k_extra = budget - w
         if k_extra <= 0:
-            idx = np.sort(win[-budget:])
+            idx_list = sorted(win[-budget:])
         else:
-            mask = np.ones(n, dtype=bool)
-            mask[win] = False
-            cand = np.nonzero(mask)[0]
-            top_extra = cand[np.argsort(-pooled[cand], kind="stable")[:k_extra]]
-            idx = np.sort(np.concatenate([win, top_extra]))
+            cand = list(range(n - w))
+            top_extra = sorted(cand, key=lambda i: pooled[i], reverse=True)[:k_extra]
+            idx_list = sorted(win + top_extra)
 
+        idx = np.array(idx_list)
         kept_idx.append(idx)
         outputs[h] = _attend(Q_new[h], K[h][idx], V[h][idx], d)
 

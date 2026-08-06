@@ -1,16 +1,32 @@
+import math
 import numpy as np
 
 
 def exp_minus_one(x):
     """Accurate e**x - 1, including for |x| far below the fp64 epsilon."""
-    x = np.asarray(x, dtype=np.float64)
-    u = np.exp(x)
-    d = u - 1.0
+    x_arr = np.asarray(x, dtype=np.float64)
+    out = np.empty_like(x_arr, dtype=np.float64)
 
-    with np.errstate(divide="ignore", invalid="ignore"):
-        lu = np.log(u)
-        val = d * (x / lu)
+    for i in range(x_arr.size):
+        xi = float(x_arr.flat[i])
+        try:
+            u = math.exp(xi)
+        except OverflowError:
+            u = float("inf")
 
-    out = np.where(d == 0.0, x, val)          # u rounded to 1 -> e^x - 1 == x
-    out = np.where(u == 0.0, -1.0, out)       # exp underflowed -> -1
+        d = u - 1.0
+
+        if u == 0.0:
+            val = -1.0
+        elif d == 0.0:
+            val = xi
+        else:
+            try:
+                lu = math.log(u)
+            except ValueError:
+                lu = float("nan")
+            val = d * (xi / lu)
+
+        out.flat[i] = val
+
     return out

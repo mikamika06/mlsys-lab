@@ -5,21 +5,53 @@ def kmeans_labels(X, k, centers, iterations):
     X = np.asarray(X, dtype=np.float64)
     c = np.asarray(centers, dtype=np.float64).copy()
 
-    for _ in range(iterations):
-        distances = np.sum((X[:, None, :] - c[None, :, :]) ** 2, axis=2)
-        labels = np.argmin(distances, axis=1)
+    N = X.shape[0]
+    D = X.shape[1]
 
-        new_c = c.copy()
-        assigned_distances = distances[np.arange(len(X)), labels]
+    labels = [0] * N
+
+    for _ in range(iterations):
+        assigned_distances = []
+
+        for i in range(N):
+            min_dist = float("inf")
+            best_j = 0
+            for j in range(k):
+                dist = 0.0
+                for d in range(D):
+                    diff = X[i, d] - c[j, d]
+                    dist += diff * diff
+                if dist < min_dist:
+                    min_dist = dist
+                    best_j = j
+            labels[i] = best_j
+            assigned_distances.append(min_dist)
+
+        new_c = np.empty((k, D), dtype=np.float64)
 
         for j in range(k):
-            mask = labels == j
-            if np.any(mask):
-                new_c[j] = np.mean(X[mask], axis=0)
+            count = 0
+            for i in range(N):
+                if labels[i] == j:
+                    count += 1
+
+            if count > 0:
+                for d in range(D):
+                    val_sum = 0.0
+                    for i in range(N):
+                        if labels[i] == j:
+                            val_sum += X[i, d]
+                    new_c[j, d] = val_sum / count
             else:
-                idx = np.argmax(assigned_distances)
-                new_c[j] = X[idx]
+                max_dist = assigned_distances[0]
+                max_idx = 0
+                for i in range(1, N):
+                    if assigned_distances[i] > max_dist:
+                        max_dist = assigned_distances[i]
+                        max_idx = i
+                for d in range(D):
+                    new_c[j, d] = X[max_idx, d]
 
         c = new_c
 
-    return labels.astype(int)
+    return np.array(labels, dtype=int)

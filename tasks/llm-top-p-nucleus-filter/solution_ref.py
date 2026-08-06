@@ -2,8 +2,14 @@ import numpy as np
 
 
 def top_p_filter(probs: np.ndarray, p: float) -> np.ndarray:
-    probs = np.asarray(probs, dtype=np.float64)
-    order = np.argsort(-probs, kind="stable")
-    cumulative = np.cumsum(probs[order])
-    cutoff = np.searchsorted(cumulative, p, side="left")
-    return order[: cutoff + 1]
+    """Filter top probabilities up to cumulative sum p."""
+    n = len(probs)
+    order = sorted(range(n), key=lambda i: probs[i], reverse=True)
+    res = []
+    cum = 0.0
+    for idx in order:
+        res.append(idx)
+        cum += float(probs[idx])
+        if cum >= p:
+            break
+    return np.array(res, dtype=np.int64)

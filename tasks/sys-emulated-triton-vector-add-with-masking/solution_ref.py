@@ -12,23 +12,20 @@ def emulated_triton_add(a: np.ndarray,
         offset = pid * block_size
         width = min(block_size, N - offset)
 
-        # Boundary mask: True for valid lanes, False for out-of-range
-        mask = np.arange(block_size) < width
+        mask = [i < width for i in range(block_size)]
 
-        # Zero-padded block tiles — avoids slicing past array end
-        a_padded = np.zeros(block_size, dtype=a.dtype)
-        b_padded = np.zeros(block_size, dtype=b.dtype)
-        a_padded[:width] = a[offset:offset + width]
-        b_padded[:width] = b[offset:offset + width]
+        a_padded = [0.0] * block_size
+        b_padded = [0.0] * block_size
+        for i in range(width):
+            a_padded[i] = a[offset + i]
+            b_padded[i] = b[offset + i]
 
-        # Apply mask (zero-fill for invalid lanes)
-        a_tile = np.where(mask, a_padded, 0.0)
-        b_tile = np.where(mask, b_padded, 0.0)
+        a_tile = [a_padded[i] if mask[i] else 0.0 for i in range(block_size)]
+        b_tile = [b_padded[i] if mask[i] else 0.0 for i in range(block_size)]
 
-        # Compute in the block
-        c_tile = a_tile + b_tile
+        c_tile = [a_tile[i] + b_tile[i] for i in range(block_size)]
 
-        # Store only the valid portion back to output
-        output[offset:offset + width] = c_tile[:width]
+        for i in range(width):
+            output[offset + i] = c_tile[i]
 
     return output

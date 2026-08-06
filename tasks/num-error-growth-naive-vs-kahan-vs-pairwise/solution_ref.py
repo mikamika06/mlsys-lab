@@ -54,14 +54,27 @@ def summation_error_growth():
 
     errors = np.asarray(errors, dtype=np.float64)
 
-    slopes = np.asarray([
-        np.polyfit(
-            np.log(ns.astype(np.float64)),
-            np.log(np.maximum(errors[:, i], 1e-300)),
-            1,
-        )[0]
-        for i in range(3)
-    ])
+    log_ns = [math.log(float(n)) for n in ns]
+    slopes_list = []
+    for i in range(3):
+        log_errors_i = [math.log(err if err > 1e-300 else 1e-300) for err in errors[:, i]]
+        n_pts = len(log_ns)
+        sum_x = 0.0
+        sum_y = 0.0
+        sum_xy = 0.0
+        sum_xx = 0.0
+        for j in range(n_pts):
+            xi = float(log_ns[j])
+            yi = float(log_errors_i[j])
+            sum_x += xi
+            sum_y += yi
+            sum_xy += xi * yi
+            sum_xx += xi * xi
+        denom = n_pts * sum_xx - sum_x * sum_x
+        m = (n_pts * sum_xy - sum_x * sum_y) / denom if denom != 0.0 else 0.0
+        slopes_list.append(m)
+
+    slopes = np.asarray(slopes_list, dtype=np.float64)
 
     return {
         "N": ns,

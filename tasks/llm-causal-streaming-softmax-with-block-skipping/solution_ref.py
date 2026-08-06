@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def streaming_causal_softmax(logits, mask, block_size):
@@ -26,18 +27,28 @@ def streaming_causal_softmax(logits, mask, block_size):
     n = logits.shape[0]
     out = np.zeros_like(logits, dtype=np.float64)
 
-    # Causal mask: lower triangular including diagonal
-    causal_mask = np.tril(np.ones((n, n), dtype=bool))
-    combined_mask = mask & causal_mask
-
     for i in range(n):
-        row_mask = combined_mask[i]
-        if not row_mask.any():
+        has_valid = False
+        max_val = 0.0
+        for j in range(i + 1):
+            if mask[i, j]:
+                val = float(logits[i, j])
+                if not has_valid:
+                    max_val = val
+                    has_valid = True
+                elif val > max_val:
+                    max_val = val
+
+        if not has_valid:
             continue
-        vals = logits[i, row_mask]
-        max_val = np.max(vals)
-        exp_vals = np.exp(vals - max_val)
-        probs = exp_vals / np.sum(exp_vals)
-        out[i, row_mask] = probs
+
+        sum_exp = 0.0
+        for j in range(i + 1):
+            if mask[i, j]:
+                sum_exp += math.exp(float(logits[i, j]) - max_val)
+
+        for j in range(i + 1):
+            if mask[i, j]:
+                out[i, j] = math.exp(float(logits[i, j]) - max_val) / sum_exp
 
     return out

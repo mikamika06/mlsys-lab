@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -32,6 +33,7 @@ def int4_groupwise_asymmetric(W: np.ndarray, X: np.ndarray, group_size: int):
     X = np.asarray(X, dtype=np.float64)
     out_f, in_f = W.shape
     groups = in_f // group_size
+    batch = X.shape[1]
 
     codes = np.zeros((out_f, in_f), dtype=np.uint8)
     scales = np.zeros((out_f, groups), dtype=np.float64)
@@ -39,21 +41,49 @@ def int4_groupwise_asymmetric(W: np.ndarray, X: np.ndarray, group_size: int):
 
     for i in range(out_f):
         for g in range(groups):
-            grp = W[i, g * group_size:(g + 1) * group_size]
-            wmin = float(np.min(grp))
-            wmax = float(np.max(grp))
+            start = g * group_size
+            wmin = W[i, start]
+            wmax = W[i, start]
+            for j in range(1, group_size):
+                val = W[i, start + j]
+                if val < wmin:
+                    wmin = val
+                if val > wmax:
+                    wmax = val
+
             scale = (wmax - wmin) / 15.0
             if scale == 0.0:
                 scale = 1.0
-            code = np.clip(np.round((grp - wmin) / scale), 0, 15).astype(np.uint8)
-            codes[i, g * group_size:(g + 1) * group_size] = code
+
             scales[i, g] = scale
             zeros[i, g] = wmin
 
-    W_hat = np.zeros((out_f, in_f), dtype=np.float64)
-    for g in range(groups):
-        sl = slice(g * group_size, (g + 1) * group_size)
-        W_hat[:, sl] = codes[:, sl].astype(np.float64) * scales[:, g:g + 1] + zeros[:, g:g + 1]
+            for j in range(group_size):
+                val = W[i, start + j]
+                rounded = round((val - wmin) / scale)
+                if rounded < 0:
+                    c = 0
+                elif rounded > 15:
+                    c = 15
+                else:
+                    c = int(rounded)
+                codes[i, start + j] = c
 
-    output = W_hat @ X
+    W_hat = np.zeros((out_f, in_f), dtype=np.float64)
+    for i in range(out_f):
+        for g in range(groups):
+            start = g * group_size
+            scale = scales[i, g]
+            wmin = zeros[i, g]
+            for j in range(group_size):
+                W_hat[i, start + j] = float(codes[i, start + j]) * scale + wmin
+
+    output = np.zeros((out_f, batch), dtype=np.float64)
+    for i in range(out_f):
+        for b in range(batch):
+            acc = 0.0
+            for k in range(in_f):
+                acc += W_hat[i, k] * X[k, b]
+            output[i, b] = acc
+
     return codes, scales, zeros, output

@@ -5,8 +5,12 @@ def reconstruct_dense(values, metadata, shape):
     values = np.asarray(values, dtype=np.float64)
     metadata = np.asarray(metadata, dtype=np.uint8)
 
-    dense = np.zeros(int(np.prod(shape)), dtype=np.float64)
-    positions = np.empty(metadata.size * 2, dtype=np.int64)
+    prod_val = 1
+    for dim in shape:
+        prod_val *= int(dim)
+
+    dense = np.zeros(prod_val, dtype=np.float64)
+    positions = np.empty(len(metadata) * 2, dtype=np.int64)
 
     value_index = 0
     pos_index = 0

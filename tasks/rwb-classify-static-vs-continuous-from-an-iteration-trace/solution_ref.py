@@ -10,11 +10,19 @@ def classify_scheduling(active: np.ndarray) -> str:
     """
     active = np.asarray(active).astype(bool)
     T = active.shape[0]
+    N = active.shape[1]
     for t in range(1, T):
-        prev = active[t - 1]
-        curr = active[t]
-        new_ids = curr & ~prev
-        continuing = prev & curr
-        if new_ids.any() and continuing.any():
+        has_new = False
+        has_continuing = False
+        for i in range(N):
+            prev_val = bool(active[t - 1, i])
+            curr_val = bool(active[t, i])
+            new_id = curr_val and (not prev_val)
+            continuing = prev_val and curr_val
+            if new_id:
+                has_new = True
+            if continuing:
+                has_continuing = True
+        if has_new and has_continuing:
             return "continuous"
     return "static"

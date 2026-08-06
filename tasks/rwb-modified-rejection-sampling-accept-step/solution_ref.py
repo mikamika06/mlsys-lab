@@ -22,12 +22,27 @@ def modified_rejection_sample(p, q, draft_token_ids, u_stream):
         if u_accept <= ratio:
             out[t] = tok
         else:
-            r = np.maximum(p[t] - q[t], 0.0)
-            r = r / r.sum()
+            r_sum = 0.0
+            r_vals = []
+            for i in range(V):
+                diff = p[t, i] - q[t, i]
+                val = diff if diff > 0.0 else 0.0
+                r_sum += val
+                r_vals.append(val)
+
+            r_normalized = [val / r_sum for val in r_vals]
+
             u_resample = u_stream[ptr]
             ptr += 1
-            cdf = np.cumsum(r)
-            idx = int(np.searchsorted(cdf, u_resample, side="left"))
+
+            cdf_val = 0.0
+            idx = V
+            for i in range(V):
+                cdf_val += r_normalized[i]
+                if cdf_val >= u_resample:
+                    idx = i
+                    break
+
             idx = min(idx, V - 1)
             out[t] = idx
 

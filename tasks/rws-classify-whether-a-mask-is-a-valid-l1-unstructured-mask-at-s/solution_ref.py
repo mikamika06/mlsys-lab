@@ -12,9 +12,17 @@ def is_valid_l1_mask(w: np.ndarray, mask: np.ndarray, amount: float) -> bool:
     n = w.size
 
     k = int(round(amount * n))
-    true_mask = np.ones(n, dtype=bool)
+    true_mask_list = [True] * n
     if k > 0:
-        idx = np.argsort(np.abs(w))
-        true_mask[idx[:k]] = False
+        indices = sorted(range(n), key=lambda i: abs(w[i]))
+        for i in indices[:k]:
+            true_mask_list[i] = False
 
-    return bool(np.array_equal(mask, true_mask))
+    if mask.size != n:
+        return False
+
+    for i in range(n):
+        if bool(mask[i]) != bool(true_mask_list[i]):
+            return False
+
+    return True

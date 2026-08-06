@@ -57,32 +57,55 @@ def q4k_quantize_superblock(x):
             mm = []
             for i in range(8):
                 sub = block[i * 32:(i + 1) * 32]
-                mn = float(sub.min())
-                mx = float(sub.max())
+                mn = float(sub[0])
+                mx = float(sub[0])
+                for val in sub:
+                    v = float(val)
+                    if v < mn:
+                        mn = v
+                    if v > mx:
+                        mx = v
                 ss.append((mx - mn) / 63.0)
                 mm.append(-mn / 63.0)
 
-            ds = max(ss)
-            dm = max(mm)
+            ds = ss[0]
+            for val in ss:
+                if val > ds:
+                    ds = val
+            dm = mm[0]
+            for val in mm:
+                if val > dm:
+                    dm = val
+
             d[r, sb] = np.float16(ds)
             dmin[r, sb] = np.float16(dm)
 
             for i in range(8):
-                sc = 0 if ds == 0 else int(np.clip(round(ss[i] / ds * 63), 0, 63))
-                mc = 0 if dm == 0 else int(np.clip(round(mm[i] / dm * 63), 0, 63))
+                sc = 0 if ds == 0 else int(max(0, min(63, round(ss[i] / ds * 63))))
+                mc = 0 if dm == 0 else int(max(0, min(63, round(mm[i] / dm * 63))))
                 sub_scales[r, sb, i] = sc
                 sub_mins[r, sb, i] = mc
 
                 sub = block[i * 32:(i + 1) * 32]
                 step = float(d[r, sb]) * sc
                 off = float(dmin[r, sb]) * mc
-                q = (
-                    np.zeros(32, dtype=np.uint8)
-                    if step == 0
-                    else np.clip(np.round((sub + off) / step), 0, 15).astype(np.uint8)
-                )
+                
+                q_list = []
+                if step == 0:
+                    for _ in range(32):
+                        q_list.append(0)
+                else:
+                    for val in sub:
+                        val_f = float(val)
+                        r_val = round((val_f + off) / step)
+                        c_val = max(0, min(15, r_val))
+                        q_list.append(int(c_val))
+                
                 base = sb * 128 + i * 16
-                codes[r, base:base + 16] = q[::2] | (q[1::2] << 4)
+                for idx_byte in range(16):
+                    even_q = q_list[idx_byte * 2]
+                    odd_q = q_list[idx_byte * 2 + 1]
+                    codes[r, base + idx_byte] = even_q | (odd_q << 4)
 
     return codes, sub_scales, sub_mins, d, dmin
 
@@ -113,10 +136,14 @@ def q4k_dequantize_superblock(codes, sub_scales, sub_mins, d, dmin):
                 sc = int(sub_scales[r, sb, i])
                 mc = int(sub_mins[r, sb, i])
                 qbytes = codes[r, sb * 128 + i * 16:sb * 128 + i * 16 + 16]
-                q = np.empty(32, dtype=np.uint8)
-                q[::2] = qbytes & 15
-                q[1::2] = qbytes >> 4
-                out[r, sb * 256 + i * 32:sb * 256 + i * 32 + 32] = (
-                    dv * sc * q.astype(np.float32) - dmv * mc
-                )
+                out_vals = []
+                for idx_byte in range(16):
+                    b_val = int(qbytes[idx_byte])
+                    q_even = b_val & 15
+                    q_odd = b_val >> 4
+                    val_even = dv * sc * float(q_even) - dmv * mc
+                    val_odd = dv * sc * float(q_odd) - dmv * mc
+                    out_vals.append(val_even)
+                    out_vals.append(val_odd)
+                out[r, sb * 256 + i * 32:sb * 256 + i * 32 + 32] = np.asarray(out_vals, dtype=np.float32)
     return out

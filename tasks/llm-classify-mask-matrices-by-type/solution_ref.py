@@ -4,22 +4,53 @@ def classify_masks(masks: list[np.ndarray]) -> list[str]:
     def classify(mask: np.ndarray) -> str:
         n = mask.shape[0]
         
-        if np.all(mask):
+        is_all = True
+        for i in range(n):
+            for j in range(n):
+                if not bool(mask[i, j]):
+                    is_all = False
+                    break
+            if not is_all:
+                break
+        if is_all:
             return "bidirectional"
             
-        causal = np.tril(np.ones((n, n), dtype=bool))
-        if np.array_equal(mask, causal):
+        is_causal = True
+        for i in range(n):
+            for j in range(n):
+                expected = i >= j
+                if bool(mask[i, j]) != expected:
+                    is_causal = False
+                    break
+            if not is_causal:
+                break
+        if is_causal:
             return "causal"
             
         for w in range(1, n - 1):
-            window_mask = np.tril(np.ones((n, n), dtype=bool)) & np.triu(np.ones((n, n), dtype=bool), -w)
-            if np.array_equal(mask, window_mask):
+            is_window = True
+            for i in range(n):
+                for j in range(n):
+                    expected = (i >= j) and (i - j <= w)
+                    if bool(mask[i, j]) != expected:
+                        is_window = False
+                        break
+                if not is_window:
+                    break
+            if is_window:
                 return "window"
                 
         for p in range(1, n):
-            prefix_mask = np.tril(np.ones((n, n), dtype=bool))
-            prefix_mask[:p, :p] = True
-            if np.array_equal(mask, prefix_mask):
+            is_prefix = True
+            for i in range(n):
+                for j in range(n):
+                    expected = (i >= j) or (i < p and j < p)
+                    if bool(mask[i, j]) != expected:
+                        is_prefix = False
+                        break
+                if not is_prefix:
+                    break
+            if is_prefix:
                 return "prefix-lm"
                 
         return "unknown"

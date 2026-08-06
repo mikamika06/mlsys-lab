@@ -3,8 +3,19 @@ import numpy as np
 def nf4_levels():
     """Return the 16 NF4 level values as a float64 numpy array."""
     from scipy.stats import norm
-    q = np.array([norm.ppf((i + 0.5) / 16) for i in range(16)])
-    q_norm = q / np.max(np.abs(q))
-    k = np.argmin(np.abs(q_norm))
-    q_norm[k] = 0.0
-    return q_norm.astype(np.float64)
+    q = [norm.ppf((i + 0.5) / 16) for i in range(16)]
+    max_val = abs(q[0])
+    for i in range(1, 16):
+        v = abs(q[i])
+        if v > max_val:
+            max_val = v
+    q_norm = [x / max_val for x in q]
+    min_idx = 0
+    min_val = abs(q_norm[0])
+    for i in range(1, 16):
+        v = abs(q_norm[i])
+        if v < min_val:
+            min_val = v
+            min_idx = i
+    q_norm[min_idx] = 0.0
+    return np.array(q_norm, dtype=np.float64)

@@ -1,12 +1,35 @@
+import math
 import numpy as np
 
 
 def _int8_symmetric_roundtrip(x: np.ndarray) -> np.ndarray:
     """Per-tensor symmetric INT8 quantize-then-dequantize."""
-    amax = float(np.max(np.abs(x)))
-    scale = max(amax / 127.0, 1e-12)
-    q = np.clip(np.round(x / scale), -127, 127)
-    return q * scale
+    amax = 0.0
+    shape = x.shape
+    if len(shape) == 1:
+        for i in range(shape[0]):
+            val = abs(x[i])
+            if val > amax:
+                amax = val
+        scale = max(amax / 127.0, 1e-12)
+        res = np.zeros(shape, dtype=np.float64)
+        for i in range(shape[0]):
+            q = max(-127, min(127, round(x[i] / scale)))
+            res[i] = q * scale
+        return res
+    else:
+        for i in range(shape[0]):
+            for j in range(shape[1]):
+                val = abs(x[i, j])
+                if val > amax:
+                    amax = val
+        scale = max(amax / 127.0, 1e-12)
+        res = np.zeros(shape, dtype=np.float64)
+        for i in range(shape[0]):
+            for j in range(shape[1]):
+                q = max(-127, min(127, round(x[i, j] / scale)))
+                res[i, j] = q * scale
+        return res
 
 
 def smoothquant_w8a8_comparison(X: np.ndarray, W: np.ndarray, alpha: float) -> dict:
@@ -37,27 +60,89 @@ def smoothquant_w8a8_comparison(X: np.ndarray, W: np.ndarray, alpha: float) -> d
     X = np.asarray(X, dtype=np.float64)
     W = np.asarray(W, dtype=np.float64)
 
-    Y_true = X @ W.T
+    n, d_in = X.shape
+    d_out, _ = W.shape
 
-    # -- raw W8A8 --
+    Y_true = np.zeros((n, d_out), dtype=np.float64)
+    for i in range(n):
+        for j in range(d_out):
+            acc = 0.0
+            for k in range(d_in):
+                acc += X[i, k] * W[j, k]
+            Y_true[i, j] = acc
+
     X_hat_raw = _int8_symmetric_roundtrip(X)
     W_hat_raw = _int8_symmetric_roundtrip(W)
-    Y_raw = X_hat_raw @ W_hat_raw.T
-    error_raw = float(np.linalg.norm(Y_raw - Y_true) / np.linalg.norm(Y_true))
+    
+    Y_raw = np.zeros((n, d_out), dtype=np.float64)
+    for i in range(n):
+        for j in range(d_out):
+            acc = 0.0
+            for k in range(d_in):
+                acc += X_hat_raw[i, k] * W_hat_raw[j, k]
+            Y_raw[i, j] = acc
 
-    # -- SmoothQuant migration, then W8A8 --
-    x_amax = np.max(np.abs(X), axis=0)   # (d_in,)
-    w_amax = np.max(np.abs(W), axis=0)   # (d_in,)
-    s = (x_amax ** alpha) / np.maximum(w_amax ** (1.0 - alpha), 1e-12)
-    s = np.maximum(s, 1e-12)
+    sum_sq_raw = 0.0
+    sum_sq_true = 0.0
+    for i in range(n):
+        for j in range(d_out):
+            diff = Y_raw[i, j] - Y_true[i, j]
+            sum_sq_raw += diff * diff
+            val = Y_true[i, j]
+            sum_sq_true += val * val
+    error_raw = float(math.sqrt(sum_sq_raw) / math.sqrt(sum_sq_true))
 
-    X_smooth = X / s[None, :]
-    W_smooth = W * s[None, :]
+    x_amax = [0.0] * d_in
+    for j in range(d_in):
+        col_max = 0.0
+        for i in range(n):
+            val = abs(X[i, j])
+            if val > col_max:
+                col_max = val
+        x_amax[j] = col_max
+
+    w_amax = [0.0] * d_in
+    for j in range(d_in):
+        col_max = 0.0
+        for i in range(d_out):
+            val = abs(W[i, j])
+            if val > col_max:
+                col_max = val
+        w_amax[j] = col_max
+
+    s = [0.0] * d_in
+    for j in range(d_in):
+        num = x_amax[j] ** alpha
+        denom = max(w_amax[j] ** (1.0 - alpha), 1e-12)
+        s[j] = max(num / denom, 1e-12)
+
+    X_smooth = np.zeros((n, d_in), dtype=np.float64)
+    for i in range(n):
+        for j in range(d_in):
+            X_smooth[i, j] = X[i, j] / s[j]
+
+    W_smooth = np.zeros((d_out, d_in), dtype=np.float64)
+    for i in range(d_out):
+        for j in range(d_in):
+            W_smooth[i, j] = W[i, j] * s[j]
 
     X_hat_sm = _int8_symmetric_roundtrip(X_smooth)
     W_hat_sm = _int8_symmetric_roundtrip(W_smooth)
-    Y_smooth = X_hat_sm @ W_hat_sm.T
-    error_smoothed = float(np.linalg.norm(Y_smooth - Y_true) / np.linalg.norm(Y_true))
+    
+    Y_smooth = np.zeros((n, d_out), dtype=np.float64)
+    for i in range(n):
+        for j in range(d_out):
+            acc = 0.0
+            for k in range(d_in):
+                acc += X_hat_sm[i, k] * W_hat_sm[j, k]
+            Y_smooth[i, j] = acc
+
+    sum_sq_sm = 0.0
+    for i in range(n):
+        for j in range(d_out):
+            diff = Y_smooth[i, j] - Y_true[i, j]
+            sum_sq_sm += diff * diff
+    error_smoothed = float(math.sqrt(sum_sq_sm) / math.sqrt(sum_sq_true))
 
     improvement_ratio = error_smoothed / error_raw if error_raw > 0 else float("inf")
 

@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -9,7 +10,7 @@ def compensated_sum(arr: np.ndarray) -> float:
     for x in arr:
         x = np.float32(x)
         t = np.float32(s + x)
-        if np.abs(s) >= np.abs(x):
+        if math.fabs(s) >= math.fabs(x):
             c = np.float32(c + np.float32(np.float32(s - t) + x))
         else:
             c = np.float32(c + np.float32(np.float32(x - t) + s))

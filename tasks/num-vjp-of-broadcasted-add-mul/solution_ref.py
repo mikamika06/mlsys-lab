@@ -4,6 +4,34 @@ from __future__ import annotations
 import numpy as np
 
 
+def _sum_axis_0(arr: np.ndarray) -> np.ndarray:
+    shape = arr.shape
+    new_shape = shape[1:]
+    out = np.zeros(new_shape, dtype=np.float64)
+    for idx in np.ndindex(new_shape):
+        s = 0.0
+        for d in range(shape[0]):
+            s += arr[(d,) + idx]
+        out[idx] = s
+    return out
+
+
+def _sum_axis_i_keepdims(arr: np.ndarray, i: int) -> np.ndarray:
+    shape = arr.shape
+    new_shape = list(shape)
+    new_shape[i] = 1
+    new_shape = tuple(new_shape)
+    out = np.zeros(new_shape, dtype=np.float64)
+    for idx in np.ndindex(new_shape):
+        s = 0.0
+        idx_list = list(idx)
+        for d in range(shape[i]):
+            idx_list[i] = d
+            s += arr[tuple(idx_list)]
+        out[idx] = s
+    return out
+
+
 def _sum_to_shape(grad: np.ndarray, shape: tuple) -> np.ndarray:
     """Reduce `grad` (some broadcast-result shape) down to `shape` by
     summing exactly the dimensions broadcasting introduced:
@@ -13,11 +41,11 @@ def _sum_to_shape(grad: np.ndarray, shape: tuple) -> np.ndarray:
 
     extra = grad.ndim - len(shape)
     for _ in range(extra):
-        grad = grad.sum(axis=0)
+        grad = _sum_axis_0(grad)
 
     for i, s in enumerate(shape):
         if s == 1 and grad.shape[i] != 1:
-            grad = grad.sum(axis=i, keepdims=True)
+            grad = _sum_axis_i_keepdims(grad, i)
 
     return grad.reshape(shape)
 

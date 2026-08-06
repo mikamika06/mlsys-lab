@@ -42,6 +42,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEYFILE = os.path.expanduser("~/.config/gemini-account-gateway/api.key")
 BASE = "http://127.0.0.1:8787"
 LADDER = ["3-6-flash", "3-1-pro"]
+ASK_TIMEOUT = 600
+GRADE_TIMEOUT = 240
 LOG = os.path.join(ROOT, "tools", "purify_log.jsonl")
 
 _spec = importlib.util.spec_from_file_location("cp", os.path.join(ROOT, "tools", "check_pure.py"))
@@ -74,7 +76,7 @@ class RateLimited(Exception):
         super().__init__(f"rate limited, retry after {retry_after}s")
 
 
-def ask(model: str, prompt: str, timeout: int = 300) -> str:
+def ask(model: str, prompt: str, timeout: int = ASK_TIMEOUT) -> str:
     body = json.dumps({"model": model,
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     req = urllib.request.Request(
@@ -140,9 +142,17 @@ The fence matters: without it the indentation is lost in transit."""
 
 
 def grade(tid: str, path: str) -> tuple[bool, str]:
+    """A hand-written reference that cannot be graded inside the timeout is not an
+    improvement: loops over a large fixture are exactly the cost this rewrite pays,
+    and a task whose own reference takes minutes is a broken task. Timing out is a
+    rejection, not a crash — the whole pool used to die on it."""
     env = dict(os.environ, PYTHONPATH=os.path.join(ROOT, "src"))
-    r = subprocess.run([sys.executable, "-m", "mlsys", "grade", tid, "--file", path, "--json"],
-                       capture_output=True, text=True, cwd=ROOT, env=env, timeout=180)
+    try:
+        r = subprocess.run([sys.executable, "-m", "mlsys", "grade", tid, "--file", path, "--json"],
+                           capture_output=True, text=True, cwd=ROOT, env=env,
+                           timeout=GRADE_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        return False, f"too slow to grade (>{GRADE_TIMEOUT}s)"
     try:
         d = json.loads(r.stdout[r.stdout.index("{"):])
     except Exception:  # noqa: BLE001
@@ -151,14 +161,27 @@ def grade(tid: str, path: str) -> tuple[bool, str]:
 
 
 def verify(tid: str) -> tuple[bool, str]:
-    r = subprocess.run(["bash", os.path.join(ROOT, "tools", "verify_task.sh"), tid],
-                       capture_output=True, text=True, cwd=ROOT, timeout=300)
+    try:
+        r = subprocess.run(["bash", os.path.join(ROOT, "tools", "verify_task.sh"), tid],
+                           capture_output=True, text=True, cwd=ROOT, timeout=GRADE_TIMEOUT + 120)
+    except subprocess.TimeoutExpired:
+        return False, "verify timed out"
     out = (r.stdout + r.stderr).strip().splitlines()
     last = out[-1] if out else ""
     return "TASK_OK" in r.stdout, last[:160]
 
 
 def one(tid: str, tries: int) -> dict:
+    try:
+        return _one(tid, tries)
+    except Exception as e:  # noqa: BLE001 — one bad task must never take the pool down
+        src = os.path.join(ROOT, "tasks", tid, "solution_ref.py")
+        if os.path.exists(src + ".bak"):
+            shutil.move(src + ".bak", src)
+        return {"id": tid, "ok": False, "why": f"{type(e).__name__}: {str(e)[:80]}"}
+
+
+def _one(tid: str, tries: int) -> dict:
     src = os.path.join(ROOT, "tasks", tid, "solution_ref.py")
     chk = os.path.join(ROOT, "tasks", tid, "check.py")
     if not os.path.isfile(src):
@@ -252,7 +275,10 @@ def main():
     with cf.ThreadPoolExecutor(max_workers=min(a.j, 10)) as ex:
         futs = {ex.submit(one, t, a.tries): t for t in queue}
         for fut in cf.as_completed(futs):
-            r = fut.result()
+            try:
+                r = fut.result()
+            except Exception as e:  # noqa: BLE001
+                r = {"id": futs[fut], "ok": False, "why": f"{type(e).__name__}: {str(e)[:80]}"}
             log(dict(r, at=time.strftime("%H:%M:%S")))
             if r["ok"]:
                 done += 1

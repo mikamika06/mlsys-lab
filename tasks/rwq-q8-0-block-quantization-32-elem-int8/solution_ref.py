@@ -14,7 +14,7 @@ def q8_0_quantize(arr: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     -------
     codes : np.ndarray
         int8 array of the same shape as `arr` containing the quantized codes.
-    dequant : np.ndarray
+    dequants : np.ndarray
         float64 array of the same shape as `arr` containing the reconstructed values.
     """
     arr = np.asarray(arr, dtype=np.float64)
@@ -25,14 +25,32 @@ def q8_0_quantize(arr: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
     for start in range(0, n, block_size):
         end = min(start + block_size, n)
-        block = arr[start:end]
-        amax = np.max(np.abs(block))
-        if amax == 0:
+        
+        amax = 0.0
+        for i in range(start, end):
+            val = arr[i]
+            if val < 0.0:
+                abs_val = -val
+            else:
+                abs_val = val
+            if abs_val > amax:
+                amax = abs_val
+
+        if amax == 0.0:
             d = 1.0
         else:
             d = amax / 127.0
-        q = np.round(block / d).astype(np.int8)
-        codes[start:end] = q
-        deq[start:end] = q.astype(np.float64) * d
+
+        for i in range(start, end):
+            val = arr[i]
+            rounded = round(val / d)
+            if rounded < -128:
+                q = -128
+            elif rounded > 127:
+                q = 127
+            else:
+                q = int(rounded)
+            codes[i] = q
+            deq[i] = float(q) * d
 
     return codes, deq

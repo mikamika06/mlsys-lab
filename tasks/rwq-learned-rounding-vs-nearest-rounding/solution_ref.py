@@ -1,10 +1,15 @@
 import itertools
+import math
 
 import numpy as np
 
 
 def _row_scale(w, qmax):
-    a = float(np.max(np.abs(w)))
+    a = 0.0
+    for val in w:
+        v_abs = val if val >= 0.0 else -val
+        if v_abs > a:
+            a = v_abs
     return a / qmax if a > 0 else 1.0
 
 
@@ -26,27 +31,78 @@ def rounding_output_mse(W: np.ndarray, X: np.ndarray, nbits: int):
     X = np.asarray(X, dtype=np.float64)
     d_out, d_in = W.shape
     qmax = (1 << (nbits - 1)) - 1
-    combos = np.array(list(itertools.product([0, 1], repeat=d_in)))
+    combos = list(itertools.product([0, 1], repeat=d_in))
 
     total_learned = 0.0
     total_rtn = 0.0
+    n_cal = X.shape[0]
+
     for i in range(d_out):
         w = W[i]
         s = _row_scale(w, qmax)
-        y = w @ X.T
+        
+        y = [0.0] * n_cal
+        for k in range(n_cal):
+            s_val = 0.0
+            X_k = X[k]
+            for j in range(d_in):
+                s_val += w[j] * X_k[j]
+            y[k] = s_val
 
-        f = np.clip(np.floor(w / s), -qmax, qmax)
-        c = np.clip(np.ceil(w / s), -qmax, qmax)
-        cand = np.stack([f, c], axis=1)
-        chosen = cand[np.arange(d_in)[None, :], combos]
-        v = chosen * s
-        Yhat = v @ X.T
-        sse = np.sum((Yhat - y[None, :]) ** 2, axis=1)
-        total_learned += float(np.min(sse))
+        cand_f = [0.0] * d_in
+        cand_c = [0.0] * d_in
+        for j in range(d_in):
+            val = w[j] / s
+            f_val = math.floor(val)
+            if f_val < -qmax:
+                f_val = -qmax
+            elif f_val > qmax:
+                f_val = qmax
+            cand_f[j] = f_val
 
-        code_rtn = np.clip(np.round(w / s), -qmax, qmax)
-        v_rtn = code_rtn * s
-        total_rtn += float(np.sum((v_rtn @ X.T - y) ** 2))
+            c_val = math.ceil(val)
+            if c_val < -qmax:
+                c_val = -qmax
+            elif c_val > qmax:
+                c_val = qmax
+            cand_c[j] = c_val
 
-    n = d_out * X.shape[0]
+        min_sse = None
+        for combo in combos:
+            sse_combo = 0.0
+            for k in range(n_cal):
+                X_k = X[k]
+                yhat_k = 0.0
+                for j in range(d_in):
+                    choice = combo[j]
+                    chosen_val = cand_f[j] if choice == 0 else cand_c[j]
+                    v_j = chosen_val * s
+                    yhat_k += v_j * X_k[j]
+                diff = yhat_k - y[k]
+                sse_combo += diff * diff
+            if min_sse is None or sse_combo < min_sse:
+                min_sse = sse_combo
+        total_learned += float(min_sse)
+
+        v_rtn = [0.0] * d_in
+        for j in range(d_in):
+            val = w[j] / s
+            rtn_val = round(val)
+            if rtn_val < -qmax:
+                rtn_val = -qmax
+            elif rtn_val > qmax:
+                rtn_val = qmax
+            v_rtn[j] = rtn_val * s
+
+        sse_rtn = 0.0
+        for k in range(n_cal):
+            X_k = X[k]
+            yhat_rtn_k = 0.0
+            for j in range(d_in):
+                yhat_rtn_k += v_rtn[j] * X_k[j]
+            diff = yhat_rtn_k - y[k]
+            sse_rtn += diff * diff
+        total_rtn += float(sse_rtn)
+
+    n = d_out * n_cal
     return total_learned / n, total_rtn / n

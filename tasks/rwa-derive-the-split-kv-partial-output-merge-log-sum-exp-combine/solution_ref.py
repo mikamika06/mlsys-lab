@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -7,12 +8,12 @@ def merge_split_kv(partials):
     l = 0.0
     numerator = None
     for m_i, l_i, o_i in partials:
-        scale = np.exp(m_i - m)
+        scale = math.exp(m_i - m)
         l += scale * l_i
-        term = scale * np.asarray(o_i, dtype=np.float64)
+        term = [scale * x for x in o_i]
         if numerator is None:
             numerator = term
         else:
-            numerator = numerator + term
+            numerator = [n + t for n, t in zip(numerator, term)]
 
-    return numerator / l
+    return np.asarray(numerator, dtype=np.float64) / l

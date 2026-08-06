@@ -5,20 +5,34 @@ def speculative_histogram(p, q, seed, n_samples):
     p = np.asarray(p, dtype=np.float64)
     q = np.asarray(q, dtype=np.float64)
 
-    residual_mass = np.maximum(p - q, 0.0)
-    residual_total = float(np.sum(residual_mass))
+    length = len(p)
+    residual_mass = np.zeros(length, dtype=np.float64)
+    for i in range(length):
+        diff = p[i] - q[i]
+        residual_mass[i] = diff if diff > 0.0 else 0.0
+
+    residual_total = 0.0
+    for i in range(length):
+        residual_total += residual_mass[i]
+
+    residual = np.zeros(length, dtype=np.float64)
     if residual_total > 0:
-        residual = residual_mass / residual_total
+        for i in range(length):
+            residual[i] = residual_mass[i] / residual_total
     else:
-        residual = p.copy()
+        for i in range(length):
+            residual[i] = p[i]
 
     rng = np.random.default_rng(seed)
-    counts = np.zeros(p.shape[0], dtype=np.int64)
+    counts = np.zeros(length, dtype=np.int64)
 
-    accept_prob = np.minimum(
-        1.0,
-        np.divide(p, q, out=np.zeros_like(p), where=q > 0),
-    )
+    accept_prob = np.zeros(length, dtype=np.float64)
+    for i in range(length):
+        if q[i] > 0:
+            val = p[i] / q[i]
+            accept_prob[i] = 1.0 if val > 1.0 else val
+        else:
+            accept_prob[i] = 0.0
 
     for _ in range(n_samples):
         proposal = int(rng.choice(len(q), p=q))
@@ -28,4 +42,8 @@ def speculative_histogram(p, q, seed, n_samples):
             token = int(rng.choice(len(p), p=residual))
         counts[token] += 1
 
-    return counts.astype(np.float64) / n_samples
+    result = np.zeros(length, dtype=np.float64)
+    for i in range(length):
+        result[i] = counts[i] / n_samples
+
+    return result

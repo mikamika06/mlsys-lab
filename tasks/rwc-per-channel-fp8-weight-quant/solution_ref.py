@@ -26,12 +26,31 @@ _MAXV = float(_GRID[-1])
 
 
 def _nearest_grid(values: np.ndarray) -> np.ndarray:
-    idx = np.searchsorted(_GRID, values)
-    idx = np.clip(idx, 1, len(_GRID) - 1)
-    lo = _GRID[idx - 1]
-    hi = _GRID[idx]
-    choose_hi = (hi - values) < (values - lo)
-    return np.where(choose_hi, hi, lo)
+    flat = values.ravel()
+    res = np.empty_like(flat)
+    grid_len = len(_GRID)
+    for i in range(len(flat)):
+        val = flat[i]
+        low = 0
+        high = grid_len
+        while low < high:
+            mid = (low + high) // 2
+            if _GRID[mid] < val:
+                low = mid + 1
+            else:
+                high = mid
+        idx = low
+        if idx < 1:
+            idx = 1
+        elif idx >= grid_len:
+            idx = grid_len - 1
+        lo = _GRID[idx - 1]
+        hi = _GRID[idx]
+        if (hi - val) < (val - lo):
+            res[i] = hi
+        else:
+            res[i] = lo
+    return res.reshape(values.shape)
 
 
 def per_channel_fp8_quant(W: np.ndarray):
@@ -43,16 +62,51 @@ def per_channel_fp8_quant(W: np.ndarray):
     """
     W = np.asarray(W, dtype=np.float64)
     rows = W.shape[0]
+    cols = W.shape[1] if W.ndim > 1 else 1
     scales = np.empty(rows, dtype=np.float64)
     out = np.empty_like(W)
     for i in range(rows):
         row = W[i]
-        amax = np.max(np.abs(row))
-        scale = amax / _MAXV if amax > 0 else 1.0
+        amax = 0.0
+        for j in range(cols):
+            val = row[j]
+            if val < 0.0:
+                val = -val
+            if val > amax:
+                amax = val
+        scale = amax / _MAXV if amax > 0.0 else 1.0
         scales[i] = scale
-        y = row / scale
-        sign = np.sign(y)
-        mag = np.clip(np.abs(y), 0.0, _MAXV)
-        q = _nearest_grid(mag)
-        out[i] = sign * q * scale
+        
+        row_out = out[i]
+        for j in range(cols):
+            val = row[j] / scale
+            if val < 0.0:
+                sign = -1.0
+                mag = -val
+            else:
+                sign = 1.0
+                mag = val
+            if mag > _MAXV:
+                mag = _MAXV
+            
+            low = 0
+            high = len(_GRID)
+            while low < high:
+                mid = (low + high) // 2
+                if _GRID[mid] < mag:
+                    low = mid + 1
+                else:
+                    high = mid
+            idx = low
+            if idx < 1:
+                idx = 1
+            elif idx >= len(_GRID):
+                idx = len(_GRID) - 1
+            lo = _GRID[idx - 1]
+            hi = _GRID[idx]
+            if (hi - mag) < (mag - lo):
+                q = hi
+            else:
+                q = lo
+            row_out[j] = sign * q * scale
     return scales, out

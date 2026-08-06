@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -18,7 +19,7 @@ def sliding_window_attention_tiled(Q: np.ndarray, K: np.ndarray, V: np.ndarray, 
     K = np.asarray(K, dtype=np.float64)
     V = np.asarray(V, dtype=np.float64)
     n, d = Q.shape
-    scale = 1.0 / np.sqrt(d)
+    scale = 1.0 / math.sqrt(d)
 
     out = np.empty((n, d), dtype=np.float64)
 
@@ -31,17 +32,57 @@ def sliding_window_attention_tiled(Q: np.ndarray, K: np.ndarray, V: np.ndarray, 
         K_tile = K[k_lo:k_hi]
         V_tile = V[k_lo:k_hi]
 
-        scores = (Q_tile @ K_tile.T) * scale
+        num_q = qe - qs
+        num_k = k_hi - k_lo
 
-        rows = np.arange(qs, qe).reshape(-1, 1)
-        cols = np.arange(k_lo, k_hi).reshape(1, -1)
-        allowed = (cols <= rows) & (rows - cols < window)
+        scores = np.empty((num_q, num_k), dtype=np.float64)
+        for i in range(num_q):
+            for j in range(num_k):
+                dot = 0.0
+                for k_idx in range(d):
+                    dot += Q_tile[i, k_idx] * K_tile[j, k_idx]
+                scores[i, j] = dot * scale
 
-        masked = np.where(allowed, scores, -np.inf)
-        masked = masked - np.max(masked, axis=-1, keepdims=True)
-        e = np.exp(masked)
-        p = e / np.sum(e, axis=-1, keepdims=True)
+        masked = np.empty((num_q, num_k), dtype=np.float64)
+        for i in range(num_q):
+            row_idx = qs + i
+            for j in range(num_k):
+                col_idx = k_lo + j
+                allowed = (col_idx <= row_idx) and ((row_idx - col_idx) < window)
+                if allowed:
+                    masked[i, j] = scores[i, j]
+                else:
+                    masked[i, j] = -float('inf')
 
-        out[qs:qe] = p @ V_tile
+        for i in range(num_q):
+            max_val = masked[i, 0]
+            for j in range(1, num_k):
+                if masked[i, j] > max_val:
+                    max_val = masked[i, j]
+            for j in range(num_k):
+                masked[i, j] = masked[i, j] - max_val
+
+        e = np.empty((num_q, num_k), dtype=np.float64)
+        for i in range(num_q):
+            for j in range(num_k):
+                e[i, j] = math.exp(masked[i, j])
+
+        p = np.empty((num_q, num_k), dtype=np.float64)
+        for i in range(num_q):
+            sum_e = 0.0
+            for j in range(num_k):
+                sum_e += e[i, j]
+            for j in range(num_k):
+                p[i, j] = e[i, j] / sum_e
+
+        res_tile = np.empty((num_q, d), dtype=np.float64)
+        for i in range(num_q):
+            for j in range(d):
+                val = 0.0
+                for k_idx in range(num_k):
+                    val += p[i, k_idx] * V_tile[k_idx, j]
+                res_tile[i, j] = val
+
+        out[qs:qe] = res_tile
 
     return out

@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -44,24 +45,50 @@ def paged_append_and_attend(kv_pool_k: np.ndarray, kv_pool_v: np.ndarray,
         offset = pos % block_size
         return block_table[logical_block] * block_size + offset
 
-    # write path: append new_k/new_v into the physical pool via slot_mapping
     for i in range(T):
         pos = existing_len + i
         s = slot_of(pos)
-        kv_pool_k[s] = new_k[i]
-        kv_pool_v[s] = new_v[i]
+        for j in range(d):
+            kv_pool_k[s, j] = new_k[i, j]
+            kv_pool_v[s, j] = new_v[i, j]
 
-    # gather path: reassemble the logical sequence from the physical pool
     total_len = existing_len + T
     gathered_k = np.empty((total_len, d), dtype=np.float64)
     gathered_v = np.empty((total_len, d), dtype=np.float64)
     for pos in range(total_len):
         s = slot_of(pos)
-        gathered_k[pos] = kv_pool_k[s]
-        gathered_v[pos] = kv_pool_v[s]
+        for j in range(d):
+            gathered_k[pos, j] = kv_pool_k[s, j]
+            gathered_v[pos, j] = kv_pool_v[s, j]
 
-    scores = (q @ gathered_k.T) / np.sqrt(d)
-    scores = scores - np.max(scores)
-    probs = np.exp(scores)
-    probs = probs / np.sum(probs)
-    return probs @ gathered_v
+    scores = np.empty((total_len,), dtype=np.float64)
+    scale = math.sqrt(d)
+    for i in range(total_len):
+        dot = 0.0
+        for j in range(d):
+            dot += q[j] * gathered_k[i, j]
+        scores[i] = dot / scale
+
+    max_score = scores[0]
+    for i in range(1, total_len):
+        if scores[i] > max_score:
+            max_score = scores[i]
+
+    probs = np.empty((total_len,), dtype=np.float64)
+    sum_probs = 0.0
+    for i in range(total_len):
+        val = math.exp(scores[i] - max_score)
+        probs[i] = val
+        sum_probs += val
+
+    for i in range(total_len):
+        probs[i] /= sum_probs
+
+    out = np.zeros((d,), dtype=np.float64)
+    for j in range(d):
+        acc = 0.0
+        for i in range(total_len):
+            acc += probs[i] * gathered_v[i, j]
+        out[j] = acc
+
+    return out

@@ -3,30 +3,27 @@ import numpy as np
 def round_to_nearest(W: np.ndarray, num_bits: int) -> np.ndarray:
     """
     Symmetric round‑to‑nearest quantization.
-
-    Parameters
-    ----------
-    W : np.ndarray of float32
-        Weight tensor to be quantized.
-    num_bits : int
-        Number of signed bits for the integer representation (e.g. 8 or 16).
-
-    Returns
-    -------
-    Q : np.ndarray of int8/int16
-        Quantized integer array with values in [-2^(n-1), ..., 2^(n-1)-1].
     """
-    max_val = np.max(np.abs(W))
-    scale = max_val / ((2**(num_bits-1)) - 1)
+    max_val = 0.0
+    for val in W.flat:
+        v = float(val)
+        abs_v = v if v >= 0.0 else -v
+        if abs_v > max_val:
+            max_val = abs_v
 
-    # Compute raw quantized values
-    Q_raw = np.round(W / scale)
+    scale = max_val / ((2 ** (num_bits - 1)) - 1)
+    qmin = -(2 ** (num_bits - 1))
+    qmax = (2 ** (num_bits - 1)) - 1
 
-    # Clip to representable range
-    qmin = -(2**(num_bits-1))
-    qmax = (2**(num_bits-1)) - 1
-    Q_clipped = np.clip(Q_raw, qmin, qmax)
-
-    # Cast to appropriate integer dtype
     dtype = np.int8 if num_bits <= 8 else np.int16
-    return Q_clipped.astype(dtype)
+    Q = np.empty(W.shape, dtype=dtype)
+
+    for i, val in enumerate(W.flat):
+        q = round(float(val) / scale)
+        if q < qmin:
+            q = qmin
+        elif q > qmax:
+            q = qmax
+        Q.flat[i] = q
+
+    return Q

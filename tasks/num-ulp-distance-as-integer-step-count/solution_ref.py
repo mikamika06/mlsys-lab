@@ -8,10 +8,14 @@ def ulp_distance(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     def ordered(x):
         bits = x.view(np.uint32)
         sign = (bits & np.uint32(0x80000000)) != 0
-        return np.where(
-            sign,
-            np.bitwise_not(bits),
-            bits ^ np.uint32(0x80000000),
-        ).astype(np.int64)
+        if sign:
+            res = np.bitwise_not(bits)
+        else:
+            res = bits ^ np.uint32(0x80000000)
+        return int(res.astype(np.int64))
 
-    return np.abs(ordered(a) - ordered(b)).astype(np.uint32)
+    out = []
+    for x, y in zip(a.flat, b.flat):
+        out.append(abs(ordered(x) - ordered(y)))
+
+    return np.array(out, dtype=np.uint32).reshape(a.shape)

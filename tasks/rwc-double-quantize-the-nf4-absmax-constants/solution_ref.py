@@ -1,11 +1,24 @@
 import numpy as np
+import math
 
 
 def _nf4_codebook() -> np.ndarray:
     rng = np.random.RandomState(0)
     sample = rng.randn(1_000_000)
-    q = (np.arange(16) + 0.5) / 16
-    return np.quantile(sample, q)
+    sample_list = sorted(sample.tolist())
+    n = len(sample_list)
+    q = [(i + 0.5) / 16 for i in range(16)]
+    res = []
+    for qi in q:
+        pos = qi * (n - 1)
+        idx = int(pos)
+        frac = pos - idx
+        if idx >= n - 1:
+            res.append(sample_list[-1])
+        else:
+            val = sample_list[idx] + frac * (sample_list[idx + 1] - sample_list[idx])
+            res.append(val)
+    return np.array(res, dtype=np.float64)
 
 
 _CODEBOOK = _nf4_codebook()
@@ -13,18 +26,36 @@ _CODEBOOK = _nf4_codebook()
 
 def _nf4_quantize(flat: np.ndarray, block_size: int):
     n = len(flat)
-    n_blocks = int(np.ceil(n / block_size))
+    n_blocks = math.ceil(n / block_size)
     codes = np.empty(n, dtype=np.uint8)
     c1 = np.empty(n_blocks, dtype=np.float64)
-    for bi, i in enumerate(range(0, n, block_size)):
+    codebook_list = _CODEBOOK.tolist()
+    bi = 0
+    for i in range(0, n, block_size):
         blk = flat[i:i + block_size]
-        m = float(np.max(np.abs(blk)))
+        m = 0.0
+        for val in blk:
+            av = val if val >= 0.0 else -val
+            if av > m:
+                m = av
         if m == 0.0:
             m = 1.0
         c1[bi] = m
-        y = blk / m
-        idx = np.abs(y[:, None] - _CODEBOOK[None, :]).argmin(axis=1)
-        codes[i:i + block_size] = idx.astype(np.uint8)
+        for j in range(len(blk)):
+            y_val = blk[j] / m
+            best_idx = 0
+            min_diff = y_val - codebook_list[0]
+            if min_diff < 0.0:
+                min_diff = -min_diff
+            for ci in range(1, 16):
+                diff = y_val - codebook_list[ci]
+                if diff < 0.0:
+                    diff = -diff
+                if diff < min_diff:
+                    min_diff = diff
+                    best_idx = ci
+            codes[i + j] = best_idx
+        bi += 1
     return codes, c1
 
 
@@ -34,13 +65,25 @@ def _affine8_quant_dequant(x: np.ndarray, outer_block: int) -> np.ndarray:
     out = np.empty(n, dtype=np.float64)
     for i in range(0, n, outer_block):
         grp = x[i:i + outer_block]
-        lo, hi = float(np.min(grp)), float(np.max(grp))
+        lo = grp[0]
+        hi = grp[0]
+        for val in grp:
+            if val < lo:
+                lo = val
+            if val > hi:
+                hi = val
         scale = (hi - lo) / 255.0
         if scale == 0.0:
             scale = 1.0
         zp = round(-lo / scale)
-        code = np.clip(np.round(grp / scale + zp), 0, 255)
-        out[i:i + outer_block] = (code - zp) * scale
+        for j in range(len(grp)):
+            val = grp[j]
+            quant_val = round(val / scale + zp)
+            if quant_val < 0:
+                quant_val = 0
+            elif quant_val > 255:
+                quant_val = 255
+            out[i + j] = (quant_val - zp) * scale
     return out
 
 

@@ -50,19 +50,56 @@ def optimal_scale_and_error(x: np.ndarray, fmt: str) -> tuple[float, float]:
     """
     x = np.asarray(x, dtype=np.float64)
     fmax = _FP8_MAX[fmt]
-    amax = float(np.max(np.abs(x)))
+    
+    amax = 0.0
+    for v in np.nditer(x):
+        val = float(v)
+        if val < 0.0:
+            val = -val
+        if val > amax:
+            amax = val
+
     if amax == 0.0:
         return 0.0, 0.0
 
     scale = amax / fmax
-    scaled = np.clip(x / scale, -fmax, fmax)
-
     grid = _GRIDS[fmt]
-    flat = scaled.ravel()
-    diffs = np.abs(flat[:, None] - grid[None, :])
-    idx = np.argmin(diffs, axis=1)
-    q = grid[idx].reshape(scaled.shape)
 
-    dequant = q * scale
-    err = float(np.max(np.abs(dequant - x)))
-    return scale, err
+    max_err = 0.0
+    q = np.empty(x.shape, dtype=np.float64)
+    dequant = np.empty(x.shape, dtype=np.float64)
+
+    it = np.nditer(x, flags=['multi_index'])
+    while not it.finished:
+        idx = it.multi_index
+        val = float(x[idx])
+
+        v = val / scale
+        if v > fmax:
+            v = fmax
+        elif v < -fmax:
+            v = -fmax
+
+        min_diff = float("inf")
+        best_g = grid[0]
+        for g in grid:
+            diff = v - g
+            if diff < 0.0:
+                diff = -diff
+            if diff < min_diff:
+                min_diff = diff
+                best_g = g
+
+        q[idx] = best_g
+        dq = best_g * scale
+        dequant[idx] = dq
+
+        err_val = dq - val
+        if err_val < 0.0:
+            err_val = -err_val
+        if err_val > max_err:
+            max_err = err_val
+
+        it.iternext()
+
+    return scale, max_err

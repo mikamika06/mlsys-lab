@@ -25,15 +25,46 @@ def rigl_grow_step(gradients: np.ndarray,
     mask = np.asarray(mask, dtype=bool)
     if gradients.shape != mask.shape:
         raise ValueError("gradients and mask must have the same shape")
-    zero_pos = np.where(~mask)[0]
+    
+    zero_pos = []
+    for i in range(mask.shape[0]):
+        if not mask[i]:
+            zero_pos.append(i)
+            
     if len(zero_pos) == 0 or grow_count <= 0:
         return mask.copy()
-    abs_grad = np.abs(gradients[zero_pos])
+        
+    abs_grad = []
+    for idx in zero_pos:
+        val = gradients[idx]
+        if val < 0:
+            val = -val
+        abs_grad.append(val)
+        
     if grow_count > len(zero_pos):
         grow_count = len(zero_pos)
-    # Select top‑grow_count indices by absolute gradient magnitude
-    top_idx_within_zero = np.argpartition(-abs_grad, grow_count-1)[:grow_count]
-    top_indices = zero_pos[top_idx_within_zero]
+        
+    paired = []
+    for i in range(len(zero_pos)):
+        paired.append((abs_grad[i], i))
+        
+    for i in range(grow_count):
+        max_idx = i
+        for j in range(i + 1, len(paired)):
+            if paired[j][0] > paired[max_idx][0]:
+                max_idx = j
+        if max_idx != i:
+            temp = paired[i]
+            paired[i] = paired[max_idx]
+            paired[max_idx] = temp
+            
+    top_indices = []
+    for i in range(grow_count):
+        original_zero_pos_idx = paired[i][1]
+        top_indices.append(zero_pos[original_zero_pos_idx])
+        
     new_mask = mask.copy()
-    new_mask[top_indices] = True
+    for idx in top_indices:
+        new_mask[idx] = True
+        
     return new_mask

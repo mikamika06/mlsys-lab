@@ -1,4 +1,6 @@
+import math
 import numpy as np
+
 
 def deepnorm_scaled_residuals(residuals, alpha):
     """
@@ -18,7 +20,11 @@ def deepnorm_scaled_residuals(residuals, alpha):
     """
     norms = []
     for i, r in enumerate(residuals):
-        norm = np.linalg.norm(r.astype(np.float64), ord=2)
-        scaled = float(norm) * (float(alpha) ** i)
+        sum_sq = 0.0
+        for j in range(len(r)):
+            val = float(r[j])
+            sum_sq += val * val
+        norm = math.sqrt(sum_sq)
+        scaled = norm * (float(alpha) ** i)
         norms.append(scaled)
     return np.array(norms, dtype=np.float64)

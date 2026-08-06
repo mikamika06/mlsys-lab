@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -68,13 +69,46 @@ def gather_and_attend(k_pool, v_pool, block_table, block_size, seq_len, q):
     v_pool = np.asarray(v_pool, dtype=np.float64)
     q = np.asarray(q, dtype=np.float64)
 
-    idx = np.asarray(block_table, dtype=np.int64)
-    k_logical = k_pool[idx].reshape(-1, k_pool.shape[-1])[:seq_len]
-    v_logical = v_pool[idx].reshape(-1, v_pool.shape[-1])[:seq_len]
-
     D = q.shape[0]
-    scores = (k_logical @ q) / np.sqrt(D)
-    scores = scores - np.max(scores)
-    w = np.exp(scores)
-    w = w / np.sum(w)
-    return w @ v_logical
+    k_logical_list = []
+    v_logical_list = []
+    for i in range(seq_len):
+        logical_block = i // block_size
+        slot = i % block_size
+        phys = block_table[logical_block]
+        k_logical_list.append(k_pool[phys, slot])
+        v_logical_list.append(v_pool[phys, slot])
+
+    k_logical = np.asarray(k_logical_list, dtype=np.float64)
+    v_logical = np.asarray(v_logical_list, dtype=np.float64)
+
+    scores_list = []
+    scale = math.sqrt(D)
+    for i in range(seq_len):
+        dot = 0.0
+        for j in range(D):
+            dot += k_logical[i, j] * q[j]
+        scores_list.append(dot / scale)
+
+    max_score = scores_list[0]
+    for s in scores_list:
+        if s > max_score:
+            max_score = s
+
+    w_list = []
+    sum_w = 0.0
+    for s in scores_list:
+        val = math.exp(s - max_score)
+        w_list.append(val)
+        sum_w += val
+
+    w_normalized = [val / sum_w for val in w_list]
+
+    out = np.zeros(D, dtype=np.float64)
+    for j in range(D):
+        acc = 0.0
+        for i in range(seq_len):
+            acc += w_normalized[i] * v_logical[i, j]
+        out[j] = acc
+
+    return out

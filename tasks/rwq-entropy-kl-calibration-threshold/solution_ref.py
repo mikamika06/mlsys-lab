@@ -1,30 +1,78 @@
+import math
 import numpy as np
 
 
 def _kl_for_threshold(activations, edges, hist, k):
     threshold = edges[k]
-    clipped = np.minimum(activations, threshold)
-    levels = np.floor(clipped / threshold * k).astype(np.int64)
-    levels = np.minimum(levels, k - 1)
-    reconstructed = (levels.astype(np.float64) + 0.5) / k * threshold
-    qhist, _ = np.histogram(reconstructed, bins=edges)
+    qhist = np.zeros(len(edges) - 1, dtype=np.int64)
+    for x in activations:
+        clipped = x if x < threshold else threshold
+        levels = math.floor((clipped / threshold) * k)
+        if levels > k - 1:
+            levels = k - 1
+        reconstructed = ((levels + 0.5) / k) * threshold
+        bin_idx = -1
+        if reconstructed == edges[-1]:
+            bin_idx = len(edges) - 2
+        else:
+            for i in range(len(edges) - 1):
+                if edges[i] <= reconstructed < edges[i + 1]:
+                    bin_idx = i
+                    break
+        if bin_idx != -1:
+            qhist[bin_idx] += 1
 
-    p = hist.astype(np.float64)
-    p = p / np.sum(p)
-    q = qhist.astype(np.float64)
-    q = q / np.sum(q)
+    sum_p = 0.0
+    for i in range(len(hist)):
+        sum_p += float(hist[i])
+
+    p_norm = np.zeros_like(hist, dtype=np.float64)
+    for i in range(len(hist)):
+        p_norm[i] = float(hist[i]) / sum_p
+
+    sum_q = 0.0
+    for i in range(len(qhist)):
+        sum_q += float(qhist[i])
+
+    q_norm = np.zeros_like(qhist, dtype=np.float64)
+    for i in range(len(qhist)):
+        q_norm[i] = float(qhist[i]) / sum_q
+
     eps = 1e-12
-    return float(np.sum(p * (np.log(p + eps) - np.log(q + eps))))
+    kl_sum = 0.0
+    for i in range(len(p_norm)):
+        pi = p_norm[i]
+        qi = q_norm[i]
+        kl_sum += pi * (math.log(pi + eps) - math.log(qi + eps))
+    return float(kl_sum)
 
 
 def calibrate_threshold_index(activations, num_bins, candidate_indices):
-    edges = np.linspace(0.0, float(np.max(activations)), num_bins + 1)
-    hist, _ = np.histogram(activations, bins=edges)
+    max_val = activations[0]
+    for val in activations:
+        if val > max_val:
+            max_val = val
+    max_val = float(max_val)
+
+    edges = np.zeros(num_bins + 1, dtype=np.float64)
+    for i in range(num_bins + 1):
+        edges[i] = i * max_val / num_bins
+
+    hist = np.zeros(num_bins, dtype=np.int64)
+    for x in activations:
+        bin_idx = -1
+        if x == edges[-1]:
+            bin_idx = len(edges) - 2
+        else:
+            for i in range(len(edges) - 1):
+                if edges[i] <= x < edges[i + 1]:
+                    bin_idx = i
+                    break
+        if bin_idx != -1:
+            hist[bin_idx] += 1
 
     best_index = int(candidate_indices[0])
-    best_kl = _kl_for_threshold(
-        activations, edges, hist, best_index
-    )
+    best_kl = _kl_for_threshold(activations, edges, hist, best_index)
 
     for k in candidate_indices[1:]:
         k = int(k)

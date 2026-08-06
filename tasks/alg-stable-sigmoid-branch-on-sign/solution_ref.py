@@ -1,19 +1,16 @@
+import math
 import numpy as np
 
 def stable_sigmoid(z: np.ndarray) -> np.ndarray:
-    z = np.asarray(z, dtype=np.float64)
-    pos_mask = z >= 0
-    neg_mask = ~pos_mask
-    out = np.empty_like(z, dtype=np.float64)
-
-    # Positive branch: use exp(-z), which is safe for large positive z
-    if np.any(pos_mask):
-        exp_neg_z = np.exp(-z[pos_mask])
-        out[pos_mask] = 1.0 / (1.0 + exp_neg_z)
-
-    # Negative branch: use exp(z), which is safe for large negative z
-    if np.any(neg_mask):
-        exp_z = np.exp(z[neg_mask])
-        out[neg_mask] = exp_z / (1.0 + exp_z)
-
+    z_arr = np.asarray(z, dtype=np.float64)
+    out = np.empty_like(z_arr, dtype=np.float64)
+    flat_z = z_arr.flat
+    flat_out = out.flat
+    for i in range(z_arr.size):
+        val = flat_z[i]
+        if val >= 0.0:
+            flat_out[i] = 1.0 / (1.0 + math.exp(-val))
+        else:
+            exp_val = math.exp(val)
+            flat_out[i] = exp_val / (1.0 + exp_val)
     return out

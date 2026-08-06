@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -24,20 +25,57 @@ def biased_flash_backward(Q, K, V, B, dO, m, l):
     m = np.asarray(m, dtype=np.float64)
     l = np.asarray(l, dtype=np.float64)
 
-    scale = np.sqrt(float(Q.shape[1]))
+    n, d = Q.shape
+    scale = math.sqrt(float(d))
 
-    # Recompute P from Q, K, B and the saved (m, l) -- the full P matrix
-    # was never stored after the forward pass.
-    S = Q @ K.T / scale + B
-    P = np.exp(S - m[:, None]) / l[:, None]
+    P = np.zeros((n, n), dtype=np.float64)
+    for i in range(n):
+        for j in range(n):
+            s_val = 0.0
+            for k in range(d):
+                s_val += Q[i, k] * K[j, k]
+            s_val = s_val / scale + B[i, j]
+            P[i, j] = math.exp(s_val - m[i]) / l[i]
 
-    dV = P.T @ dO
-    dP = dO @ V.T
-    correction = np.sum(dP * P, axis=1, keepdims=True)
-    dS = P * (dP - correction)  # bias is additive, so dS == d(scaled scores)
+    dV = np.zeros((n, d), dtype=np.float64)
+    for i in range(n):
+        for k in range(d):
+            val = 0.0
+            for j in range(n):
+                val += P[j, i] * dO[j, k]
+            dV[i, k] = val
 
-    dQ = (dS @ K) / scale
-    dK = (dS.T @ Q) / scale
+    dP = np.zeros((n, n), dtype=np.float64)
+    for i in range(n):
+        for j in range(n):
+            val = 0.0
+            for k in range(d):
+                val += dO[i, k] * V[j, k]
+            dP[i, j] = val
+
+    dS = np.zeros((n, n), dtype=np.float64)
+    for i in range(n):
+        corr = 0.0
+        for j in range(n):
+            corr += dP[i, j] * P[i, j]
+        for j in range(n):
+            dS[i, j] = P[i, j] * (dP[i, j] - corr)
+
+    dQ = np.zeros((n, d), dtype=np.float64)
+    for i in range(n):
+        for k in range(d):
+            val = 0.0
+            for j in range(n):
+                val += dS[i, j] * K[j, k]
+            dQ[i, k] = val / scale
+
+    dK = np.zeros((n, d), dtype=np.float64)
+    for j in range(n):
+        for k in range(d):
+            val = 0.0
+            for i in range(n):
+                val += dS[i, j] * Q[i, k]
+            dK[j, k] = val / scale
 
     return (
         np.asarray(dQ, dtype=np.float64),

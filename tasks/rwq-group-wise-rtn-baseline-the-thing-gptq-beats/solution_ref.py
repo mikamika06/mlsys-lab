@@ -17,18 +17,41 @@ def rtn_group_quantize(W: np.ndarray, group_size: int):
       Wq    -- float array, same shape as W, the dequantized reconstruction.
     """
     W = np.asarray(W, dtype=np.float64)
-    qmax = 7
     d_out, d_in = W.shape
     n_groups = d_in // group_size
 
     codes = np.empty((d_out, d_in), dtype=np.int64)
     Wq = np.empty((d_out, d_in), dtype=np.float64)
+
     for g in range(n_groups):
-        sl = slice(g * group_size, (g + 1) * group_size)
-        block = W[:, sl]
-        amax = np.max(np.abs(block), axis=1)
-        scale = np.where(amax > 0, amax / qmax, 1.0)
-        c = np.clip(np.round(block / scale[:, None]), -qmax, qmax)
-        codes[:, sl] = c.astype(np.int64)
-        Wq[:, sl] = c * scale[:, None]
+        col_start = g * group_size
+        col_end = col_start + group_size
+        for r in range(d_out):
+            amax = 0.0
+            for c in range(col_start, col_end):
+                val = W[r, c]
+                abs_val = val if val >= 0.0 else -val
+                if abs_val > amax:
+                    amax = abs_val
+
+            if amax > 0.0:
+                scale = amax / 7.0
+            else:
+                scale = 1.0
+
+            for c in range(col_start, col_end):
+                val = W[r, c]
+                scaled = val / scale
+                rounded = round(scaled)
+
+                if rounded > 7:
+                    clipped = 7
+                elif rounded < -7:
+                    clipped = -7
+                else:
+                    clipped = int(rounded)
+
+                codes[r, c] = clipped
+                Wq[r, c] = float(clipped) * scale
+
     return codes, Wq

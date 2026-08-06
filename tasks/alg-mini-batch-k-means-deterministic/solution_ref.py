@@ -29,25 +29,54 @@ def mini_batch_kmeans(
         Final cluster centroids after `n_iter` updates.
     """
     rng = np.random.default_rng(seed)
-    centroids = X[:k].astype(np.float64).copy()
+    n_samples, n_features = X.shape
+    centroids = np.zeros((k, n_features), dtype=np.float64)
+    for i in range(k):
+        for j in range(n_features):
+            centroids[i, j] = float(X[i, j])
 
     for it in range(1, n_iter + 1):
-        # Sample a batch with replacement
-        idx = rng.choice(len(X), size=batch_size, replace=True)
-        batch = X[idx]
+        idx = rng.choice(n_samples, size=batch_size, replace=True)
 
-        # Compute squared Euclidean distances to centroids
-        dists = np.sum((batch[:, None, :] - centroids[None, :, :]) ** 2, axis=2)
-        labels = np.argmin(dists, axis=1)
+        batch = np.zeros((batch_size, n_features), dtype=X.dtype)
+        for b in range(batch_size):
+            for j in range(n_features):
+                batch[b, j] = X[idx[b], j]
 
-        # Batch means per centroid (keep old value if no assignment)
-        new_centroids = centroids.copy()
-        for i in range(k):
-            mask = (labels == i)
-            if np.any(mask):
-                new_centroids[i] = np.mean(batch[mask], axis=0)
+        labels = [0] * batch_size
+        for b in range(batch_size):
+            min_dist = float('inf')
+            best_c = 0
+            for c in range(k):
+                d_sq = 0.0
+                for j in range(n_features):
+                    diff = float(batch[b, j]) - centroids[c, j]
+                    d_sq += diff * diff
+                if d_sq < min_dist:
+                    min_dist = d_sq
+                    best_c = c
+            labels[b] = best_c
 
-        # Incremental moving average
-        centroids = (centroids * (it - 1) + new_centroids) / it
+        new_centroids = np.zeros((k, n_features), dtype=np.float64)
+        for c in range(k):
+            count = 0
+            for b in range(batch_size):
+                if labels[b] == c:
+                    count += 1
+
+            if count > 0:
+                for j in range(n_features):
+                    sum_val = 0.0
+                    for b in range(batch_size):
+                        if labels[b] == c:
+                            sum_val += float(batch[b, j])
+                    new_centroids[c, j] = sum_val / count
+            else:
+                for j in range(n_features):
+                    new_centroids[c, j] = centroids[c, j]
+
+        for c in range(k):
+            for j in range(n_features):
+                centroids[c, j] = (centroids[c, j] * (it - 1) + new_centroids[c, j]) / it
 
     return centroids

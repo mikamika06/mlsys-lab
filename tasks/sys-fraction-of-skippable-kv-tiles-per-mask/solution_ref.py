@@ -13,6 +13,18 @@ def skippable_kv_tile_fraction(mask: np.ndarray, tile_size: int) -> float:
     mask = np.asarray(mask, dtype=bool)
     n = mask.shape[0]
     nt = n // tile_size
-    blocks = mask.reshape(nt, tile_size, nt, tile_size)
-    block_has_any = blocks.any(axis=(1, 3))
-    return float(1.0 - block_has_any.mean())
+    skipping_count = 0
+    total_blocks = nt * nt
+    for i in range(nt):
+        for j in range(nt):
+            has_any = False
+            for ii in range(tile_size):
+                for jj in range(tile_size):
+                    if mask[i * tile_size + ii, j * tile_size + jj]:
+                        has_any = True
+                        break
+                if has_any:
+                    break
+            if not has_any:
+                skipping_count += 1
+    return float(skipping_count / total_blocks)

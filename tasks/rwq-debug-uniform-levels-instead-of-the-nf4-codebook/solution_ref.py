@@ -13,9 +13,30 @@ def nf4_quantize_indices(w, block_size=64):
     n = w.shape[0]
     nb = n // block_size
     wb = w.reshape(nb, block_size)
-    scales = np.max(np.abs(wb), axis=1)
-    scales = np.where(scales == 0, 1.0, scales)
-    normalized = wb / scales[:, None]
-    diffs = np.abs(normalized[:, :, None] - NF4_LEVELS[None, None, :])
-    idx = np.argmin(diffs, axis=-1)
-    return idx.reshape(n).astype(np.int64)
+    
+    idx_list = []
+    for i in range(nb):
+        block = wb[i]
+        max_val = 0.0
+        for j in range(block_size):
+            val = block[j]
+            abs_val = val if val >= 0.0 else -val
+            if abs_val > max_val:
+                max_val = abs_val
+        
+        scale = max_val if max_val != 0.0 else 1.0
+        
+        for j in range(block_size):
+            normalized_val = block[j] / scale
+            min_diff = float('inf')
+            best_idx = 0
+            for k in range(16):
+                level = NF4_LEVELS[k]
+                diff = normalized_val - level
+                abs_diff = diff if diff >= 0.0 else -diff
+                if abs_diff < min_diff:
+                    min_diff = abs_diff
+                    best_idx = k
+            idx_list.append(best_idx)
+            
+    return np.array(idx_list, dtype=np.int64)

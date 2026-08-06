@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def incremental_decode(embeddings: np.ndarray,
@@ -20,30 +21,36 @@ def incremental_decode(embeddings: np.ndarray,
         Incremental attention outputs.
     """
     n = embeddings.shape[0]
+    d_in = embeddings.shape[1]
+    d_q = Wq.shape[1]
     d_k = Wk.shape[1]
-    sqrt_dk = np.sqrt(d_k)
+    d_v = Wv.shape[1]
+    sqrt_dk = math.sqrt(d_k)
 
-    # Cache for keys and values
-    cache_K = np.empty((0, d_k), dtype=np.float64)
-    cache_V = np.empty((0, Wv.shape[1]), dtype=np.float64)
-
-    outputs = np.empty((n, Wv.shape[1]), dtype=np.float64)
+    cache_K_list = []
+    cache_V_list = []
+    outputs_list = []
 
     for t in range(n):
         x_t = embeddings[t]
-        Q_t = x_t @ Wq
-        K_t = x_t @ Wk
-        V_t = x_t @ Wv
+        Q_t = [sum(x_t[i] * Wq[i, j] for i in range(d_in)) for j in range(d_q)]
+        K_t = [sum(x_t[i] * Wk[i, j] for i in range(d_in)) for j in range(d_k)]
+        V_t = [sum(x_t[i] * Wv[i, j] for i in range(d_in)) for j in range(d_v)]
 
-        # Append to cache
-        cache_K = np.vstack((cache_K, K_t[None, :]))
-        cache_V = np.vstack((cache_V, V_t[None, :]))
+        cache_K_list.append(K_t)
+        cache_V_list.append(V_t)
 
-        scores = (Q_t @ cache_K.T) / sqrt_dk  # shape (t+1,)
-        max_score = scores.max()
-        exp_scores = np.exp(scores - max_score)
-        alphas = exp_scores / exp_scores.sum()
+        scores = []
+        for s in range(t + 1):
+            dot_val = sum(Q_t[j] * cache_K_list[s][j] for j in range(d_k))
+            scores.append(dot_val / sqrt_dk)
 
-        outputs[t] = alphas @ cache_V
+        max_score = max(scores)
+        exp_scores = [math.exp(score - max_score) for score in scores]
+        sum_exp = sum(exp_scores)
+        alphas = [es / sum_exp for es in exp_scores]
 
-    return outputs
+        out_t = [sum(alphas[s] * cache_V_list[s][v_col] for s in range(t + 1)) for v_col in range(d_v)]
+        outputs_list.append(out_t)
+
+    return np.array(outputs_list, dtype=np.float64)

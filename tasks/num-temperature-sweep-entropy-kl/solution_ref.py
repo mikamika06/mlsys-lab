@@ -1,31 +1,36 @@
+import math
 import numpy as np
 
+
 def softmax_temperature_sweep(logits: np.ndarray, temps):
-    """
-    Compute the temperature‑scaled softmax for each temperature in `temps`.
-
-    Parameters
-    ----------
-    logits : np.ndarray
-        1-D array of raw logits.
-    temps : Sequence[float]
-        Iterable of positive temperatures.
-
-    Returns
-    -------
-    probs : np.ndarray
-        2-D array of shape (len(temps), len(logits)) containing the softmax
-        probabilities for each temperature. The result is dtype float64.
-    """
+    """Compute the temperature-scaled softmax for each temperature in `temps`."""
     logits = np.asarray(logits, dtype=np.float64)
     temps = np.asarray(temps, dtype=np.float64)
 
-    probs_list = []
-    for t in temps:
-        scaled = logits / t
-        max_val = np.max(scaled)
-        exp_shifted = np.exp(scaled - max_val)
-        probs = exp_shifted / np.sum(exp_shifted)
-        probs_list.append(probs)
+    n_temps = len(temps)
+    n_logits = len(logits)
+    probs = np.zeros((n_temps, n_logits), dtype=np.float64)
 
-    return np.vstack(probs_list)
+    for i in range(n_temps):
+        t = temps[i]
+
+        scaled = []
+        for j in range(n_logits):
+            scaled.append(logits[j] / t)
+
+        max_val = scaled[0]
+        for j in range(1, n_logits):
+            if scaled[j] > max_val:
+                max_val = scaled[j]
+
+        exp_shifted = []
+        sum_exp = 0.0
+        for j in range(n_logits):
+            val = math.exp(scaled[j] - max_val)
+            exp_shifted.append(val)
+            sum_exp += val
+
+        for j in range(n_logits):
+            probs[i, j] = exp_shifted[j] / sum_exp
+
+    return probs
