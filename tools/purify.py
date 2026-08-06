@@ -43,7 +43,11 @@ KEYFILE = os.path.expanduser("~/.config/gemini-account-gateway/api.key")
 BASE = "http://127.0.0.1:8787"
 LADDER = ["3-6-flash", "3-1-pro"]
 ASK_TIMEOUT = 600
-GRADE_TIMEOUT = 240
+# The bank's own verifier kills a grade at 30 seconds (`alarm 30` in
+# verify_task.sh), so anything slower is rejected there anyway — and on a slower CI
+# runner, a candidate that takes 27s here takes longer than 30 there and fails as
+# "no JSON from the grader". Budget below that, not above it.
+GRADE_TIMEOUT = 25
 LOG = os.path.join(ROOT, "tools", "purify_log.jsonl")
 
 _spec = importlib.util.spec_from_file_location("cp", os.path.join(ROOT, "tools", "check_pure.py"))
