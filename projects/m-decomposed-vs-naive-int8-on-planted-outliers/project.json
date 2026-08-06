@@ -1,0 +1,64 @@
+{
+  "id": "m-decomposed-vs-naive-int8-on-planted-outliers",
+  "title": "Decomposed vs naive int8 with planted outliers",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "bitsandbytes LLM.int8() mixed-precision decomposition",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/decomposed.py",
+    "quant/threshold.py",
+    "quant/skip.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Decomposed vs naive int8 MSE comparison",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "decomposed_better",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Optimal threshold under fp16 FLOP cap",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "threshold_optimal",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for int8 module skipping",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_skip",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

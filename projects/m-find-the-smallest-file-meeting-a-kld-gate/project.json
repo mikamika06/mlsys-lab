@@ -1,0 +1,46 @@
+{
+  "id": "m-find-the-smallest-file-meeting-a-kld-gate",
+  "title": "Find the smallest file meeting a KLD gate with KV overrides",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "llama-quantize-cli",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/gate.py",
+    "quant/override.py",
+    "quant/pipeline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Find smallest file meeting KLD gate",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "candidates_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Override bad architecture KV during quantization",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "overrides_matched", "op": "==", "threshold": 1},
+        {"metric": "sizes_match", "op": "==", "threshold": 1},
+        {"metric": "fallback_handled", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for KLD gate and overrides",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_gate", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

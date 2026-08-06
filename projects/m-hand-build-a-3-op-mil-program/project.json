@@ -1,0 +1,44 @@
+{
+  "id": "m-hand-build-a-3-op-mil-program",
+  "title": "Hand-build a 3-op MIL program and analyze graph passes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "MIL: Core ML's intermediate language and graph passes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "miltool/builder.py",
+    "miltool/passes.py",
+    "miltool/parser.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Hand-build a 3-op MIL program",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "program_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "SDPA graph pass effect on long sequences",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "pass_effect_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "MIL text-dump op histogram parser and safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_histogram", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -21,19 +21,19 @@ s = \frac{\max(x)-\min(x)}{255}, \qquad
 z = \operatorname{round}\!\bigl(-\,\tfrac{\min(x)}{s}\bigr).
 $$
 
-The goal of this task is to implement a round‑trip that takes a NumPy array, quantizes it with the above asymmetric scheme, then immediately dequantizes it back to floating point.  The function must return both the dequantized array and the integer zero point used.
+The goal of this task is to implement a round‑trip that takes a list, quantizes it with the above asymmetric scheme, then immediately dequantizes it back to floating point.  The function must return both the dequantized array and the integer zero point used.
 
 ## Task
 
 Implement `asymmetric_quant_round_trip(x)`:
 
 ```python
-def asymmetric_quant_round_trip(x: np.ndarray) -> tuple[np.ndarray, int]:
+def asymmetric_quant_round_trip(x: list[float]) -> tuple[list[float], int]:
     ...
 ```
 
-* `x` is a NumPy array of arbitrary shape containing floating‑point values.  
-* The function must use only vectorized NumPy operations; no explicit Python loops are allowed.  
+* `x` is a list of arbitrary shape containing floating‑point values.  
+* The function must use only vectorized Python operations; no explicit Python loops are allowed.  
 * It should return a tuple `(dequantized, zero_point)` where:
   * `dequantized` has the same shape as `x`, dtype `float64`, and contains the dequantized values.
   * `zero_point` is an integer in the range $[-128,127]$ that was used during quantization.
@@ -41,10 +41,9 @@ def asymmetric_quant_round_trip(x: np.ndarray) -> tuple[np.ndarray, int]:
 ## Example
 
 ```python
-import numpy as np
 from your_module import asymmetric_quant_round_trip
 
-A = np.array([0.0, 1.0, -2.5])
+A = [0.0, 1.0, -2.5]
 deq, zp = asymmetric_quant_round_trip(A)
 print(deq)   # approximately [0., 1., -2.5]
 print(zp)    # integer zero point used

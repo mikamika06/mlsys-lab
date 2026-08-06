@@ -1,0 +1,19 @@
+{
+  "id": "m-fix-a-ggufwriter-state-machine-violation",
+  "title": "Fix GGUFWriter state-machine violation and streaming tensor iterator",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-py-library",
+  "edits": ["ggufwriter/writer.py", "ggufwriter/memory.py", "ggufwriter/streaming.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "GGUFWriter state-machine compliance", "check": "harness/m1.py",
+     "gates": [{"metric": "states_passed", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Memmap vs full-read peak memory control", "check": "harness/m2.py",
+     "gates": [{"metric": "memory_ratio_ok", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Streaming GGUF tensor iterator safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_iterator", "op": "==", "threshold": 1}]}
+  ]
+}

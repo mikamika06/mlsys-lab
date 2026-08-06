@@ -1,0 +1,5 @@
+We recently merged a new SGLang-based backend to handle tree-based speculative decoding. The idea is to verify multiple candidate draft paths in a single forward pass by packing them into a draft tree. It looked great in the initial token-acceptance metrics—our tree widths of 4 and 8 were showing high acceptance rates.
+
+However, looking at the actual text output, the model is generating literal word salads. It is as if the tokens in different branches of the draft tree are leaking into each other during the verification step. If branch A proposes "the cat sat" and branch B proposes "the dog ran", the verifier seems to be evaluating "the cat ran" or some blended context. 
+
+I checked the logs, and while the position IDs seem plausible, I suspect our attention mask flattening is just falling back to a standard causal mask instead of properly masking out sibling branches in the tree topology. We also need to make sure we are actually extracting the longest verified path correctly, and build a script to parse the sweep logs to see how accepted_length scales with tree_width.

@@ -1,0 +1,72 @@
+{
+  "id": "m-compile-safe-custom-op-wrapper",
+  "title": "Compile-safe custom op wrapper with fake tensor shape registration",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "torch-compile-and-graph-integration",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "custom_op/wrapper.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Register custom operator and forward execution",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "op_registered",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "eager_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Register fake shape kernel and eliminate graph breaks",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "fake_registered",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "fullgraph_compiled",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test catching graph breaks and missing fake implementation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_graph_break",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

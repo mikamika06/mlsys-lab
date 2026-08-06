@@ -1,0 +1,40 @@
+{
+  "id": "m-build-time-and-plan-size-vs-optimization-level",
+  "title": "Build time, plan size, and failure diagnostics for TensorRT pipelines",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT build pipeline: parser -> network -> builder config -> engine",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["trtpipe/profile.py", "trtpipe/diagnostics.py", "trtpipe/determinism.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Profile build time and plan size vs optimization level",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "profiles_matched", "op": "==", "threshold": 1},
+        {"metric": "size_ratio_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify build pipeline failure stages",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "stages_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test engine round-trip determinism",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_nondeterministic_roundtrip", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

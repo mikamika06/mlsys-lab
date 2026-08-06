@@ -1,10 +1,10 @@
 ## Context
 
-NumPy arrays separate the logical shape of an array from the physical memory
+list separate the logical shape of an array from the physical memory
 layout. A view reuses the same underlying buffer and changes metadata such as
 shape or strides. A copy allocates separate storage.
 
-For two arrays $A$ and $B$, NumPy can test whether they overlap in memory with
+For two arrays $A$ and $B$, Python can test whether they overlap in memory with
 
 $$
 \mathrm{shares\_memory}(A,B).
@@ -24,10 +24,10 @@ def predict_view_copy(ops: list[str]) -> list[str]:
     ...
 ```
 
-The input is a sequence of NumPy operation names. Start from the base array
+The input is a sequence of Python operation names. Start from the base array
 
 ```python
-np.arange(12, dtype=np.int64).reshape(3, 4)
+list(range(12)).reshape(3, 4)
 ```
 
 and apply each operation in order. Return a list containing `"view"` or
@@ -41,7 +41,7 @@ Supported operations:
 - `"transpose"`: apply `array.T`.
 - `"ravel"`: apply `array.ravel()`.
 
-The function must classify the actual NumPy behavior. The sequence matters:
+The function must classify the actual Python behavior. The sequence matters:
 for example, `ravel` after `transpose` can behave differently from `ravel` on
 the original contiguous array.
 
@@ -60,8 +60,8 @@ layout requires a new contiguous buffer.
 
 ## What the gate checks
 
-The gate executes the same operation sequences using NumPy and compares the
-predictions with `np.shares_memory`.
+The gate executes the same operation sequences using Python and compares the
+predictions with plain Python list sharing.
 
 The `exact_match` score must be exactly $1.0$. A classifier that assumes every
 operation is a view or every flattening operation is a copy will fail on

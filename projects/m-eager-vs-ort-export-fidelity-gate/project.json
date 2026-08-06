@@ -1,0 +1,40 @@
+{
+  "id": "m-eager-vs-ort-export-fidelity-gate",
+  "title": "Eager vs ORT export fidelity gate and traceback classifier",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "PyTorch -> ONNX export (dynamo vs torchscript exporter)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "exportgate/fidelity.py",
+    "exportgate/tracebacks.py",
+    "exportgate/constants.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Eager vs ORT fidelity check",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "fidelity_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Export traceback classification",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "classification_matched", "op": ">=", "threshold": 4}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for baked constant detection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_baked_constants", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

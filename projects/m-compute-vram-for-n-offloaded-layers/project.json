@@ -1,0 +1,21 @@
+{
+  "id": "m-compute-vram-for-n-offloaded-layers",
+  "title": "Compute VRAM and optimize layer offloading for llama.cpp",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-gguf-llamacpp",
+  "track": "runtime-memory-mmap-offload",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["offload/compute.py", "offload/policy.py", "offload/sweep.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute VRAM for N offloaded layers", "check": "harness/m1.py",
+     "gates": [{"metric": "vram_matched", "op": ">=", "threshold": 1.0}]},
+    {"n": 2, "title": "Choose the maximum -ngl that fits a budget", "check": "harness/m2.py",
+     "gates": [{"metric": "budget_matched", "op": ">=", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid knee selection", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_knee", "op": "==", "threshold": 1}]}
+  ]
+}

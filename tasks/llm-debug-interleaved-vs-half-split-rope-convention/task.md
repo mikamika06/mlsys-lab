@@ -28,12 +28,12 @@ they represent different models and are not interchangeable.
 Implement `apply_rope(x, position)`:
 
 ```python
-def apply_rope(x: np.ndarray, position: int) -> np.ndarray:
+def apply_rope(x: list[float], position: int) -> list[float]:
     ...
 ```
 
-The input `x` is a one-dimensional NumPy array with an even number of
-dimensions. Return a new `float64` NumPy array containing the RoPE-transformed
+The input `x` is a list of floats with an even number of
+dimensions. Return a new `float64` list containing the RoPE-transformed
 vector using the GPT-NeoX half-split convention.
 
 The input vector must not be modified.
@@ -41,9 +41,8 @@ The input vector must not be modified.
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1., 2., 3., 4.])
+x = [1., 2., 3., 4.]
 y = apply_rope(x, 5)
 ```
 
@@ -53,7 +52,7 @@ is dimensions $(1,3)$ because the split point is $d/2=2$.
 ## What the gate checks
 
 The gate builds its expected outputs by computing the half-split RoPE formula
-directly with NumPy. The returned vector is compared with the oracle result
+directly with Python. The returned vector is compared with the oracle result
 using the maximum absolute error
 
 $$

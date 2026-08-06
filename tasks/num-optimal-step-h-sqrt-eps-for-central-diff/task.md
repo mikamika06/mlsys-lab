@@ -23,14 +23,14 @@ accurate — it can be much worse, because rounding error dominates.
 Implement `best_h_central_diff(f, fprime, x, h_grid)`:
 
 ```python
-def best_h_central_diff(f, fprime, x: float, h_grid: np.ndarray) -> float:
+def best_h_central_diff(f, fprime, x: float, h_grid: list[float]) -> float:
     ...
 ```
 
 - `f`: a callable, `f(x) -> float`.
 - `fprime`: a callable giving the true analytic derivative, `fprime(x) -> float`.
 - `x`: the point at which to evaluate.
-- `h_grid`: a 1-D NumPy array of candidate step sizes to search over.
+- `h_grid`: a list of floats of candidate step sizes to search over.
 
 For every $h$ in `h_grid`, compute the central-difference relative error
 
@@ -44,10 +44,9 @@ not an interpolated or externally chosen value) that minimizes it.
 ## Example
 
 ```python
-import numpy as np
 
-h_grid = np.logspace(-12, -1, 40)
-h_star = best_h_central_diff(np.sin, np.cos, 1.3, h_grid)
+h_grid = [10p for p in [-12 + i * 11 / 39 for i in range(40)]]
+h_star = best_h_central_diff(math.sin, math.cos, 1.3, h_grid)
 # h_star should land somewhere around 1e-5 to 1e-6, NOT at the smallest
 # h_grid value — the smallest h in the grid is dominated by rounding noise
 # and gives a much larger error than the optimum.

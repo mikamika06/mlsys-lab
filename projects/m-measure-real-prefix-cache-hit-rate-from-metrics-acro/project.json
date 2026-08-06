@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-real-prefix-cache-hit-rate-from-metrics-acro",
+  "title": "Measure real prefix-cache hit rate from /metrics across a two-turn workload",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "automatic-prefix-caching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["apcmetric/parser.py", "apcmetric/workload.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse prefix cache counters from metrics payload", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute hit rate across a two-turn workload", "check": "harness/m2.py",
+     "gates": [{"metric": "hit_rate_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid hit rate computations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_computation", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-feasibility-check-is-max-model-len-max-num-seqs-join",
+  "title": "Feasibility check for max model length and max num seqs",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "kv-cache-memory-budget",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["feasibility/check.py", "feasibility/quant.py", "feasibility/repair.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Feasibility check for max model length and max num seqs", "check": "harness/m1.py",
+     "gates": [{"metric": "feasibility_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "FP8 KV cache memory gain and accuracy risk", "check": "harness/m2.py",
+     "gates": [{"metric": "quant_matched", "op": ">=", "threshold": 5}]},
+    {"n": 3, "title": "Safety net: repairing a failing launch", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_repair", "op": "==", "threshold": 1}]}
+  ]
+}

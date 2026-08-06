@@ -18,10 +18,10 @@ The merge operation performs the inverse permutation and restores the original s
 Implement two functions:
 
 ```python
-def split_heads(x: np.ndarray, num_heads: int) -> np.ndarray:
+def split_heads(x: list[list[list[float]]], num_heads: int) -> list[list[list[list[float]]]]:
     ...
 
-def merge_heads(heads: np.ndarray) -> np.ndarray:
+def merge_heads(heads: list[float]) -> list[float]:
     ...
 ```
 
@@ -30,23 +30,22 @@ It should return an array of shape `(B,T,num_heads,D//num_heads)`.
 
 `merge_heads` takes the output of `split_heads` and returns a tensor of shape `(B,T,D)` that is identical to the input of `split_heads`.
 
-Both functions must use only NumPy operations; no explicit Python loops are allowed.
+Both functions must use only Python operations; no explicit Python loops are allowed.
 
 ## Example
 
 ```python
-import numpy as np
-x = np.arange(24).reshape(2,3,4)   # B=2, T=3, D=4
+x = list(range(24)).reshape(2,3,4)   # B=2, T=3, D=4
 heads = split_heads(x, 2)
 # heads.shape == (2,3,2,2)
 merged = merge_heads(heads)
 assert merged.shape == (2,3,4)
-np.testing.assert_array_equal(merged, x)
+assert merged == x
 ```
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares your `merge_heads(split_heads(x))` against it.  
+The grader computes a reference implementation using Python and compares your `merge_heads(split_heads(x))` against it.  
 It reports the maximum absolute difference:
 
 $$

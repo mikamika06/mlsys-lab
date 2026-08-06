@@ -1,0 +1,69 @@
+{
+  "id": "m-lora-forward-over-a-dequantized-nf4-base",
+  "title": "LoRA forward over a dequantized NF4 base",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "QLoRA fine-tuning with bitsandbytes and PEFT",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "qlora/forward.py",
+    "qlora/accounting.py",
+    "qlora/config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Dequantized NF4 base with LoRA forward pass",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "forward_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Parameter accounting & config repair",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "accounting_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "config_repaired",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for QLoRA dynamic invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_mismatched_dtype_nan",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "m-classify-8-workloads-as-self-host-hosted-api-hybrid-",
+  "title": "Classify 8 workloads as self-host, hosted-api, or hybrid",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "capacity-and-cost-planning",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "workloads/classifier.py",
+    "workloads/metrics.py",
+    "workloads/report.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify workloads and identifying factors",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "classification_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "TCO and volume break-even analysis",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "metrics_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for classification logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_classifier", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

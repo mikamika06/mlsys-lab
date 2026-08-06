@@ -1,8 +1,6 @@
-import numpy as np
-
-def launch_indices(block_dim: int, grid_dim: int) -> np.ndarray:
+def launch_indices(block_dim: int, grid_dim: int) -> list[int]:
     """
-    Return a flat array of global thread indices for a 1‑D GPU launch.
+    Return a flat list of global thread indices for a 1‑D GPU launch.
 
     Parameters
     ----------
@@ -13,10 +11,13 @@ def launch_indices(block_dim: int, grid_dim: int) -> np.ndarray:
 
     Returns
     -------
-    np.ndarray
-        A 1-D integer array of length ``block_dim * grid_dim`` containing
+    list[int]
+        A 1-D integer list of length ``block_dim * grid_dim`` containing
         global indices ``block_idx * block_dim + thread_idx`` for each
         combination of block and thread indices.
     """
-    total = block_dim * grid_dim
-    return np.arange(total, dtype=np.int64)
+    result = []
+    for i in range(grid_dim):
+        for j in range(block_dim):
+            result.append(i * block_dim + j)
+    return result

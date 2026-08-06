@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def salient_channels(X: np.ndarray, fraction: float=0.1) -> np.ndarray:
+def salient_channels(X: list[list[float]], fraction: float = 0.1) -> list[int]:
     raise NotImplementedError('your code here')

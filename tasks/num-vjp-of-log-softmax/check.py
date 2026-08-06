@@ -32,20 +32,20 @@ def grade(sol, fx) -> dict:
     max_err = 0.0
 
     for shape in shapes:
-        x = rng.randn(*shape) * 2.0
-        g = rng.randn(*shape)
+        x_np = rng.randn(*shape) * 2.0
+        g_np = rng.randn(*shape)
 
-        ref = _numeric_vjp(x, g)
+        ref = _numeric_vjp(x_np, g_np)
         try:
-            got = sol.log_softmax_vjp(x.copy(), g.copy())
-            got = np.asarray(got, dtype=np.float64)
+            got = sol.log_softmax_vjp(x_np.tolist(), g_np.tolist())
+            got_np = np.asarray(got, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
 
-        if got.shape != x.shape:
+        if got_np.shape != x_np.shape:
             return {"max_abs_err": float("inf")}
 
-        err = float(np.max(np.abs(got - ref)))
+        err = float(np.max(np.abs(got_np - ref)))
         max_err = max(max_err, err)
 
     return {"max_abs_err": max_err}

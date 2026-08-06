@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def zca_whitening(X: np.ndarray) -> np.ndarray:
+def zca_whitening(X: list[list[float]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

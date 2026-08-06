@@ -1,0 +1,44 @@
+{
+  "id": "m-allowlist-tuning-to-absorb-a-stray-op",
+  "title": "Allowlist tuning to absorb a stray op",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Backend partitioners and delegate blobs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "partitioner/predict.py",
+    "partitioner/tune.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict delegation for 12 ops",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "partitions_matched", "op": "==", "threshold": 20}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Delegate-blob byte accounting",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "cands_matched", "op": "==", "threshold": 20},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: catch merged delegate blobs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_merged_blobs", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

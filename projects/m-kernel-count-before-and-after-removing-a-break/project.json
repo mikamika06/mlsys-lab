@@ -1,0 +1,45 @@
+{
+  "id": "m-kernel-count-before-and-after-removing-a-break",
+  "title": "Kernel count before and after removing a break",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Reading Inductor output code (Triton / C++)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fusion/parser.py",
+    "fusion/bytes_calc.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse output code to find fusion groups",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "parse_match", "op": "==", "threshold": 1},
+        {"metric": "count_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Calculate bytes moved for fused vs unfused chains",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "unfused_match", "op": "==", "threshold": 1},
+        {"metric": "fused_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching broken fusion calculators",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_fusion", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

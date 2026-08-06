@@ -1,0 +1,44 @@
+{
+  "id": "m-derive-total-training-memory-for-full-ft-lora-and-ql",
+  "title": "Derive total training memory for full-FT, LoRA, and QLoRA",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "full-ft-vs-lora-vs-qlora-tradeoff",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "finetune/memory.py",
+    "finetune/scaling.py",
+    "finetune/budget.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive total training memory for full-FT, LoRA, and QLoRA",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "memory_estimates_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analyze memory scaling ratios across model sizes",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ratios_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for hardware budget classification",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_budget", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

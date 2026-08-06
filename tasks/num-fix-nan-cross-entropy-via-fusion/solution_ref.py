@@ -1,6 +1,6 @@
-import numpy as np
+import math
 
-def cross_entropy(logits: np.ndarray, target: int) -> float:
+def cross_entropy(logits: list[float], target: int) -> float:
     """Stable cross-entropy using the fused log-sum-exp trick.
 
     Subtracts the running maximum before exponentiating to prevent
@@ -8,16 +8,19 @@ def cross_entropy(logits: np.ndarray, target: int) -> float:
 
     Parameters
     ----------
-    logits : np.ndarray
-        1-D array of shape ``(C,)`` of raw class scores.
+    logits : list[float]
+        List of raw class scores.
     target : int
-        Ground-truth class index, ``0 <= target < C``.
+        Ground-truth class index, ``0 <= target < len(logits)``.
 
     Returns
     -------
     float
         Scalar cross-entropy loss.
     """
-    m = np.max(logits)
-    log_sum_exp = m + np.log(np.sum(np.exp(logits - m)))
+    m = max(logits)
+    sum_exp = 0.0
+    for x in logits:
+        sum_exp += math.exp(x - m)
+    log_sum_exp = m + math.log(sum_exp)
     return float(-(logits[target] - log_sum_exp))

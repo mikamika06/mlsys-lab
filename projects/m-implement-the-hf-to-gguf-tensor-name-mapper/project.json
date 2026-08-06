@@ -1,0 +1,46 @@
+{
+  "id": "m-implement-the-hf-to-gguf-tensor-name-mapper",
+  "title": "HF to GGUF tensor mapper and RoPE conversion",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "tensor-naming-and-arch-mapping",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "ggufmap/mapper.py",
+    "ggufmap/rope.py",
+    "ggufmap/filter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "HF to GGUF tensor name mapping",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "names_mapped", "op": "==", "threshold": 15},
+        {"metric": "invalid_handled", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Undo RoPE dimension permutation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "cases_matched", "op": "==", "threshold": 3},
+        {"metric": "exact_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching invalid RoPE unpermutations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_faults", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

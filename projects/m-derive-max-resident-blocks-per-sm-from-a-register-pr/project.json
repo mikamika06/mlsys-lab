@@ -1,0 +1,69 @@
+{
+  "id": "m-derive-max-resident-blocks-per-sm-from-a-register-pr",
+  "title": "Derive max resident blocks per SM from a register-pressure budget",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Resource-limit failure modes & compiler errors",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "triton_calc/regs.py",
+    "triton_calc/occupancy.py",
+    "triton_calc/budget.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Effective register allocation per thread",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "regs_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Max resident blocks per SM from budget",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "occupancy_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "budget_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for register rounding",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_rounding",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

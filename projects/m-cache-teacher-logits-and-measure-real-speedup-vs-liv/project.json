@@ -1,0 +1,83 @@
+{
+  "id": "m-cache-teacher-logits-and-measure-real-speedup-vs-liv",
+  "title": "Cache teacher logits and measure distillation speedup",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "distillation-training-loop-mechanics",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "distillcache/memory.py",
+    "distillcache/engine.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Full-vocab and compressed teacher logit cache memory footprint",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "footprints_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "topk_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "ram_budget_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Offline teacher logit cache engine and distillation speedup measurement",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cache_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "throughput_ratio",
+          "op": ">=",
+          "threshold": 1.5
+        },
+        {
+          "metric": "saved_teacher_calls",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches live teacher fallback during offline distillation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_live_fallback",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

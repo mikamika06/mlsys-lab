@@ -26,8 +26,14 @@ def grade(sol, fx) -> dict:
 
         ref = _oracle_attention(Q, K, V)
         try:
-            one = np.asarray(sol.streaming_attention(Q, K, V, 1), dtype=np.float64)
-            all_at_once = np.asarray(sol.streaming_attention(Q, K, V, n), dtype=np.float64)
+            one = np.asarray(
+                sol.streaming_attention(Q.tolist(), K.tolist(), V.tolist(), 1),
+                dtype=np.float64,
+            )
+            all_at_once = np.asarray(
+                sol.streaming_attention(Q.tolist(), K.tolist(), V.tolist(), n),
+                dtype=np.float64,
+            )
         except Exception:
             return {"max_abs_err": float("inf")}
 

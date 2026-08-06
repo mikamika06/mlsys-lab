@@ -1,5 +1,5 @@
-import numpy as np
+import math
 
-def apply_rope(x: np.ndarray, pos: np.ndarray) -> np.ndarray:
+def apply_rope(x: list[list[list[list[float]]]], pos: list[int]) -> list[list[list[list[float]]]]:
     """Apply Rotary Position Embedding (RoPE) to the last dimension of x."""
-    raise NotImplementedError
+    raise NotImplementedError('your code here')

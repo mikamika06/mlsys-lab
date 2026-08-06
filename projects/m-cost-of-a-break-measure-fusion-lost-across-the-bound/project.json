@@ -1,0 +1,21 @@
+{
+  "id": "m-cost-of-a-break-measure-fusion-lost-across-the-bound",
+  "title": "Measure fusion lost across graph break boundaries",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Graph breaks: causes, detection, elimination",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["breakcost/fusion.py", "breakcost/analyzer.py", "breakcost/cost.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect severed fusion opportunities across breaks", "check": "harness/m1.py",
+     "gates": [{"metric": "fusion_match", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Quantize exact memory and bandwidth cost of lost fusions", "check": "harness/m2.py",
+     "gates": [{"metric": "cost_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard: regression test for break cost analysis", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_fusion", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,1 @@
+"""AMX tile module."""

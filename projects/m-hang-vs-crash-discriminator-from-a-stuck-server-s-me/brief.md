@@ -1,0 +1,11 @@
+# Incident Report: Production vLLM Serving Node Hangs Without Emitting Crash Exit Codes
+
+## Symptom Description
+During a high-load stress test on our vLLM inference serving cluster, one of the GPU worker nodes abruptly stops responding to incoming HTTP inference requests. Clients receive either connection timeouts or 504 Gateway Timeouts after the standard proxy wait duration. However, looking at the orchestrator level, the container process has not exited; its PID remains alive, and the container restart policy has not been triggered.
+
+Monitoring agents report that the standard system metrics (such as GPU memory utilization and process RSS) remain completely flat at their last recorded values, while the internal application log stream (`stdout`/`stderr`) has stopped writing entries entirely, even though heartbeat ping threads are ostensibly scheduled. When manual intervention is attempted via `kill -0`, the process responds, proving it is technically alive, yet the inference engine is completely deadlocked—likely trapped in a CUDA driver synchronization lock, a Python GIL deadlock within a custom multi-threaded sampling routine, or a stalled ZeroMQ backend coordination loop.
+
+Because the process does not crash with a non-zero exit code or an explicit Python traceback, automated Kubernetes liveness probes that rely solely on container process existence continue to mark the pod as healthy, routing more traffic to a completely frozen worker and cascading latency spikes across the entire API gateway layer.
+
+## Task Objective
+We need a robust, automated diagnostic tool that reads raw server log files and time-series metric snapshots collected from a stuck or terminated server instance, and deterministically discriminates whether the node suffered a **Hard Crash** (sudden termination, abrupt metric cut-off, OS OOM killer SIGKILL, segmentation fault) versus a **Silent Hang** (infinite deadlock, thread starvation, flat-lined metrics while process is alive). The script must ingest these mixed telemetry artifacts, parse their timestamps, extract state transitions, and classify the failure mode accurately under strict performance and correctness guarantees without relying on simple wall-clock heuristics.

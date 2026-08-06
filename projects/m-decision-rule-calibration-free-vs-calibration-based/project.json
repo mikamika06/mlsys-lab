@@ -1,0 +1,22 @@
+{
+  "id": "m-decision-rule-calibration-free-vs-calibration-based",
+  "title": "Quantization decision rules and library audit",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Ecosystem map and library selection",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["quantmap/rule.py", "quantmap/audit.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Decision rule for calibration-free vs calibration-based quant", "check": "harness/m1.py",
+     "gates": [{"metric": "rules_matched", "op": "==", "threshold": 4}]},
+    {"n": 2, "title": "Bits-per-parameter table and library dependency audit", "check": "harness/m2.py",
+     "gates": [{"metric": "table_matched", "op": "==", "threshold": 4},
+               {"metric": "audit_matched", "op": "==", "threshold": 4}]},
+    {"n": 3, "title": "Safety net: test that catches flawed decision rules and audits", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

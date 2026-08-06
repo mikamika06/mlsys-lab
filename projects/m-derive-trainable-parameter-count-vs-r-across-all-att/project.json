@@ -1,0 +1,46 @@
+{
+  "id": "m-derive-trainable-parameter-count-vs-r-across-all-att",
+  "title": "Derive LoRA Trainable Parameters and Scaling Laws",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "lora-hyperparameters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "loraspec/params.py",
+    "loraspec/scaling.py",
+    "loraspec/resolver.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Module path resolution and trainable parameter counts vs rank",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "params_matched", "op": "==", "threshold": 1},
+        {"metric": "resolved_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Alpha/rank output scaling laws vs naive alpha scaling",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "scaling_matched", "op": "==", "threshold": 1},
+        {"metric": "output_delta_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches unscaled rank dynamics",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unscaled_rank", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

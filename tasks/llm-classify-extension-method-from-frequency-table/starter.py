@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def classify_extension(inv_freq: np.ndarray) -> str:
+def classify_extension(inv_freq: list[float]) -> str:
     raise NotImplementedError('your code here')

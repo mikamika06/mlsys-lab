@@ -1,4 +1,2 @@
-import numpy as np
-
-def hessian_saliency(W: np.ndarray, A: np.ndarray) -> np.ndarray:
+def hessian_saliency(W: list[list[float]], A: list[list[float]]) -> list[float]:
     raise NotImplementedError('your code here')

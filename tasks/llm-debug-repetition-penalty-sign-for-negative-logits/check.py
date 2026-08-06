@@ -13,23 +13,23 @@ def _oracle(logits, penalty):
 
 def grade(sol, fx) -> dict:
     cases = [
-        (np.array([4.0, -3.0, 0.0, 1.5]), 2.0),
-        (np.array([-10.0, -0.5, 0.25, 7.0]), 1.25),
-        (np.array([0.0, -1.0, 1.0, -2.0, 2.0]), 3.0),
-        (np.linspace(-5, 5, 21), 1.7),
+        ([4.0, -3.0, 0.0, 1.5], 2.0),
+        ([-10.0, -0.5, 0.25, 7.0], 1.25),
+        ([0.0, -1.0, 1.0, -2.0, 2.0], 3.0),
+        (list(np.linspace(-5, 5, 21)), 1.7),
     ]
 
     worst = 0.0
     for logits, penalty in cases:
         try:
-            got = sol.apply_repetition_penalty(logits.copy(), penalty)
-            got = np.asarray(got, dtype=np.float64)
+            got = sol.apply_repetition_penalty(list(logits), penalty)
+            got_arr = np.asarray(got, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
 
         ref = _oracle(logits, penalty)
-        if got.shape != ref.shape:
+        if got_arr.shape != ref.shape:
             return {"max_abs_err": float("inf")}
-        worst = max(worst, float(np.max(np.abs(got - ref))))
+        worst = max(worst, float(np.max(np.abs(got_arr - ref))))
 
     return {"max_abs_err": worst}

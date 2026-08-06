@@ -1,5 +1,5 @@
-import numpy as np
+import math
 
-def classify_sampler(orig_logits: np.ndarray, filtered_logits: np.ndarray) -> str:
+def classify_sampler(orig_logits: list[list[float]], filtered_logits: list[list[float]]) -> str:
     """Classify the sampler used on the batch."""
     raise NotImplementedError('your code here')

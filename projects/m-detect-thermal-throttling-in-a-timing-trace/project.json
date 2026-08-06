@@ -1,0 +1,22 @@
+{
+  "id": "m-detect-thermal-throttling-in-a-timing-trace",
+  "title": "Detect thermal throttling in a timing trace",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "benchmark-methodology",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["throttling/detect.py", "throttling/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify throttling transition points", "check": "harness/m1.py",
+     "gates": [{"metric": "transitions_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Quantify performance degradation severity", "check": "harness/m2.py",
+     "gates": [{"metric": "severity_match", "op": "==", "threshold": 1},
+               {"metric": "ratio_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches missed throttling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_missed_throttling", "op": "==", "threshold": 1}]}
+  ]
+}

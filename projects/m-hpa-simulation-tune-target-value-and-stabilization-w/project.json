@@ -1,0 +1,22 @@
+{
+  "id": "m-hpa-simulation-tune-target-value-and-stabilization-w",
+  "title": "HPA simulation, tuning target value, stabilization, and session affinity",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "routing-autoscaling-and-multi-replica",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["hpa/sim.py", "hpa/affinity.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "HPA simulation and stabilization tuning", "check": "harness/m1.py",
+     "gates": [{"metric": "sim_matches", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Diagnose thrash timeline and quantify session affinity hit-rate loss", "check": "harness/m2.py",
+     "gates": [{"metric": "diagnose_match", "op": "==", "threshold": 1},
+               {"metric": "affinity_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for autoscaling and routing", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_window", "op": "==", "threshold": 1}]}
+  ]
+}

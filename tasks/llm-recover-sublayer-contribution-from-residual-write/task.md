@@ -9,30 +9,29 @@ Given only $x_{\text{in}}$ and $x_{\text{out}}$, recovering the sublayer output 
 
 $$f(x_{\text{in}}) = x_{\text{out}} - x_{\text{in}}.$$
 
-The task is to implement this recovery in pure NumPy.
+The task is to implement this recovery in pure Python.
 
 ## Task
 
-Implement `recover_sublayer_contribution(in_, out_)` that takes two 1‑D or 2‑D NumPy arrays of equal shape and returns the element‑wise difference `out_ - in_`. The result must be a NumPy array of type `float64`.
+Implement `recover_sublayer_contribution(in_, out_)` that takes two 1‑D or 2‑D list of equal shape and returns the element‑wise difference `out_ - in_`. The result must be a list of type `float64`.
 
 ```python
-def recover_sublayer_contribution(in_: np.ndarray, out_: np.ndarray) -> np.ndarray:
+def recover_sublayer_contribution(in_, out_):
     ...
 ```
 
 ## Example
 
 ```python
-import numpy as np
-in_  = np.array([0.5, -1.2, 3.4])
-out_ = np.array([1.5, -0.8, 2.9])
+in_  = [0.5, -1.2, 3.4]
+out_ = [1.5, -0.8, 2.9]
 sub = recover_sublayer_contribution(in_, out_)
-print(sub)          # [ 1.   0.4 -0.5]
+print(sub)  # [1.0, 0.3999999999999999, -0.5]
 ```
 
 ## What the gate checks
 
-The grader computes a reference by subtracting the two arrays with NumPy and then evaluates the maximum absolute error:
+The grader computes a reference by subtracting the two arrays with Python and then evaluates the maximum absolute error:
 
 $$\max_{i} |\, \text{candidate}[i] - \text{reference}[i] \,|.$$
 

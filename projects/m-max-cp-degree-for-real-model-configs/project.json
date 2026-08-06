@@ -1,0 +1,44 @@
+{
+  "id": "m-max-cp-degree-for-real-model-configs",
+  "title": "Max CP-Degree for Real Model Configs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Context parallelism for long sequences (Ring Attention vs DeepSpeed-Ulysses)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "cpdegree/config.py",
+    "cpdegree/usp.py",
+    "cpdegree/logeval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Max CP-degree for real model configs",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Why hybrid USP wins: Two-tier bandwidth",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "usp_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "CP-degree vs throughput from a real log",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_degree", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

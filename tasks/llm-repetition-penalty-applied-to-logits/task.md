@@ -20,35 +20,33 @@ This rule matches the implementation used in Hugging Face transformers.
 Implement the function `apply_repetition_penalty` that applies the repetition penalty described above.
 
 ```python
-def apply_repetition_penalty(logits: np.ndarray,
+def apply_repetition_penalty(logits: list[float],
                              seen_tokens: list[int],
-                             penalty: float) -> np.ndarray:
+                             penalty: float) -> list[float]:
     ...
 ```
 
-* `logits` – a 1‑D NumPy array of shape `(V,)`, dtype `float64`.  
+* `logits` – a 1‑D list of shape `(V,)`, dtype `float64`.  
 * `seen_tokens` – an iterable of integer token indices that have already appeared.  
 * `penalty` – a positive scalar $p>1$.
 
-The function must return a new NumPy array of the same shape and dtype as `logits`, with the penalty applied only to tokens in `seen_tokens`. Do **not** modify the input array in place.
+The function must return a new list of the same shape and dtype as `logits`, with the penalty applied only to tokens in `seen_tokens`. Do **not** modify the input array in place.
 
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([0.5, -1.2, 3.4, 0.0], dtype=np.float64)
+logits = [0.5, -1.2, 3.4, 0.0]
 seen = [0, 2]
 penalty = 2.0
 
 new_logits = apply_repetition_penalty(logits, seen, penalty)
-print(new_logits)
-# Output: [0.25   -1.2    1.7     0.0 ]
+print(new_logits)  # [0.25, -1.2, 1.7, 0.0]
 ```
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares your output with it.  
+The grader computes a reference implementation using Python and compares your output with it.  
 It reports the maximum absolute difference `max_abs_err`.  
 Your solution must satisfy
 

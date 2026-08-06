@@ -1,0 +1,39 @@
+{
+  "id": "m-compute-million-output-tokens-from-measured-throughp",
+  "title": "Cost and capacity planning for vLLM serving",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "capacity-and-cost-planning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["capacity/cost.py", "capacity/sizing.py", "capacity/selector.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Token cost from throughput and instance pricing",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "cost_rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Replica sizing under diurnal load curves",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "replica_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching under-provisioned sizing",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_underprovisioning", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

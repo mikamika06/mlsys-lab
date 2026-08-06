@@ -15,26 +15,25 @@ This transformation preserves the ratios of the exponentials and thus the result
 
 Implement a function `softmax(logits)` that:
 
-* accepts a NumPy array `logits` of arbitrary shape,
+* accepts a list `logits` of arbitrary shape,
 * computes the softmax along the last axis using the max‑subtraction trick,
 * returns an array of type `float64` with the same shape as the input.
 
-The implementation must use only vectorized NumPy operations; explicit Python loops are disallowed.
+The implementation must use only vectorized Python operations; explicit Python loops are disallowed.
 
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([1000.0, 1001.0, -1000.0])
+logits = [1000.0, 1001.0, -1000.0]
 probs = softmax(logits)
-print(probs)          # [0.26894142 0.73105858 0.00000000]
+print(probs)  # [0.2689414213699951, 0.7310585786300049, 0.0]
 ```
 
 The large positive values do not cause overflow because the maximum is subtracted before exponentiation.
 
 ## What the gate checks
 
-The grader computes a reference softmax using NumPy’s stable implementation and compares your output with it via the metric `max_abs_err`. Your result must satisfy
+The grader computes a reference softmax using Python’s stable implementation and compares your output with it via the metric `max_abs_err`. Your result must satisfy
 
 $$\mathrm{max\_abs\_err} \le 10^{-9}.$$
 

@@ -1,0 +1,20 @@
+{
+  "id": "m-blocked-tag-string-reconstruction-from-rank-isa",
+  "title": "Blocked tag string reconstruction from rank and ISA",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "oneDNN memory formats & blocked layouts",
+  "difficulty": 3,
+  "edits": ["dnnfmt/tags.py", "dnnfmt/logs.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Blocked tag string reconstruction from rank and ISA", "check": "harness/m1.py",
+     "gates": [{"metric": "tags_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "NCHW vs NHWC reorder primitive count from verbose log", "check": "harness/m2.py",
+     "gates": [{"metric": "counts_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches layout corruption", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_layout_corruption", "op": "==", "threshold": 1}]}
+  ]
+}

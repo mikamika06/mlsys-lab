@@ -18,7 +18,7 @@ def grade(sol, fx) -> dict:
         ref = gamma * (x - mu) / std_ref + beta
 
         try:
-            got = np.asarray(sol.layer_norm(x, gamma, beta, eps), dtype=np.float64)
+            got = np.asarray(sol.layer_norm(x.tolist(), gamma.tolist(), beta.tolist(), float(eps)), dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
 

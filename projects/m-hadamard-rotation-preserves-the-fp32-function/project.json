@@ -1,0 +1,40 @@
+{
+  "id": "m-hadamard-rotation-preserves-the-fp32-function",
+  "title": "Hadamard rotation for activation outlier mitigation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Accuracy recovery: rotations, AutoRound, and EoRA",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "hadamard/rotation.py",
+    "hadamard/stats.py",
+    "hadamard/fused.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Hadamard rotation preserves the fp32 function",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 2,
+      "title": "Outlier statistics before and after rotation",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "stats_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test for fused rotation correctness",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_fused", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -40,7 +40,7 @@ will silently keep only one of these three terms.
 Implement `tape_grad`:
 
 ```python
-def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: np.ndarray) -> np.ndarray:
+def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: list[float]) -> list[float]:
     ...
 ```
 
@@ -51,7 +51,7 @@ def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: np.ndarray) -> np.ndar
   ops: `"add"`, `"sub"`, `"mul"` (each with a 2-tuple of input indices) and
   `"sin"` (with a 1-tuple). The output of the whole computation is the value
   of the **last** node in the tape.
-* `x` — 1-D NumPy array, the input values.
+* `x` — list of floats, the input values.
 
 Run a forward pass to obtain every node's value, then a backward pass over
 the tape **in reverse order**, seeding the output node's adjoint with `1.0`
@@ -63,7 +63,6 @@ with respect to `x`) as a 1-D array of shape `(len(x),)`.
 ## Example
 
 ```python
-import numpy as np
 
 # t = x0*x1 ; f = sin(t) + t*x2 + t
 tape = [
@@ -73,7 +72,7 @@ tape = [
     ("add", (4, 5)),   # node 6 = node 4 + node 5
     ("add", (6, 3)),   # node 7 = node 6 + node 3   <- output
 ]
-x = np.array([0.6, -0.4, 1.1])
+x = [0.6, -0.4, 1.1]
 grad = tape_grad(tape, x)
 ```
 

@@ -1,0 +1,38 @@
+{
+  "id": "m-assert-openai-sdk-compatibility-against-a-live-serve",
+  "title": "Assert OpenAI-SDK compatibility against a live server",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "openai-compatible-api-surface",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["compat/adapter.py", "compat/suite.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Transform and normalize 8 OpenAI SDK request shapes",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "shapes_matched", "op": "==", "threshold": 8.0}]
+    },
+    {
+      "n": 2,
+      "title": "Execute live request-response verification cycle",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "total_executed", "op": "==", "threshold": 8.0},
+        {"metric": "responses_valid", "op": "==", "threshold": 8.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catches missing field transformations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_missing_transform", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

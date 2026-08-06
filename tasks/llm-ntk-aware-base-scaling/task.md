@@ -11,28 +11,26 @@ This preserves the logarithmic spacing of angles while scaling the overall magni
 Implement `scale_rope_base(theta, factor)`:
 
 ```python
-def scale_rope_base(theta: np.ndarray | float,
-                    factor: np.ndarray | float) -> np.ndarray:
+def scale_rope_base(theta: list[float] | float,
+                    factor: list[float] | float) -> list[float] | float:
     ...
 ```
 
-The function should accept scalars or NumPy arrays and return a NumPy array of type `float64`. It must compute the element‑wise exponentiation $\theta^{\,\text{factor}}$.
+The function should accept scalars or list and return a list of type `float64`. It must compute the element‑wise exponentiation $\theta^{\,\text{factor}}$.
 
 ## Example
 
 ```python
-import numpy as np
 from solution_ref import scale_rope_base
 
-theta = np.array([1.0, 2.0, 4.0])
+theta = [1.0, 2.0, 4.0]
 f = 0.5
-print(scale_rope_base(theta, f))
-# [1.         1.41421356 2.        ]
+print(scale_rope_base(theta, f))  # [1.0, 1.4142135623730951, 2.0]
 ```
 
 ## What the gate checks
 
-The grader generates a set of test pairs $(\theta,\text{factor})$ and compares your implementation against the reference computed by NumPy using $\theta^{\,\text{factor}}$. It uses the scorer
+The grader generates a set of test pairs $(\theta,\text{factor})$ and compares your implementation against the reference computed by Python using $\theta^{\,\text{factor}}$. It uses the scorer
 ```python
 from arena.scorers import max_abs_err
 ```

@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-expert-capacity-and-token-drop-fraction",
+  "title": "Derive expert capacity and token-drop fraction for MoE routing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "capacity-factor-dropless-moe",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["moe/capacity.py", "moe/dispatch.py", "moe/measure.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive expert capacity and token-drop fraction", "check": "harness/m1.py",
+     "gates": [{"metric": "capacity_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Grouped-GEMM token dispatch matches naive per-expert loop", "check": "harness/m2.py",
+     "gates": [{"metric": "dispatch_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid token drop masks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_mask", "op": "==", "threshold": 1}]}
+  ]
+}

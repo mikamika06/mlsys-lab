@@ -12,12 +12,13 @@ def grade(sol, fx) -> dict:
     ]
     max_err = 0.0
     for x in tests:
+        x_list = x.tolist()
         try:
-            cand = sol.log_softmax(x)
+            cand = sol.log_softmax(x_list)
         except Exception:
             return {"max_abs_err": float("inf")}
         mx = np.max(x, axis=-1, keepdims=True)
-        ref = -mx + np.log(np.sum(np.exp(x - mx), axis=-1, keepdims=True))
+        ref = x - (mx + np.log(np.sum(np.exp(x - mx), axis=-1, keepdims=True)))
         err = max_abs_err(ref, cand)
         if err > max_err:
             max_err = err

@@ -1,0 +1,23 @@
+{
+  "id": "m-enforce-set-per-process-memory-fraction-0-5-confirm-",
+  "title": "Enforce MPS memory fraction and track fragmentation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "PyTorch MPS memory management",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mpsmem/fraction.py", "mpsmem/loop.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Enforce memory fraction and confirm OOM", "check": "harness/m1.py",
+     "gates": [{"metric": "fraction_matched", "op": "==", "threshold": 1},
+               {"metric": "oom_caught", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Memory-safe generation loop with cadenced cache clearing", "check": "harness/m2.py",
+     "gates": [{"metric": "cadence_matched", "op": "==", "threshold": 1},
+               {"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Safety net for fragmentation ratio and regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

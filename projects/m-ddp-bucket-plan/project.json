@@ -1,0 +1,44 @@
+{
+  "id": "m-ddp-bucket-plan",
+  "title": "DDP bucket planning and trace overlap analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Distributed and multi-GPU interactions",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ddpplan/bucket.py",
+    "ddpplan/trace.py",
+    "ddpplan/divergence.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Build reverse-order DDP bucket plans",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "bucket_plans_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute communication/computation overlap fraction from traces",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "overlap_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch rank-divergent bucket plan hangs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_divergent_plans", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

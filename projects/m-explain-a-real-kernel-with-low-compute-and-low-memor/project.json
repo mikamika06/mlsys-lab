@@ -1,0 +1,21 @@
+{
+  "id": "m-explain-a-real-kernel-with-low-compute-and-low-memor",
+  "title": "Analyze a low-compute low-memory kernel bottleneck",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "speed-of-light-throughput-metrics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kernel_analysis/metrics.py", "kernel_analysis/bottleneck.py", "kernel_analysis/report.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute operational intensity and GFLOP/s gap", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Classify latency-bound and occupancy constraints", "check": "harness/m2.py",
+     "gates": [{"metric": "classification_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests catch faulty bottleneck logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_faulty_classification", "op": "==", "threshold": 1}]}
+  ]
+}

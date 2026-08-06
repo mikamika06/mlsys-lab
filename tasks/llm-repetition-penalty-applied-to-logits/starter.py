@@ -1,4 +1,4 @@
-import numpy as np
-
-def apply_repetition_penalty(logits: np.ndarray, seen_tokens: list[int], penalty: float) -> np.ndarray:
+def apply_repetition_penalty(logits: list[float],
+                             seen_tokens: list[int],
+                             penalty: float) -> list[float]:
     raise NotImplementedError('your code here')

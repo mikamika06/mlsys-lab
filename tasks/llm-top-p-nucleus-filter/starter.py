@@ -1,4 +1,2 @@
-import numpy as np
-
-def top_p_filter(probs: np.ndarray, p: float) -> np.ndarray:
+def top_p_filter(probs: list[float], p: float) -> list[int]:
     raise NotImplementedError('your code here')

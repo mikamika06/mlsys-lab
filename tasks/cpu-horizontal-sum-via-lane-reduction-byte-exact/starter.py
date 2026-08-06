@@ -1,5 +1,3 @@
-import numpy as np
-
-def lane_reduce_sum(a: np.ndarray) -> np.ndarray:
+def lane_reduce_sum(a: list[int]) -> int:
     """your code here"""
-    raise NotImplementedError('Lane reduction sum not implemented')
+    raise NotImplementedError('your code here')

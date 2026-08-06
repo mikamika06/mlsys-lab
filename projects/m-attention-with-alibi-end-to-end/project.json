@@ -1,0 +1,21 @@
+{
+  "id": "m-attention-with-alibi-end-to-end",
+  "title": "Attention with ALiBi End-to-End",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "score-modifiers-softcap-alibi-scale",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["alibi_attn/attention.py", "alibi_attn/matrix.py", "alibi_attn/overflow.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Attention with ALiBi end-to-end", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Modifier and backend support matrix", "check": "harness/m2.py",
+     "gates": [{"metric": "matrix_matches", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch un-softcapped overflow rate bug", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ignored_softcap", "op": "==", "threshold": 1}]}
+  ]
+}

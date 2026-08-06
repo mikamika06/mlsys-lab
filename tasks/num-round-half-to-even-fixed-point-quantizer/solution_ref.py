@@ -1,12 +1,11 @@
-import numpy as np
 import math
 
-def quantize_fixed_point(arr: np.ndarray, frac_bits: int) -> np.ndarray:
+def quantize_fixed_point(arr: list[float], frac_bits: int) -> list[int]:
     """Quantizes a float array to fixed‑point with round‑half‑to‑even."""
     scale = 1 << frac_bits
-    out = np.empty(arr.shape, dtype=np.int64)
-    for i in range(arr.size):
-        val = float(arr.flat[i]) * scale
+
+    def process_val(val_f: float) -> int:
+        val = val_f * scale
         f = math.floor(val)
         frac = val - f
         if frac > 0.5:
@@ -18,5 +17,12 @@ def quantize_fixed_point(arr: np.ndarray, frac_bits: int) -> np.ndarray:
                 res = f
             else:
                 res = f + 1
-        out.flat[i] = int(res)
-    return out
+        return int(res)
+
+    def recurse(item):
+        if isinstance(item, list):
+            return [recurse(sub) for sub in item]
+        else:
+            return process_val(float(item))
+
+    return recurse(arr)

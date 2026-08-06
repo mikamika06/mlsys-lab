@@ -1,0 +1,21 @@
+{
+  "id": "m-max-context-length-under-a-fixed-36gb-budget-mha-vs-",
+  "title": "Max context length under a fixed 36GB budget: MHA vs GQA vs MLA",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "kv-cache-memory-scaling",
+  "size": "M",
+  "edits": ["kvcalc/memory.py", "kvcalc/budget.py", "kvcalc/oom.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "KV cache memory footprint for MHA, GQA, and MLA", "check": "harness/m1.py",
+     "gates": [{"metric": "memory_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Maximum context length under a 36GB budget", "check": "harness/m2.py",
+     "gates": [{"metric": "budget_matched", "op": "==", "threshold": 1},
+               {"metric": "scaling_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching incorrect context back-calculation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_oom_calc", "op": "==", "threshold": 1}]}
+  ]
+}

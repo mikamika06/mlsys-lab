@@ -1,0 +1,22 @@
+{
+  "id": "m-convert-with-split-max-size-and-verify-the-shard-pla",
+  "title": "Convert with --split-max-size and verify the shard plan",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "convert-hf-to-gguf-pipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["sharder/plan.py", "sharder/vocab.py", "sharder/schedule.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Model tensor sharding plan with size cap", "check": "harness/m1.py",
+     "gates": [{"metric": "plans_matched", "op": ">=", "threshold": 4}]},
+    {"n": 2, "title": "Vocab-only metadata round-trip and shard budgeting", "check": "harness/m2.py",
+     "gates": [{"metric": "vocab_matched", "op": "==", "threshold": 1},
+               {"metric": "splits_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches single-file leakage", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_merged_shards", "op": "==", "threshold": 1}]}
+  ]
+}

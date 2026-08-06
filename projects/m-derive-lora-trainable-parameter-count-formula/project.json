@@ -1,0 +1,64 @@
+{
+  "id": "m-derive-lora-trainable-parameter-count-formula",
+  "title": "LoRA parameter count, weight merging, and efficient forward pass",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "lora-mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "lora/params.py",
+    "lora/merge.py",
+    "lora/forward.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive LoRA trainable parameter count formula",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "params_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive LoRA merge equivalence",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "merge_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching scaling or correctness faults",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_bad_forward",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

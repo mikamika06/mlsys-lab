@@ -1,0 +1,64 @@
+{
+  "id": "m-latency-across-four-mlcomputeunits-settings",
+  "title": "Compute units and Apple Neural Engine placement",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Compute units and Apple Neural Engine placement",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ane_diag/profile.py",
+    "ane_diag/fallback.py",
+    "ane_diag/classifier.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Evaluate profile latency across compute unit options",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "latency_ratio",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Isolate the graph operation forcing CPU fallback",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "isolated_correctly",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression suite for ANE eligibility",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_classifier",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

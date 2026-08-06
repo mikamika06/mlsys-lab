@@ -1,0 +1,22 @@
+{
+  "id": "m-compute-the-dispatch-combine-roofline-crossover-poin",
+  "title": "Compute dispatch roofline crossover and expert bin-packing",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "expert-parallelism-all-to-all",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["moeplan/roofline.py", "moeplan/placement.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute the dispatch/combine roofline crossover point", "check": "harness/m1.py",
+     "gates": [{"metric": "roofline_matched", "op": ">=", "threshold": 4}]},
+    {"n": 2, "title": "Bin-pack experts to GPUs to minimize max-loaded rank", "check": "harness/m2.py",
+     "gates": [{"metric": "placement_matched", "op": ">=", "threshold": 4},
+               {"metric": "max_load_optimal", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catches unoptimized placement", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_naive_placement", "op": "==", "threshold": 1}]}
+  ]
+}

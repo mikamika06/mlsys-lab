@@ -9,7 +9,7 @@ def grade(sol, fx) -> dict:
     ntk  = rng.standard_normal((12, 20))
 
     try:
-        got_pi, got_ntk = sol.compare_pi_ntk(base, pi, ntk)
+        got_pi, got_ntk = sol.compare_pi_ntk(base.tolist(), pi.tolist(), ntk.tolist())
     except Exception as e:
         return {"mean_kl_pi": 0.0, "mean_kl_ntk": 0.0}
 

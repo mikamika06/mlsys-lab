@@ -31,30 +31,34 @@ The output for the current token should be identical to recomputing attention ov
 Implement `decode_steps`:
 
 ```python
-def decode_steps(x, Wq, Wk, Wv):
+def decode_steps(
+    x: list[list[float]],
+    Wq: list[list[float]],
+    Wk: list[list[float]],
+    Wv: list[list[float]],
+) -> list[list[float]]:
     ...
 ```
 
 Inputs:
 
-- `x`: a NumPy array of shape $(n, d)$ containing token representations.
-- `Wq`, `Wk`, `Wv`: NumPy arrays of shape $(d, d)$ containing projection matrices.
+- `x`: a list of shape $(n, d)$ containing token representations.
+- `Wq`, `Wk`, `Wv`: list of shape $(d, d)$ containing projection matrices.
 
-Return a NumPy array of shape $(n, d)$ containing the attention output for each decode step.
+Return a list of shape $(n, d)$ containing the attention output for each decode step.
 
 For each position $t$, compute the query from the current token, append the current key and value to the KV-cache, and attend over the complete cache. The returned row $t$ must match a full recomputation over `x[:t+1]`.
 
-Use NumPy operations. The implementation should maintain the cache rather than rebuilding the whole history for every step.
+Use Python operations. The implementation should maintain the cache rather than rebuilding the whole history for every step.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1.0, 0.0], [0.0, 1.0]])
-Wq = np.eye(2)
-Wk = np.eye(2)
-Wv = np.eye(2)
+x = [[1.0, 0.0], [0.0, 1.0]]
+Wq = [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]
+Wk = [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]
+Wv = [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]
 
 y = decode_steps(x, Wq, Wk, Wv)
 ```
@@ -63,7 +67,7 @@ The first row attends only to the first token. The second row attends to both to
 
 ## What the gate checks
 
-The gate builds a NumPy reference implementation that performs full recomputation for every decode step. It compares the submitted implementation against this oracle.
+The gate builds a Python reference implementation that performs full recomputation for every decode step. It compares the submitted implementation against this oracle.
 
 The maximum absolute element error
 

@@ -1,0 +1,43 @@
+{
+  "id": "m-export-and-load-an-onnx-model-with-3-backend-config-",
+  "title": "Export and Load an ONNX Model With 3 Backend-Config Variants",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Triton Backends & Instance Groups",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "onnxconfig/exporter.py",
+    "onnxconfig/variants.py",
+    "onnxconfig/validator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Base ONNX model export structure",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "structure_matched", "op": ">=", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Three backend-config variants generation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "variants_matched", "op": "==", "threshold": 1},
+        {"metric": "params_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for variant configs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_config", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

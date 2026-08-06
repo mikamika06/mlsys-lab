@@ -1,21 +1,20 @@
-import numpy as np
-from typing import Tuple
+from __future__ import annotations
 
 def lloyd_fixed_init(
-    X: np.ndarray,
-    init_centroids: np.ndarray,
+    X: list[list[float]],
+    init_centroids: list[list[float]],
     max_iter: int = 300,
     tol: float = 1e-4
-) -> Tuple[np.ndarray, int]:
-    n_samples = X.shape[0]
-    n_features = X.shape[1]
-    k_clusters = init_centroids.shape[0]
+) -> tuple[list[int], int]:
+    n_samples = len(X)
+    n_features = len(X[0])
+    k_clusters = len(init_centroids)
 
     centroids = []
     for i in range(k_clusters):
         row = []
         for j in range(n_features):
-            row.append(float(init_centroids[i, j]))
+            row.append(float(init_centroids[i][j]))
         centroids.append(row)
 
     labels = [0] * n_samples
@@ -28,7 +27,7 @@ def lloyd_fixed_init(
             for k in range(k_clusters):
                 dist_sq = 0.0
                 for d in range(n_features):
-                    diff = float(X[i, d]) - centroids[k][d]
+                    diff = float(X[i][d]) - centroids[k][d]
                     dist_sq += diff * diff
                 if dist_sq < min_dist_sq:
                     min_dist_sq = dist_sq
@@ -42,10 +41,7 @@ def lloyd_fixed_init(
                     same = False
                     break
             if same:
-                out = np.empty(n_samples, dtype=np.int64)
-                for i in range(n_samples):
-                    out[i] = labels[i]
-                return out, it - 1
+                return list(labels), it - 1
 
         if labels_prev is None:
             labels_prev = [0] * n_samples
@@ -62,10 +58,7 @@ def lloyd_fixed_init(
                     sum_val = 0.0
                     for i in range(n_samples):
                         if labels[i] == k:
-                            sum_val += float(X[i, d])
+                            sum_val += float(X[i][d])
                     centroids[k][d] = sum_val / count
 
-    out = np.empty(n_samples, dtype=np.int64)
-    for i in range(n_samples):
-        out[i] = labels[i]
-    return out, max_iter
+    return list(labels), max_iter

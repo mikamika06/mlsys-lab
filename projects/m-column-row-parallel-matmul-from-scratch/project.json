@@ -1,0 +1,44 @@
+{
+  "id": "m-column-row-parallel-matmul-from-scratch",
+  "title": "Column and Row Parallel Matmul from Scratch",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Tensor parallelism mechanics (column/row parallel, f/g operators)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tp/operators.py",
+    "tp/comm.py",
+    "tp/mlp.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Column and Row Parallel Matmul with f/g Operators",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "max_abs_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-Layer TP Communication Volume Analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "volume_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: Regression test for f/g autograd operators",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_swapped_fg", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

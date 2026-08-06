@@ -19,7 +19,7 @@ def footprint_sweep(widths):
 
 `widths` is an iterable of positive integers. Each integer is the number of attributes stored in an instance.
 
-Return a NumPy array of shape $(n, 3)$ with `float64` values. For each width, the columns must be:
+Return a list of shape $(n, 3)$ with `float64` values. For each width, the columns must be:
 
 1. ratio of a normal dict-backed class instance footprint to a slots instance footprint,
 2. ratio of a `namedtuple` instance footprint to a slots instance footprint,
@@ -30,7 +30,6 @@ The footprint should be measured using CPython object sizes. The function should
 ## Example
 
 ```python
-import numpy as np
 
 ratios = footprint_sweep([1, 4, 16])
 
@@ -38,7 +37,7 @@ ratios = footprint_sweep([1, 4, 16])
 # columns correspond to:
 # [dict_class / slots, namedtuple / slots, key_shared / slots]
 assert ratios.shape == (3, 3)
-assert ratios.dtype == np.float64
+assert ratios.dtype == float
 ```
 
 ## What the gate checks

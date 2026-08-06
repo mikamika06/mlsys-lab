@@ -1,0 +1,21 @@
+{
+  "id": "m-find-the-weight-distribution-where-q4-1-beats-q4-0",
+  "title": "Find the weight distribution where Q4_1 beats Q4_0",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "legacy-quant-blocks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quant/blocks.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Find the weight distribution crossing point", "check": "harness/m1.py",
+     "gates": [{"metric": "distribution_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Correct nibble-order decoder and block reconstruction", "check": "harness/m2.py",
+     "gates": [{"metric": "decoding_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching nibble order inversion", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_nibbles", "op": "==", "threshold": 1}]}
+  ]
+}

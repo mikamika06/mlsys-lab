@@ -1,13 +1,11 @@
-import numpy as np
-
-def lane_reduce_sum(a: np.ndarray) -> np.ndarray:
+def lane_reduce_sum(a: list[int]) -> int:
     """
-    Compute the horizontal sum of a 1‑D integer array via SIMD‑style lane reduction.
-    The result is returned as a scalar NumPy array with the same dtype as *a*.
+    Compute the horizontal sum of a list of integers via SIMD‑style lane reduction.
+    The result is returned as an integer.
     """
-    if a.ndim != 1 or not np.issubdtype(a.dtype, np.integer):
-        raise ValueError("Input must be a one‑dimensional integer array.")
+    if not isinstance(a, list):
+        raise ValueError("Input must be a list.")
     total = 0
     for i in range(len(a)):
         total += a[i]
-    return np.array(total, dtype=a.dtype)
+    return total

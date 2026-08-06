@@ -1,0 +1,22 @@
+{
+  "id": "m-classify-a-deserialization-error",
+  "title": "Classify TensorRT engine deserialization errors",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Engine portability: version, hardware and runtime-platform compatibility",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["trtplan/parser.py", "trtplan/classifier.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse .plan headers", "check": "harness/m1.py",
+     "gates": [{"metric": "headers_matched", "op": "==", "threshold": 10}]},
+    {"n": 2, "title": "Classify deserialization status and hardware penalty", "check": "harness/m2.py",
+     "gates": [{"metric": "status_matched", "op": "==", "threshold": 12},
+               {"metric": "penalty_matched", "op": "==", "threshold": 12}]},
+    {"n": 3, "title": "Safety net: regression test for hardware penalty bypass", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_penalty_bypass", "op": "==", "threshold": 1}]}
+  ]
+}

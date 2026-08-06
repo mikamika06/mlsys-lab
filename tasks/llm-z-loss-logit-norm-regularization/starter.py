@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def z_loss(logits: np.ndarray, targets: np.ndarray, lambda_: float) -> np.ndarray:
+def z_loss(logits: list[list[float]], targets: list[int], lambda_: float) -> list[float]:
     raise NotImplementedError('your code here')

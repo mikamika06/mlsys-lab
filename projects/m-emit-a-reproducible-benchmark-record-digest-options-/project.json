@@ -1,0 +1,63 @@
+{
+  "id": "m-emit-a-reproducible-benchmark-record-digest-options-",
+  "title": "Reproducible benchmark records and methodological flaw analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "benchmarking-methodology-for-runners",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "benchmark/recorder.py",
+    "benchmark/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Emit a reproducible benchmark record",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "record_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analyze methodological flaws and bias directions",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "flaws_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test catching cold start inflation errors",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_cold_start",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

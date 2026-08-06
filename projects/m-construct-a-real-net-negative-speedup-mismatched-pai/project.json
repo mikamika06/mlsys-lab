@@ -1,0 +1,47 @@
+{
+  "id": "m-construct-a-real-net-negative-speedup-mismatched-pai",
+  "title": "Pathological Cases in Speculative Decoding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Failure modes & pathological cases",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "spec_fail/metrics.py",
+    "spec_fail/pathology.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Metrics and Acceptance Collapse",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "acceptance_rate_match", "op": "==", "threshold": 1},
+        {"metric": "speedup_match", "op": "==", "threshold": 1},
+        {"metric": "collapse_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Constructing the Pathologies",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "negative_speedup", "op": "==", "threshold": 1},
+        {"metric": "lookup_correct", "op": "==", "threshold": 1},
+        {"metric": "degenerate_loop", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety Net: Catching Broken Drafter Logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_lookup", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

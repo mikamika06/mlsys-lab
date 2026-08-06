@@ -1,0 +1,7 @@
+# Symptom Report: Continuous Batching Simulator Divergence
+
+Our serving simulation pipeline is currently exhibiting erratic behavior when evaluating LLM inference workloads under high request arrival rates. During recent load testing sessions, the system under test produces anomalous throughput figures and incorrect completion timestamps for queued requests. Specifically, when multiple asynchronous requests arrive simultaneously, the active batch occasionally exceeds the configured maximum batch size limit, or conversely, stalls indefinitely despite available capacity in the execution engine.
+
+Furthermore, the computed throughput ratio comparing continuous batching against traditional static batching fluctuates wildly, sometimes showing static batching outperforming continuous batching under bursty traffic patterns, which contradicts theoretical expectations and offline profiling data. Engineers investigating the core scheduling logic noticed that request admissions do not properly respect memory and capacity bounds at each discrete simulation step, causing cascading delays and inaccurate token completion metrics.
+
+We need you to implement a robust continuous-batching simulator that correctly models request arrivals, dynamic queue admission based on strict predicate checks, and step-by-step token generation completions. Additionally, you must implement the precise throughput ratio calculation between static and continuous scheduling modes, and author regression tests to safeguard the admission predicate invariants against future regressions.

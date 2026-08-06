@@ -1,0 +1,23 @@
+{
+  "id": "m-activation-arena-size-from-liveness-intervals",
+  "title": "Activation arena sizing and memory planning for edge export",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": ".pte format, memory planning and program-data separation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["arena/pte_reader.py", "arena/planner.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse .pte constant segment header", "check": "harness/m1.py",
+     "gates": [{"metric": "pte_parsed", "op": "==", "threshold": 1},
+               {"metric": "errors_handled", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Greedy memory planning and arena size calculation", "check": "harness/m2.py",
+     "gates": [{"metric": "arena_plans_matched", "op": "==", "threshold": 1},
+               {"metric": "optimal_packing", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test that rejects non-greedy memory planners", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_first_fit_bug", "op": "==", "threshold": 1}]}
+  ]
+}

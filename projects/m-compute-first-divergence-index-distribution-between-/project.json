@@ -1,0 +1,38 @@
+{
+  "id": "m-compute-first-divergence-index-distribution-between-",
+  "title": "First-Divergence Index and Near-Tie Analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "determinism-correctness-and-regression-testing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["divergence/analyze.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute first-divergence index",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "byte_exact_fraction", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Regression gate and near ties",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "gate_correct", "op": "==", "threshold": 1.0},
+        {"metric": "ties_correct", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Regression test for divergence",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_blind_divergence", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

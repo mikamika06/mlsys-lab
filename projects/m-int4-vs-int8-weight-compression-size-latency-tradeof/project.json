@@ -1,0 +1,21 @@
+{
+  "id": "m-int4-vs-int8-weight-compression-size-latency-tradeof",
+  "title": "INT4 vs INT8 weight compression size and latency tradeoff",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "NNCF weight compression for LLMs (INT4/INT8)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["compressor/weights.py", "compressor/tradeoff.py", "compressor/validator.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "INT4 and INT8 weight size and simulated latency tradeoff", "check": "harness/m1.py",
+     "gates": [{"metric": "tradeoff_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Throughput ratio validation under memory constraints", "check": "harness/m2.py",
+     "gates": [{"metric": "throughput_ratio", "op": ">=", "threshold": 0.9}]},
+    {"n": 3, "title": "Safety net: catching non-divisible group sizes", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_non_divisible_groups", "op": "==", "threshold": 1}]}
+  ]
+}

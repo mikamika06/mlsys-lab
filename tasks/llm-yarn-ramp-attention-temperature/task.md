@@ -57,15 +57,15 @@ Implement `yarn_ramp_temperature`:
 
 ```python
 def yarn_ramp_temperature(
-    q: np.ndarray,
-    k: np.ndarray,
-    inv_freq: np.ndarray,
-    positions: np.ndarray,
+    q: list[list[float]],
+    k: list[list[float]],
+    inv_freq: list[float],
+    positions: list[int],
     beta_fast: float,
     beta_slow: float,
     scale: float,
     temperature: float,
-) -> np.ndarray:
+) -> list[list[float]]:
     ...
 ```
 
@@ -78,17 +78,16 @@ A_{ij} =
 \frac{q_i^\top k_j}{\sqrt{d}\sqrt{t}} .
 $$
 
-Use NumPy operations. The returned array must be `float64`.
+Use Python operations. The returned array must be `float64`.
 
 ## Example
 
 ```python
-import numpy as np
 
-q = np.array([[1., 0., 0., 1.]])
-k = np.array([[1., 1., 0., 0.]])
-freq = np.array([1.0, 0.5])
-pos = np.array([2])
+q = [[1., 0., 0., 1.]]
+k = [[1., 1., 0., 0.]]
+freq = [1.0, 0.5]
+pos = [2]
 
 out = yarn_ramp_temperature(
     q, k, freq, pos,
@@ -101,7 +100,7 @@ out = yarn_ramp_temperature(
 
 ## What the gate checks
 
-The gate computes the YaRN and rotary reference directly with NumPy and compares the
+The gate computes the YaRN and rotary reference directly with Python and compares the
 candidate output against that oracle. The maximum absolute element error
 
 $$

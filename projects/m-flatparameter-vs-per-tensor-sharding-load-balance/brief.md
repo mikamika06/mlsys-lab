@@ -1,0 +1,7 @@
+# Ticket: Distributed training imbalance and unexpected parameter state errors under FSDP1 wrapping
+
+We are observing severe performance degradation and unexpected crashes during distributed training initialization using our FSDP1 setup. When scaling up our model across multiple GPU nodes, training steps experience extreme stalls where certain ranks finish all communication collectives significantly ahead of others, leading to idle waiting times and poor cluster utilization.
+
+Additionally, engineers attempting to freeze specific backbone layers or modify parameter requires_grad attributes post-initialization are encountering abrupt runtime failures with cryptic traceback messages pointing deep inside the parameter flattening and unflattening routines. These errors surface unpredictably depending on how modules are nested and wrapped by the auto wrapping policies.
+
+Specifically, when custom module wrapping policies group layers together, the resulting sharded parameter groups exhibit skewed byte counts across ranks. Furthermore, attempting to mutate or freeze parameters after FSDP initialization triggers state validation exceptions because the flat parameter view loses synchronization with the underlying module parameters. We need to analyze and implement the core sharding load-balancing logic, reconstruct the deterministic unit assignment behavior of the auto wrap policy, and add robust regression tests to safeguard against freeze-constraint violations.

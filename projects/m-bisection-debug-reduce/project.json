@@ -1,0 +1,46 @@
+{
+  "id": "m-bisection-debug-reduce",
+  "title": "Bisection debug-reduce for TensorRT and ONNX workflows",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Polygraphy: run, inspect, surgeon, debug reduce workflows",
+  "difficulty": 3,
+  "edits": [
+    "polyreduce/bisect.py",
+    "polyreduce/sanitize.py",
+    "polyreduce/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Bisection search over pipeline steps",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "bisect_correct", "op": "==", "threshold": 1},
+        {"metric": "is_logarithmic", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Sanitize subnormals and classify divergence",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "sanitize_correct", "op": "==", "threshold": 1},
+        {"metric": "classify_correct", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test suite for debug-reduce",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_linear_search", "op": "==", "threshold": 1},
+        {"metric": "catches_ignored_sanitization", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

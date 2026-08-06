@@ -1,0 +1,43 @@
+{
+  "id": "m-cold-cache-protocol-prove-the-cache-was-actually-col",
+  "title": "Cold-cache protocol: prove the cache was actually cold",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "serving-benchmark-methodology",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "coldcache/protocol.py",
+    "coldcache/verifier.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Eviction protocol and device-host flush",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "cold_state_flushed", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Execution trace proof generation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "trace_verified", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching warm cache leakage",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_warm_leakage", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

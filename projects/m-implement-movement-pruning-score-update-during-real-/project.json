@@ -1,0 +1,21 @@
+{
+  "id": "m-implement-movement-pruning-score-update-during-real-",
+  "title": "Movement pruning score update and trajectory reconstruction",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Movement pruning / learned masks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["movement/prune.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Implement movement-pruning score update during fine-tuning", "check": "harness/m1.py",
+     "gates": [{"metric": "scores_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Reconstruct movement-score trajectory from synthetic series", "check": "harness/m2.py",
+     "gates": [{"metric": "trajectory_error", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Safety net: regression test comparing movement vs magnitude masks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_mask", "op": "==", "threshold": 1}]}
+  ]
+}

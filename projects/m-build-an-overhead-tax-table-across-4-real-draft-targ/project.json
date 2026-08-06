@@ -1,0 +1,48 @@
+{
+  "id": "m-build-an-overhead-tax-table-across-4-real-draft-targ",
+  "title": "Build an overhead tax table across 4 real draft/target pairs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Measuring & profiling speculative decoding",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tax/profiles.py",
+    "tax/overhead.py",
+    "tax/reports.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Acceptance dynamics and pair overhead tax",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "acceptance_matched", "op": "==", "threshold": 1},
+        {"metric": "overhead_matched", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "4-pair overhead tax table and optimal gamma search",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "table_matched", "op": "==", "threshold": 1},
+        {"metric": "optimal_matched", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching broken tax calculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_tax", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

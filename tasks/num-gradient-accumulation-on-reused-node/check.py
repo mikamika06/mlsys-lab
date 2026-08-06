@@ -82,7 +82,7 @@ def grade(sol, fx) -> dict:
             x = rng.uniform(-2.0, 2.0, size=n_in)
             ref = _central_fd_grad(tape, x)
             try:
-                got = sol.tape_grad(tape, x)
+                got = sol.tape_grad(tape, x.tolist())
                 got = np.asarray(got, dtype=np.float64).ravel()
             except Exception:
                 return {"rel_err": float("inf")}

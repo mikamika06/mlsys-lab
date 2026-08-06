@@ -25,24 +25,23 @@ it raises an `IndexError`). Find the bug and fix it.
 The function signature is:
 
 ```python
-def matmul_naive(A, B):
+def matmul_naive(A: list[list[float]], B: list[list[float]]) -> list[list[float]]:
     """Compute A @ B for A of shape (m,k) and B of shape (k,n) using explicit
-    Python loops. Returns a float64 NumPy array of shape (m,n)."""
+    Python loops. Returns a float64 list of shape (m,n)."""
 ```
 
-`A` and `B` are NumPy arrays. `A` has shape $(m,k)$ and `B` has shape $(k,n)$;
+`A` and `B` are list. `A` has shape $(m,k)$ and `B` has shape $(k,n)$;
 in general $k \neq n$, so a correct fix must actually swap the index order,
 not just happen to work by accident.
 
 ## Example
 
 ```python
-import numpy as np
-A = np.array([[1.0, 2.0, 3.0],
-              [4.0, 5.0, 6.0]])            # shape (2, 3)
-B = np.array([[ 7.0,  8.0],
+A = [[1.0, 2.0, 3.0],
+              [4.0, 5.0, 6.0]]            # shape (2, 3)
+B = [[ 7.0,  8.0],
               [ 9.0, 10.0],
-              [11.0, 12.0]])               # shape (3, 2)
+              [11.0, 12.0]]               # shape (3, 2)
 
 C = matmul_naive(A, B)
 # C == [[ 58.0,  64.0],
@@ -57,7 +56,7 @@ $$
 \mathrm{max\_abs\_err} = \max_{i,j} \left| C_{ij} - (A B)_{ij} \right|
 $$
 
-against `A @ B` computed by NumPy, on several random rectangular matrices
+against `A @ B` computed by Python, on several random rectangular matrices
 (including non-square cases where the buggy indexing raises an `IndexError`
 or produces a completely wrong shape). The maximum error over all cases must
 satisfy $\mathrm{max\_abs\_err} \le 10^{-6}$.

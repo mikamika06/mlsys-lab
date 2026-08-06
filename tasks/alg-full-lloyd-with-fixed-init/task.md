@@ -20,11 +20,11 @@ Implement `lloyd_fixed_init`:
 
 ```python
 def lloyd_fixed_init(
-    X: np.ndarray,
-    init_centroids: np.ndarray,
+    X: list[list[float]],
+    init_centroids: list[list[float]],
     max_iter: int = 300,
     tol: float = 1e-4
-) -> Tuple[np.ndarray, int]:
+) -> tuple[list[int], int]:
     ...
 ```
 
@@ -39,14 +39,13 @@ The implementation must be fully vectorised: no explicit Python loops over data 
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[0., 0.],
+X = [[0., 0.],
               [1., 0.],
               [0., 2.],
-              [5., 5.]])
-init_centroids = np.array([[0., 0.],   # cluster 0
-                           [5., 5.]])  # cluster 1
+              [5., 5.]]
+init_centroids = [[0., 0.],   # cluster 0
+                           [5., 5.]]  # cluster 1
 
 labels, n_iter = lloyd_fixed_init(X, init_centroids)
 print(labels)   # array([0, 0, 0, 1])
@@ -59,7 +58,7 @@ The first three points are closer to the origin centroid; the last point is assi
 
 Two aspects are verified:
 
-* **Exact match** – the returned `labels` array must be identical to that produced by a reference implementation using NumPy’s broadcasting and vectorised operations.
+* **Exact match** – the returned `labels` array must be identical to that produced by a reference implementation using Python’s broadcasting and vectorised operations.
 * **Correct shape & type** – `labels` must have shape `(n,)`, dtype `int64`; `n_iter` must be an integer.
 
 The grader runs several random test cases; any deviation from the reference labels causes the gate to fail. No timing or line‑count checks are performed for this task.

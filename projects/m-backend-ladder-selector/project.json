@@ -1,0 +1,21 @@
+{
+  "id": "m-backend-ladder-selector",
+  "title": "Backend ladder selector for FlashAttention portability",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "portability-and-fallbacks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flashsel/probe.py", "flashsel/selector.py", "flashsel/fallback.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Import-safe capability probe", "check": "harness/m1.py",
+     "gates": [{"metric": "probes_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Prioritized backend ladder selector", "check": "harness/m2.py",
+     "gates": [{"metric": "ladder_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: cross-backend equivalence test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_equivalence", "op": "==", "threshold": 1}]}
+  ]
+}

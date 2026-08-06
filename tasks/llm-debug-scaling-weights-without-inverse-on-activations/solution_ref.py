@@ -1,10 +1,21 @@
-import numpy as np
+def restore_awq_equivalence(
+    X: list[list[float]], W: list[list[float]], s: list[float]
+) -> list[list[float]]:
+    n = len(X)
+    d = len(s)
+    m = len(W)
 
+    X_comp = [[X[i][j] / s[j] for j in range(d)] for i in range(n)]
+    W_scaled = [[W[i][j] * s[j] for j in range(d)] for i in range(m)]
 
-def restore_awq_equivalence(X, W, s):
-    X = np.asarray(X, dtype=np.float64)
-    W = np.asarray(W, dtype=np.float64)
-    s = np.asarray(s, dtype=np.float64)
-    W_scaled = W * s[None, :]
-    X_compensated = X / s[None, :]
-    return X_compensated @ W_scaled.T
+    Y = []
+    for i in range(n):
+        row = []
+        for j in range(m):
+            val = 0.0
+            for k in range(d):
+                val += X_comp[i][k] * W_scaled[j][k]
+            row.append(val)
+        Y.append(row)
+
+    return Y

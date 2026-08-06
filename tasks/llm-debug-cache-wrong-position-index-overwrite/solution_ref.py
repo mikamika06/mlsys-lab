@@ -1,9 +1,6 @@
-import numpy as np
-
-
-def write_kv_cache(cache_k, cache_v, new_k, new_v, position):
-    updated_k = np.array(cache_k, copy=True)
-    updated_v = np.array(cache_v, copy=True)
-    updated_k[position, :] = new_k
-    updated_v[position, :] = new_v
+def write_kv_cache(cache_k: list[list[float]], cache_v: list[list[float]], new_k: list[float], new_v: list[float], position: int) -> tuple[list[list[float]], list[list[float]]]:
+    updated_k = [row[:] for row in cache_k]
+    updated_v = [row[:] for row in cache_v]
+    updated_k[position] = list(new_k)
+    updated_v[position] = list(new_v)
     return updated_k, updated_v

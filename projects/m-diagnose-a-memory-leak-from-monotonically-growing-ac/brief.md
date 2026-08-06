@@ -1,0 +1,7 @@
+# Production Incident Report: GPU Out-Of-Memory Failures During Long Training Runs
+
+Our large language model distributed training pipeline is experiencing intermittent and unpredictable Out-Of-Memory (OOM) crashes when jobs run continuously beyond several thousand iterations. Although hyperparameter configurations such as micro-batch size, sequence length, and precision modes remain completely static throughout training, cluster telemetry indicates that allocated GPU memory increases steadily step after step without ever reaching a stable steady-state ceiling. This gradual upward drift eventually exhausts device capacity during routine backward passes.
+
+Compounding our diagnostic challenges, standard monitoring tools provide insufficient visibility into low-level PyTorch CUDA caching allocator dynamics. Specifically, engineers cannot quantify the exact ratio of memory block split events versus fresh segment requests issued to the underlying driver, hindering our ability to evaluate allocator fragmentation. Additionally, while we attempt to curtail peak memory usage by applying gradient checkpointing across heavy Transformer block layers, we lack a precise, automated utility to compute exact theoretical peak-memory savings prior to cluster deployment.
+
+We require a comprehensive diagnostic module integrated into our low-level systems library to parse snapshot telemetry, detect monotonic memory leaks, calculate allocator split fractions, and measure gradient checkpoint reduction metrics.

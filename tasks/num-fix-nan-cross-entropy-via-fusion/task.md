@@ -20,27 +20,26 @@ The shifted exponentials $e^{x_j - m}$ are at most $1$, so no overflow occurs. T
 Implement the function
 
 ```python
-def cross_entropy(logits: np.ndarray, target: int) -> float:
+def cross_entropy(logits: list[float], target: int) -> float:
 ```
 
-where `logits` is a 1-D `float64` NumPy array of shape `(C,)` and `target` is an integer class index.
+where `logits` is a 1-D `float64` list of shape `(C,)` and `target` is an integer class index.
 
 The provided starter code contains an **unstable** implementation that produces `NaN` for large logits. Replace it with a fused, numerically stable version.
 
-You may only use NumPy (`import numpy as np`).
+You may only use Python (`import math`).
 
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([1e3, 2e3, 3e3])
+logits = [1e3, 2e3, 3e3]
 target = 1
 loss = cross_entropy(logits, target)
 print(loss)   # 1000.0  (finite)
 ```
 
-The broken starter would return `NaN` because `np.exp(logits)` overflows.
+The broken starter would return `NaN` because `[math.exp(x) for x in logits]` overflows.
 
 ## What the gate checks
 

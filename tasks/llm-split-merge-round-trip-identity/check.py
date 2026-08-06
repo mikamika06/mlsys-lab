@@ -16,8 +16,9 @@ def grade(sol, fx) -> dict:
             for num_heads in [2, 4, 8]:
                 dim = num_heads * 8  # ensure divisible
                 x = np.random.randn(batch, seq_len, dim).astype(np.float64)
+                x_list = x.tolist()
                 try:
-                    split = sol.split_heads(x, num_heads)
+                    split = sol.split_heads(x_list, num_heads)
                     merged = sol.merge_heads(split)
                 except Exception:
                     return {"max_abs_err": float("inf")}

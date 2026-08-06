@@ -1,0 +1,73 @@
+{
+  "id": "m-bls-vs-static-ensemble-reconstruct-when-conditional-",
+  "title": "BLS vs Static Ensemble: Reconstruct When Conditional Routing Is Required",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Triton Ensembles & BLS",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bls_router/router.py",
+    "bls_router/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct conditional routing with Triton BLS",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "routing_accuracy",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "evaluations_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure execution overhead and unnecessary model invocations",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bls_efficiency_ratio",
+          "op": ">=",
+          "threshold": 1.5
+        },
+        {
+          "metric": "static_waste_detected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch static ensemble conditional routing violations",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_static_routing_violation",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

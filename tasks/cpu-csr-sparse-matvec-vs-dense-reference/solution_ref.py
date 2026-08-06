@@ -1,12 +1,10 @@
-import numpy as np
-
-def csr_matvec(data, indices, indptr, x):
+def csr_matvec(data: list[float], indices: list[int], indptr: list[int], x: list[float]) -> list[float]:
     """
     Multiply a matrix in CSR format by a dense vector.
-    Returns a 1‑D NumPy array of float64 containing the result.
+    Returns a list of floats containing the result.
     """
     n = len(indptr) - 1
-    y = np.zeros(n, dtype=np.float64)
+    y = [0.0] * n
     for i in range(n):
         start = indptr[i]
         end = indptr[i + 1]

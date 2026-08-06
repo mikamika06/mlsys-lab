@@ -1,0 +1,5 @@
+We are seeing a severe regression in batched inference when integrating `flash_attention_2` into our HuggingFace Transformers pipelines. Users report that when `padding_side='right'` is passed to the tokenizer, batched generation yields gibberish output specifically on the padded sequences. The model starts echoing random characters instead of coherent text. Interestingly, `padding_side='left'` does not exhibit this behavior and works flawlessly. 
+
+Additionally, our model instantiation is fragile. Users on PyTorch 2.0 with unsupported dtype configs are crashing abruptly because we lack a centralized logic to gracefully resolve and fall back to the most optimal, legally supported `attn_implementation`. 
+
+To isolate the right-padding corruption, we need to build a robust backend-parity assertion suite. It should evaluate output equality between two attention backends but strictly ignore discrepancies inside the padded token positions. We also need a reliable resolver to determine the valid backends based on the model's configuration and the host's hardware environment.

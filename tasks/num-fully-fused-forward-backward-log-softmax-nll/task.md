@@ -37,7 +37,7 @@ it for both the loss and $P$, and never forming a separate autodiff graph.
 Implement `fused_log_softmax_nll(logits, targets)`:
 
 ```python
-def fused_log_softmax_nll(logits: np.ndarray, targets: np.ndarray):
+def fused_log_softmax_nll(logits: list[list[float]], targets: list[int]):
     ...
 ```
 
@@ -45,7 +45,7 @@ def fused_log_softmax_nll(logits: np.ndarray, targets: np.ndarray):
 * `targets` is a 1-D integer array of shape $(N,)$ with values in $[0, C)$.
 
 Return a tuple `(loss, dlogits)` where `loss` is a Python `float` equal to
-$\mathcal{L}$ above, and `dlogits` is a `float64` NumPy array of shape
+$\mathcal{L}$ above, and `dlogits` is a `float64` list of shape
 $(N, C)$ equal to $\partial \mathcal{L} / \partial Z$. Both quantities must be
 computed with a numerically stable log-sum-exp (subtract the row max before
 exponentiating) so the function stays accurate for logits with large
@@ -54,9 +54,8 @@ magnitude.
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([[2.0, 1.0, 0.1], [0.5, 0.5, 3.0]])
-targets = np.array([0, 2])
+logits = [[2.0, 1.0, 0.1], [0.5, 0.5, 3.0]]
+targets = [0, 2]
 loss, dlogits = fused_log_softmax_nll(logits, targets)
 # loss  ~= 0.4170   (mean NLL over the 2 rows)
 # dlogits ~= softmax(logits) with 1/N subtracted at the target column of each row

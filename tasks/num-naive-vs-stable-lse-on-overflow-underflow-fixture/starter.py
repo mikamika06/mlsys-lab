@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def logsumexp_stable(x: np.ndarray) -> float:
+def logsumexp_stable(x: list[float]) -> float:
     """
     Numerically stable log-sum-exp: ``log(sum(exp(x)))``.
 

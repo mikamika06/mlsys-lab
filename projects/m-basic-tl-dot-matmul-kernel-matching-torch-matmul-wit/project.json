@@ -1,0 +1,43 @@
+{
+  "id": "m-basic-tl-dot-matmul-kernel-matching-torch-matmul-wit",
+  "title": "Basic tl.dot matmul kernel matching torch.matmul within tolerance",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Matrix multiplication with tl.dot",
+  "difficulty": 3,
+  "edits": [
+    "triton_matmul/kernel.py",
+    "triton_matmul/constraints.py",
+    "triton_matmul/perf.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Basic tl.dot matmul kernel matching torch.matmul",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "max_abs_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Check tl.dot multiple-of-16 shape-alignment constraint",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "constraints_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching invalid tile alignments",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_alignment", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "m-amx-expected-but-ref-fallback-root-cause",
+  "title": "oneDNN verbose log analysis & JIT kernel selection",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "oneDNN verbose log & JIT kernel selection",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["onednn_diag/fallback.py", "onednn_diag/isa_sweep.py", "onednn_diag/profiler.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect AMX reference fallbacks and extract root causes", "check": "harness/m1.py",
+     "gates": [{"metric": "fallbacks_identified", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "ISA dynamic K-sweep analysis & primitive time dominance", "check": "harness/m2.py",
+     "gates": [{"metric": "isa_sweeps_matched", "op": "==", "threshold": 1},
+               {"metric": "profiler_breakdown_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard: test suite catching masked reference fallbacks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_masked_fallback", "op": "==", "threshold": 1}]}
+  ]
+}

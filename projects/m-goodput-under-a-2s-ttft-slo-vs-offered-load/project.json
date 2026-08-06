@@ -1,0 +1,44 @@
+{
+  "id": "m-goodput-under-a-2s-ttft-slo-vs-offered-load",
+  "title": "Goodput under a 2s TTFT SLO vs offered load",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "continuous-batching-and-scheduling",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "goodput/logs.py",
+    "goodput/little.py",
+    "goodput/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct running-batch size from server logs",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "batch_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Little's law check: queue length vs latency",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "little_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Goodput under a 2s TTFT SLO vs offered load",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

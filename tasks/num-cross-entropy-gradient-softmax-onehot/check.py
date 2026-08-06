@@ -52,7 +52,7 @@ def _cases(rng):
     cases.append((z, np.array([2, 3, 0, 4])))
     # 4. large negative offset (shift invariance)
     cases.append((rng.standard_normal((3, 6)) - 1e3, rng.integers(0, 6, size=3)))
-    return [(np.asarray(a, dtype=np.float64), np.asarray(b, dtype=np.int64)) for a, b in cases]
+    return [(a.tolist(), b.tolist()) for a, b in cases]
 
 
 def _fail():
@@ -65,16 +65,16 @@ def grade(sol, fx) -> dict:
     worst = 0.0
     worst_sum = 0.0
     for logits, labels in _cases(rng):
-        ref = _ref_grad(logits, labels)
+        ref = _ref_grad(np.asarray(logits, dtype=np.float64), np.asarray(labels, dtype=np.int64))
         try:
-            got = sol.cross_entropy_backward(logits.copy(), labels.copy())
+            got = sol.cross_entropy_backward([row[:] for row in logits], list(labels))
         except Exception:
             return _fail()
         try:
             got = np.asarray(got, dtype=np.float64)
         except Exception:
             return _fail()
-        if got.shape != logits.shape or not np.all(np.isfinite(got)):
+        if got.shape != np.shape(logits) or not np.all(np.isfinite(got)):
             return _fail()
         worst = max(worst, scorers.max_abs_err(ref, got))
         # rows of the gradient must sum to 0 (softmax sums to 1, onehot sums to 1)
@@ -84,7 +84,7 @@ def grade(sol, fx) -> dict:
     fd_logits = rng.standard_normal((4, 5))
     fd_labels = rng.integers(0, 5, size=4).astype(np.int64)
     try:
-        got_fd = np.asarray(sol.cross_entropy_backward(fd_logits.copy(), fd_labels.copy()), dtype=np.float64)
+        got_fd = np.asarray(sol.cross_entropy_backward(fd_logits.tolist(), fd_labels.tolist()), dtype=np.float64)
     except Exception:
         return _fail()
     if got_fd.shape != fd_logits.shape or not np.all(np.isfinite(got_fd)):

@@ -1,0 +1,21 @@
+{
+  "id": "m-detect-version-skew-between-converter-and-runtime",
+  "title": "Detect version skew between model converter and runtime",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "failure-triage-and-errors",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["skew/parser.py", "skew/runtime.py", "skew/checker.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse metadata and version tags", "check": "harness/m1.py",
+     "gates": [{"metric": "parsed_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Detect version skew and compatibility flags", "check": "harness/m2.py",
+     "gates": [{"metric": "skew_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for skew detection", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_skew", "op": "==", "threshold": 1}]}
+  ]
+}

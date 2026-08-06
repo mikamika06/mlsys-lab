@@ -1,0 +1,46 @@
+{
+  "id": "m-compare-real-wall-clock-of-plain-transformers-peft-t",
+  "title": "Compare Wall-Clock, Peak Memory, and Loss of PyTorch PEFT vs MLX",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "framework-comparison",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bench/profile.py",
+    "bench/memory.py",
+    "bench/loss.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Wall-clock profiling and relative latency ratio",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "profile_runs_matched", "op": "==", "threshold": 1},
+        {"metric": "latency_ratio", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Peak memory tracking and memory reduction ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "memory_runs_matched", "op": "==", "threshold": 1},
+        {"metric": "memory_ratio", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch loss divergence and un-synchronized timer benchmarks",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unsynced_benchmarks", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

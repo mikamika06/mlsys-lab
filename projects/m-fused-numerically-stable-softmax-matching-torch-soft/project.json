@@ -1,0 +1,40 @@
+{
+  "id": "m-fused-numerically-stable-softmax-matching-torch-soft",
+  "title": "Fused Numerically Stable Softmax and LayerNorm",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Reduction kernels: fused softmax & LayerNorm",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "softmaxln/softmax.py",
+    "softmaxln/overflow.py",
+    "softmaxln/layernorm.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Numerically stable fused softmax matching torch.softmax",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 2,
+      "title": "Reproduce softmax overflow when max-subtraction is skipped",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "overflow_detected", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Fused LayerNorm and regression safeguards",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_layernorm", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

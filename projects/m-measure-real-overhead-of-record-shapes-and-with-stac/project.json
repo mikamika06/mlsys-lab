@@ -1,0 +1,43 @@
+{
+  "id": "m-measure-real-overhead-of-record-shapes-and-with-stac",
+  "title": "Measure real overhead of record_shapes and with_stack",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "profiler-overhead-and-heisenberg",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "profoverhead/measure.py",
+    "profoverhead/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure per-option profiler overheads",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "overheads_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive total time doubling overhead ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "throughput_ratio", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching missing schedule step calls",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_missing_schedule", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

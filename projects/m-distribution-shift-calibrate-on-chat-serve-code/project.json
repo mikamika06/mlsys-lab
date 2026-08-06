@@ -1,0 +1,21 @@
+{
+  "id": "m-distribution-shift-calibrate-on-chat-serve-code",
+  "title": "Distribution shift calibration on chat and serving on code",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-quant-calibration-with-llm-compressor",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["calib/shift.py", "calib/metrics.py", "calib/adjust.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute activation distribution shift and relative error", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err_match", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Calibrate scales for code domain from chat statistics", "check": "harness/m2.py",
+     "gates": [{"metric": "scales_adjusted", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches unadjusted scales", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_scaling", "op": "==", "threshold": 1}]}
+  ]
+}

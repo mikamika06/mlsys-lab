@@ -1,11 +1,6 @@
-def sum_order_discrepancy(arr):
-    import numpy as np
-    a = np.asarray(arr, dtype=np.float64)
-
-    n = a.shape[0]
-    vals = []
-    for i in range(n):
-        vals.append(float(a[i]))
+def sum_order_discrepancy(arr: list[float]) -> tuple[float, float, float]:
+    vals = [float(x) for x in arr]
+    n = len(vals)
 
     sorted_vals = sorted(vals)
 
@@ -19,6 +14,6 @@ def sum_order_discrepancy(arr):
 
     s_pair = 0.0
     for i in range(n):
-        s_pair += float(a[i])
+        s_pair += vals[i]
 
     return (float(s_asc), float(s_desc), float(s_pair))

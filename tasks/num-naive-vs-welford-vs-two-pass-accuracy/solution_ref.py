@@ -1,9 +1,5 @@
-import numpy as np
-
-
-def welford_variance(data: np.ndarray) -> float:
+def welford_variance(data: list[float]) -> float:
     """Population variance via Welford's single-pass online algorithm."""
-    data = np.asarray(data, dtype=np.float64)
     n = 0
     mean = 0.0
     m2 = 0.0

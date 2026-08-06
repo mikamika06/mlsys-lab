@@ -1,0 +1,40 @@
+{
+  "id": "m-derive-whether-prefill-or-decode-is-compute-or-memor",
+  "title": "Prefill vs decode roofline, chunked batching, and log comparison",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Prefill/Decode Phases & Chunked Prefill",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "prefill/roofline.py",
+    "prefill/simulate.py",
+    "prefill/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Roofline analysis for prefill and decode",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "roofline_match", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Chunked-prefill batch simulation under token budget",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "sim_match", "op": "==", "threshold": 1}, {"metric": "rel_err", "op": "<", "threshold": 1e-5}]
+    },
+    {
+      "n": 3,
+      "title": "Log comparison of TTFT and ITL with safeguard tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

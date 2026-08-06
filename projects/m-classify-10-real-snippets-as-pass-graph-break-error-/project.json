@@ -1,0 +1,47 @@
+{
+  "id": "m-classify-10-real-snippets-as-pass-graph-break-error-",
+  "title": "Classify PyTorch snippets and isolate compilation overheads",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "torch.compile programming model & modes",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "compiletracer/classifier.py",
+    "compiletracer/dynamic_shapes.py",
+    "compiletracer/backend_overhead.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify snippets under default vs fullgraph compilation modes",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "snippets_classified", "op": ">=", "threshold": 10.0},
+        {"metric": "classifications_exact", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Track cumulative compile overhead and isolate Inductor backend cost",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "static_overhead_match", "op": "==", "threshold": 1.0},
+        {"metric": "dynamic_overhead_match", "op": "==", "threshold": 1.0},
+        {"metric": "backend_breakdown_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for classifier and overhead bounds",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_flawed_classifier", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

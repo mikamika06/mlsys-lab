@@ -1,0 +1,44 @@
+{
+  "id": "m-backend-picker-from-workload-specs",
+  "title": "Backend picker from workload specs and TensorRT payback calculator",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Choosing the backend: ORT CPU/CUDA/TRT EP vs standalone TensorRT vs TRT-LLM",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "picker/selector.py",
+    "picker/payback.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Backend picker from workload specs",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "workloads_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Normalized cross-backend table and payback volume",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "payback_accurate", "op": "==", "threshold": 1.0},
+        {"metric": "table_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches flawed payback calculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_flawed_payback", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

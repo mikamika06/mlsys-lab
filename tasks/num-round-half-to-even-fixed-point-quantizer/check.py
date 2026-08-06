@@ -14,11 +14,11 @@ def grade(sol, fx) -> dict:
         arr = rng.uniform(-10, 10, size=shape).astype(np.float64)
         frac_bits = rng.integers(0, 8)   # 0–7 fractional bits
         try:
-            got = sol.quantize_fixed_point(arr, frac_bits)
+            got = sol.quantize_fixed_point(arr.tolist(), frac_bits)
         except Exception:
             return {"exact_match": 0.0}
         exp = _expected(arr, frac_bits)
-        if not np.array_equal(got, exp):
+        if got != exp.tolist():
             ok = 0.0
             break
 
@@ -26,11 +26,11 @@ def grade(sol, fx) -> dict:
     arr = np.array([0.125, 0.375], dtype=np.float64)   # *4 => [0.5, 1.5]
     frac_bits = 2
     try:
-        got = sol.quantize_fixed_point(arr, frac_bits)
+        got = sol.quantize_fixed_point(arr.tolist(), frac_bits)
     except Exception:
         return {"exact_match": 0.0}
     exp = _expected(arr, frac_bits)
-    if not np.array_equal(got, exp):
+    if got != exp.tolist():
         ok = 0.0
 
     return {"exact_match": ok}

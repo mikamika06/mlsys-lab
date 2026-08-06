@@ -1,0 +1,64 @@
+{
+  "id": "m-compute-load-variance-reduction-from-a-recorded-eplb",
+  "title": "Compute load-variance reduction from a recorded EPLB",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "eplb-elastic-ep",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "eplb/variance.py",
+    "eplb/redundant.py",
+    "eplb/bounds.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantify load variance reduction from a rebalance log",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Greedy redundant-expert rebalancing",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against naive replica bound calculation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_naive_bound",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

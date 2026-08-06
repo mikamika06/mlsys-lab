@@ -28,12 +28,13 @@ def grade(sol, fx) -> dict:
         k = rng.integers(1, n_train + 1)
         try:
             ref = _reference_knn(X_train, y_train, X_query, k)
-            cand = sol.knn_regression_average(X_train, y_train, X_query, k)
+            cand = sol.knn_regression_average(X_train.tolist(), y_train.tolist(), X_query.tolist(), k)
         except Exception:
             return {"rel_err": float("inf")}
-        if cand.shape != ref.shape or cand.dtype != np.float64:
+        if not isinstance(cand, list) or len(cand) != ref.shape[0]:
             return {"rel_err": float("inf")}
-        err = rel_err(ref, cand)
+        cand_arr = np.asarray(cand, dtype=np.float64)
+        err = rel_err(ref, cand_arr)
         if err > max_err:
             max_err = err
     return {"rel_err": max_err}

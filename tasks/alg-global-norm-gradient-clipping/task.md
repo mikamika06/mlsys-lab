@@ -20,7 +20,7 @@ $$ G_i \leftarrow G_i \times \text{coef} $$
 
 ## Task
 
-Write a function `clip_global_norm(grads: List[np.ndarray], max_norm: float) -> List[np.ndarray]` that takes a list of gradient tensors and a maximum norm, and returns a new list of clipped gradient tensors.
+Write a function `clip_global_norm(grads: List[list[float]], max_norm: float) -> List[list[float]]` that takes a list of gradient tensors and a maximum norm, and returns a new list of clipped gradient tensors.
 
 - You should not modify the input arrays in-place; return new arrays.
 - Use $\epsilon = 10^{-6}$ in the denominator when calculating the scale coefficient, as shown in the formula.
@@ -28,9 +28,8 @@ Write a function `clip_global_norm(grads: List[np.ndarray], max_norm: float) -> 
 ## Example
 
 ```python
-import numpy as np
 
-grads = [np.array([3.0, 4.0])]
+grads = [[3.0, 4.0]]
 max_norm = 2.0
 
 clipped_grads = clip_global_norm(grads, max_norm)

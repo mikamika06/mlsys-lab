@@ -1,0 +1,21 @@
+{
+  "id": "m-debug-itl-spikes-every-n-steps",
+  "title": "Debug ITL spikes every N steps",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "chunked-prefill-and-token-budget",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["itl_debug/metrics.py", "itl_debug/analyzer.py", "itl_debug/fix.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect periodicity of ITL spikes", "check": "harness/m1.py",
+     "gates": [{"metric": "period_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Identify root cause allocation batch size", "check": "harness/m2.py",
+     "gates": [{"metric": "root_cause_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches unpatched stall", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unpatched_stall", "op": "==", "threshold": 1}]}
+  ]
+}

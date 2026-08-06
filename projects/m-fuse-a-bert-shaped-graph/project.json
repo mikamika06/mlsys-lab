@@ -1,0 +1,40 @@
+{
+  "id": "m-fuse-a-bert-shaped-graph",
+  "title": "BERT graph fusion, attention triage, and fp16 trade-offs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Transformer-specific ORT optimization (onnxruntime.transformers)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bertfuse/fusion.py",
+    "bertfuse/triage.py",
+    "bertfuse/fp16.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Fuse a BERT-shaped graph",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "fusions_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Zero Attention fusions triage",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "triage_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: precision trade-off and regression tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_fp16", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

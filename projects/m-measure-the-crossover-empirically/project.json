@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-the-crossover-empirically",
+  "title": "Measure the quantization crossover empirically",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-quant-libs",
+  "track": "Quantization scheme taxonomy (WxAy)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantlib/crossover.py", "quantlib/metrics.py", "quantlib/sweep.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure execution metrics across schemes", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Locate the exact empirical crossover point", "check": "harness/m2.py",
+     "gates": [{"metric": "crossover_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches invalid crossover bounds", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_crossover", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,11 +1,10 @@
 import math
-import numpy as np
 
 
-def entropy_inflation_ratio(Q: np.ndarray, K: np.ndarray) -> float:
-    N = Q.shape[0]
-    d = Q.shape[1]
-    M = K.shape[0]
+def entropy_inflation_ratio(Q: list[list[float]], K: list[list[float]]) -> float:
+    N = len(Q)
+    d = len(Q[0])
+    M = len(K)
 
     sqrt_d = math.sqrt(d)
 
@@ -15,7 +14,7 @@ def entropy_inflation_ratio(Q: np.ndarray, K: np.ndarray) -> float:
         for j in range(M):
             s = 0.0
             for k in range(d):
-                s += float(Q[i, k]) * float(K[j, k])
+                s += float(Q[i][k]) * float(K[j][k])
             row.append(s)
         scores.append(row)
 

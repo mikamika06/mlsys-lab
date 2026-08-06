@@ -1,13 +1,12 @@
 import math
-import numpy as np
 
-def kmeans_pp_seed(X: np.ndarray, n_clusters: int, rng_stream: np.ndarray) -> np.ndarray:
+def kmeans_pp_seed(X: list[list[float]], n_clusters: int, rng_stream: list[float]) -> list[int]:
     """
     Correct implementation of K-Means++ seeding that consumes rng_stream.
     """
-    n_samples = X.shape[0]
-    n_features = X.shape[1]
-    indices = np.empty(n_clusters, dtype=np.int64)
+    n_samples = len(X)
+    n_features = len(X[0])
+    indices = [0] * n_clusters
 
     first_idx = int(math.floor(rng_stream[0] * n_samples))
     indices[0] = first_idx
@@ -17,7 +16,7 @@ def kmeans_pp_seed(X: np.ndarray, n_clusters: int, rng_stream: np.ndarray) -> np
     for i in range(n_samples):
         sq_dist = 0.0
         for j in range(n_features):
-            d = float(X[i, j]) - float(first_center[j])
+            d = float(X[i][j]) - float(first_center[j])
             sq_dist += d * d
         if sq_dist < dists[i]:
             dists[i] = sq_dist
@@ -44,7 +43,7 @@ def kmeans_pp_seed(X: np.ndarray, n_clusters: int, rng_stream: np.ndarray) -> np
         for i in range(n_samples):
             sq_dist = 0.0
             for j in range(n_features):
-                d = float(X[i, j]) - float(new_center[j])
+                d = float(X[i][j]) - float(new_center[j])
                 sq_dist += d * d
             if sq_dist < dists[i]:
                 dists[i] = sq_dist

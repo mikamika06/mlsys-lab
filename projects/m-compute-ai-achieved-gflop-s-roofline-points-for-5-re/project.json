@@ -1,0 +1,35 @@
+{
+  "id": "m-compute-ai-achieved-gflop-s-roofline-points-for-5-re",
+  "title": "Roofline points, real kernels, and performance limiters",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "roofline-in-practice-real-kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["roofline/calc.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute AI and GFLOP/s roofline points for 5 kernels",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]
+    },
+    {
+      "n": 2,
+      "title": "FlashAttention vs standard attention classification",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "classification_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for performance limiters",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_limiter", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

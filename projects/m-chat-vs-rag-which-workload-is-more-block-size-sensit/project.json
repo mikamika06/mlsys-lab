@@ -1,0 +1,45 @@
+{
+  "id": "m-chat-vs-rag-which-workload-is-more-block-size-sensit",
+  "title": "Block Size Sensitivity & Lookup Cost Model for Chat vs RAG",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "block-size-and-fragmentation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "block_sensitivity/workload.py",
+    "block_sensitivity/lookup.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Chat vs RAG sensitivity and prefix hit rate regression",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "sensitivity_matched", "op": "==", "threshold": 1},
+        {"metric": "hit_rate_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Block table lookup cost and decode step latency model",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "lookup_cost_rel_err", "op": "<=", "threshold": 0.01},
+        {"metric": "decode_latency_rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against misaligned prefix hit rate bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_misaligned_prefix_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

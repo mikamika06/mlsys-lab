@@ -1,0 +1,74 @@
+{
+  "id": "m-latency-vs-opt-shape-sensitivity",
+  "title": "Profile Refactoring & Latency Sensitivity in TensorRT",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Dynamic shapes & optimization profiles in TensorRT",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "trtopt/profile.py",
+    "trtopt/sensitivity.py",
+    "trtopt/tensors.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Tensor classification and profile sensitivity diagnostic",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "classified_correctly",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "sensitivity_scores_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Split wide profile into low and high profiles to meet latency ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "profiles_split_valid",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "latency_ratio",
+          "op": "<=",
+          "threshold": 0.75
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for profile boundaries and tensor rules",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_merged_profiles",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

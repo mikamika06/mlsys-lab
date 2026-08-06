@@ -1,0 +1,47 @@
+{
+  "id": "m-kl-ranking-vs-perplexity-ranking",
+  "title": "KL ranking vs perplexity ranking and baseline contamination gate",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Accuracy evaluation and recovery reporting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "evalrec/metrics.py",
+    "evalrec/contamination.py",
+    "evalrec/gate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "KL divergence vs perplexity candidate ranking",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "ranks_matched", "op": "==", "threshold": 1},
+        {"metric": "disagreement_detected", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Baseline contamination detection and per-category gate",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "contamination_checks_pass", "op": "==", "threshold": 1},
+        {"metric": "gate_evaluations_pass", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for category thresholds and ranking",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_global_gate_bug", "op": "==", "threshold": 1},
+        {"metric": "catches_ppl_kl_swap_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,16 +1,16 @@
-import numpy as np
+import random
 import math
 
-def lsh_recall(A: np.ndarray,
-               Q: np.ndarray,
+def lsh_recall(A: list[list[float]],
+               Q: list[list[float]],
                k: int,
                t: int,
                seed: int) -> float:
-    rng = np.random.default_rng(seed)
-    n = A.shape[0]
-    d = A.shape[1]
-    m = Q.shape[0]
-    planes = rng.standard_normal((t, d))
+    rng = random.Random(seed)
+    n = len(A)
+    d = len(A[0]) if n > 0 else 0
+    m = len(Q)
+    planes = [[rng.gauss(0.0, 1.0) for _ in range(d)] for _ in range(t)]
 
     data_bits = []
     for i in range(n):
@@ -18,7 +18,7 @@ def lsh_recall(A: np.ndarray,
         for j in range(t):
             dot_val = 0.0
             for dim in range(d):
-                dot_val += float(A[i, dim]) * float(planes[j, dim])
+                dot_val += float(A[i][dim]) * float(planes[j][dim])
             row_bits.append(dot_val >= 0.0)
         data_bits.append(row_bits)
 
@@ -28,7 +28,7 @@ def lsh_recall(A: np.ndarray,
         for j in range(t):
             dot_val = 0.0
             for dim in range(d):
-                dot_val += float(Q[i, dim]) * float(planes[j, dim])
+                dot_val += float(Q[i][dim]) * float(planes[j][dim])
             row_bits.append(dot_val >= 0.0)
         query_bits.append(row_bits)
 
@@ -51,7 +51,7 @@ def lsh_recall(A: np.ndarray,
             if key in buckets[col]:
                 for item in buckets[col][key]:
                     cand_set.add(item)
-        
+
         if not cand_set:
             cand_indices = list(range(n))
         else:
@@ -61,7 +61,7 @@ def lsh_recall(A: np.ndarray,
         for idx in cand_indices:
             dist_sq = 0.0
             for dim in range(d):
-                diff = float(A[idx, dim]) - float(Q[qi, dim])
+                diff = float(A[idx][dim]) - float(Q[qi][dim])
                 dist_sq += diff * diff
             dists.append(math.sqrt(dist_sq))
 
@@ -72,7 +72,7 @@ def lsh_recall(A: np.ndarray,
         for idx in range(n):
             dist_sq = 0.0
             for dim in range(d):
-                diff = float(A[idx, dim]) - float(Q[qi, dim])
+                diff = float(A[idx][dim]) - float(Q[qi][dim])
                 dist_sq += diff * diff
             all_dists.append(math.sqrt(dist_sq))
 
@@ -83,12 +83,12 @@ def lsh_recall(A: np.ndarray,
         for a_idx in set(approx_idx):
             if a_idx in exact_set:
                 overlap += 1
-                
+
         recall = float(overlap) / float(k)
         recalls.append(recall)
 
     sum_recalls = 0.0
     for r in recalls:
         sum_recalls += r
-        
+
     return float(sum_recalls / len(recalls))

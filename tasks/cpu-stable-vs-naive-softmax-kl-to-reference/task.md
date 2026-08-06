@@ -24,11 +24,11 @@ This task also models deterministic memory behaviour. A kernel emits a byte-addr
 Implement `stable_softmax_kernel(logits)`:
 
 ```python
-def stable_softmax_kernel(logits: np.ndarray) -> tuple[np.ndarray, list[int]]:
+def stable_softmax_kernel(logits: list[list[float]]) -> tuple[list[list[float]], list[int]]:
     ...
 ```
 
-The input is a 2-D NumPy array of shape $(n, d)$ containing float64 logits. Return:
+The input is a list of lists of floats of shape $(n, d)$ containing float64 logits. Return:
 
 1. A float64 array of shape $(n, d)$ containing the row-wise stable softmax probabilities.
 2. A list of integer byte addresses describing the memory access trace.
@@ -38,10 +38,9 @@ The trace must follow the deterministic row-major traversal used by the referenc
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1000.0, 1001.0, 1002.0],
-              [1.0, 2.0, 3.0]])
+x = [[1000.0, 1001.0, 1002.0],
+              [1.0, 2.0, 3.0]]
 
 y, trace = stable_softmax_kernel(x)
 

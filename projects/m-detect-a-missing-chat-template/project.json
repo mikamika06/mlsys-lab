@@ -1,0 +1,22 @@
+{
+  "id": "m-detect-a-missing-chat-template",
+  "title": "Detect missing chat templates and optimize calibration compute",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "Calibration dataset design",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["calib/detector.py", "calib/optimizer.py", "calib/hessian.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect a missing chat template", "check": "harness/m1.py",
+     "gates": [{"metric": "templates_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Choose optimal N and seqlen minimizing calibration compute", "check": "harness/m2.py",
+     "gates": [{"metric": "optimal_match", "op": "==", "threshold": 1},
+               {"metric": "compute_bound", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: Hessian accumulation memory test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_hessian", "op": "==", "threshold": 1}]}
+  ]
+}

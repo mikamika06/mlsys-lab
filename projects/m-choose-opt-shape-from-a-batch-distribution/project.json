@@ -1,0 +1,40 @@
+{
+  "id": "m-choose-opt-shape-from-a-batch-distribution",
+  "title": "Choose opt shape from a batch distribution",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Dynamic shapes & optimization profiles in TensorRT",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["trtprof/profile.py", "trtprof/planner.py", "trtprof/runtime.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Choose opt shape from a batch distribution",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "distributions_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Build a profile plan from a workload spec",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "plans_matched", "op": "==", "threshold": 1},
+        {"metric": "bounds_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Fix an out-of-profile enqueue error",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unbounded_enqueue", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

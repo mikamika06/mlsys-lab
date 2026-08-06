@@ -1,0 +1,44 @@
+{
+  "id": "m-implement-the-speculative-rejection-sampling-accepta",
+  "title": "Speculative rejection-sampling acceptance",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "speculative-decoding-in-production",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "speculative/accept.py",
+    "speculative/model.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Implement the rejection-sampling acceptance rule",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "matches", "op": "==", "threshold": 50}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analytical expected tokens and speedup model",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "valid", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against broken probability invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_q_norm", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

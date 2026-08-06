@@ -1,22 +1,22 @@
 import math
-import numpy as np
 
-def salient_channels(X: np.ndarray, fraction: float = 0.1) -> np.ndarray:
+def salient_channels(X: list[list[float]], fraction: float = 0.1) -> list[int]:
     """
     Return indices of the top fraction of channels by mean absolute activation.
     """
     if not (0 <= fraction <= 1):
         raise ValueError("fraction must be in [0, 1]")
-    n_samples, n_channels = X.shape
+    n_samples = len(X)
+    n_channels = len(X[0]) if n_samples > 0 else 0
     k = math.ceil(fraction * n_channels)
-    if k == 0:
-        return np.array([], dtype=np.int64)
+    if k == 0 or n_channels == 0:
+        return []
 
     mean_abs = [0.0] * n_channels
     for c in range(n_channels):
         s = 0.0
         for r in range(n_samples):
-            v = X[r, c]
+            v = X[r][c]
             if v < 0:
                 v = -v
             s += v
@@ -43,4 +43,4 @@ def salient_channels(X: np.ndarray, fraction: float = 0.1) -> np.ndarray:
             j -= 1
         topk[j + 1] = key
 
-    return np.array(topk, dtype=np.int64)
+    return topk

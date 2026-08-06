@@ -1,0 +1,22 @@
+{
+  "id": "m-fragmentation-model-expected-wasted-tokens-per-seque",
+  "title": "Block fragmentation model and table auditor",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "paged-attention-block-management",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["frag/model.py", "frag/auditor.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Expected wasted tokens and optimal block size", "check": "harness/m1.py",
+     "gates": [{"metric": "wasted_match", "op": "==", "threshold": 1},
+               {"metric": "optimal_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Block-table auditor for traces", "check": "harness/m2.py",
+     "gates": [{"metric": "audit_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for fragmentation bounds", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_wasted", "op": "==", "threshold": 1}]}
+  ]
+}

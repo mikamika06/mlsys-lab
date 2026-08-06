@@ -1,0 +1,5 @@
+We are observing significant accuracy degradation when quantizing weight matrices and activations in our low-level transformer deployment pipelines due to prominent activation outliers residing in specific channels. These extreme values inflate quantization error across the entire tensor when standard per-tensor or per-channel scales are applied.
+
+To mitigate this without altering the underlying floating-point capacity or rewriting the model architecture, we need to introduce an orthogonal Hadamard rotation prior to quantization. Applying a Hadamard transform spreads the magnitude of outlier activations more uniformly across all channels, reducing the maximum absolute values and stabilizing subsequent low-bit quantization steps.
+
+However, introducing this rotation must be mathematically transparent to the original floating-point execution when running in full precision (fp32), and it requires careful handling when fusing normalization layers like RMSNorm into the subsequent linear projections. Your task is to implement the core rotation logic, verify outlier dispersion statistics, and implement the safety net tests ensuring correctness under fused conditions.

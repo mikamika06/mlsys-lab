@@ -62,7 +62,7 @@ def rne_fp32_bits(pairs: list[tuple[int, int]]) -> list[int]:
   must map to the all-zero-mantissa, all-zero-exponent bit pattern for the
   given sign.
 - You must not round through an intermediate `float64` (no
-  `float(num) / float(den)`, no `np.float32(num / den)`) — some test cases
+  `float(num) / float(den)`, no float(num / den)`) — some test cases
   are specifically constructed so that route gives the wrong answer.
 
 ## Example

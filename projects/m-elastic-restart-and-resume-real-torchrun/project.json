@@ -1,0 +1,21 @@
+{
+  "id": "m-elastic-restart-and-resume-real-torchrun",
+  "title": "Elastic restart, NCCL timeout debugging, and rendezvous behavior",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Fault tolerance, elastic training & NCCL timeout debugging",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["elastic/parser.py", "elastic/rendezvous.py", "elastic/resume.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Diagnose NCCL watchdog timeout logs", "check": "harness/m1.py",
+     "gates": [{"metric": "logs_diagnosed", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Rendezvous behavior under membership change", "check": "harness/m2.py",
+     "gates": [{"metric": "membership_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for elastic resume", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_resume", "op": "==", "threshold": 1}]}
+  ]
+}

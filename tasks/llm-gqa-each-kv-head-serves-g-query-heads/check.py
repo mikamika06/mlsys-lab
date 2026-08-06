@@ -1,25 +1,26 @@
-import numpy as np
+import random
 from mlsys.scorers import max_abs_err
 
 def grade(sol, fx) -> dict:
-    # Generate several random test cases
-    rng = np.random.default_rng(seed=42)
+    rng = random.Random(42)
     err_max = 0.0
     for _ in range(3):
-        n_kv = rng.integers(1, 6)
-        g = rng.integers(2, 5)
-        d = rng.integers(4, 9)
+        n_kv = rng.randint(1, 5)
+        g = rng.randint(2, 4)
+        d = rng.randint(4, 8)
         n_q = n_kv * g
-        Q = rng.standard_normal((n_q, d)).astype(np.float64)
-        K = rng.standard_normal((n_kv, d)).astype(np.float64)
-        V = rng.standard_normal((n_kv, d)).astype(np.float64)
 
-        # Reference implementation
-        j_indices = np.arange(n_q) // g
-        K_sel = K[j_indices]
-        V_sel = V[j_indices]
-        scores = np.sum(Q * K_sel, axis=1)
-        O_ref = scores[:, None] * V_sel
+        Q = [[rng.gauss(0, 1) for _ in range(d)] for _ in range(n_q)]
+        K = [[rng.gauss(0, 1) for _ in range(d)] for _ in range(n_kv)]
+        V = [[rng.gauss(0, 1) for _ in range(d)] for _ in range(n_kv)]
+
+        # Reference implementation in pure Python
+        O_ref = []
+        for i in range(n_q):
+            j = i // g
+            score = sum(Q[i][k] * K[j][k] for k in range(d))
+            row = [score * V[j][k] for k in range(d)]
+            O_ref.append(row)
 
         try:
             O_sol = sol.gqa_attention(Q, K, V, g)

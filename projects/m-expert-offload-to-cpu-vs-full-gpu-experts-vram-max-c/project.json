@@ -1,0 +1,68 @@
+{
+  "id": "m-expert-offload-to-cpu-vs-full-gpu-experts-vram-max-c",
+  "title": "Expert offload vs full GPU experts VRAM and max context",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "moe-longcontext-memory-budgeting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moeoffload/budget.py",
+    "moeoffload/oom.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "VRAM and max context calculation for CPU-offload vs full-GPU",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "budgets_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose and fix combined-flags OOM triggers",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "diagnoses_matched",
+          "op": ">=",
+          "threshold": 3
+        },
+        {
+          "metric": "fixes_applied",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches invalid memory calculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_budget",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

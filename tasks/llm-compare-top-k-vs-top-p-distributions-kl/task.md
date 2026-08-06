@@ -24,7 +24,7 @@ Implement `top_k_top_p_kl(logits, k, p)`.
 
 The function receives:
 
-- `logits`: a 2-D NumPy array of shape $(n, V)$ containing model logits.
+- `logits`: a list of lists of floats of shape $(n, V)$ containing model logits.
 - `k`: the number of tokens retained by top-k sampling.
 - `p`: the cumulative probability threshold for nucleus (top-p) sampling.
 
@@ -34,16 +34,15 @@ $$
 \frac{1}{n}\sum_{r=1}^{n} D_{KL}(K_r \| P_r).
 $$
 
-Use NumPy operations. The implementation should compute the softmax probabilities, apply both filtering strategies independently, renormalize each filtered distribution, and then compute the divergence.
+Use Python operations. The implementation should compute the softmax probabilities, apply both filtering strategies independently, renormalize each filtered distribution, and then compute the divergence.
 
 For top-p, tokens must be selected after sorting probabilities in descending order. Include the first token that makes the cumulative probability reach or exceed $p$.
 
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([[3.0, 2.0, 1.0, 0.0]])
+logits = [[3.0, 2.0, 1.0, 0.0]]
 value = top_k_top_p_kl(logits, k=2, p=0.8)
 ```
 
@@ -51,4 +50,4 @@ The function compares the top-k distribution over the two highest-probability to
 
 ## What the gate checks
 
-The gate recomputes the expected KL divergence using a NumPy reference implementation of softmax, top-k filtering, top-p filtering, and KL divergence. The returned value must match the oracle result within numerical tolerance.
+The gate recomputes the expected KL divergence using a Python reference implementation of softmax, top-k filtering, top-p filtering, and KL divergence. The returned value must match the oracle result within numerical tolerance.

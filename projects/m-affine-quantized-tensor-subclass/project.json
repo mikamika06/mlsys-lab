@@ -1,0 +1,42 @@
+{
+  "id": "m-affine-quantized-tensor-subclass",
+  "title": "Affine-quantized tensor subclass",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "torchao quantize_ and tensor subclasses",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["qtensor/configs.py", "qtensor/subclass.py", "qtensor/compare.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Map targets to configs and build subclass structure",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs_matched", "op": ">=", "threshold": 3},
+        {"metric": "has_attributes", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Implement affine quantization and measure relative error",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "deq_rel_err", "op": "==", "threshold": 1},
+        {"metric": "matmul_works", "op": "==", "threshold": 1},
+        {"metric": "get_rel_err_works", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catches missing zero_point",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_dequantize", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

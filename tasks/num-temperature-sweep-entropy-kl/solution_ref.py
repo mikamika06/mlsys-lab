@@ -1,15 +1,12 @@
 import math
-import numpy as np
+from collections.abc import Sequence
 
 
-def softmax_temperature_sweep(logits: np.ndarray, temps):
+def softmax_temperature_sweep(logits: list[float], temps: Sequence[float]) -> list[list[float]]:
     """Compute the temperature-scaled softmax for each temperature in `temps`."""
-    logits = np.asarray(logits, dtype=np.float64)
-    temps = np.asarray(temps, dtype=np.float64)
-
     n_temps = len(temps)
     n_logits = len(logits)
-    probs = np.zeros((n_temps, n_logits), dtype=np.float64)
+    probs = []
 
     for i in range(n_temps):
         t = temps[i]
@@ -30,7 +27,9 @@ def softmax_temperature_sweep(logits: np.ndarray, temps):
             exp_shifted.append(val)
             sum_exp += val
 
+        row = []
         for j in range(n_logits):
-            probs[i, j] = exp_shifted[j] / sum_exp
+            row.append(exp_shifted[j] / sum_exp)
+        probs.append(row)
 
     return probs

@@ -1,0 +1,63 @@
+{
+  "id": "m-identify-the-top-time-kernel-and-cross-entropy-s-mem",
+  "title": "Identify top-time kernel and cross-entropy memory share",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "unsloth-fused-triton-kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "profalyze/kernels.py",
+    "profalyze/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Top-time kernel identification",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "top_kernel_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Cross-entropy memory share calculation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "memory_share_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for trace invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_invariant",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

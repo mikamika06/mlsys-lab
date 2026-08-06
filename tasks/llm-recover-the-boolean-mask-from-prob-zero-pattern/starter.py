@@ -1,5 +1,3 @@
-import numpy as np
-
-def recover_mask(P: np.ndarray, eps: float = 1e-12) -> np.ndarray:
+def recover_mask(P: list[list[float]], eps: float = 1e-12) -> list[list[bool]]:
     """Return a boolean mask where P[i,j] > eps."""
-    return np.ones_like(P, dtype=bool)
+    raise NotImplementedError('your code here')

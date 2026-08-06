@@ -1,4 +1,4 @@
-import numpy as np
-
-def lm_head_projection(hidden_states: np.ndarray, weight: np.ndarray, bias: np.ndarray) -> np.ndarray:
+def lm_head_projection(hidden_states: list[list[list[float]]],
+                       weight: list[list[float]],
+                       bias: list[float]) -> list[list[list[float]]]:
     raise NotImplementedError('your code here')

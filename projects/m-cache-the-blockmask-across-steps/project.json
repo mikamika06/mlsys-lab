@@ -1,0 +1,21 @@
+{
+  "id": "m-cache-the-blockmask-across-steps",
+  "title": "Cache the BlockMask across autoregressive steps",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "FlexAttention: score_mod, mask_mod, BlockMask",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flexmask/caching.py", "flexmask/sparsity.py", "flexmask/repair.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Cache the BlockMask across steps", "check": "harness/m1.py",
+     "gates": [{"metric": "latency_ratio", "op": "<=", "threshold": 0.5}]},
+    {"n": 2, "title": "Block sparsity vs element sparsity metrics", "check": "harness/m2.py",
+     "gates": [{"metric": "sparsity_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Repair mask_mod coordinate swap and safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_swapped_indices", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "m-find-the-broken-accept-reject-variant",
+  "title": "Speculative sampling accept-reject variants and TV distance",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Core speculative sampling algorithm (draft-verify-accept/reject)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["speculative/sampling.py", "speculative/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify the correct speculative accept/reject variant", "check": "harness/m1.py",
+     "gates": [{"metric": "variant_identified", "op": "==", "threshold": 1},
+               {"metric": "argmin_index", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "TV distance comparison: Speculative sampling vs top-1 heuristic", "check": "harness/m2.py",
+     "gates": [{"metric": "tv_compared", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for acceptance invariant", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}]}
+  ]
+}

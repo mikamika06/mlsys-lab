@@ -1,0 +1,44 @@
+{
+  "id": "m-compare-mlx-lm-lora-s-real-trainable-param-count-aga",
+  "title": "Compare mlx_lm.lora trainable parameters, fusion identity, and DoRA benchmarking",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "mac-native-mlx-lora",
+  "difficulty": 3,
+  "edits": [
+    "mlx_lora_audit/params.py",
+    "mlx_lora_audit/fuse.py",
+    "mlx_lora_audit/bench.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Trainable parameter count audit",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "params_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Fusion state equivalence and fine-tune resource comparison",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "fuse_matched", "op": "==", "threshold": 1},
+        {"metric": "bench_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches unscaled fusion",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unscaled_fusion", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

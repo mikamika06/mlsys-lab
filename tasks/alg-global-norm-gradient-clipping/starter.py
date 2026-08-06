@@ -1,8 +1,7 @@
-import numpy as np
-from typing import List
+import math
 
-def clip_global_norm(grads: List[np.ndarray], max_norm: float) -> List[np.ndarray]:
+def clip_global_norm(grads: List[List[float]], max_norm: float) -> List[List[float]]:
     """
     Clips a list of gradient tensors by their global L2 norm.
     """
-    raise NotImplementedError
+    raise NotImplementedError('your code here')

@@ -13,11 +13,13 @@ def grade(sol, fx) -> dict:
 
     worst = 0.0
     try:
-        for A in cases:
-            got = np.asarray(sol.reconstruct_from_svd(A.copy()), dtype=np.float64)
-            if got.shape != A.shape:
+        for A_arr in cases:
+            A_list = A_arr.tolist()
+            got = sol.reconstruct_from_svd(A_list)
+            got_arr = np.asarray(got, dtype=np.float64)
+            if got_arr.shape != A_arr.shape:
                 return {"max_abs_err": float("inf")}
-            err = float(np.max(np.abs(got - A)))
+            err = float(np.max(np.abs(got_arr - A_arr)))
             worst = max(worst, err)
     except Exception:
         return {"max_abs_err": float("inf")}

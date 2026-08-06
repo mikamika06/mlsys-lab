@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def layernorm_vjp(x: np.ndarray, grad_y: np.ndarray, eps: float=1e-05) -> np.ndarray:
+def layernorm_vjp(x: list[list[float]], grad_y: list[list[float]], eps: float=1e-05) -> list[list[float]]:
     raise NotImplementedError('your code here')

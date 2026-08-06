@@ -1,6 +1,4 @@
-import numpy as np
-
-def layout_cost(shape):
+def layout_cost(shape: tuple[int, int, int, int]) -> tuple[int, int]:
     """
     Compute cache‑line access counts for BHSD and BSHD layouts.
     """

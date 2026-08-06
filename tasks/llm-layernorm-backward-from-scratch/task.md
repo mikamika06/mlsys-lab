@@ -23,18 +23,18 @@ dY_{ij}
 \right).
 $$
 
-This expression is fully vectorizable with NumPy broadcasting.
+This expression is fully vectorizable with Python broadcasting.
 
 ## Task
 
 Implement the function
 
 ```python
-def compute_dx(dy: np.ndarray,
-               x: np.ndarray,
-               gamma: np.ndarray,
-               beta: np.ndarray,
-               eps: float = 1e-5) -> np.ndarray:
+def compute_dx(dy: list[list[float]],
+               x: list[list[float]],
+               gamma: list[float],
+               beta: list[float],
+               eps: float = 1e-5) -> list[list[float]]:
     ...
 ```
 
@@ -46,20 +46,19 @@ It receives:
 * `eps` – numerical stability constant (default `1e-5`).
 
 Return `dx`, the gradient of the loss with respect to `x`.  
-The implementation must use only NumPy vectorized operations; no explicit Python loops over samples or features.
+The implementation must use only Python vectorized operations; no explicit Python loops over samples or features.
 
 ## Example
 
 ```python
-import numpy as np
 from compute_dx import compute_dx
 
 N, D = 2, 3
-x      = np.array([[1.0, 2.0, 3.0],
-                   [4.0, 5.0, 6.0]])
-gamma  = np.array([1.0, 0.5, -0.5])
-beta   = np.zeros(D)
-dy     = np.ones((N,D))
+x      = [[1.0, 2.0, 3.0],
+                   [4.0, 5.0, 6.0]]
+gamma  = [1.0, 0.5, -0.5]
+beta   = [0.0] * D
+dy     = [[1.0] * D for _ in range(N)]
 
 dx = compute_dx(dy, x, gamma, beta)
 print(dx)
@@ -71,6 +70,6 @@ The output is a `(2,3)` array of gradients computed from the analytic formula.
 
 * **Relative error** – The returned `dx` must match the gradient obtained by central finite differences applied to the forward LayerNorm implementation.  
   The metric `rel_err = ||dx - dx_ref|| / ||dx_ref||` is required to be ≤ $10^{-4}$.
-* **Pure NumPy** – The solution should not contain explicit Python loops over array elements; it must rely on broadcasting and vectorized operations.
+* **Pure Python** – The solution should not contain explicit Python loops over array elements; it must rely on broadcasting and vectorized operations.
 
 The grader computes the reference gradient by perturbing each element of `x` with a small step size, evaluating the forward pass, and forming the loss $L = \sum_{i,j} dy_{ij}\,Y_{ij}$.

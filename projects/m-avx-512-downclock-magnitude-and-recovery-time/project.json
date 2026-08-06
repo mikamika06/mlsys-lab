@@ -1,0 +1,45 @@
+{
+  "id": "m-avx-512-downclock-magnitude-and-recovery-time",
+  "title": "AVX-512 downclock magnitude, recovery time, and VNNI speedup",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "AVX-512/VNNI ISA mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "avx512_mechanics/classifier.py",
+    "avx512_mechanics/downclock.py",
+    "avx512_mechanics/vnni.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify instruction snippets into ISA frequency tiers",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "tier_matches", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Model downclock recovery time and VNNI MAC/cycle speedup",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "downclock_rel_err", "op": "<=", "threshold": 0.01},
+        {"metric": "vnni_rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching ignored recovery time window",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_ignored_recovery", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

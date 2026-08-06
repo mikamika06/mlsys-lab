@@ -1,0 +1,40 @@
+{
+  "id": "m-inspect-a-real-fsdp1-flatparameter-shard",
+  "title": "FSDP1 FlatParameter shard inspection and balance",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP1 flat-parameter sharding fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fsdp_shard/inspect.py",
+    "fsdp_shard/padding.py",
+    "fsdp_shard/balance.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Inspect FlatParameter shard layout",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "shards_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Padding overhead across model shapes",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "padding_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Per-rank shard balance and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unbalanced_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

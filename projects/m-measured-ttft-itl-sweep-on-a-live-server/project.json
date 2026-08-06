@@ -1,0 +1,22 @@
+{
+  "id": "m-measured-ttft-itl-sweep-on-a-live-server",
+  "title": "Measured TTFT/ITL sweep on a live server",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "chunked-prefill-and-token-budget",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["sweep/server.py", "sweep/metrics.py", "sweep/alignment.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "TTFT and ITL sweep under live server concurrency", "check": "harness/m1.py",
+     "gates": [{"metric": "sweep_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Quantify head-of-line blocking from large prompts", "check": "harness/m2.py",
+     "gates": [{"metric": "blocking_matched", "op": "==", "threshold": 1},
+               {"metric": "latency_ratio_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: boundary alignment invariant test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_misaligned_chunks", "op": "==", "threshold": 1}]}
+  ]
+}

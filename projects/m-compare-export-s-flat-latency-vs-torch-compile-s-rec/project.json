@@ -1,0 +1,41 @@
+{
+  "id": "m-compare-export-s-flat-latency-vs-torch-compile-s-rec",
+  "title": "Flat Export Latency vs Compile Recompilation Spikes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Production concerns: compile-time/runtime tradeoffs, portability, memory donation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["exportbench/runner.py", "exportbench/artifact.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compare export flat latency against torch.compile recompilations",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "latency_ratio", "op": ">=", "threshold": 2.0},
+        {"metric": "export_flatness", "op": "<=", "threshold": 0.15}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reproduce and isolate export artifact deserialization errors",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "deserialization_handled", "op": "==", "threshold": 1.0},
+        {"metric": "valid_artifact_loaded", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching dynamic shape specialization regressions",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_static_compile", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

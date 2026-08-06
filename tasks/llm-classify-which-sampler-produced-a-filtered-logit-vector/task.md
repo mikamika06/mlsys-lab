@@ -13,28 +13,28 @@ Common filtering strategies include:
 Write `classify_sampler(orig_logits, filtered_logits)`:
 
 ```python
-import numpy as np
 
-def classify_sampler(orig_logits: np.ndarray, filtered_logits: np.ndarray) -> str:
+def classify_sampler(orig_logits: list[list[float]], filtered_logits: list[list[float]]) -> str:
     ...
 ```
 
-Given a batch of original logits and the corresponding post-filter logits (where rejected tokens have been set to `-np.inf`), classify which strategy produced the filter. Return one of `"greedy"`, `"top-k"`, `"top-p"`, or `"min-p"`.
+Given a batch of original logits and the corresponding post-filter logits (where rejected tokens have been set to `-float('inf')`), classify which strategy produced the filter. Return one of `"greedy"`, `"top-k"`, `"top-p"`, or `"min-p"`.
 
-The logits are 2D float NumPy arrays of shape `(batch_size, vocab_size)`. You can assume:
+The logits are 2D float list of shape `(batch_size, vocab_size)`. You can assume:
+
 - The batch size is large enough (e.g., 32) to eliminate ambiguity (so top-p won't accidentally keep exactly $k$ tokens for every row).
 - The sampler parameter ($k$, $p$, or $\text{min\_}p$) is constant across the entire batch.
 - Floating-point arithmetic may introduce tiny inaccuracies, so use a tolerance (e.g., `1e-5`) when checking strict inequalities (like establishing upper and lower bounds for $p$).
+
 
 *Hint: For Top-P and Min-P, calculate the probability distributions using softmax. Then compute the bounds on the parameter $p$ required for each row. If the intersection of valid $p$ intervals across all rows is non-empty, you've found the correct sampler.*
 
 ## Example
 
 ```python
-import numpy as np
 
 # Pseudo-code example
-classify_sampler(logits, filtered_logits_from_top_p) 
+classify_sampler(logits, filtered_logits_from_top_p)
 # Returns: "top-p"
 ```
 

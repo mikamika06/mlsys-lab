@@ -1,0 +1,22 @@
+{
+  "id": "m-measure-real-mlx-lm-speedup-from-draft-model-on-a-de",
+  "title": "Measure real mlx-lm speedup from draft model on a dense target",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "MLX / Apple Silicon speculative decoding",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["spec/measure.py", "spec/sweep.py", "spec/moe_regression.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure real speedup ratio against baseline", "check": "harness/m1.py",
+     "gates": [{"metric": "speedup_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Sweep draft tokens to find the optimum", "check": "harness/m2.py",
+     "gates": [{"metric": "optimum_found", "op": "==", "threshold": 1},
+               {"metric": "sweep_count", "op": ">=", "threshold": 4}]},
+    {"n": 3, "title": "Safety net: regression test for MoE speculative decoding", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_moe_regression", "op": "==", "threshold": 1}]}
+  ]
+}

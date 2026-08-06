@@ -1,0 +1,44 @@
+{
+  "id": "m-metrics-forensics-is-the-p99-spike-preemption-or-que",
+  "title": "Metrics forensics: is the p99 spike preemption or queueing?",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "preemption-recompute-vs-swap",
+  "size": "M",
+  "edits": [
+    "forensics/metrics.py",
+    "forensics/simulator.py",
+    "forensics/capacity.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Isolate preemption versus queueing from trace metrics",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "metrics_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Drive a simulated server into preemption and count events",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "preemption_count_match", "op": "==", "threshold": 1},
+        {"metric": "queue_delay_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Choose max_num_seqs for zero-preemption at target QPS",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_suboptimal_capacity", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

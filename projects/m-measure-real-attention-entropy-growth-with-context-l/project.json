@@ -1,0 +1,44 @@
+{
+  "id": "m-measure-real-attention-entropy-growth-with-context-l",
+  "title": "Diagnose Long-Context Failures",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "long-context-evaluation-failure-modes",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "longctx_eval/entropy.py",
+    "longctx_eval/diagnostics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute attention entropies",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.001}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose failure modes",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "modes_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against misdiagnosis",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

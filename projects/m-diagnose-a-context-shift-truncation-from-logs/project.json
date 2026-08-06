@@ -1,0 +1,39 @@
+{
+  "id": "m-diagnose-a-context-shift-truncation-from-logs",
+  "title": "Diagnose llama-server context shifts, latency, and response validity",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "llama-server-production",
+  "difficulty": 3,
+  "edits": [
+    "diag/logs.py",
+    "diag/perf.py",
+    "diag/validate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Diagnose context-shift truncation from server logs",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "diagnosis_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Compare batched vs sequential processing performance ratios",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "ratio_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: validate OpenAI payload schema compliance test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_validation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -24,18 +24,17 @@ When $X$ is not centered, we first subtract its mean.
 Implement the function `zca_whitening`:
 
 ```python
-def zca_whitening(X: np.ndarray) -> np.ndarray:
+def zca_whitening(X: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
-The function receives a 2‑D NumPy array of shape $(n,d)$ and returns a new array of the same shape containing the ZCA‑whitened data.  
-Use only NumPy; no explicit Python loops are required.
+The function receives a 2‑D list of shape $(n,d)$ and returns a new array of the same shape containing the ZCA‑whitened data.  
+Use only Python; no explicit Python loops are required.
 
 ## Example
 
 ```python
-import numpy as np
-X = np.array([[1, 0], [0, 1], [-1, 0]])
+X = [[1, 0], [0, 1], [-1, 0]]
 Y = zca_whitening(X)
 # Y has zero mean and Cov(Y) ≈ I_2
 ```

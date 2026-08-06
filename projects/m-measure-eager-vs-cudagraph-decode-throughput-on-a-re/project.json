@@ -1,0 +1,40 @@
+{
+  "id": "m-measure-eager-vs-cudagraph-decode-throughput-on-a-re",
+  "title": "Measure eager vs CUDA graph decode throughput",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "cudagraphs-compile-and-startup-latency",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "cudaperf/eager.py",
+    "cudaperf/graph.py",
+    "cudaperf/measure.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Eager decode execution and throughput",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "eager_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "CUDA graph capture and execution",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "graph_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 3,
+      "title": "Throughput ratio measurement and regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_ratio", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

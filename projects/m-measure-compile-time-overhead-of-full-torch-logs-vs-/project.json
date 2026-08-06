@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-compile-time-overhead-of-full-torch-logs-vs-disabled",
+  "title": "Compile-time overhead and unsupported op detection in TORCH_LOGS",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Debugging & observability (TORCH_LOGS, tlparse, depyf)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tlog/overhead.py", "tlog/unsupported.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure compile-time overhead ratio", "check": "harness/m1.py",
+     "gates": [{"metric": "ratio_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Extract unsupported op from logs", "check": "harness/m2.py",
+     "gates": [{"metric": "op_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for log parser", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

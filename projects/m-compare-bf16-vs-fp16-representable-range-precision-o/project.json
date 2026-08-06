@@ -1,0 +1,26 @@
+{
+  "id": "m-compare-bf16-vs-fp16-representable-range-precision-o",
+  "title": "Numeric dtype behavior and failure modes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Numeric dtype behavior & failure modes across Metal",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "dtypecheck/analysis.py",
+    "dtypecheck/roundtrip.py",
+    "dtypecheck/reduction.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Analyze bf16 vs fp16 range and precision", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Quantify roundtrip precision loss", "check": "harness/m2.py",
+     "gates": [{"metric": "loss_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: detect overflow and fix via upcast", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_overflow", "op": "==", "threshold": 1}]}
+  ]
+}

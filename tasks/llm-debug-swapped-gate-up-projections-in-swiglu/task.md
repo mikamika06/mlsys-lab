@@ -22,41 +22,38 @@ Implement a function `swiglu` that correctly computes the SwiGLU output as descr
 
 ```python
 def swiglu(
-    X: np.ndarray,
-    W_gate: np.ndarray,
-    W_up: np.ndarray,
-    b_gate: Optional[np.ndarray] = None,
-    b_up: Optional[np.ndarray] = None
-) -> np.ndarray:
+    X: list[float],
+    W_gate: list[float],
+    W_up: list[float],
+    b_gate: Optional[list[float]] = None,
+    b_up: Optional[list[float]] = None
+) -> list[float]:
 ```
 
 * `X` – 2‑D array of shape `(n, d_in)`
 * `W_gate`, `W_up` – weight matrices of shape `(d_in, d_out)`
 * `b_gate`, `b_up` – optional bias vectors of length `d_out`; if omitted they are treated as zero.
 
-The function must return a NumPy array of shape `(n, d_out)` with dtype `float64`.  No explicit Python loops are allowed; use vectorised NumPy operations only.
+The function must return a list of shape `(n, d_out)` with dtype `float64`.  No explicit Python loops are allowed; use vectorised Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[1.0, 2.0],
-              [3.0, 4.0]])
-W_gate = np.array([[0.5, -0.2],
-                    [0.1, 0.7]])
-W_up   = np.array([[-0.3, 0.8],
-                   [0.6, -0.5]])
+X = [[1.0, 2.0],
+              [3.0, 4.0]]
+W_gate = [[0.5, -0.2],
+                    [0.1, 0.7]]
+W_up   = [[-0.3, 0.8],
+                   [0.6, -0.5]]
 
 Y = swiglu(X, W_gate, W_up)
-print(Y)
-# [[ 0.        0.        ]
-#  [ 1.728...  0.      ]]
+print(Y)  # [[0.44789818665375236, -0.10803984064500528], [2.3300872571518845, 0.5268451408989582]]
 ```
 
 ## What the gate checks
 
-The grader computes a reference output using NumPy and compares it to your implementation with the metric  
+The grader computes a reference output using Python and compares it to your implementation with the metric  
 
 $$\max_{i,j} |\,Y_{\text{cand}}(i,j) - Y_{\text{ref}}(i,j)\,|.$$
 

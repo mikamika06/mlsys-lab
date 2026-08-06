@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def quantize_fixed_point(arr: np.ndarray, frac_bits: int) -> np.ndarray:
+def quantize_fixed_point(arr: list[float], frac_bits: int) -> list[int]:
     raise NotImplementedError('your code here')

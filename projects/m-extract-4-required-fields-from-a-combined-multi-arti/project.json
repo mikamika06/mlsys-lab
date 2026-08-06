@@ -1,0 +1,40 @@
+{
+  "id": "m-extract-4-required-fields-from-a-combined-multi-arti",
+  "title": "Extract fields, decompile with depyf, and inspect debug dir",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Debugging & observability (TORCH_LOGS, tlparse, depyf)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "extractor/parse.py",
+    "extractor/decompile.py",
+    "extractor/debugdir.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract 4 required fields from combined TORCH_LOGS",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "fields_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Decompile resume function with depyf and verify signature",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "signature_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Enumerate TORCH_COMPILE_DEBUG debug-directory contents",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_enumeration", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

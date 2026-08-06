@@ -1,0 +1,45 @@
+{
+  "id": "m-compressed-vs-frozen-save-size",
+  "title": "Compressed vs frozen save size, load times, and dequantization bounds",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "Serialization, saving, and loading quantized models",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantlibs/sizes.py",
+    "quantlibs/loader.py",
+    "quantlibs/dequant.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compressed vs frozen save size analysis",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "size_ratio_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Load-time comparison and format overheads",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "load_match", "op": "==", "threshold": 1},
+        {"metric": "format_order_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Dequantize back to fp16 and bound the loss",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_bound", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

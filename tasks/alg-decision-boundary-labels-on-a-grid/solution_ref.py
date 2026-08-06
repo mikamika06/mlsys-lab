@@ -1,31 +1,27 @@
-import numpy as np
-
 def knn_grid_labels(
-    train_points: np.ndarray,
-    train_labels: np.ndarray,
-    grid_points: np.ndarray,
+    train_points: list[list[float]],
+    train_labels: list[int],
+    grid_points: list[list[float]],
     k: int = 3
-) -> np.ndarray:
+) -> list[list[float]]:
     """
-    Vectorised k‑Nearest Neighbours classification on a dense grid.
+    k‑Nearest Neighbours classification on a dense grid.
 
     Parameters
     ----------
-    train_points : (N, d) array of training samples.
-    train_labels : (N,) integer labels in {0,…,C-1}.
-    grid_points  : (M, d) query points to classify.
+    train_points : list of training samples.
+    train_labels : integer labels in {0,…,C-1}.
+    grid_points  : query points to classify.
     k            : number of neighbours to consider.
 
     Returns
     -------
-    logits : (M, C) one‑hot encoded predictions.
+    logits : one‑hot encoded predictions.
     """
-    train_points = np.asarray(train_points, dtype=np.float64)
-    grid_points  = np.asarray(grid_points,  dtype=np.float64)
-
-    N, d = train_points.shape
-    M     = grid_points.shape[0]
-    C     = int(max(train_labels)) + 1
+    N = len(train_points)
+    d = len(train_points[0]) if N > 0 else 0
+    M = len(grid_points)
+    C = int(max(train_labels)) + 1 if len(train_labels) > 0 else 1
 
     logits_list = []
     for i in range(M):
@@ -33,7 +29,7 @@ def knn_grid_labels(
         for j in range(N):
             s = 0.0
             for l in range(d):
-                diff = grid_points[i, l] - train_points[j, l]
+                diff = grid_points[i][l] - train_points[j][l]
                 s += diff * diff
             row_dists.append(s)
 
@@ -56,5 +52,4 @@ def knn_grid_labels(
         row_logit[best_label] = 1.0
         logits_list.append(row_logit)
 
-    logits = np.asarray(logits_list, dtype=np.float64)
-    return logits
+    return logits_list

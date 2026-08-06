@@ -1,0 +1,20 @@
+{
+  "id": "m-derive-per-rank-optimizer-state-memory-under-zero-1-",
+  "title": "Derive per-rank optimizer state memory and ZeRO memory stages",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "deepspeed-zero-distributed",
+  "difficulty": 3,
+  "edits": ["zeromem/optimizer.py", "zeromem/stages.py", "zeromem/budget.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Optimizer state memory under ZeRO-1 vs unsharded", "check": "harness/m1.py",
+     "gates": [{"metric": "optimizer_matched", "op": "==", "threshold": 18}]},
+    {"n": 2, "title": "Total per-rank memory across ZeRO stages 1, 2, and 3", "check": "harness/m2.py",
+     "gates": [{"metric": "stages_matched", "op": "==", "threshold": 54}]},
+    {"n": 3, "title": "Minimum ZeRO stage fitting a GPU budget and safeguard test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

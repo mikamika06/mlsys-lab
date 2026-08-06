@@ -14,19 +14,19 @@ def grade(sol, fx) -> dict:
 
     max_rel_err = 0.0
     count = 0
-    
+
     for fixture in my_fx:
         data = fixture["data"]
-        
+
         try:
             student_out = sol.welford_variance(copy.deepcopy(data))
             ref_out = reference(data)
-            
+
             if ref_out == 0.0:
                 err = abs(student_out - ref_out)
             else:
                 err = abs(student_out - ref_out) / abs(ref_out)
-                
+
             max_rel_err = max(max_rel_err, err)
             count += 1
         except Exception as e:

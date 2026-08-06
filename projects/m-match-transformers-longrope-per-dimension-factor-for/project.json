@@ -1,0 +1,41 @@
+{
+  "id": "m-match-transformers-longrope-per-dimension-factor-for",
+  "title": "LongRoPE Per-Dimension Factor & YaRN Diagnostics",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "rope-scaling-methods",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["longrope/scaling.py", "longrope/perplexity.py", "longrope/entropy.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "LongRoPE per-dimension scaling factors",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "factors_matched", "op": "==", "threshold": 1.0},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Perplexity comparison & entropy analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ppl_ranks_matched", "op": "==", "threshold": 1.0},
+        {"metric": "entropy_trends_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching uniform scaling regression",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_uniform_scaling", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

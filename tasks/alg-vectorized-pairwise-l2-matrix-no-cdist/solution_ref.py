@@ -1,33 +1,30 @@
-import numpy as np
+def pairwise_l2_matrix(
+    X: list[list[float]], Y: list[list[float]]
+) -> list[list[float]]:
+    n = len(X)
+    d = len(X[0]) if n > 0 else 0
+    m = len(Y)
 
-
-def pairwise_l2_matrix(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
-    X = np.asarray(X, dtype=np.float64)
-    Y = np.asarray(Y, dtype=np.float64)
-
-    n, d = X.shape
-    m = Y.shape[0]
-
-    X_norm = np.zeros(n, dtype=np.float64)
+    X_norm = [0.0] * n
     for i in range(n):
         s = 0.0
         for k in range(d):
-            s += X[i, k] ** 2
+            s += float(X[i][k]) ** 2
         X_norm[i] = s
 
-    Y_norm = np.zeros(m, dtype=np.float64)
+    Y_norm = [0.0] * m
     for j in range(m):
         s = 0.0
         for k in range(d):
-            s += Y[j, k] ** 2
+            s += float(Y[j][k]) ** 2
         Y_norm[j] = s
 
-    result = np.zeros((n, m), dtype=np.float64)
+    result = [[0.0] * m for _ in range(n)]
     for i in range(n):
         for j in range(m):
             dot = 0.0
             for k in range(d):
-                dot += X[i, k] * Y[j, k]
-            result[i, j] = X_norm[i] + Y_norm[j] - 2.0 * dot
+                dot += float(X[i][k]) * float(Y[j][k])
+            result[i][j] = X_norm[i] + Y_norm[j] - 2.0 * dot
 
     return result

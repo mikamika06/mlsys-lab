@@ -1,0 +1,5 @@
+# Intermittent Memory Exhaustion and Corrupted Attention Context in Paged KV Cache Engine
+
+Serving engineers report that our custom LLM inference runtime experiences unexpected out-of-memory (OOM) failures under heavy multi-sequence batching, despite reporting sufficient total free KV slots. Additionally, under high concurrency with sequence completion and dynamic chunked prefill, specific requests return garbled tokens. Diagnostics indicate that the engine fails to track physical block allocations correctly across varying sequence lengths and incorrectly computes system fragmentation metrics used by the batch scheduler.
+
+To resolve these issues, we need a robust paged KV cache allocation and retrieval module. The implementation must allocate physical cache blocks on demand, maintain request-level block tables, gather contiguous logical key-value sequences from physical block tables for attention computation, and accurately compute both internal and external memory fragmentation metrics.

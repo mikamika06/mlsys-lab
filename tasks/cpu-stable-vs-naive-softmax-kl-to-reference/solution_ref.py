@@ -1,27 +1,26 @@
 import math
-import numpy as np
 
 
-def stable_softmax_kernel(logits):
-    x = np.asarray(logits, dtype=np.float64)
-    n, d = x.shape
-    result = np.zeros((n, d), dtype=np.float64)
+def stable_softmax_kernel(logits: list[list[float]]) -> tuple[list[list[float]], list[int]]:
+    n = len(logits)
+    d = len(logits[0])
+    result = [[0.0 for _ in range(d)] for _ in range(n)]
 
     for r in range(n):
-        max_val = x[r, 0]
+        max_val = logits[r][0]
         for c in range(1, d):
-            val = x[r, c]
+            val = logits[r][c]
             if val > max_val:
                 max_val = val
 
         row_sum = 0.0
         for c in range(d):
-            exp_val = math.exp(x[r, c] - max_val)
-            result[r, c] = exp_val
+            exp_val = math.exp(logits[r][c] - max_val)
+            result[r][c] = exp_val
             row_sum += exp_val
 
         for c in range(d):
-            result[r, c] = result[r, c] / row_sum
+            result[r][c] = result[r][c] / row_sum
 
     trace = []
     for r in range(n):

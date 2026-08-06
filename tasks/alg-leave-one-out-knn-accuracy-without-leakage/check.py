@@ -14,7 +14,7 @@ def _oracle_loo_knn_predict(X, y, k, n_classes):
     for row in neighbors:
         counts = np.bincount(y[row], minlength=n_classes)
         preds.append(int(np.argmax(counts)))
-    return np.asarray(preds, dtype=np.int64)
+    return preds
 
 
 def _argmax_agreement(a, b):
@@ -24,20 +24,20 @@ def _argmax_agreement(a, b):
 def grade(sol, fx) -> dict:
     cases = [
         (
-            np.array([[0.0], [0.05], [1.0], [1.05]]),
-            np.array([0, 0, 1, 1]),
+            [[0.0], [0.05], [1.0], [1.05]],
+            [0, 0, 1, 1],
             1,
             2,
         ),
         (
-            np.array([[0.0], [0.0], [0.1], [2.0], [2.1]]),
-            np.array([1, 0, 0, 1, 1]),
+            [[0.0], [0.0], [0.1], [2.0], [2.1]],
+            [1, 0, 0, 1, 1],
             2,
             2,
         ),
         (
-            np.array([[0, 0], [1, 0], [0, 1], [5, 5], [6, 5], [5, 6]], dtype=float),
-            np.array([0, 0, 0, 1, 1, 1]),
+            [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [5.0, 5.0], [6.0, 5.0], [5.0, 6.0]],
+            [0, 0, 0, 1, 1, 1],
             3,
             2,
         ),

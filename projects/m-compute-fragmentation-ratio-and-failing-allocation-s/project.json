@@ -1,0 +1,45 @@
+{
+  "id": "m-compute-fragmentation-ratio-and-failing-allocation-s",
+  "title": "Compute fragmentation ratio and failing allocation size",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "cuda-oom-diagnosis",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "oomdiag/analysis.py",
+    "oomdiag/history.py",
+    "oomdiag/trend.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute fragmentation ratio and failing allocation size",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "fragmentation_match", "op": ">=", "threshold": 1.0},
+        {"metric": "failing_size_match", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Identify the largest allocation site",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "site_match", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Predict the exact OOM step from trend",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_predictor", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

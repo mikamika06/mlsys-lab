@@ -1,0 +1,40 @@
+{
+  "id": "m-generate-valid-n-m-masks-via-block-wise-top-k",
+  "title": "Valid N:M masks, non-Ampere sparse errors, and A100 GEMM log parsing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "N:M semi-structured (2:4) sparsity mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "sparse/masks.py",
+    "sparse/error.py",
+    "sparse/bench.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Generate valid N:M masks via block-wise top-k",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "masks_valid", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Capture PyTorch error for 2:4 sparse matmul without Ampere GPU",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "error_captured", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Parse recorded A100 2:4 GEMM benchmark log",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_parser", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-extract-a-named-speed-of-light-metric-for-n-kernels-",
+  "title": "Extract Nsight Compute Speed-Of-Light metrics and analyze profiles",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "nsight-compute-cli-and-sections",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["solparser/parser.py", "solparser/diff.py", "solparser/safety.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Extract Speed-Of-Light metrics from CSV exports", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Diff basic vs full reports and find added sections", "check": "harness/m2.py",
+     "gates": [{"metric": "sections_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching replay mismatches", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_mismatch", "op": "==", "threshold": 1}]}
+  ]
+}

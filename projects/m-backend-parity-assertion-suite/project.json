@@ -1,0 +1,53 @@
+{
+  "id": "m-backend-parity-assertion-suite",
+  "title": "Backend-parity assertion suite",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "huggingface-transformers-integration",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "hf_attn/resolver.py",
+    "hf_attn/suite.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Legal attn_implementation resolver",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "exact_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Backend-parity assertion suite",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "exact_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Right-padding corruption repro",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "exact_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

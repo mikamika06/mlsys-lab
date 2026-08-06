@@ -34,7 +34,7 @@ def grade(sol, fx) -> dict:
     max_err = 0.0
     for logits, targets in cases:
         try:
-            got = sol.cross_entropy_from_logits(logits, targets)
+            got = sol.cross_entropy_from_logits(logits.tolist(), targets.tolist())
         except Exception:
             return {"max_abs_err": float("inf")}
         ref = _stable_ce(logits, targets)

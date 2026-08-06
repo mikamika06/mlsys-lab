@@ -1,0 +1,21 @@
+{
+  "id": "m-determine-rejected-requests-under-queue-policy-rejec",
+  "title": "Determine rejected requests and attribute latency regressions under Triton queue policy",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Triton Dynamic Batching Config",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["batcher/policy.py", "batcher/diagnose.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Determine rejected requests under REJECT policy", "check": "harness/m1.py",
+     "gates": [{"metric": "rejections_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Attribute latency regression to batcher vs model", "check": "harness/m2.py",
+     "gates": [{"metric": "attribution_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: test catching incorrect queue bounds", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_rejection", "op": "==", "threshold": 1}]}
+  ]
+}

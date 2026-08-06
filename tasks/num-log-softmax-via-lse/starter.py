@@ -1,5 +1,5 @@
-import numpy as np
+import math
 
-def log_softmax(x):
+def log_softmax(x: list[float]) -> list[float]:
     """Compute log(softmax(x)) in a numerically stable way."""
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')

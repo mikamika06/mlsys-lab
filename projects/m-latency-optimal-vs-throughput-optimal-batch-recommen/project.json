@@ -1,0 +1,44 @@
+{
+  "id": "m-latency-optimal-vs-throughput-optimal-batch-recommen",
+  "title": "Latency-optimal vs throughput-optimal batch recommendation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Batch size vs. speculative decoding throughput",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "batchopt/profile.py",
+    "batchopt/metrics.py",
+    "batchopt/recommender.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Profile throughput and latency curves",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "curves_matched", "op": ">=", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Recommend latency-optimal and throughput-optimal batch sizes",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "recommendations_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test on batch trade-offs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_batch_tradeoff", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

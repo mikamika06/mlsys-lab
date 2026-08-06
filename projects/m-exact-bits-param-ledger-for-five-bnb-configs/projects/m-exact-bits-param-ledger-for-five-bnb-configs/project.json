@@ -1,0 +1,21 @@
+{
+  "id": "m-exact-bits-param-ledger-for-five-bnb-configs",
+  "title": "Exact bits/param ledger and nested absmax quantization for bitsandbytes configs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "Double (nested) quantization and memory accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["bnb_ledger/ledger.py", "bnb_ledger/quant.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Exact bits/param ledger for five bnb configs", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Implement nested absmax quantization", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: regression tests for ledger and quantization", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_ledger", "op": "==", "threshold": 1}]}
+  ]
+}

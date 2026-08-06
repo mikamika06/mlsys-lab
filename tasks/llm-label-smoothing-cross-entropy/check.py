@@ -27,7 +27,7 @@ def grade(sol, fx):
         eps = rng.uniform(0.0, 0.5)
 
         try:
-            got = sol.label_smoothed_cross_entropy(logits, targets, eps)
+            got = sol.label_smoothed_cross_entropy(logits.tolist(), targets.tolist(), eps)
         except Exception:
             return {"max_abs_err": float("inf")}
 

@@ -1,6 +1,10 @@
-import numpy as np
+import math
 
-def compute_dx(dy: np.ndarray, x: np.ndarray, gamma: np.ndarray, beta: np.ndarray, eps: float=1e-05) -> np.ndarray:
+def compute_dx(dy: list[list[float]],
+               x: list[list[float]],
+               gamma: list[float],
+               beta: list[float],
+               eps: float = 1e-5) -> list[list[float]]:
     """TODO: This implementation is incorrect. It ignores the second term in the
 analytic gradient that involves `x_hat` and the mean of `dy * x_hat`.
 As a result, the returned gradients will have a relative error far above

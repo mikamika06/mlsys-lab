@@ -1,0 +1,68 @@
+{
+  "id": "m-attribute-a-recompile-to-its-failing-guard",
+  "title": "Attribute a recompile to its failing guard",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Guards and recompilation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "guardeval/evaluator.py",
+    "guardeval/attribution.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Guard evaluator over dynamic input properties",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "evaluations_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Recompile count and attribution under batch schedule",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "recompiles_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "attributions_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching ignored stride guards",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_stride_guard",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

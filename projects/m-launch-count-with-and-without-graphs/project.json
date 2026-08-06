@@ -1,0 +1,64 @@
+{
+  "id": "m-launch-count-with-and-without-graphs",
+  "title": "Launch count with and without graphs",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "CUDA Graphs and mode='reduce-overhead'",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "launchgraph/launches.py",
+    "launchgraph/predict.py",
+    "launchgraph/harness.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Launch count with and without graphs",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "launches_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Predict the CUDA-graph speedup",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "predictions_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Static-buffer harness for varying inputs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_dynamic_recapture_bug",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

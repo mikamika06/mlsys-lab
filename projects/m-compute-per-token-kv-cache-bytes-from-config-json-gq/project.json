@@ -1,0 +1,38 @@
+{
+  "id": "m-compute-per-token-kv-cache-bytes-from-config-json-gq",
+  "title": "KV Cache Per-Token Bytes, Max-Context Solver, and Block Prediction",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "kv-cache-memory-budget",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["vllm_budget/kv.py", "vllm_budget/solver.py", "vllm_budget/blocks.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute GQA-aware KV cache bytes per token",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "configs_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Solve max context length and predict GPU block counts",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "solver_matched", "op": "==", "threshold": 1.0},
+        {"metric": "blocks_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch subtle head dimension and rounding bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_gqa_head_dim_bug", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

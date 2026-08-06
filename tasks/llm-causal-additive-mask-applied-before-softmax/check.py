@@ -19,14 +19,18 @@ def grade(sol, fx) -> dict:
         np.full((3, 3), -10.0, dtype=np.float64)
     ]
     max_err = 0.0
-    for scores in cases:
+    for scores_arr in cases:
+        scores_list = scores_arr.tolist()
         try:
-            out = sol.causal_masked_softmax(scores)
+            out_list = sol.causal_masked_softmax(scores_list)
         except Exception:
             return {"max_abs_err": float("inf")}
-        if out.shape != scores.shape or out.dtype != np.float64:
+
+        out = np.array(out_list, dtype=np.float64)
+        if out.shape != scores_arr.shape:
             return {"max_abs_err": float("inf")}
-        ref = _reference(scores)
+
+        ref = _reference(scores_arr)
         err = max_abs_err(ref, out)
         if err > max_err:
             max_err = err

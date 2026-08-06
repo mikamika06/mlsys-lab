@@ -1,0 +1,42 @@
+{
+  "id": "m-minimal-opset-import-fix",
+  "title": "Minimal ONNX Opset Import and Clip Semantic Fix",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Opset versions, ir_version and operator semantics drift",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "opsetfix/transformer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Opset version and IR alignment",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "opserset_aligned", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Clip attribute-to-input rewrite",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "clips_rewritten", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches unhandled clips",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_clip", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

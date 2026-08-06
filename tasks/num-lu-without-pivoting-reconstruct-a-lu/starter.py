@@ -1,4 +1,2 @@
-import numpy as np
-
-def lu_no_pivot(A: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def lu_no_pivot(A: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
     raise NotImplementedError('your code here')

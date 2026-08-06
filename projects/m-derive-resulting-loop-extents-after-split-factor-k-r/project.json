@@ -1,0 +1,63 @@
+{
+  "id": "m-derive-resulting-loop-extents-after-split-factor-k-r",
+  "title": "Deriving loop extents and reproducing TVM schedule errors",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TVM TensorIR schedule primitives",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "tvmutils/analysis.py",
+    "tvmutils/validator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Deriving loop extents after split and reorder",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "extents_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verifying schedule bounds and layout against ground truth",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "schedule_verified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catching invalid vectorization schedule errors",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_vectorization",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

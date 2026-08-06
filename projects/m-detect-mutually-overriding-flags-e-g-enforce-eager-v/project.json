@@ -1,0 +1,21 @@
+{
+  "id": "m-detect-mutually-overriding-flags-e-g-enforce-eager-v",
+  "title": "Detecting conflicting vLLM serving and engine flags",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "vllm-serve-cli-and-engine-args",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vllmargs/conflict.py", "vllmargs/translate.py", "vllmargs/clamp.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect mutually overriding flags", "check": "harness/m1.py",
+     "gates": [{"metric": "conflicts_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Translate CLI to engine kwargs and back", "check": "harness/m2.py",
+     "gates": [{"metric": "translation_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for argument clamping and conflicts", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_clamp", "op": "==", "threshold": 1}]}
+  ]
+}

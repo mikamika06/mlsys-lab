@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 _UNARY = {"sin"}
 _BINARY = {"add", "sub", "mul"}
@@ -7,9 +6,8 @@ _BINARY = {"add", "sub", "mul"}
 
 def _forward(tape, x):
     """Evaluate every node value; node i (0-indexed) is len(x) + i."""
-    n_in = x.shape[0]
-    val = np.zeros(n_in + len(tape), dtype=np.float64)
-    val[:n_in] = x
+    n_in = len(x)
+    val = list(x) + [0.0] * len(tape)
     for i, (op, ins) in enumerate(tape):
         idx = n_in + i
         if op == "add":
@@ -29,7 +27,7 @@ def _forward(tape, x):
     return val
 
 
-def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: np.ndarray) -> np.ndarray:
+def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: list[float]) -> list[float]:
     """
     Reverse-mode autograd over a Wengert list.
 
@@ -42,14 +40,13 @@ def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: np.ndarray) -> np.ndar
     node in the tape.
 
     Returns the gradient of the output with respect to every entry of
-    ``x``, as a 1-D array of shape ``(len(x),)``.
+    ``x``, as a list of floats.
     """
-    x = np.asarray(x, dtype=np.float64).ravel()
-    n_in = x.shape[0]
+    n_in = len(x)
     val = _forward(tape, x)
-    n_nodes = val.shape[0]
+    n_nodes = len(val)
 
-    adj = np.zeros(n_nodes, dtype=np.float64)
+    adj = [0.0] * n_nodes
     adj[-1] = 1.0
 
     for i in reversed(range(len(tape))):

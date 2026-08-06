@@ -1,0 +1,22 @@
+{
+  "id": "m-bytes-per-token-calculator-from-config-json",
+  "title": "Bytes-per-token calculator and concurrency frontier from model config",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-cache-memory-math",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kvcalc/calc.py", "kvcalc/ratio.py", "kvcalc/concurrency.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Bytes-per-token calculator from config.json", "check": "harness/m1.py",
+     "gates": [{"metric": "bytes_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "MLA vs GQA cache ratios and max concurrency frontier", "check": "harness/m2.py",
+     "gates": [{"metric": "ratio_match", "op": "==", "threshold": 1},
+               {"metric": "concurrency_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for memory calculations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_calc", "op": "==", "threshold": 1}]}
+  ]
+}

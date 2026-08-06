@@ -1,0 +1,68 @@
+{
+  "id": "m-build-a-prometheus-metrics-parser-against-triton-s-r",
+  "title": "Prometheus Metrics Parser Against Triton's Real Metric Names",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Triton Metrics & Observability",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "triton_metrics/parser.py",
+    "triton_metrics/aggregator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse raw Prometheus exposition text into metric samples",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "samples_parsed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Aggregate Triton per-model and per-GPU metrics",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "model_stats_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "gpu_stats_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catches broken label aggregation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_label_agg",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

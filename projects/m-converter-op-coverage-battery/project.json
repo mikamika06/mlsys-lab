@@ -1,0 +1,41 @@
+{
+  "id": "m-converter-op-coverage-battery",
+  "title": "Converter op-coverage battery and custom-op fallback debugging",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Op coverage gaps and unsupported-op debugging",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["converter/coverage.py", "converter/fallback.py", "converter/rewrite.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Audit graph operator coverage against target runtime support tables",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "graphs_audited", "op": "==", "threshold": 1.0},
+        {"metric": "coverage_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analyze fallback vs rewrite latency trade-offs and select optimal routes",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "latency_evaluated", "op": "==", "threshold": 1.0},
+        {"metric": "fallback_decisions_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression suite for op decomposition and mathematical safety",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_flawed_decomposition", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

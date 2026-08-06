@@ -1,0 +1,5 @@
+The memory subsystem for our low-level attention kernels is reporting severe bandwidth saturation during large context decodes. Engineers have observed that the naive memory traffic calculations for multi-head attention kernels significantly underestimate actual DRAM byte movement when accounting for intermediate query-key dot products, key-value loading loops, and softmax reduction passes.
+
+We need a rigorous HBM traffic model specifically tailored for attention mechanisms, starting with a precise accounting of byte reads and writes for Q, K, V, and O tensors. Following this, we require an arithmetic-intensity calculator that maps total floating-point operations against total bytes transferred to memory. Finally, we need a robust roofline bound classifier that evaluates whether a given attention configuration is memory-bandwidth bound or compute bound under hardware operational limits.
+
+Your task is to implement the traffic model, the arithmetic-intensity calculator, and the roofline classifier in `attention/traffic.py`, `attention/intensity.py`, and `attention/roofline.py` respectively, and ensure all validation tests pass successfully.

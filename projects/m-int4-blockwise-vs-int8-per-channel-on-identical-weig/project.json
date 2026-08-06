@@ -1,0 +1,68 @@
+{
+  "id": "m-int4-blockwise-vs-int8-per-channel-on-identical-weig",
+  "title": "INT4 Blockwise vs INT8 Per-Channel Quantization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-edge-export",
+  "track": "Core ML weight quantization (coremltools.optimize.coreml)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/core.py",
+    "quant/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantization routines and scale calculation",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "quantization_matches",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "MSE evaluation comparing INT8 per-channel and INT4 blockwise",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "mse_matches",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "compression_ratio_matches",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for quantization invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_blockwise",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

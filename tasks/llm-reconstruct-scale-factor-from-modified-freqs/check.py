@@ -12,7 +12,7 @@ def grade(sol, fx) -> dict:
         delta[idx_outlier] = 0.001 * s_true
         mod = orig * (s_true + delta)
         try:
-            got = sol.recover_scale_factor(orig, mod)
+            got = sol.recover_scale_factor(orig.tolist(), mod.tolist())
         except Exception:
             return {"rel_err": float("inf")}
         if not isinstance(got, (float, np.floating)):

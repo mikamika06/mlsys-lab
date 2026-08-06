@@ -1,0 +1,69 @@
+{
+  "id": "m-lse-merge-of-partial-attention-outputs",
+  "title": "LSE merge of partial attention outputs and ring attention",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "context-parallel-and-ring-attention",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ringattn/lse.py",
+    "ringattn/simulator.py",
+    "ringattn/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Merge partial attention outputs using LSE",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 1e-05
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Ring attention simulator and causal load analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ring_rel_err",
+          "op": "<=",
+          "threshold": 1e-05
+        },
+        {
+          "metric": "load_ratio_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch un-scaled LSE merging",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unscaled_lse",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

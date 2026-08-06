@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-memory-savings-of-sink-window-vs-full-kv-cach",
+  "title": "Derive memory savings and perplexity of sink-window vs full KV cache",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "kv-cache-compression-eviction",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["streamkv/analysis.py", "streamkv/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive exact memory bounds and savings", "check": "harness/m1.py",
+     "gates": [{"metric": "memory_bytes_matched", "op": ">=", "threshold": 4}]},
+    {"n": 2, "title": "Compare perplexity curves across strategies", "check": "harness/m2.py",
+     "gates": [{"metric": "perplexity_trend_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for eviction invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

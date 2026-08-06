@@ -1,0 +1,46 @@
+{
+  "id": "m-compare-real-moe-model-configs-on-shared-fine-graine",
+  "title": "Compare real MoE model configs on shared/fine-grained architecture choices",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "shared-fine-grained-experts",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moecomp/analyzer.py",
+    "moecomp/metrics.py",
+    "moecomp/reporter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse and normalize MoE configurations",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute fine-grained and shared expert cost metrics",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err_match", "op": "==", "threshold": 1},
+        {"metric": "param_match", "op": "==", "threshold": 1},
+        {"metric": "ratio_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catching flawed routing definitions",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_routing", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

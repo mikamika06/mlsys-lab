@@ -1,0 +1,68 @@
+{
+  "id": "m-kernel-eligibility-function",
+  "title": "Kernel-eligibility function and backend dispatch analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Kernel selection and backend dispatch",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "dispatch/selector.py",
+    "dispatch/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Kernel eligibility evaluation and backend selection",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Label 20 checkpoints and locate minimal fast-path configs",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "labels_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "remedies_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression tests for dispatch invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_fallbacks",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

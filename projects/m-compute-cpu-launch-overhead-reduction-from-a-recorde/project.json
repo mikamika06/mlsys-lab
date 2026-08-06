@@ -1,0 +1,21 @@
+{
+  "id": "m-compute-cpu-launch-overhead-reduction-from-a-recorde",
+  "title": "CPU launch overhead reduction and autotune search space",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-compilers",
+  "track": "max-autotune kernel autotuning & CUDA graphs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["autotune/overhead.py", "autotune/searchspace.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute CPU-launch-overhead reduction from trace", "check": "harness/m1.py",
+     "gates": [{"metric": "overhead_reduced_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute max-autotune matmul search-space size", "check": "harness/m2.py",
+     "gates": [{"metric": "search_space_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid overhead ratios", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_overhead", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,4 +1,9 @@
-import numpy as np
+import math
 
-def streaming_attention(Q, K, V, block_size):
+def streaming_attention(
+    Q: list[list[float]],
+    K: list[list[float]],
+    V: list[list[float]],
+    block_size: int,
+) -> list[list[float]]:
     raise NotImplementedError('your code here')

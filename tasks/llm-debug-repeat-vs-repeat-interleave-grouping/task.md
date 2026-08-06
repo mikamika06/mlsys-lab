@@ -38,25 +38,22 @@ instead of repeating each head group.
 Implement `expand_kv_heads(kv, num_q_heads)`:
 
 ```python
-def expand_kv_heads(kv: np.ndarray, num_q_heads: int) -> np.ndarray:
+def expand_kv_heads(kv: list[list[list[list[float]]]], num_q_heads: int) -> list[list[list[list[float]]]]:
     ...
 ```
 
-The input `kv` is a NumPy array with shape $(b, h_{kv}, s, d)$. The value
+The input `kv` is a list with shape $(b, h_{kv}, s, d)$. The value
 `num_q_heads` is a positive multiple of the number of key/value heads.
 
 Return a new array with shape `(b, num_q_heads, s, d)` where each key/value head
-is repeated the required number of times for grouped-query attention. Use NumPy
+is repeated the required number of times for grouped-query attention. Use Python
 operations and preserve the input dtype.
 
 ## Example
 
 ```python
-import numpy as np
 
-kv = np.array(
-    [[[[1.0]], [[2.0]]]]
-)
+kv = [[[[1.0]], [[2.0]]]]
 
 out = expand_kv_heads(kv, 4)
 
@@ -67,7 +64,7 @@ out = expand_kv_heads(kv, 4)
 ## What the gate checks
 
 The gate builds several GQA tensors and computes the expected expansion using a
-NumPy reference implementation with `np.repeat`. The candidate output is compared
+Python reference implementation with `range` and list repetition. The candidate output is compared
 using
 
 $$\max_i |x_i - y_i|.$$

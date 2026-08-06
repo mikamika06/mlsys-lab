@@ -1,0 +1,62 @@
+{
+  "id": "m-break-even-volume-self-hosted-vllm-vs-per-token-api-",
+  "title": "Break-even volume, spot economics, and prefix caching valuation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "capacity-and-cost-planning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "vllm_cost/model.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Break-even volume between self-hosting and per-token API",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "breakeven_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Spot instance expected cost with preemption and lost work",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "spot_cost_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Prefix caching dollar savings and safeguard regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_fault",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

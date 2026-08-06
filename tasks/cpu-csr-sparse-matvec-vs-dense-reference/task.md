@@ -18,35 +18,31 @@ The matrix–vector product $y = A\,x$, where $x \in \mathbb{R}^{d}$, can be com
 Implement a function that performs this multiplication efficiently:
 
 ```python
-def csr_matvec(data: np.ndarray,
-               indices: np.ndarray,
-               indptr: np.ndarray,
-               x: np.ndarray) -> np.ndarray:
+def csr_matvec(data: list[float], indices: list[int], indptr: list[int], x: list[float]) -> list[float]:
     ...
 ```
 
 The function receives the CSR representation of a matrix and a dense vector `x`.  
-It must return the product `y` as a 1‑D NumPy array of type `float64`.
+It must return the product `y` as a 1‑D list of type `float64`.
 
 * Constraints
-  * Use only NumPy; do not convert the sparse matrix to a dense form.
+  * Use only Python; do not convert the sparse matrix to a dense form.
   * The algorithm should run in $O(\text{nnz})$ time, where $\text{nnz}=m$ is the number of stored non‑zeros.
 
 ## Example
 
 ```python
-import numpy as np
 
 # A = [[1, 0, 2],
 #      [0, 3, 0]]
-data   = np.array([1, 2, 3], dtype=np.float64)
-indices= np.array([0, 2, 1], dtype=np.int32)
-indptr = np.array([0, 2, 3], dtype=np.int32)
+data   = [1, 2, 3]
+indices= [0, 2, 1]
+indptr = [0, 2, 3]
 
-x = np.array([4, 5, 6], dtype=np.float64)
+x = [4, 5, 6]
 
 y = csr_matvec(data, indices, indptr, x)
-print(y)          # [13. 15.]
+print(y)  # [16.0, 15.0]
 ```
 
 ## What the gate checks

@@ -1,0 +1,21 @@
+{
+  "id": "m-diagnose-a-large-achieved-vs-theoretical-occupancy-g",
+  "title": "Diagnose large achieved vs theoretical occupancy gap",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "occupancy-theoretical-vs-achieved",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["occupancy/resource.py", "occupancy/warp_stats.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Rank kernel configs by theoretical occupancy", "check": "harness/m1.py",
+     "gates": [{"metric": "rankings_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Diagnose occupancy gap via warp state statistics", "check": "harness/m2.py",
+     "gates": [{"metric": "diagnosis_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for occupancy analysis", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_diagnosis", "op": "==", "threshold": 1}]}
+  ]
+}

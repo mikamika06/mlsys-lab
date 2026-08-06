@@ -1,0 +1,44 @@
+{
+  "id": "m-benchmark-flaw-detector-audit-8-benchmark-configs-fo",
+  "title": "Audit vLLM benchmark configs and calculate TTFT confidence intervals",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "benchmark-harness-and-methodology",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "benchaudit/detector.py",
+    "benchaudit/reconstruct.py",
+    "benchaudit/stats.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Audit benchmark configs for methodology flaws",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs_audited", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reconstruct CLI invocations from benchmark results",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "reconstructions_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Calculate required TTFT sample size and safeguard against invalid statistics",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_flawed_stats", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

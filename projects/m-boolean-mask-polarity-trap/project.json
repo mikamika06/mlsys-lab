@@ -1,0 +1,21 @@
+{
+  "id": "m-boolean-mask-polarity-trap",
+  "title": "Boolean mask polarity trap in SDPA",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "scaled_dot_product_attention: API and backend dispatch",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["sdpa_trap/attention.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Manual attention baseline", "check": "harness/m1.py",
+     "gates": [{"metric": "exact_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "SDPA migration with correct polarity", "check": "harness/m2.py",
+     "gates": [{"metric": "exact_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard against polarity trap", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_inverted_mask", "op": "==", "threshold": 1}]}
+  ]
+}

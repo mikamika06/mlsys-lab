@@ -29,7 +29,7 @@ input row through the shared normalizer.
 Implement `log_softmax_vjp`:
 
 ```python
-def log_softmax_vjp(x, g):
+def log_softmax_vjp(x: list[list[float]], g: list[list[float]]) -> list[list[float]]:
     """Vector-Jacobian product of y = log_softmax(x, axis=-1).
 
     Given the upstream gradient `g` (dLoss/dy, same shape as x), returns
@@ -37,18 +37,17 @@ def log_softmax_vjp(x, g):
     """
 ```
 
-* `x` — a 2-D NumPy array of shape $(B, C)$ (log-softmax is applied per row,
+* `x` — a list of lists of floats of shape $(B, C)$ (log-softmax is applied per row,
   i.e. along the last axis).
-* `g` — a NumPy array of the same shape as `x`: the upstream gradient.
+* `g` — a list of the same shape as `x`: the upstream gradient.
 * Return `g - softmax(x) * sum(g, axis=-1, keepdims=True)`, computing
   `softmax(x)` yourself (e.g. via a numerically-stable log-softmax).
 
 ## Example
 
 ```python
-import numpy as np
-x = np.array([[1.0, 2.0, 3.0]])
-g = np.array([[1.0, 0.0, 0.0]])
+x = [[1.0, 2.0, 3.0]]
+g = [[1.0, 0.0, 0.0]]
 log_softmax_vjp(x, g)
 # softmax(x) ≈ [[0.0900, 0.2447, 0.6652]]
 # result ≈ [[1 - 0.0900, 0 - 0.2447, 0 - 0.6652]]

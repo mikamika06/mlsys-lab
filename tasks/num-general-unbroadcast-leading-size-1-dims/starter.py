@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def unbroadcast(grad, shape):
     """Reduce `grad` (which has the shape produced by broadcasting a tensor
     of shape `shape` up to grad.shape) back down to `shape`, by summing over

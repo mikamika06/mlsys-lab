@@ -12,7 +12,7 @@ def grade(sol, fx) -> dict:
         W = rng.standard_normal((n_out, n_in)).astype(np.float64)
         A = rng.standard_normal((30, n_in)).astype(np.float64)  # batch size 30
         try:
-            cand = sol.hessian_saliency(W, A)
+            cand = sol.hessian_saliency(W.tolist(), A.tolist())
         except Exception:
             return {"rel_err": float("inf")}
         ref = _ref_saliency(W, A)

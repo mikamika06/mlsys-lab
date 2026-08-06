@@ -1,6 +1,6 @@
-import numpy as np
+import math
 
-def label_smoothed_fused_ce(logits, targets, eps=0.1):
+def label_smoothed_fused_ce(logits: list[list[float]], targets: list[int], eps: float=0.1) -> float:
     """
     Numerically stable label-smoothed cross-entropy.
 
@@ -14,4 +14,4 @@ def label_smoothed_fused_ce(logits, targets, eps=0.1):
     -------
     float — mean cross-entropy over the batch
     """
-    raise NotImplementedError("Implement label-smoothed fused cross-entropy")
+    raise NotImplementedError('your code here')

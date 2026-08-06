@@ -1,0 +1,63 @@
+{
+  "id": "m-derive-the-grammar-imposed-acceptance-ceiling-indepe",
+  "title": "Grammar-imposed acceptance ceiling for speculative decoding",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Speculative decoding with structured output",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "grammar/ceiling.py",
+    "grammar/transition.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Grammar transition matrix and reachability",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "transitions_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Exact acceptance ceiling computation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ceiling_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for ceiling invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_faulty_ceiling",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

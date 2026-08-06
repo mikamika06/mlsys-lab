@@ -39,7 +39,7 @@ $$
 
 Implement `stream_softmax_row_chunks(logits, chunk_size)`.
 
-The function receives a 2-D NumPy array `logits` of shape $(r, n)$ and an integer `chunk_size`. It returns a NumPy array of the same shape containing the softmax value of every row.
+The function receives a list of lists of floats `logits` of shape $(r, n)$ and an integer `chunk_size`. It returns a list of the same shape containing the softmax value of every row.
 
 The implementation must compute each row by processing columns in chunks. It should maintain the online softmax state instead of applying softmax independently to each chunk.
 
@@ -47,18 +47,17 @@ The output must be `float64`.
 
 ```python
 def stream_softmax_row_chunks(
-    logits: np.ndarray,
+    logits: list[list[float]],
     chunk_size: int
-) -> np.ndarray:
+) -> list[list[float]]:
     ...
 ```
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1.0, 2.0, 3.0, 4.0]])
+x = [[1.0, 2.0, 3.0, 4.0]]
 y = stream_softmax_row_chunks(x, 2)
 
 # approximately:
@@ -67,7 +66,7 @@ y = stream_softmax_row_chunks(x, 2)
 
 ## What the gate checks
 
-The gate compares the returned probabilities against a NumPy reference implementation of full stable softmax. The maximum absolute difference
+The gate compares the returned probabilities against a Python reference implementation of full stable softmax. The maximum absolute difference
 
 $$
 \max_i |p_i - \hat{p}_i|

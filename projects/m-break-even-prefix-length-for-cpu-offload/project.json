@@ -1,0 +1,45 @@
+{
+  "id": "m-break-even-prefix-length-for-cpu-offload",
+  "title": "Break-even prefix length for CPU offload",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-offloading-to-cpu-and-disk",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "offload/simulator.py",
+    "offload/tiers.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Two-tier cache latency simulator and break-even length",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "simulations_matched", "op": ">=", "threshold": 5},
+        {"metric": "breakevens_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Optimal storage tier selection per workload",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "tiers_matched", "op": ">=", "threshold": 5},
+        {"metric": "workloads_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching latency calculation errors",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_ignored_overhead", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

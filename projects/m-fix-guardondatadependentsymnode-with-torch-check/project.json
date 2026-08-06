@@ -1,0 +1,21 @@
+{
+  "id": "m-fix-guardondatadependentsymnode-with-torch-check",
+  "title": "Fix GuardOnDataDependentSymNode with torch._check",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Dynamic shapes and the symbolic shape env",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["symfix/core.py", "symfix/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Fix GuardOnDataDependentSymNode with torch._check", "check": "harness/m1.py",
+     "gates": [{"metric": "checks_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Predict automatic-dynamic marking from a shape trace", "check": "harness/m2.py",
+     "gates": [{"metric": "predictions_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching missing checks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_missing_check", "op": "==", "threshold": 1}]}
+  ]
+}

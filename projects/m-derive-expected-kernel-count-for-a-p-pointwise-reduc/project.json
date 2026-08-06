@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-expected-kernel-count-for-a-p-pointwise-reduc",
+  "title": "Derive expected kernel count for pointwise-reduction-pointwise chains",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Inductor fusion & scheduler",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["kernelplan/derivation.py", "kernelplan/comparison.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive expected kernel count for P-pointwise + reduction + Q-pointwise", "check": "harness/m1.py",
+     "gates": [{"metric": "counts_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compare scheduler-node count vs kernel count across 4 real blocks", "check": "harness/m2.py",
+     "gates": [{"metric": "comparison_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching incorrect fusion counts", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_fusion", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-dataloader-wait-fraction-from-a-trace",
+  "title": "Dataloader wait fraction, prefetching, and worker saturation",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "Host-side pipeline: DataLoader, pinning, transfers, layout",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["pipeline/trace.py", "pipeline/prefetch.py", "pipeline/workers.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Dataloader wait fraction from a trace", "check": "harness/m1.py",
+     "gates": [{"metric": "wait_fraction_rel_err", "op": "<=", "threshold": 1e-4}]},
+    {"n": 2, "title": "Double-buffered H2D prefetcher simulation", "check": "harness/m2.py",
+     "gates": [{"metric": "prefetch_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Minimum num_workers to saturate the GPU and regression safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

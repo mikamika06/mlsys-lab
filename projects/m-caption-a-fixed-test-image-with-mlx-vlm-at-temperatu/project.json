@@ -1,0 +1,44 @@
+{
+  "id": "m-caption-a-fixed-test-image-with-mlx-vlm-at-temperatu",
+  "title": "Vision-language model inference and profiling with mlx-vlm",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "mlx-vlm vision-language model inference",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mlx_vlm_utils/caption.py",
+    "mlx_vlm_utils/scaling.py",
+    "mlx_vlm_utils/profile.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Caption a fixed test image with mlx-vlm at temperature zero",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "caption_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure image-token count vs input resolution",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "scaling_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Compare latency and memory for single vs multi-image prompts",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_profiling", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

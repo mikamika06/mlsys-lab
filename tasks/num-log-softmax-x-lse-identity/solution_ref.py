@@ -1,33 +1,34 @@
 import math
-import numpy as np
 
-
-def log_softmax(x: np.ndarray) -> np.ndarray:
+def log_softmax(x: list[float] | list[list[float]]) -> list[float] | list[list[float]]:
     """Compute log-softmax along the last axis via the stable x − LSE identity."""
-    x = np.asarray(x, dtype=np.float64)
-    orig_shape = x.shape
-    n_cols = orig_shape[-1]
-    n_rows = 1
-    for dim in orig_shape[:-1]:
-        n_rows *= dim
+    if not x:
+        return []
 
-    x_2d = x.reshape(n_rows, n_cols)
-    out_2d = np.empty((n_rows, n_cols), dtype=np.float64)
+    is_2d = isinstance(x[0], list)
+    rows = x if is_2d else [x]
+    out_rows = []
 
-    for i in range(n_rows):
-        max_val = x_2d[i, 0]
+    for row in rows:
+        n_cols = len(row)
+        if n_cols == 0:
+            out_rows.append([])
+            continue
+
+        max_val = row[0]
         for j in range(1, n_cols):
-            val = x_2d[i, j]
-            if val > max_val:
-                max_val = val
+            if row[j] > max_val:
+                max_val = row[j]
 
         sum_exp = 0.0
         for j in range(n_cols):
-            sum_exp += math.exp(x_2d[i, j] - max_val)
+            sum_exp += math.exp(row[j] - max_val)
 
         lse = max_val + math.log(sum_exp)
 
-        for j in range(n_cols):
-            out_2d[i, j] = x_2d[i, j] - lse
+        out_row = [row[j] - lse for j in range(n_cols)]
+        out_rows.append(out_row)
 
-    return out_2d.reshape(orig_shape)
+    if not is_2d:
+        return out_rows[0]
+    return out_rows

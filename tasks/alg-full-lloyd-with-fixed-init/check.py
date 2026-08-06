@@ -20,21 +20,22 @@ def grade(sol, fx) -> dict:
     rng = np.random.default_rng(12345)
     ok = 1.0
     for _ in range(5):
-        n = rng.integers(10, 50)
-        d = rng.integers(2, 6)
-        k = rng.integers(2, min(n // 2, 8))
+        n = int(rng.integers(10, 50))
+        d = int(rng.integers(2, 6))
+        k = int(rng.integers(2, min(n // 2, 8)))
         X = rng.standard_normal((n, d))
         init_centroids = rng.standard_normal((k, d))
         try:
-            cand_labels, cand_iter = sol.lloyd_fixed_init(X, init_centroids)
+            cand_labels, cand_iter = sol.lloyd_fixed_init(X.tolist(), init_centroids.tolist())
         except Exception:
             ok = 0.0
             break
         ref_labels, _ = _reference_lloyd(X, init_centroids)
-        if not isinstance(cand_labels, np.ndarray) or cand_labels.shape != (n,) or cand_labels.dtype.kind != 'i':
+        ref_list = ref_labels.tolist()
+        if not isinstance(cand_labels, list) or len(cand_labels) != n or not all(isinstance(x, (int, np.integer)) for x in cand_labels):
             ok = 0.0
             break
-        if not np.array_equal(cand_labels, ref_labels):
+        if cand_labels != ref_list:
             ok = 0.0
             break
         if not isinstance(cand_iter, int) or cand_iter < 1:

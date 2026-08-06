@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-the-analytic-gradient-of-lora-loss-wrt-a-and-",
+  "title": "Derive and implement analytic gradients and modules for LoRA",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "lora-mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["lora/grad.py", "lora/module.py", "lora/counts.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Analytic gradient derivation and validation", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Raw PyTorch LoRALinear module matching PEFT output", "check": "harness/m2.py",
+     "gates": [{"metric": "output_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Parameter count validation and regression safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_counts", "op": "==", "threshold": 1}]}
+  ]
+}

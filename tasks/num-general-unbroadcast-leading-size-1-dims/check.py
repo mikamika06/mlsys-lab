@@ -36,11 +36,12 @@ def grade(sol, fx) -> dict:
 
     max_err = 0.0
     for full_shape, shape in cases:
-        grad = rng.randn(*full_shape)
-        ref = _oracle_unbroadcast(grad, shape)
+        grad_arr = rng.randn(*full_shape)
+        ref = _oracle_unbroadcast(grad_arr, shape)
+        grad_list = grad_arr.tolist()
         try:
-            got = sol.unbroadcast(grad.copy(), shape)
-            got = np.asarray(got, dtype=np.float64)
+            got_list = sol.unbroadcast(grad_list, shape)
+            got = np.asarray(got_list, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
 

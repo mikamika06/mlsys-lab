@@ -1,0 +1,41 @@
+{
+  "id": "m-decode-an-mxfp4-block-to-fp32",
+  "title": "MXFP4 Block Decoding and Error Crossover Analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "mxfp4-shared-exponent",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mxfp4/decode.py", "mxfp4/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Decode MXFP4 block to fp32",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "blocks_matched", "op": ">=", "threshold": 5},
+        {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Enumerate representable grid values and evaluate Q4_0 crossover",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "grid_matched", "op": "==", "threshold": 1},
+        {"metric": "crossover_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching corrupt shared exponent decoding",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_corrupt_scale", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

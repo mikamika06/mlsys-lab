@@ -1,0 +1,22 @@
+{
+  "id": "m-implement-the-chained-block-hash-over-a-token-list",
+  "title": "Chained Block Hash for Prefix Caching",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-caching-block-hashing",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["blockhash/hashing.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Implement chained block hashes", "check": "harness/m1.py",
+     "gates": [{"metric": "hashes_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Count reusable and lost blocks", "check": "harness/m2.py",
+     "gates": [{"metric": "reusable_match", "op": "==", "threshold": 1},
+               {"metric": "divergence_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches unchained hashing", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unchained", "op": "==", "threshold": 1}]}
+  ]
+}

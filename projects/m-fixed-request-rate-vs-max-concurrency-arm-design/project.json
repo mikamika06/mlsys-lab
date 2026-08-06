@@ -1,0 +1,22 @@
+{
+  "id": "m-fixed-request-rate-vs-max-concurrency-arm-design",
+  "title": "Fixed request rate vs max-concurrency arm design",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "serving-benchmark-methodology",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["bench/parser.py", "bench/stats.py", "bench/compare.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse vllm bench serve JSON into structured metrics", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Percentile noise and required repeats for 5% claims", "check": "harness/m2.py",
+     "gates": [{"metric": "repeats_valid", "op": "==", "threshold": 1},
+               {"metric": "throughput_ratio", "op": ">=", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: regression test catching comparison anomalies", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_comparison", "op": "==", "threshold": 1}]}
+  ]
+}

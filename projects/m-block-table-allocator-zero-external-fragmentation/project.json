@@ -1,0 +1,45 @@
+{
+  "id": "m-block-table-allocator-zero-external-fragmentation",
+  "title": "Block-table allocator and prefix caching",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "kv-cache-serving-mechanics",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "kvcache/allocator.py",
+    "kvcache/fragmentation.py",
+    "kvcache/server.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Zero external fragmentation and optimal sizing",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "allocator_ooms_correctly", "op": "==", "threshold": 1},
+        {"metric": "optimal_size_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Simulate prefix-cache hit rate",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "hit_rate_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Regression test for fragmentation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fragmentation_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

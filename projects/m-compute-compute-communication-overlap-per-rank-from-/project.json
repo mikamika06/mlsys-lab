@@ -1,0 +1,21 @@
+{
+  "id": "m-compute-compute-communication-overlap-per-rank-from-",
+  "title": "Compute/communication overlap and straggler analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "distributed-multi-gpu-profiling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["prof/overlap.py", "prof/straggler.py", "prof/model.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute compute/communication overlap % per rank", "check": "harness/m1.py",
+     "gates": [{"metric": "overlaps_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Identify the straggler rank from AllReduce trace", "check": "harness/m2.py",
+     "gates": [{"metric": "straggler_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test communication-bound ratio model", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_ratio", "op": "==", "threshold": 1}]}
+  ]
+}

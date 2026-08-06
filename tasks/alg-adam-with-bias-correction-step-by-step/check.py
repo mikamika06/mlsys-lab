@@ -19,12 +19,18 @@ def grade(sol, fx) -> dict:
     rng = np.random.default_rng(0)
     d = 5
     T = 10
-    params0 = rng.standard_normal(d)
-    grads = rng.standard_normal((T, d))
+    params0_arr = rng.standard_normal(d)
+    grads_arr = rng.standard_normal((T, d))
+
+    params0_list = params0_arr.tolist()
+    grads_list = grads_arr.tolist()
+
     try:
-        candidate = sol.adam_trajectory(params0, grads)
+        candidate = sol.adam_trajectory(params0_list, grads_list)
     except Exception:
         return {"max_abs_err": float("inf")}
-    ref = _reference_trajectory(params0, grads)
-    err = max_abs_err(ref, candidate)
+
+    candidate_arr = np.array(candidate, dtype=np.float64)
+    ref = _reference_trajectory(params0_arr, grads_arr)
+    err = max_abs_err(ref, candidate_arr)
     return {"max_abs_err": err}

@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-real-per-step-wall-clock-difference-between-",
+  "title": "Real wall-clock and memory tradeoffs in full-FT vs LoRA vs QLoRA",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "full-ft-vs-lora-vs-qlora-tradeoff",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["efficiency/bench.py", "efficiency/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure per-step wall-clock difference", "check": "harness/m1.py",
+     "gates": [{"metric": "latency_ratio_valid", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Rank real measured memory against derived ordering", "check": "harness/m2.py",
+     "gates": [{"metric": "ranking_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching invariant violations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_ranking", "op": "==", "threshold": 1}]}
+  ]
+}

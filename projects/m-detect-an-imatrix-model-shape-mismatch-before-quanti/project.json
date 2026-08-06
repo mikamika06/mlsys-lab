@@ -1,0 +1,21 @@
+{
+  "id": "m-detect-an-imatrix-model-shape-mismatch-before-quanti",
+  "title": "Detect imatrix and model shape mismatch before quantizing",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "imatrix-guided-quant-math",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["imatrix/core.py", "imatrix/validator.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Single tensor shape and dimension verification", "check": "harness/m1.py",
+     "gates": [{"metric": "tensor_checks_passed", "op": ">=", "threshold": 1.0}]},
+    {"n": 2, "title": "Full model imatrix mismatch report", "check": "harness/m2.py",
+     "gates": [{"metric": "report_matches", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: regression test catching silent shape mismatch bypass", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_bypassed_mismatch", "op": "==", "threshold": 1.0}]}
+  ]
+}

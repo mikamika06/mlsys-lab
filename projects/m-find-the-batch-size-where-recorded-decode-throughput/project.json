@@ -1,0 +1,21 @@
+{
+  "id": "m-find-the-batch-size-where-recorded-decode-throughput",
+  "title": "Finding decode crossover batch size and GEMV occupancy limits",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "llm-inference-profiling-prefill-decode",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["decode_prof/analysis.py", "decode_prof/model.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify the memory-to-compute crossover batch size", "check": "harness/m1.py",
+     "gates": [{"metric": "crossover_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Diagnose GEMV occupancy limitations and effective bandwidth", "check": "harness/m2.py",
+     "gates": [{"metric": "occupancy_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching faulty crossover calculation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_faulty_crossover", "op": "==", "threshold": 1}]}
+  ]
+}

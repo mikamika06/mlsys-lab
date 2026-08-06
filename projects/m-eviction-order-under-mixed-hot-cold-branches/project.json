@@ -1,0 +1,22 @@
+{
+  "id": "m-eviction-order-under-mixed-hot-cold-branches",
+  "title": "Eviction order under mixed hot/cold branches",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "radix-tree-prefix-caching",
+  "difficulty": 3,
+  "edits": ["evict/policy.py", "evict/tree.py", "evict/scheduler.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Branch temperature and priority scoring", "check": "harness/m1.py",
+     "gates": [{"metric": "scores_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Eviction sequence order and memory reclaim", "check": "harness/m2.py",
+     "gates": [{"metric": "order_match", "op": "==", "threshold": 1},
+               {"metric": "reclaim_match", "op": "==", "threshold": 1},
+               {"metric": "safe_retention", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for branch protection", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_order", "op": "==", "threshold": 1}]}
+  ]
+}

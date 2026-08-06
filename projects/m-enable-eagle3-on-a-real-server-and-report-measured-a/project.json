@@ -1,0 +1,69 @@
+{
+  "id": "m-enable-eagle3-on-a-real-server-and-report-measured-a",
+  "title": "Enable EAGLE3 speculative decoding and measure performance gains",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "speculative-decoding-in-production",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "eagle/config.py",
+    "eagle/server.py",
+    "eagle/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Configure EAGLE3 draft tree and engine parameters",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Run server simulation and report acceptance rate and TPOT gain",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "latency_ratio_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "acceptance_rate_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for EAGLE3 metrics and invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_acceptance",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

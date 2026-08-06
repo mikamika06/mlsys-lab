@@ -49,21 +49,25 @@ def grade(sol, fx) -> dict:
         n_features = rng.integers(2, 6)
         k_clusters = rng.integers(2, min(n_samples, 8) + 1)
 
-        X = rng.standard_normal((n_samples, n_features))
-        rng_stream = rng.random(k_clusters)
+        X_np = rng.standard_normal((n_samples, n_features))
+        rng_stream_np = rng.random(k_clusters)
+
+        X_list = X_np.tolist()
+        rng_stream_list = rng_stream_np.tolist()
 
         try:
-            got = sol.kmeans_pp_seed(X, int(k_clusters), rng_stream)
-            ref = _reference_kmeans_pp_seed(X, int(k_clusters), rng_stream)
+            got = sol.kmeans_pp_seed(X_list, int(k_clusters), rng_stream_list)
+            ref = _reference_kmeans_pp_seed(X_np, int(k_clusters), rng_stream_np)
         except Exception as e:
             ok = 0.0
             break
 
-        if not isinstance(got, np.ndarray) or got.dtype != np.int64:
+        if not isinstance(got, list) or not all(isinstance(x, int) for x in got):
             ok = 0.0
             break
 
-        if not np.array_equal(got, ref):
+        ref_list = ref.tolist()
+        if got != ref_list:
             ok = 0.0
             break
 

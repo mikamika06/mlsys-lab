@@ -1,0 +1,46 @@
+{
+  "id": "m-find-the-draft-size-below-which-int8-quantization-st",
+  "title": "Draft model size threshold for INT8 quantization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Quantized draft models",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "specquant/draft.py",
+    "specquant/throughput.py",
+    "specquant/crossover.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Model draft latency and acceptance yields",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "latencies_matched", "op": ">=", "threshold": 3},
+        {"metric": "acceptance_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Calculate throughput and find crossover draft size",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "throughput_ratio", "op": ">=", "threshold": 1.0},
+        {"metric": "crossovers_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching non-monotonic crossover logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_crossover", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

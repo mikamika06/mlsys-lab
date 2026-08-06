@@ -1,0 +1,42 @@
+{
+  "id": "m-compute-theoretical-jaccl-all-reduce-time-at-55gbps-",
+  "title": "Theoretical JACCL all-reduce and pipeline performance modeling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "MLX distributed inference (Ring backend / JACCL / Thunderbolt)",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "jaccl/perf.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute theoretical JACCL all-reduce transfer time at 55Gbps",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.0001}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure ring all-reduce latency overhead vs single-process compute",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.0001}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test pipeline bubble fraction minimization",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_bubble", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

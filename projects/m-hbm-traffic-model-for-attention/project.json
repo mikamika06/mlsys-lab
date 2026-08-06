@@ -1,0 +1,21 @@
+{
+  "id": "m-hbm-traffic-model-for-attention",
+  "title": "HBM traffic model for attention",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "memory-io-and-roofline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["attention/traffic.py", "attention/intensity.py", "attention/roofline.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "HBM traffic calculation for attention", "check": "harness/m1.py",
+     "gates": [{"metric": "traffic_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Arithmetic intensity calculation", "check": "harness/m2.py",
+     "gates": [{"metric": "intensity_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: roofline classification regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_classifier", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "m-measure-moe-expert-coverage-of-a-calibration-set",
+  "title": "MoE expert coverage, imatrix comparison, and truncation detection",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "imatrix-generation",
+  "difficulty": 3,
+  "edits": [
+    "moecov/coverage.py",
+    "moecov/compare.py",
+    "moecov/detect.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure MoE expert coverage of a calibration set",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "coverage_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Compare imatrices from two corpora",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "comparison_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 3,
+      "title": "Detect a truncated imatrix run",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_truncation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-cross-check-a-real-report-s-theoretical-occupancy-ag",
+  "title": "Cross-check theoretical occupancy and map report fields",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "nsight-compute-cli-and-sections",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["occupancy/calc.py", "occupancy/mapping.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Map raw ncu fields to report sections", "check": "harness/m1.py",
+     "gates": [{"metric": "mapping_matched", "op": ">=", "threshold": 1.0}]},
+    {"n": 2, "title": "Compute theoretical occupancy and cross-check report", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err_ok", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for occupancy limits", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}]}
+  ]
+}

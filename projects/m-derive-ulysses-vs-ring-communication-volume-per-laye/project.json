@@ -1,0 +1,45 @@
+{
+  "id": "m-derive-ulysses-vs-ring-communication-volume-per-laye",
+  "title": "Ulysses vs Ring communication volume per layer",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "sequence-context-parallelism",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "seqcomm/formulas.py",
+    "seqcomm/ulysses.py",
+    "seqcomm/sweep.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive analytical communication volume formulas",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "formulas_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Toy Ulysses sequence-parallel attention implementation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ulysses_correctness", "op": "==", "threshold": 1.0},
+        {"metric": "alltoall_calls_valid", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test suite catches invalid USP and volume models",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_invalid_usp", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

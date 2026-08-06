@@ -1,0 +1,43 @@
+{
+  "id": "m-match-a-toy-min-cut-partitioner-s-recompute-set-to-a",
+  "title": "Match toy min-cut partitioner recompute set and compare op counts",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "AOTAutograd (joint graph, functionalization, partitioner)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "partitioner/toy.py",
+    "partitioner/aot_bridge.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Match toy min-cut partitioner recompute set to AOTAutograd decision",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "recompute_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compare standalone aot_autograd op count vs full torch.compile pipeline",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "op_count_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching incorrect recompute sets",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_recompute", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

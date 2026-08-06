@@ -1,0 +1,45 @@
+{
+  "id": "m-affine-quant-params-from-min-max",
+  "title": "Affine Quantization Parameters & Static Calibration",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT quantization: dynamic, static, QDQ vs QOperator",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "quantizer/params.py",
+    "quantizer/static_quant.py",
+    "quantizer/report.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Affine quant params from min/max",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "params_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "CalibrationDataReader and static quantization",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "calib_matched", "op": "==", "threshold": 1},
+        {"metric": "size_ratio", "op": "<=", "threshold": 0.3}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches unclamped zero points",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unclamped_zp", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

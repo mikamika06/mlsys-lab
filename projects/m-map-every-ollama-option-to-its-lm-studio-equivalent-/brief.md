@@ -1,0 +1,9 @@
+# Ticket: Local Runner Translation Layer Failures and Resource State Desync
+
+## Symptom Report
+
+Our internal testing pipeline and developer tooling integration layers are experiencing critical validation failures when attempting to bridge execution scripts from Ollama-based runner configurations over to LM Studio equivalents. Engineers migrating local models notice that job definitions executing smoothly under standard Ollama CLI flags or API payloads fail unpredictably or drop specialized hyperparameters upon submission to the LM Studio runtime server interface.
+
+Specifically, configuration translation scripts throw unexpected mapping exceptions or silently strip non-standard arguments, leaving execution environments unconfigured for crucial parameters such as context lengths, sampling controls, and custom stop sequences. Furthermore, resource management routines designed to handle model persistence and idle eviction report erratic behavior: models persist indefinitely past their expiration thresholds or get prematurely unloaded during active inference cycles. Compounding these issues, initialization traces show that runtime instances occasionally fail to trigger on-demand model loading correctly during the initial API request handshake, resulting in immediate connection drops or blank response payloads instead of graceful JIT execution startup.
+
+These discrepancies disrupt automated evaluation loops and local debugging tasks across development environments. We need a robust, deterministic module implemented within the runner mapping library to correctly translate all standard Ollama parameters while explicitly accounting for unsupported gaps, accurately model idle expiration and TTL behavior using discrete state progression, and reliably verify JIT model loading semantics on initial requests without relying on fragile timing assumptions.

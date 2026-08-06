@@ -1,0 +1,45 @@
+{
+  "id": "m-collate-cost-budget",
+  "title": "Collate cost budgeting and adaptive DataLoader collation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Host-side pipeline: DataLoader, pinning, transfers, layout",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "collate/budget.py",
+    "collate/adaptive.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Collate profiler and budget evaluation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "profile_matched", "op": "==", "threshold": 1},
+        {"metric": "budget_eval_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Adaptive batching within collate budget",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "adaptive_batching_matched", "op": "==", "threshold": 1},
+        {"metric": "budget_respected", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches unmonitored collate budget leaks",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_budget_leaks", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

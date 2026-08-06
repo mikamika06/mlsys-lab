@@ -1,0 +1,22 @@
+{
+  "id": "m-effect-of-long-output-requests-on-batch-turnover",
+  "title": "Effect of long-output requests on batch turnover",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "continuous-batching-and-scheduling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["turnover/model.py", "turnover/schedule.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Model request turnover and batch stagnation", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Schedule mitigation for long-output dominance", "check": "harness/m2.py",
+     "gates": [{"metric": "turnover_improved", "op": "==", "threshold": 1},
+               {"metric": "latency_bounded", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for long-output starvation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_scheduler", "op": "==", "threshold": 1}]}
+  ]
+}

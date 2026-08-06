@@ -1,0 +1,40 @@
+{
+  "id": "m-compare-fused-merged-model-output-vs-base-adapter-ou",
+  "title": "Compare fused model outputs, resolve training OOM, and diff adapter configs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "mlx-lm LoRA / QLoRA fine-tuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "loraeval/compare.py",
+    "loraeval/oom.py",
+    "loraeval/diff.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compare fused model output vs base+adapter output",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 2,
+      "title": "Reproduce training-OOM pattern and tune batch size",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "oom_solved", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Diff adapter_config.json fields and safeguard regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_diff", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

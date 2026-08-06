@@ -1,0 +1,40 @@
+{
+  "id": "m-build-and-run-an-engine-in-python",
+  "title": "Build and run an inference engine in Python",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT build pipeline: parser -> network -> builder config -> engine",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "engine/parser.py",
+    "engine/builder.py",
+    "engine/runner.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse ONNX models and report unsupported node errors",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "parser_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Translate trtexec flags to builder configuration and build engine",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "builder_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Execute inference engine and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

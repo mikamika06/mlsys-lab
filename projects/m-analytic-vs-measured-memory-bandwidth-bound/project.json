@@ -1,0 +1,41 @@
+{
+  "id": "m-analytic-vs-measured-memory-bandwidth-bound",
+  "title": "Analytic vs Measured Memory Bandwidth Bound",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Throughput, latency, and memory measurement",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["bwbound/analytic.py", "bwbound/measured.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute analytic memory and compute bounds",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "m1_rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "m1_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analyze empirical measurement and utilization metrics",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "m2_rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "m2_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching precision scaling bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_dtype_scaling_bug", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

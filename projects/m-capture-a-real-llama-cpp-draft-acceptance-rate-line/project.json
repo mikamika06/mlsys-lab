@@ -1,0 +1,64 @@
+{
+  "id": "m-capture-a-real-llama-cpp-draft-acceptance-rate-line",
+  "title": "Capture a real llama.cpp draft-acceptance-rate line",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "llama.cpp local speculative decoding",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "spec/capture.py",
+    "spec/sweep.py",
+    "spec/ratio.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Capture draft-acceptance-rate line and metrics",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "metrics_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Sweep spec_draft_n_max for optimal throughput",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "optimal_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catches incorrect acceptance ratio computation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_ratio",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

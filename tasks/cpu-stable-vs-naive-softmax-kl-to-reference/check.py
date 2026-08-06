@@ -36,28 +36,26 @@ def _cache_result(addrs):
 
 def grade(sol, fx) -> dict:
     cases = [
-        np.array(
-            [[1000.0, 1001.0, 1002.0],
-             [-1000.0, -999.0, -998.0]],
-            dtype=np.float64,
-        ),
-        np.array(
-            [[5000.0, 4999.0, 4998.0, 4997.0],
-             [0.0, 1.0, 2.0, 3.0]],
-            dtype=np.float64,
-        ),
-        np.array(
-            [[700.0, 701.0, 702.0, 703.0, 704.0]],
-            dtype=np.float64,
-        ),
+        [
+            [1000.0, 1001.0, 1002.0],
+            [-1000.0, -999.0, -998.0],
+        ],
+        [
+            [5000.0, 4999.0, 4998.0, 4997.0],
+            [0.0, 1.0, 2.0, 3.0],
+        ],
+        [
+            [700.0, 701.0, 702.0, 703.0, 704.0],
+        ],
     ]
 
     worst_kl = 0.0
     cache_match = 1.0
 
     for x in cases:
-        ref = _softmax_reference(x)
-        ref_trace = _trace_reference(x.shape)
+        x_np = np.asarray(x, dtype=np.float64)
+        ref = _softmax_reference(x_np)
+        ref_trace = _trace_reference(x_np.shape)
 
         try:
             got, trace = sol.stable_softmax_kernel(x)

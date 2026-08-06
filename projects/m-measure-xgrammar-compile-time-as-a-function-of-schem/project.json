@@ -1,0 +1,40 @@
+{
+  "id": "m-measure-xgrammar-compile-time-as-a-function-of-schem",
+  "title": "XGrammar compilation time, token masking, and schema rewriting",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-vllm-serving",
+  "track": "structured-outputs-and-guided-decoding",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "schema_opt/compile.py",
+    "schema_opt/mask.py",
+    "schema_opt/rewrite.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compile time scaling with schema complexity",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "compile_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Token mask and FSM alignment",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "mask_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: constraint-friendly schema validation test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_rewrite", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

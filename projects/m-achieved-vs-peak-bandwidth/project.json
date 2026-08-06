@@ -1,0 +1,44 @@
+{
+  "id": "m-achieved-vs-peak-bandwidth",
+  "title": "Achieved vs Peak Bandwidth Profiling",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "memory-io-and-roofline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bandwidth/tracker.py",
+    "bandwidth/roofline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Memory transfer and achieved bandwidth calculation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Roofline bound analysis and bottleneck classification",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5},
+        {"metric": "classification_acc", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching under-counted recomputation bytes",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_underaccounted_bytes", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

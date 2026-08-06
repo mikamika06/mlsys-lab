@@ -1,0 +1,44 @@
+{
+  "id": "m-compute-gpu-idle-gap-time-as-of-wall-time-from-a-rea",
+  "title": "Compute GPU idle-gap time from nsys timeline",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "nsight-systems-timeline-and-gaps",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "nsysprof/parser.py",
+    "nsysprof/warmup.py",
+    "nsysprof/syncs.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "GPU idle-gap time as a percentage of wall time",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Warm-up analysis on synthetic kernel lists",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Count per-iteration sync points and safeguard test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_sync", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

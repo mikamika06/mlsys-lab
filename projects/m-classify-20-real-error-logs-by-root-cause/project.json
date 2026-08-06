@@ -1,0 +1,21 @@
+{
+  "id": "m-classify-20-real-error-logs-by-root-cause",
+  "title": "Classify 20 real error logs and repair GGUF architecture",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "failure-triage-and-errors",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gguf_triage/classifier.py", "gguf_triage/repair.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Classify 20 real error logs by root cause", "check": "harness/m1.py",
+     "gates": [{"metric": "classifications_matched", "op": ">=", "threshold": 20}]},
+    {"n": 2, "title": "Emit minimal fixing commands", "check": "harness/m2.py",
+     "gates": [{"metric": "commands_matched", "op": ">=", "threshold": 20}]},
+    {"n": 3, "title": "Safety net: test regression and GGUF header repair", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_repair", "op": "==", "threshold": 1}]}
+  ]
+}

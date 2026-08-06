@@ -1,0 +1,21 @@
+{
+  "id": "m-compute-an-imatrix-from-captured-activations",
+  "title": "Compute and merge importance matrices from activations",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "imatrix-generation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["imatrix/compute.py", "imatrix/merge.py", "imatrix/validate.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute imatrix from captured activations", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Merge multiple imatrix files with correct weighting", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Safety net: test that catches unweighted merging", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unweighted_merge", "op": "==", "threshold": 1}]}
+  ]
+}

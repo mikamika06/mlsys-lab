@@ -1,0 +1,22 @@
+{
+  "id": "m-compile-time-vs-steady-state-latency-across-modes-on",
+  "title": "Compile time vs steady-state latency across modes on CPU",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Compile modes and Inductor tuning knobs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["compengine/modes.py", "compengine/analyzer.py", "compengine/freeze.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Mode selector function", "check": "harness/m1.py",
+     "gates": [{"metric": "modes_matched", "op": ">=", "threshold": 4}]},
+    {"n": 2, "title": "Compile time vs steady-state latency profile", "check": "harness/m2.py",
+     "gates": [{"metric": "profile_matched", "op": "==", "threshold": 1},
+               {"metric": "ordering_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches improper constant folding", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_folding", "op": "==", "threshold": 1}]}
+  ]
+}

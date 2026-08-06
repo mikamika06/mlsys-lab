@@ -1,0 +1,22 @@
+{
+  "id": "m-build-a-real-2-stage-pipeline-via-deploymenthandle",
+  "title": "Build a real 2-stage pipeline via DeploymentHandle",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Ray Serve Deployment Composition",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["pipeline/stages.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Two-stage pipeline execution via deployment handle", "check": "harness/m1.py",
+     "gates": [{"metric": "pipeline_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Per-stage latency accumulation across handle boundary", "check": "harness/m2.py",
+     "gates": [{"metric": "latency_tracked", "op": "==", "threshold": 1},
+               {"metric": "stage_isolated", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for pipeline stage metrics", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_pipeline", "op": "==", "threshold": 1}]}
+  ]
+}

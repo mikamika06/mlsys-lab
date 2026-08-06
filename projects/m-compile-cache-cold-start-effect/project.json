@@ -1,0 +1,74 @@
+{
+  "id": "m-compile-cache-cold-start-effect",
+  "title": "Compile-Cache Cold-Start Effect and Artifact Integrity",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Shipping and maintaining edge models in production",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "edge_cache/manifest.py",
+    "edge_cache/compiler.py",
+    "edge_cache/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Model-artifact integrity manifest validation",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "valid_manifests_passed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "corrupted_manifests_rejected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Cold-start cache effect and population-weighted p95 estimator",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "latency_ratio",
+          "op": ">=",
+          "threshold": 3.0
+        },
+        {
+          "metric": "p95_matches_reference",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: Regression tests catch manifest bypass",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_manifest_bypass",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

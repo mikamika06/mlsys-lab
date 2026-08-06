@@ -1,0 +1,22 @@
+{
+  "id": "m-decode-latency-model-inference-time-tp-sweet-spot",
+  "title": "Decode latency model and inference-time TP sweet spot",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Distributed inference tensor/pipeline parallel serving (AutoTP, KV-cache sharding)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["autotp/model.py", "autotp/sharding.py", "autotp/search.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Decode latency modeling and hardware profile matching", "check": "harness/m1.py",
+     "gates": [{"metric": "latency_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "GQA KV-cache head sharding and AutoTP sweet spot selection", "check": "harness/m2.py",
+     "gates": [{"metric": "sharding_match", "op": "==", "threshold": 1},
+               {"metric": "sweet_spot_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for partition invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_partition", "op": "==", "threshold": 1}]}
+  ]
+}

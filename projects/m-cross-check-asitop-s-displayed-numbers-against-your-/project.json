@@ -1,0 +1,40 @@
+{
+  "id": "m-cross-check-asitop-s-displayed-numbers-against-your-own-parse",
+  "title": "Cross-check asitop numbers and analyze Metal traces",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "GPU/system profiling (powermetrics, asitop, Instruments)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "edgemetrics/parser.py",
+    "edgemetrics/trace.py",
+    "edgemetrics/logger.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Cross-check asitop numbers against raw powermetrics",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "parsed_correct", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Count GPU command-buffer gaps from trace export",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "gaps_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Detect mid-run utilization drops and pass regression tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

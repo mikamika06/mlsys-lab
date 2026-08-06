@@ -1,0 +1,6 @@
+Ticket #TR-8819: GPU Kernel Launch Performance Degradation Under High Register Pressure
+
+Symptoms:
+During profiling and execution of custom Triton kernels on modern NVIDIA architectures including Ampere and Hopper, we observe unexpected drops in hardware occupancy and severe performance throttling when compiling kernels that utilize a high number of registers per thread. Specifically, kernels compiled with dense register allocations fail to achieve the expected concurrent block concurrency on streaming multiprocessors (SMs), leading to under-utilization of compute pipelines and memory latency hiding failures.
+
+The current heuristic in our low-level backend service relies on a naive linear division of total hardware registers by the raw declared register count per thread, completely ignoring hardware-specific allocation granularities, warp-level granularity rounding rules, and strict limits on maximum resident blocks per SM. Consequently, the scheduler dispatches fewer thread blocks than physically permissible or overestimates occupancy, causing runtime resource contention, memory barrier stalls, or silent performance degradation. We need a robust, exact derivation module to correctly compute effective register footprints and maximum resident blocks per SM from the register-pressure budget under varying hardware constraints.

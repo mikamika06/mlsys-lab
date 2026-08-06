@@ -29,7 +29,7 @@ output silently changes.
 
 Implement `restore_awq_equivalence(X, W, s)`.
 
-The function receives three NumPy arrays:
+The function receives three list:
 
 - `X` with shape $(n, d)$ containing activations.
 - `W` with shape $(m, d)$ containing weights.
@@ -40,16 +40,15 @@ preserving the original linear layer output.
 
 The implementation should compute the equivalent of the original output
 $XW^\top$ by scaling weights and compensating activations. The returned array
-must be a NumPy array with `float64` values.
+must be a list with `float64` values.
 
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[1.0, 2.0]])
-W = np.array([[3.0, 4.0]])
-s = np.array([2.0, 5.0])
+X = [[1.0, 2.0]]
+W = [[3.0, 4.0]]
+s = [2.0, 5.0]
 
 Y = restore_awq_equivalence(X, W, s)
 # Y is [[11.0]]
@@ -57,7 +56,7 @@ Y = restore_awq_equivalence(X, W, s)
 
 ## What the gate checks
 
-The gate compares the implementation against a NumPy oracle that computes the
+The gate compares the implementation against a Python oracle that computes the
 linear layer after applying the weight scaling and the required inverse scaling
 on activations.
 

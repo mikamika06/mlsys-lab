@@ -2,7 +2,7 @@
 
 In automatic differentiation the backward pass must undo every shape change that
 broadcasting introduced in the forward pass.  When a row-vector $b \in \mathbb{R}^{m}$
-is added to each row of a matrix $A \in \mathbb{R}^{n \times m}$, NumPy broadcasts
+is added to each row of a matrix $A \in \mathbb{R}^{n \times m}$, Python broadcasts
 $b$ to shape $(n, m)$ by implicit replication:
 
 $$C_{ij} = A_{ij} + b_{j}.$$
@@ -14,7 +14,7 @@ $$\frac{\partial \mathcal{L}}{\partial b_{j}}
   = \sum_{i=1}^{n} \frac{\partial \mathcal{L}}{\partial C_{ij}}.$$
 
 In vector form, $\nabla_{b}\,\mathcal{L} = (\nabla_{C}\,\mathcal{L})^{\!\top}\,
-\mathbf{1}_{n}$, which in NumPy is `np.sum(dc, axis=0)`.  Returning the raw upstream
+\mathbf{1}_{n}$, which in Python is `[sum(col) for col in zip(*dc)]`. Returning the raw upstream
 gradient `dc` without reducing it is a common autograd bug: the result has the wrong
 shape $(n, m)$ instead of $(m,)$ and every downstream parameter update is corrupted.
 
@@ -29,21 +29,20 @@ The provided implementation is **buggy**: the `backward` function does not sum
 over the broadcast axis when computing `db`.  Fix it so that:
 
 1. `da` has shape $(n, m)$ and equals $dc$.
-2. `db` has shape $(m,)$ and equals `np.sum(dc, axis=0)`.
+2. `db` has shape $(m,)$ and equals `[sum(col) for col in zip(*dc)]`.
 
 Do **not** change the forward pass.
 
 ## Example
 
 ```python
-import numpy as np
-a = np.array([[1.0, 2.0],
-              [3.0, 4.0]])
-b = np.array([10.0, 20.0])
+a = [[1.0, 2.0],
+              [3.0, 4.0]]
+b = [10.0, 20.0]
 c, backward = broadcast_add(a, b)
 # c = [[11., 22.],
 #       [13., 24.]]
-dc = np.ones_like(c)
+dc = [[1.0 for _ in row] for row in c]
 da, db = backward(dc)
 # da = [[1., 1.],
 #        [1., 1.]]       ← shape (2, 2)

@@ -1,0 +1,24 @@
+{
+  "id": "m-compute-total-kv-bytes-for-model-num-ctx-num-paralle",
+  "title": "Total KV bytes and parallel slots queue",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "concurrency-parallel-slots-and-queue",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["slots/memory.py", "slots/runner.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute KV cache bytes and slot limits", "check": "harness/m1.py",
+     "gates": [{"metric": "kv_bytes_match", "op": "==", "threshold": 1.0},
+               {"metric": "max_parallel_match", "op": "==", "threshold": 1.0}]},
+    {"n": 2, "title": "Simulate parallel slot queue and drops", "check": "harness/m2.py",
+     "gates": [{"metric": "completions_match", "op": "==", "threshold": 1.0},
+               {"metric": "drops_match", "op": "==", "threshold": 1.0},
+               {"metric": "metrics_match", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Safeguard against missing Keys/Values memory", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_missing_kv_factor", "op": "==", "threshold": 1.0}]}
+  ]
+}

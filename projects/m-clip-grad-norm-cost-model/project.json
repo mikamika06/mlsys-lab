@@ -1,0 +1,23 @@
+{
+  "id": "m-clip-grad-norm-cost-model",
+  "title": "Gradient norm clipping cost model and optimization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Optimizer-step and training-loop overheads",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gradclip/cost.py", "gradclip/clip.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Cost model prediction for gradient clipping overhead", "check": "harness/m1.py",
+     "gates": [{"metric": "cost_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Optimized gradient norm computation and scaling", "check": "harness/m2.py",
+     "gates": [{"metric": "norm_match", "op": "==", "threshold": 1},
+               {"metric": "scaled_match", "op": "==", "threshold": 1},
+               {"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Safety net: regression test for gradient clipping invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_scaling", "op": "==", "threshold": 1}]}
+  ]
+}

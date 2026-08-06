@@ -17,11 +17,11 @@ Using this *log‑sum‑exp* trick yields a numerically stable implementation.
 Implement `fused_cross_entropy(logits, targets)`:
 
 ```python
-def fused_cross_entropy(logits: np.ndarray, targets: np.ndarray) -> float:
+def fused_cross_entropy(logits: list[list[float]], targets: list[int]) -> float:
     ...
 ```
 
-`logits` is a 2‑D NumPy array of shape $(N,C)$ containing unnormalised scores for $N$ examples and $C$ classes.  
+`logits` is a 2‑D list of shape $(N,C)$ containing unnormalised scores for $N$ examples and $C$ classes.  
 `targets` is a 1‑D integer array of length $N$ with the correct class index for each example.
 
 The function must return the mean cross‑entropy loss over the batch as a scalar `float64`.  
@@ -30,17 +30,16 @@ It should be fully vectorised: no explicit Python loops are allowed, and it must
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([[0.2, 1.5, -0.3],
-                   [2.0, 0.0, 0.1]])
-targets = np.array([1, 0])
+logits = [[0.2, 1.5, -0.3],
+                   [2.0, 0.0, 0.1]]
+targets = [1, 0]
 loss = fused_cross_entropy(logits, targets)
 print(loss)   # ≈ 0.6931471805599453
 ```
 
 ## What the gate checks
 
-The grader computes a reference loss with NumPy’s stable log‑sum‑exp routine and compares it to your implementation using the metric `max_abs_err`.  
+The grader computes a reference loss with Python’s stable log‑sum‑exp routine and compares it to your implementation using the metric `max_abs_err`.  
 Your solution must satisfy
 
 $$\mathrm{max\_abs\_err} \le 10^{-9}.$$

@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-tokens-needed-for-a-target-column-standard-er",
+  "title": "Derive tokens needed for a target column standard error and convert legacy imatrix",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "imatrix-generation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["imatrix/derive.py", "imatrix/convert.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive tokens needed for target column standard error", "check": "harness/m1.py",
+     "gates": [{"metric": "tokens_derived_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Convert legacy .dat imatrix to GGUF format", "check": "harness/m2.py",
+     "gates": [{"metric": "conversion_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for standard error derivation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_derivation", "op": "==", "threshold": 1}]}
+  ]
+}

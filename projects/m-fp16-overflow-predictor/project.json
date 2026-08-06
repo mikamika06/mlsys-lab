@@ -1,0 +1,22 @@
+{
+  "id": "m-fp16-overflow-predictor",
+  "title": "FP16 overflow predictor and sensitivity ranking",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Numerical parity and accuracy validation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["fp16pred/predictor.py", "fp16pred/ranking.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "FP16 overflow prediction from tensor statistics", "check": "harness/m1.py",
+     "gates": [{"metric": "predictions_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Metric sensitivity ranking and golden file comparison", "check": "harness/m2.py",
+     "gates": [{"metric": "rankings_match", "op": "==", "threshold": 1},
+               {"metric": "golden_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid precision bounds", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_bounds", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,8 +1,2 @@
-import numpy as np
-
-def assign_clusters(X: np.ndarray, centroids: np.ndarray) -> np.ndarray:
-    X_norm = np.sum(X**2, axis=1)[:, None]
-    C_norm = np.sum(centroids**2, axis=1)[None, :]
-    cross = X @ centroids.T
-    dists_sq = X_norm + C_norm - 2*cross
-    return np.argmin(dists_sq, axis=1)
+def assign_clusters(X: list[list[float]], centroids: list[list[float]]) -> list[int]:
+    return [min(range(len(centroids)), key=lambda j: sum((a - b) ** 2 for a, b in zip(x, centroids[j]))) for x in X]

@@ -29,12 +29,7 @@ The result can be split into three views without additional matrix multiplicatio
 Implement `fused_qkv_projection(X, Wq, Wk, Wv)`:
 
 ```python
-def fused_qkv_projection(
-    X: np.ndarray,
-    Wq: np.ndarray,
-    Wk: np.ndarray,
-    Wv: np.ndarray,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def fused_qkv_projection(X: list[list[float]], Wq: list[list[float]], Wk: list[list[float]], Wv: list[list[float]]) -> tuple[list[list[float]], list[list[float]], list[list[float]]]:
     ...
 ```
 
@@ -47,17 +42,16 @@ multiplication followed by slicing. Do not call matrix multiplication separately
 $W_q$, $W_k$, and $W_v$.
 
 The returned arrays must be numerically equivalent to the separate projection formula
-using float64 NumPy operations.
+using float64 Python operations.
 
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[1.0, 2.0]])
-Wq = np.array([[1.0], [0.0]])
-Wk = np.array([[0.0], [1.0]])
-Wv = np.array([[1.0], [1.0]])
+X = [[1.0, 2.0]]
+Wq = [[1.0], [0.0]]
+Wk = [[0.0], [1.0]]
+Wv = [[1.0], [1.0]]
 
 Q, K, V = fused_qkv_projection(X, Wq, Wk, Wv)
 
@@ -68,11 +62,11 @@ Q, K, V = fused_qkv_projection(X, Wq, Wk, Wv)
 
 ## What the gate checks
 
-The numeric gate computes the reference answer with NumPy using the unfused definition
+The numeric gate computes the reference answer with Python using the unfused definition
 $Q=XW_q$, $K=XW_k$, and $V=XW_v$. The maximum absolute error must satisfy
 $\max |A-B| \le 10^{-6}$.
 
-The optimization gate instruments NumPy matrix multiplication calls while running the
+The optimization gate instruments Python matrix multiplication calls while running the
 candidate implementation. The candidate must use exactly one matrix multiplication.
 An implementation with three independent projections fails this gate even if the
 numeric output is correct.

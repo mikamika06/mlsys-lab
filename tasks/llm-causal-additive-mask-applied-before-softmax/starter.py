@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def causal_masked_softmax(scores: np.ndarray) -> np.ndarray:
+def causal_masked_softmax(scores: list[list[float]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

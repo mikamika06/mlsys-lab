@@ -1,0 +1,44 @@
+{
+  "id": "m-benchmark-two-quant-types-and-report-pp-tg",
+  "title": "llama-bench Quantization Benchmark & Roofline Analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "perf-measurement-llama-bench",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "llambench/parser.py",
+    "llambench/roofline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse llama-bench JSON into a normalized table",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "parsed_configs_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Predict tg throughput from a bandwidth roofline",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "roofline_match", "op": "==", "threshold": 1},
+        {"metric": "throughput_ratio", "op": ">=", "threshold": 0.8}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches swapped benchmark metrics",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_swapped_metrics", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

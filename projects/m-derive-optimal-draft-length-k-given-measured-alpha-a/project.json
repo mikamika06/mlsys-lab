@@ -1,0 +1,20 @@
+{
+  "id": "m-derive-optimal-draft-length-k-given-measured-alpha-a",
+  "title": "Optimal draft length and EAGLE tree acceptance",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "speculative-decoding-long-context",
+  "difficulty": 3,
+  "edits": ["draftopt/opt.py", "draftopt/tree.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Optimal draft length given alpha and cost ratio", "check": "harness/m1.py",
+     "gates": [{"metric": "optimal_k_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "EAGLE tree vs single-chain acceptance stats", "check": "harness/m2.py",
+     "gates": [{"metric": "tree_stats_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches broken optimality", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_opt", "op": "==", "threshold": 1}]}
+  ]
+}

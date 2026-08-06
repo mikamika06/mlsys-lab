@@ -1,0 +1,7 @@
+We are running large language model pre-training and fine-tuning workloads on NVIDIA Ampere and newer GPUs where TF32 mode is enabled by default for matrix multiplications. Recently, regression tests and validation runs in our continuous integration pipeline started showing flaky assertion failures when comparing floating-point outputs against golden reference tensors produced under strict FP32 precision.
+
+The discrepancies do not appear on older Pascal or Volta hardware where TF32 is unavailable, nor do they appear when explicitly forcing `torch.backends.cuda.matmul.allow_tf32 = False`. However, disabling TF32 entirely incurs an unacceptable performance penalty on tensor core operations, slowing down our training throughput by a significant margin.
+
+Your task is to investigate and resolve this numerical discrepancy by designing a robust, principled approach to tolerance selection when TF32 is enabled. Specifically, you need to implement utilities that analyze tensor operations, compute precise relative error bounds between standard FP32 and TF32 execution paths, and establish a defensible tolerance configuration that prevents false alarms in CI while still catching genuine numerical regressions.
+
+You will implement a Python package `tf32guard` with modules for error estimation, tolerance recommendation, and verification testing, ensuring that your solution maintains strict adherence to numerical invariants under low-precision constraints.

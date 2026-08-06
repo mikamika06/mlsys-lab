@@ -1,28 +1,26 @@
-def fused_cross_entropy(logits, targets):
-    import numpy as np
+def fused_cross_entropy(logits: list[list[float]], targets: list[int]) -> float:
     import math
-    logits = np.asarray(logits, dtype=np.float64)
-    targets = np.asarray(targets, dtype=np.int64)
-    
-    N = logits.shape[0]
-    C = logits.shape[1]
-    
+
+    N = len(logits)
+    C = len(logits[0]) if N > 0 else 0
+
     total_ce = 0.0
-    
+
     for i in range(N):
-        row_max = logits[i, 0]
+        row = logits[i]
+        row_max = row[0]
         for j in range(1, C):
-            if logits[i, j] > row_max:
-                row_max = logits[i, j]
-                
+            if row[j] > row_max:
+                row_max = row[j]
+
         exp_sum = 0.0
         for j in range(C):
-            exp_sum += math.exp(logits[i, j] - row_max)
-            
+            exp_sum += math.exp(row[j] - row_max)
+
         logsumexp = math.log(exp_sum) + row_max
-        target_val = logits[i, targets[i]]
-        
+        target_val = row[targets[i]]
+
         ce = - (target_val - logsumexp)
         total_ce += ce
-        
+
     return float(total_ce / N)

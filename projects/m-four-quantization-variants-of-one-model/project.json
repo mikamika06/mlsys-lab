@@ -1,0 +1,34 @@
+{
+  "id": "m-four-quantization-variants-of-one-model",
+  "title": "Four quantization variants and calibration sweep for edge export",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "TFLite/LiteRT post-training quantization modes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["edgequant/variants.py", "edgequant/int8io.py", "edgequant/sweep.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Four quantization variants generation and sizing",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "variants_matched", "op": "==", "threshold": 4}]
+    },
+    {
+      "n": 2,
+      "title": "Full-integer conversion with true int8 IO and size ratio",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "int8_io_matched", "op": "==", "threshold": 1},
+                {"metric": "size_ratio_valid", "op": ">=", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Calibration-size stability sweep and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+                {"metric": "passes_on_good", "op": "==", "threshold": 1},
+                {"metric": "catches_broken_sweep", "op": "==", "threshold": 1}]
+    }
+  ]
+}

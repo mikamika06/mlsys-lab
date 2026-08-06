@@ -12,42 +12,39 @@ $$
 \operatorname{gelu}(z) = \tfrac12 z \Bigl(1 + \tanh\!\bigl(\sqrt{\tfrac{2}{\pi}}\,(z+0.044715\,z^3)\bigr)\Bigr).
 $$
 
-Implementing this operation efficiently with NumPy requires only a few linear algebra calls and no explicit Python loops.
+Implementing this operation efficiently with Python requires only a few linear algebra calls and no explicit Python loops.
 
 ## Task
 
 Define the function `geglu_ffn` that takes three arguments:
 
 ```python
-def geglu_ffn(x: np.ndarray, w_gate: np.ndarray, w_up: np.ndarray) -> np.ndarray:
+def geglu_ffn(x: list[list[float]], w_gate: list[list[float]], w_up: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
 * `x` – a 2‑D array of shape `(batch, d_in)` with dtype float64.
 * `w_gate`, `w_up` – weight matrices of shape `(d_in, d_out)` also float64.
 
-The function must return the matrix of shape `(batch, d_out)` computed as described above. The output should be a NumPy array of dtype float64 and contain no NaNs or Infs.
+The function must return the matrix of shape `(batch, d_out)` computed as described above. The output should be a list of dtype float64 and contain no NaNs or Infs.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1., 2.], [3., 4.]])
-w_gate = np.eye(2)
-w_up   = np.ones((2, 2))
+x = [[1., 2.], [3., 4.]]
+w_gate = [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]
+w_up   = [[1.0] * 2 for _ in range(2)]
 
 out = geglu_ffn(x, w_gate, w_up)
-print(out)
-# [[0.8413447460685429 0.8413447460685429]
-#  [1.8185945305080544 1.8185945305080544]]
+print(out)  # [[2.5235759718248305, 5.863793082263324], [20.97453825542759, 27.999508278362654]]
 ```
 
 (The numbers come from applying the GELU formula to `x` and multiplying by a matrix of ones.)
 
 ## What the gate checks
 
-The grader evaluates your implementation against a NumPy reference using the metric
+The grader evaluates your implementation against a Python reference using the metric
 
 $$
 \max_{i,j} |\, \text{candidate}_{ij} - \text{reference}_{ij}\,|

@@ -41,7 +41,7 @@ def grade(sol, fx) -> dict:
     worst = 0.0
     for x, gy in cases:
         try:
-            got = np.asarray(sol.layernorm_vjp(x, gy, 1e-5), dtype=np.float64)
+            got = np.asarray(sol.layernorm_vjp(x.tolist(), gy.tolist(), 1e-5), dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
         ref = _finite_difference_vjp(x, gy, 1e-5)

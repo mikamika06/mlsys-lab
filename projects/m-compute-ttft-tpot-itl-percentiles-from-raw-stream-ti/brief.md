@@ -1,0 +1,7 @@
+# Ticket: Benchmark Stream Metrics Extraction, Trace Generation, and Outlier Run Isolation
+
+We are currently encountering a critical reliability and performance analysis bottleneck within our low-level inference serving evaluation pipeline. When ingesting raw streaming output logs from concurrent client sessions, our current telemetry processing script fails to reliably compute accurate TTFT (Time to First Token), TPOT (Time Per Output Token), and ITL (Inter-Token Latency) percentiles. Specifically, timestamp jitter and packet reordering in high-concurrency streams cause severe skew in our reported latency distributions, leading to inconsistent performance gating in our continuous integration pipeline.
+
+Furthermore, our synthetic trace generation module for evaluating prefix-caching hit rates is currently incapable of producing deterministic request traces with an exact 60 percent shared-prefix token ratio. This lack of precise control over the prompt distribution prevents us from accurately benchmarking KV cache sharing efficiency under controlled load conditions.
+
+Finally, our automated anomaly detection workflow occasionally accepts corrupted or stale benchmark runs where client connections stalled mid-stream, skewing our throughput and latency regression reports. We urgently require a robust, deterministic implementation to compute precise streaming metrics, construct traces with exact shared-prefix ratios, and reliably identify invalid or degraded benchmark runs through rigorous regression tests.

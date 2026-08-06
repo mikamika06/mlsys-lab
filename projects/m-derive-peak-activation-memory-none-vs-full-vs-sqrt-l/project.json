@@ -1,0 +1,62 @@
+{
+  "id": "m-derive-peak-activation-memory-none-vs-full-vs-sqrt-l",
+  "title": "Derive peak activation memory: none vs full vs sqrt(L)-optimal checkpointing",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "gradient-checkpointing-mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ckpt/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive peak memory and optimal segment size",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "memory_cases_matched",
+          "op": ">=",
+          "threshold": 5.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive recompute-FLOPs overhead ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "overhead_cases_matched",
+          "op": ">=",
+          "threshold": 5.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches altered memory models",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_fault",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

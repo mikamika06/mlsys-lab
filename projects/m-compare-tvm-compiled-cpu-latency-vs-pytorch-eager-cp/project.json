@@ -1,0 +1,73 @@
+{
+  "id": "m-compare-tvm-compiled-cpu-latency-vs-pytorch-eager-cp",
+  "title": "Compare TVM Relax CPU latency vs PyTorch eager",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TVM Relax IR & TVMScript / frontend import",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tvm_bench/frontend.py",
+    "tvm_bench/latency.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Ingest PyTorch modules and isolate unsupported ops",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "supported_handled",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "unsupported_captured",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure CPU latency and calculate eager-to-TVM speedup ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "latency_ratio",
+          "op": ">=",
+          "threshold": 1.0
+        },
+        {
+          "metric": "timing_accurate",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: catch invalid operator conversions in test suite",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_op_conversions",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

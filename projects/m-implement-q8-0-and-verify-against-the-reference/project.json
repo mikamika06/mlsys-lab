@@ -1,0 +1,21 @@
+{
+  "id": "m-implement-q8-0-and-verify-against-the-reference",
+  "title": "Implement Q8_0 and verify against the reference",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "legacy-quant-blocks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quant/legacy.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Implement Q8_0 encoding, decoding, and reference verification", "check": "harness/m1.py",
+     "gates": [{"metric": "q8_0_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Derive bytes-per-block and bits-per-weight for legacy types", "check": "harness/m2.py",
+     "gates": [{"metric": "properties_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching incorrect Q8 scaling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_scaling", "op": "==", "threshold": 1}]}
+  ]
+}

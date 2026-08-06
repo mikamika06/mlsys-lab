@@ -1,0 +1,22 @@
+{
+  "id": "m-mixed-batch-call-argument-builder",
+  "title": "Mixed-batch call-argument builder and latency model",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "prefill-decode-and-serving-integration",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["batch/builder.py", "batch/offsets.py", "batch/latency.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Mixed-batch call-argument builder", "check": "harness/m1.py",
+     "gates": [{"metric": "arguments_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Chunked-prefill offset math and batch parameters", "check": "harness/m2.py",
+     "gates": [{"metric": "offsets_matched", "op": "==", "threshold": 1},
+               {"metric": "strides_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches offset misalignment", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_offsets", "op": "==", "threshold": 1}]}
+  ]
+}

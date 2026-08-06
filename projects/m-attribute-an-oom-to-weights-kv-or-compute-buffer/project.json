@@ -1,0 +1,22 @@
+{
+  "id": "m-attribute-an-oom-to-weights-kv-or-compute-buffer",
+  "title": "Attribute an OOM to weights, KV or compute buffer",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "runtime-memory-mmap-offload",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["memplan/predict.py", "memplan/oom.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Predict compute buffer and load time", "check": "harness/m1.py",
+     "gates": [{"metric": "compute_matched", "op": "==", "threshold": 1.0},
+               {"metric": "load_matched", "op": "==", "threshold": 1.0}]},
+    {"n": 2, "title": "Attribute the OOM", "check": "harness/m2.py",
+     "gates": [{"metric": "oom_matched", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: a test that catches wrong allocation order", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_wrong_order", "op": "==", "threshold": 1.0}]}
+  ]
+}

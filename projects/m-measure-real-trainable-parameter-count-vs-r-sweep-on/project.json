@@ -1,0 +1,45 @@
+{
+  "id": "m-measure-real-trainable-parameter-count-vs-r-sweep-on",
+  "title": "Measure real trainable parameter count and dynamic LoRA behavior",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "lora-hyperparameters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "lorameasure/params.py",
+    "lorameasure/expansion.py",
+    "lorameasure/stochasticity.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Trainable parameter count vs r sweep",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "param_counts_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Target modules all-linear expansion",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "expansion_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Dropout stochasticity measurement and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_missing_rank_scaling", "op": "==", "threshold": 1.0},
+        {"metric": "stochasticity_matched", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -17,30 +17,27 @@ A common mistake is to copy a LayerNorm implementation and forget that the cente
 Implement `rms_norm`:
 
 ```python
-def rms_norm(x: np.ndarray, eps: float = 1e-5) -> np.ndarray:
+def rms_norm(x: list[list[float]], eps: float=1e-05) -> list[list[float]]:
     ...
 ```
 
-* `x` is a 2‑D NumPy array of shape $(B,D)$.
+* `x` is a 2‑D list of shape $(B,D)$.
 * The function must return a new array of the same shape and dtype `float64`.
 * No mean subtraction should occur; only divide by the RMS of each row.
 
 ## Example
 
 ```python
-import numpy as np
 from rms_norm import rms_norm
 
-X = np.array([[1, 2], [3, 4]], dtype=np.float64)
+X = [[1, 2], [3, 4]]
 Y = rms_norm(X)
-print(Y)
-# [[0.4472136 0.89442719]
-#  [0.9486833 1.8973666]]
+print(Y)  # [[0.6324542671264065, 1.264908534252813], [0.8485277980128058, 1.1313703973504077]]
 ```
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares your output with it.  
+The grader computes a reference implementation using Python and compares your output with it.  
 It reports the maximum absolute difference:
 
 $$

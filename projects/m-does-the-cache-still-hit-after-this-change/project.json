@@ -1,0 +1,21 @@
+{
+  "id": "m-does-the-cache-still-hit-after-this-change",
+  "title": "Does the cache still hit after this change?",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Compile-time caching and warm start",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["cacheutils/hasher.py", "cacheutils/forensics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Stable cache-key hasher", "check": "harness/m1.py",
+     "gates": [{"metric": "hashes_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Cache directory forensics", "check": "harness/m2.py",
+     "gates": [{"metric": "forensics_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches unstable hashing", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unstable_hasher", "op": "==", "threshold": 1}]}
+  ]
+}

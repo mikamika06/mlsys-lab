@@ -1,0 +1,23 @@
+{
+  "id": "m-implement-data-free-kd-via-teacher-self-sampling",
+  "title": "Data-free KD via teacher self-sampling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Data-free / synthetic-data distillation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["dfkd/sampling.py", "dfkd/distill.py", "dfkd/bounds.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Teacher self-sampling", "check": "harness/m1.py",
+     "gates": [{"metric": "probs_match", "op": "==", "threshold": 1},
+               {"metric": "sequence_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compare data-free vs real-corpus distillation", "check": "harness/m2.py",
+     "gates": [{"metric": "student_fit_match", "op": "==", "threshold": 1},
+               {"metric": "accuracy_delta_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Minimum synthetic-prompt diversity bound", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ignored_truncation", "op": "==", "threshold": 1}]}
+  ]
+}

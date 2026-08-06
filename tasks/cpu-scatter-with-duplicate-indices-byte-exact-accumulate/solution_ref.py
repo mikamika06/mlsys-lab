@@ -1,5 +1,4 @@
-import numpy as np
-
-def scatter_add(dst, idx, src, out):
+def scatter_add(dst: list[int], idx: list[int], src: list[int], out: list[int]) -> None:
     """Accumulate src into out at indices idx, handling duplicates."""
-    np.add.at(out, idx, src)
+    for i in range(len(src)):
+        out[idx[i]] += src[i]

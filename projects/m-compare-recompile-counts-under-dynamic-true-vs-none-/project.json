@@ -1,0 +1,63 @@
+{
+  "id": "m-compare-recompile-counts-under-dynamic-true-vs-none-",
+  "title": "Comparing recompile counts and LRU guard-cache behavior",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Guards, specialization & recompilation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "recompiles/analysis.py",
+    "recompiles/simulate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Recompile count comparison under dynamic modes",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "comparison_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "LRU guard-cache simulation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "simulation_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for guard cache",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_policy",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

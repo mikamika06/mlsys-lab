@@ -1,0 +1,68 @@
+{
+  "id": "m-draft-export-triage-report",
+  "title": "Draft-export triage report",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "torch.export and AOTInductor packaging",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "triage/exporter.py",
+    "triage/report.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Categorize export failures into draft triage codes",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "modules_categorized",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Structured triage JSON report generation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "report_structure_valid",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "scores_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch unclassified exception fallbacks",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_unclassified_fallbacks",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

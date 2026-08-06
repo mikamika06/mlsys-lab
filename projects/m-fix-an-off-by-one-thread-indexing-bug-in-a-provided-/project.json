@@ -1,0 +1,22 @@
+{
+  "id": "m-fix-an-off-by-one-thread-indexing-bug-in-a-provided-",
+  "title": "Fix thread indexing, math drift, and int4 dequant in MLX Metal kernels",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "MLX custom Metal kernels (mx.fast.metal_kernel)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["metal_kernels/kernel.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Fix thread indexing off-by-one in Metal kernel", "check": "harness/m1.py",
+     "gates": [{"metric": "indexing_correct", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compare fast vs safe math drift on sum-reduction", "check": "harness/m2.py",
+     "gates": [{"metric": "drift_analyzed", "op": "==", "threshold": 1},
+               {"metric": "safe_mode_matches", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Implement custom int4 dequant kernel matching mx.dequantize", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_dequant", "op": "==", "threshold": 1}]}
+  ]
+}

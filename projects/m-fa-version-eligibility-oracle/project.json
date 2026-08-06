@@ -1,0 +1,21 @@
+{
+  "id": "m-fa-version-eligibility-oracle",
+  "title": "FlashAttention Version Eligibility and Upgrade Planner",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "version-and-hardware-gating",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["fa_oracle/stack.py", "fa_oracle/oracle.py", "fa_oracle/planner.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detecting runtime stack from torch", "check": "harness/m1.py",
+     "gates": [{"metric": "stack_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "FA version eligibility oracle", "check": "harness/m2.py",
+     "gates": [{"metric": "eligibility_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Minimal upgrade path planner and regression safety", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_planner", "op": "==", "threshold": 1}]}
+  ]
+}

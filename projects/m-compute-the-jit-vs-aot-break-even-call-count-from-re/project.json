@@ -1,0 +1,47 @@
+{
+  "id": "m-compute-the-jit-vs-aot-break-even-call-count-from-re",
+  "title": "JIT vs AOT break-even call count from profiling traces",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Production/AOT compilation & cross-backend portability",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "aotbreak/profiler.py",
+    "aotbreak/breakeven.py",
+    "aotbreak/schedule.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse trace recordings into overhead profiles",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "profiles_matched", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Break-even call counts and strategy selection",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "counts_matched", "op": "==", "threshold": 1},
+        {"metric": "strategy_matched", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for break-even threshold rounding",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_ceiling_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

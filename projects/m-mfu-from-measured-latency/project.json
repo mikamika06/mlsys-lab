@@ -1,0 +1,35 @@
+{
+  "id": "m-mfu-from-measured-latency",
+  "title": "MFU, TFLOPs and speedup auditing from measured latency",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "flops-tflops-and-mfu-accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mfu/accounting.py", "mfu/audit.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "MFU from measured latency",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "mfu_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Reproduce a published TFLOPs/s number",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "tflops_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 3,
+      "title": "Audit inconsistent speedup claims",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_inconsistent_audits", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

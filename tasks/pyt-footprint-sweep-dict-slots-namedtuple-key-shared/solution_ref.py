@@ -1,8 +1,6 @@
 import sys
 from collections import namedtuple
 
-import numpy as np
-
 
 def footprint_sweep(widths):
     rows = []
@@ -46,4 +44,4 @@ def footprint_sweep(widths):
             ]
         )
 
-    return np.asarray(rows, dtype=np.float64)
+    return rows

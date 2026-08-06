@@ -1,14 +1,19 @@
-import numpy as np
+import math
 
 
 def signed_zero_profile():
-    with np.errstate(divide="ignore", invalid="ignore"):
-        values = np.array([
-            1.0 / np.float64(-0.0),
-            np.float64(-0.0) + np.float64(0.0),
-            np.float64(0.0) + np.float64(-0.0),
-            np.copysign(np.float64(0.0), np.float64(-1.0)),
-            np.copysign(np.float64(-0.0), np.float64(1.0)),
-            np.copysign(np.float64(5.0), np.float64(-0.0)),
-        ], dtype=np.float64)
-    return [int(x) for x in np.signbit(values)]
+    values = [
+        math.copysign(float("inf"), -1.0),
+        -0.0 + 0.0,
+        0.0 + -0.0,
+        math.copysign(0.0, -1.0),
+        math.copysign(-0.0, 1.0),
+        math.copysign(5.0, -0.0),
+    ]
+    result = []
+    for x in values:
+        if math.copysign(1.0, x) < 0:
+            result.append(1)
+        else:
+            result.append(0)
+    return result

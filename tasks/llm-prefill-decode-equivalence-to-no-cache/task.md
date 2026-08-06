@@ -15,23 +15,22 @@ Both procedures should yield identical arrays of shape $(n,d)$.
 
 ## Task
 
-Implement `prefill_decode_equiv(inputs: np.ndarray) -> Tuple[np.ndarray, np.ndarray]`:
+Implement `prefill_decode_equiv(inputs: list[float]) -> Tuple[list[float], list[float]]`:
 
 ```python
-def prefill_decode_equiv(inputs):
+def prefill_decode_equiv(inputs: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
     ...
 ```
 
-The function receives a 2‑D NumPy array `inputs` of shape `(seq_len, d)` and returns a tuple `(no_cache, cache)` where each element is an array of shape `(seq_len, d)`. The first array contains the hidden states obtained by the no‑cache strategy; the second contains those obtained with a key/value cache. Both must be computed using only NumPy operations and `float64` precision.
+The function receives a 2‑D list `inputs` of shape `(seq_len, d)` and returns a tuple `(no_cache, cache)` where each element is an array of shape `(seq_len, d)`. The first array contains the hidden states obtained by the no‑cache strategy; the second contains those obtained with a key/value cache. Both must be computed using only Python operations and `float64` precision.
 
 ## Example
 
 ```python
-import numpy as np
 from solution_ref import prefill_decode_equiv   # or your own implementation
 
-rng = np.random.RandomState(42)
-inputs = rng.randn(5, 16).astype(np.float64)
+rng = random.Random(42)
+inputs = rng.randn(5, 16).astype(float)
 
 no_cache, cache = prefill_decode_equiv(inputs)
 print(no_cache.shape)  # (5, 16)

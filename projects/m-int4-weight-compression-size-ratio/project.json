@@ -1,0 +1,38 @@
+{
+  "id": "m-int4-weight-compression-size-ratio",
+  "title": "INT4 weight compression size ratio and AWQ perplexity delta",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "NNCF weight compression for LLMs (INT4/INT8)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["compression/ratio.py", "compression/awq.py", "compression/footprint.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "INT4 weight compression size ratio calculation",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "ratios_matched", "op": "==", "threshold": 5}]
+    },
+    {
+      "n": 2,
+      "title": "Data-free vs data-aware AWQ perplexity delta and footprint",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "footprint_matched", "op": "==", "threshold": 1},
+        {"metric": "perplexity_delta_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches invalid compression assumptions",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_ratio", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

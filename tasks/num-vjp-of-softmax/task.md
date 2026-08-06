@@ -23,24 +23,23 @@ This avoids constructing the full $n \times n$ Jacobian matrix and directly comp
 Implement `softmax_vjp(x, g)`:
 
 ```python
-def softmax_vjp(x: np.ndarray, g: np.ndarray) -> np.ndarray:
+def softmax_vjp(x: list[float], g: list[float]) -> list[float]:
     ...
 ```
 
-The function receives two one-dimensional NumPy arrays with the same shape. `x` contains logits and `g` is the gradient arriving from the output of softmax. Return the gradient with respect to `x`.
+The function receives two list of floats with the same shape. `x` contains logits and `g` is the gradient arriving from the output of softmax. Return the gradient with respect to `x`.
 
 Requirements:
-- Use NumPy operations.
-- Return a `float64` NumPy array.
+- Use Python operations.
+- Return a `float64` list.
 - Handle arbitrary finite input values.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1.0, 2.0, 3.0])
-g = np.array([0.5, -1.0, 2.0])
+x = [1.0, 2.0, 3.0]
+g = [0.5, -1.0, 2.0]
 
 dx = softmax_vjp(x, g)
 ```
@@ -49,7 +48,7 @@ The output is the gradient that should be passed to the operation that produced 
 
 ## What the gate checks
 
-The gate computes a NumPy softmax reference and compares the returned VJP against it. The maximum absolute error
+The gate computes a Python softmax reference and compares the returned VJP against it. The maximum absolute error
 
 $$
 \max_i |\hat{d x}_i - d x_i|

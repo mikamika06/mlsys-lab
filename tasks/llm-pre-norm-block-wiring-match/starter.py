@@ -1,8 +1,20 @@
-import numpy as np
+import math
 
-
-def pre_norm_block(x, gamma1, beta1, gamma2, beta2,
-                   Wq, Wk, Wv, Wo, W1, b1, W2, b2):
+def pre_norm_block(
+    x: list[list[float]],
+    gamma1: list[float],
+    beta1: list[float],
+    gamma2: list[float],
+    beta2: list[float],
+    Wq: list[list[float]],
+    Wk: list[list[float]],
+    Wv: list[list[float]],
+    Wo: list[list[float]],
+    W1: list[list[float]],
+    b1: list[float],
+    W2: list[list[float]],
+    b2: list[float],
+) -> list[list[float]]:
     """One pre-norm transformer block over a residual stream x of shape (T, d).
 
     Wire two sublayers on the residual stream:
@@ -14,4 +26,4 @@ def pre_norm_block(x, gamma1, beta1, gamma2, beta2,
     then @ Wo), and a two-layer MLP with tanh-approximate GELU. Return y of
     shape (T, d).
     """
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')

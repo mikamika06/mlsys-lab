@@ -1,0 +1,22 @@
+{
+  "id": "m-implement-the-profiler-schedule-state-machine",
+  "title": "Profiler schedule state machine and misconfiguration engine",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "torch.profiler: capture configuration",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["profiler/schedule.py", "profiler/diagnose.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Profiler schedule state machine", "check": "harness/m1.py",
+     "gates": [{"metric": "states_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Schedule arithmetic and zero-GPU diagnosis", "check": "harness/m2.py",
+     "gates": [{"metric": "arithmetic_matched", "op": "==", "threshold": 1},
+               {"metric": "diagnosis_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for schedule state machine", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_state_machine", "op": "==", "threshold": 1}]}
+  ]
+}

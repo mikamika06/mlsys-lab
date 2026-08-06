@@ -1,0 +1,40 @@
+{
+  "id": "m-compute-physical-kv-blocks-needed-with-internal-frag",
+  "title": "PagedAttention Block-Table Allocator & Internal Fragmentation Analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "vLLM PagedAttention KV-Cache",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["paged_kv/allocator.py", "paged_kv/startup.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Block allocation & internal fragmentation accounting",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "blocks_matched", "op": "==", "threshold": 1},
+        {"metric": "frag_ratio_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Minimal PagedAttention BlockTableAllocator lifecycle",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "allocator_lifecycle_passed", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Log-derived capacity estimation and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_tail_allocation_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

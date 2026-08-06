@@ -1,0 +1,43 @@
+{
+  "id": "m-find-the-losing-batch-size-from-a-latency-table",
+  "title": "Find the losing batch size and tune serving limits from telemetry",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Throughput, latency, and memory measurement",
+  "difficulty": 3,
+  "edits": [
+    "latency/analyzer.py",
+    "latency/tuning.py",
+    "latency/warmup.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Find the losing batch size from a latency table",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "argmin_index", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Tune max_num_seqs under a TTFT SLO",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ttft_tuned", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Spot the missing-warmup artifact",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_warmup", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

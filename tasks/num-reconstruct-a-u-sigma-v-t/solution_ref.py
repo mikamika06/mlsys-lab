@@ -1,14 +1,12 @@
 import math
-import numpy as np
 
 
-def reconstruct_from_svd(A: np.ndarray) -> np.ndarray:
+def reconstruct_from_svd(A: list[list[float]]) -> list[list[float]]:
     """Reconstruct matrix from SVD."""
-    A_arr = np.asarray(A, dtype=np.float64)
-    m = A_arr.shape[0]
-    n = A_arr.shape[1]
+    m = len(A)
+    n = len(A[0])
 
-    A_list = [[A_arr[i, j] for j in range(n)] for i in range(m)]
+    A_list = [[A[i][j] for j in range(n)] for i in range(m)]
 
     if n <= m:
         d = n
@@ -160,4 +158,4 @@ def reconstruct_from_svd(A: np.ndarray) -> np.ndarray:
                     acc += vecs[i][r] * Y[i][c_idx]
                 recon_list[r][c_idx] = acc
 
-    return np.array(recon_list, dtype=np.float64)
+    return recon_list

@@ -1,0 +1,73 @@
+{
+  "id": "m-benchmark-serving-throughput-across-backends",
+  "title": "Benchmark serving throughput across attention backends",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "vllm-attention-backend-selection",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "serving/backend.py",
+    "serving/benchmark.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Force FA2 backend configuration on Hopper nodes",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "hopper_fa2_forced",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "non_hopper_rejected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Benchmark throughput and TTFT vs ITL tradeoff report",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "throughput_ratio",
+          "op": ">=",
+          "threshold": 1.2
+        },
+        {
+          "metric": "report_structure_valid",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for backend selection and performance drop",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_backend_fallback",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

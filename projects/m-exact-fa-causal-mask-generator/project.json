@@ -1,0 +1,21 @@
+{
+  "id": "m-exact-fa-causal-mask-generator",
+  "title": "Exact FlashAttention Causal Mask Generator",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "causal-masking-and-bottom-right-alignment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["famask/generator.py", "famask/disagreement.py", "famask/decode.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Exact causal mask generation", "check": "harness/m1.py",
+     "gates": [{"metric": "masks_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Top-left vs bottom-right disagreement map", "check": "harness/m2.py",
+     "gates": [{"metric": "disagreement_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: decode-step mask and regression tests", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_decode", "op": "==", "threshold": 1}]}
+  ]
+}

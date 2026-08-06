@@ -1,0 +1,40 @@
+{
+  "id": "m-measure-cold-vs-warm-compile-latency-with-torchinduc",
+  "title": "Cold vs warm compile latency and artifact caching with TorchInductor",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Compile caching (FXGraphCache / Mega-cache / AOTAutogradCache)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "compcache/measurement.py",
+    "compcache/invalidation.py",
+    "compcache/mega.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure cold vs warm compile latency",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "latency_ratio_valid", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Cache invalidation on constant change vs identical rerun",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "invalidation_behavior_correct", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Mega-cache artifact persistence and zero recompiles",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_caching", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

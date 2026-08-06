@@ -1,0 +1,21 @@
+{
+  "id": "m-compare-jsd-gkd-vs-forward-kl-gkd-student-output-div",
+  "title": "Compare JSD-GKD vs forward-KL-GKD student output diversity",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Sequence-level & on-policy LLM distillation (GKD)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["gkd/diversity.py", "gkd/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Empirical token entropy and vocabulary coverage calculation", "check": "harness/m1.py",
+     "gates": [{"metric": "entropy_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "JSD vs Forward-KL student diversity comparison ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: regression test catching broken diversity formulations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_diversity", "op": "==", "threshold": 1}]}
+  ]
+}

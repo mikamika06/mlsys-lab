@@ -11,17 +11,13 @@ $$ \text{softmax}(\mathbf{x})_i = \text{softmax}(\mathbf{x} - c)_i $$
 By choosing $c = \max(\mathbf{x})$, we can guarantee that all inputs to the exponentiation are $\le 0$, which prevents overflow.
 
 ## Task
-Implement `stable_softmax(x)` where `x` is a 2D numpy array of shape `(N, D)` representing `N` independent distributions of `D` logits each. The function should compute the softmax along the second dimension (axis 1) using a numerically stable approach.
+Implement `stable_softmax(x)` where `x` is a list of lists of floats of shape `(N, D)` representing `N` independent distributions of `D` logits each. The function should compute the softmax along the second dimension (axis 1) using a numerically stable approach.
 
 ## Example
 ```python
-import numpy as np
 
-logits = np.array([[1000.0, 1001.0], [-1000.0, -999.0]])
-print(stable_softmax(logits))
-# Expected output:
-# [[0.26894142 0.73105858]
-#  [0.26894142 0.73105858]]
+logits = [[1000.0, 1001.0], [-1000.0, -999.0]]
+print(stable_softmax(logits))  # [[0.2689414213699951, 0.7310585786300049], [0.2689414213699951, 0.7310585786300049]]
 ```
 
 ## What the gate checks

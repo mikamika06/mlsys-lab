@@ -39,11 +39,7 @@ beyond the training context length without changing its bias rule.
 Implement `alibi_extrapolation_metric`:
 
 ```python
-def alibi_extrapolation_metric(
-    num_heads: int,
-    trained_len: int,
-    extra_len: int,
-) -> float:
+def alibi_extrapolation_metric(num_heads, trained_len, extra_len):
     ...
 ```
 
@@ -73,7 +69,7 @@ score = alibi_extrapolation_metric(2, 8, 4)
 
 ## What the gate checks
 
-The gate recomputes the metric with a NumPy reference implementation of the
+The gate recomputes the metric with a Python reference implementation of the
 ALiBi equations. The returned value is compared using relative error
 $\mathrm{rel\_err}$ and must satisfy
 

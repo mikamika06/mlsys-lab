@@ -1,0 +1,21 @@
+{
+  "id": "m-correct-timing-harness",
+  "title": "Correct timing harness for FlashAttention benchmarks",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "benchmark-methodology",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["timing/harness.py", "timing/audit.py", "timing/stats.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Correct timing harness with proper warmup and sync", "check": "harness/m1.py",
+     "gates": [{"metric": "harness_correct", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Flawed-benchmark audit detects methodological errors", "check": "harness/m2.py",
+     "gates": [{"metric": "audit_detected", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: sample-size calculation for a 5% CI", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_ci", "op": "==", "threshold": 1}]}
+  ]
+}

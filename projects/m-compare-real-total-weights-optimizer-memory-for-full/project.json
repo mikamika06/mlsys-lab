@@ -1,0 +1,40 @@
+{
+  "id": "m-compare-real-total-weights-optimizer-memory-for-full",
+  "title": "Compare real total weights and optimizer memory for full-FT vs LoRA",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "optimizer-state-memory",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "optmem/params.py",
+    "optmem/states.py",
+    "optmem/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parameter counting for full-FT and LoRA",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "params_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Optimizer state memory byte calculation",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "memory_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching incorrect optimizer memory",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_memory", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

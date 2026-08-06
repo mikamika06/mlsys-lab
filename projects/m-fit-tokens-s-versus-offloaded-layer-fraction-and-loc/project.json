@@ -1,0 +1,45 @@
+{
+  "id": "m-fit-tokens-s-versus-offloaded-layer-fraction-and-loc",
+  "title": "Fit tokens/s versus offloaded layer fraction and locate the cliff",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "gpu-offload-and-layer-split",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "offload/profiler.py",
+    "offload/memory.py",
+    "offload/planner.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Profile throughput vs offload fraction and locate performance cliffs",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "cliffs_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute maximal layers fitting in a strict memory budget",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "fit_exact_match", "op": "==", "threshold": 1.0},
+        {"metric": "respects_memory_cap", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: Regression suite catching unsafe memory allocations and invalid cliff selections",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_overbudget_allocator", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

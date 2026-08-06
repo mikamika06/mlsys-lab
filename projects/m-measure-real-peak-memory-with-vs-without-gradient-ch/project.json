@@ -1,0 +1,40 @@
+{
+  "id": "m-measure-real-peak-memory-with-vs-without-gradient-ch",
+  "title": "Real peak memory and gradient flow in checkpointed frozen models",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "gradient-checkpointing-mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gradckpt/memory.py",
+    "gradckpt/flow.py",
+    "gradckpt/fix.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure real peak memory with vs without gradient checkpointing",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "memory_measured", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Reproduce gradient-flow failure from checkpointing a frozen base",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "flow_reproduced", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Verify enable_input_require_grads fixes frozen-base checkpointing flow",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "fix_verified", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

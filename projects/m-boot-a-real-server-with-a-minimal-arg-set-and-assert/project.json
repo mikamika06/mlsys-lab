@@ -1,0 +1,22 @@
+{
+  "id": "m-boot-a-real-server-with-a-minimal-arg-set-and-assert",
+  "title": "Boot a server with minimal engine args and verify model endpoint",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "vllm-serve-cli-and-engine-args",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vllm_boot/config.py", "vllm_boot/server.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse CLI arguments into MinimalEngineConfig", "check": "harness/m1.py",
+     "gates": [{"metric": "args_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Boot server and handle /v1/models endpoint", "check": "harness/m2.py",
+     "gates": [{"metric": "server_booted", "op": "==", "threshold": 1},
+               {"metric": "models_endpoint_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catches served-model-name mismatch", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ignored_served_name", "op": "==", "threshold": 1}]}
+  ]
+}

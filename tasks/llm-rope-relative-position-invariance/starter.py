@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def rope_relative_dot(q, k, pos_q, pos_k):
+def rope_relative_dot(q: list[float], k: list[float], pos_q: int, pos_k: int) -> float:
     raise NotImplementedError('your code here')

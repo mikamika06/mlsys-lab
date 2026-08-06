@@ -9,7 +9,7 @@ For a batch of $N$ examples the average loss is
 
 $$L = \frac{1}{N}\sum_{i=1}^N \ell(z^{(i)}, y^{(i)}).$$
 
-In many sequence‑modeling tasks some positions are padding and should not influence training.  The convention in PyTorch and NumPy is to use an *ignore index* $I$; any target equal to $I$ must be omitted from both the numerator and denominator of the average:
+In many sequence‑modeling tasks some positions are padding and should not influence training.  The convention in PyTorch and Python is to use an *ignore index* $I$; any target equal to $I$ must be omitted from both the numerator and denominator of the average:
 
 $$L_{\text{masked}} = \frac{1}{M}\sum_{i:\,y^{(i)}\neq I} \ell(z^{(i)}, y^{(i)}),$$
 
@@ -20,8 +20,8 @@ where $M$ is the number of non‑ignored positions.
 Implement a function that computes this masked average cross‑entropy loss:
 
 ```python
-def masked_cross_entropy(logits: np.ndarray,
-                         targets: np.ndarray,
+def masked_cross_entropy(logits: list[list[float]],
+                         targets: list[int],
                          ignore_index: int = -100) -> float:
     ...
 ```
@@ -31,17 +31,16 @@ def masked_cross_entropy(logits: np.ndarray,
 * The function must return a scalar `float64` representing $L_{\text{masked}}$.
 * If all positions are ignored, return `0.0`.
 
-The implementation should use only vectorised NumPy operations; no explicit Python loops.
+The implementation should use only vectorised Python operations; no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([[2.0, 1.0],
+logits = [[2.0, 1.0],
                    [0.5, 1.5],
-                   [1.0, 3.0]])
-targets = np.array([0, -100, 1])   # second position is padding
+                   [1.0, 3.0]]
+targets = [0, -100, 1]   # second position is padding
 
 loss = masked_cross_entropy(logits, targets)
 print(loss)  # ≈ 0.6931471805599453
@@ -51,7 +50,7 @@ The loss is the average of the two non‑ignored examples.
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy’s log‑softmax and masking.  
+The grader computes a reference implementation using Python’s log‑softmax and masking.  
 It then compares your result to that reference with the metric `max_abs_err`.  
 Your solution must satisfy
 

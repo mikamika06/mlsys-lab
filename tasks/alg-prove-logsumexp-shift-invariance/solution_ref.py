@@ -1,8 +1,7 @@
 import math
-import numpy as np
 
-def logsumexp(x: np.ndarray) -> float:
-    """Stable computation of the log‑sum‑exp of a 1‑D array."""
+def logsumexp(x: list[float]) -> float:
+    """Stable computation of the log‑sum‑exp of a list."""
     m = float(x[0])
     for i in range(1, len(x)):
         val = float(x[i])

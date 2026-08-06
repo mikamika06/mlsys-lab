@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-real-peak-memory-difference-between-naive-an",
+  "title": "Peak memory and gradient verification for fused chunked reductions",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "unsloth-fused-triton-kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["fusedmem/memory.py", "fusedmem/triton_grad.py", "fusedmem/parser.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure real peak-memory difference between naive and fused chunked reduction", "check": "harness/m1.py",
+     "gates": [{"metric": "size_ratio", "op": ">=", "threshold": 1.1}]},
+    {"n": 2, "title": "Verify Triton-interpret fused kernel gradients match naive-torch", "check": "harness/m2.py",
+     "gates": [{"metric": "grad_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for log parsing", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_parser", "op": "==", "threshold": 1}]}
+  ]
+}

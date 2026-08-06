@@ -22,7 +22,7 @@ These numbers correspond to cycle counts and are identical for every test case.
 Implement the function `compute_amat`:
 
 ```python
-def compute_amat(hit_rates: np.ndarray) -> float:
+def compute_amat(hit_rates: list[float]) -> float:
     ...
 ```
 
@@ -33,8 +33,7 @@ def compute_amat(hit_rates: np.ndarray) -> float:
 ## Example
 
 ```python
-import numpy as np
-hr = np.array([0.98, 0.95, 0.90])
+hr = [0.98, 0.95, 0.90]
 amat = compute_amat(hr)
 print(amat)   # 1.102
 ```

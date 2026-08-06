@@ -1,0 +1,64 @@
+{
+  "id": "m-detect-tied-vs-untied-embeddings",
+  "title": "GGUF tensor mapping and embedding analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "tensor-naming-and-arch-mapping",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ggufmap/embed.py",
+    "ggufmap/unmapped.py",
+    "ggufmap/moe.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect tied vs untied embeddings",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "embed_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Locate unmapped HF keys after conversion",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "unmapped_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid MoE tensor inventories",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_moe",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

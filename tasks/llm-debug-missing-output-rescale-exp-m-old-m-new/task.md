@@ -44,32 +44,31 @@ Implement `online_softmax_update`:
 
 ```python
 def online_softmax_update(
-    m_old: float,
-    l_old: float,
-    O_old: np.ndarray,
-    m_block: float,
-    l_block: float,
-    O_block: np.ndarray,
-) -> tuple[float, float, np.ndarray]:
+    m_old,
+    l_old,
+    O_old,
+    m_block,
+    l_block,
+    O_block,
+):
     ...
 ```
 
 The function must return `(m_new, l_new, O_new)` using the numerically stable update equations above.
 
-`O_old` and `O_block` are one-dimensional NumPy arrays with the same shape. Return `O_new` as a NumPy array with dtype `float64`.
+`O_old` and `O_block` are list of floats with the same shape. Return `O_new` as a list with dtype `float64`.
 
 ## Example
 
 ```python
-import numpy as np
 
 m_new, l_new, O_new = online_softmax_update(
     1.0,
     2.0,
-    np.array([3.0, 4.0]),
+    [3.0, 4.0],
     3.0,
     1.5,
-    np.array([5.0, 6.0]),
+    [5.0, 6.0],
 )
 
 # m_new == 3.0
@@ -78,7 +77,7 @@ m_new, l_new, O_new = online_softmax_update(
 
 ## What the gate checks
 
-The gate computes a reference result from the mathematical online softmax update using NumPy. It compares the returned output values with the reference using maximum absolute error:
+The gate computes a reference result from the mathematical online softmax update using Python. It compares the returned output values with the reference using maximum absolute error:
 
 $$
 \mathrm{max\_abs\_err} = \max_i |x_i - y_i|.

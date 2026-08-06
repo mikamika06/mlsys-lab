@@ -1,0 +1,74 @@
+{
+  "id": "m-measure-real-acceptance-rate-for-3-draft-target-pair",
+  "title": "Real acceptance rate and optimal pairing for speculative decoding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Draft/target model pairing",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "specpair/metrics.py",
+    "specpair/tokenizer.py",
+    "specpair/selector.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure real acceptance rate and classify tokenizer compatibility",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "acceptance_rate_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "compatibility_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Select throughput-optimal draft model from latency/acceptance data",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "optimal_draft_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "throughput_ratio",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid acceptance calculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_off_by_one_acceptance",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

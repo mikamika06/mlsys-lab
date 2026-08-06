@@ -1,0 +1,44 @@
+{
+  "id": "m-implement-vllm-s-prefix-block-hashing-scheme",
+  "title": "vLLM Automatic Prefix Caching and Block Hashing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "vLLM Automatic Prefix Caching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "prefix_cache/block_hash.py",
+    "prefix_cache/cache_engine.py",
+    "prefix_cache/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Block Hashing Scheme",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "blocks_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2, "title": "Prefix Cache Hit Rate and TTFT Speedup",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "hit_rate_matched", "op": "==", "threshold": 1.0},
+        {"metric": "ttft_speedup_valid", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching broken parent hash chains",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_chain", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

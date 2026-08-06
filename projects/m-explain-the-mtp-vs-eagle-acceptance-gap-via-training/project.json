@@ -1,0 +1,69 @@
+{
+  "id": "m-explain-the-mtp-vs-eagle-acceptance-gap-via-training",
+  "title": "Explain the MTP-vs-EAGLE acceptance gap via training regime",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Native multi-token prediction (MTP)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mtpgap/model.py",
+    "mtpgap/simulation.py",
+    "mtpgap/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Multi-token loss trajectory and gradient interference",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "losses_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Draft acceptance probability and trajectory divergence",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "acceptance_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "divergence_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for training regime gap invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_invariant",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

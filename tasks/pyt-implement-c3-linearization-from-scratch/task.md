@@ -18,7 +18,7 @@ Implement `c3(graph, cls_index, names)`.
 
 Arguments:
 
-- `graph`: a NumPy integer matrix where `graph[i, j] == 1` means class `i` has direct base class `j`.
+- `graph`: a Python integer matrix where `graph[i, j] == 1` means class `i` has direct base class `j`.
 - `cls_index`: the index of the class whose linearization should be returned.
 - `names`: a list of class names indexed by the rows of `graph`.
 
@@ -29,14 +29,13 @@ Do not use `type.__mro__`, `inspect`, or other built-in MRO helpers. Implement t
 ## Example
 
 ```python
-import numpy as np
 
-graph = np.array([
+graph = [
     [0, 1, 1, 0],
     [0, 0, 0, 1],
     [0, 0, 0, 1],
     [0, 0, 0, 0],
-])
+]
 
 names = ["D", "B", "C", "A"]
 

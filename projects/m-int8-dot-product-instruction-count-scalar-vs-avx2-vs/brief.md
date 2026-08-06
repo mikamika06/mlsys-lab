@@ -1,0 +1,5 @@
+We are migrating our CPU inference fleet for an in-house INT8 transformer model. Operations is seeing highly volatile QPS depending on which CPU generation an inference worker lands on. The metrics show that nodes with older AVX2-only processors are exhibiting nearly 3x the latency of our newer Cascade Lake and Ice Lake nodes that support AVX-512 VNNI.
+
+A junior engineer pointed out that both CPU types are executing either 256-bit or 512-bit vector instructions, so the theoretical difference shouldn't be that stark. But profiling indicates an instruction bottleneck in the core dot-product loops. AVX2 lacks a native INT8 dot-product instruction, forcing the compiler to emit a sequence of `vpmaddubsw`, `vpmaddwd`, and `vpaddd` to accomplish what VNNI does in a single `vpdpbusd` instruction.
+
+We need to build an analytical model to quantify this gap. You'll compute the theoretical INT8 MACs per cycle under both ISAs, and then write an objdump parser to count these specific instructions in our compiled binaries. Make sure your parser strictly matches instruction mnemonics, as `vpdpbusd` and its saturating variant `vpdpbusds` have different performance profiles.

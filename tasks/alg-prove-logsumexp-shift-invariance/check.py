@@ -15,8 +15,10 @@ def grade(sol, fx) -> dict:
     max_err = 0.0
     for x, c in cases:
         try:
-            y1 = sol.logsumexp(x)
-            y2 = sol.logsumexp(x + c) - c
+            x_list = x.tolist()
+            x_shifted = (x + c).tolist()
+            y1 = sol.logsumexp(x_list)
+            y2 = sol.logsumexp(x_shifted) - c
         except Exception:
             return {"max_abs_err": float("inf")}
         ref1 = np.logaddexp.reduce(x)

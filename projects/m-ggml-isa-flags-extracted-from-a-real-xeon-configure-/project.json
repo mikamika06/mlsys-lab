@@ -1,0 +1,45 @@
+{
+  "id": "m-ggml-isa-flags-extracted-from-a-real-xeon-configure-",
+  "title": "GGML ISA flags and AMX/AVX-512 performance on Xeon",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "llama.cpp CPU backend ISA tiers (AVX-512/AMX)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ggml_isa/parser.py",
+    "ggml_isa/benchmark.py",
+    "ggml_isa/classifier.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract GGML ISA flags from configure logs",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "flags_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "AMX vs AVX-512 tokens/sec comparison and scaling",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "speedup_match", "op": "==", "threshold": 1},
+        {"metric": "efficiency_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching faulty classifications",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_faulty_classification", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

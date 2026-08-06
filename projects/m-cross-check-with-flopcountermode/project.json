@@ -1,0 +1,48 @@
+{
+  "id": "m-cross-check-with-flopcountermode",
+  "title": "Cross-check with FlopCounterMode",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "flops-tflops-and-mfu-accounting",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "attention/tracker.py",
+    "attention/ops.py",
+    "attention/cross_check.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "FlopCounterMode and shape-based ops",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "tracker_works", "op": "==", "threshold": 1},
+        {"metric": "matmul_flops", "op": "==", "threshold": 1},
+        {"metric": "softmax_flops", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analytical vs Empirical Flops",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "forward_shape", "op": "==", "threshold": 1},
+        {"metric": "rel_err_is_zero", "op": "==", "threshold": 1},
+        {"metric": "analytical_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test fails on missing MAC factor",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_factor", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

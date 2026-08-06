@@ -1,0 +1,21 @@
+{
+  "id": "m-compare-cpu-kernel-count-vs-eager-op-count-for-a-5-o",
+  "title": "Compare CPU kernel count vs eager op count and find autotuned reduction configs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TorchInductor codegen (Triton/C++ kernel generation)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["audit/core.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compare CPU kernel count vs eager op count for pointwise chains", "check": "harness/m1.py",
+     "gates": [{"metric": "ratio_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Find autotuned config behind GPU reduction-order numeric diff", "check": "harness/m2.py",
+     "gates": [{"metric": "config_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: regression test catching invariant violations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_fusion", "op": "==", "threshold": 1}]}
+  ]
+}

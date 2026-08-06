@@ -1,0 +1,45 @@
+{
+  "id": "m-explain-the-group-size-32-desc-act-tp-4-crash",
+  "title": "Explain group_size=32 desc_act TP=4 crash",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Kernel selection and backend dispatch",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tpquant/layout.py",
+    "tpquant/parallel.py",
+    "tpquant/checker.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analyze group index layout and rank slice compatibility",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "layout_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose configuration and prepare parallel dispatch",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "diagnosis_matches", "op": "==", "threshold": 1},
+        {"metric": "prep_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for TP quantization layouts",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unsafe_layout", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

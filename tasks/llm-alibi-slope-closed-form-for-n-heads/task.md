@@ -17,21 +17,20 @@ where $k$ is the number of heads that are a power of two.  For arbitrary $n$, th
 Implement `alibi_slopes(n_heads)`:
 
 ```python
-def alibi_slopes(n_heads: int) -> np.ndarray:
+def alibi_slopes(n_heads: int) -> list[float]:
     ...
 ```
 
 The function must:
 
 1. Accept a positive integer `n_heads`.
-2. Return a NumPy array of shape `(n_heads,)` containing the slopes for each head.
+2. Return a list of shape `(n_heads,)` containing the slopes for each head.
 3. Use the closed‑form algorithm described above, handling any `n_heads`, not just powers of two.
-4. Produce an array with dtype `np.float32`.
+4. Produce an array with dtype float.
 
 ## Example
 
 ```python
-import numpy as np
 from your_module import alibi_slopes
 
 slopes = alibi_slopes(4)
@@ -46,4 +45,4 @@ The grader computes a reference array using the exact algorithm and compares it 
 
 $$\texttt{rel\_err} = \frac{\lVert \hat{s}-s\rVert_2}{\lVert s\rVert_2 + 10^{-12}}.$$
 
-Your solution must achieve `rel_err ≤ 1e-6`.  Any deviation larger than this threshold will cause the gate to fail.  The grader also verifies that your function accepts only positive integers and returns a NumPy array of dtype `float32`.
+Your solution must achieve `rel_err ≤ 1e-6`.  Any deviation larger than this threshold will cause the gate to fail.  The grader also verifies that your function accepts only positive integers and returns a list of dtype `float32`.

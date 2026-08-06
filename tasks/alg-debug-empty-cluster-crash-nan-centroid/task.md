@@ -30,11 +30,11 @@ Implement `kmeans_labels(X, k, centers, iterations)`:
 
 ```python
 def kmeans_labels(
-    X: np.ndarray,
+    X: list[list[float]],
     k: int,
-    centers: np.ndarray,
+    centers: list[list[float]],
     iterations: int
-) -> np.ndarray:
+) -> list[int]:
     ...
 ```
 
@@ -50,24 +50,23 @@ For each iteration:
 
 Return the final integer label array of shape $(n,)$.
 
-Use deterministic NumPy behavior. The returned labels must use integer dtype.
+Use deterministic Python behavior. The returned labels must use integer dtype.
 
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([
+X = [
     [0.0, 0.0],
     [0.1, 0.0],
     [5.0, 5.0],
-])
+]
 
-centers = np.array([
+centers = [
     [0.0, 0.0],
     [0.2, 0.0],
     [10.0, 10.0],
-])
+]
 
 labels = kmeans_labels(X, 3, centers, 3)
 ```

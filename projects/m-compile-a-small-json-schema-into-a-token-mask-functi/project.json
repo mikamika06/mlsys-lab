@@ -1,0 +1,45 @@
+{
+  "id": "m-compile-a-small-json-schema-into-a-token-mask-functi",
+  "title": "Compile JSON Schema into Token Mask",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "structured-output-and-tool-calling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "schema_runner/compiler.py",
+    "schema_runner/benchmark.py",
+    "schema_runner/diagnostics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compile JSON Schema into a token-mask function",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "schemas_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure decode tok/s with and without schema constraint",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "benchmark_valid", "op": "==", "threshold": 1},
+        {"metric": "ratio_computed", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Diagnose non-terminating requests under unsatisfiable schemas",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unsatisfiable_deadlock", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

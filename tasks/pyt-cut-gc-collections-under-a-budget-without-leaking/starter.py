@@ -1,6 +1,3 @@
-import gc
-
-
 def cut_gc_collections_under_budget(n_cycles):
     """Allocate n_cycles temporary reference cycles with automatic collection
     budgeted away, then reclaim them explicitly.

@@ -1,0 +1,41 @@
+{
+  "id": "m-bf16-accumulation-error-compounding",
+  "title": "BF16 Accumulation Error Compounding and Deterministic Reproducibility",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Numerical failure modes at scale (loss spikes, non-determinism, precision bugs)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["bfacc/accumulation.py", "bfacc/repro.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compensated accumulation and error compounding tracking",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "tracking_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Deterministic reduction and loss spike diagnosis",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "bit_exact_matches", "op": "==", "threshold": 1.0},
+        {"metric": "spike_diagnosed", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test suite validates stability",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_naive_accumulation", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

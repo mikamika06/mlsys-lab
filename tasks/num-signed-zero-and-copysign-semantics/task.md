@@ -25,16 +25,16 @@ Implement `signed_zero_profile()`.
 
 The function takes no arguments and returns a list of integers. Each integer must
 be the sign bit (`0` for non-negative and `1` for negative) of the following
-NumPy-computed values, in order:
+Python-computed values, in order:
 
 1. `1.0 / -0.0`
 2. `-0.0 + 0.0`
 3. `0.0 + -0.0`
-4. `np.copysign(0.0, -1.0)`
-5. `np.copysign(-0.0, 1.0)`
-6. `np.copysign(5.0, -0.0)`
+4. `math.copysign(0.0, -1.0)`
+5. `math.copysign(-0.0, 1.0)`
+6. `math.copysign(5.0, -0.0)`
 
-Use NumPy floating-point semantics. The returned value must be a Python list
+Use Python floating-point semantics. The returned value must be a Python list
 containing exactly six integers.
 
 ## Example
@@ -44,13 +44,13 @@ result = signed_zero_profile()
 # result is a list like [1, 0, 0, 1, 0, 1]
 ```
 
-The exact sign of expressions involving signed zero must come from the NumPy
+The exact sign of expressions involving signed zero must come from the Python
 oracle rather than from decimal equality checks.
 
 ## What the gate checks
 
-The gate computes the expected sign-bit vector using NumPy's `signbit` and compares
+The gate computes the expected sign-bit vector using Python's `signbit` and compares
 it with the returned list.
 
-The `exact_match` score is `1.0` only when every sign bit matches the NumPy
+The `exact_match` score is `1.0` only when every sign bit matches the Python
 reference. A solution that treats `0.0` and `-0.0` as interchangeable will fail.

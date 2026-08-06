@@ -1,0 +1,21 @@
+{
+  "id": "m-implement-the-engine-arg-precedence-resolver-default",
+  "title": "Engine-arg precedence resolver and argument classification",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "vllm-serve-cli-and-engine-args",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vllm_engine/resolver.py", "vllm_engine/parser.py", "vllm_engine/buckets.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Argv parser for vllm serve", "check": "harness/m1.py",
+     "gates": [{"metric": "parser_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Precedence resolver across defaults, yaml, env, and cli", "check": "harness/m2.py",
+     "gates": [{"metric": "precedence_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for engine arg classification and precedence", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_classification", "op": "==", "threshold": 1}]}
+  ]
+}

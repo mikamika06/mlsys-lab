@@ -1,13 +1,16 @@
-import numpy as np
-
-def apply_logit_bias_map(logits, bias_map):
+def apply_logit_bias_map(logits: list[list[float]], bias_map: dict[int, float]) -> list[list[float]]:
     """
     Correct implementation that adds the bias values to every row of logits.
     """
-    # Create a 1‑D array of biases for each token in the vocabulary.
-    bias = np.zeros(logits.shape[1], dtype=np.float64)
+    n = len(logits)
+    d = len(logits[0]) if n > 0 else 0
+    bias = [0.0] * d
     for token, value in bias_map.items():
-        if 0 <= token < logits.shape[1]:
+        if 0 <= token < d:
             bias[token] += value
-    # Broadcasting adds the same bias vector to every row.
-    return logits + bias
+
+    out = []
+    for row in logits:
+        new_row = [x + b for x, b in zip(row, bias)]
+        out.append(new_row)
+    return out

@@ -1,0 +1,20 @@
+{
+  "id": "m-derive-kv-cache-bytes-for-a-gqa-model",
+  "title": "Derive KV cache bytes for a GQA model with quantization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "kv-cache-and-quantized-cache",
+  "difficulty": 3,
+  "edits": ["kvderive/calc.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive baseline GQA KV cache bytes", "check": "harness/m1.py",
+     "gates": [{"metric": "baseline_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Derive KV bytes with quantized cache types", "check": "harness/m2.py",
+     "gates": [{"metric": "quant_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for formula invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_formula_mutation", "op": "==", "threshold": 1}]}
+  ]
+}

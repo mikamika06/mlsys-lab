@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-shared-memory-bytes-from-block-m-n-k-num-stag",
+  "title": "Deriving Triton shared-memory footprint and resource limits",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Block tiling, occupancy, and resource budgets",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["shm/bytes.py", "shm/config.py", "shm/sweep.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive shared-memory bytes from tile and stage parameters", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Reconstruct plausible tile configs from OutOfResources messages", "check": "harness/m2.py",
+     "gates": [{"metric": "match_score", "op": ">=", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: regression test for occupancy and sweep analysis", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

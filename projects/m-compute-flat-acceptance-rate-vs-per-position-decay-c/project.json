@@ -1,0 +1,23 @@
+{
+  "id": "m-compute-flat-acceptance-rate-vs-per-position-decay-c",
+  "title": "Acceptance rate fundamentals",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Acceptance rate fundamentals",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["spec/decay.py", "spec/domains.py", "spec/kl_bounds.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Flat acceptance rate and positional decay curve from trace", "check": "harness/m1.py",
+     "gates": [{"metric": "flat_rate_rel_err", "op": "<=", "threshold": 0.001},
+               {"metric": "decay_curve_rel_err", "op": "<=", "threshold": 0.001}]},
+    {"n": 2, "title": "Domain variations and KL divergence bounds", "check": "harness/m2.py",
+     "gates": [{"metric": "domain_rate_rel_err", "op": "<=", "threshold": 0.001},
+               {"metric": "kl_bound_rel_err", "op": "<=", "threshold": 0.001}]},
+    {"n": 3, "title": "Safeguard: regression test for positional decay calculation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_flat_decay_bug", "op": "==", "threshold": 1}]}
+  ]
+}

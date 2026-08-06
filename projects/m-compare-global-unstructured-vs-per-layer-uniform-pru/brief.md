@@ -1,0 +1,5 @@
+We noticed surprising discrepancies in model performance after applying different unstructured magnitude pruning strategies. A downstream service relies on structured weight masks produced from a candidate model architecture, but our current pruning pipeline treats per-layer sparsification identically to a global threshold approach without clear bounds on relative error or retention metrics.
+
+In this project, you will build and evaluate a pruning comparator tool that analyzes two distinct magnitude pruning schemes: global unstructured pruning (where a single global magnitude threshold is selected across all layer parameters) and per-layer uniform pruning (where every layer independently zeroes out an exact uniform fraction of its smallest absolute parameters).
+
+Your task is to compute the precise boolean pruning masks and magnitude thresholds for both approaches given multi-layer weight tensors, evaluate their resulting overall sparsities, compare the retained spectral or Frobenius norms across layers, and write an invariant regression suite that guards against improper threshold selection and layer-wise mask shape mismatches.

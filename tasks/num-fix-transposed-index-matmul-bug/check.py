@@ -7,16 +7,18 @@ def grade(sol, fx) -> dict:
     max_err = 0.0
 
     for (m, k, n) in shapes:
-        A = rng.randn(m, k)
-        B = rng.randn(k, n)
+        A_np = rng.randn(m, k)
+        B_np = rng.randn(k, n)
+        A = A_np.tolist()
+        B = B_np.tolist()
 
         try:
-            C = sol.matmul_naive(A.copy(), B.copy())
+            C = sol.matmul_naive(A, B)
             C = np.asarray(C, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
 
-        C_ref = A @ B
+        C_ref = A_np @ B_np
         if C.shape != C_ref.shape:
             return {"max_abs_err": float("inf")}
 

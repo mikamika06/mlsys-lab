@@ -1,0 +1,40 @@
+{
+  "id": "m-derive-total-serving-memory-budget-for-a-real-moe-mo",
+  "title": "Serving memory budget, FLOPs crossover, and latency profiling for MoE",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "moe-longcontext-memory-budgeting",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "moebudget/budget.py",
+    "moebudget/flops.py",
+    "moebudget/latency.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Total serving memory budget for MoE",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "budget_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Attention-vs-FFN FLOPs crossover context length",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "crossover_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Latency vs context length profiling and regression test safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_latency", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

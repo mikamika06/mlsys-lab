@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-expected-mlx-lm-adapter-trainable-param-count",
+  "title": "Derive expected mlx_lm adapter trainable-param count",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "mac-native-mlx-lora",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mlx_lora_util/derive.py", "mlx_lora_util/verify.py", "mlx_lora_util/train.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive expected trainable parameter count", "check": "harness/m1.py",
+     "gates": [{"metric": "counts_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Verify safetensors shapes and parameter keys", "check": "harness/m2.py",
+     "gates": [{"metric": "shapes_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches broken derivation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_derivation", "op": "==", "threshold": 1}]}
+  ]
+}

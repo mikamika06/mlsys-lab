@@ -1,0 +1,21 @@
+{
+  "id": "m-hit-rate-from-two-metrics-scrapes",
+  "title": "KV cache hit rate from two metrics scrapes",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-observability-and-slos",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kvmetric/calc.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Hit rate from two consecutive scrapes", "check": "harness/m1.py",
+     "gates": [{"metric": "hit_rate_match", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Metric classification and PromQL dashboard queries", "check": "harness/m2.py",
+     "gates": [{"metric": "queries_match", "op": ">=", "threshold": 4}]},
+    {"n": 3, "title": "Safety net: regression test for metric aggregation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_aggregation", "op": "==", "threshold": 1}]}
+  ]
+}

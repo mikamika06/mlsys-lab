@@ -1,0 +1,44 @@
+{
+  "id": "m-measure-real-peak-memory-per-rank-in-a-4-process-loc",
+  "title": "Measure real peak memory and communication overhead in local FSDP2 jobs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "fsdp-distributed-finetuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fsdpmeasure/memory.py",
+    "fsdpmeasure/residency.py",
+    "fsdpmeasure/overhead.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Peak memory per rank in a 4-process local FSDP2 job vs single-process baseline",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "peak_memory_match", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Parameter residency comparison between SHARD_GRAD_OP and FULL_SHARD",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "residency_match", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Wall-clock overhead measurement from Gloo communication and regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_faulty_overhead", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

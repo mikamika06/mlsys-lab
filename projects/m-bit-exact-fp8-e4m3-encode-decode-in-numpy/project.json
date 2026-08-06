@@ -1,0 +1,40 @@
+{
+  "id": "m-bit-exact-fp8-e4m3-encode-decode-in-numpy",
+  "title": "Bit-exact FP8 E4M3 encode/decode in NumPy",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "fp8-kv-cache-quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["fp8kv/quant.py", "fp8kv/compare.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Bit-exact FP8 E4M3 encode and decode",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "byte_exact_fraction", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-tensor absmax scaling and round-trip error",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "scale_exact_fraction", "op": "==", "threshold": 1.0},
+        {"metric": "roundtrip_mse_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for E4M3 vs E5M2 scale selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_scale", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

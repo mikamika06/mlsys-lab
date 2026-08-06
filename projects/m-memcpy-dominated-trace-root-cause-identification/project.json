@@ -1,0 +1,44 @@
+{
+  "id": "m-memcpy-dominated-trace-root-cause-identification",
+  "title": "Memcpy-dominated trace root-cause identification",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "ONNX Runtime CPU profiling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "trace_analyzer/parser.py",
+    "trace_analyzer/diff.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse and aggregate trace events",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "matches_o0", "op": "==", "threshold": 1},
+        {"metric": "matches_o99", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Profile diff across optimization levels",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "matches_reference", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch missing eliminated ops",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_ops", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

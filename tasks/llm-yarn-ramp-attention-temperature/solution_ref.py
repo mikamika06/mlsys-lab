@@ -1,23 +1,17 @@
 import math
-import numpy as np
 
 
 def yarn_ramp_temperature(
-    q,
-    k,
-    inv_freq,
-    positions,
-    beta_fast,
-    beta_slow,
-    scale,
-    temperature,
-):
-    q = np.asarray(q, dtype=np.float64)
-    k = np.asarray(k, dtype=np.float64)
-    inv_freq = np.asarray(inv_freq, dtype=np.float64)
-    positions = np.asarray(positions, dtype=np.float64)
-
-    num_freq = inv_freq.shape[0]
+    q: list[list[float]],
+    k: list[list[float]],
+    inv_freq: list[float],
+    positions: list[int],
+    beta_fast: float,
+    beta_slow: float,
+    scale: float,
+    temperature: float,
+) -> list[list[float]]:
+    num_freq = len(inv_freq)
     freq = []
     denom_ramp = beta_fast - beta_slow
     for d in range(num_freq):
@@ -30,42 +24,42 @@ def yarn_ramp_temperature(
             ramp = val
         freq.append(float(inv_freq[d]) / (1.0 + ramp * (scale - 1.0)))
 
-    n_q = q.shape[0]
-    n_k = k.shape[0]
-    dim = q.shape[1]
+    n_q = len(q)
+    n_k = len(k)
+    dim = len(q[0])
 
-    qr = np.empty((n_q, dim), dtype=np.float64)
+    qr = [[0.0] * dim for _ in range(n_q)]
     for i in range(n_q):
-        pos = positions[i]
+        pos = float(positions[i])
         for j in range(num_freq):
             angle = pos * freq[j]
             c = math.cos(angle)
             s = math.sin(angle)
-            x0 = q[i, 2 * j]
-            x1 = q[i, 2 * j + 1]
-            qr[i, 2 * j] = x0 * c - x1 * s
-            qr[i, 2 * j + 1] = x0 * s + x1 * c
+            x0 = q[i][2 * j]
+            x1 = q[i][2 * j + 1]
+            qr[i][2 * j] = x0 * c - x1 * s
+            qr[i][2 * j + 1] = x0 * s + x1 * c
 
-    kr = np.empty((n_k, dim), dtype=np.float64)
+    kr = [[0.0] * dim for _ in range(n_k)]
     for i in range(n_k):
-        pos = positions[i]
+        pos = float(positions[i])
         for j in range(num_freq):
             angle = pos * freq[j]
             c = math.cos(angle)
             s = math.sin(angle)
-            x0 = k[i, 2 * j]
-            x1 = k[i, 2 * j + 1]
-            kr[i, 2 * j] = x0 * c - x1 * s
-            kr[i, 2 * j + 1] = x0 * s + x1 * c
+            x0 = k[i][2 * j]
+            x1 = k[i][2 * j + 1]
+            kr[i][2 * j] = x0 * c - x1 * s
+            kr[i][2 * j + 1] = x0 * s + x1 * c
 
     scale_factor = math.sqrt(float(dim)) * math.sqrt(float(temperature))
 
-    out = np.empty((n_q, n_k), dtype=np.float64)
+    out = [[0.0] * n_k for _ in range(n_q)]
     for i in range(n_q):
         for j in range(n_k):
             acc = 0.0
             for d in range(dim):
-                acc += qr[i, d] * kr[j, d]
-            out[i, j] = acc / scale_factor
+                acc += qr[i][d] * kr[j][d]
+            out[i][j] = acc / scale_factor
 
     return out

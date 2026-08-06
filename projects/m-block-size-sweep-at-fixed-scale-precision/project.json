@@ -1,0 +1,64 @@
+{
+  "id": "m-block-size-sweep-at-fixed-scale-precision",
+  "title": "Block size sweep at fixed scale precision",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "FP4 microscaling: NVFP4 vs MXFP4",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fp4quant/unpack.py",
+    "fp4quant/scale.py",
+    "fp4quant/sweep.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Unpack MXFP4 packed nibble tensors correctly",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "unpack_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Fix E8M0 rounding direction bug and scale quantization",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "scale_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Block-size sweep argmin selection and safeguard tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "argmin_index",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

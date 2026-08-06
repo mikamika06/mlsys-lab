@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def recover_angles(orig: np.ndarray, rot: np.ndarray) -> np.ndarray:
+def recover_angles(orig: list[list[float]], rot: list[list[float]]) -> list[float]:
     raise NotImplementedError('your code here')

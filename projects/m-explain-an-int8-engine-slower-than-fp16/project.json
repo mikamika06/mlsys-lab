@@ -1,0 +1,21 @@
+{
+  "id": "m-explain-an-int8-engine-slower-than-fp16",
+  "title": "Diagnosing and fixing slow INT8 engines in ONNX workflows",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Explicit quantization: Q/DQ placement and INT8/FP8 engines",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["int8opt/engine.py", "int8opt/scales.py", "int8opt/canonicalize.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Recover per-channel scales from quantized ONNX", "check": "harness/m1.py",
+     "gates": [{"metric": "scales_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Q/DQ placement canonicalization", "check": "harness/m2.py",
+     "gates": [{"metric": "graph_canonicalized", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches broken scale recovery", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_scales", "op": "==", "threshold": 1}]}
+  ]
+}

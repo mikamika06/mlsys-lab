@@ -1,0 +1,21 @@
+{
+  "id": "m-diff-hlo-op-counts-before-vs-after-optimization-for-a-jitted-function",
+  "title": "HLO op count diffs, fusion analysis, and scaling dumps",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "XLA HLO internals & dumps",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["hlodiff/diff.py", "hlodiff/fusion.py", "hlodiff/growth.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Diff HLO op counts before vs after optimization", "check": "harness/m1.py",
+     "gates": [{"metric": "diff_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Identify fused instruction blocks and count fusion kernels", "check": "harness/m2.py",
+     "gates": [{"metric": "fusion_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Measure HLO dump size and file count growth across model sizes", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_growth", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "m-cross-check-a-recorded-run-s-reported-trainable-para",
+  "title": "Cross-check recorded runs against LoRA parameter formula",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "qlora-end-to-end-pipeline",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "loraparams/formula.py",
+    "loraparams/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Formula for LoRA trainable parameter calculation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Audit recorded runs against expected formulas",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "runs_audited", "op": "==", "threshold": 1},
+        {"metric": "mismatches_detected", "op": "==", "threshold": 1},
+        {"metric": "summaries_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches incorrect parameter counting",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bias_bug", "op": "==", "threshold": 1},
+        {"metric": "catches_save_modules_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

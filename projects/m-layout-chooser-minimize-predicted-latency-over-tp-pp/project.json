@@ -1,0 +1,45 @@
+{
+  "id": "m-layout-chooser-minimize-predicted-latency-over-tp-pp",
+  "title": "Layout Chooser and EP Imbalance Analyzer",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "parallelism-tp-pp-dp-ep",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "layout/__init__.py",
+    "layout/chooser.py",
+    "layout/imbalance.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Memory split feasibility and EP straggler factor",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "memory_checks_matched", "op": "==", "threshold": 1.0},
+        {"metric": "straggler_factors_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Minimize predicted latency over 8-GPU layouts",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "layout_argmins_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catch invalid layout selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_unconstrained_chooser", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "m-back-out-effective-service-latency-via-little-s-law-",
+  "title": "Effective Service Latency via Little's Law and Capacity Planning",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Metrics-Driven Capacity Planning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "capacity/trace.py",
+    "capacity/batching.py",
+    "capacity/autoscaler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Back Out Effective Service Latency via Little's Law",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "trace_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Find Batch Size Minimizing $/1K Tokens Under SLA Constraint",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "batching_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "cost_rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches invalid SLA batch selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_sla",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

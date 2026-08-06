@@ -34,12 +34,7 @@ This recurrence avoids storing the complete attention matrix while preserving nu
 Implement `streaming_softmax_attention(Q, K, V, block_size)`:
 
 ```python
-def streaming_softmax_attention(
-    Q: np.ndarray,
-    K: np.ndarray,
-    V: np.ndarray,
-    block_size: int,
-) -> np.ndarray:
+def streaming_softmax_attention(Q, K, V, block_size):
     ...
 ```
 
@@ -57,11 +52,10 @@ Use the streaming softmax recurrence. Do not construct the full $n \times n$ att
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0], [4.0]])
+Q = [[1.0, 0.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0], [4.0]]
 
 out = streaming_softmax_attention(Q, K, V, 1)
 ```
@@ -76,7 +70,7 @@ directly.
 
 ## What the gate checks
 
-The gate builds deterministic query, key, and value arrays and computes a NumPy oracle using the full scaled dot-product attention expression. The candidate implementation is compared against that oracle.
+The gate builds deterministic query, key, and value arrays and computes a Python oracle using the full scaled dot-product attention expression. The candidate implementation is compared against that oracle.
 
 The reported metric is `max_abs_err`, the largest absolute difference between the candidate output and the oracle output. The value must satisfy
 

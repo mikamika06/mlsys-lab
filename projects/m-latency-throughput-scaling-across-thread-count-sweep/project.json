@@ -1,0 +1,23 @@
+{
+  "id": "m-latency-throughput-scaling-across-thread-count-sweep",
+  "title": "Thread Scaling, Oversubscription & NUMA Topology in CPU Inference",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "Threading, affinity & NUMA for CPU inference",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["scaling/threads.py", "scaling/numa.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Analyze thread scaling sweep and oversubscription", "check": "harness/m1.py",
+     "gates": [{"metric": "latency_ratio", "op": ">=", "threshold": 0.8},
+               {"metric": "oversubscription_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Calculate NUMA locality ratios and penalties", "check": "harness/m2.py",
+     "gates": [{"metric": "numa_ratio_matched", "op": "==", "threshold": 1},
+               {"metric": "local_ratio_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test suite catching invalid thread counts", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_threads", "op": "==", "threshold": 1}]}
+  ]
+}

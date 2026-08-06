@@ -1,0 +1,21 @@
+{
+  "id": "m-instrument-active-peak-cache-memory-through-an-mlx-g",
+  "title": "Instrumenting active, peak, and cache memory in MLX loops",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Memory-limit knobs & OOM/kernel-panic prevention",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["mlx_mem/instrument.py", "mlx_mem/throughput.py", "mlx_mem/locate.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Instrument active, peak, and cache memory", "check": "harness/m1.py",
+     "gates": [{"metric": "instrument_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Measure throughput penalty under memory limits", "check": "harness/m2.py",
+     "gates": [{"metric": "penalty_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Locate step crossing the wired ceiling and regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ceiling_violation", "op": "==", "threshold": 1}]}
+  ]
+}

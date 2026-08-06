@@ -1,0 +1,21 @@
+{
+  "id": "m-detect-nan-entering-the-hessian",
+  "title": "Detecting NaN in Hessians and deciding PTQ fallback",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Failure modes and OOM during quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantfix/hessian.py", "quantfix/decision.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect NaN or invalid values entering the Hessian", "check": "harness/m1.py",
+     "gates": [{"metric": "hessian_checks_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Decide when model-free PTQ fallback is required", "check": "harness/m2.py",
+     "gates": [{"metric": "decision_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for Hessian checks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

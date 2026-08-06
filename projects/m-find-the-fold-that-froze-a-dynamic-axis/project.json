@@ -1,0 +1,46 @@
+{
+  "id": "m-find-the-fold-that-froze-a-dynamic-axis",
+  "title": "Find the fold that froze a dynamic axis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ONNX graph surgery & simplification (graphsurgeon, onnxsim/onnxslim)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "graphfix/fold_finder.py",
+    "graphfix/graph_sweep.py",
+    "graphfix/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Find the fold that froze a dynamic axis",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "graphs_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Dead-node and orphan-initializer sweep and payoff",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "nodes_swept", "op": "==", "threshold": 1},
+        {"metric": "initializers_swept", "op": "==", "threshold": 1},
+        {"metric": "payoff_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches frozen dynamic axes",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_frozen_axis", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,10 +1,9 @@
 import math
-import numpy as np
 
 
-def classify_sampler(orig_logits: np.ndarray, filtered_logits: np.ndarray) -> str:
-    num_rows = orig_logits.shape[0]
-    num_cols = orig_logits.shape[1]
+def classify_sampler(orig_logits: list[list[float]], filtered_logits: list[list[float]]) -> str:
+    num_rows = len(orig_logits)
+    num_cols = len(orig_logits[0])
 
     counts = []
     kept_mask = []
@@ -12,7 +11,7 @@ def classify_sampler(orig_logits: np.ndarray, filtered_logits: np.ndarray) -> st
         row_count = 0
         row_kept = []
         for j in range(num_cols):
-            is_k = filtered_logits[i, j] != float("-inf")
+            is_k = filtered_logits[i][j] != float("-inf")
             row_kept.append(is_k)
             if is_k:
                 row_count += 1
@@ -40,15 +39,15 @@ def classify_sampler(orig_logits: np.ndarray, filtered_logits: np.ndarray) -> st
 
     probs = []
     for i in range(num_rows):
-        max_logit = orig_logits[i, 0]
+        max_logit = orig_logits[i][0]
         for j in range(1, num_cols):
-            if orig_logits[i, j] > max_logit:
-                max_logit = orig_logits[i, j]
+            if orig_logits[i][j] > max_logit:
+                max_logit = orig_logits[i][j]
 
         row_exps = []
         sum_exp = 0.0
         for j in range(num_cols):
-            e = math.exp(orig_logits[i, j] - max_logit)
+            e = math.exp(orig_logits[i][j] - max_logit)
             row_exps.append(e)
             sum_exp += e
 

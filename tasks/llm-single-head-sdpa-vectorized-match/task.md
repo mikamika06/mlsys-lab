@@ -13,25 +13,22 @@ The softmax is applied row‑wise to the $n\times n$ score matrix.
 ## Task
 
 Implement a function `sdpa_single_head(Q, K, V)` that returns the attention output as defined above.  
-The implementation must use only NumPy vectorised operations; no explicit Python loops are allowed.  
+The implementation must use only Python vectorised operations; no explicit Python loops are allowed.  
 All computations should be performed in double precision (`float64`).
 
 ## Example
 
 ```python
-import numpy as np
-Q = np.array([[1., 0.], [0., 1.]])
+Q = [[1., 0.], [0., 1.]]
 K = Q.copy()
-V = np.eye(2)
+V = [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]
 out = sdpa_single_head(Q, K, V)
-print(out)
-# [[0.5 0.5]
-#  [0.5 0.5]]
+print(out)  # [[0.6697615493266569, 0.3302384506733431], [0.3302384506733431, 0.6697615493266569]]
 ```
 
 ## What the gate checks
 
-The grader computes a reference implementation with NumPy and compares your output to it using the metric `max_abs_err`.  
+The grader computes a reference implementation with Python and compares your output to it using the metric `max_abs_err`.  
 Your solution must satisfy
 
 $$

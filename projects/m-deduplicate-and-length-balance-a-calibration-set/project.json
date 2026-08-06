@@ -1,0 +1,35 @@
+{
+  "id": "m-deduplicate-and-length-balance-a-calibration-set",
+  "title": "Deduplicate and length-balance a calibration set",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Calibration dataset design",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["calib/dedup.py", "calib/balance.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "MinHash LSH deduplication of calibration sequences",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "dedup_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Bucket-based sequence length balancing",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "balance_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch disabled min-hash deduplication",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_no_dedup", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

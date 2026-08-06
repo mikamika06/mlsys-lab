@@ -1,0 +1,21 @@
+{
+  "id": "m-cu-seqlens-from-an-attention-mask",
+  "title": "Cumulative sequence lengths and packing safety for variable-length attention",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "varlen-api-and-sequence-packing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["varlen/seqlens.py", "varlen/packing.py", "varlen/leak.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive cu_seqlens from an attention mask", "check": "harness/m1.py",
+     "gates": [{"metric": "seqlens_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Lossless unpad and pad round trip", "check": "harness/m2.py",
+     "gates": [{"metric": "roundtrip_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: detect cross-document leakage", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_leakage", "op": "==", "threshold": 1}]}
+  ]
+}

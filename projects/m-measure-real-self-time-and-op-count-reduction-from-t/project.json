@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-real-self-time-and-op-count-reduction-from-t",
+  "title": "Measure real self-time and op-count reduction from torch.compile",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "torch-compile-inductor-profiling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["torchprof/profile.py", "torchprof/guards.py", "torchprof/fusion.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure self-time and operator counts", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Detect guard failure recompile counters", "check": "harness/m2.py",
+     "gates": [{"metric": "guard_detected", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Count fused vs unfused kernels", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_fusion", "op": "==", "threshold": 1}]}
+  ]
+}

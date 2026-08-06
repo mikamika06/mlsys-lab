@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-real-allocated-kv-blocks-and-compare-against",
+  "title": "Measure real allocated KV blocks and compare against prediction",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "kv-cache-memory-budget",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kvalloc/blocks.py", "kvalloc/metrics.py", "kvalloc/simulator.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute theoretical block budget", "check": "harness/m1.py",
+     "gates": [{"metric": "budgets_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Measure real allocated blocks and compute relative error", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches corrupted block counters", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_corrupted_counter", "op": "==", "threshold": 1}]}
+  ]
+}

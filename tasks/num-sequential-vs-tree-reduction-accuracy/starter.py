@@ -1,4 +1,4 @@
-import numpy as np
+import struct
 
-def tree_sum(values: np.ndarray) -> np.float32:
+def tree_sum(values: list[float]) -> float:
     raise NotImplementedError('your code here')

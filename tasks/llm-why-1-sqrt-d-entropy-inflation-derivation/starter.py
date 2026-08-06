@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def entropy_inflation_ratio(Q: np.ndarray, K: np.ndarray) -> float:
+def entropy_inflation_ratio(Q: list[list[float]], K: list[list[float]]) -> float:
     raise NotImplementedError('your code here')

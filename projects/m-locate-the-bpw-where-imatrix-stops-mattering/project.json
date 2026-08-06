@@ -1,0 +1,46 @@
+{
+  "id": "m-locate-the-bpw-where-imatrix-stops-mattering",
+  "title": "Locate the bpw where imatrix stops mattering",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "imatrix-guided-quant-math",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "imatrix_analysis/roles.py",
+    "imatrix_analysis/search.py",
+    "imatrix_analysis/threshold.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Rank tensor roles by imatrix benefit",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "roles_ranked", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Beat a weighted-MSE threshold with a custom search",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "search_valid", "op": "==", "threshold": 1},
+        {"metric": "target_met", "op": "==", "threshold": 1},
+        {"metric": "beats_uniform", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches threshold miscalculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_threshold", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

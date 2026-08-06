@@ -1,0 +1,40 @@
+{
+  "id": "m-cold-start-decomposition",
+  "title": "Cold-start decomposition and shadow wheels",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT sessions, execution providers & the onnxruntime-gpu install matrix",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ort_perf/env.py", "ort_perf/profiler.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect shadowing ORT wheels",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "cases_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Decompose cold-start and EP deltas",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "creation_rel_err", "op": "<", "threshold": 0.0001},
+        {"metric": "first_run_rel_err", "op": "<", "threshold": 0.0001},
+        {"metric": "steady_rel_err", "op": "<", "threshold": 0.0001},
+        {"metric": "speedup_rel_err", "op": "<", "threshold": 0.0001}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: catch a leaky first-run measurement",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_leaky_first_run", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

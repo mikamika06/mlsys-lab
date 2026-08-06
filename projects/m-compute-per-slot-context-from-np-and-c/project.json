@@ -1,0 +1,64 @@
+{
+  "id": "m-compute-per-slot-context-from-np-and-c",
+  "title": "Compute per-slot context from -np and -c",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "llama-server-production",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "slotplan/context.py",
+    "slotplan/saturation.py",
+    "slotplan/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute per-slot context from -np and -c",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Find the -np saturation point",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "saturation_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Verify prompt-cache reuse via /metrics",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_metrics",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "m-compare-cpu-vs-blas-vs-gpu-build-throughput",
+  "title": "Compare CPU, BLAS, and GPU build throughput and configuration",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-gguf-llamacpp",
+  "track": "build-backends-cpu-repack",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "backperf/throughput.py",
+    "backperf/repack.py",
+    "backperf/cmake.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "CPU vs BLAS vs GPU build throughput comparison",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "throughput_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "File size invariant analysis after removing Q4_0_4_4",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "size_analysis_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for backend CMake flags and invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_flags", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

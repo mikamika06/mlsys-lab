@@ -1,0 +1,39 @@
+{
+  "id": "m-backward-activation-memory-lse-vs-probabilities",
+  "title": "Backward activation memory: LSE vs probabilities",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "memory-io-and-roofline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["memattn/allocator.py", "memattn/planner.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Calculate backward activation memory for LSE vs Probabilities",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Determine maximum sequence length and batch size under memory budget",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catches missing LSE scaling optimization",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_quadratic_lse_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

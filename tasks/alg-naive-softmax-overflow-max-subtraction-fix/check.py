@@ -16,15 +16,16 @@ def grade(sol, fx) -> dict:
         np.full((2, 3), 12345.0),
     ]
     max_err = 0.0
-    for logits in cases:
+    for arr in cases:
+        logits = arr.tolist()
         try:
             got = sol.softmax(logits)
         except Exception:
             return {"max_abs_err": float("inf")}
-        if not isinstance(got, np.ndarray):
+        if not isinstance(got, list):
             return {"max_abs_err": float("inf")}
-        expected = _reference(logits)
-        err = scorers.max_abs_err(expected, got)
+        expected = _reference(arr)
+        err = scorers.max_abs_err(expected, np.asarray(got, dtype=np.float64))
         if np.isnan(err) or np.isinf(err):
             err = float("inf")
         max_err = max(max_err, err)

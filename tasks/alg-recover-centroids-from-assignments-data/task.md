@@ -7,7 +7,7 @@ where $S_i$ is the set of points assigned to cluster $i$.
 
 ## Task
 Implement a function `recover_centroids(X, labels)` that calculates the centroids for each cluster. 
-The input `X` is an $N \times D$ NumPy array representing $N$ data points of dimension $D$.
+The input `X` is an $N \times D$ list representing $N$ data points of dimension $D$.
 The input `labels` is a 1D array of length $N$ containing integer labels $0, 1, \dots, k-1$.
 The function should return a $k \times D$ array where the $i$-th row is the centroid of cluster $i$.
 

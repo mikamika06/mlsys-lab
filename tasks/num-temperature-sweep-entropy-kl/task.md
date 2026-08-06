@@ -21,31 +21,27 @@ Its mean over a set of temperature values measures how close a candidate impleme
 Implement `softmax_temperature_sweep`:
 
 ```python
-def softmax_temperature_sweep(logits: np.ndarray, temps: Sequence[float]) -> np.ndarray:
+def softmax_temperature_sweep(logits: list[float], temps: Sequence[float]) -> list[list[float]]:
     ...
 ```
 
-* `logits` – a 1‑D NumPy array of shape `(n,)` containing the raw logits for a single sample.
+* `logits` – a 1‑D list of shape `(n,)` containing the raw logits for a single sample.
 * `temps` – an iterable of positive floats representing temperatures to sweep over.
 
-The function must return a 2‑D NumPy array of shape `(len(temps), n)` where each row contains the softmax probabilities computed with the corresponding temperature. The implementation must be numerically stable: subtract the maximum value of the scaled logits before exponentiation, and use `float64` arithmetic throughout.
+The function must return a 2‑D list of shape `(len(temps), n)` where each row contains the softmax probabilities computed with the corresponding temperature. The implementation must be numerically stable: subtract the maximum value of the scaled logits before exponentiation, and use `float64` arithmetic throughout.
 
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([0., 1., 2.])
+logits = [0., 1., 2.]
 temps = [0.5, 1.0, 2.0]
 probs = softmax_temperature_sweep(logits, temps)
-print(probs)
-# [[0.11920292 0.31622777 0.56456931]
-#  [0.09003057 0.24472847 0.66524096]
-#  [0.04742587 0.23692882 0.71564531]]
+print(probs)  # [[0.015876239976466765, 0.11731042782619838, 0.8668133321973349], [0.09003057317038046, 0.24472847105479764, 0.6652409557748218], [0.1863237232258476, 0.3071958857184984, 0.506480391055654]]
 ```
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares it to your output with the mean Kullback–Leibler divergence `mean_kl`. The candidate passes only if
+The grader computes a reference implementation using Python and compares it to your output with the mean Kullback–Leibler divergence `mean_kl`. The candidate passes only if
 
 $$\text{mean\_kl} \le 10^{-9}.$$
 

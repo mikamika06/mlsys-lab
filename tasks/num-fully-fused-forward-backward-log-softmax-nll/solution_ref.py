@@ -1,56 +1,54 @@
 import math
-import numpy as np
 
 
-def fused_log_softmax_nll(logits: np.ndarray, targets: np.ndarray):
+def fused_log_softmax_nll(logits: list[list[float]], targets: list[int]):
     """Fused stable log-softmax forward + backward: mean NLL loss and its gradient."""
-    logits = np.asarray(logits, dtype=np.float64)
-    targets = np.asarray(targets, dtype=np.int64)
-    n, c = logits.shape
+    n = len(logits)
+    c = len(logits[0])
 
-    m = np.zeros((n, 1), dtype=np.float64)
+    m = [0.0] * n
     for i in range(n):
-        mx = logits[i, 0]
+        mx = logits[i][0]
         for j in range(1, c):
-            if logits[i, j] > mx:
-                mx = logits[i, j]
-        m[i, 0] = mx
+            if logits[i][j] > mx:
+                mx = logits[i][j]
+        m[i] = mx
 
-    shifted = np.zeros((n, c), dtype=np.float64)
+    shifted = [[0.0] * c for _ in range(n)]
     for i in range(n):
         for j in range(c):
-            shifted[i, j] = logits[i, j] - m[i, 0]
+            shifted[i][j] = logits[i][j] - m[i]
 
-    lse = np.zeros(n, dtype=np.float64)
+    lse = [0.0] * n
     for i in range(n):
         s = 0.0
         for j in range(c):
-            s += math.exp(shifted[i, j])
-        lse[i] = m[i, 0] + math.log(s)
+            s += math.exp(shifted[i][j])
+        lse[i] = m[i] + math.log(s)
 
-    log_probs = np.zeros((n, c), dtype=np.float64)
+    log_probs = [[0.0] * c for _ in range(n)]
     for i in range(n):
         for j in range(c):
-            log_probs[i, j] = logits[i, j] - lse[i]
+            log_probs[i][j] = logits[i][j] - lse[i]
 
     sum_loss = 0.0
     for i in range(n):
-        sum_loss += log_probs[i, targets[i]]
+        sum_loss += log_probs[i][targets[i]]
     loss = -float(sum_loss / n)
 
-    probs = np.zeros((n, c), dtype=np.float64)
+    probs = [[0.0] * c for _ in range(n)]
     for i in range(n):
         for j in range(c):
-            probs[i, j] = math.exp(log_probs[i, j])
+            probs[i][j] = math.exp(log_probs[i][j])
 
-    dlogits = np.zeros((n, c), dtype=np.float64)
+    dlogits = [[0.0] * c for _ in range(n)]
     for i in range(n):
         for j in range(c):
-            dlogits[i, j] = probs[i, j]
+            dlogits[i][j] = probs[i][j]
     for i in range(n):
-        dlogits[i, targets[i]] -= 1.0
+        dlogits[i][targets[i]] -= 1.0
     for i in range(n):
         for j in range(c):
-            dlogits[i, j] /= n
+            dlogits[i][j] /= n
 
     return loss, dlogits

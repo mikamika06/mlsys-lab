@@ -1,0 +1,39 @@
+{
+  "id": "m-input-contract-error-classifier",
+  "title": "Input-contract error classifier",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "flash-attn-python-api-surface",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "flash_contract/guard.py",
+    "flash_contract/classifier.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Alignment and contiguity guard",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "matches", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Error classifier",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "matches", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against broken guards",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_guard", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

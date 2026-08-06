@@ -1,0 +1,21 @@
+{
+  "id": "m-classify-slo-violations-into-queueing-long-prefill-l",
+  "title": "Classify SLO violations in LLM serving",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "latency-metrics-slo-and-goodput",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["slo/classifier.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify SLO violating requests", "check": "harness/m1.py",
+     "gates": [{"metric": "violations_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Classify violation root causes", "check": "harness/m2.py",
+     "gates": [{"metric": "causes_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Regression test for classification logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_classifier", "op": "==", "threshold": 1}]}
+  ]
+}

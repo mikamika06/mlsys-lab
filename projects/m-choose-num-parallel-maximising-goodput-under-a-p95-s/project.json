@@ -1,0 +1,46 @@
+{
+  "id": "m-choose-num-parallel-maximising-goodput-under-a-p95-s",
+  "title": "Concurrency tuning and head-of-line blocking diagnosis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "concurrency-parallel-slots-and-queue",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "runner/capacity.py",
+    "runner/diagnose.py",
+    "runner/simulate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Select optimal concurrency slot count under P95 SLO",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "optimal_concurrency_matched", "op": "==", "threshold": 1},
+        {"metric": "max_goodput_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose low-utilization 503 errors and head-of-line blocking",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "diagnosed_503_cause", "op": "==", "threshold": 1},
+        {"metric": "hol_blocking_detected", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test suite for concurrency decisions",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_faulty_slo_filter", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

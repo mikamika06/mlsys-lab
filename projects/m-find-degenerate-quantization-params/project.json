@@ -1,0 +1,44 @@
+{
+  "id": "m-find-degenerate-quantization-params",
+  "title": "Find degenerate quantization params, structural diff, and flatbuffer rebuild",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "TFLite flatbuffer anatomy",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "tflite_tools/quant.py",
+    "tflite_tools/diff.py",
+    "tflite_tools/rebuild.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Identify degenerate quantization parameters",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "degenerate_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Structural diff of two tflite flatbuffers",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "diff_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for flatbuffer rebuild and tensor names",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_rebuild", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

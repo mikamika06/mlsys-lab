@@ -1,17 +1,18 @@
-import numpy as np
-
-def minp_filter(probs: np.ndarray, min_p: float) -> np.ndarray:
+def minp_filter(probs: list[float], min_p: float) -> list[bool]:
     """
     Return a boolean mask indicating which tokens have probability at least
     `min_p` times the maximum probability in `probs`.
     """
-    max_prob = probs.flat[0]
-    for x in probs.flat:
+    if not probs:
+        return []
+
+    max_prob = probs[0]
+    for x in probs:
         if x > max_prob:
             max_prob = x
     threshold = min_p * max_prob
 
-    out = np.empty(probs.shape, dtype=bool)
-    for i in range(out.size):
-        out.flat[i] = probs.flat[i] >= threshold
+    out = []
+    for x in probs:
+        out.append(x >= threshold)
     return out

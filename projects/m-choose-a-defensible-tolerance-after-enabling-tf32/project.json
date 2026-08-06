@@ -1,0 +1,22 @@
+{
+  "id": "m-choose-a-defensible-tolerance-after-enabling-tf32",
+  "title": "Choose a defensible tolerance after enabling TF32",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "Low-precision numerics: bf16, fp16, fp32, TF32",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tf32guard/error.py", "tf32guard/tolerance.py", "tf32guard/verify.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute relative error bounds under TF32 truncation", "check": "harness/m1.py",
+     "gates": [{"metric": "error_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Recommend a defensible tolerance given matrix dimensions", "check": "harness/m2.py",
+     "gates": [{"metric": "tolerance_match", "op": "==", "threshold": 1},
+               {"metric": "safe_bound", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching loose tolerances", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_tolerance", "op": "==", "threshold": 1}]}
+  ]
+}

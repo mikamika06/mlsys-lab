@@ -1,0 +1,44 @@
+{
+  "id": "m-compute-pairwise-throughput-ratios-from-a-recorded-m",
+  "title": "Compute framework throughput ratios and scaling efficiency",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "framework-comparison",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "benchcomp/ratios.py",
+    "benchcomp/scaling.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Pairwise ratios and framework ranking",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "ratios_rel_err", "op": "<=", "threshold": 0.0001},
+        {"metric": "ranking_matches", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Multi-GPU scaling efficiency",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "scaling_rel_err", "op": "<=", "threshold": 0.0001}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catches incorrect VRAM ranking logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_vram_inversion", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "id": "m-auto-device-actual-selection-check",
+  "title": "AUTO device actual-selection check",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "OpenVINO Core runtime API (compile_model / infer_request)",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "ovdev/selection.py",
+    "ovdev/matrix.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Resolve actual execution devices under AUTO targeting",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "selections_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Evaluate compile-success matrix across static and dynamic shapes",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "matrix_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catching invalid selection assertions",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_device",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

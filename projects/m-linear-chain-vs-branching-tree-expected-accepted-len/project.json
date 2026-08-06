@@ -1,0 +1,44 @@
+{
+  "id": "m-linear-chain-vs-branching-tree-expected-accepted-len",
+  "title": "Linear Chain vs Branching Tree Expected Accepted Length",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Tree-based speculation & verification",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "speculative/tree.py",
+    "speculative/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Expected accepted length for linear draft chains",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "linear_rel_err", "op": "<=", "threshold": 0.001}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Tree verification and expected accepted length",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "tree_rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "path_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches buggy tree verification",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_tree_eval", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

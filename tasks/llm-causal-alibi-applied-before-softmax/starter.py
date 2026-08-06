@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def causal_alibi_logits(logits: np.ndarray, alibi_bias: np.ndarray) -> np.ndarray:
+def causal_alibi_logits(logits: list[list[float]], alibi_bias: list[list[float]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

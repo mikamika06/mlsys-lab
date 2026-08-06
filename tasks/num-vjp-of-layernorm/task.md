@@ -42,30 +42,29 @@ $$
 \hat{x}_i = \frac{x_i-\mu}{\sqrt{\sigma^2+\epsilon}}.
 $$
 
-The implementation should apply this chain rule directly with NumPy operations.
+The implementation should apply this chain rule directly with Python operations.
 
 ## Task
 
 Implement `layernorm_vjp(x, grad_y, eps)`:
 
 ```python
-def layernorm_vjp(x: np.ndarray, grad_y: np.ndarray, eps: float = 1e-5) -> np.ndarray:
+def layernorm_vjp(x: list[list[float]], grad_y: list[list[float]], eps: float=1e-05) -> list[list[float]]:
     ...
 ```
 
-The inputs `x` and `grad_y` are NumPy arrays of the same shape $(n,d)$. Each row
+The inputs `x` and `grad_y` are list of the same shape $(n,d)$. Each row
 is normalized independently. Return the gradient with respect to `x` with the
 same shape and `float64` dtype.
 
-Do not use automatic differentiation libraries. Use NumPy operations only.
+Do not use automatic differentiation libraries. Use Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1.0, 2.0, 3.0]])
-grad_y = np.ones_like(x)
+x = [[1.0, 2.0, 3.0]]
+grad_y = [[1.0 for _ in row] for row in x]
 
 dx = layernorm_vjp(x, grad_y)
 # dx is approximately [[0.0, 0.0, 0.0]]

@@ -1,0 +1,5 @@
+An inference server serving large language models is profiling a custom GPU kernel used in its attention layer. Engineers notice that the kernel exhibits surprisingly low hardware utilization: both the computed arithmetic intensity and the memory bandwidth utilization metrics reported by the profiler sit well below the device's theoretical peaks.
+
+At first glance, the low numbers look like a benign underutilization or an unoptimized dispatch queue. However, the system intermittently stalls during heavy batch execution, and latency spikes disproportionately when sequence lengths vary, even though raw execution time is short.
+
+Your task is to analyze this kernel's execution characteristics, compute its exact operational intensity, evaluate its throughput in GFLOP/s against the hardware theoretical peak, and pinpoint the specific bottleneck causing both low compute and low memory utilization simultaneously (such as latency-bound launch overheads, warp starvation, or tail-effect block distributions). You will build a profiling and analysis module to compute these metrics precisely and write a regression test suite to catch incorrect bottleneck classifications.

@@ -1,0 +1,5 @@
+Production dynamic batching for our sequence classification pipeline is experiencing severe GPU memory inflation and kernel execution overhead during peak traffic. Investigation shows that our current padding pipeline rounds every incoming variable-length sequence up to the maximum batch sequence length, creating significant amounts of waste padded tokens.
+
+Engineers have proposed moving to dynamic bucketed padding, where sequences are routed into pre-computed bucket boundaries to cap padding overhead. However, naive bucketing strategies either introduce too many CUDA kernel launches due to excessive distinct shape compilations or still waste too much memory when bucket boundaries are spaced too far apart.
+
+We need a flexible padding module that supports sequence bucket assignment, quantifies token padding waste across representative length distributions, and solves for an optimal bucket ladder given a joint cost model of token waste and bucket compilation overhead. Finally, we need a regression test suite to ensure future changes to padding algorithms or bucket planners catch subtle length alignment bugs.

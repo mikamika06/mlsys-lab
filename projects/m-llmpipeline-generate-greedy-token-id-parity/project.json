@@ -1,0 +1,41 @@
+{
+  "id": "m-llmpipeline-generate-greedy-token-id-parity",
+  "title": "LLMPipeline parity and overhead",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "OpenVINO GenAI LLMPipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["inference.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Token-id parity and throughput profiling",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "parity_match", "op": "==", "threshold": 1},
+        {"metric": "throughput_ratio", "op": ">=", "threshold": 5.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Fallback for missing chat templates",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "chat_ok", "op": "==", "threshold": 1},
+        {"metric": "fallback_ok", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test the decoding axis",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_axis", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

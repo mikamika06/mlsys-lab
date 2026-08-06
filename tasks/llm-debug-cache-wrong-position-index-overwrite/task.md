@@ -16,10 +16,10 @@ Implement `write_kv_cache(cache_k, cache_v, new_k, new_v, position)`.
 
 The function receives:
 
-- `cache_k`: a NumPy array of shape $(T, d)$ containing cached keys.
-- `cache_v`: a NumPy array of shape $(T, d)$ containing cached values.
-- `new_k`: a NumPy array of shape $(d,)$ containing the new key.
-- `new_v`: a NumPy array of shape $(d,)$ containing the new value.
+- `cache_k`: a list of shape $(T, d)$ containing cached keys.
+- `cache_v`: a list of shape $(T, d)$ containing cached values.
+- `new_k`: a list of shape $(d,)$ containing the new key.
+- `new_v`: a list of shape $(d,)$ containing the new value.
 - `position`: a zero-based integer token position.
 
 Return a tuple `(updated_k, updated_v)` where the rows at `position` contain `new_k` and `new_v`. Do not change other rows.
@@ -27,13 +27,12 @@ Return a tuple `(updated_k, updated_v)` where the rows at `position` contain `ne
 ## Example
 
 ```python
-import numpy as np
 
-cache_k = np.zeros((4, 3))
-cache_v = np.zeros((4, 3))
+cache_k = [[0.0] * 3 for _ in range(4)]
+cache_v = [[0.0] * 3 for _ in range(4)]
 
-new_k = np.array([1.0, 2.0, 3.0])
-new_v = np.array([4.0, 5.0, 6.0])
+new_k = [1.0, 2.0, 3.0]
+new_v = [4.0, 5.0, 6.0]
 
 updated_k, updated_v = write_kv_cache(
     cache_k, cache_v, new_k, new_v, 2
@@ -45,7 +44,7 @@ updated_k, updated_v = write_kv_cache(
 
 ## What the gate checks
 
-The gate builds the expected cache update using a NumPy oracle that writes the new token at the requested zero-based position. The returned key and value caches are compared against this reference using the maximum absolute error:
+The gate builds the expected cache update using a Python oracle that writes the new token at the requested zero-based position. The returned key and value caches are compared against this reference using the maximum absolute error:
 
 $$
 \mathrm{max\_abs\_err} = \max_i |x_i - \hat{x}_i|.

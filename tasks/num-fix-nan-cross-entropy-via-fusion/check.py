@@ -27,12 +27,13 @@ def grade(sol, fx) -> dict:
     # --- moderate random cases ---
     for _ in range(20):
         C = int(rng.randint(2, 10))
-        logits = rng.randn(C).astype(np.float64) * 1000.0
+        logits_arr = rng.randn(C).astype(np.float64) * 1000.0
+        logits_list = logits_arr.tolist()
         target = int(rng.randint(C))
 
-        ref_val = _stable_cross_entropy(logits, target)
+        ref_val = _stable_cross_entropy(logits_arr, target)
         try:
-            cand_val = float(sol.cross_entropy(logits.copy(), target))
+            cand_val = float(sol.cross_entropy(logits_list, target))
         except Exception:
             cand_val = float("nan")
 
@@ -42,11 +43,12 @@ def grade(sol, fx) -> dict:
     # --- extreme-magnitude cases that break naive implementations ---
     for scale in [1e-3, 1e2, 1e5, -1e5, 1e6]:
         C = 5
-        logits = np.full(C, scale, dtype=np.float64)
+        logits_arr = np.full(C, scale, dtype=np.float64)
+        logits_list = logits_arr.tolist()
         for t in range(C):
-            ref_val = _stable_cross_entropy(logits, t)
+            ref_val = _stable_cross_entropy(logits_arr, t)
             try:
-                cand_val = float(sol.cross_entropy(logits.copy(), t))
+                cand_val = float(sol.cross_entropy(logits_list, t))
             except Exception:
                 cand_val = float("nan")
             refs.append(ref_val)

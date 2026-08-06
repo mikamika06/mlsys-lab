@@ -29,7 +29,7 @@ def grade(sol, fx) -> dict:
         h_ref, err_ref = _ref_best_h(f, fprime, x, h_grid)
 
         try:
-            h_got = sol.best_h_central_diff(f, fprime, float(x), h_grid.copy())
+            h_got = sol.best_h_central_diff(f, fprime, float(x), h_grid.tolist())
         except Exception:
             return {"rel_err": float("inf")}
 
@@ -42,7 +42,7 @@ def grade(sol, fx) -> dict:
             return {"rel_err": float("inf")}
 
         # must be an actual element of the grid, not an interpolated value
-        if not np.any(h_grid == h_got):
+        if h_got not in h_grid.tolist():
             return {"rel_err": float("inf")}
 
         err_got = _central_diff_rel_err(f, fprime, x, h_got)

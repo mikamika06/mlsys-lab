@@ -1,0 +1,21 @@
+{
+  "id": "m-cost-of-deterministic-true",
+  "title": "Cost and management of deterministic FlashAttention and training divergence",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "backward-pass-determinism-and-dropout",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["detcost/metrics.py", "detcost/diagnose.py", "detcost/tradeoff.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Quantifying the latency and memory cost of deterministic execution", "check": "harness/m1.py",
+     "gates": [{"metric": "latency_ratio", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Diagnosing divergence points in training runs", "check": "harness/m2.py",
+     "gates": [{"metric": "divergence_detected", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for checkpointing and FA tradeoffs", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_tradeoff", "op": "==", "threshold": 1}]}
+  ]
+}

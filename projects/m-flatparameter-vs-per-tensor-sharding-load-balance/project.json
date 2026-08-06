@@ -1,0 +1,21 @@
+{
+  "id": "m-flatparameter-vs-per-tensor-sharding-load-balance",
+  "title": "FSDP1 Flat-Parameter Sharding and Load Balance",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP1 flat-parameter sharding fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["fsdp_balance/sharding.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "FlatParameter vs Per-Tensor Sharding Load Balance", "check": "harness/m1.py",
+     "gates": [{"metric": "balance_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Reconstruct auto_wrap_policy's Unit Assignment", "check": "harness/m2.py",
+     "gates": [{"metric": "units_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: regression test for freeze constraints", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_freeze_violation", "op": "==", "threshold": 1}]}
+  ]
+}

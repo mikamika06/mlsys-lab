@@ -58,40 +58,49 @@ def grade(sol, fx) -> dict:
     max_error = 0.0
 
     for _ in range(5):
-        batch = rng.integers(1, 4)
-        seq_len = rng.integers(1, 6)
-        d_model = rng.choice([8, 12, 16])  # even dimensions
-        max_seq_len = seq_len + rng.integers(3, 7)
+        batch = int(rng.integers(1, 4))
+        seq_len = int(rng.integers(1, 6))
+        d_model = int(rng.choice([8, 12, 16]))  # even dimensions
+        max_seq_len = seq_len + int(rng.integers(3, 7))
 
-        x = rng.standard_normal((batch, seq_len, d_model))
-        wq = rng.standard_normal((d_model, d_model))
-        wk = rng.standard_normal((d_model, d_model))
-        wv = rng.standard_normal((d_model, d_model))
+        x_np = rng.standard_normal((batch, seq_len, d_model))
+        wq_np = rng.standard_normal((d_model, d_model))
+        wk_np = rng.standard_normal((d_model, d_model))
+        wv_np = rng.standard_normal((d_model, d_model))
 
-        rope_freqs = 1.0 / (10000 ** (np.arange(d_model//2) / d_model))
+        rope_freqs_np = 1.0 / (10000 ** (np.arange(d_model//2) / d_model))
 
-        kv_cache_k = np.zeros((batch, max_seq_len, d_model), dtype=np.float64)
-        kv_cache_v = np.zeros((batch, max_seq_len, d_model), dtype=np.float64)
+        kv_cache_k_np = np.zeros((batch, max_seq_len, d_model), dtype=np.float64)
+        kv_cache_v_np = np.zeros((batch, max_seq_len, d_model), dtype=np.float64)
 
-        cache_pos = rng.integers(0, max_seq_len - seq_len + 1)
+        cache_pos = int(rng.integers(0, max_seq_len - seq_len + 1))
 
         # Copies for reference
-        kv_cache_k_ref = kv_cache_k.copy()
-        kv_cache_v_ref = kv_cache_v.copy()
+        kv_cache_k_ref = kv_cache_k_np.copy()
+        kv_cache_v_ref = kv_cache_v_np.copy()
+
+        # Convert inputs to lists for the solution function
+        x_list = x_np.tolist()
+        wq_list = wq_np.tolist()
+        wk_list = wk_np.tolist()
+        wv_list = wv_np.tolist()
+        rope_freqs_list = rope_freqs_np.tolist()
+        kv_cache_k_list = kv_cache_k_np.tolist()
+        kv_cache_v_list = kv_cache_v_np.tolist()
 
         try:
             q_sol, k_rot_sol, v_rot_sol = sol.fused_qkv_rope_kv_cache_write(
-                x, wq, wk, wv,
-                rope_freqs,
-                kv_cache_k, kv_cache_v,
+                x_list, wq_list, wk_list, wv_list,
+                rope_freqs_list,
+                kv_cache_k_list, kv_cache_v_list,
                 cache_pos
             )
         except Exception as e:
             return {"max_abs_err": float("inf")}
 
         q_ref, k_rot_ref, v_rot_ref = _reference(
-            x, wq, wk, wv,
-            rope_freqs,
+            x_np, wq_np, wk_np, wv_np,
+            rope_freqs_np,
             kv_cache_k_ref, kv_cache_v_ref,
             cache_pos
         )
@@ -102,9 +111,9 @@ def grade(sol, fx) -> dict:
         err_v = max_abs_err(v_rot_sol, v_rot_ref)
 
         # Compare caches
-        err_cache_k = max_abs_err(kv_cache_k[:, cache_pos:cache_pos+seq_len, :],
+        err_cache_k = max_abs_err(np.array(kv_cache_k_list)[:, cache_pos:cache_pos+seq_len, :],
                                   kv_cache_k_ref[:, cache_pos:cache_pos+seq_len, :])
-        err_cache_v = max_abs_err(kv_cache_v[:, cache_pos:cache_pos+seq_len, :],
+        err_cache_v = max_abs_err(np.array(kv_cache_v_list)[:, cache_pos:cache_pos+seq_len, :],
                                   kv_cache_v_ref[:, cache_pos:cache_pos+seq_len, :])
 
         case_max = max(err_q, err_k, err_v, err_cache_k, err_cache_v)

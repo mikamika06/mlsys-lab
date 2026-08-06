@@ -1,0 +1,21 @@
+{
+  "id": "m-autocast-dtype-oracle",
+  "title": "Autocast Dtype Oracle",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "AMP autocast semantics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["oracle/trace.py", "oracle/diagnose.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Dtype map of every intermediate tensor", "check": "harness/m1.py",
+     "gates": [{"metric": "maps_matched", "op": ">=", "threshold": 1.0}]},
+    {"n": 2, "title": "Autocast region FP32 fallback diagnosis", "check": "harness/m2.py",
+     "gates": [{"metric": "diagnoses_matched", "op": ">=", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: test suite catching misidentified FP32 regions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_broken_oracle", "op": "==", "threshold": 1.0}]}
+  ]
+}

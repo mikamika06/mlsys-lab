@@ -1,5 +1,5 @@
-import numpy as np
+import math
 
-def apply_rope(x: np.ndarray, pos: int) -> np.ndarray:
+def apply_rope(x: list[list[float]], pos: int) -> list[list[float]]:
     """Incorrect implementation of RoPE – the signs in the rotation are swapped."""
     raise NotImplementedError('your code here')

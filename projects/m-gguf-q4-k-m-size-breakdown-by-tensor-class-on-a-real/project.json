@@ -1,0 +1,45 @@
+{
+  "id": "m-gguf-q4-k-m-size-breakdown-by-tensor-class-on-a-real",
+  "title": "GGUF Q4_K_M Size Breakdown and Mixed-Precision MoE Quantization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "moe-quantization",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "moe_quant/breakdown.py",
+    "moe_quant/perplexity.py",
+    "moe_quant/map.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "GGUF Q4_K_M size breakdown by tensor class",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "breakdown_matched", "op": "==", "threshold": 1},
+        {"metric": "total_bytes_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Perplexity delta for selective quantization",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "perplexity_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Mixed-precision hot/cold expert quant map",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_map", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

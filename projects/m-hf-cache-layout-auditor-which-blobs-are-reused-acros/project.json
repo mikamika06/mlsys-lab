@@ -1,0 +1,21 @@
+{
+  "id": "m-hf-cache-layout-auditor-which-blobs-are-reused-acros",
+  "title": "HF cache layout auditor and cold-start budget model",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-vllm-serving",
+  "track": "docker-and-container-deployment",
+  "size": "M",
+  "difficulty": 3,
+  "edits": ["auditor/layout.py", "auditor/budget.py", "auditor/packaging.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Auditing blob reuse across model revisions", "check": "harness/m1.py",
+     "gates": [{"metric": "layout_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Cold-start budget prediction using size ratios", "check": "harness/m2.py",
+     "gates": [{"metric": "budget_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Offline packaging safeguard and regression tests", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_offline", "op": "==", "threshold": 1}]}
+  ]
+}

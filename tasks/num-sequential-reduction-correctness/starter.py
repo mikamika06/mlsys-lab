@@ -1,4 +1,2 @@
-import numpy as np
-
-def sequential_sum(values):
+def sequential_sum(values: list[float]) -> float:
     raise NotImplementedError('your code here')

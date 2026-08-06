@@ -1,0 +1,45 @@
+{
+  "id": "m-mmap-vs-heap-load-comparison",
+  "title": "Mmap vs heap weight loading comparison and attribution",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Binary size, memory footprint and selective builds",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "weightloader/loader.py",
+    "weightloader/attribution.py",
+    "weightloader/dedup.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Mmap vs heap memory footprint comparison",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "footprint_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Size-regression attribution and weight deduplication savings",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "attribution_match", "op": "==", "threshold": 1},
+        {"metric": "dedup_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for memory invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_dedup", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

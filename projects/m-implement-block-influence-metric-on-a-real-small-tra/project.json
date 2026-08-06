@@ -1,0 +1,40 @@
+{
+  "id": "m-implement-block-influence-metric-on-a-real-small-tra",
+  "title": "Block Influence metric and depth pruning for small transformers",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Depth pruning / layer dropping (ShortGPT)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "blockinf/metric.py",
+    "blockinf/prune.py",
+    "blockinf/eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Block Influence metric computation",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "max_rel_err", "op": "<", "threshold": 1e-4}]
+    },
+    {
+      "n": 2,
+      "title": "Layer selection from BI scores",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "selection_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Perplexity evaluation and regression safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_pruning", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "id": "m-hub-kernel-loading-without-flash-attn-installed",
+  "title": "Hub-kernel loading without flash-attn installed",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "huggingface-transformers-integration",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "hf_attn/router.py",
+    "hf_attn/cost.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Hub attention backend resolution without flash-attn",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "backends_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Train-step cost estimation across backends",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cost_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid fallback dispatch",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_fallback",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

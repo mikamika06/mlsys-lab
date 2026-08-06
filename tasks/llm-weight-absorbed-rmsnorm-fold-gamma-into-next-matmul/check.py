@@ -27,7 +27,7 @@ def grade(sol, fx) -> dict:
         X = rng.normal(size=(n, d)).astype(np.float64)
 
         try:
-            folded_W, folded_b = sol.fold_rmsnorm_gamma(W, b, gamma)
+            folded_W, folded_b = sol.fold_rmsnorm_gamma(W.tolist(), b.tolist(), gamma.tolist())
         except Exception:
             return {"max_abs_err": float("inf")}
 

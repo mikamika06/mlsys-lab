@@ -1,0 +1,69 @@
+{
+  "id": "m-compare-fused-vs-unfused-wall-time-from-a-recorded-d",
+  "title": "Compare fused vs unfused wall-time from a recorded do_bench run",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Elementwise & fused pointwise kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bench_analysis/parser.py",
+    "bench_analysis/metrics.py",
+    "bench_analysis/report.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse timing samples and extract latency statistics",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "traces_parsed",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute memory bandwidth and speedup ratios",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "metrics_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "throughput_ratio",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for metric calculation invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_ignored_dtypes",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-error-message-cause-fix-table",
+  "title": "FlashAttention error message triage, validator, and repro generator",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "error-triage-taxonomy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flashdiag/triage.py", "flashdiag/validator.py", "flashdiag/repro.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Error message cause and fix mapping", "check": "harness/m1.py",
+     "gates": [{"metric": "matches_count", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Preflight configuration validator", "check": "harness/m2.py",
+     "gates": [{"metric": "validation_accuracy", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching invalid fallback bypass", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

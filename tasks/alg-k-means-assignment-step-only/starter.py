@@ -1,4 +1,2 @@
-import numpy as np
-
-def assign_clusters(X: np.ndarray, centroids: np.ndarray) -> np.ndarray:
+def assign_clusters(X: list[list[float]], centroids: list[list[float]]) -> list[int]:
     raise NotImplementedError('your code here')

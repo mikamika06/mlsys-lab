@@ -1,0 +1,69 @@
+{
+  "id": "m-load-test-a-real-local-moe-server-ttft-and-throughpu",
+  "title": "Load-test a real local MoE server: TTFT and throughput under concurrency",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "moe-serving-frameworks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moeload/benchmark.py",
+    "moeload/metrics.py",
+    "moeload/server.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate local MoE server and record execution traces",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "traces_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Calculate TTFT percentiles, throughput, and latency ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "metrics_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "latency_ratio",
+          "op": ">=",
+          "threshold": 1.5
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for invalid TTFT metrics",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_zero_ttft",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

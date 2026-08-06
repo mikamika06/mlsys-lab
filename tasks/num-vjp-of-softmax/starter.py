@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def softmax_vjp(x: np.ndarray, g: np.ndarray) -> np.ndarray:
+def softmax_vjp(x: list[float], g: list[float]) -> list[float]:
     raise NotImplementedError('your code here')

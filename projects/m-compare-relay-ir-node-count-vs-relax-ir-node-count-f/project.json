@@ -1,0 +1,21 @@
+{
+  "id": "m-compare-relay-ir-node-count-vs-relax-ir-node-count-f",
+  "title": "Compare Relay vs Relax IR node counts and constant folding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TVM Relay legacy vs Relax migration & deployment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["relays/model.py", "relays/compare.py", "relays/fold.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Model definition and IR node count comparison", "check": "harness/m1.py",
+     "gates": [{"metric": "counts_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Reproduce constant-folding discrepancy", "check": "harness/m2.py",
+     "gates": [{"metric": "discrepancy_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test coverage", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_fold", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,59 @@
+import importlib.util
+import os
+import numpy as np
+
+
+def _run(path):
+    spec = importlib.util.spec_from_file_location("learner_regression", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    fns = [getattr(mod, n) for n in dir(mod)
+           if n.startswith("test_") and callable(getattr(mod, n))]
+    if not fns:
+        return None
+    for fn in fns:
+        fn()
+    return True
+
+
+def _survives(path):
+    try:
+        return _run(path) is True
+    except Exception:
+        return False
+
+
+def check(workdir):
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_quant": 0.0}
+    path = os.path.join(workdir, "tests", "test_regression.py")
+    if not os.path.isfile(path):
+        out["_note"] = "tests/test_regression.py is missing"
+        return out
+    try:
+        first = _run(path)
+    except Exception as e:
+        out["has_tests"] = 1.0
+        out["_note"] = f"the tests fail on a correct plan: {type(e).__name__}: {str(e)[:120]}"
+        return out
+    if first is None:
+        out["_note"] = "no test_* functions found"
+        return out
+    out["has_tests"] = 1.0
+    out["passes_on_good"] = 1.0
+
+    import bnbquant.quantize as q
+    good_q = q.blockwise_quantize
+
+    def broken_quant(tensor, block_size, bits=8):
+        res, scales, orig_len = good_q(tensor, block_size, bits)
+        return np.zeros_like(res), np.zeros_like(scales), orig_len
+
+    q.blockwise_quantize = broken_quant
+    import bnbquant
+    bnbquant.blockwise_quantize = broken_quant
+    try:
+        out["catches_broken_quant"] = 0.0 if _survives(path) else 1.0
+    finally:
+        q.blockwise_quantize = good_q
+        bnbquant.blockwise_quantize = good_q
+    return out

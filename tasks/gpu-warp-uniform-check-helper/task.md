@@ -15,7 +15,7 @@ It should return ``True`` only when *all* 32 lanes share the same value.
 Implement a Python function with the following signature:
 
 ```python
-def all_lanes_agree(pred: list | tuple | np.ndarray) -> bool:
+def all_lanes_agree(pred):
     """
     Return True iff every element in pred has the same truth‑value.
     The length of pred is assumed to be 32 (a warp), but the implementation may
@@ -23,7 +23,7 @@ def all_lanes_agree(pred: list | tuple | np.ndarray) -> bool:
     """
 ```
 
-The function must not depend on any external libraries beyond the standard library and NumPy.
+The function must not depend on any external libraries beyond the standard library and Python.
 
 ## Example
 

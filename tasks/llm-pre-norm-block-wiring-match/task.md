@@ -47,8 +47,21 @@ $$
 Implement `pre_norm_block`:
 
 ```python
-def pre_norm_block(x, gamma1, beta1, gamma2, beta2,
-                   Wq, Wk, Wv, Wo, W1, b1, W2, b2):
+def pre_norm_block(
+    x: list[list[float]],
+    gamma1: list[float],
+    beta1: list[float],
+    gamma2: list[float],
+    beta2: list[float],
+    Wq: list[list[float]],
+    Wk: list[list[float]],
+    Wv: list[list[float]],
+    Wo: list[list[float]],
+    W1: list[list[float]],
+    b1: list[float],
+    W2: list[list[float]],
+    b2: list[float],
+) -> list[list[float]]:
     ...
 ```
 
@@ -66,15 +79,14 @@ variance), single-head attention, and tanh-GELU MLP defined above.
 ## Example
 
 ```python
-import numpy as np
 T, d, h = 4, 8, 32
-rng = np.random.default_rng(1)
+rng = random.Random(1)
 x = rng.standard_normal((T, d))
-gamma1 = np.ones(d);  beta1 = np.zeros(d)
-gamma2 = np.ones(d);  beta2 = np.zeros(d)
+gamma1 = [1.0] * d;  beta1 = [0.0] * d
+gamma2 = [1.0] * d;  beta2 = [0.0] * d
 Wq, Wk, Wv, Wo = (rng.standard_normal((d, d)) / d**0.5 for _ in range(4))
-W1 = rng.standard_normal((d, h)) * 0.1; b1 = np.zeros(h)
-W2 = rng.standard_normal((h, d)) * 0.1; b2 = np.zeros(d)
+W1 = rng.standard_normal((d, h)) * 0.1; b1 = [0.0] * h
+W2 = rng.standard_normal((h, d)) * 0.1; b2 = [0.0] * d
 
 y = pre_norm_block(x, gamma1, beta1, gamma2, beta2,
                    Wq, Wk, Wv, Wo, W1, b1, W2, b2)
@@ -84,7 +96,7 @@ assert y.shape == (T, d)
 ## What the gate checks
 
 The grader builds several random blocks (varied `T`, `d`) with a fixed seed,
-computes the reference block output with an independent pure-NumPy implementation,
+computes the reference block output with an independent pure-Python implementation,
 and measures `max_abs_err` = the maximum absolute difference between your output
 and the reference over every element and every case. The gate passes when
 `max_abs_err < 1e-5`. Any wiring mistake — re-normalizing $x$ instead of $h$,

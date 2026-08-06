@@ -1,0 +1,45 @@
+{
+  "id": "m-derive-optimal-gamma-given-alpha-and-draft-target-la",
+  "title": "Optimal draft length gamma tuning for speculative decoding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Draft length (gamma) tuning",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "speculative/optimal.py",
+    "speculative/sweep.py",
+    "speculative/adaptive.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive optimal gamma given alpha and latency ratio",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "derivations_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Sweep gamma and measure real tokens/sec",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "argmin_index", "op": "==", "threshold": 1},
+        {"metric": "throughput_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Adaptive acceptance-streak heuristic and safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_adaptive", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

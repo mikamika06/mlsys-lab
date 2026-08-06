@@ -1,0 +1,22 @@
+{
+  "id": "m-compare-recorded-eval-loss-of-dynamic-quant-vs-unifo",
+  "title": "Unsloth workflow evaluation and VRAM log reconciliation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "unsloth-end-to-end-workflow",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["workflow/eval_compare.py", "workflow/vram_reconcile.py", "workflow/installer_parse.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compare recorded eval loss of dynamic vs uniform quantization", "check": "harness/m1.py",
+     "gates": [{"metric": "eval_loss_rel_err", "op": "<=", "threshold": 1e-4}]},
+    {"n": 2, "title": "Reconcile MoE fine-tune VRAM logs against bf16 baseline and parse installer transcripts", "check": "harness/m2.py",
+     "gates": [{"metric": "vram_reconciled", "op": "==", "threshold": 1},
+               {"metric": "installer_parsed", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching flawed evaluation records", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_flawed_eval", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "m-measure-the-quality-delta-of-a-plausible-wrong-templ",
+  "title": "Measure the quality delta of a plausible wrong template",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "prompt-templating-and-chat-format",
+  "edits": ["templater/quality.py", "templater/tools.py", "templater/stops.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure quality delta of wrong template", "check": "harness/m1.py",
+     "gates": [{"metric": "delta_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Render tool definitions and validate emitted call", "check": "harness/m2.py",
+     "gates": [{"metric": "tool_call_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: detect failing stop sequences", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_stops", "op": "==", "threshold": 1}]}
+  ]
+}

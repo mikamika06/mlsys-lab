@@ -1,0 +1,47 @@
+{
+  "id": "m-manual-prefix-priming-reuse-past-key-values-across-p",
+  "title": "Manual Prefix Priming and Dynamic KV Cache Truncation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "hf-transformers-cache-api",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "prefixcache/priming.py",
+    "prefixcache/benchmark.py",
+    "prefixcache/dynamic.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Manual prefix priming across prompts",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "prefix_matched", "op": "==", "threshold": 1.0},
+        {"metric": "cache_reused", "op": "==", "threshold": 1.0},
+        {"metric": "tokens_correct", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Cache-implementation benchmark table",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "table_matches", "op": "==", "threshold": 1.0},
+        {"metric": "savings_correct", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for DynamicCache crop and resume",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_crop", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

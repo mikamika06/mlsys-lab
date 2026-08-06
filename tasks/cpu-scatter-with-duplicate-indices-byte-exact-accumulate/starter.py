@@ -1,8 +1,4 @@
-import numpy as np
-
-def scatter_add(dst, idx, src, out):
+def scatter_add(dst: list[int], idx: list[int], src: list[int], out: list[int]) -> None:
     """Accumulate src into out at indices idx, handling duplicates.
     Currently overwrites — fix it to accumulate byte-exact."""
-    out[:] = dst
-    for i in range(len(idx)):
-        out[idx[i]] = src[i]  # BUG: overwrites on duplicate indices
+    raise NotImplementedError('your code here')

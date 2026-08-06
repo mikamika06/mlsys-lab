@@ -1,0 +1,7 @@
+# Quantization Pipeline Mismatch and Inaccurate Calibration
+
+We are currently observing severe accuracy degradation and activation skew when migrating our ONNX execution pipelines from dynamic float evaluation to static int8 quantization in our runtime engine.
+
+During static calibration, downstream nodes exhibit extreme output skew and clipping artifacts on activations with asymmetric float ranges, particularly after non-linear operations such as ReLU. In addition, when comparing dynamic quantization per batch against static calibration across the whole dataset, our validation metrics report inconsistent scaling factors and unexpected zero-point shifts. Inspection of current benchmark outputs revealed that zero-point calculations frequently spill out of the valid 8-bit integer range [0, 255], leading to silent wrap-around and overflow when values are stored in unsigned byte representations.
+
+We need a clean, standalone quantization parameter calculator and static calibration workflow. The module must calculate exact affine scale and clamped zero-point parameters from minimum and maximum float ranges, stream calibration datasets to compute aggregate min/max statistics across execution batches, and produce comparative error and size metrics against dynamic quantization baselines. Finally, we need a regression test suite to catch ungrounded or unclamped zero-point implementations before deployment.

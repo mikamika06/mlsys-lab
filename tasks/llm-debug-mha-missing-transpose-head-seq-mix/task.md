@@ -29,7 +29,7 @@ Implement `mha_forward(X, Wq, Wk, Wv, Wo, num_heads)`.
 
 The function receives:
 
-- `X`, a NumPy array with shape $(B,S,E)$.
+- `X`, a list with shape $(B,S,E)$.
 - `Wq`, `Wk`, and `Wv`, projection matrices with shape $(E,E)$.
 - `Wo`, an output projection matrix with shape $(E,E)$.
 - `num_heads`, the number of attention heads $H$.
@@ -44,15 +44,14 @@ Use the standard multi-head attention layout:
 4. Apply scaled dot-product attention.
 5. Merge heads back to $(B,S,E)$ and apply $Wo$.
 
-The implementation may use NumPy operations only.
+The implementation may use Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-X = np.zeros((2, 4, 8))
-W = np.eye(8)
+X = [[[0.0] * 8 for _ in range(4)] for _ in range(2)]
+W = [[1.0 if i == j else 0.0 for j in range(8)] for i in range(8)]
 
 Y = mha_forward(X, W, W, W, W, 2)
 # Y has shape (2, 4, 8)
@@ -61,7 +60,7 @@ Y = mha_forward(X, W, W, W, W, 2)
 
 ## What the gate checks
 
-The gate computes a NumPy reference implementation of multi-head attention and
+The gate computes a Python reference implementation of multi-head attention and
 compares the submitted output using maximum absolute error.
 
 The returned value must satisfy

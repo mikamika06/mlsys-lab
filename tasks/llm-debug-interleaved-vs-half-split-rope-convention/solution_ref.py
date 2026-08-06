@@ -1,19 +1,17 @@
-import numpy as np
+import math
 
 
-def apply_rope(x: np.ndarray, position: int) -> np.ndarray:
-    x = np.asarray(x, dtype=np.float64)
-    d = x.shape[0]
+def apply_rope(x: list[float], position: int) -> list[float]:
+    d = len(x)
     half = d // 2
 
-    idx = np.arange(half, dtype=np.float64)
-    theta = position * (10000.0 ** (-2.0 * idx / d))
-    c = np.cos(theta)
-    s = np.sin(theta)
-
-    out = np.empty_like(x, dtype=np.float64)
-    a = x[:half]
-    b = x[half:]
-    out[:half] = a * c - b * s
-    out[half:] = a * s + b * c
+    out = [0.0] * d
+    for i in range(half):
+        theta = position * (10000.0 ** (-2.0 * i / d))
+        c = math.cos(theta)
+        s = math.sin(theta)
+        a = x[i]
+        b = x[i + half]
+        out[i] = a * c - b * s
+        out[i + half] = a * s + b * c
     return out

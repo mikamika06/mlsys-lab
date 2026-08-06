@@ -13,22 +13,24 @@ def _oracle(W, W_q, X):
 def grade(sol, fx) -> dict:
     cases = [
         (
-            np.array([[1.0, -2.0], [3.0, 4.0]], dtype=np.float64),
-            np.array([[1.0, -1.5], [2.5, 4.0]], dtype=np.float64),
-            np.array([[1.0, 0.0, 2.0], [0.5, -1.0, 1.5]], dtype=np.float64),
+            [[1.0, -2.0], [3.0, 4.0]],
+            [[1.0, -1.5], [2.5, 4.0]],
+            [[1.0, 0.0, 2.0], [0.5, -1.0, 1.5]],
         ),
         (
-            np.arange(12, dtype=np.float64).reshape(3, 4),
-            np.arange(12, dtype=np.float64).reshape(3, 4) + 0.25,
-            np.array(
-                [[1.0, -1.0], [0.5, 2.0], [3.0, 0.0], [-2.0, 1.0]],
-                dtype=np.float64,
-            ),
+            np.arange(12, dtype=np.float64).reshape(3, 4).tolist(),
+            (np.arange(12, dtype=np.float64).reshape(3, 4) + 0.25).tolist(),
+            [
+                [1.0, -1.0],
+                [0.5, 2.0],
+                [3.0, 0.0],
+                [-2.0, 1.0],
+            ],
         ),
         (
-            np.array([[0.1, -0.2, 0.3]], dtype=np.float64),
-            np.array([[0.0, -0.25, 0.25]], dtype=np.float64),
-            np.array([[2.0, 1.0], [-1.0, 0.5], [0.0, 3.0]], dtype=np.float64),
+            [[0.1, -0.2, 0.3]],
+            [[0.0, -0.25, 0.25]],
+            [[2.0, 1.0], [-1.0, 0.5], [0.0, 3.0]],
         ),
     ]
 

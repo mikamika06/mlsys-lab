@@ -1,0 +1,40 @@
+{
+  "id": "m-compute-batching-efficiency-ratio-from-a-real-promet",
+  "title": "Compute batching efficiency ratio and latency decomposition from Prometheus",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Triton Metrics & Observability",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "batching/efficiency.py",
+    "batching/latency.py",
+    "batching/diagnostics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute Batching Efficiency Ratio From a Real Prometheus Dump",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 2,
+      "title": "Decompose End-to-End Latency Into Queueing vs Execution Fractions",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 3,
+      "title": "Diagnose Throughput Drop: More Queueing or Slower Compute?",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "m-measure-on-disk-kernel-cache-footprint-across-5-mode",
+  "title": "Measure on-disk kernel-cache footprint across 5 model sizes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Compile caching (FXGraphCache / Mega-cache / AOTAutogradCache)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "cachefootprint/measure.py",
+    "cachefootprint/invalidation.py",
+    "cachefootprint/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure on-disk footprint across 5 model sizes",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "sizes_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Detect path-keyed cache invalidation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "invalidation_detected", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Compare raw directory bytes vs artifact bytes",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_size_inflation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

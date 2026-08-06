@@ -12,34 +12,32 @@ During self-attention, a boolean mask matrix dictates which tokens can attend to
 Write `classify_masks(masks)`:
 
 ```python
-import numpy as np
 
-def classify_masks(masks: list[np.ndarray]) -> list[str]:
+def classify_masks(masks: list[list[list[bool]]]) -> list[str]:
     ...
 ```
 
-Given a list of 2D boolean NumPy arrays of shape `(N, N)`, return a list of strings labeling each mask as one of `"bidirectional"`, `"causal"`, `"window"`, or `"prefix-lm"`. You may assume all input masks perfectly match one of these four categories for some valid parameter ($w$ or $P$).
+Given a list of 2D boolean list of shape `(N, N)`, return a list of strings labeling each mask as one of `"bidirectional"`, `"causal"`, `"window"`, or `"prefix-lm"`. You may assume all input masks perfectly match one of these four categories for some valid parameter ($w$ or $P$).
 
 ## Example
 
 ```python
-import numpy as np
 
 # A 4x4 Causal Mask
-causal_mask = np.array([
+causal_mask = [
     [ True, False, False, False],
     [ True,  True, False, False],
     [ True,  True,  True, False],
     [ True,  True,  True,  True]
-])
+]
 
 # A 4x4 Prefix-LM Mask with P=2
-prefix_mask = np.array([
+prefix_mask = [
     [ True,  True, False, False],
     [ True,  True, False, False],
     [ True,  True,  True, False],
     [ True,  True,  True,  True]
-])
+]
 
 classify_masks([causal_mask, prefix_mask])
 # Returns: ["causal", "prefix-lm"]

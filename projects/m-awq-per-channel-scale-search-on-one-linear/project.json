@@ -1,0 +1,40 @@
+{
+  "id": "m-awq-per-channel-scale-search-on-one-linear",
+  "title": "AWQ per-channel scale search on one linear layer",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "AWQ activation-aware scaling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["awq/scale.py", "awq/search.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Prove and implement function-preserving scale folding",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "scale_folding_exact", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Alpha grid MSE search and optimal scale selection",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "grid_search_matched", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching decoupled scale folding",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_decoupled_folding", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

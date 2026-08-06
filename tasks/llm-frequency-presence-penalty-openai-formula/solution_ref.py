@@ -1,21 +1,19 @@
-import numpy as np
-
 def apply_frequency_presence_penalty(
-    logits: np.ndarray,
-    token_counts: np.ndarray,
+    logits: list[float],
+    token_counts: list[int],
     freq_penalty: float,
     presence_penalty: float
-) -> np.ndarray:
+) -> list[float]:
     """
     Apply OpenAI's frequency + presence penalty to a vector of logits.
 
     Parameters
     ----------
-    logits : np.ndarray
-        Raw logits for each token, shape (vocab_size,).
-    token_counts : np.ndarray
+    logits : list[float]
+        Raw logits for each token.
+    token_counts : list[int]
         Integer counts of how many times each token has appeared in the prompt,
-        same shape as ``logits``.
+        same length as ``logits``.
     freq_penalty : float
         Penalty coefficient applied per occurrence of a token.
     presence_penalty : float
@@ -23,17 +21,12 @@ def apply_frequency_presence_penalty(
 
     Returns
     -------
-    np.ndarray
-        Penalised logits, dtype float64 and same shape as ``logits``.
+    list[float]
+        Penalised logits, same length as ``logits``.
     """
-    # Ensure correct dtypes
-    logits = np.asarray(logits, dtype=np.float64)
-    token_counts = np.asarray(token_counts, dtype=np.int64)
-
-    # Presence mask: 1.0 if count > 0 else 0.0
-    presence_mask = (token_counts > 0).astype(np.float64)
-
-    # Total penalty per token
-    penalty = token_counts * freq_penalty + presence_mask * presence_penalty
-
-    return logits - penalty
+    penalised = []
+    for l, c in zip(logits, token_counts):
+        presence = 1.0 if c > 0 else 0.0
+        penalty = c * freq_penalty + presence * presence_penalty
+        penalised.append(l - penalty)
+    return penalised

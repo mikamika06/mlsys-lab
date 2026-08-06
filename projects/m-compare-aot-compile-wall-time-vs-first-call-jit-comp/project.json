@@ -1,0 +1,68 @@
+{
+  "id": "m-compare-aot-compile-wall-time-vs-first-call-jit-comp",
+  "title": "Compare AOT compile wall time vs first-call JIT compilation and StableHLO op diffing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "JAX AOT staged compilation & StableHLO export",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "aot_compare/profiling.py",
+    "aot_compare/stablehlo_diff.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "AOT compile wall time vs JIT first-call compilation profiling",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "time_ratio_rel_err",
+          "op": "<=",
+          "threshold": 0.25
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "StableHLO op count parser and flag diffing",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "op_diff_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "parse_ops_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching broken compilation analysis",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_fault",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

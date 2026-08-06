@@ -3,7 +3,7 @@ import numpy as np
 def grade(sol, fx) -> dict:
     """
     Verify that sol.launch_indices(block_dim, grid_dim)
-    returns a NumPy array equal to np.arange(block_dim*grid_dim,dtype=np.int64).
+    returns a list equal to the expected reference.
     """
     ok = 1.0
     cases = [
@@ -16,17 +16,17 @@ def grade(sol, fx) -> dict:
     for block_dim, grid_dim in cases:
         try:
             got = sol.launch_indices(block_dim, grid_dim)
-            expected = np.arange(block_dim * grid_dim, dtype=np.int64)
+            expected = np.arange(block_dim * grid_dim, dtype=np.int64).tolist()
         except Exception:
             ok = 0.0
             break
-        if not isinstance(got, np.ndarray):
+        if not isinstance(got, list):
             ok = 0.0
             break
-        if got.shape != expected.shape or got.dtype != expected.dtype:
+        if len(got) != len(expected):
             ok = 0.0
             break
-        if not np.array_equal(got, expected):
+        if got != expected:
             ok = 0.0
             break
     return {"exact_match": ok}

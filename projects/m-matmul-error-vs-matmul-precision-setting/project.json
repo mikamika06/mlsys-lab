@@ -1,0 +1,41 @@
+{
+  "id": "m-matmul-error-vs-matmul-precision-setting",
+  "title": "Matmul error and BF16 safety",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Low-precision numerics: bf16, fp16, fp32, TF32",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["numerics.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Implement truncations and matmul chain error",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "tf32_truncation", "op": "==", "threshold": 1},
+        {"metric": "bf16_truncation", "op": "==", "threshold": 1},
+        {"metric": "chain_correct", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Identify bf16-unsafe layers",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "unsafe_layers_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: verify tf32 remains more precise than bf16",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_tf32", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

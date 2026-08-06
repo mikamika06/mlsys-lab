@@ -1,0 +1,21 @@
+{
+  "id": "m-deployment-target-feature-matrix",
+  "title": "Deployment target feature matrix and image input repair",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "coremltools ct.convert: the conversion contract",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["exporttools/matrix.py", "exporttools/repair.py", "exporttools/opset.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Deployment-target feature matrix validation", "check": "harness/m1.py",
+     "gates": [{"metric": "matrix_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Repair broken image-input conversion specifications", "check": "harness/m2.py",
+     "gates": [{"metric": "repair_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Enumerate mlprogram opset and operator frequency", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_opset", "op": "==", "threshold": 1}]}
+  ]
+}

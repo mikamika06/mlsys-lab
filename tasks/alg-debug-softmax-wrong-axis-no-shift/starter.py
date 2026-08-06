@@ -1,5 +1,5 @@
-import numpy as np
+import math
+from collections import defaultdict
 
-def softmax(x: np.ndarray, axis: int = -1) -> np.ndarray:
-    exps = np.exp(x)
-    return exps / np.sum(exps, axis=0, keepdims=True)
+def softmax(x: list[list[float]], axis: int = -1) -> list[list[float]]:
+    raise NotImplementedError('your code here')

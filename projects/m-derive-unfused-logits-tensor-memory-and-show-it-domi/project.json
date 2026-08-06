@@ -1,0 +1,64 @@
+{
+  "id": "m-derive-unfused-logits-tensor-memory-and-show-it-domi",
+  "title": "Unfused logits memory and fused Triton kernel",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "unsloth-fused-triton-kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "logits/memory.py",
+    "logits/chunked.py",
+    "logits/kernel.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive unfused logits tensor memory and dominate weight memory",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "memory_ratio_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Vocab-chunked cross-entropy memory savings",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "savings_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Toy fused Triton kernel in interpret mode matching torch",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_wrong_kernel",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

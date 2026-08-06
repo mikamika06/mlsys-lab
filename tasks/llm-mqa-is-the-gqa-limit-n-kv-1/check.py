@@ -19,13 +19,14 @@ def grade(sol, fx) -> dict:
         (rng.standard_normal((1, 7, 10)), rng.standard_normal((1, 7, 10)), rng.standard_normal((1, 7, 8))),
     ]
     max_err = 0.0
-    for Q, K, V in cases:
+    for Q_arr, K_arr, V_arr in cases:
         try:
-            cand = sol.gqa_limit_nkv_1(Q, K, V)
+            cand = sol.gqa_limit_nkv_1(Q_arr.tolist(), K_arr.tolist(), V_arr.tolist())
+            cand_arr = np.array(cand)
         except Exception as e:
             return {"max_abs_err": float("inf")}
-        ref = _reference(Q, K, V)
-        err = np.max(np.abs(cand - ref))
+        ref = _reference(Q_arr, K_arr, V_arr)
+        err = np.max(np.abs(cand_arr - ref))
         if err > max_err:
             max_err = err
     return {"max_abs_err": max_err}

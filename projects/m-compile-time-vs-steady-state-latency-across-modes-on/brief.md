@@ -1,0 +1,9 @@
+Our inference pipeline on CPU is facing an urgent performance bottleneck in production, and standard eager-mode execution is failing to deliver acceptable throughput or latency figures. We are experimenting with PyTorch's compilation infrastructure, specifically targeting torch.compile and its various configuration modes such as default, reduce-overhead, and max-autotune, alongside exploring the impact of module freezing on static constant folding.
+
+However, when we integrate compilation into our service, we hit a wall of unpredictable behaviors. The first major issue is the massive spike in initial compilation overhead: invoking torch.compile for the first time on our core modules freezes the application for an unacceptably long duration before the first inference request can even be served. We need to understand the trade-offs between this heavy upfront compilation cost and the steady-state latency achieved across different modes.
+
+Second, we lack a clean abstraction to select and configure these compilation modes programmatically based on runtime flags or hardware profiles, leading to messy, error-prone conditional logic scattered across our codebase.
+
+Third, and most critically, our model parameters contain several constants and embedding weights that should ideally be folded directly into the compiled graph during optimization, but without explicit model freezing, these remain as dynamic tensor lookups or redundant operations, hurting our steady-state execution speed.
+
+We need you to build a clean, robust, and well-tested low-level system module that implements a precise compilation mode selector, analyzes compile-time versus steady-state latency profiles, and correctly handles module freezing to ensure optimal constant folding on CPU. Every milestone must be rigorously engineered and verified.

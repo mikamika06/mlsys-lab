@@ -15,32 +15,28 @@ When an entry of $z$ is set to $-\infty$, $\exp(-\infty)=0$ and the correspondin
 Implement `causal_masked_softmax(scores)`:
 
 ```python
-def causal_masked_softmax(scores: np.ndarray) -> np.ndarray:
+def causal_masked_softmax(scores: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
-`scores` is a 2‑D NumPy array of shape $(L, L)$ containing raw attention logits. The function must return an array of the same shape where each row has been softmaxed after applying a lower‑triangular causal mask (including the diagonal). The output should be of type `float64`.
+`scores` is a 2‑D list of shape $(L, L)$ containing raw attention logits. The function must return an array of the same shape where each row has been softmaxed after applying a lower‑triangular causal mask (including the diagonal). The output should be of type `float64`.
 
 ## Example
 
 ```python
-import numpy as np
-scores = np.array([[0, 1, 2],
+scores = [[0, 1, 2],
                    [3, 4, 5],
-                   [6, 7, 8]], dtype=np.float64)
+                   [6, 7, 8]]
 
 masked = causal_masked_softmax(scores)
-print(masked)
-# [[0.09003057 0.24472847 0.66524096]
-#  [1.         0.         0.        ]
-#  [1.         0.         0.        ]]
+print(masked)  # [[1.0, 0.0, 0.0], [0.2689414213699951, 0.7310585786300048, 0.0], [0.09003057317038046, 0.24472847105479767, 0.665240955774822]]
 ```
 
 The first row is softmaxed normally; the second and third rows have all future positions masked to $-\infty$ before the softmax, so only the diagonal entry survives.
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy’s broadcasting and `np.exp`. It then evaluates the maximum absolute error between your output and the reference. Your solution must achieve
+The grader computes a reference implementation using list comprehensions and `math.exp`. It then evaluates the maximum absolute error between your output and the reference. Your solution must achieve
 
 $$
 \max_{i,j} |\, \hat{y}_{ij} - y_{ij}\,| \le 10^{-6}.

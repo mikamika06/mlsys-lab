@@ -31,51 +31,50 @@ with its own value.
 Implement `windowed_ring_attention(Q, K, V, W)`:
 
 ```python
-def windowed_ring_attention(Q, K, V, W):
+def windowed_ring_attention(
+    Q: list[list[float]],
+    K: list[list[float]],
+    V: list[list[float]],
+    W: int,
+) -> tuple[list[list[float]], list[list[float]], list[list[float]]]:
     ...
     return out, Kbuf, Vbuf
 ```
 
-- `Q`, `K` are `(n, d)` NumPy arrays, `V` is `(n, dv)`; `W` is the window size (int, `1 <= W <= n`).
-- Stream the tokens `0..n-1`. Maintain a capacity-`W` ring buffer, writing token
-  `t` into physical slot `t % W` and overwriting whatever was there.
+- `Q`, `K` are `(n, d)` list, `V` is `(n, dv)`; `W` is the window size (int, `1 <= W <= n`).
+- Stream the tokens `0..n-1`. Maintain a capacity-`W` ring buffer, writing token `t` into physical slot `t % W` and overwriting whatever was there.
 - Return:
   - `out`: `(n, dv)` — the per-step sliding-window attention outputs $o_t$.
   - `Kbuf`: `(W, d)` — the **final** physical contents of the key ring buffer.
   - `Vbuf`: `(W, dv)` — the **final** physical contents of the value ring buffer.
+
 
 Use $\sqrt{d}$ scaling and a numerically stable softmax (subtract the row max).
 
 ## Example
 
 ```python
-import numpy as np
 n, d, dv, W = 5, 2, 2, 3
-Q = np.arange(n * d, dtype=float).reshape(n, d)
-K = np.arange(n * d, dtype=float).reshape(n, d)
-V = np.arange(n * dv, dtype=float).reshape(n, dv)
+Q = [[float(i * d + j) for j in range(d)] for i in range(n)]
+K = [[float(i * d + j) for j in range(d)] for i in range(n)]
+V = [[float(i * dv + j) for j in range(dv)] for i in range(n)]
 
 out, Kbuf, Vbuf = windowed_ring_attention(Q, K, V, W)
-# out.shape == (5, 2)
+# len(out) == 5, len(out[0]) == 2
 # Step t=4 attends only to tokens {2, 3, 4} (the last W=3), not {0,1}.
 # After streaming all 5 tokens the ring buffer (capacity 3) holds, by slot:
 #   slot 0 -> token 3   (3 % 3 == 0, most recent writer of slot 0)
 #   slot 1 -> token 4   (4 % 3 == 1)
 #   slot 2 -> token 2   (2 % 3 == 2)
-# so Kbuf == K[[3, 4, 2]] and Vbuf == V[[3, 4, 2]].
+# so Kbuf == [K[3], K[4], K[2]] and Vbuf == [V[3], V[4], V[2]].
 ```
 
 ## What the gate checks
 
-Two gates, evaluated on several random streams (all with $n > W$, so the buffer
-fully wraps):
+Two gates, evaluated on several random streams (all with $n > W$, so the buffer fully wraps):
 
-- `max_abs_err` $\le 10^{-5}$: the largest absolute difference between your `out`
-  and a straightforward windowed-attention reference computed in chronological
-  order. A full (non-evicting) cache attends to every past token and fails; an
-  off-by-one window boundary fails.
-- `buffer_max_abs_err` $\le 10^{-5}$: the largest absolute difference between your
-  final `Kbuf`/`Vbuf` and the reference ring layout (token `t` at slot `t % W`,
-  last writer wins). This forces genuine circular indexing, not just a sliced list.
+- `max_abs_err` $\le 10^{-5}$: the largest absolute difference between your `out` and a straightforward windowed-attention reference computed in chronological order. A full (non-evicting) cache attends to every past token and fails; an off-by-one window boundary fails.
+- `buffer_max_abs_err` $\le 10^{-5}$: the largest absolute difference between your final `Kbuf`/`Vbuf` and the reference ring layout (token `t` at slot `t % W`, last writer wins). This forces genuine circular indexing, not just a sliced list.
 
-Both references are computed with NumPy inside the grader — nothing is hardcoded.
+
+Both references are computed with Python inside the grader — nothing is hardcoded.

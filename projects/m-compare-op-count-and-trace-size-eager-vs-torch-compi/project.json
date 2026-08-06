@@ -1,0 +1,19 @@
+{
+  "id": "m-compare-op-count-and-trace-size-eager-vs-torch-compi",
+  "title": "Compare Op Count, Trace Size, and Recompile Cache-Hit Ratio",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "torch-compile-inductor-profiling",
+  "edits": ["prof/analysis.py", "prof/cache.py", "prof/trace.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Op count and trace size comparison", "check": "harness/m1.py",
+     "gates": [{"metric": "comparison_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Recompile cache-hit ratio across sequence", "check": "harness/m2.py",
+     "gates": [{"metric": "ratio_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_logic", "op": "==", "threshold": 1}]}
+  ]
+}

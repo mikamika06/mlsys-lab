@@ -1,0 +1,44 @@
+{
+  "id": "m-encode-decode-a-sparse-tensor-to-bitmask-values-form",
+  "title": "Encode and decode sparse tensors to bitmask-values format",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-pruning-distill",
+  "track": "Sparse checkpoint formats & compressed-tensors serialization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "sparsecoder/codec.py",
+    "sparsecoder/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Round-trip encode and decode for bitmask and values",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "exact_match_fraction", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Break-even sparsity point and real byte-size savings",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "breakeven_match", "op": "==", "threshold": 1},
+        {"metric": "savings_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching incorrect decoding length",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_decoder", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

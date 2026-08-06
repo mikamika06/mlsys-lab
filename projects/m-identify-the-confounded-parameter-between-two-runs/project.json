@@ -1,0 +1,20 @@
+{
+  "id": "m-identify-the-confounded-parameter-between-two-runs",
+  "title": "Identify confounded parameters and tune llama-bench throughput",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "perf-measurement-llama-bench",
+  "difficulty": 3,
+  "edits": ["benchopt/analysis.py", "benchopt/tuning.py", "benchopt/validation.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Isolate the confounded parameter between runs", "check": "harness/m1.py",
+     "gates": [{"metric": "confounder_identified", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Tune parameters to beat default prompt processing throughput", "check": "harness/m2.py",
+     "gates": [{"metric": "throughput_beaten", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for tg ordering vs bytes-read", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_ordering", "op": "==", "threshold": 1}]}
+  ]
+}

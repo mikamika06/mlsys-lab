@@ -1,0 +1,22 @@
+{
+  "id": "m-count-trt-subgraphs-from-a-log",
+  "title": "TensorRT Execution Provider Subgraph Analysis and Cache Benchmarking",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT TensorRT EP: subgraph partitioning, engine & timing caches",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["trtlog/parser.py", "trtlog/bench.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Count TRT subgraphs and node details from logs", "check": "harness/m1.py",
+     "gates": [{"metric": "subgraphs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "CUDA EP vs TRT EP head-to-head and timing cache reuse", "check": "harness/m2.py",
+     "gates": [{"metric": "latency_ratio_match", "op": "==", "threshold": 1},
+               {"metric": "cache_reuse_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches parser or cache bugs", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_parser", "op": "==", "threshold": 1}]}
+  ]
+}

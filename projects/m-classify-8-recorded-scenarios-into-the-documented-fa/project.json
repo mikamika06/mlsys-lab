@@ -1,0 +1,22 @@
+{
+  "id": "m-classify-8-recorded-scenarios-into-the-documented-fa",
+  "title": "Classify 8 recorded scenarios into the documented failure-mode taxonomy",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Failure modes & pathological cases",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["specfail/classifier.py", "specfail/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Classify the 8 scenarios against the taxonomy", "check": "harness/m1.py",
+     "gates": [{"metric": "scenarios_classified", "op": "==", "threshold": 8}]},
+    {"n": 2, "title": "Compute taxonomic confidence and distribution metrics", "check": "harness/m2.py",
+     "gates": [{"metric": "metrics_match", "op": "==", "threshold": 1},
+               {"metric": "distribution_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for failure taxonomy classification", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_classifier", "op": "==", "threshold": 1}]}
+  ]
+}

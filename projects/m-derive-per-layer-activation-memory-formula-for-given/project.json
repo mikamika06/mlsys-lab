@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-per-layer-activation-memory-formula-for-given",
+  "title": "Derive per-layer activation memory formula",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "activation-memory-accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["actmem/formula.py", "actmem/crossover.py", "actmem/total.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-layer activation memory formula", "check": "harness/m1.py",
+     "gates": [{"metric": "formula_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Attention vs MLP memory crossover sequence length", "check": "harness/m2.py",
+     "gates": [{"metric": "crossover_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Total un-checkpointed activation memory across layers and safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -35,29 +35,28 @@ in either regime, at the same $O(1)$ memory and $O(N)$ time cost as Kahan.
 Implement both:
 
 ```python
-def kahan_sum(x: np.ndarray) -> float:
+def kahan_sum(x: list[float]) -> float:
     ...
 
-def neumaier_sum(x: np.ndarray) -> float:
+def neumaier_sum(x: list[float]) -> float:
     ...
 ```
 
-* `x` — a 1-D `float64` NumPy array.
+* `x` — a 1-D `float64` list.
 * `kahan_sum` must implement the **classic** Kahan recurrence exactly as
   written above (including its blind spot — do not fix it here).
 * `neumaier_sum` must implement the magnitude-checked Neumaier recurrence
   above, which stays accurate even when a running sum near zero is followed
   by a much larger addend.
-* Both return a Python/NumPy scalar float, computed with `float64` arithmetic
+* Both return a Python/Python scalar float, computed with `float64` arithmetic
   throughout (no casting through `float32` or `Decimal`).
 
 ## Example
 
 ```python
-import numpy as np
 
 # running sum sits at 1.0, then a huge addend arrives, then it cancels back out
-x = np.array([1.0, 1e16, 1.0, 1.0, -1e16, 1.0, 1.0, 1.0])
+x = [1.0, 1e16, 1.0, 1.0, -1e16, 1.0, 1.0, 1.0]
 
 kahan_sum(x)     # loses several of the unit terms once |s| < |x| — inaccurate
 neumaier_sum(x)  # exact: 6.0

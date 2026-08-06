@@ -1,0 +1,26 @@
+{
+  "id": "m-find-gpu-only-custom-call-fusion-ops-by-comparing-cp",
+  "title": "Find GPU-only custom-call/fusion ops via HLO diffs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "XLA HLO internals & dumps",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "hlodiff/parser.py",
+    "hlodiff/diff.py",
+    "hlodiff/compile.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Parse HLO modules and extract op signatures", "check": "harness/m1.py",
+     "gates": [{"metric": "parsed_correctly", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Find GPU-only custom-call and fusion ops", "check": "harness/m2.py",
+     "gates": [{"metric": "fusions_matched", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches XLA failures", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_lowering", "op": "==", "threshold": 1}]}
+  ]
+}

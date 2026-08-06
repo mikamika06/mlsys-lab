@@ -1,5 +1,11 @@
-import numpy as np
+import math
 
-def ffn_forward(x, W_up, b_up, W_down, b_down):
+def ffn_forward(
+    x: list[float],
+    W_up: list[list[float]],
+    b_up: list[float],
+    W_down: list[list[float]],
+    b_down: list[float],
+) -> list[float]:
     """Vanilla FFN forward: down_proj(gelu(up_proj(x)))."""
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')

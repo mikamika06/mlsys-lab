@@ -1,0 +1,21 @@
+{
+  "id": "m-detect-a-per-step-upward-drift",
+  "title": "Detect per-step upward drift and classify memory snapshots",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "Memory snapshots and leak hunting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["leak/drift.py", "leak/snapshots.py", "leak/instrument.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect a per-step upward drift", "check": "harness/m1.py",
+     "gates": [{"metric": "drift_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Classify six snapshots", "check": "harness/m2.py",
+     "gates": [{"metric": "classification_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches broken drift detection", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_drift", "op": "==", "threshold": 1}]}
+  ]
+}

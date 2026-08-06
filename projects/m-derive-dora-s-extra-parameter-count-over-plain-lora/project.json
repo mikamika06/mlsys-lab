@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-dora-s-extra-parameter-count-over-plain-lora",
+  "title": "Derive DoRA parameters, forward pass, and rsLoRA scaling",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "advanced-adapters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["adapter/dora.py", "adapter/scaling.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive DoRA's extra parameter count over plain LoRA", "check": "harness/m1.py",
+     "gates": [{"metric": "counts_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Implement DoRA forward pass and match numpy reference", "check": "harness/m2.py",
+     "gates": [{"metric": "forward_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Derive rsLoRA's stabilized scaling vs plain LoRA's blow-up", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_scaling_fault", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,21 +1,18 @@
 import math
-import numpy as np
 
-def rmsnorm(x, weight, eps=1e-6):
-    x_arr = np.asarray(x, dtype=np.float64)
-    w_arr = np.asarray(weight, dtype=x_arr.dtype)
-    n = len(x_arr)
-    
+def rmsnorm(x: list[float], weight: list[float], eps: float = 1e-6) -> list[float]:
+    n = len(x)
+
     sq_sum = 0.0
     for i in range(n):
-        val = float(x_arr[i])
+        val = float(x[i])
         sq_sum += val * val
-        
+
     mean_sq = sq_sum / n
     denom = math.sqrt(mean_sq + eps)
-    
-    out = np.empty(x_arr.shape, dtype=x_arr.dtype)
+
+    out = []
     for i in range(n):
-        out[i] = float(w_arr[i]) * (float(x_arr[i]) / denom)
-        
+        out.append(float(weight[i]) * (float(x[i]) / denom))
+
     return out

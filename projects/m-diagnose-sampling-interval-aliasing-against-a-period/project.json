@@ -1,0 +1,63 @@
+{
+  "id": "m-diagnose-sampling-interval-aliasing-against-a-period",
+  "title": "Diagnosing sampling interval aliasing against periodic loops",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "profiler-taxonomy-sampling-vs-instrumentation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "sampler/core.py",
+    "sampler/diagnose.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Toy statistical sampler vs instrumented ground truth",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "sampler_match",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose aliasing across sampling intervals",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "aliasing_match",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for aliasing checks",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_bias",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

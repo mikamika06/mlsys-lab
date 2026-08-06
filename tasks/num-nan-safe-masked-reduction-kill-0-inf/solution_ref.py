@@ -1,10 +1,10 @@
-import numpy as np
-
-def masked_sum(data, mask):
+def masked_sum(data: list[float], mask: list[bool]) -> float:
     """Return the sum of data values where mask is True.
 
-    Uses np.where to avoid the 0*inf NaN trap that data*mask creates.
+    Uses an explicit loop to avoid the 0*inf NaN trap.
     """
-    data = np.asarray(data, dtype=np.float64)
-    mask = np.asarray(mask, dtype=bool)
-    return float(np.sum(np.where(mask, data, 0.0)))
+    total = 0.0
+    for d, m in zip(data, mask):
+        if m:
+            total += d
+    return float(total)

@@ -1,0 +1,45 @@
+{
+  "id": "m-copy-heavy-vs-creative-writing-prompt-n-gram-accepta",
+  "title": "Copy-heavy vs creative-writing prompt n-gram acceptance gap",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "N-gram / prompt-lookup decoding",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ngrameval/analyzer.py",
+    "ngrameval/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analyze n-gram match distribution across prompts",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "distributions_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute acceptance rates and entropy gap metrics",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "acceptance_rate_match", "op": "==", "threshold": 1},
+        {"metric": "entropy_gap_match", "op": "==", "threshold": 1},
+        {"metric": "workload_classification_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching flawed acceptance metrics",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_metrics", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-fail-fast-guard-on-runtime-recompiles",
+  "title": "Fail-fast guard for runtime recompilations in inference serving",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Inference serving concerns: warmup, batching, tail latency",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["recompile/guard.py", "recompile/cache.py", "recompile/policy.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Fail-fast guard on runtime recompiles", "check": "harness/m1.py",
+     "gates": [{"metric": "guard_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Cold start cache validation", "check": "harness/m2.py",
+     "gates": [{"metric": "cache_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Rollback policy table and safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_policy", "op": "==", "threshold": 1}]}
+  ]
+}

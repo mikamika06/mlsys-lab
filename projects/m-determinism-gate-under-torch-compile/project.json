@@ -1,0 +1,21 @@
+{
+  "id": "m-determinism-gate-under-torch-compile",
+  "title": "Determinism gate under torch.compile",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Numerical validation and performance regression gating",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["detgate/core.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect non-determinism across multiple runs", "check": "harness/m1.py",
+     "gates": [{"metric": "determinism_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Warmup and autotuning stabilization gate", "check": "harness/m2.py",
+     "gates": [{"metric": "warmup_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for determinism checks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_non_determinism", "op": "==", "threshold": 1}]}
+  ]
+}

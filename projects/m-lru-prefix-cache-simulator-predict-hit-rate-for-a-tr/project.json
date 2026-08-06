@@ -1,0 +1,44 @@
+{
+  "id": "m-lru-prefix-cache-simulator-predict-hit-rate-for-a-tr",
+  "title": "LRU prefix-cache simulator and Prometheus hit rate analyzer",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-cache-eviction-and-hit-rate",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "prefcache/simulator.py",
+    "prefcache/eviction.py",
+    "prefcache/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "LRU prefix-cache simulator predict hit rate",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "hit_rate_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reverse-order free eviction sequence reproduction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "sequences_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches broken hit rate calculation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_counter", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

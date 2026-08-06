@@ -1,0 +1,22 @@
+{
+  "id": "m-joint-int8-lut-compression-accounting",
+  "title": "Joint int8+LUT compression accounting",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-edge-export",
+  "track": "Palettization and lookup-table compression",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["accounting/sizes.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Account for joint int8+LUT bytes per layer", "check": "harness/m1.py",
+     "gates": [{"metric": "matched", "op": "==", "threshold": 36}]},
+    {"n": 2, "title": "Optimize the method per layer", "check": "harness/m2.py",
+     "gates": [{"metric": "matched_plan", "op": "==", "threshold": 2},
+               {"metric": "matched_total", "op": "==", "threshold": 2}]},
+    {"n": 3, "title": "Safety net: catch a fake joint compression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}]}
+  ]
+}

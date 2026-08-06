@@ -1,16 +1,12 @@
-import numpy as np
-
-def naive_matmul(A: np.ndarray, B: np.ndarray) -> np.ndarray:
-    A = np.asarray(A, dtype=np.float64)
-    B = np.asarray(B, dtype=np.float64)
-    m, k1 = A.shape
-    k2, n = B.shape
+def naive_matmul(A: list[list[float]], B: list[list[float]]) -> list[list[float]]:
+    m, k1 = len(A), len(A[0])
+    k2, n = len(B), len(B[0])
     assert k1 == k2, "Inner dimensions must agree"
-    C = np.zeros((m, n), dtype=np.float64)
+    C = [[0.0] * n for _ in range(m)]
     for i in range(m):
         for j in range(n):
             s = 0.0
             for p in range(k1):
-                s += A[i, p] * B[p, j]
-            C[i, j] = s
+                s += A[i][p] * B[p][j]
+            C[i][j] = s
     return C

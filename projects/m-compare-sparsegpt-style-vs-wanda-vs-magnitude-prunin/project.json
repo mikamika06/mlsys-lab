@@ -1,0 +1,45 @@
+{
+  "id": "m-compare-sparsegpt-style-vs-wanda-vs-magnitude-prunin",
+  "title": "SparseGPT vs Wanda vs Magnitude Pruning Quality & Domain Mismatch",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "LLM one-shot post-training pruning (SparseGPT, Wanda)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "prune/compare.py",
+    "prune/wanda.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compare SparseGPT, Wanda, and magnitude pruning relative error",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "methods_compared", "op": "==", "threshold": 1},
+        {"metric": "rel_err_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Debug Wanda pruning under mismatched calibration domain",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "domain_debugged", "op": "==", "threshold": 1},
+        {"metric": "norm_scaled", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching incorrect calibration scaling",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_scaling", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

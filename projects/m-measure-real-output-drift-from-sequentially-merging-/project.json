@@ -1,0 +1,44 @@
+{
+  "id": "m-measure-real-output-drift-from-sequentially-merging-adapters",
+  "title": "Measure real output drift from sequentially merging adapters",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "adapter-merging-deployment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "adaptermerge/merge.py",
+    "adaptermerge/drift.py",
+    "adaptermerge/evaluate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Sequential adapter weight merging",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "weights_matched", "op": ">=", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Output drift measurement via relative error",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err_matched", "op": ">=", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for merge invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_merge", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

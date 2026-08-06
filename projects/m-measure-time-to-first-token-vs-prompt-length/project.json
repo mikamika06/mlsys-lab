@@ -1,0 +1,68 @@
+{
+  "id": "m-measure-time-to-first-token-vs-prompt-length",
+  "title": "Measure time-to-first-token vs prompt length",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "llama-server-production",
+  "difficulty": 3,
+  "edits": [
+    "ttft/metrics.py",
+    "ttft/model.py",
+    "ttft/analyze.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract and compute raw TTFT values across prompt lengths",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "metrics_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Fit latency model and verify relative error bounds",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "parameters_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for TTFT anomaly detection",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_fake_ttft",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

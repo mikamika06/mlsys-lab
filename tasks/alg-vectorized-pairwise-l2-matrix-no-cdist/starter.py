@@ -1,4 +1,2 @@
-import numpy as np
-
-def pairwise_l2_matrix(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+def pairwise_l2_matrix(X: list[list[float]], Y: list[list[float]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

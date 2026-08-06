@@ -1,0 +1,45 @@
+{
+  "id": "m-fix-the-broken-ring-all-reduce",
+  "title": "Fix the Broken Ring All-Reduce and DDP Bucket Mechanics",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Data-parallel baseline & NCCL collective mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ring/allreduce.py",
+    "ring/sweep.py",
+    "ring/bucket.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Fix the Broken Ring All-Reduce",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "tensors_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "bucket_cap_mb Sweep on Real DDP",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "optimal_bucket_match", "op": "==", "threshold": 1},
+        {"metric": "sweep_count_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Reconstruct DDP's Reverse-Order Bucket Assignment",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_forward_order", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

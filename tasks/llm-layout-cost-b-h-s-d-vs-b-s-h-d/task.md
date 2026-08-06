@@ -29,12 +29,11 @@ def layout_cost(shape: tuple[int, int, int, int]) -> tuple[int, int]:
   * `cost_bh`: number of cache lines accessed when the tensor is stored in **BHSD** layout and traversed as `(B,H,S,d)`.
   * `cost_sh`: number of cache lines accessed when the same data is stored in **BSHD** layout and traversed as `(B,S,H,d)`.
 
-The implementation must use only NumPy for any arithmetic; no explicit Python loops over elements are allowed.  The result should be deterministic across platforms.
+The implementation must use only Python for any arithmetic; no explicit Python loops over elements are allowed.  The result should be deterministic across platforms.
 
 ## Example
 
 ```python
-import numpy as np
 shape = (2, 3, 4, 5)   # B=2, H=3, S=4, d=5
 cost_bh, cost_sh = layout_cost(shape)
 print(cost_bh, cost_sh)   # e.g. 120 140

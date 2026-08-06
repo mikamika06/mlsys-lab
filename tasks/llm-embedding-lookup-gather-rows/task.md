@@ -12,20 +12,19 @@ This operation is often called *gather* or *lookup*.  It must be performed effic
 Implement a function that performs this lookup:
 
 ```python
-def lookup_embeddings(ids: np.ndarray, weights: np.ndarray) -> np.ndarray:
+def lookup_embeddings(ids: list[int], weights: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
-- `ids` – a one‑dimensional NumPy array of integer token ids.  
+- `ids` – a list of floats of integer token ids.  
 - `weights` – the embedding matrix of shape `(V, D)` with dtype `float64`.  
 The function must return an array of shape `(len(ids), D)` containing the rows indexed by `ids`, also as `float64`.
 
 ## Example
 
 ```python
-import numpy as np
-E = np.array([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])
-ids = np.array([2, 0])
+E = [[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]]
+ids = [2, 0]
 out = lookup_embeddings(ids, E)
 # out == [[0.5, 0.6],
 #         [0.1, 0.2]]
@@ -33,7 +32,7 @@ out = lookup_embeddings(ids, E)
 
 ## What the gate checks
 
-The grader compares your output with a reference implementation that uses NumPy’s advanced indexing.  
+The grader compares your output with a reference implementation that uses Python’s advanced indexing.  
 It reports the maximum absolute error:
 
 $$

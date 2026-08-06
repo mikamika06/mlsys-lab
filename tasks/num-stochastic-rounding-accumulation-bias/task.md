@@ -54,7 +54,7 @@ def accumulate_rne(start: float, c: float, n_steps: int, q: float) -> float:
     ...
 
 def accumulate_stochastic(start: float, c: float, n_steps: int, q: float,
-                           rng: np.random.Generator) -> float:
+rng: random.Random) -> float:
     ...
 ```
 
@@ -69,7 +69,6 @@ seeded generator give independent trials, and returns the final value.
 ## Example
 
 ```python
-import numpy as np
 
 start, c, q, n_steps = 1000.0, 0.0003, 0.01, 3000
 # exact = 1000.0 + 3000 * 0.0003 = 1000.9
@@ -77,7 +76,7 @@ start, c, q, n_steps = 1000.0, 0.0003, 0.01, 3000
 rne = accumulate_rne(start, c, n_steps, q)
 # rne == 1000.0  -- stuck; every update rounded away.
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 sr = accumulate_stochastic(start, c, n_steps, q, rng)
 # a single stochastic trial lands close to 1000.9, though not exactly on
 # it (it's still a random variable) -- averaging over many independent
@@ -92,7 +91,7 @@ closed-form oracle, since this is just the associativity-free sum of
 `n_steps` copies of `c`. It calls your `accumulate_rne` and checks it
 matches a from-scratch reference RNE simulation (also derived from the
 formula above, not hardcoded). Then, for `K=200` independent
-`np.random.default_rng(seed)` instances (fixed seeds), it calls your
+`random.Random(seed)` instances (fixed seeds), it calls your
 `accumulate_stochastic` once per seed and averages the `K` results.
 
 The gate metric is the worst case over both scenarios of

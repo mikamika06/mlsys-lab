@@ -12,10 +12,10 @@ def grade(sol, fx) -> dict:
         ids = rng.integers(0, vocab_size, size=n)
         ref = np.take(weights, ids, axis=0).astype(np.float64)
         try:
-            got = sol.lookup_embeddings(ids, weights)
+            got = sol.lookup_embeddings(ids.tolist(), weights.tolist())
         except Exception:
             return {"max_abs_err": float("inf")}
-        err = max_abs_err(ref, got)
+        err = max_abs_err(ref, np.array(got))
         if err > max_error:
             max_error = err
     return {"max_abs_err": max_error}

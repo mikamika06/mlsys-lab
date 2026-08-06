@@ -1,0 +1,63 @@
+{
+  "id": "m-classify-which-signature-fields-participate-in-the-j",
+  "title": "Classify which signature fields participate in the JIT cache key",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "triton.jit compilation, constexpr, and kernel caching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tritoncache/cache_key.py",
+    "tritoncache/manager.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Signature Field Classification & Key Construction",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "keys_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Cache Manager & Specialization Rules",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cache_stats_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Regression Test Safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_merged_windows",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

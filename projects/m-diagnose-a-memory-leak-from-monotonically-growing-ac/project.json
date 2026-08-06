@@ -1,0 +1,43 @@
+{
+  "id": "m-diagnose-a-memory-leak-from-monotonically-growing-ac",
+  "title": "Diagnose memory leaks, checkpoint savings, and allocator split fractions",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "torch-profiler-memory-snapshot-and-oom",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "memdiag/leak.py",
+    "memdiag/checkpoint.py",
+    "memdiag/allocator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Diagnose memory leaks from active bytes",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "leaks_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Checkpoint savings and allocator event fraction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "savings_matched", "op": "==", "threshold": 1},
+        {"metric": "fraction_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches broken leak detection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_leak", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

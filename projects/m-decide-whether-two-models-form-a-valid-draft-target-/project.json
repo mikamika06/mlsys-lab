@@ -1,0 +1,68 @@
+{
+  "id": "m-decide-whether-two-models-form-a-valid-draft-target-",
+  "title": "Speculative Decoding Pair Validation and Efficiency Analysis",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-gguf-llamacpp",
+  "track": "speculative-decoding-draft",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "specdec/pair.py",
+    "specdec/efficiency.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Decide whether two models form a valid draft/target pair",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "pairs_checked",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive break-even acceptance rate and measure why specdec fails on prefill",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "breakeven_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "prefill_measured",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid draft-target pairs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_pairs",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

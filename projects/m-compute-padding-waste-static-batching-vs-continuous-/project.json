@@ -1,0 +1,64 @@
+{
+  "id": "m-compute-padding-waste-static-batching-vs-continuous-",
+  "title": "Compute Padding Waste: Static Batching vs Continuous Batching",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Static vs Dynamic Batching Tradeoffs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "batching/waste.py",
+    "batching/simulator.py",
+    "batching/cost.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute static vs continuous padding waste metrics",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "waste_metrics_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Simulate static and continuous batchers head-to-head",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "simulation_metrics_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Cost efficiency analysis and safeguard regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_static_padding_bug",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

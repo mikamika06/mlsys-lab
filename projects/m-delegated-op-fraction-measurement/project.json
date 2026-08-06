@@ -1,0 +1,44 @@
+{
+  "id": "m-delegated-op-fraction-measurement",
+  "title": "Delegated Op Fraction Measurement",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Backend partitioners and delegate blobs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "delegate_measure/extractor.py",
+    "delegate_measure/partitioner.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract and measure delegation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.001}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Partition for XNNPACK and CoreML",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "match_xnnpack", "op": "==", "threshold": 1},
+        {"metric": "match_coreml", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch invalid grouping",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_grouping", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

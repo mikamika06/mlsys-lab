@@ -1,0 +1,35 @@
+{
+  "id": "m-model-the-effect-of-leave-output-tensor-on-size",
+  "title": "Model the effect of leave-output-tensor on size",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "ftype-recipes-mixed-precision",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ggufsize/model.py", "ggufsize/calc.py", "ggufsize/estimator.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse model tensor shapes and output tensor identification",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "shapes_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Calculate exact byte sizes with and without output tensor",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catching flawed leave-output handling",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_output_tensor", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

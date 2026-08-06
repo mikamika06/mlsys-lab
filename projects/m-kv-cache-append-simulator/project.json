@@ -1,0 +1,21 @@
+{
+  "id": "m-kv-cache-append-simulator",
+  "title": "KV Cache Simulator and Bandwidth Profiling",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "kv-cache-decode-api",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["simulator/core.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "KV cache append simulator", "check": "harness/m1.py",
+     "gates": [{"metric": "matches", "op": "==", "threshold": 50}]},
+    {"n": 2, "title": "Decode bandwidth floor", "check": "harness/m2.py",
+     "gates": [{"metric": "exact_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Regression test for off-by-one errors", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_off_by_one", "op": "==", "threshold": 1}]}
+  ]
+}

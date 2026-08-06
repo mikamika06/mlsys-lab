@@ -1,18 +1,18 @@
-import numpy as np
+import random
 
 def mini_batch_kmeans(
-    X: np.ndarray,
+    X: list[list[float]],
     k: int,
     batch_size: int,
     n_iter: int,
     seed: int = 0
-) -> np.ndarray:
+) -> list[list[float]]:
     """
     Deterministic mini‑batch k‑means.
 
     Parameters
     ----------
-    X : ndarray, shape (n_samples, n_features)
+    X : list of list of float
         Data points.
     k : int
         Number of clusters.
@@ -25,23 +25,25 @@ def mini_batch_kmeans(
 
     Returns
     -------
-    centroids : ndarray, shape (k, n_features)
+    centroids : list of list of float
         Final cluster centroids after `n_iter` updates.
     """
-    rng = np.random.default_rng(seed)
-    n_samples, n_features = X.shape
-    centroids = np.zeros((k, n_features), dtype=np.float64)
+    rng = random.Random(seed)
+    n_samples = len(X)
+    n_features = len(X[0])
+
+    centroids = [[0.0] * n_features for _ in range(k)]
     for i in range(k):
         for j in range(n_features):
-            centroids[i, j] = float(X[i, j])
+            centroids[i][j] = float(X[i][j])
 
     for it in range(1, n_iter + 1):
-        idx = rng.choice(n_samples, size=batch_size, replace=True)
+        idx = [rng.randrange(n_samples) for _ in range(batch_size)]
 
-        batch = np.zeros((batch_size, n_features), dtype=X.dtype)
+        batch = [[0.0] * n_features for _ in range(batch_size)]
         for b in range(batch_size):
             for j in range(n_features):
-                batch[b, j] = X[idx[b], j]
+                batch[b][j] = float(X[idx[b]][j])
 
         labels = [0] * batch_size
         for b in range(batch_size):
@@ -50,14 +52,14 @@ def mini_batch_kmeans(
             for c in range(k):
                 d_sq = 0.0
                 for j in range(n_features):
-                    diff = float(batch[b, j]) - centroids[c, j]
+                    diff = batch[b][j] - centroids[c][j]
                     d_sq += diff * diff
                 if d_sq < min_dist:
                     min_dist = d_sq
                     best_c = c
             labels[b] = best_c
 
-        new_centroids = np.zeros((k, n_features), dtype=np.float64)
+        new_centroids = [[0.0] * n_features for _ in range(k)]
         for c in range(k):
             count = 0
             for b in range(batch_size):
@@ -69,14 +71,14 @@ def mini_batch_kmeans(
                     sum_val = 0.0
                     for b in range(batch_size):
                         if labels[b] == c:
-                            sum_val += float(batch[b, j])
-                    new_centroids[c, j] = sum_val / count
+                            sum_val += batch[b][j]
+                    new_centroids[c][j] = sum_val / count
             else:
                 for j in range(n_features):
-                    new_centroids[c, j] = centroids[c, j]
+                    new_centroids[c][j] = centroids[c][j]
 
         for c in range(k):
             for j in range(n_features):
-                centroids[c, j] = (centroids[c, j] * (it - 1) + new_centroids[c, j]) / it
+                centroids[c][j] = (centroids[c][j] * (it - 1) + new_centroids[c][j]) / it
 
     return centroids

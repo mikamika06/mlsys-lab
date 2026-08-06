@@ -1,0 +1,20 @@
+{
+  "id": "m-minimal-fp16-op-block-list",
+  "title": "Minimal FP16 op block list and decoder graph audit",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Transformer-specific ORT optimization (onnxruntime.transformers)",
+  "difficulty": 4,
+  "edits": ["ortopt/blocklist.py", "ortopt/optimizer.py", "ortopt/audit.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Minimal FP16 operation block list", "check": "harness/m1.py",
+     "gates": [{"metric": "blocklist_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Generic ALL vs transformers optimizer comparison", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 0.001}]},
+    {"n": 3, "title": "Safety net: KV-cache decoder graph audit test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_graph", "op": "==", "threshold": 1}]}
+  ]
+}

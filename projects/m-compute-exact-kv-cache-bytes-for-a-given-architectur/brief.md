@@ -1,0 +1,6 @@
+# Ticket: KV Cache Memory Estimation and GPU Offloading Limit Discrepancy
+
+## Symptom
+The local runner service has been experiencing unexpected out-of-memory (OOM) crashes and silent CPU offloading during high-concurrency long-context inference runs. Operators notice that when serving models with large context windows (such as 32k or 64k tokens), the system configuration tool reports that the entire model and its key-value (KV) cache fit comfortably within the target GPU's VRAM budget. However, once requests start executing in production or via local runner loops, runtime telemetry (specifically monitoring tool outputs similar to `ollama ps`) abruptly drops from 100% GPU residency to partial CPU offloading, or throws critical CUDA OOM errors mid-inference.
+
+Furthermore, automated deployment scripts fail to accurately predict the maximum safe context length ($num\_ctx$) for custom model architectures, leading to either severely underutilized hardware capacity or catastrophic runtime failures when users push the sequence length to its advertised limits. We need a rigorous, exact programmatic method to compute KV cache memory consumption down to the exact byte, determine the precise threshold for GPU memory saturation, and systematically analyze context length limits to identify the exact tipping point where full GPU residency breaks down.

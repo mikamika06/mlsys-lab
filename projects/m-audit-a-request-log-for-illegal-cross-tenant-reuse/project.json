@@ -1,0 +1,42 @@
+{
+  "id": "m-audit-a-request-log-for-illegal-cross-tenant-reuse",
+  "title": "Audit a request log for illegal cross-tenant reuse",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-cache-isolation-and-multitenancy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["logaudit/audit.py", "logaudit/tracker.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct block mapping and trace cache lookups",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "traces_parsed", "op": "==", "threshold": 1},
+        {"metric": "block_mappings_correct", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Detect cross-tenant reuse violations and leakage metrics",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "violations_match", "op": "==", "threshold": 1},
+        {"metric": "leaked_tokens_match", "op": "==", "threshold": 1},
+        {"metric": "isolation_score_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch ignored tenant boundary checks",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_tenant_check", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

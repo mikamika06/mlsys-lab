@@ -1,0 +1,44 @@
+{
+  "id": "m-e4m3-encode-decode-with-subnormals",
+  "title": "E4M3 encode, decode, and per-tensor scaling with subnormals",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "FP8 quantization (E4M3 weights and activations)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fp8util/quant.py",
+    "fp8util/scale.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "E4M3 bit-exact encode and decode with subnormals",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "encode_decode_exact", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-tensor FP8 scale derivation and comparison",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "scale_match", "op": "==", "threshold": 1},
+        {"metric": "comparison_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching incorrect subnormal handling",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_subnormals", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

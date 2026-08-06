@@ -1,0 +1,40 @@
+{
+  "id": "m-compute-effective-bits-per-weight-from-a-gguf-tensor",
+  "title": "Compute effective bits-per-weight from a GGUF tensor",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "quantization-choice-for-local-runners",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_utils/bits.py",
+    "gguf_utils/perf.py",
+    "gguf_utils/policy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute effective bits-per-weight from a GGUF tensor table",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "bits_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Fit decode tok/s against bytes-per-weight across three quants",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "fit_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid model selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_choice", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

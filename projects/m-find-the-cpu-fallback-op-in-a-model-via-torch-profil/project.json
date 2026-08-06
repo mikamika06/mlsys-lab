@@ -1,0 +1,43 @@
+{
+  "id": "m-find-the-cpu-fallback-op-in-a-model-via-torch-profil",
+  "title": "Find the CPU-fallback op in a model via torch.profiler",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "PyTorch MPS operator coverage & silent fallback",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mps_diag/profiler.py",
+    "mps_diag/latency.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect CPU fallback operations via profiler events",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "fallbacks_identified", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure latency cliff and fallback performance ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "latency_ratio_correct", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching silent fallback reintroduction",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_silent_fallback", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

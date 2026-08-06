@@ -10,7 +10,7 @@ def _ref_variance(x):
 
 
 def grade(sol, fx) -> dict:
-    x = np.asarray(fx["x"], dtype=np.float64)
+    x = [float(v) for v in fx["x"]]
     ref = _ref_variance(x)
 
     try:

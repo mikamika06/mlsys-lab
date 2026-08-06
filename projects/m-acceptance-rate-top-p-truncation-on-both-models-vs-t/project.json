@@ -1,0 +1,63 @@
+{
+  "id": "m-acceptance-rate-top-p-truncation-on-both-models-vs-t",
+  "title": "Acceptance rate under dual top-p truncation vs target-only",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Sampling temperature & distribution matching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "spec/sampling.py",
+    "spec/acceptance.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Truncated distribution matching and token acceptance",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "acceptance_matches",
+          "op": ">=",
+          "threshold": 10
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Acceptance rate analysis across temperatures and truncation modes",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rate_analysis_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching improper residual probability masking",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_masked_residual",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "m-derive-the-break-even-step-count-for-compile-s-warmu",
+  "title": "Torch compile and PEFT interaction analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "torch-compile-peft-interactions",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "compile_peft/breakeven.py",
+    "compile_peft/guards.py",
+    "compile_peft/adapters.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Break-even step count derivation", "check": "harness/m1.py",
+     "gates": [{"metric": "breakeven_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Guard failure classification", "check": "harness/m2.py",
+     "gates": [{"metric": "classification_matched", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "PEFT adapter switch recompilation count and regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

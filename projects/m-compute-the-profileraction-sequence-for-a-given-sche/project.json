@@ -1,0 +1,38 @@
+{
+  "id": "m-compute-the-profileraction-sequence-for-a-given-sche",
+  "title": "Compute ProfilerAction sequence and instrument training loop",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "torch-profiler-api-and-schedule",
+  "difficulty": 3,
+  "edits": [
+    "profiler_util/schedule.py",
+    "profiler_util/instrument.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute ProfilerAction sequence for a given schedule",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "sequences_matched", "op": ">=", "threshold": 5}]
+    },
+    {
+      "n": 2,
+      "title": "Instrument a training loop and produce exact trace files",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "trace_count_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test diagnosing double profiler.step() calls",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_double_step", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

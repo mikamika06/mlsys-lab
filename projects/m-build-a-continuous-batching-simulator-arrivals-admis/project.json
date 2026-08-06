@@ -1,0 +1,45 @@
+{
+  "id": "m-build-a-continuous-batching-simulator-arrivals-admis",
+  "title": "Continuous batching simulator",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "continuous-batching-scheduler",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "cbsim/engine.py",
+    "cbsim/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate static and continuous batching",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "static_err", "op": "<", "threshold": 0.05},
+        {"metric": "continuous_err", "op": "<", "threshold": 0.05},
+        {"metric": "ratio_err", "op": "<", "threshold": 0.05}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-step batch occupancy histogram",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "hist_err", "op": "<", "threshold": 0.05}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against broken admission",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_admission_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

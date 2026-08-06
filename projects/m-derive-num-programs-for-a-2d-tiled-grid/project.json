@@ -1,0 +1,43 @@
+{
+  "id": "m-derive-num-programs-for-a-2d-tiled-grid",
+  "title": "Derive num_programs for a 2D tiled grid",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Grid launch configuration (1D/2D/meta-parameter grids)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "triton_grid/config.py",
+    "triton_grid/kernel.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive num_programs for a 2D tiled grid",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Launch a 2D tiled elementwise kernel with a meta-lambda grid",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "kernel_outputs_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching floor-division grid bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_floor_division", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

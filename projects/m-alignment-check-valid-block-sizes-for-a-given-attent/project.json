@@ -1,0 +1,41 @@
+{
+  "id": "m-alignment-check-valid-block-sizes-for-a-given-attent",
+  "title": "Alignment check for valid KV cache block sizes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "block-size-and-fragmentation",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["blockalign/validator.py", "blockalign/planner.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Validate block size constraints for backend and model configs",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "validations_matched", "op": "==", "threshold": 1},
+        {"metric": "filters_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Select optimal block size minimizing memory waste",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "optimal_selected", "op": "==", "threshold": 1},
+        {"metric": "memory_waste_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching missing alignment checks",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_alignment_checks", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

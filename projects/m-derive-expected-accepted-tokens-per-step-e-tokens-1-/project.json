@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-expected-accepted-tokens-per-step-e-tokens-1-",
+  "title": "Core speculative sampling and token expectation derivation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Core speculative sampling algorithm (draft-verify-accept/reject)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["speculative/theory.py", "speculative/sampling.py", "speculative/trace.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Expected accepted tokens per step derivation", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Modified rejection sampling and losslessness verification", "check": "harness/m2.py",
+     "gates": [{"metric": "lossless_score", "op": ">=", "threshold": 0.95}]},
+    {"n": 3, "title": "Deterministic trace reproduction and safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -34,30 +34,29 @@ Implement a function that, given an initial parameter vector and a sequence of g
 
 ```python
 def adam_trajectory(
-    params0: np.ndarray,
-    grads: np.ndarray,
+    params0: list[float],
+    grads: list[list[float]],
     lr: float = 1e-3,
     beta1: float = 0.9,
     beta2: float = 0.999,
     eps: float = 1e-8
-) -> np.ndarray:
+) -> list[list[float]]:
 ```
 
-* `params0` – a one‑dimensional NumPy array of shape `(d,)`.
+* `params0` – a list of floats of shape `(d,)`.
 * `grads` – a two‑dimensional array of shape `(T, d)` where each row is the gradient at that step.
 * The function should return an array of shape `(T+1, d)`.  The first row must be `params0`; subsequent rows are the parameters after each update.
 
-The implementation may use any NumPy operations; no external libraries are required.  All computations should be performed in `float64`.
+The implementation uses plain Python; no external libraries are required.  All computations should be performed in `float64`.
 
 ## Example
 
 ```python
-import numpy as np
 
 # Initial parameters and a toy gradient sequence
-p0 = np.zeros(3)
-g = np.array([[1, 0, -1],
-              [0, 2, 0]])
+p0 = [0.0] * 3
+g = [[1, 0, -1],
+              [0, 2, 0]]
 
 traj = adam_trajectory(p0, g)
 
@@ -67,9 +66,7 @@ print(traj)
 Output (illustrative):
 
 ```
-[[ 0.          0.          0.        ]
- [-0.0010005   0.         -0.0010005]
- [-0.0010005   0.0039998  -0.0010005]]
+[[0.0, 0.0, 0.0], [-0.0009999999900000003, 0.0, 0.0009999999900000003], [-0.0016700582346581131, -0.0007441368183064559, 0.0016700582346581131]]
 ```
 
 ## What the gate checks

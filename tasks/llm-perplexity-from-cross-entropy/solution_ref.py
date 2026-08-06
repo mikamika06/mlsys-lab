@@ -1,16 +1,15 @@
 import math
-import numpy as np
 
-def perplexity_from_cross_entropy(logits: np.ndarray,
-                                   targets: np.ndarray) -> float:
+def perplexity_from_cross_entropy(logits: list[list[float]],
+                                   targets: list[int]) -> float:
     """
     Compute the perplexity of a language model given raw logits and target indices.
 
     Parameters
     ----------
-    logits : np.ndarray, shape (N, V)
+    logits : list[list[float]], shape (N, V)
         Raw scores for each token in the vocabulary.
-    targets : np.ndarray, shape (N,)
+    targets : list[int], shape (N,)
         Integer indices of the correct token for each sample.
 
     Returns
@@ -18,7 +17,8 @@ def perplexity_from_cross_entropy(logits: np.ndarray,
     float
         The perplexity value as a scalar Python float.
     """
-    N, V = logits.shape
+    N = len(logits)
+    V = len(logits[0])
     total_ce = 0.0
 
     for i in range(N):

@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-quantization-error-vs-blocksize-curve-for-abs",
+  "title": "Quantization error curves and blockwise int8 for bitsandbytes",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "bitsandbytes-internals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quant/curve.py", "quant/blockwise.py", "quant/outliers.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Quantization error vs blocksize curve", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 2, "title": "Blockwise int8 absmax quantize and dequantize", "check": "harness/m2.py",
+     "gates": [{"metric": "quant_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for blockwise precision and outliers", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_quant", "op": "==", "threshold": 1}]}
+  ]
+}

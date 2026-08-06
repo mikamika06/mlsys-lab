@@ -1,10 +1,4 @@
-import numpy as np
-
-
-def sq_dist_expansion(a: np.ndarray, b: np.ndarray) -> float:
-    a = np.asarray(a, dtype=np.float64)
-    b = np.asarray(b, dtype=np.float64)
-
+def sq_dist_expansion(a: list[float], b: list[float]) -> float:
     dot_aa = 0.0
     for i in range(len(a)):
         dot_aa += float(a[i]) * float(a[i])

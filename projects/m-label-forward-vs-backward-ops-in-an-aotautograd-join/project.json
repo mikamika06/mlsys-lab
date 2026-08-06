@@ -1,0 +1,46 @@
+{
+  "id": "m-label-forward-vs-backward-ops-in-an-aotautograd-join",
+  "title": "AOTAutograd Joint Graph Analysis and Functionalization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "AOTAutograd (joint graph, functionalization, partitioner)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "aot_tools/graph_labeler.py",
+    "aot_tools/recompute_planner.py",
+    "aot_tools/functionalize.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Label forward vs backward ops in joint graph",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "graphs_labeled_correctly", "op": "==", "threshold": 1.0},
+        {"metric": "recall_at_k", "op": ">=", "threshold": 0.95}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Evaluate recompute vs save memory tradeoff",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "savings_calculated_correctly", "op": "==", "threshold": 1.0},
+        {"metric": "optimal_decisions_ratio", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Functionalization pass and mutation safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_unfunctionalized_mutations", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

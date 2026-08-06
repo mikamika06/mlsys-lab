@@ -1,0 +1,44 @@
+{
+  "id": "m-estimate-context-extension-training-cost-from-litera",
+  "title": "Estimate context-extension training cost and schedule from literature",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "context-extension-training",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ctxcost/estimator.py",
+    "ctxcost/rope.py",
+    "ctxcost/evals.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Estimate token budget and training cost from literature parameters",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "costs_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Simulate staged context-extension schedule and RoPE base growth",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "schedules_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching incorrect cost scaling",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_scaling", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

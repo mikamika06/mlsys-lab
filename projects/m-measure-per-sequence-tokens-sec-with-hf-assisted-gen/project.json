@@ -1,0 +1,45 @@
+{
+  "id": "m-measure-per-sequence-tokens-sec-with-hf-assisted-gen",
+  "title": "Batch size vs. speculative decoding throughput",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Batch size vs. speculative decoding throughput",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "specbatch/measure.py",
+    "specbatch/flops.py",
+    "specbatch/crossover.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure per-sequence throughput",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "matched", "op": "==", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "FLOPs-neutral size and Crossover",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "flops_matched", "op": "==", "threshold": 3},
+        {"metric": "cross_matched", "op": "==", "threshold": 3}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch ignored batch size",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_batch_div", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

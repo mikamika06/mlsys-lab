@@ -1,0 +1,5 @@
+We are in the middle of optimizing our model's transformer blocks, specifically replacing our custom multi-head attention implementation with PyTorch's `F.scaled_dot_product_attention` (SDPA). This was supposed to be a drop-in replacement to take advantage of FlashAttention and other memory-efficient backends. The tensor shapes are matching, and the integration seemed completely straightforward.
+
+However, right after deploying the new implementation to our testing cluster, all downstream evaluation tasks began failing catastrophically. Sequences that do not have any padding tokens are suddenly outputting NaNs everywhere. For sequences that do have padding, the embeddings for the actual content tokens are completely zeroed out or contain garbage, while the padding tokens inexplicably seem to be the only ones with non-zero attention weights! 
+
+We pass in our standard `pad_mask` tensor (where `True` indicates a padding token that should be ignored) exactly as we did with the `masked_fill_` approach in the old codebase. Fix both the manual baseline and the SDPA migration so they evaluate correctly and resolve these numerical collapses.

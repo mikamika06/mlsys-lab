@@ -14,30 +14,29 @@ A lower perplexity indicates that the model assigns higher probability to the tr
 Implement `perplexity_from_cross_entropy(logits, targets)`:
 
 ```python
-def perplexity_from_cross_entropy(logits: np.ndarray,
-                                   targets: np.ndarray) -> float:
+def perplexity_from_cross_entropy(logits: list[list[float]],
+                                   targets: list[int]) -> float:
     ...
 ```
 
-`logits` is a 2‑D NumPy array of shape `(N, V)` containing the raw scores for each token in the vocabulary. `targets` is a 1‑D integer array of length `N` with the index of the correct token for each sample.
+`logits` is a 2‑D list of shape `(N, V)` containing the raw scores for each token in the vocabulary. `targets` is a 1‑D integer array of length `N` with the index of the correct token for each sample.
 
-The function must compute the cross‑entropy loss per sample using the softmax of the logits, average over all samples, exponentiate that mean, and return the resulting perplexity as a Python float (or NumPy scalar). No explicit loops are allowed; use vectorised NumPy operations only.
+The function must compute the cross‑entropy loss per sample using the softmax of the logits, average over all samples, exponentiate that mean, and return the resulting perplexity as a Python float (or Python scalar). No explicit loops are allowed; use vectorised Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([[2.0, 1.0, 0.1],
-                   [0.5, 2.5, 0.3]])
-targets = np.array([0, 1])
+logits = [[2.0, 1.0, 0.1],
+                   [0.5, 2.5, 0.3]]
+targets = [0, 1]
 pp = perplexity_from_cross_entropy(logits, targets)
 print(pp)   # ≈ 2.13
 ```
 
 ## What the gate checks
 
-The grader evaluates your implementation against a NumPy reference and reports the relative error
+The grader evaluates your implementation against a Python reference and reports the relative error
 $$\mathrm{rel\_err}=\frac{|\,\hat{\mathrm{PP}}-\mathrm{PP}\,|}{|\mathrm{PP}|+10^{-12}}.$$
 Your solution must achieve $\mathrm{rel\_err}\le 1\times10^{-6}$.
 
-Additionally, the returned value must be a scalar of type `float` or `np.floating`. Any other return type causes the gate to fail.
+Additionally, the returned value must be a scalar of type `float`. Any other return type causes the gate to fail.

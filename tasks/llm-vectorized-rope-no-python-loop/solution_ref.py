@@ -1,28 +1,35 @@
-import numpy as np
+import math
 
-def apply_rope(x: np.ndarray, pos: np.ndarray) -> np.ndarray:
-    """Apply Rotary Position Embedding (RoPE) to the last dimension of x."""
-    B, S, H, D = x.shape
-    # frequency for each pair
-    freqs = 1.0 / (10000.0 ** (np.arange(0, D, 2, dtype=np.float64) / D))
-    # angles = pos * freqs, shape (S, D//2)
-    angles = pos[:, None].astype(np.float64) * freqs[None, :]
-    cos_vals = np.cos(angles)
-    sin_vals = np.sin(angles)
+def apply_rope(x: list[list[list[list[float]]]], pos: list[int]) -> list[list[list[list[float]]]]:
+    """Apply Rotary Position Embedding (RoPE) to the last dimension of x using pure Python."""
+    B = len(x)
+    S = len(x[0])
+    H = len(x[0][0])
+    D = len(x[0][0][0])
 
-    # reshape x into pairs (..., D//2, 2)
-    x_pairs = x.reshape(B, S, H, D // 2, 2)
-    x_even = x_pairs[..., 0]
-    x_odd = x_pairs[..., 1]
+    half_D = D // 2
+    freqs = [1.0 / (10000.0 ** ((2 * i) / D)) for i in range(half_D)]
 
-    # broadcast cos/sin
-    cos_b = cos_vals[None, :, None, :]  # (1, S, 1, D//2)
-    sin_b = sin_vals[None, :, None, :]
+    out = []
+    for b in range(B):
+        batch_out = []
+        for s in range(S):
+            m = float(pos[s])
+            seq_out = []
+            for h in range(H):
+                head_data = x[b][s][h]
+                new_head_data = [0.0] * D
+                for i in range(half_D):
+                    angle = m * freqs[i]
+                    c = math.cos(angle)
+                    sin_val = math.sin(angle)
 
-    # rotate
-    y_even = x_even * cos_b - x_odd * sin_b
-    y_odd = x_odd * cos_b + x_even * sin_b
+                    x_even = head_data[2 * i]
+                    x_odd = head_data[2 * i + 1]
 
-    # interleave
-    y_pairs = np.stack([y_even, y_odd], axis=-1)
-    return y_pairs.reshape(B, S, H, D)
+                    new_head_data[2 * i] = x_even * c - x_odd * sin_val
+                    new_head_data[2 * i + 1] = x_odd * c + x_even * sin_val
+                seq_out.append(new_head_data)
+            batch_out.append(seq_out)
+        out.append(batch_out)
+    return out

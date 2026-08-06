@@ -1,0 +1,74 @@
+{
+  "id": "m-kv-cache-byte-budget-and-max-context",
+  "title": "KV Cache Byte Budget and Core ML State Name Repair",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Stateful Core ML models and on-device KV cache",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "exporter/budget.py",
+    "exporter/convert.py",
+    "exporter/repair.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute maximum context length within byte budget",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_context_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "bytes_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Convert decoder model and repair StateType name mismatch",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "conversion_passed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "repair_passed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: Regression tests catching state mismatch and budget drift",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_name_mismatch",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -28,7 +28,7 @@ def grade(sol, fx) -> dict:
         targets = rng.integers(-1, C, size=N)  # -1 will be used as ignore_index
         ignore_index = -1
         try:
-            got = func(logits, targets, ignore_index=ignore_index)
+            got = func(logits.tolist(), targets.tolist(), ignore_index=ignore_index)
             ref = _reference(logits, targets, ignore_index)
             diff = abs(float(got) - float(ref))
             if diff > max_diff:

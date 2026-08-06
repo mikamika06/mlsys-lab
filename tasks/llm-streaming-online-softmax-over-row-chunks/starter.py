@@ -1,4 +1,7 @@
-import numpy as np
+import math
 
-def stream_softmax_row_chunks(logits: np.ndarray, chunk_size: int) -> np.ndarray:
+def stream_softmax_row_chunks(
+    logits: list[list[float]],
+    chunk_size: int
+) -> list[list[float]]:
     raise NotImplementedError('your code here')

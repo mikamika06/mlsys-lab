@@ -9,7 +9,7 @@ Taking the log of both sides gives the **log-softmax**:
 $$\operatorname{log\_softmax}(x_i) = x_i - \log\!\left(\sum_{j=1}^{n} e^{x_j}\right).$$
 
 The inner sum $\operatorname{LSE}(x) = \log\!\left(\sum_{j} e^{x_j}\right)$ is
-called the **LogSumExp**. A naïve implementation of LSE (just `np.log(np.sum(np.exp(x)))`)
+called the **LogSumExp**. A naïve implementation of LSE (just `math.log(sum(math.exp(v) for v in x))`)
 suffers from overflow whenever any component of $x$ is large, because $e^{x_j}$
 exceeds `float64` range for $x_j \gtrsim 710$.
 
@@ -27,11 +27,11 @@ $$\operatorname{log\_softmax}(x_i) = x_i - m - \log\!\left(\sum_{j} e^{x_j - m}\
 Implement `log_softmax`:
 
 ```python
-def log_softmax(x: np.ndarray) -> np.ndarray:
+def log_softmax(x: list[float] | list[list[float]]) -> list[float] | list[list[float]]:
     ...
 ```
 
-The input `x` is a NumPy array of arbitrary shape; compute log-softmax along the
+The input `x` is a list of arbitrary shape; compute log-softmax along the
 **last axis** and return an array of the same shape with dtype `float64`.
 
 You **must** use the stable $x - \operatorname{LSE}(x)$ identity. Do not compute
@@ -41,8 +41,7 @@ will not pass the gate.
 ## Example
 
 ```python
-import numpy as np
-x = np.array([1.0, 2.0, 3.0])
+x = [1.0, 2.0, 3.0]
 result = log_softmax(x)
 # result ≈ [-2.4076, -1.4076, -0.4076]
 # sum of exp(result) ≈ 1.0
@@ -51,9 +50,9 @@ result = log_softmax(x)
 For large values the naïve approach breaks:
 
 ```python
-x = np.array([1000.0, 1001.0, 1002.0])
+x = [1000.0, 1001.0, 1002.0]
 log_softmax(x)           # correct: [-2.4076, -1.4076, -0.4076]
-np.log(np.exp(x) / np.exp(x).sum())  # returns [-nan, -nan, -nan]
+[math.log(math.exp(v) / sum(math.exp(v) for v in x)) for v in x] # returns [-nan, -nan, -nan]
 ```
 
 ## What the gate checks

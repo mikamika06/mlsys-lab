@@ -1,0 +1,40 @@
+{
+  "id": "m-failure-family-classifier-over-30-real-log-excerpts",
+  "title": "vLLM Engine Failure Family Classifier and Timeline Reconstructor",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "engine-failure-modes-and-debugging",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "faildebug/classifier.py",
+    "faildebug/runbook.py",
+    "faildebug/timeline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Failure-family classifier over 30 real log excerpts",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "classified_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Runbook mapper for minimal fixes",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "fixes_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Interleaved multi-process log timeline reordering and regression safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_timeline", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,12 +1,8 @@
-import numpy as np
-
-
-def best_h_central_diff(f, fprime, x: float, h_grid: np.ndarray) -> float:
-    h_grid = np.asarray(h_grid, dtype=np.float64)
+def best_h_central_diff(f, fprime, x: float, h_grid: list[float]) -> float:
     true = fprime(x)
 
     best_h = None
-    best_err = np.inf
+    best_err = float("inf")
     for h in h_grid:
         approx = (f(x + h) - f(x - h)) / (2.0 * h)
         err = abs(approx - true) / (abs(true) + 1e-300)

@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-with-stack-true-trace-size-and-overhead-rati",
+  "title": "Torch profiler trace size, stack overhead, and schedule windows",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "torch-profiler-api-and-schedule",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["profiler_utils/metrics.py", "profiler_utils/schedule.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Trace size and overhead ratio with stacks", "check": "harness/m1.py",
+     "gates": [{"metric": "size_ratio_match", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Active windows for infinite schedule", "check": "harness/m2.py",
+     "gates": [{"metric": "schedule_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for profiler metrics", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_metrics", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "m-compute-per-rank-pipeline-comm-volume-for-n-rank-lay",
+  "title": "Compute per-rank pipeline comm volume for N-rank layer sharding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "MLX distributed inference (Ring backend / JACCL / Thunderbolt)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mlxdist/pipeline.py",
+    "mlxdist/ring.py",
+    "mlxdist/sharding.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute pipeline communication volume across N ranks",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "volume_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Load-balanced layer sharding and ring launch",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "sharding_balanced", "op": "==", "threshold": 1},
+        {"metric": "ring_reduced", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3, "title": "Safety net: test catches broken comm layout", "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_sharding", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

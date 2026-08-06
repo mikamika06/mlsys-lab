@@ -1,12 +1,17 @@
-import numpy as np
+import math
 
-def recover_angles(orig: np.ndarray, rot: np.ndarray) -> np.ndarray:
+def recover_angles(orig: list[list[float]], rot: list[list[float]]) -> list[float]:
     """
     Compute the signed rotation angle (in radians) that maps each row of `orig`
-    to the corresponding row of `rot` using vectorised NumPy operations.
-    Both inputs must be 2‑D arrays of shape (n, 2). The output is a 1‑D array
-    of length n with dtype float64.
+    to the corresponding row of `rot` using explicit Python loops and math functions.
+    Both inputs must be lists of length n containing lists of two floats. The output is a list
+    of length n with floats.
     """
-    cross = orig[:, 0] * rot[:, 1] - orig[:, 1] * rot[:, 0]
-    dot   = orig[:, 0] * rot[:, 0] + orig[:, 1] * rot[:, 1]
-    return np.arctan2(cross, dot)
+    angles = []
+    for v, w in zip(orig, rot):
+        vx, vy = v[0], v[1]
+        wx, wy = w[0], w[1]
+        cross = vx * wy - vy * wx
+        dot = vx * wx + vy * wy
+        angles.append(math.atan2(cross, dot))
+    return angles

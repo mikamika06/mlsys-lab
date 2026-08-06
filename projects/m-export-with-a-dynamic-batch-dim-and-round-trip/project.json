@@ -1,0 +1,45 @@
+{
+  "id": "m-export-with-a-dynamic-batch-dim-and-round-trip",
+  "title": "Export with a dynamic batch dimension and round-trip",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "torch.export and AOTInductor packaging",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "export_util/export.py",
+    "export_util/fixup.py",
+    "export_util/signature.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Export with a dynamic batch dimension",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "dynamic_export_matched", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Fix data-dependent control flow and round-trip",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "roundtrip_matched", "op": "==", "threshold": 1.0},
+        {"metric": "max_error_ok", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Reconstruct export signature and safeguard regression",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_signature", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

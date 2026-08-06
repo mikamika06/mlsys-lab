@@ -1,0 +1,21 @@
+{
+  "id": "m-compute-memory-utilization-gap-static-padded-allocat",
+  "title": "Compute Memory-Utilization Gap: Static Padded Allocation vs PagedAttention",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "vLLM PagedAttention KV-Cache",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gap/utilization.py", "gap/probing.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Quantify static vs paged KV-cache utilization", "check": "harness/m1.py",
+     "gates": [{"metric": "utilization_metrics_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Measure max concurrent sequences via OOM probing", "check": "harness/m2.py",
+     "gates": [{"metric": "probing_results_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catches static padding overestimation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ignored_padding", "op": "==", "threshold": 1}]}
+  ]
+}

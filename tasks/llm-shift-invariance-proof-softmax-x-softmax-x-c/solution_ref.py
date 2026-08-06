@@ -1,29 +1,27 @@
 import math
-import numpy as np
 
 
-def softmax(x):
+def softmax(x: list[float]) -> list[float]:
     """Numerically stable softmax computation."""
-    arr = np.asarray(x, dtype=np.float64)
-    n = arr.size
+    n = len(x)
     if n == 0:
-        return np.empty_like(arr)
+        return []
 
-    max_val = float(arr.flat[0])
+    max_val = float(x[0])
     for i in range(1, n):
-        val = float(arr.flat[i])
+        val = float(x[i])
         if val > max_val:
             max_val = val
 
     exp_vals = [0.0] * n
     sum_e = 0.0
     for i in range(n):
-        ev = math.exp(float(arr.flat[i]) - max_val)
+        ev = math.exp(float(x[i]) - max_val)
         exp_vals[i] = ev
         sum_e += ev
 
-    out = np.empty(arr.shape, dtype=np.float64)
+    out = [0.0] * n
     for i in range(n):
-        out.flat[i] = exp_vals[i] / sum_e
+        out[i] = exp_vals[i] / sum_e
 
     return out

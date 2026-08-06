@@ -1,0 +1,21 @@
+{
+  "id": "m-disambiguate-4-real-profiling-failure-transcripts-by",
+  "title": "Disambiguate profiling failures and permissions",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "cuda-profiling-permissions-and-environment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["profdebug/disambiguate.py", "profdebug/permissions.py", "profdebug/compat.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Disambiguate profiling failure transcripts", "check": "harness/m1.py",
+     "gates": [{"metric": "disambiguate_match", "op": ">=", "threshold": 4.0}]},
+    {"n": 2, "title": "Predict ERR_NVGPUCTRPERM from state", "check": "harness/m2.py",
+     "gates": [{"metric": "prediction_match", "op": ">=", "threshold": 1.0}]},
+    {"n": 3, "title": "Resolve driver compatibility and safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_incompatible", "op": "==", "threshold": 1.0}]}
+  ]
+}

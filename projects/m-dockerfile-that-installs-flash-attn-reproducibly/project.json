@@ -1,0 +1,21 @@
+{
+  "id": "m-dockerfile-that-installs-flash-attn-reproducibly",
+  "title": "Reproducible Flash-Attn Dockerfile and Install Cost Analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "install-and-build-matrix",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flashbuild/dockerfile.py", "flashbuild/cost.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reproducible Dockerfile structure", "check": "harness/m1.py",
+     "gates": [{"metric": "dockerfile_valid", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Flash-attn version install cost ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "latency_ratio", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for build reproducibility", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unpinned_install", "op": "==", "threshold": 1}]}
+  ]
+}

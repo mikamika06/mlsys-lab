@@ -13,28 +13,33 @@ def _reference_knn(Xtr, ytr, Xte, k):
         max_count = counts.max()
         best_labels = labels[counts == max_count]
         preds.append(best_labels.min())
-    return np.array(preds, dtype=np.int64)
+    return preds
 
 def grade(sol, fx) -> dict:
     rng = np.random.default_rng(42)
     n_tr, d = 200, 5
-    Xtr = rng.standard_normal((n_tr, d))
-    ytr = rng.integers(low=0, high=4, size=n_tr)
+    Xtr_np = rng.standard_normal((n_tr, d))
+    ytr_np = rng.integers(low=0, high=4, size=n_tr)
     n_te = 50
-    Xte = rng.standard_normal((n_te, d))
+    Xte_np = rng.standard_normal((n_te, d))
     k = 3
 
-    ref_pred = _reference_knn(Xtr, ytr, Xte, k)
+    Xtr_list = Xtr_np.tolist()
+    ytr_list = ytr_np.tolist()
+    Xte_list = Xte_np.tolist()
+
+    ref_pred = _reference_knn(Xtr_np, ytr_np, Xte_np, k)
 
     try:
-        cand_pred = sol.knn_majority_vote(Xtr, ytr, Xte, k)
+        cand_pred = sol.knn_majority_vote(Xtr_list, ytr_list, Xte_list, k)
     except Exception:
         return {"argmax_agreement": 0.0}
 
-    if not isinstance(cand_pred, np.ndarray):
+    if not isinstance(cand_pred, list):
         return {"argmax_agreement": 0.0}
-    if cand_pred.shape != (n_te,):
+    if len(cand_pred) != n_te:
         return {"argmax_agreement": 0.0}
 
-    score = argmax_agreement(ref_pred, cand_pred)
+    cand_pred_np = np.array(cand_pred, dtype=np.int64)
+    score = argmax_agreement(np.array(ref_pred, dtype=np.int64), cand_pred_np)
     return {"argmax_agreement": float(score)}

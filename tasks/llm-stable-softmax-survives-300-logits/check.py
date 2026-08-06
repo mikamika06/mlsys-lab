@@ -21,7 +21,7 @@ def grade(sol, fx) -> dict:
     logits = _build_test_cases()
 
     try:
-        got = np.asarray(sol.stable_softmax(logits), dtype=np.float64)
+        got = np.asarray(sol.stable_softmax(logits.tolist()), dtype=np.float64)
     except Exception:
         return {"max_abs_err": float("inf")}
 

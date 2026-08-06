@@ -1,0 +1,21 @@
+{
+  "id": "m-int8-dot-product-instruction-count-scalar-vs-avx2-vs",
+  "title": "Int8 dot-product instruction count: scalar vs AVX2 vs VNNI",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "AVX-512/VNNI ISA mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["isa/throughput.py", "isa/parser.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Theoretical INT8 MACs per cycle", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 4}]},
+    {"n": 2, "title": "Objdump instruction counter", "check": "harness/m2.py",
+     "gates": [{"metric": "files_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: exact mnemonic matching", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_substring_matching", "op": "==", "threshold": 1}]}
+  ]
+}

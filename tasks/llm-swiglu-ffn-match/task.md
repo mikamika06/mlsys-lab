@@ -33,15 +33,15 @@ Implement `swiglu_ffn`:
 
 ```python
 def swiglu_ffn(
-    x: np.ndarray,
-    gate_w: np.ndarray,
-    up_w: np.ndarray,
-    down_w: np.ndarray,
-) -> np.ndarray:
+    x: list[list[float]],
+    gate_w: list[list[float]],
+    up_w: list[list[float]],
+    down_w: list[list[float]],
+) -> list[list[float]]:
     ...
 ```
 
-The arguments are NumPy arrays with shapes:
+The arguments are list with shapes:
 
 - `x`: $(n, d)$
 - `gate_w`: $(d, h)$
@@ -50,25 +50,24 @@ The arguments are NumPy arrays with shapes:
 
 Return the output array $Y$ with shape $(n, d)$.
 
-The implementation must compute the SwiGLU feed-forward operation using NumPy
+The implementation must compute the SwiGLU feed-forward operation using Python
 operations. The result must be `float64`.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1.0, -1.0]])
-gate_w = np.array([[0.5, 0.2], [0.1, -0.3]])
-up_w = np.array([[0.4, -0.2], [0.6, 0.1]])
-down_w = np.array([[1.0, 0.5], [-0.5, 0.7]])
+x = [[1.0, -1.0]]
+gate_w = [[0.5, 0.2], [0.1, -0.3]]
+up_w = [[0.4, -0.2], [0.6, 0.1]]
+down_w = [[1.0, 0.5], [-0.5, 0.7]]
 
 y = swiglu_ffn(x, gate_w, up_w, down_w)
 ```
 
 ## What the gate checks
 
-The gate computes the expected output using an independent NumPy oracle that
+The gate computes the expected output using an independent Python oracle that
 implements the SwiGLU equations. It compares the submitted implementation using
 the maximum absolute error
 

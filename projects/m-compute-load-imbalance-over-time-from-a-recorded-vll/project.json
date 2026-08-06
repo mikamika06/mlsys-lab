@@ -1,0 +1,44 @@
+{
+  "id": "m-compute-load-imbalance-over-time-from-a-recorded-vll",
+  "title": "MoE Serving Imbalance, Scaling, and Trace Profiling",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "moe-serving-frameworks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moe_analyzer/imbalance.py",
+    "moe_analyzer/scaling.py",
+    "moe_analyzer/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute load imbalance over time from recorded vLLM logs",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.001}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Fit and extrapolate throughput vs EP-degree and compare traces",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.001}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catches load imbalance calculation faults",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

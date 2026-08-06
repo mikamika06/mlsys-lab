@@ -1,0 +1,21 @@
+{
+  "id": "m-continuous-batching-simulator-arrivals-admission-com",
+  "title": "Continuous batching simulator for LLM serving",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "continuous-batching-and-scheduling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["cbsim/simulator.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Simulator core: arrivals, admission, and completion", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 2, "title": "Static vs continuous batching throughput ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: test for admission predicate invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_admission", "op": "==", "threshold": 1}]}
+  ]
+}

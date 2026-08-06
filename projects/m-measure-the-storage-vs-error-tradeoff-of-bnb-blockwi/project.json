@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-the-storage-vs-error-tradeoff-of-bnb-blockwi",
+  "title": "Storage vs error tradeoff of blockwise quantization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "bitsandbytes-internals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["bnbquant/quantize.py", "bnbquant/evaluate.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Blockwise quantization and dequantization", "check": "harness/m1.py",
+     "gates": [{"metric": "quant_match", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Storage-vs-error tradeoff curve measurement", "check": "harness/m2.py",
+     "gates": [{"metric": "tradeoff_match", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test on blockwise properties", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_quant", "op": "==", "threshold": 1}]}
+  ]
+}

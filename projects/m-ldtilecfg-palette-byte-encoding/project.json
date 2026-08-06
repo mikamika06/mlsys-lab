@@ -1,0 +1,40 @@
+{
+  "id": "m-ldtilecfg-palette-byte-encoding",
+  "title": "AMX tile architecture & TMUL throughput model",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "AMX tile architecture & TMUL throughput model",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["amx/config.py", "amx/model.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "LDTILECFG palette byte encoding",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "AMX vs AVX-512 speedup ceiling and time share breakdown",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "speedup_rel_err", "op": "<=", "threshold": 0.05},
+        {"metric": "share_rel_err", "op": "<=", "threshold": 0.05}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching corrupted tile row dimensions",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_corrupted_config", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

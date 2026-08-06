@@ -1,0 +1,22 @@
+{
+  "id": "m-cheap-proxies-vs-true-sensitivity",
+  "title": "Cheap proxies vs true sensitivity",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Layer sensitivity and mixed-precision recipes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["sens/proxy.py", "sens/metric.py", "sens/recipe.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute cheap proxy scores", "check": "harness/m1.py",
+     "gates": [{"metric": "proxy_matched", "op": "==", "threshold": 12}]},
+    {"n": 2, "title": "Compute true sensitivity and generate recipe", "check": "harness/m2.py",
+     "gates": [{"metric": "sens_matched", "op": "==", "threshold": 1},
+               {"metric": "recipe_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for proxy vs true sensitivity", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fake", "op": "==", "threshold": 1}]}
+  ]
+}

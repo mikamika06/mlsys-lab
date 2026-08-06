@@ -1,0 +1,21 @@
+{
+  "id": "m-mark-dynamic-vs-mark-static-effect-on-graph-count",
+  "title": "Effect of mark_dynamic vs mark_static on graph count",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Dynamic shapes and the symbolic shape env",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["dynshape/mark.py", "dynshape/count.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Apply dynamic and static tensor markings", "check": "harness/m1.py",
+     "gates": [{"metric": "markings_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Count compilation graphs across varying shapes", "check": "harness/m2.py",
+     "gates": [{"metric": "graph_count_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for bounding graph count", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_policy", "op": "==", "threshold": 1}]}
+  ]
+}

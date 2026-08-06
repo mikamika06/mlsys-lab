@@ -3,16 +3,23 @@ import socket
 import threading
 import time
 
-import numpy as np
-
 
 def _build_ops():
     def sleep_op():
         time.sleep(0.15)
 
     def dot_op():
-        a = np.ones((700, 700), dtype=np.float64)
-        np.dot(a, a)
+        n = 250
+        a = [[1.0] * n for _ in range(n)]
+        b = [[1.0] * n for _ in range(n)]
+        c = [[0.0] * n for _ in range(n)]
+        for i in range(n):
+            for j in range(n):
+                s = 0.0
+                for k in range(n):
+                    s += a[i][k] * b[k][j]
+                c[i][j] = s
+        return c
 
     def hash_op():
         data = b"x" * (32 * 1024 * 1024)

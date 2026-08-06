@@ -1,0 +1,21 @@
+{
+  "id": "m-engine-chooser-map-10-deployment-briefs-to-vllm-sgla",
+  "title": "Engine chooser for LLM serving architectures",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "engine-selection-and-comparison",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["chooser/briefs.py", "chooser/matrix.py", "chooser/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Map deployment briefs to inference engines", "check": "harness/m1.py",
+     "gates": [{"metric": "briefs_matched", "op": ">=", "threshold": 10}]},
+    {"n": 2, "title": "Reconstruct engine feature matrix from official docs", "check": "harness/m2.py",
+     "gates": [{"metric": "matrix_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for memory footprint estimation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_memory", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -44,8 +44,15 @@ def grade(sol, fx) -> dict:
         Wo = rng.normal(size=(E, E)).astype(np.float64)
 
         ref = _ref_mha(X, Wq, Wk, Wv, Wo, H)
+
+        X_list = X.tolist()
+        Wq_list = Wq.tolist()
+        Wk_list = Wk.tolist()
+        Wv_list = Wv.tolist()
+        Wo_list = Wo.tolist()
+
         try:
-            got = np.asarray(sol.mha_forward(X, Wq, Wk, Wv, Wo, H))
+            got = np.asarray(sol.mha_forward(X_list, Wq_list, Wk_list, Wv_list, Wo_list, H))
         except Exception:
             return {"max_abs_err": float("inf")}
 

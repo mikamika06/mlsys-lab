@@ -1,0 +1,68 @@
+{
+  "id": "m-measure-throughput-decay-with-d-context-depth",
+  "title": "Measure context depth decay and GPU offload scaling in llama-bench",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-gguf-llamacpp",
+  "track": "perf-measurement-llama-bench",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "llamaperf/decay.py",
+    "llamaperf/offload.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure throughput decay with -d context depth",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "decay_rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compare GPU throughput across two -ngl settings",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "offload_rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for decay and offload models",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_decay_bug",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_offload_bug",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

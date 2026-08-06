@@ -1,9 +1,10 @@
-import numpy as np
-
-
-def apply_repetition_penalty(logits: np.ndarray, penalty: float) -> np.ndarray:
-    x = np.asarray(logits, dtype=np.float64)
-    out = x.copy()
-    out[x > 0] = x[x > 0] / penalty
-    out[x < 0] = x[x < 0] * penalty
+def apply_repetition_penalty(logits: list[float], penalty: float) -> list[float]:
+    out = []
+    for x in logits:
+        if x > 0:
+            out.append(x / penalty)
+        elif x < 0:
+            out.append(x * penalty)
+        else:
+            out.append(0.0)
     return out

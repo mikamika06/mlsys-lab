@@ -15,15 +15,16 @@ def grade(sol, fx):
     max_err = 0.0
     shapes = [(3, 4), (5, 2), (1, 6), (10, 8), (7, 1)]
     for b, d in shapes:
-        x = rng.standard_normal((b, d))
-        gamma = rng.standard_normal(d)
-        beta = rng.standard_normal(d)
+        x_mat = rng.standard_normal((b, d)).tolist()
+        gamma_vec = rng.standard_normal(d).tolist()
+        beta_vec = rng.standard_normal(d).tolist()
         try:
-            out = sol.layer_norm(x, gamma, beta)
+            out = sol.layer_norm(x_mat, gamma_vec, beta_vec)
         except Exception as e:
             return {"max_abs_err": float("inf")}
-        ref = _reference_layer_norm(x, gamma, beta)
-        err = np.max(np.abs(out - ref))
+        ref = _reference_layer_norm(x_mat, gamma_vec, beta_vec)
+        out_arr = np.asarray(out, dtype=np.float64)
+        err = np.max(np.abs(out_arr - ref))
         if err > max_err:
             max_err = err
     return {"max_abs_err": max_err}

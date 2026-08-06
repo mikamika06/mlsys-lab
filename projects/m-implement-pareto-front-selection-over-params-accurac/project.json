@@ -1,0 +1,21 @@
+{
+  "id": "m-implement-pareto-front-selection-over-params-accurac",
+  "title": "Pareto-front selection for distilled checkpoints",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Distillation compression-accuracy measurement (Pareto)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["pareto/front.py", "pareto/metrics.py", "pareto/compare.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Pareto front selection over parameter and accuracy points", "check": "harness/m1.py",
+     "gates": [{"metric": "front_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Real accuracy retention measurement vs teacher", "check": "harness/m2.py",
+     "gates": [{"metric": "retention_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid Pareto fronts", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_dominated", "op": "==", "threshold": 1}]}
+  ]
+}

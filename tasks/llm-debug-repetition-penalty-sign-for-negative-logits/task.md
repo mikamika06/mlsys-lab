@@ -24,12 +24,12 @@ incorrectly makes negative logits less negative and changes the token ranking.
 Implement `apply_repetition_penalty(logits, penalty)`:
 
 ```python
-def apply_repetition_penalty(logits: np.ndarray, penalty: float) -> np.ndarray:
+def apply_repetition_penalty(logits: list[float], penalty: float) -> list[float]:
     ...
 ```
 
-The function receives a one-dimensional NumPy array of logits and a scalar
-penalty. Return a new `float64` NumPy array where every element is transformed
+The function receives a list of floats of logits and a scalar
+penalty. Return a new `float64` list where every element is transformed
 according to the sign-aware rule above.
 
 Do not modify the input array.
@@ -37,9 +37,8 @@ Do not modify the input array.
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([4.0, -3.0, 0.0, 1.5])
+logits = [4.0, -3.0, 0.0, 1.5]
 out = apply_repetition_penalty(logits, 2.0)
 
 # [2.0, -6.0, 0.0, 0.75]
@@ -47,7 +46,7 @@ out = apply_repetition_penalty(logits, 2.0)
 
 ## What the gate checks
 
-The gate computes the expected output using a NumPy reference implementation of
+The gate computes the expected output using a Python reference implementation of
 the sign-aware repetition penalty rule. The returned array must have
 maximum absolute error
 

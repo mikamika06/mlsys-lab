@@ -35,17 +35,22 @@ def grade(sol, fx) -> dict:
         v = rng.normal(size=(b, h, tk, d)).astype(np.float64)
 
         try:
-            kg, vg = sol.uptrain_mha_to_gqa(q, k, v, groups)
+            kg, vg = sol.uptrain_mha_to_gqa(
+                q.tolist(), k.tolist(), v.tolist(), groups
+            )
         except Exception:
             return {"mean_kl": float("inf")}
 
         ref_k, ref_v = _oracle_pool(k, v, groups)
 
-        if kg.shape != ref_k.shape or vg.shape != ref_v.shape:
+        kg_arr = np.asarray(kg, dtype=np.float64)
+        vg_arr = np.asarray(vg, dtype=np.float64)
+
+        if kg_arr.shape != ref_k.shape or vg_arr.shape != ref_v.shape:
             return {"mean_kl": float("inf")}
 
         ref_logits = _as_logits(ref_k, ref_v)
-        cand_logits = _as_logits(np.asarray(kg), np.asarray(vg))
+        cand_logits = _as_logits(kg_arr, vg_arr)
 
         value = scorers.mean_kl(ref_logits, cand_logits)
         if not np.isfinite(value):

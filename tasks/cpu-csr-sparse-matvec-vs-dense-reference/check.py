@@ -43,11 +43,11 @@ def grade(sol, fx) -> dict:
     max_err = 0.0
     for data, indices, indptr, x in cases:
         try:
-            y = sol.csr_matvec(data, indices, indptr, x)
+            y = sol.csr_matvec(data.tolist(), indices.tolist(), indptr.tolist(), x.tolist())
         except Exception:
             return {"max_abs_err": float("inf")}
         ref = _dense_matvec(data, indices, indptr, x)
-        err = np.max(np.abs(y - ref))
+        err = np.max(np.abs(np.array(y) - ref))
         if err > max_err:
             max_err = err
     return {"max_abs_err": max_err}

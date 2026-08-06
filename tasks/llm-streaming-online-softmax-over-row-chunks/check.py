@@ -21,7 +21,7 @@ def grade(sol, fx) -> dict:
     for logits, chunk_size in cases:
         ref = _oracle_softmax(logits)
         try:
-            got = sol.stream_softmax_row_chunks(logits.copy(), chunk_size)
+            got = sol.stream_softmax_row_chunks(logits.tolist(), chunk_size)
             got = np.asarray(got, dtype=np.float64)
             err = float(np.max(np.abs(ref - got)))
         except Exception:

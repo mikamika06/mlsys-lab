@@ -1,0 +1,22 @@
+{
+  "id": "m-compare-ollama-side-requantization-against-llama-qua",
+  "title": "Ollama Requantization vs llama-quantize and Remote Import",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "importing-gguf-safetensors-and-adapters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["runner/import_tools.py", "runner/remote_blobs.py", "runner/quant_compare.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Import safetensors directory and verify architecture", "check": "harness/m1.py",
+     "gates": [{"metric": "imports_checked", "op": ">=", "threshold": 4}]},
+    {"n": 2, "title": "Remote blob upload and model creation", "check": "harness/m2.py",
+     "gates": [{"metric": "blobs_valid", "op": "==", "threshold": 1},
+               {"metric": "models_created", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching quantizer block drift", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_quant_drift", "op": "==", "threshold": 1}]}
+  ]
+}

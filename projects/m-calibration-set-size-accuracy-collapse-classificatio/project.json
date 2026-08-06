@@ -1,0 +1,21 @@
+{
+  "id": "m-calibration-set-size-accuracy-collapse-classificatio",
+  "title": "Calibration-set-size accuracy-collapse classification",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "NNCF post-training INT8 quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantcollapse/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "FakeQuantize node count and scale reconstruction", "check": "harness/m1.py",
+     "gates": [{"metric": "scales_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Calibration-set-size accuracy-collapse classification", "check": "harness/m2.py",
+     "gates": [{"metric": "classification_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching classification regression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_collapsed_logic", "op": "==", "threshold": 1}]}
+  ]
+}

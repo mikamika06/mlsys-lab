@@ -1,0 +1,35 @@
+{
+  "id": "m-best-single-change-from-layer-timings",
+  "title": "TensorRT layer timings and engine profiles",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Engine introspection & layer profiling (inspector, dumpProfile, nsys)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["trtexplore/analyze.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse engine memory and fused layer count",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "metrics_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Identify the best single change from profiling",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "argmin_index", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catches an invalid timing change",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_argmin", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

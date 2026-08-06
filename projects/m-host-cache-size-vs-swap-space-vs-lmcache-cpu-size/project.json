@@ -1,0 +1,78 @@
+{
+  "id": "m-host-cache-size-vs-swap-space-vs-lmcache-cpu-size",
+  "title": "Host Cache Size vs Swap Space vs LMCache CPU Size",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "engine-portability-and-attention-backends",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "memplan/config.py",
+    "memplan/evaluator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute memory allocations for host cache, swap space, and LMCache",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Evaluate fragmentation, overhead limits, and eviction feasibility",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bytes_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "feasibility_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "saves_memory",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "schedule_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for buffer overlap and bounds",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_buffer_overlap",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

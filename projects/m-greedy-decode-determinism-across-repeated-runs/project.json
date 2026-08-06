@@ -1,0 +1,35 @@
+{
+  "id": "m-greedy-decode-determinism-across-repeated-runs",
+  "title": "Greedy-decode determinism and latency across runs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "OpenVINO GenAI LLMPipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["decoder/pipeline.py", "decoder/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Greedy decode determinism across repeated runs",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "exact_match_fraction", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "KV-cache-reused vs cold-restart per-token latency",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "speedup_ratio", "op": ">=", "threshold": 1.2}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for deterministic runs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_non_deterministic", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

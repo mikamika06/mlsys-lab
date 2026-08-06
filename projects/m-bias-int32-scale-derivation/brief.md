@@ -1,0 +1,5 @@
+Our edge ML runtime is rejecting newly trained quantized TFLite models with a "Dequantization contract violated: bias scale mismatch" error. Or worse, when we bypass the check, the models run but output complete static as soon as the first convolution layer finishes. 
+
+We traced the regression to how we handle the `bias` tensors during the TFLite-to-DSP-format conversion. If we train a model without biases (`use_bias=False`), the integer math perfectly matches the float reference model. The moment we include bias, the accumulator values blow up or shrink incorrectly. 
+
+The edge DSP requires all inputs, weights, and biases to be integers. The 2D convolution accumulates in `int32`. You need to fix how we derive the `int32` scale for the bias tensor, write the function to dequantize the weights to verify them, and finally implement the bit-exact integer convolution logic (including the asymmetric input zero-point) so we can run a bit-true simulation in Python and prove the dequantization contract holds before flashing the DSP hardware.

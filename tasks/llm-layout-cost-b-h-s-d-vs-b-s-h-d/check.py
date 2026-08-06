@@ -1,5 +1,3 @@
-import numpy as np
-
 def _ref(shape):
     B, H, S, d = shape
     # strides for BHSD layout (C‑order)

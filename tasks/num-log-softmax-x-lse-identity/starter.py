@@ -1,6 +1,5 @@
-import numpy as np
+import math
 
-def log_softmax(x):
+def log_softmax(x: list[float] | list[list[float]]) -> list[float] | list[list[float]]:
     """Compute log-softmax of x along the last axis."""
-    e_x = np.exp(x)
-    return np.log(e_x / e_x.sum(axis=-1, keepdims=True))
+    raise NotImplementedError('your code here')

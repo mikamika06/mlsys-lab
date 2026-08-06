@@ -12,7 +12,7 @@ M_{ij} =
 $$
 
 so that the $i$‑th query can only attend to positions $\le i$.  
-In NumPy this is exactly the lower triangular part of an all‑ones matrix:  
+In Python this is exactly the lower triangular part of an all‑ones matrix:  
 
 $$
 M = \operatorname{tril}\!\bigl(\mathbf{1}_{n\times n}\bigr).
@@ -25,27 +25,22 @@ A common off‑by‑one bug occurs when the implementation mistakenly allows the
 Implement a function that returns the correct causal mask:
 
 ```python
-def create_causal_mask(n: int) -> np.ndarray:
+def create_causal_mask(n: int) -> list[list[float]]:
     ...
 ```
 
-The function receives an integer sequence length `n` and must return an `(n, n)` NumPy array of type `float64`.  The returned matrix should have ones on and below the main diagonal and zeros elsewhere.
+The function receives an integer sequence length `n` and must return an `(n, n)` list of type `float64`.  The returned matrix should have ones on and below the main diagonal and zeros elsewhere.
 
 ## Example
 
 ```python
-import numpy as np
 mask = create_causal_mask(4)
-print(mask)
-# [[1. 0. 0. 0.]
-#  [1. 1. 0. 0.]
-#  [1. 1. 1. 0.]
-#  [1. 1. 1. 1.]]
+print(mask)  # [[1.0, 0.0, 0.0, 0.0], [1.0, 1.0, 0.0, 0.0], [1.0, 1.0, 1.0, 0.0], [1.0, 1.0, 1.0, 1.0]]
 ```
 
 ## What the gate checks
 
-The grader computes a reference mask with `np.tril(np.ones((n, n), dtype=np.float64))` for several sequence lengths and evaluates the **maximum absolute error** between the candidate output and this reference:
+The grader computes a reference mask with `[[1.0 if j <= i else 0.0 for j in range(n)] for i in range(n)]` for several sequence lengths and evaluates the **maximum absolute error** between the candidate output and this reference:
 
 $$
 \mathrm{max\_abs\_err} = \max_{i,j}\bigl|\,M^{\text{cand}}_{ij}-M^{\text{ref}}_{ij}\bigr|.

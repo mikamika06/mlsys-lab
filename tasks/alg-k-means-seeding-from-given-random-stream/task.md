@@ -18,35 +18,34 @@ $$
 
 This weighted sampling ensures that points far from existing centers are more likely to become new centers, leading to a better spread of initial seeds.
 
-In this task we are given an explicit random stream $u \in [0,1)^m$ (a 1‑D NumPy array) and must consume its values in order to perform the weighted sampling deterministically. No additional randomness is allowed; the algorithm must be fully reproducible from $X$, $k$, and $u$.
+In this task we are given an explicit random stream $u \in [0,1)^m$ (a 1‑D list) and must consume its values in order to perform the weighted sampling deterministically. No additional randomness is allowed; the algorithm must be fully reproducible from $X$, $k$, and $u$.
 
 ## Task
 
 Implement a function with the following signature:
 
 ```python
-def kmeans_pp_seed(X: np.ndarray, n_clusters: int, rng_stream: np.ndarray) -> np.ndarray:
+def kmeans_pp_seed(X: list[list[float]], n_clusters: int, rng_stream: list[float]) -> list[int]:
     ...
 ```
 
-* `X` – a 2‑D NumPy array of shape `(n_samples, n_features)` containing the data points.
+* `X` – a 2‑D list of shape `(n_samples, n_features)` containing the data points.
 * `n_clusters` – the number of centers to select (`k`).
-* `rng_stream` – a 1‑D NumPy array of uniformly distributed floats in `[0,1)`.  
+* `rng_stream` – a 1‑D list of uniformly distributed floats in `[0,1)`.  
   The first element is used for selecting the very first center (uniform over all points).  
   Subsequent elements are consumed one per additional center and are interpreted as uniform random numbers to perform weighted sampling via the cumulative distribution function.
 
-The function must return a NumPy array of shape `(n_clusters,)` containing the indices of the chosen centers. Indices should be `int64`. The algorithm must **not** use any other source of randomness; it must rely solely on `rng_stream`.
+The function must return a list of shape `(n_clusters,)` containing the indices of the chosen centers. Indices should be `int64`. The algorithm must **not** use any other source of randomness; it must rely solely on `rng_stream`.
 
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[0, 0],
+X = [[0, 0],
               [1, 0],
               [0, 1],
-              [10, 10]])
-rng_stream = np.array([0.25, 0.6, 0.9])   # three values for k=3
+              [10, 10]]
+rng_stream = [0.25, 0.6, 0.9]   # three values for k=3
 
 indices = kmeans_pp_seed(X, 3, rng_stream)
 print(indices)          # e.g., array([2, 1, 3])
@@ -57,7 +56,7 @@ The exact output depends on the deterministic sampling procedure described above
 ## What the gate checks
 
 * **Exact match** – The returned indices must be identical to those produced by a reference implementation that follows the same algorithm and consumes `rng_stream` in order.  
-  The grader computes the reference using NumPy operations; no hard‑coded expected values are used.
+  The grader computes the reference using Python operations; no hard‑coded expected values are used.
 * **Determinism** – Because only `rng_stream` is allowed for randomness, any deviation (e.g., reusing the stream incorrectly or ignoring it) will cause a mismatch and fail the gate.
 
 The task is considered solved when your implementation passes the exact‑match check on all provided test cases.

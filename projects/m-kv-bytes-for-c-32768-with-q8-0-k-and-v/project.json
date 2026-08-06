@@ -1,0 +1,68 @@
+{
+  "id": "m-kv-bytes-for-c-32768-with-q8-0-k-and-v",
+  "title": "KV bytes for -c 32768 with q8_0 K and V",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "llamacpp-and-local-kv-quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvquant/parser.py",
+    "kvquant/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse GGUF header for KV hyperparameters",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "headers_matched",
+          "op": ">=",
+          "threshold": 3.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Calculate KV cache memory usage and perplexity deltas",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bytes_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "ppl_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for KV memory and GGUF parsing",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_undercounting",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

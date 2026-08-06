@@ -1,0 +1,74 @@
+{
+  "id": "m-diagnose-a-recorded-mlx-lm-server-oom-crash-log",
+  "title": "Diagnose MLX-LM server OOM and quantization weight drift",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "mlx-lm CLI workflow (convert / quantize / generate / server)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mlxdiag/oom.py",
+    "mlxdiag/quant.py",
+    "mlxdiag/drift.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Diagnose recorded mlx_lm.server OOM crash log",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "logs_parsed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "oom_metrics_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reconstruct quantization config and evaluate weight drift",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "configs_reconstructed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "drift_evaluated",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches unmonitored drift",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_drift",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

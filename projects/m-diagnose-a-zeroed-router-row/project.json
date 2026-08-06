@@ -1,0 +1,68 @@
+{
+  "id": "m-diagnose-a-zeroed-router-row",
+  "title": "Diagnose a zeroed router row in MoE routing",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "moe-routing-fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moerouter/params.py",
+    "moerouter/routing.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Active vs total parameter accounting for MoE config",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose zeroed router rows and produce safe top-k routing weights",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "routing_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "zero_row_handled",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches unhandled zeroed router rows",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_zeroed_row_fault",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,4 @@
-import numpy as np
+import math
 
-def normalize_embeddings(embeddings: np.ndarray) -> np.ndarray:
-    # TODO: missing sqrt(d) scaling
-    return embeddings  # returns unscaled matrix, causing large errors
+def normalize_embeddings(embeddings: list[list[float]]) -> list[list[float]]:
+    raise NotImplementedError('your code here')

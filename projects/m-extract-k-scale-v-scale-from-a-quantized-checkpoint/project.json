@@ -1,0 +1,21 @@
+{
+  "id": "m-extract-k-scale-v-scale-from-a-quantized-checkpoint",
+  "title": "Extract and calibrate KV scales from quantized checkpoints",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-quant-calibration-with-llm-compressor",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kvquant/extract.py", "kvquant/calibrate.py", "kvquant/sweep.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Extract k_scale and v_scale from checkpoint", "check": "harness/m1.py",
+     "gates": [{"metric": "scales_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Reproduce absmax calibration from cached activations", "check": "harness/m2.py",
+     "gates": [{"metric": "absmax_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for scale stability sweep", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_sweep", "op": "==", "threshold": 1}]}
+  ]
+}

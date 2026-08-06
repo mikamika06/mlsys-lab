@@ -1,8 +1,7 @@
-import numpy as np
-
-
 def fold_rmsnorm_gamma(W, b, gamma):
-    W = np.asarray(W, dtype=np.float64)
-    b = np.asarray(b, dtype=np.float64)
-    gamma = np.asarray(gamma, dtype=np.float64)
-    return gamma.reshape(1, -1) * W, b.copy()
+    W_folded = []
+    for row in W:
+        new_row = [w * g for w, g in zip(row, gamma)]
+        W_folded.append(new_row)
+    b_folded = list(b)
+    return W_folded, b_folded

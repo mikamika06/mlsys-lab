@@ -1,0 +1,21 @@
+{
+  "id": "m-find-the-single-config-change-that-turned-100-gpu-in",
+  "title": "Diagnosing GPU-to-CPU offload regression and prediction",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "gpu-offload-and-layer-split",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["offload/finder.py", "offload/parser.py", "offload/predict.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Find the single config change turning 100% GPU into a CPU split", "check": "harness/m1.py",
+     "gates": [{"metric": "found_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Parse PROCESSOR column into numeric CPU/GPU split", "check": "harness/m2.py",
+     "gates": [{"metric": "parsed_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Predict decode tok/s and safeguard test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_prediction", "op": "==", "threshold": 1}]}
+  ]
+}

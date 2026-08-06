@@ -1,0 +1,64 @@
+{
+  "id": "m-compute-kv-bytes-for-f16-q8-0-q4-0-including-block-s",
+  "title": "KV cache quantization accounting and evaluation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "kv-cache-quantization-and-flash-attention",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "kvquant/calc.py",
+    "kvquant/memory.py",
+    "kvquant/eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute KV cache byte sizes with block overhead",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "calc_rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure real resident buffer footprints",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "memory_rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test needle retrieval quality loss",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_quant",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

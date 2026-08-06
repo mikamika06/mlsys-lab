@@ -1,0 +1,7 @@
+Ticket: #4892 - Production Tail-Latency Spikes and Misclassified Thread Subscriptions under KMP_AFFINITY Configuration Changes
+
+In our multi-socket CPU inference worker pools, production telemetry logs show wildly erratic token-generation latency spikes whenever OpenMP runtime environment variables like KMP_AFFINITY are modified or auto-configured under high concurrency. Specifically, certain deployment nodes exhibit severe tail-latency degradation, with p99 latency jumping by 300% to 500% compared to baseline configurations, even though overall core utilization metrics appear balanced across NUMA domains.
+
+Furthermore, automated orchestration agents attempting to classify running thread-config subscription states from raw trace logs are misidentifying oversubscribed or under-pinned topologies as optimal, causing cascading thread migration overheads, frequent context switches, and severe cache thrashing across L3 boundaries. Operators report that standard diagnostic scripts fail to correlate raw log timestamps with effective execution durations, making it impossible to determine whether a given pinning mode introduces performance regressions.
+
+We need a robust analysis module to reliably parse KMP pinning configurations and execution latencies from real logs, compare their effective performance using deterministic ratio metrics against a reference oracle, and classify thread-config subscription states with absolute precision before deploying thread-pool updates cluster-wide.

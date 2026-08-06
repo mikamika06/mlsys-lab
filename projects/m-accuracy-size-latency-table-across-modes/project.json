@@ -1,0 +1,24 @@
+{
+  "id": "m-accuracy-size-latency-table-across-modes",
+  "title": "Accuracy/size/latency table across PTQ modes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "TFLite/LiteRT post-training quantization modes",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["quanteval/modes.py", "quanteval/table.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Quantization mode transformations and model size calculation", "check": "harness/m1.py",
+     "gates": [{"metric": "modes_quantized", "op": ">=", "threshold": 4},
+               {"metric": "sizes_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Accuracy loss, latency modeling, and trade-off table generation", "check": "harness/m2.py",
+     "gates": [{"metric": "table_correct", "op": "==", "threshold": 1},
+               {"metric": "size_ratio", "op": "<=", "threshold": 0.35},
+               {"metric": "ranking_correct", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching swapped quantization modes", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_swapped_modes", "op": "==", "threshold": 1}]}
+  ]
+}

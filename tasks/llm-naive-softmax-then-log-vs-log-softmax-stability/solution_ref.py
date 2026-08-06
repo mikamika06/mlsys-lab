@@ -1,30 +1,24 @@
 import math
-import numpy as np
 
 
-def log_softmax(x: np.ndarray) -> np.ndarray:
+def log_softmax(x: list[list[float]]) -> list[list[float]]:
     """Numerically stable log‑softmax along the last axis."""
-    x = np.asarray(x, dtype=np.float64)
-    shape = x.shape
-    last_dim = shape[-1]
-    out_shape = shape[:-1] + (1,)
-    out = np.zeros(out_shape, dtype=np.float64)
-
-    x_flat = np.reshape(x, (-1, last_dim))
-    out_flat = np.reshape(out, (-1, 1))
-
-    num_rows = x_flat.shape[0]
-    for i in range(num_rows):
-        mx = x_flat[i, 0]
-        for j in range(1, last_dim):
-            val = x_flat[i, j]
+    out = []
+    for row in x:
+        if not row:
+            out.append([])
+            continue
+        mx = row[0]
+        for val in row[1:]:
             if val > mx:
                 mx = val
 
         s = 0.0
-        for j in range(last_dim):
-            s += math.exp(x_flat[i, j] - mx)
+        for val in row:
+            s += math.exp(val - mx)
 
-        out_flat[i, 0] = -mx + math.log(s)
+        shift = mx + math.log(s)
+        new_row = [val - shift for val in row]
+        out.append(new_row)
 
     return out

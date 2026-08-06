@@ -1,0 +1,45 @@
+{
+  "id": "m-kernel-attribution-harness",
+  "title": "Kernel Attribution Harness and Fallback Diagnostic",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "silent-fallback-and-perf-debugging",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kernel_attr/attribution.py",
+    "kernel_attr/detector.py",
+    "kernel_attr/fallback.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Kernel attribution harness",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "attributed_events", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quadratic memory detector and fallback cause identification",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "detector_accuracy", "op": "==", "threshold": 1.0},
+        {"metric": "fallback_causes_correct", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for fallback invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_fallbacks", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

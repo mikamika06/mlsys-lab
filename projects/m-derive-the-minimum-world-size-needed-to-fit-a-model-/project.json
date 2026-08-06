@@ -1,0 +1,40 @@
+{
+  "id": "m-derive-the-minimum-world-size-needed-to-fit-a-model-",
+  "title": "Derive minimum world size and verify FSDP sharding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "fsdp-distributed-finetuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fsdpfit/sizing.py",
+    "fsdpfit/launcher.py",
+    "fsdpfit/verify.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive minimum world size under memory budget",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "sizing_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Launch 2-process FSDP job and inspect sharded parameter sizes",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "sharded_sizes_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Verify un-sharded weight parity and regression safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_fault", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

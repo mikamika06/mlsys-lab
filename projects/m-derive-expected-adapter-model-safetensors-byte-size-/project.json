@@ -1,0 +1,63 @@
+{
+  "id": "m-derive-expected-adapter-model-safetensors-byte-size-",
+  "title": "Derive expected adapter model safetensors byte size and verify PEFT roundtrip",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "peft-library-mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "peftutils/size.py",
+    "peftutils/verify.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive expected adapter safetensors byte size",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "sizes_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive relative file size and ratio compared to base model checkpoint",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ratios_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches incorrect tensor shapes or outputs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_adapter",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

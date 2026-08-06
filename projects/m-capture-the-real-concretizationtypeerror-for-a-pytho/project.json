@@ -1,0 +1,21 @@
+{
+  "id": "m-capture-the-real-concretizationtypeerror-for-a-pytho",
+  "title": "ConcretizationTypeError, tracer limits, and JIT retracing counter",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "JAX jit & jaxpr tracing semantics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["jaxcomp/tracer.py", "jaxcomp/retrace.py", "jaxcomp/compare.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Capture the true ConcretizationTypeError on Python conditional", "check": "harness/m1.py",
+     "gates": [{"metric": "captured_correctly", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Track true JIT retraces across distinct shapes with counter", "check": "harness/m2.py",
+     "gates": [{"metric": "retrace_counts_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching missing ConcretizationTypeError assertions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ignored_errors", "op": "==", "threshold": 1}]}
+  ]
+}

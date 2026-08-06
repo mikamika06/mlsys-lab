@@ -1,0 +1,7 @@
+We are running quantization evaluations on a series of hardware targets for low-level ML systems, specifically exploring quantization scheme taxonomy (WxAy) under the `rw2-quant-libs` area.
+
+During our empirical benchmarks on hybrid quantization grids, we noticed a major performance anomaly when evaluating mixed-precision and standard low-bit layouts. At certain block sizes and arithmetic intensities, the throughput profile exhibits unexpected inflection points where higher-precision quantization configurations unexpectedly outperform lower-bit configurations due to kernel launch overheads, memory bandwidth saturation, and dequantization instruction overhead.
+
+However, our current analysis scripts rely entirely on theoretical hardware models and static analytical bounds, making it impossible to predict the exact operating point where the performance curves cross. Without a rigorous, empirical approach to locate this crossover point on real execution profiles, our optimization passes either choose sub-optimal fallback formats or waste memory bandwidth trying to decode kernels that are bound by execution bottlenecks elsewhere in the pipeline.
+
+Your task is to implement an empirical measurement framework in `quantlib/crossover.py` that sweeps configuration parameters, records execution metrics, identifies the precise empirical crossover boundary between competing quantization schemes, and validates your findings with a robust regression test suite.

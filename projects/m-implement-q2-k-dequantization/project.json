@@ -1,0 +1,63 @@
+{
+  "id": "m-implement-q2-k-dequantization",
+  "title": "Q2_K Dequantization and K-Quant Superblock Analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "k-quant-superblocks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kquant/dequant.py",
+    "kquant/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Q2_K dequantization and Q3_K hmask reconstruction",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-05
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Exact bit-per-weight (bpw) derivation for K-quant family",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bpw_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for dequantization and scales",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_dequant",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

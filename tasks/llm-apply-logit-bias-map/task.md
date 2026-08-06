@@ -14,31 +14,28 @@ otherwise $y_{i,t}=x_{i,t}$.  The bias values are independent of the position an
 Implement a function that applies such a bias map to a batch of logits:
 
 ```python
-def apply_logit_bias_map(logits: np.ndarray, bias_map: dict[int, float]) -> np.ndarray:
+def apply_logit_bias_map(logits: list[list[float]], bias_map: dict[int, float]) -> list[list[float]]:
     ...
 ```
 
-`logits` is a 2‑D NumPy array of shape $(n,\;d)$ where $n$ is the number of positions and $d$ the vocabulary size.  
+`logits` is a 2‑D list of shape $(n,\;d)$ where $n$ is the number of positions and $d$ the vocabulary size.  
 `bias_map` maps integer token indices to floating point bias values. The function must return a new array of the same shape with the biases added as described above.
 
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([[0.1, 0.2, 0.3],
-                   [0.4, 0.5, 0.6]])
+logits = [[0.1, 0.2, 0.3],
+                   [0.4, 0.5, 0.6]]
 bias_map = {0: -0.05, 2: 0.10}
 
 biased = apply_logit_bias_map(logits, bias_map)
-print(biased)
-# [[ 0.05  0.20  0.40]
-#  [ 0.35  0.50  0.70]]
+print(biased)  # [[0.05, 0.2, 0.4], [0.35000000000000003, 0.5, 0.7]]
 ```
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares your output with it.  
+The grader computes a reference implementation using Python and compares your output with it.  
 It reports the maximum absolute difference
 
 $$

@@ -1,0 +1,5 @@
+We deployed our new vision transformer to production, but the latency improvements over the standard ONNX Runtime are practically non-existent. Furthermore, the TensorRT engine is pre-allocating an enormous amount of device memory, which is causing out-of-memory errors on our smaller edge instances. I suspect that TensorRT is failing to fuse certain critical operations compared to the raw ONNX graph.
+
+I've run the TensorRT engine inspector and dumped the JSON reports for both the raw ONNX model and the version passed through onnx-simplifier. Your first task is to parse these two reports, extract the exact device memory size allocated by the engine (which should be identical), and count the total number of layers in both models to determine how many fusions actually occurred.
+
+Secondly, we ran trtexec with dumpProfile to get detailed layer timings. I have also prepared a list of candidate graph changes (where each candidate maps specific layer names to a new, optimized timeMs). Implement a routine to evaluate these candidates against the base profile and return the integer index of the single candidate that yields the absolute lowest overall network latency.

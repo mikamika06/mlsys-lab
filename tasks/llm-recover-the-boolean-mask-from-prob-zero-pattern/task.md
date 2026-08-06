@@ -35,7 +35,7 @@ $\varepsilon > 0$: treat entries with $P_{ij} \le \varepsilon$ as zero.
 Implement `recover_mask(P, eps=1e-12)`:
 
 ```python
-def recover_mask(P: np.ndarray, eps: float = 1e-12) -> np.ndarray:
+def recover_mask(P: list[list[float]], eps: float = 1e-12) -> list[list[bool]]:
     ...
 ```
 
@@ -46,13 +46,12 @@ $M_{ij}$ is True iff $P_{ij} > \varepsilon$.
 ## Example
 
 ```python
-import numpy as np
 
-P = np.array([
+P = [
     [0.0, 0.5, 0.0],
     [0.3, 0.0, 0.7],
     [0.0, 0.0, 1.0]
-])
+]
 
 M = recover_mask(P, eps=1e-12)
 # Expected:

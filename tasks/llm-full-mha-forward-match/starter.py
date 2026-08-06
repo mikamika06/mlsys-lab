@@ -1,5 +1,11 @@
-import numpy as np
+import math
 
-def mha_forward(X: np.ndarray, Wq: np.ndarray, Wk: np.ndarray, Wv: np.ndarray, Wo: np.ndarray) -> np.ndarray:
+def mha_forward(
+    X: list[list[list[float]]],
+    Wq: list[list[float]],
+    Wk: list[list[float]],
+    Wv: list[list[float]],
+    Wo: list[list[float]],
+) -> list[list[list[float]]]:
     """Broken implementation – missing scaling by sqrt(head_dim)."""
     raise NotImplementedError('your code here')

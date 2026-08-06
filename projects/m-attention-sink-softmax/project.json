@@ -1,0 +1,44 @@
+{
+  "id": "m-attention-sink-softmax",
+  "title": "Attention Sink Softmax & Window Drift",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "sliding-window-and-attention-sinks",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "attnsink/sink_softmax.py",
+    "attnsink/drift.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Sink-augmented causal window attention",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Window sweep output drift across long contexts",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5},
+        {"metric": "sink_beats_win", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: catch double-counted sink logits",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_double_counted_sinks", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

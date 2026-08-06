@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: np.ndarray) -> np.ndarray:
+def tape_grad(tape: list[tuple[str, tuple[int, ...]]], x: list[float]) -> list[float]:
     """
     Reverse-mode autograd over a Wengert list.
 

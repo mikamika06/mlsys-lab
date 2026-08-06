@@ -1,0 +1,46 @@
+{
+  "id": "m-block-table-allocator",
+  "title": "Paged KV Cache Block Allocator and Logical Gather",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "paged-kv-and-block-tables",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "pagedkv/__init__.py",
+    "pagedkv/allocator.py",
+    "pagedkv/gather.py",
+    "pagedkv/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Block table allocator and physical block tracking",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "allocator_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Gather logical KV tensors and fragmentation metrics",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "gather_matched", "op": "==", "threshold": 1.0},
+        {"metric": "fragmentation_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching fragmentation metric calculation errors",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_fragmentation_bug", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

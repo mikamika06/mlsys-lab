@@ -37,7 +37,7 @@ def grade(sol, fx) -> dict:
     ok = 1.0
     for arr in tests:
         try:
-            got = sol.classify_contiguity(arr)
+            got = sol.classify_contiguity(arr.tolist())
         except Exception:
             return {"exact_match": 0.0}
         ref = _reference_classify(arr)

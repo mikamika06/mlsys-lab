@@ -1,0 +1,21 @@
+{
+  "id": "m-emit-the-minimal-fix-command-per-failure-class",
+  "title": "Minimal fix commands and build optimization for FlashAttention",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "install-and-build-matrix",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["buildfix/abi.py", "buildfix/jobs.py", "buildfix/fix.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Predict ABI mismatch from build configuration", "check": "harness/m1.py",
+     "gates": [{"metric": "abi_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compute optimal MAX_JOBS build sweep", "check": "harness/m2.py",
+     "gates": [{"metric": "jobs_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Emit minimal fix command and pass regression safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_fix", "op": "==", "threshold": 1}]}
+  ]
+}

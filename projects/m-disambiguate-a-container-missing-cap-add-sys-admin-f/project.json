@@ -1,0 +1,43 @@
+{
+  "id": "m-disambiguate-a-container-missing-cap-add-sys-admin-f",
+  "title": "Disambiguate container SYS_ADMIN capability from bare-metal profiling failures",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "cuda-profiling-permissions-and-environment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "profilediag/classifier.py",
+    "profilediag/triage.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Disambiguate container capability from bare-metal permission faults",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "cases_matched", "op": ">=", "threshold": 6}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Triage 6 real ncu and nsys failure transcripts",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "triage_accuracy", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches misclassification of missing caps",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_classifier", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

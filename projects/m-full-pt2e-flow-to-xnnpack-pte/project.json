@@ -1,0 +1,21 @@
+{
+  "id": "m-full-pt2e-flow-to-xnnpack-pte",
+  "title": "Full PT2E quantization and XNNPACK .pte export pipeline",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "PT2E quantization (prepare_pt2e / convert_pt2e)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["pt2ex/quant.py", "pt2ex/export.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Observer ranges and true activation bounds", "check": "harness/m1.py",
+     "gates": [{"metric": "observer_match", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Per-tensor vs per-channel PT2E conversion error", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: regression test for PT2E export flow", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_flow", "op": "==", "threshold": 1}]}
+  ]
+}

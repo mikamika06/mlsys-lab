@@ -1,0 +1,21 @@
+{
+  "id": "m-build-and-statically-validate-a-2-step-ensemble-tens",
+  "title": "Build and statically validate a 2-step Triton ensemble",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Triton Ensembles & BLS",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ensemble/wiring.py", "ensemble/latency.py", "ensemble/errors.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Build and statically validate a 2-step ensemble tensor wiring", "check": "harness/m1.py",
+     "gates": [{"metric": "wiring_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute true ensemble p50/p99 from per-step queueing", "check": "harness/m2.py",
+     "gates": [{"metric": "latency_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Classify ensemble config errors from real error strings", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_wiring", "op": "==", "threshold": 1}]}
+  ]
+}

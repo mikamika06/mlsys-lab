@@ -40,10 +40,10 @@ def grade(sol, fx) -> dict:
         try:
             ref_P, ref_L, ref_U = _oracle_lu(A)
 
-            P, L, U = sol.lu_partial_pivot(A.copy())
-            P = np.asarray(P, dtype=np.float64)
-            L = np.asarray(L, dtype=np.float64)
-            U = np.asarray(U, dtype=np.float64)
+            res_P, res_L, res_U = sol.lu_partial_pivot(A.tolist())
+            P = np.asarray(res_P, dtype=np.float64)
+            L = np.asarray(res_L, dtype=np.float64)
+            U = np.asarray(res_U, dtype=np.float64)
 
             err = max(
                 float(np.max(np.abs(P - ref_P))),

@@ -1,0 +1,22 @@
+{
+  "id": "m-match-transformers-dynamic-ntk-rope-parameter-formul",
+  "title": "Match transformer RoPE scaling parameter formulas",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "rope-scaling-methods",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ropescaling/scaling.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Dynamic-NTK RoPE parameter formula", "check": "harness/m1.py",
+     "gates": [{"metric": "dynamic_ntk_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "YaRN and Llama-3 RoPE parameter formulas", "check": "harness/m2.py",
+     "gates": [{"metric": "yarn_matched", "op": ">=", "threshold": 3},
+               {"metric": "llama3_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: a test that catches uniform scaling fallbacks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_scaling", "op": "==", "threshold": 1}]}
+  ]
+}

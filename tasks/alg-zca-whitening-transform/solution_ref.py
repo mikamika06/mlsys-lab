@@ -1,21 +1,20 @@
 import math
-import numpy as np
 
-def zca_whitening(X: np.ndarray) -> np.ndarray:
+def zca_whitening(X: list[list[float]]) -> list[list[float]]:
     n_samples = len(X)
     n_features = len(X[0])
 
     mean = [0.0] * n_features
     for i in range(n_samples):
         for j in range(n_features):
-            mean[j] += float(X[i, j])
+            mean[j] += float(X[i][j])
     for j in range(n_features):
         mean[j] /= n_samples
 
     X_centered = [[0.0] * n_features for _ in range(n_samples)]
     for i in range(n_samples):
         for j in range(n_features):
-            X_centered[i][j] = float(X[i, j]) - mean[j]
+            X_centered[i][j] = float(X[i][j]) - mean[j]
 
     cov = [[0.0] * n_features for _ in range(n_features)]
     for j in range(n_features):
@@ -82,12 +81,12 @@ def zca_whitening(X: np.ndarray) -> np.ndarray:
                 acc += V[i][k] * inv_sqrt_eigvals[k] * V[j][k]
             W_zca[i][j] = acc
 
-    X_whitened = np.zeros((n_samples, n_features), dtype=np.float64)
+    X_whitened = [[0.0] * n_features for _ in range(n_samples)]
     for i in range(n_samples):
         for j in range(n_features):
             acc = 0.0
             for k in range(n_features):
                 acc += X_centered[i][k] * W_zca[k][j]
-            X_whitened[i, j] = acc
+            X_whitened[i][j] = acc
 
     return X_whitened

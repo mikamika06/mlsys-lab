@@ -1,0 +1,39 @@
+{
+  "id": "m-map-20-real-error-transcripts-to-their-failure-class",
+  "title": "Local runner troubleshooting and preflight safety checks",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "troubleshooting-taxonomy",
+  "difficulty": 3,
+  "edits": [
+    "troubleshoot/mapper.py",
+    "troubleshoot/diagnosis.py",
+    "troubleshoot/preflight.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Map error transcripts to failure classes",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "mapped_correctly", "op": ">=", "threshold": 20}]
+    },
+    {
+      "n": 2,
+      "title": "Extract root cause and fix from logs, ps, and memory counters",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "diagnoses_correct", "op": ">=", "threshold": 20}]
+    },
+    {
+      "n": 3,
+      "title": "Preflight checker and regression test suite",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_preflight", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

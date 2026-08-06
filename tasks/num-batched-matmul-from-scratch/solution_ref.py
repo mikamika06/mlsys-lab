@@ -1,17 +1,17 @@
-import numpy as np
-
-
-def batched_matmul(A: np.ndarray, B: np.ndarray) -> np.ndarray:
-    batch, m, k = A.shape
-    _, _, n = B.shape
-    out = np.zeros((batch, m, n), dtype=np.float64)
-
-    for s in range(batch):
-        for i in range(m):
-            for j in range(n):
-                total = 0.0
-                for t in range(k):
-                    total += A[s, i, t] * B[s, t, j]
-                out[s, i, j] = total
-
-    return out
+def batched_matmul(A: list, B: list) -> list:
+    """
+    Performs batched matrix multiplication without using any external libraries.
+    A: 3D list of shape (batch_size, n, m)
+    B: 3D list of shape (batch_size, m, p)
+    Returns a 3D list of shape (batch_size, n, p)
+    """
+    result = []
+    for a_mat, b_mat in zip(A, B):
+        # Transpose B for easier column access
+        b_t = list(zip(*b_mat))
+        c_mat = [
+            [sum(a * b for a, b in zip(a_row, b_col)) for b_col in b_t]
+            for a_row in a_mat
+        ]
+        result.append(c_mat)
+    return result

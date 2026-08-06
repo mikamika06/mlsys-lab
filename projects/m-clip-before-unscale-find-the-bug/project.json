@@ -1,0 +1,69 @@
+{
+  "id": "m-clip-before-unscale-find-the-bug",
+  "title": "Clip before unscale and loss-scaling dynamics",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "GradScaler and loss-scaling dynamics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "scalerlab/clip.py",
+    "scalerlab/counter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Correct gradient unscaling and clipping order",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Count skipped optimizer steps under underflow",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "skipped_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "behavior_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching clip-before-unscale",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "has_tests": "has_tests",
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_order",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "m-fix-a-benchmark-script-that-forgets-mx-eval",
+  "title": "Fix a benchmark script that forgets mx.eval",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "MLX lazy evaluation & compute graph",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mlx_bench/bench.py",
+    "mlx_bench/graph.py",
+    "mlx_bench/compile_opt.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Fix explicit evaluation in the benchmark script",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "evals_fixed", "op": "==", "threshold": 1},
+        {"metric": "timing_nonzero", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Identify implicit evaluation triggers in tensor inspection",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "triggers_identified", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: benchmark regression test for compiled matmul chains",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_eval", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

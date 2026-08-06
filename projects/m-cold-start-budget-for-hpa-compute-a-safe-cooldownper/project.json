@@ -1,0 +1,63 @@
+{
+  "id": "m-cold-start-budget-for-hpa-compute-a-safe-cooldownper",
+  "title": "Cold-start budget for HPA: compute a safe cooldownPeriod",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "cudagraphs-compile-and-startup-latency",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "hpabudget/readiness.py",
+    "hpabudget/cooldown.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Distinguish process initialization from engine readiness",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "probe_accuracy",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute safe HPA cooldown period with compile-cache prediction",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.01
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catching unready probes and unsafe cooldowns",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_optimistic_cooldown",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

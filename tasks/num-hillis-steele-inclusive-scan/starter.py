@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def hillis_steele_scan(x: np.ndarray) -> np.ndarray:
+def hillis_steele_scan(x: list[int]) -> list[int]:
     """Inclusive prefix-sum scan via the Hillis-Steele distance-doubling recurrence.
 
     Parameters

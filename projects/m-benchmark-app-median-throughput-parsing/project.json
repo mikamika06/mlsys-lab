@@ -1,0 +1,44 @@
+{
+  "id": "m-benchmark-app-median-throughput-parsing",
+  "title": "Parsing benchmark_app metrics and per-layer counters",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "benchmark_app CLI & report analysis",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "bapp/summary.py",
+    "bapp/pc.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse throughput, median latency, and compare hints",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "fps_rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "median_rel_err", "op": "<=", "threshold": 0.001}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Extract top-5 performance counters",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "top5_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch inverted sort in top-5",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_inverted_sort", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

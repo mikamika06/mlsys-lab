@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-real-m4-max-unified-memory-bandwidth-via-tor",
+  "title": "M4 Max unified memory bandwidth and profiling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "apple-silicon-profiling-path",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mprofiler/bandwidth.py", "mprofiler/memory.py", "mprofiler/signpost.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Bandwidth percentage calculation", "check": "harness/m1.py",
+     "gates": [{"metric": "bandwidth_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "MPS memory timeline polling", "check": "harness/m2.py",
+     "gates": [{"metric": "timeline_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: signpost kernel count regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_counter", "op": "==", "threshold": 1}]}
+  ]
+}

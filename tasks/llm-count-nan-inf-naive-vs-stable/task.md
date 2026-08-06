@@ -4,7 +4,7 @@ The softmax function is ubiquitous in machine learning for converting a vector o
 
 $$\operatorname{softmax}(z)_i = \frac{\exp(z_i)}{\sum_{j=1}^{d}\exp(z_j)}.$$
 
-When the entries of $z$ are large, $\exp(z_i)$ can overflow to $+\infty$, producing non‑finite values in the numerator or denominator. A *naïve* implementation that directly applies `np.exp` and divides by the sum will therefore return a matrix containing `inf` or `nan`.  
+When the entries of $z$ are large, $\exp(z_i)$ can overflow to $+\infty$, producing non‑finite values in the numerator or denominator. A *naïve* implementation that directly applies `math.exp` and divides by the sum will therefore return a matrix containing `inf` or `nan`.
 A *stable* variant subtracts the maximum logit before exponentiation:
 
 $$\operatorname{softmax}_{\text{stable}}(z)_i = \frac{\exp(z_i - m)}{\sum_{j=1}^{d}\exp(z_j - m)}, \qquad m=\max_k z_k,$$
@@ -18,24 +18,24 @@ In this task you will write a helper that counts how many non‑finite entries a
 Implement `count_nonfinite_in_naive_softmax`:
 
 ```python
-def count_nonfinite_in_naive_softmax(x: np.ndarray) -> int:
+def count_nonfinite_in_naive_softmax(x: list[list[float]]) -> int:
     ...
 ```
 
-* `x` is a 2‑D NumPy array of shape $(n, d)$ containing logits.
-* The function must compute the naïve softmax (direct exponentiation and division) **using only NumPy**.
-* It should return an integer equal to the number of elements in the resulting matrix that are not finite (`np.isfinite` returns `False`).
-* All intermediate computations should use `float64`.
+- `x` is a 2‑D list of shape $(n, d)$ containing logits.
+- The function must compute the naïve softmax (direct exponentiation and division) **using only Python**.
+- It should return an integer equal to the number of elements in the resulting matrix that are not finite (`math.isfinite` returns `False`).
+- All intermediate computations should use `float64`.
+
 
 ## Example
 
 ```python
-import numpy as np
 from solution_ref import count_nonfinite_in_naive_softmax
 
 # Large logits that cause overflow
-X = np.array([[1000, 1000, 1000],
-              [2000, 2000, 2000]], dtype=np.float64)
+X = [[1000, 1000, 1000],
+              [2000, 2000, 2000]]
 
 cnt = count_nonfinite_in_naive_softmax(X)
 print(cnt)   # → 6
@@ -45,4 +45,4 @@ The naïve softmax produces `inf` for every entry in the first row and also for 
 
 ## What the gate checks
 
-A single exact‑match gate compares your function’s output on a fixed overflow test case to an oracle computed with NumPy. The expected integer count must match exactly; otherwise the submission fails.
+A single exact‑match gate compares your function’s output on a fixed overflow test case to an oracle computed with Python. The expected integer count must match exactly; otherwise the submission fails.

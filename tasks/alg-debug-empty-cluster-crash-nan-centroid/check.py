@@ -28,28 +28,29 @@ def _oracle_kmeans_labels(X, k, centers, iterations):
 def grade(sol, fx) -> dict:
     cases = [
         (
-            np.array([[0.0, 0.0], [0.2, 0.1], [5.0, 5.0], [5.2, 5.1]]),
+            [[0.0, 0.0], [0.2, 0.1], [5.0, 5.0], [5.2, 5.1]],
             4,
-            np.array([[0.0, 0.0], [5.0, 5.0], [10.0, 10.0], [20.0, 20.0]]),
+            [[0.0, 0.0], [5.0, 5.0], [10.0, 10.0], [20.0, 20.0]],
             4,
         ),
         (
-            np.array([[1.0, 1.0], [1.1, 1.0], [1.2, 0.9], [8.0, 8.0]]),
+            [[1.0, 1.0], [1.1, 1.0], [1.2, 0.9], [8.0, 8.0]],
             3,
-            np.array([[1.0, 1.0], [1.5, 1.5], [30.0, 30.0]]),
+            [[1.0, 1.0], [1.5, 1.5], [30.0, 30.0]],
             3,
         ),
     ]
 
     for X, k, centers, iterations in cases:
-        expected = _oracle_kmeans_labels(X, k, centers, iterations)
+        expected = _oracle_kmeans_labels(np.array(X), k, np.array(centers), iterations)
         try:
-            got = np.asarray(sol.kmeans_labels(X, k, centers, iterations))
+            got = sol.kmeans_labels(X, k, centers, iterations)
+            got_arr = np.asarray(got)
         except Exception:
             return {"exact_match": 0.0}
-        if got.dtype.kind not in "iu":
+        if got_arr.dtype.kind not in "iu":
             return {"exact_match": 0.0}
-        if not np.array_equal(got, expected):
+        if not np.array_equal(got_arr, expected):
             return {"exact_match": 0.0}
 
     return {"exact_match": 1.0}

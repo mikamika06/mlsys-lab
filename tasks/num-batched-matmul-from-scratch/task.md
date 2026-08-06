@@ -26,34 +26,33 @@ then over the output rows, columns, and reduction dimension.
 Implement `batched_matmul(A, B)`:
 
 ```python
-def batched_matmul(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+def batched_matmul(A: list, B: list) -> list:
     ...
 ```
 
-The function receives two 3-D NumPy arrays with shapes $(b, m, k)$ and
+The function receives two 3-D list with shapes $(b, m, k)$ and
 $(b, k, n)$ and returns a 3-D array with shape $(b, m, n)$ containing the
 batched matrix product.
 
 Implement the multiplication from scratch using explicit loops over the batch,
-output rows, output columns, and shared dimension. Do not call `np.matmul`,
-`np.dot`, or equivalent matrix multiplication helpers.
+output rows, output columns, and shared dimension. Do not call `matmul`,
+`dot`, or equivalent matrix multiplication helpers.
 
 The returned array should contain floating point values.
 
 ## Example
 
 ```python
-import numpy as np
 
-A = np.array([
+A = [
     [[1, 2], [3, 4]],
     [[5, 6], [7, 8]]
-], dtype=float)
+]
 
-B = np.array([
+B = [
     [[1, 0], [0, 1]],
     [[2, 1], [1, 2]]
-], dtype=float)
+]
 
 C = batched_matmul(A, B)
 
@@ -65,7 +64,7 @@ C = batched_matmul(A, B)
 
 ## What the gate checks
 
-The gate computes a reference result using NumPy's `matmul` implementation and
+The gate computes a reference result using Python's `matmul` implementation and
 compares the submitted function output with the oracle result.
 
 The maximum absolute error

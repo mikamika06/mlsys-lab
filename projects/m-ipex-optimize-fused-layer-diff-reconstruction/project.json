@@ -1,0 +1,64 @@
+{
+  "id": "m-ipex-optimize-fused-layer-diff-reconstruction",
+  "title": "IPEX fused-layer diff reconstruction and AMP latency comparison",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "Intel Extension for PyTorch optimize & graph capture",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ipexdiff/diff.py",
+    "ipexdiff/bench.py",
+    "ipexdiff/meta.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct fused-layer diffs from IPEX optimization",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "models_diffed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Benchmark IPEX bf16 vs PyTorch CPU AMP autocast latency",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "benchmarks_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for fused layer tracking",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_fusions",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

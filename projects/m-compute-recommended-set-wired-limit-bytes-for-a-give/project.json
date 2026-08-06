@@ -1,0 +1,22 @@
+{
+  "id": "m-compute-recommended-set-wired-limit-bytes-for-a-give",
+  "title": "Compute recommended set_wired_limit bytes for a given hw.memsize",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Memory-limit knobs & OOM/kernel-panic prevention",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["limits/compute.py", "limits/simulate.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute optimal wired memory limits", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": "==", "threshold": 8}]},
+    {"n": 2, "title": "Tune cache limits and simulate RSS growth", "check": "harness/m2.py",
+     "gates": [{"metric": "tune_matched", "op": "==", "threshold": 1},
+               {"metric": "sim_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch limits that cause OOM", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unsafe_limits", "op": "==", "threshold": 1}]}
+  ]
+}

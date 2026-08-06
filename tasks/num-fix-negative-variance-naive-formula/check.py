@@ -7,16 +7,16 @@ def _oracle(x):
 
 def grade(sol, fx) -> dict:
     cases = [
-        np.array([1e12, 1e12 + 1, 1e12 - 1], dtype=np.float64),
-        np.array([0.0, 1.0, 2.0, 3.0, 4.0], dtype=np.float64),
-        np.array([-5.5, 2.25, 7.75, 11.0], dtype=np.float64),
-        np.linspace(1e9, 1e9 + 100, 1000, dtype=np.float64),
+        [1e12, 1e12 + 1, 1e12 - 1],
+        [0.0, 1.0, 2.0, 3.0, 4.0],
+        [-5.5, 2.25, 7.75, 11.0],
+        list(np.linspace(1e9, 1e9 + 100, 1000, dtype=float)),
     ]
 
     worst = 0.0
     for x in cases:
         try:
-            got = float(sol.stable_variance(x.copy()))
+            got = float(sol.stable_variance(list(x)))
         except Exception:
             return {"rel_err": float("inf")}
 

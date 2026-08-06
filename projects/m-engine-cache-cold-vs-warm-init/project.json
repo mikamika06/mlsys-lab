@@ -1,0 +1,74 @@
+{
+  "id": "m-engine-cache-cold-vs-warm-init",
+  "title": "TensorRT engine cache cold vs warm initialization and node coverage",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT TensorRT EP: subgraph partitioning, engine & timing caches",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "trt_engine/cache.py",
+    "trt_engine/partition.py",
+    "trt_engine/validator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Engine cache validation and warm-init parity",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "cache_matches",
+          "op": ">=",
+          "threshold": 3.0
+        },
+        {
+          "metric": "latency_ratio",
+          "op": "<=",
+          "threshold": 1.2
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Subgraph partitioning and TRT node coverage maximization",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "coverage_ratio",
+          "op": ">=",
+          "threshold": 0.95
+        },
+        {
+          "metric": "partition_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching cache invalidation bypasses",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_cache",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

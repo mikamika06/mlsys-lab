@@ -1,0 +1,46 @@
+{
+  "id": "m-benchmark-tokens-sec-across-mlx-lm-llama-cpp-metal-a",
+  "title": "Benchmark tokens/sec and RSS across MLX, llama.cpp-Metal, and PyTorch-MPS",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Comparative benchmarking: MLX vs PyTorch-MPS vs llama.cpp",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "benchedge/metrics.py",
+    "benchedge/runner.py",
+    "benchedge/summary.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Isolate prompt prefill TTFT and decode throughput",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "metrics_matched", "op": ">=", "threshold": 3},
+        {"metric": "throughput_ratio", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure peak RSS and construct backend comparisons",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rss_matched", "op": "==", "threshold": 1},
+        {"metric": "summary_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catching corrupted decode timings",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_flawed_benchmark", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -11,20 +11,28 @@ def grade(sol, fx) -> dict:
     max_err = 0.0
 
     for shape in shapes:
-        x = rng.standard_normal(shape).astype(np.float64)
+        x_np = rng.standard_normal(shape).astype(np.float64)
+        x_list = x_np.tolist()
         for eps in epsilons:
             try:
-                out = sol.rms_norm(x, eps=eps)
-            except Exception as e:
+                out = sol.rms_norm(x_list, eps=eps)
+            except Exception:
                 return {"max_abs_err": float("inf")}
 
-            ref = _reference_rms_norm(x, eps)
+            ref = _reference_rms_norm(x_np, eps)
 
-            # Ensure dtype is float64
-            if out.dtype != np.float64:
+            if not isinstance(out, list):
                 return {"max_abs_err": float("inf")}
 
-            err = np.max(np.abs(out - ref))
+            try:
+                out_np = np.array(out, dtype=np.float64)
+            except Exception:
+                return {"max_abs_err": float("inf")}
+
+            if out_np.shape != ref.shape:
+                return {"max_abs_err": float("inf")}
+
+            err = float(np.max(np.abs(out_np - ref)))
             max_err = max(max_err, err)
 
     return {"max_abs_err": max_err}

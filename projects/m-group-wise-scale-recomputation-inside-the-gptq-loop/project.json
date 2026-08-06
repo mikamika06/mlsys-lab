@@ -1,0 +1,21 @@
+{
+  "id": "m-group-wise-scale-recomputation-inside-the-gptq-loop",
+  "title": "Group-wise scale recomputation inside the GPTQ loop",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "GPTQ algorithm mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gptq/scales.py", "gptq/loop.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute group-wise scales", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Scale recomputation inside the update loop", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-4}]},
+    {"n": 3, "title": "Safety net: a test that catches static scales", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_static_scales", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def kahan_sum(x: np.ndarray) -> float:
+def kahan_sum(x: list[float]) -> float:
     """Classic Kahan compensated summation (unmodified — keeps its blind spot).
 
     c = (t - s) - y implicitly assumes |s| >= |x| on every step; when a much
@@ -10,7 +7,7 @@ def kahan_sum(x: np.ndarray) -> float:
     """
     s = 0.0
     c = 0.0
-    for xi in np.asarray(x, dtype=np.float64):
+    for xi in x:
         xi = float(xi)
         y = xi - c
         t = s + y
@@ -19,7 +16,7 @@ def kahan_sum(x: np.ndarray) -> float:
     return s
 
 
-def neumaier_sum(x: np.ndarray) -> float:
+def neumaier_sum(x: list[float]) -> float:
     """Kahan-Neumaier (Kahan-Babuska) summation: magnitude-checked compensation.
 
     Picks which of the running sum `s` and the new term `xi` is larger before
@@ -28,7 +25,7 @@ def neumaier_sum(x: np.ndarray) -> float:
     """
     s = 0.0
     c = 0.0
-    for xi in np.asarray(x, dtype=np.float64):
+    for xi in x:
         xi = float(xi)
         t = s + xi
         if abs(s) >= abs(xi):

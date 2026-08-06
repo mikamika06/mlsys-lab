@@ -1,0 +1,45 @@
+{
+  "id": "m-cache-salt-isolation-prove-two-tenants-share-nothing",
+  "title": "Cache salt isolation, template surgery, and LoRA hash keys",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-caching-block-hashing",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "prefixhash/salt.py",
+    "prefixhash/surgery.py",
+    "prefixhash/lora.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Cache salt isolation and zero-share proof",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "salt_isolated", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Template surgery and LoRA hash key tuples",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "surgery_matched", "op": "==", "threshold": 1},
+        {"metric": "lora_keys_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching broken isolation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_isolation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

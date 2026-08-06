@@ -23,11 +23,11 @@ $2^{-8}$ across the heads.
 Implement `alibi_slopes(n)`:
 
 ```python
-def alibi_slopes(n: int) -> np.ndarray:
+def alibi_slopes(n: int) -> list[float]:
     ...
 ```
 
-Return a NumPy array of shape $(n,)$ with dtype `float64` containing the ALiBi
+Return a list of shape $(n,)$ with dtype `float64` containing the ALiBi
 slopes for $n$ attention heads.
 
 The returned values must satisfy
@@ -41,7 +41,6 @@ Assume $n$ is a positive integer.
 ## Example
 
 ```python
-import numpy as np
 
 slopes = alibi_slopes(4)
 
@@ -50,7 +49,7 @@ slopes = alibi_slopes(4)
 
 ## What the gate checks
 
-The gate computes an independent NumPy reference implementation of the geometric
+The gate computes an independent Python reference implementation of the geometric
 formula and compares the submitted result using maximum absolute error:
 
 $$

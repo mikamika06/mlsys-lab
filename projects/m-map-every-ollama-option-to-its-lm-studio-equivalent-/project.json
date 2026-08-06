@@ -1,0 +1,40 @@
+{
+  "id": "m-map-every-ollama-option-to-its-lm-studio-equivalent-",
+  "title": "Ollama to LM Studio options, TTL eviction, and JIT loading",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "lm-studio-cli-and-runtime-engines",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "runner_map/mapping.py",
+    "runner_map/ttl.py",
+    "runner_map/jit.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Map Ollama options and flag gaps",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "mapping_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "TTL keep_alive eviction timing",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "ttl_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "JIT loading on first API request and regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_jit", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

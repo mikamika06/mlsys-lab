@@ -41,11 +41,11 @@ which keeps score variance approximately constant as $d$ changes.
 Implement `entropy_inflation_ratio(Q, K)`:
 
 ```python
-def entropy_inflation_ratio(Q: np.ndarray, K: np.ndarray) -> float:
+def entropy_inflation_ratio(Q: list[list[float]], K: list[list[float]]) -> float:
     ...
 ```
 
-The function receives two NumPy arrays with shapes $(n, d)$. Compute the mean row
+The function receives two list with shapes $(n, d)$. Compute the mean row
 entropy of the unscaled attention distribution and the mean row entropy of the
 scaled attention distribution. Return the ratio
 
@@ -53,15 +53,14 @@ $$
 R = \frac{\mathrm{mean}(H(\mathrm{softmax}(QK^\top / \sqrt{d})))}{\mathrm{mean}(H(\mathrm{softmax}(QK^\top)))} .
 $$
 
-Use NumPy operations. The result must be a Python `float`.
+Use Python operations. The result must be a Python `float`.
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1., 0.], [0., 1.]])
-K = np.array([[1., 0.], [0., 1.]])
+Q = [[1., 0.], [0., 1.]]
+K = [[1., 0.], [0., 1.]]
 
 ratio = entropy_inflation_ratio(Q, K)
 # ratio is greater than 1 because scaling increases entropy
@@ -70,7 +69,7 @@ ratio = entropy_inflation_ratio(Q, K)
 ## What the gate checks
 
 The gate builds deterministic query and key matrices and computes the reference value
-using a NumPy softmax and entropy implementation. The submitted function is compared
+using a Python softmax and entropy implementation. The submitted function is compared
 with the oracle ratio using relative error:
 
 $$

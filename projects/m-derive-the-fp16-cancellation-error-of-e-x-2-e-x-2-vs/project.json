@@ -1,0 +1,63 @@
+{
+  "id": "m-derive-the-fp16-cancellation-error-of-e-x-2-e-x-2-vs",
+  "title": "FP16 cancellation error in variance and fused-softmax bandwidth",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Reduction kernels: fused softmax & LayerNorm",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "variance/derivation.py",
+    "variance/benchmark.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "FP16 cancellation error of E[x^2]-E[x]^2 vs two-pass variance",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.05
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Bandwidth advantage confirmation from real benchmark",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bandwidth_ratio",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching variance formula bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_variance",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

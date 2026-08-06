@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def stable_sigmoid(x: np.ndarray) -> np.ndarray:
+def stable_sigmoid(x: list[float]) -> list[float]:
     """Return the logistic sigmoid of ``x`` without ever overflowing.
 
     x -- float64 array, |x| may be as large as 1e4

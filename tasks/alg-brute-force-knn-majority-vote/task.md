@@ -9,10 +9,10 @@ When several classes tie for the majority, the algorithm must break ties determi
 Implement a function with the following signature:
 
 ```python
-def knn_majority_vote(Xtr: np.ndarray,
-                      ytr: np.ndarray,
-                      Xte: np.ndarray,
-                      k: int) -> np.ndarray:
+def knn_majority_vote(Xtr: list[list[float]],
+                      ytr: list[int],
+                      Xte: list[list[float]],
+                      k: int) -> list[int]:
     ...
 ```
 
@@ -21,19 +21,18 @@ def knn_majority_vote(Xtr: np.ndarray,
 * `Xte` – test data to classify, shape $(n_{\text{test}}, d)$, dtype float64.  
 * `k` – number of neighbours to consider (positive integer).  
 
-The function must return a NumPy array of shape $(n_{\text{test}},)$ containing the predicted labels for each test point. The implementation should be **brute‑force**: compute all pairwise distances explicitly; no external libraries such as scikit‑learn are allowed.
+The function must return a list of shape $(n_{\text{test}},)$ containing the predicted labels for each test point. The implementation should be **brute‑force**: compute all pairwise distances explicitly; no external libraries such as scikit‑learn are allowed.
 
 ## Example
 
 ```python
-import numpy as np
 
-Xtr = np.array([[0, 0], [1, 0], [0, 2]], dtype=np.float64)
-ytr = np.array([0, 1, 1], dtype=np.int64)
-Xte = np.array([[0.5, 0.5], [2, 2]], dtype=np.float64)
+Xtr = [[0, 0], [1, 0], [0, 2]]
+ytr = [0, 1, 1]
+Xte = [[0.5, 0.5], [2, 2]]
 
 preds = knn_majority_vote(Xtr, ytr, Xte, k=3)
-print(preds)          # [1 1]
+print(preds)  # [1, 1]
 ```
 
 The first test point is closer to all three training points; the majority label among $\{0,1,1\}$ is $1$.  

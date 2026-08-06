@@ -32,7 +32,12 @@ def grade(sol, fx) -> dict:
     ref = _full_recompute(x, Wq, Wk, Wv)
 
     try:
-        got = np.asarray(sol.decode_steps(x, Wq, Wk, Wv), dtype=np.float64)
+        x_list = x.tolist()
+        Wq_list = Wq.tolist()
+        Wk_list = Wk.tolist()
+        Wv_list = Wv.tolist()
+        got_list = sol.decode_steps(x_list, Wq_list, Wk_list, Wv_list)
+        got = np.asarray(got_list, dtype=np.float64)
         err = float(np.max(np.abs(got - ref)))
     except Exception:
         err = float("inf")

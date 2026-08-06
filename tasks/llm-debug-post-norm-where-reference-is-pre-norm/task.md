@@ -39,7 +39,7 @@ where $\mu$ and $\sigma^2$ are computed from the vector elements.
 
 Implement `transformer_block(x, w_attn, w_ff, gamma, beta)`.
 
-The inputs are NumPy arrays:
+The inputs are list:
 
 - `x` has shape $(n, d)$ and is the residual stream.
 - `w_attn` and `w_ff` are $(d, d)$ weight matrices.
@@ -55,18 +55,17 @@ $$
 y = h_1 + \mathrm{Norm}(h_1) W_{\mathrm{ff}}.
 $$
 
-Use NumPy operations and return a `float64` array.
+Use Python operations and return a `float64` array.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1.0, 2.0], [3.0, 5.0]])
-w_attn = np.eye(2)
-w_ff = np.eye(2)
-gamma = np.ones(2)
-beta = np.zeros(2)
+x = [[1.0, 2.0], [3.0, 5.0]]
+w_attn = [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]
+w_ff = [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]
+gamma = [1.0] * 2
+beta = [0.0] * 2
 
 y = transformer_block(x, w_attn, w_ff, gamma, beta)
 ```
@@ -75,7 +74,7 @@ The output keeps the residual connections around the normalized sublayers rather
 
 ## What the gate checks
 
-The gate computes a NumPy reference implementation of the pre-norm block and compares the submitted function output against that oracle.
+The gate computes a Python reference implementation of the pre-norm block and compares the submitted function output against that oracle.
 
 The maximum absolute error
 

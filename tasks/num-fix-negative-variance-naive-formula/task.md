@@ -47,11 +47,11 @@ $$
 Implement `stable_variance(x)`:
 
 ```python
-def stable_variance(x: np.ndarray) -> float:
+def stable_variance(x: list[float]) -> float:
     ...
 ```
 
-The function receives a one-dimensional NumPy array and returns the population
+The function receives a list of floats and returns the population
 variance as a Python `float`. Use a numerically stable online variance
 algorithm. Do not compute the result as `mean(x**2) - mean(x)**2`.
 
@@ -61,9 +61,8 @@ variation.
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1e12, 1e12 + 1, 1e12 - 1], dtype=np.float64)
+x = [1e12, 1e12 + 1, 1e12 - 1]
 v = stable_variance(x)
 
 # v is approximately 0.6666666666666666
@@ -71,7 +70,7 @@ v = stable_variance(x)
 
 ## What the gate checks
 
-The gate compares the returned value against NumPy's float64 variance reference.
+The gate compares the returned value against Python's float64 variance reference.
 The relative error
 
 $$

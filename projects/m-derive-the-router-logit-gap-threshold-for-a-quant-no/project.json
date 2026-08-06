@@ -1,0 +1,44 @@
+{
+  "id": "m-derive-the-router-logit-gap-threshold-for-a-quant-no",
+  "title": "Derive router-logit-gap threshold for quantization-induced argmax flips",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "moe-quantization",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "routerquant/analysis.py",
+    "routerquant/threshold.py",
+    "routerquant/sim.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantization error analysis for RTN vs AWQ",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "error_matched", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Router-logit-gap threshold derivation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "threshold_matched", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catches incorrect thresholds",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_logic", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

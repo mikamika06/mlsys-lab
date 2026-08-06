@@ -1,0 +1,3 @@
+Our distributed training clusters keep running out of VRAM during the backward pass of long-sequence attention workloads, while short-sequence runs underutilize memory. The memory profiler indicates that saved activation memory during attention backward is scaling quadratically with sequence length in some configurations, but linear in others.
+
+We need to formalize the activation memory footprint comparison between storing the full attention probability matrix versus storing the log-sum-exp (LSE) vector (as done in FlashAttention). Furthermore, we need tools to calculate the maximum supportable sequence length and maximum batch size given a strict activation memory budget for both standard and LSE-based attention implementations.

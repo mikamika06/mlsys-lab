@@ -1,0 +1,22 @@
+{
+  "id": "m-launch-sglang-with-and-without-disable-radix-cache-a",
+  "title": "Quantifying TTFT reduction with SGLang Radix Cache",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "sglang-radixattention-and-cache-tree",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["sgl_utils/launcher.py", "sgl_utils/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "SGLang server command builder and configuration", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "TTFT latency ratio with and without radix cache", "check": "harness/m2.py",
+     "gates": [{"metric": "ratio_match", "op": "==", "threshold": 1},
+               {"metric": "latency_ratio_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for cache configuration", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_cache", "op": "==", "threshold": 1}]}
+  ]
+}

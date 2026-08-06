@@ -1,53 +1,54 @@
 import math
-import numpy as np
+import random
 
 
-def sample_sequence(logits: np.ndarray, temperature: float, seed: int) -> np.ndarray:
+def sample_sequence(logits: list[list[float]], temperature: float, seed: int) -> list[int]:
     """Reproduce a seeded temperature-sampled id sequence via inverse-CDF draws.
 
-    One np.random.default_rng(seed) is created, and one uniform is consumed per
-    decode step, in order. Returns an int64 array of shape (T,).
+    A random.Random(seed) is created, and one uniform is consumed per
+    decode step, in order. Returns a list of integers of length T.
     """
-    logits = np.asarray(logits, dtype=np.float64)
-    T, V = logits.shape
-    rng = np.random.default_rng(seed)
-    ids = np.empty(T, dtype=np.int64)
+    T = len(logits)
+    V = len(logits[0])
+    rng = random.Random(seed)
+    ids = [0] * T
     for t in range(T):
-        z = logits[t] / temperature
-        
+        row = logits[t]
+        z = [val / temperature for val in row]
+
         max_z = z[0]
         for i in range(1, V):
             if z[i] > max_z:
                 max_z = z[i]
-                
-        z_shifted = z - max_z
-        
-        e = np.empty(V, dtype=np.float64)
+
+        z_shifted = [val - max_z for val in z]
+
+        e = [0.0] * V
         for i in range(V):
             e[i] = math.exp(z_shifted[i])
-            
+
         sum_e = 0.0
         for i in range(V):
             sum_e += e[i]
-            
-        p = np.empty(V, dtype=np.float64)
+
+        p = [0.0] * V
         for i in range(V):
             p[i] = e[i] / sum_e
-            
-        cdf = np.empty(V, dtype=np.float64)
+
+        cdf = [0.0] * V
         acc = 0.0
         for i in range(V):
             acc += p[i]
             cdf[i] = acc
-            
+
         u = rng.random()
-        
+
         idx = V
         for i in range(V):
             if cdf[i] > u:
                 idx = i
                 break
-                
+
         if idx >= V:
             idx = V - 1
         ids[t] = idx

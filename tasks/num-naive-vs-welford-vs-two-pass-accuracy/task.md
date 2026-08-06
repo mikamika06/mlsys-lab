@@ -46,11 +46,11 @@ single pass, without storing the whole array in a second traversal.
 Implement `welford_variance(data)`:
 
 ```python
-def welford_variance(data: np.ndarray) -> float:
+def welford_variance(data: list[float]) -> float:
     ...
 ```
 
-`data` is a 1-D `float64` NumPy array. Return the population variance
+`data` is a 1-D `float64` list. Return the population variance
 (divide by $n$, not $n-1$) computed with Welford's online algorithm — track a
 running mean and running $M_2$ while iterating over the array once, and
 return $M_2 / n$ at the end. Do not use the naive
@@ -59,8 +59,7 @@ $\mathbb{E}[X^2] - \mathbb{E}[X]^2$ expansion.
 ## Example
 
 ```python
-import numpy as np
-x = np.array([1e8 + 0.5, 1e8 - 0.5, 1e8 + 1.0, 1e8 - 1.0])
+x = [1e8 + 0.5, 1e8 - 0.5, 1e8 + 1.0, 1e8 - 1.0]
 welford_variance(x)
 # ~= 0.625   (the variance of the small offsets, unaffected by the 1e8 shift)
 ```

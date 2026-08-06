@@ -36,9 +36,9 @@ Implement `fold_rmsnorm_gamma(W, b, gamma)`.
 
 The function receives:
 
-- `W`: a NumPy array of shape $(m,d)$ containing the next linear layer weights.
-- `b`: a NumPy array of shape $(m,)$ containing the linear bias.
-- `gamma`: a NumPy array of shape $(d,)$ containing the RMSNorm scale.
+- `W`: a list of shape $(m,d)$ containing the next linear layer weights.
+- `b`: a list of shape $(m,)$ containing the linear bias.
+- `gamma`: a list of shape $(d,)$ containing the RMSNorm scale.
 
 Return a tuple `(W_folded, b_folded)` where `W_folded` has the RMSNorm scale
 absorbed into the input dimension of the weight matrix and `b_folded` is the
@@ -47,16 +47,15 @@ unchanged bias.
 The folded layer must satisfy the same result as applying RMSNorm first and then
 the original linear layer.
 
-Use NumPy operations only.
+Use Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[2.0, 3.0], [4.0, 5.0]])
-b = np.array([1.0, -1.0])
-gamma = np.array([10.0, 20.0])
+W = [[2.0, 3.0], [4.0, 5.0]]
+b = [1.0, -1.0]
+gamma = [10.0, 20.0]
 
 W2, b2 = fold_rmsnorm_gamma(W, b, gamma)
 
@@ -72,7 +71,7 @@ W2, b2 = fold_rmsnorm_gamma(W, b, gamma)
 
 The gate creates random weights, biases, gamma vectors, and inputs. It computes the
 reference output by applying RMSNorm followed by the original matrix multiplication
-using NumPy. It then computes the output using the folded weights returned by the
+using Python. It then computes the output using the folded weights returned by the
 candidate solution.
 
 The maximum absolute difference

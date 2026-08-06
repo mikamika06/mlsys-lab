@@ -12,10 +12,10 @@ This “stable” form keeps all intermediate values bounded. When $z$ is a 2‑
 
 ## Task
 
-Implement `softmax_streaming(logits)` that accepts a NumPy array of shape `(n, d)` and returns an array of the same shape containing the softmax probabilities for each row. The implementation must use only vectorized NumPy operations; no explicit Python loops are allowed. It should be numerically stable even when elements of `logits` are very large or very small.
+Implement `softmax_streaming(logits)` that accepts a list of shape `(n, d)` and returns an array of the same shape containing the softmax probabilities for each row. The implementation must use only vectorized Python operations; no explicit Python loops are allowed. It should be numerically stable even when elements of `logits` are very large or very small.
 
 ```python
-def softmax_streaming(logits: np.ndarray) -> np.ndarray:
+def softmax_streaming(logits: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
@@ -24,9 +24,8 @@ The result must have dtype `float64`.
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([[1.0, 2.0, 3.0],
-                   [1000.0, 1000.0, 1000.0]])
+logits = [[1.0, 2.0, 3.0],
+                   [1000.0, 1000.0, 1000.0]]
 softmax_streaming(logits)
 # array([[0.09003057, 0.24472847, 0.66524096],
 #        [0.33333333, 0.33333333, 0.33333333]])

@@ -1,0 +1,40 @@
+{
+  "id": "m-derive-padding-waste-percentage-for-a-given-batch-of",
+  "title": "Padding waste and batch efficiency in sequence packing",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "sequence-packing-long-context-memory",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "packeff/waste.py",
+    "packeff/crossover.py",
+    "packeff/batches.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Padding-waste percentage for a batch",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "waste_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Crossover between packing and padding attention cost",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "crossover_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Batches needed under padding vs packing",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_batches", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

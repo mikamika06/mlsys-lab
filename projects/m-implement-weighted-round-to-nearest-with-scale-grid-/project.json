@@ -1,0 +1,35 @@
+{
+  "id": "m-implement-weighted-round-to-nearest-with-scale-grid-",
+  "title": "Weighted Round-to-Nearest with Scale Grid Search and Imatrix Gain",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "imatrix-guided-quant-math",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quant/scale.py", "quant/round.py", "quant/gain.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Closed-form optimal scale derivation",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "scale_matched", "op": ">=", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Weighted round-to-nearest with scale grid search",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "grid_matched", "op": ">=", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for imatrix sensitivity",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unweighted", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

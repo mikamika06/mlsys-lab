@@ -29,23 +29,22 @@ then reuse the scalar value $\log(s)$ for every output element.
 Implement `streaming_log_softmax(x)`:
 
 ```python
-def streaming_log_softmax(x: np.ndarray) -> np.ndarray:
+def streaming_log_softmax(x: list[float]) -> list[float]:
     ...
 ```
 
-The function takes a one-dimensional NumPy array of logits and returns a
-float64 NumPy array containing $\log(\mathrm{softmax}(x))$.
+The function takes a list of floats of logits and returns a
+float64 list containing $\log(\mathrm{softmax}(x))$.
 
 Use max-subtraction before exponentiation. The implementation must not compute an
-unstable expression such as `np.exp(x) / np.sum(np.exp(x))` because this can
+unstable expression such as `[math.exp(v) for v in x]` divided by `sum(math.exp(v) for v in x)` because this can
 overflow for valid inputs.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1.0, 2.0, 3.0])
+x = [1.0, 2.0, 3.0]
 y = streaming_log_softmax(x)
 
 # approximately:
@@ -54,7 +53,7 @@ y = streaming_log_softmax(x)
 
 ## What the gate checks
 
-The gate computes a float64 NumPy oracle using the stable log-softmax formula and
+The gate computes a float64 Python oracle using the stable log-softmax formula and
 compares the returned values against it.
 
 The metric `max_abs_err` is:

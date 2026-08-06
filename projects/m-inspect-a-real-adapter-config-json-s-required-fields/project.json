@@ -1,0 +1,39 @@
+{
+  "id": "m-inspect-a-real-adapter-config-json-s-required-fields",
+  "title": "PEFT Adapter Configs and Routing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "peft-library-mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "peft_mechanics/config.py",
+    "peft_mechanics/router.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Inspect adapter config",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "configs_matched", "op": "==", "threshold": 6}]
+    },
+    {
+      "n": 2,
+      "title": "Adapter Router",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "outputs_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: catches broken switch",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_switch", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,11 +1,6 @@
-import numpy as np
-
-
 def c3(graph, cls_index, names):
-    graph = np.asarray(graph)
-
     def bases(i):
-        return [j for j in range(len(names)) if graph[i, j] != 0]
+        return [j for j in range(len(names)) if graph[i][j] != 0]
 
     def lin(i):
         direct = bases(i)

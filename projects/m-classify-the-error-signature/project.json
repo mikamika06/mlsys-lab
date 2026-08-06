@@ -1,0 +1,44 @@
+{
+  "id": "m-classify-the-error-signature",
+  "title": "Classify the error signature across runtimes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Numerical validation methodology across runtimes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "errorclass/signature.py",
+    "errorclass/tolerance.py",
+    "errorclass/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify the error signature",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "signatures_matched", "op": ">=", "threshold": 5.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Tolerance policy false-accept and reject limits",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "policy_evaluated", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Top-1 agreement vs tensor error safeguards",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_policy", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

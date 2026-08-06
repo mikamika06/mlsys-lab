@@ -1,0 +1,39 @@
+{
+  "id": "m-choose-batch-size-maximising-embeddings-s-under-a-me",
+  "title": "Optimal batch size and sequence truncation for embeddings",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "embeddings-endpoint",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["embedopt/batching.py", "embedopt/truncation.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Select throughput-maximizing batch size under memory cap",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "optimal_batch_selected", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Apply sequence truncation and generate reports",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "truncation_policy_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch unhandled truncation overflow",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_missing_truncation_errors", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "m-capture-rule-checklist-as-a-static-checker",
+  "title": "Capture-rule checklist as a static checker",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "CUDA Graphs and mode='reduce-overhead'",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "graph_checker/checker.py",
+    "graph_checker/optimizer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Static check FX graphs for capture rule violations",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "violations_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Rewrite graph violations into safe patterns",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "transforms_valid", "op": "==", "threshold": 1.0},
+        {"metric": "clears_violations", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catches unrewritten sync ops",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_uncaught_sync", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

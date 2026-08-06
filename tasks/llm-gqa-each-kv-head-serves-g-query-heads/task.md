@@ -10,10 +10,10 @@ and the output vector is simply $O_i = s_i\,V_j$. The assignment of queries to K
 
 ## Task
 
-Implement `gqa_attention(Q, K, V, g)` that returns a NumPy array `O` of shape `(n_q, d)`. Use vectorized NumPy operations only; no explicit Python loops. The function must work for arbitrary positive integers `n_q`, `n_kv`, `d`, and grouping factor `g` such that $n_q = n_{kv}\times g$.
+Implement `gqa_attention(Q, K, V, g)` that returns a list `O` of shape `(n_q, d)`. Use vectorized Python operations only; no explicit Python loops. The function must work for arbitrary positive integers `n_q`, `n_kv`, `d`, and grouping factor `g` such that $n_q = n_{kv}\times g$.
 
 ```python
-def gqa_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, g: int) -> np.ndarray:
+def gqa_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], g: int) -> list[list[float]]:
     ...
 ```
 
@@ -22,10 +22,9 @@ The output should be of dtype `float64`.
 ## Example
 
 ```python
-import numpy as np
-Q = np.array([[1., 0.], [0., 1.], [1., 1.]])
-K = np.array([[2., 3.], [4., 5.]])   # n_kv=2, g=2 -> n_q=4 but we use 3 for demo
-V = np.array([[7., 8.], [9.,10.]])
+Q = [[1., 0.], [0., 1.], [1., 1.]]
+K = [[2., 3.], [4., 5.]]   # n_kv=2, g=2 -> n_q=4 but we use 3 for demo
+V = [[7., 8.], [9.,10.]]
 O = gqa_attention(Q, K, V, g=2)
 print(O)
 ```
@@ -33,11 +32,9 @@ print(O)
 Output (rounded):
 
 ```
-[[14. 16.]
- [18. 20.]
- [22. 24.]]
+[[14.0, 16.0], [21.0, 24.0], [81.0, 90.0]]
 ```
 
 ## What the gate checks
 
-The grader computes a reference implementation with NumPy and compares your output to it using the scorer `max_abs_err`. The maximum absolute difference must be at most $10^{-5}$.
+The grader computes a reference implementation with Python and compares your output to it using the scorer `max_abs_err`. The maximum absolute difference must be at most $10^{-5}$.

@@ -1,0 +1,40 @@
+{
+  "id": "m-detect-unsupported-jinja-filters-for-minja",
+  "title": "Detect unsupported Jinja filters and decide minja tool modes",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "chat-templates-jinja-tools",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "minja_tools/filters.py",
+    "minja_tools/diff.py",
+    "minja_tools/decision.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect unsupported Jinja filters for minja",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "filters_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Diff rendered prompts across two template versions",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "diff_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: decide whether a model needs --jinja for tools",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_decision", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

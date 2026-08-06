@@ -1,0 +1,44 @@
+{
+  "id": "m-gpu-memory-utilization-sweep-realized-gpu-blocks",
+  "title": "GPU memory utilization sweep, FP8 KV cache, and multi-model allocation",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-cache-capacity-and-startup-config",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gpucache/sweep.py",
+    "gpucache/capacity.py",
+    "gpucache/multi.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "GPU memory utilization sweep to realized blocks",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "FP8 dtype effect on max_model_len and block capacity",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "capacity_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: multi-model GPU memory fraction allocation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_split", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

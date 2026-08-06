@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def _stable_log_softmax(x):
@@ -9,11 +10,11 @@ def _stable_log_softmax(x):
 
 def grade(sol, fx) -> dict:
     cases = [
-        np.array([1.0, 2.0, 3.0]),
-        np.array([-1000.0, -1001.0, -1002.0]),
-        np.array([-500.0, 0.0, 1.0]),
-        np.array([[-100.0, -200.0, -300.0], [1.0, 2.0, 3.0]]),
-        np.array([-700.0, -701.0, -702.0, -703.0]),
+        [1.0, 2.0, 3.0],
+        [-1000.0, -1001.0, -1002.0],
+        [-500.0, 0.0, 1.0],
+        [[-100.0, -200.0, -300.0], [1.0, 2.0, 3.0]],
+        [-700.0, -701.0, -702.0, -703.0],
     ]
 
     max_err = 0.0
@@ -22,7 +23,7 @@ def grade(sol, fx) -> dict:
     for x in cases:
         ref = _stable_log_softmax(x)
         try:
-            got = np.asarray(sol.log_softmax(x.copy()), dtype=np.float64)
+            got = np.asarray(sol.log_softmax(x), dtype=np.float64)
         except Exception:
             return {"max_abs_err": 1.0, "all_finite": 0.0}
 

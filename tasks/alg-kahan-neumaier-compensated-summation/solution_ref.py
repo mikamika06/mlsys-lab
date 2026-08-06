@@ -1,16 +1,19 @@
-import numpy as np
+import struct
 
 
-def compensated_sum(arr: np.ndarray) -> np.float32:
-    s = np.float32(0.0)
-    c = np.float32(0.0)
+def compensated_sum(arr: list[float]) -> float:
+    def f32(v: float) -> float:
+        return struct.unpack('f', struct.pack('f', v))[0]
+
+    s = 0.0
+    c = 0.0
     for x in arr:
-        t = np.float32(s + x)
+        t = f32(s + x)
         abs_s = s if s >= 0 else -s
         abs_x = x if x >= 0 else -x
         if abs_s >= abs_x:
-            c = np.float32(c + np.float32(np.float32(s - t) + x))
+            c = f32(c + f32(f32(s - t) + x))
         else:
-            c = np.float32(c + np.float32(np.float32(x - t) + s))
+            c = f32(c + f32(f32(x - t) + s))
         s = t
-    return np.float32(s + c)
+    return f32(s + c)

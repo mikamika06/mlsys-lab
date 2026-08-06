@@ -1,0 +1,47 @@
+{
+  "id": "m-log-current-allocated-memory-vs-driver-allocated-mem",
+  "title": "PyTorch MPS memory management",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "PyTorch MPS memory management",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mps_mem/divergence.py",
+    "mps_mem/fragmentation.py",
+    "mps_mem/threshold.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Divergence and OOM threshold",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "divergence_match", "op": "==", "threshold": 1},
+        {"metric": "threshold_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reproduce and fix MPS fragmentation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "reproduces_oom", "op": "==", "threshold": 1},
+        {"metric": "fix_prevents_oom", "op": "==", "threshold": 1},
+        {"metric": "is_fragmentation", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch broken empty_cache",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_cache", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

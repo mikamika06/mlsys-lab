@@ -1,0 +1,40 @@
+{
+  "id": "m-minimum-dram-traffic-for-coalesced-vs-strided-access",
+  "title": "Minimum DRAM traffic for coalesced vs strided access",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "memory-workload-cache-and-coalescing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "coalesce/traffic.py",
+    "coalesce/simulate.py",
+    "coalesce/ratio.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Minimum DRAM traffic for size and stride",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "traffic_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Simulate 32B-sector coalescing for a warp",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "simulation_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: excess traffic ratio regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_ratio", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

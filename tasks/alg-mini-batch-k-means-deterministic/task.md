@@ -9,36 +9,33 @@ Implement `mini_batch_kmeans`:
 
 ```python
 def mini_batch_kmeans(
-    X: np.ndarray,
+    X: list[list[float]],
     k: int,
     batch_size: int,
     n_iter: int,
     seed: int = 0
-) -> np.ndarray:
+) -> list[list[float]]:
     ...
 ```
 
-* `X` is a 2‑D NumPy array of shape $(n, d)$ containing the data points.  
+* `X` is a 2‑D list of shape $(n, d)$ containing the data points.  
 * The function must return an array of shape $(k, d)$ with the final centroids after `n_iter` iterations.  
 * Use the first $k$ rows of `X` as the initial centroids.  
 * At each iteration:
-  1. Sample `batch_size` indices from $\{0,\dots,n-1\}$ **with replacement** using a NumPy random generator seeded by `seed`.  
+  1. Sample `batch_size` indices from $\{0,\dots,n-1\}$ **with replacement** using a Python random generator seeded by `seed`.  
   2. Assign every point in the batch to its nearest centroid (Euclidean distance).  
   3. Compute the mean of each assigned subset; if a centroid receives no points, keep its previous value.  
   4. Update centroids with an incremental average: after iteration $t$,
      $$c^{(t)} = \frac{(t-1)c^{(t-1)} + m^{(t)}}{t},$$
      where $m^{(t)}$ is the batch‑mean vector for that iteration.  
-* All computations must be performed with NumPy only; no explicit Python loops over samples are required.
+* All computations must be performed with Python only; no explicit Python loops over samples are required.
 
 ## Example
 
 ```python
-import numpy as np
-X = np.array([[0, 0], [1, 0], [0, 2], [5, 5]])
+X = [[0, 0], [1, 0], [0, 2], [5, 5]]
 centroids = mini_batch_kmeans(X, k=2, batch_size=2, n_iter=10, seed=42)
-print(centroids)
-# [[0. 0.]
-#  [5. 5.]]
+print(centroids)  # [[0.25, 0.5], [2.4400000000000004, 1.8]]
 ```
 
 ## What the gate checks

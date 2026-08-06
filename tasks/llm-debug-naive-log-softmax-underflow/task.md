@@ -39,20 +39,18 @@ large negative values.
 def log_softmax(x):
     """Compute log(softmax(x)) along the last axis.
 
-    x : array-like of shape (..., n)
-    Returns: ndarray of same shape, with log-softmax applied along the last axis.
+    x : list of shape (..., n)
+    Returns: list of same shape, with log-softmax applied along the last axis.
     """
     ...
 ```
 
-The input may be 1-D (a single vector) or 2-D (a batch of vectors).  Always
-return a `float64` NumPy array of the same shape.
+The input may be 1-D (a single vector) or 2-D (a batch of vectors). Always return a `float64` list of the same shape.
 
 ## Example
 
 ```python
-import numpy as np
-x = np.array([-1000.0, -1001.0, -1002.0])
+x = [-1000.0, -1001.0, -1002.0]
 y = log_softmax(x)
 # Correct: approximately [-0.4076, -1.4076, -2.4076]
 # Bug:     [-inf, -inf, -inf]
@@ -61,7 +59,7 @@ y = log_softmax(x)
 With a normal-scale input the naive code happens to work:
 
 ```python
-x = np.array([1.0, 2.0, 3.0])
+x = [1.0, 2.0, 3.0]
 y = log_softmax(x)
 # Both naive and fixed give approximately [-2.4076, -1.4076, -0.4076]
 ```
@@ -70,12 +68,6 @@ y = log_softmax(x)
 
 Two gates.
 
-**`max_abs_err`** — The maximum element-wise absolute difference between your
-output and a reference log-softmax computed with the log-sum-exp trick must be
-below $10^{-6}$.  Five test cases are used, including inputs where every
-element is around $-1000$ (complete naive underflow), mixed inputs where some
-elements underflow and others do not, and batched 2-D inputs.
+**`max_abs_err`** — The maximum element-wise absolute difference between your output and a reference log-softmax computed with the log-sum-exp trick must be below $10^{-6}$. Five test cases are used, including inputs where every element is around $-1000$ (complete naive underflow), mixed inputs where some elements underflow and others do not, and batched 2-D inputs.
 
-**`all_finite`** — Every element of the output across all test cases must be
-finite (`np.isfinite`).  The buggy starter returns $-\infty$ on the large-
-negative inputs, so it fails this gate immediately.
+**`all_finite`** — Every element of the output across all test cases must be finite (`math.isfinite`). The buggy starter returns $-\infty$ on the large- negative inputs, so it fails this gate immediately.

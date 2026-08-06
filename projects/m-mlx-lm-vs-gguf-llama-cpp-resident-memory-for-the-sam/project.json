@@ -1,0 +1,44 @@
+{
+  "id": "m-mlx-lm-vs-gguf-llama-cpp-resident-memory-for-the-sam",
+  "title": "MLX-LM vs GGUF llama.cpp MoE resident memory and throughput",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "moe-apple-silicon",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "moe_bench/memory.py",
+    "moe_bench/throughput.py",
+    "moe_bench/concurrent.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Resident memory comparison between mlx-lm and GGUF",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "memory_ratios_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Metal token generation speed and throughput matching",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "throughput_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: maximum concurrently resident experts under a memory ceiling",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_resident_count", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

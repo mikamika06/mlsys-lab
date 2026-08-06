@@ -1,13 +1,13 @@
 import math
-import numpy as np
+import random
 
-np.random.seed(0)
+random.seed(0)
 d = 16
-W_ih = np.random.randn(d, d).astype(np.float64)
-W_hh = np.random.randn(d, d).astype(np.float64)
-b = np.random.randn(d).astype(np.float64)
+W_ih = [[random.gauss(0, 1) for _ in range(d)] for _ in range(d)]
+W_hh = [[random.gauss(0, 1) for _ in range(d)] for _ in range(d)]
+b = [random.gauss(0, 1) for _ in range(d)]
 
-def prefill_decode_equiv(inputs: np.ndarray):
+def prefill_decode_equiv(inputs: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
     """
     Compute hidden states for a toy RNN using two strategies:
       * no_cache  – recompute the whole prefix from scratch at each step.
@@ -15,15 +15,15 @@ def prefill_decode_equiv(inputs: np.ndarray):
 
     Parameters
     ----------
-    inputs : np.ndarray of shape (seq_len, d)
+    inputs : list of list of float of shape (seq_len, d)
         Sequence of token embeddings.
 
     Returns
     -------
     tuple
-        (no_cache, cache) where each is an array of shape (seq_len, d).
+        (no_cache, cache) where each is a list of shape (seq_len, d).
     """
-    seq_len = inputs.shape[0]
+    seq_len = len(inputs)
 
     no_cache_list = []
     for L in range(1, seq_len + 1):
@@ -34,14 +34,13 @@ def prefill_decode_equiv(inputs: np.ndarray):
             for r in range(d):
                 acc = 0.0
                 for c in range(d):
-                    acc += W_ih[r, c] * float(x_i[c])
+                    acc += W_ih[r][c] * float(x_i[c])
                 for c in range(d):
-                    acc += W_hh[r, c] * h_prev[c]
+                    acc += W_hh[r][c] * h_prev[c]
                 acc += b[r]
                 h_next[r] = math.tanh(acc)
             h_prev = h_next
         no_cache_list.append(h_prev)
-    no_cache = np.array(no_cache_list, dtype=np.float64)
 
     cache_list = []
     h_prev = [0.0] * d
@@ -51,13 +50,12 @@ def prefill_decode_equiv(inputs: np.ndarray):
         for r in range(d):
             acc = 0.0
             for c in range(d):
-                acc += W_ih[r, c] * float(x_i[c])
+                acc += W_ih[r][c] * float(x_i[c])
             for c in range(d):
-                acc += W_hh[r, c] * h_prev[c]
+                acc += W_hh[r][c] * h_prev[c]
             acc += b[r]
             h_next[r] = math.tanh(acc)
         h_prev = h_next
         cache_list.append(h_prev)
-    cache = np.array(cache_list, dtype=np.float64)
 
-    return no_cache, cache
+    return no_cache_list, cache_list

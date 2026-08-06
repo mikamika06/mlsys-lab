@@ -1,0 +1,78 @@
+{
+  "id": "m-blockmask-construction-cost",
+  "title": "BlockMask construction cost and amortized mask caching",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "flexattention-and-custom-masks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "flexmask/cost.py",
+    "flexmask/cache.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "BlockMask construction cost and FlexAttention vs FA2 causal analysis",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "cost_analysis_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "latency_ratio",
+          "op": ">=",
+          "threshold": 1.5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Amortized mask caching policy",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cache_hits_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "cache_eviction_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "amortized_latency_ratio",
+          "op": "<=",
+          "threshold": 1.15
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching stale cache reuse across dynamic shapes",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_stale_cache_reuse",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

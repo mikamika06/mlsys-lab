@@ -1,0 +1,45 @@
+{
+  "id": "m-cosine-hidden-state-distillation-with-learned-projec",
+  "title": "Cosine Hidden-State Distillation with Learned Projection",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Feature / intermediate-layer distillation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "distill/hidden.py",
+    "distill/mapping.py",
+    "distill/attention.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Cosine distance loss with linear projection",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "TinyBERT layer-mapping table and attention-map KL metric",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "mapping_matches", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catches unnormalized cosine projection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unnormalized_cosine", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "m-awq-vs-gptq-vs-rtn-at-w4a16",
+  "title": "AWQ activation-aware scaling vs GPTQ vs RTN at W4A16",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "AWQ activation-aware scaling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "awqsim/compare.py",
+    "awqsim/scale.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantization loss under RTN, GPTQ, and AWQ at W4A16",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "evals_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Unseen architecture mapping and scale calculation with explosion guard",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "mappings_matched", "op": ">=", "threshold": 3},
+        {"metric": "scales_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test that catches exploding scale factors",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_exploding_scales", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -18,18 +18,21 @@ def grade(sol, fx) -> dict:
     for x in _cases(rng):
         ref = np.cumsum(x)
         try:
-            got = sol.hillis_steele_scan(x.copy())
+            got = sol.hillis_steele_scan(x.tolist())
         except Exception:
             ok = 0.0
             break
-        got = np.asarray(got)
-        if got.shape != ref.shape:
+        if not isinstance(got, list):
             ok = 0.0
             break
-        if not np.issubdtype(got.dtype, np.integer):
+        got_arr = np.array(got)
+        if got_arr.shape != ref.shape:
             ok = 0.0
             break
-        if not np.array_equal(got, ref):
+        if not np.issubdtype(got_arr.dtype, np.integer):
+            ok = 0.0
+            break
+        if not np.array_equal(got_arr, ref):
             ok = 0.0
             break
     return {"exact_match": ok}

@@ -7,19 +7,18 @@ The naive algorithm evaluates each entry of $C$ independently using a triple loo
 
 ## Task
 
-Implement the function `naive_matmul(A, B)` that takes two 2‑D NumPy arrays `A` and `B`, verifies that their inner dimensions agree, and returns a new array of shape `(m,n)` containing the matrix product. The result must be of dtype `float64`. Do **not** use any NumPy linear‑algebra routine such as `np.dot`, `np.matmul`, or the `@` operator; instead write an explicit triple loop.
+Implement the function `naive_matmul(A, B)` that takes two 2‑D lists `A` and `B`, verifies that their inner dimensions agree, and returns a new list of shape `(m,n)` containing the matrix product. The result must consist of floats. Do **not** use the `@` operator; instead write an explicit triple loop.
 
 ```python
-def naive_matmul(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+def naive_matmul(A: list[list[float]], B: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
 ## Example
 
 ```python
-import numpy as np
-A = np.array([[1, 2], [3, 4]], dtype=np.float64)
-B = np.array([[5, 6], [7, 8]], dtype=np.float64)
+A = [[1, 2], [3, 4]]
+B = [[5, 6], [7, 8]]
 C = naive_matmul(A, B)
 # C should be:
 # array([[19., 22.],
@@ -28,9 +27,9 @@ C = naive_matmul(A, B)
 
 ## What the gate checks
 
-The grader computes a NumPy reference product `np.matmul(A,B)` and compares it to your output using the scorer
+The grader computes a Python reference product `[[sum(a * b for a, b in zip(r, c)) for c in zip(*B)] for r in A]` and compares it to your output using the scorer
 `max_abs_err`. The absolute error must satisfy
 
 $$\max_{i,j} |C_{ij}^{\text{your}} - C_{ij}^{\text{ref}}| \le 10^{-6}.$$
 
-Any deviation larger than this threshold causes the gate to fail. The implementation is also expected to use explicit Python loops; using vectorized NumPy operations or BLAS calls will still produce a correct result but is discouraged for this exercise.
+Any deviation larger than this threshold causes the gate to fail. The implementation is also expected to use explicit Python loops; using vectorized Python operations or BLAS calls will still produce a correct result but is discouraged for this exercise.

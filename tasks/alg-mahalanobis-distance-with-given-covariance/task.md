@@ -9,7 +9,7 @@ $$ (x_i - x_j)^T \Sigma^{-1} (x_i - x_j) = x_i^T \Sigma^{-1} x_i + x_j^T \Sigma^
 we can vectorize the computation using matrix multiplication.
 
 ## Task
-Write a function `pairwise_mahalanobis(X: np.ndarray, cov_inv: np.ndarray) -> np.ndarray` that computes the pairwise Mahalanobis distance between all rows of $X$.
+Write a function `pairwise_mahalanobis(X: list[float], cov_inv: list[float]) -> list[float] that computes the pairwise Mahalanobis distance between all rows of $X$.
 
 - `X`: An $n \times d$ matrix representing $n$ samples in $d$ dimensions.
 - `cov_inv`: A $d \times d$ symmetric positive-definite matrix representing the inverse covariance ($\Sigma^{-1}$).
@@ -18,10 +18,9 @@ The function should return an $n \times n$ matrix where the $(i, j)$ entry is th
 
 ## Example
 ```python
-import numpy as np
 
-X = np.array([[1.0, 2.0], [3.0, 4.0]])
-cov_inv = np.array([[1.0, 0.0], [0.0, 1.0]])  # Identity implies Euclidean distance
+X = [[1.0, 2.0], [3.0, 4.0]]
+cov_inv = [[1.0, 0.0], [0.0, 1.0]]  # Identity implies Euclidean distance
 
 D = pairwise_mahalanobis(X, cov_inv)
 # D[0, 1] will be sqrt((1-3)^2 + (2-4)^2) = sqrt(8) ~ 2.828

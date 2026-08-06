@@ -1,0 +1,21 @@
+{
+  "id": "m-fuse-x-y-z-into-one-kernel-matching-torch-exactly",
+  "title": "Fuse (x+y)*z into one Triton kernel matching torch exactly",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Elementwise & fused pointwise kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["triton_ops/fuse.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Fused kernel matching torch exactly", "check": "harness/m1.py",
+     "gates": [{"metric": "max_rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "HBM bytes saved calculation", "check": "harness/m2.py",
+     "gates": [{"metric": "bytes_saved_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching broadcast stride bugs", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_stride_bug", "op": "==", "threshold": 1}]}
+  ]
+}

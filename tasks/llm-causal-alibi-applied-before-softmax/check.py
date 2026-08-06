@@ -13,14 +13,20 @@ def grade(sol, fx) -> dict:
     rng = np.random.default_rng(0)
     max_err = 0.0
     for seq_len in [2, 3, 5]:
-        logits = rng.standard_normal((seq_len, seq_len))
-        bias = rng.uniform(-1, 1, (seq_len, seq_len))
+        logits_arr = rng.standard_normal((seq_len, seq_len))
+        bias_arr = rng.uniform(-1, 1, (seq_len, seq_len))
+
+        logits_list = logits_arr.tolist()
+        bias_list = bias_arr.tolist()
+
         try:
-            cand = sol.causal_alibi_logits(logits, bias)
+            cand = sol.causal_alibi_logits(logits_list, bias_list)
         except Exception:
             return {"max_abs_err": float("inf")}
-        ref = _reference(logits, bias)
-        err = np.max(np.abs(cand - ref))
+
+        cand_arr = np.array(cand, dtype=np.float64)
+        ref = _reference(logits_arr, bias_arr)
+        err = np.max(np.abs(cand_arr - ref))
         if err > max_err:
             max_err = err
     return {"max_abs_err": float(max_err)}

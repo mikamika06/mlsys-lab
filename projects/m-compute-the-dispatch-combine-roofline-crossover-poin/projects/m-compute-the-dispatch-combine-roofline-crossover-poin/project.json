@@ -1,0 +1,21 @@
+{
+  "id": "m-compute-the-dispatch-combine-roofline-crossover-poin",
+  "title": "Dispatch/combine roofline crossover and expert bin-packing",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "expert-parallelism-all-to-all",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["moeroof/crossover.py", "moeroof/packing.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute the dispatch/combine roofline crossover point", "check": "harness/m1.py",
+     "gates": [{"metric": "crossover_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Bin-pack experts to GPUs to minimize max-loaded rank", "check": "harness/m2.py",
+     "gates": [{"metric": "packing_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching incorrect roofline or packing invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

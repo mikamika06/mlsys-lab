@@ -1,4 +1,5 @@
-import numpy as np
-
-def knn_regression_average(X_train: np.ndarray, y_train: np.ndarray, X_query: np.ndarray, k: int) -> np.ndarray:
+def knn_regression_average(X_train: list[list[float]],
+                           y_train: list[float],
+                           X_query: list[list[float]],
+                           k: int) -> list[float]:
     raise NotImplementedError('your code here')

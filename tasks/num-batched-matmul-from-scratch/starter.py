@@ -1,4 +1,2 @@
-import numpy as np
-
-def batched_matmul(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+def batched_matmul(A: list, B: list) -> list:
     raise NotImplementedError('your code here')

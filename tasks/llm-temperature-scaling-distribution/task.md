@@ -9,29 +9,28 @@ When $T=1$ this is the ordinary softmax. Larger temperatures produce flatter dis
 
 ## Task
 
-Implement `temperature_scale(logits: np.ndarray, T: float) -> np.ndarray` that returns the temperature‑scaled probability distribution for a 1‑D array of logits. The function must:
+Implement `temperature_scale(logits: list[float], T: float) -> list[float] that returns the temperature‑scaled probability distribution for a 1‑D array of logits. The function must:
 
-- Accept any NumPy array of shape `(n,)` or `(batch,n)` and return an array of the same shape.
-- Use only NumPy operations; no explicit Python loops.
+- Accept any list of shape `(n,)` or `(batch,n)` and return an array of the same shape.
+- Use only Python operations; no explicit Python loops.
 - Return a `float64` array.
 
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([2.0, 1.0, 0.1])
+logits = [2.0, 1.0, 0.1]
 T = 0.5
 probs = temperature_scale(logits, T)
-print(probs)   # [0.73105858 0.26894142 0.        ]
+print(probs)  # [0.8637771182080067, 0.11689952094598567, 0.019323360846007505]
 ```
 
 ## What the gate checks
 
-The grader computes a reference distribution using NumPy’s softmax with the same temperature and measures the mean Kullback–Leibler divergence
+The grader computes a reference distribution using Python’s softmax with the same temperature and measures the mean Kullback–Leibler divergence
 $$
 \text{mean\_kl} = \frac1n \sum_{i=1}^{n}
 p_i^{\text{ref}}\,
 \log\!\left(\frac{p_i^{\text{ref}}}{p_i^{\text{cand}}}\right).
 $$
 
-The candidate must achieve $\text{mean\_kl} \le 10^{-6}$ against the reference. A correct implementation will produce a distribution that matches NumPy’s result up to machine precision.
+The candidate must achieve $\text{mean\_kl} \le 10^{-6}$ against the reference. A correct implementation will produce a distribution that matches Python’s result up to machine precision.

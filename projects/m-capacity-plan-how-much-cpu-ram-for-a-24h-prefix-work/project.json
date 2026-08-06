@@ -1,0 +1,21 @@
+{
+  "id": "m-capacity-plan-how-much-cpu-ram-for-a-24h-prefix-work",
+  "title": "CPU RAM and disk-backed KV cache capacity plan",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-offloading-to-cpu-and-disk",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["capacity/plan.py", "capacity/disk.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "24-hour prefix RAM capacity sizing", "check": "harness/m1.py",
+     "gates": [{"metric": "plans_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Disk offload read amplification measurement", "check": "harness/m2.py",
+     "gates": [{"metric": "amplification_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: catch unaligned block fetch amplification", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unaligned_reads", "op": "==", "threshold": 1}]}
+  ]
+}

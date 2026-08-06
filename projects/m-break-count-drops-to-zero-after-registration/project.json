@@ -1,0 +1,68 @@
+{
+  "id": "m-break-count-drops-to-zero-after-registration",
+  "title": "Break count drops to zero after registration",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Custom ops, torch.library and compile compatibility",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "customop/ops.py",
+    "customop/compile_utils.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Schema validation and opcheck verification",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "opcheck_passed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Eliminate graph breaks during torch.compile",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "graph_breaks",
+          "op": "==",
+          "threshold": 0
+        },
+        {
+          "metric": "compiled_correctly",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for schema and compile compatibility",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unregistered_op",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

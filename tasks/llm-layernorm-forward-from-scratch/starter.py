@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def layer_norm(x: np.ndarray, gamma: np.ndarray, beta: np.ndarray) -> np.ndarray:
+def layer_norm(x: list[list[float]], gamma: list[float], beta: list[float]) -> list[list[float]]:
     raise NotImplementedError('your code here')

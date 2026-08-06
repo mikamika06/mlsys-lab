@@ -21,26 +21,27 @@ When the number of key/value pairs per head equals one ($n_{\text{kv}}=1$), ever
 Implement `gqa_limit_nkv_1(Q, K, V)`:
 
 ```python
-def gqa_limit_nkv_1(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.ndarray:
+def gqa_limit_nkv_1(
+    Q: list[list[list[float]]],
+    K: list[list[list[float]]],
+    V: list[list[list[float]]],
+) -> list[list[list[float]]]:
     ...
 ```
 
-The function receives three 3‑D NumPy arrays of shapes  
+The function receives three 3‑D list of shapes  
 $Q \in \mathbb{R}^{B\times N_q\times d_k}$, $K \in \mathbb{R}^{B\times N_k\times d_k}$ and $V \in \mathbb{R}^{B\times N_v\times d_v}$.  
-It must return the attention output of shape $(B,\,N_q,\,d_v)$ computed exactly as described in the context section.  Use only NumPy operations; no explicit Python loops.
+It must return the attention output of shape $(B,\,N_q,\,d_v)$ computed exactly as described in the context section.  Use only Python operations; no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
-Q = np.array([[[1.,0.],[0.,1.]]])          # shape (1,2,2)
-K = np.array([[[1.,0.],[0.,1.]]])          # shape (1,2,2)
-V = np.array([[[1.,2.],[3.,4.]]])          # shape (1,2,2)
+Q = [[[1.,0.],[0.,1.]]]          # shape (1,2,2)
+K = [[[1.,0.],[0.,1.]]]          # shape (1,2,2)
+V = [[[1.,2.],[3.,4.]]]          # shape (1,2,2)
 
 O = gqa_limit_nkv_1(Q, K, V)
-print(O)
-# [[1. 2.]
-#  [3. 4.]]
+print(O)  # [[[1.6604769013466862, 2.6604769013466862], [2.3395230986533138, 3.3395230986533138]]]
 ```
 
 ## What the gate checks

@@ -1,0 +1,44 @@
+{
+  "id": "m-choose-max-num-batched-tokens-maximizing-goodput-und",
+  "title": "Max batched tokens goodput under ITL constraints and engine config translation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "chunked-prefill-and-token-budget",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "chunking/goodput.py",
+    "chunking/correctness.py",
+    "chunking/translate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Choose max num batched tokens maximizing goodput under ITL p99 threshold",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "optimal_token_limit_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verify chunk-boundary correctness and logit identity",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "logits_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching flawed chunked prefill correctness",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

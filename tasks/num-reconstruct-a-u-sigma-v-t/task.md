@@ -9,7 +9,7 @@ orthonormal columns and $\Sigma = \operatorname{diag}(\sigma_1,\dots,\sigma_k)$
 holds the (non-negative, descending) singular values, with $k=\min(m,n)$ for
 the *economy* (reduced) decomposition.
 
-`numpy.linalg.svd(A, full_matrices=False)` returns `U` of shape $(m,k)$, a
+`linalg.svd(A, full_matrices=False)` returns `U` of shape $(m,k)$, a
 1-D array `s` of length $k$ (just the diagonal of $\Sigma$, not the full
 matrix), and `Vt` of shape $(k,n)$ — already $V^\top$, not $V$. A common bug
 is forgetting that `s` needs to become a diagonal matrix before the matrix
@@ -21,7 +21,7 @@ product, or reconstructing with the wrong shape when $A$ is rectangular
 Implement `reconstruct_from_svd`:
 
 ```python
-def reconstruct_from_svd(A: np.ndarray) -> np.ndarray:
+def reconstruct_from_svd(A: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
@@ -36,11 +36,10 @@ floating-point precision.
 ## Example
 
 ```python
-import numpy as np
-A = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])  # shape (3, 2)
+A = [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]  # shape (3, 2)
 Ahat = reconstruct_from_svd(A)
 Ahat.shape        # (3, 2)
-np.max(np.abs(Ahat - A))   # ~1e-15
+max(abs(x - y) for row1, row2 in zip(Ahat, A) for x, y in zip(row1, row2)) # ~1e-15
 ```
 
 ## What the gate checks

@@ -1,0 +1,45 @@
+{
+  "id": "m-apply-a-gguf-lora-to-dequantized-base-weights",
+  "title": "Apply a GGUF LoRA to dequantized base weights",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "lora-gguf-adapters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "adapter/convert.py",
+    "gguf_adapter/parser.py",
+    "gguf_adapter/dequant.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Convert PEFT adapter to GGUF LoRA format",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "conversion_correct", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Parse GGUF LoRA and rebuild delta matrices",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "delta_reconstruction_matched", "op": "==", "threshold": 1.0},
+        {"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Apply LoRA to dequantized base weights and safeguard test suite",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_unscaled_lora", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

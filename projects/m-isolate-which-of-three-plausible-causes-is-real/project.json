@@ -1,0 +1,63 @@
+{
+  "id": "m-isolate-which-of-three-plausible-causes-is-real",
+  "title": "Isolate Cause of GGUF Serving Failures",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "failure-triage-and-errors",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "triage/isolate.py",
+    "triage/classifier.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Isolate failure root cause from single sample diagnostics",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "samples_correct",
+          "op": ">=",
+          "threshold": 10
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Batch log triage meeting accuracy targets",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "accuracy",
+          "op": ">=",
+          "threshold": 0.95
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catch cause misclassifications",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_triage",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

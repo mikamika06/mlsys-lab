@@ -29,11 +29,13 @@ magnitudes.
 Implement `layerwise_output_mse(W, W_q, X)`:
 
 ```python
-def layerwise_output_mse(W: np.ndarray, W_q: np.ndarray, X: np.ndarray) -> float:
+def layerwise_output_mse(
+    W: list[list[float]], W_q: list[list[float]], X: list[list[float]]
+) -> float:
     ...
 ```
 
-The inputs are NumPy arrays:
+The inputs are list:
 
 - `W` is the original weight matrix with shape $(m, k)$.
 - `W_q` is the quantized weight matrix with the same shape as $W$.
@@ -45,11 +47,10 @@ Return the Python `float` value of the mean squared error between `W @ X` and
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[1.0, 2.0], [3.0, 4.0]])
-W_q = np.array([[1.0, 1.5], [3.0, 3.5]])
-X = np.array([[1.0, 2.0], [0.5, 1.0]])
+W = [[1.0, 2.0], [3.0, 4.0]]
+W_q = [[1.0, 1.5], [3.0, 3.5]]
+X = [[1.0, 2.0], [0.5, 1.0]]
 
 value = layerwise_output_mse(W, W_q, X)
 ```
@@ -59,7 +60,7 @@ returns their average squared difference.
 
 ## What the gate checks
 
-The gate computes the expected objective using NumPy matrix multiplication and
+The gate computes the expected objective using Python matrix multiplication and
 mean squared error as the numerical oracle. The returned value is compared with
 that oracle. The final metric is the squared difference between the submitted
 result and the oracle result, which must satisfy

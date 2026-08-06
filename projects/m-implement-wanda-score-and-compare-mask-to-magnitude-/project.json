@@ -1,0 +1,48 @@
+{
+  "id": "m-implement-wanda-score-and-compare-mask-to-magnitude-pruning",
+  "title": "One-shot Post-training Pruning: Wanda & SparseGPT",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "LLM one-shot post-training pruning (SparseGPT, Wanda)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "pruning/wanda.py",
+    "pruning/sparsegpt.py",
+    "pruning/eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Magnitude vs Wanda scoring",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "mag_match", "op": "==", "threshold": 1.0},
+        {"metric": "wan_match", "op": "==", "threshold": 1.0},
+        {"metric": "rec_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Second-order weight updates with OBS",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "w_match", "op": "==", "threshold": 1.0},
+        {"metric": "m_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "MSE curve and OBS update safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "curve_match", "op": "==", "threshold": 1.0},
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_obs", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

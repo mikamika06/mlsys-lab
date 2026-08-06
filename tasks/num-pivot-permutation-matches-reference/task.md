@@ -20,7 +20,7 @@ been applied — not from the original matrix's column $k$.
 Implement `lu_pivot_indices`:
 
 ```python
-def lu_pivot_indices(A: np.ndarray) -> np.ndarray:
+def lu_pivot_indices(A: list[list[float]]) -> list[int]:
     ...
 ```
 
@@ -29,16 +29,15 @@ partial pivoting yourself (row swap + eliminate below the pivot at every step,
 so later pivot choices see the correctly updated Schur complement) and return
 the length-$n$ integer `piv` swap vector in LAPACK's convention described
 above. `piv[n-1]` is always `n-1` (no row left to swap the last pivot with).
-Do not call `scipy.linalg.lu_factor` / `scipy.linalg.lu` / `numpy.linalg`
+Do not call `scipy.linalg.lu_factor` / `scipy.linalg.lu`
 LU-family routines — implement the elimination loop yourself.
 
 ## Example
 
 ```python
-import numpy as np
-A = np.array([[2.0, 1.0, 1.0],
+A = [[2.0, 1.0, 1.0],
               [4.0, 3.0, 3.0],
-              [8.0, 7.0, 9.0]])
+              [8.0, 7.0, 9.0]]
 lu_pivot_indices(A)
 # -> array([2, 2, 2])   # matches scipy.linalg.lu_factor(A)[1]
 ```

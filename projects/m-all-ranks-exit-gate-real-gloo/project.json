@@ -1,0 +1,25 @@
+{
+  "id": "m-all-ranks-exit-gate-real-gloo",
+  "title": "All-Ranks-Exit Gate & Safe Checkpoint Resume",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Fault tolerance, elastic training & NCCL timeout debugging",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ft/gate.py", "ft/checkpoint.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "All-Ranks-Exit Gate with Real Gloo", "check": "harness/m1.py",
+     "gates": [{"metric": "success_match", "op": "==", "threshold": 1},
+               {"metric": "timeout_match", "op": "==", "threshold": 1},
+               {"metric": "timing_measured", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Safe-Resume From Corrupted 'latest'", "check": "harness/m2.py",
+     "gates": [{"metric": "valid_latest", "op": "==", "threshold": 1},
+               {"metric": "corrupted_latest", "op": "==", "threshold": 1},
+               {"metric": "missing_latest", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard against blind trust", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_blind_trust", "op": "==", "threshold": 1}]}
+  ]
+}

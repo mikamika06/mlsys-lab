@@ -1,0 +1,64 @@
+{
+  "id": "m-hunt-the-qzeros-off-by-one",
+  "title": "Hunt the qzeros off-by-one and layout packings",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Bit packing and kernel-specific weight layouts",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantlib/layout.py",
+    "quantlib/gidx.py",
+    "quantlib/pack.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Resolve zero-point off-by-one offsets",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "zzeros_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Apply and invert g_idx permutation safely",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "gidx_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches index drift",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_off_by_one",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

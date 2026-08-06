@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-the-16-nf4-quantile-levels-from-the-standard-",
+  "title": "Derive 16 NF4 Quantile Levels and Blockwise Quantization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "qlora-4bit-quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["nf4/quant.py", "nf4/block.py", "nf4/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive NF4 quantiles from standard normal", "check": "harness/m1.py",
+     "gates": [{"metric": "quantiles_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Blockwise absmax NF4 quantization round-trip", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 0.15}]},
+    {"n": 3, "title": "Double-quantization memory savings derivation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_quantiles", "op": "==", "threshold": 1}]}
+  ]
+}

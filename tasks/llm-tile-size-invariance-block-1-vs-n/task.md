@@ -22,23 +22,22 @@ Implement `streaming_attention(Q, K, V, block_size)`.
 
 The function takes:
 
-- `Q`: a NumPy array of shape $(n, d)$.
-- `K`: a NumPy array of shape $(n, d)$.
-- `V`: a NumPy array of shape $(n, m)$.
+- `Q`: a list of shape $(n, d)$.
+- `K`: a list of shape $(n, d)$.
+- `V`: a list of shape $(n, m)$.
 - `block_size`: positive integer tile size.
 
-Return the attention output as a NumPy array of shape $(n, m)$ with dtype `float64`.
+Return the attention output as a list of shape $(n, m)$ with dtype `float64`.
 
-Use a streaming softmax approach over key/value tiles. The output should not depend on the chosen `block_size`. The implementation may use NumPy matrix operations inside each tile, but should not construct the complete attention matrix for all $n$ keys.
+Use a streaming softmax approach over key/value tiles. The output should not depend on the chosen `block_size`. The implementation may use Python matrix operations inside each tile, but should not construct the complete attention matrix for all $n$ keys.
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0], [4.0]])
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0], [4.0]]
 
 out = streaming_attention(Q, K, V, 1)
 # out is approximately:
@@ -48,7 +47,7 @@ out = streaming_attention(Q, K, V, 1)
 
 ## What the gate checks
 
-The gate computes a NumPy full-matrix softmax attention oracle and compares it with the submitted implementation.
+The gate computes a Python full-matrix softmax attention oracle and compares it with the submitted implementation.
 
 It runs the implementation twice on the same inputs: once with `block_size = 1` and once with `block_size = n`. The reported metric is the largest absolute difference across these results and the oracle:
 

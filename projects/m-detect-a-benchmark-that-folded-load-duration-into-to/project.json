@@ -1,0 +1,62 @@
+{
+  "id": "m-detect-a-benchmark-that-folded-load-duration-into-to",
+  "title": "Detect benchmark runs with folded load duration in throughput",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-local-runners",
+  "track": "timing-counters-and-throughput-math",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "runner/audit.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse and extract benchmark performance fields",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "parsed_correctly",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Detect if load duration was folded into tok/s",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "detection_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for folding detection",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_bad_audit",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

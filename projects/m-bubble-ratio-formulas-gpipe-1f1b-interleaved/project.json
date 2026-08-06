@@ -1,0 +1,45 @@
+{
+  "id": "m-bubble-ratio-formulas-gpipe-1f1b-interleaved",
+  "title": "Pipeline parallelism bubble ratio analysis and schedule modeling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Pipeline parallelism scheduling (GPipe / 1F1B / interleaved / zero-bubble)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "pipelib/formulas.py",
+    "pipelib/schedule.py",
+    "pipelib/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analytical bubble ratio estimators for GPipe, 1F1B, and Interleaved 1F1B",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-6}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Event-driven schedule simulation for GPipe and 1F1B",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "schedule_matched", "op": "==", "threshold": 1.0},
+        {"metric": "bubble_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Peak in-flight microbatches and test regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_inflight_miscalculation", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

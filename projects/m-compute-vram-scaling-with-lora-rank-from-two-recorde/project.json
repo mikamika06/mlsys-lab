@@ -1,0 +1,63 @@
+{
+  "id": "m-compute-vram-scaling-with-lora-rank-from-two-recorde",
+  "title": "Compute and VRAM scaling with LoRA rank from Unsloth logs",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "unsloth-end-to-end-workflow",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "lorascaling/extractor.py",
+    "lorascaling/predictor.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract base overhead and per-rank slope parameters",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "logs_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Predict target rank VRAM and step FLOPs within relative error bound",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 1e-05
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression tests catch non-linear or zero-intercept predictors",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_zero_intercept_fault",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

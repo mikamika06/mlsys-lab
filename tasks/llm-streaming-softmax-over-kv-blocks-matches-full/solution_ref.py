@@ -1,21 +1,17 @@
 import math
-import numpy as np
 
 
 def streaming_softmax_attention(Q, K, V, block_size):
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-
-    n, d = Q.shape
-    v_dim = V.shape[1]
+    n = len(Q)
+    d = len(Q[0])
+    v_dim = len(V[0])
     scale = 1.0 / math.sqrt(d)
-    out = np.empty((n, v_dim), dtype=np.float64)
+    out = [[0.0] * v_dim for _ in range(n)]
 
     for i in range(n):
         m = -math.inf
         l = 0.0
-        o = np.zeros(v_dim, dtype=np.float64)
+        o = [0.0] * v_dim
 
         for start in range(0, n, block_size):
             end = start + block_size
@@ -29,7 +25,7 @@ def streaming_softmax_attention(Q, K, V, block_size):
                 j = start + b
                 dot_val = 0.0
                 for k in range(d):
-                    dot_val += float(Q[i, k]) * float(K[j, k])
+                    dot_val += float(Q[i][k]) * float(K[j][k])
                 scores[b] = dot_val * scale
 
             block_max = -math.inf
@@ -55,7 +51,7 @@ def streaming_softmax_attention(Q, K, V, block_size):
                 v_sum = 0.0
                 for b in range(block_len):
                     j = start + b
-                    v_sum += weights[b] * float(V[j, c])
+                    v_sum += weights[b] * float(V[j][c])
                 weights_V[c] = v_sum
 
             for c in range(v_dim):

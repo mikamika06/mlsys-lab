@@ -1,0 +1,40 @@
+{
+  "id": "m-direct-coreml-vs-via-onnx-numerical-divergence",
+  "title": "Direct CoreML vs via-ONNX numerical divergence and node assignment",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "ONNX as interchange for edge",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "coreml_audit/divergence.py",
+    "coreml_audit/census.py",
+    "coreml_audit/min_config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Direct CoreML vs via-ONNX numerical divergence",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "max_abs_err_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "CoreML EP node-assignment census",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "census_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Minimal op-config for a model set",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_config", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

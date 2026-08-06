@@ -24,23 +24,22 @@ same floating-point format.
 Implement `sequential_sum(values)`:
 
 ```python
-def sequential_sum(values):
+def sequential_sum(values: list[float]) -> float:
     ...
 ```
 
-The function receives a one-dimensional NumPy array of floating-point values and
+The function receives a list of floats of floating-point values and
 must return the sum produced by a left fold in the original input order.
-Accumulate using NumPy `float64` arithmetic and return the scalar result.
+Accumulate using Python `float64` arithmetic and return the scalar result.
 
-Do not use `np.sum` or other reduction operations, because their reduction order
+Do not use built-in reduction functions or other reduction operations, because their reduction order
 may differ from the required sequential order.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1.0, 2.0, 3.0])
+x = [1.0, 2.0, 3.0]
 result = sequential_sum(x)
 # 6.0
 ```

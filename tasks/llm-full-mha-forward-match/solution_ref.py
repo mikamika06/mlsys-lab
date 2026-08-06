@@ -1,19 +1,24 @@
 import math
-import numpy as np
 
 
 def mha_forward(
-    X: np.ndarray, Wq: np.ndarray, Wk: np.ndarray, Wv: np.ndarray, Wo: np.ndarray
-) -> np.ndarray:
+    X: list[list[list[float]]],
+    Wq: list[list[float]],
+    Wk: list[list[float]],
+    Wv: list[list[float]],
+    Wo: list[list[float]],
+) -> list[list[list[float]]]:
     """Full multi-head attention forward pass."""
-    batch, seq_len, d_model = X.shape
+    batch = len(X)
+    seq_len = len(X[0])
+    d_model = len(X[0][0])
     H = 4
     head_dim = d_model // H
     assert d_model % H == 0
 
-    Q = np.zeros((batch, seq_len, d_model), dtype=X.dtype)
-    K = np.zeros((batch, seq_len, d_model), dtype=X.dtype)
-    V = np.zeros((batch, seq_len, d_model), dtype=X.dtype)
+    Q = [[[0.0] * d_model for _ in range(seq_len)] for _ in range(batch)]
+    K = [[[0.0] * d_model for _ in range(seq_len)] for _ in range(batch)]
+    V = [[[0.0] * d_model for _ in range(seq_len)] for _ in range(batch)]
 
     for b in range(batch):
         for i in range(seq_len):
@@ -22,15 +27,15 @@ def mha_forward(
                 k_val = 0.0
                 v_val = 0.0
                 for k in range(d_model):
-                    x = X[b, i, k]
-                    q_val += x * Wq[k, j]
-                    k_val += x * Wk[k, j]
-                    v_val += x * Wv[k, j]
-                Q[b, i, j] = q_val
-                K[b, i, j] = k_val
-                V[b, i, j] = v_val
+                    x = X[b][i][k]
+                    q_val += x * Wq[k][j]
+                    k_val += x * Wk[k][j]
+                    v_val += x * Wv[k][j]
+                Q[b][i][j] = q_val
+                K[b][i][j] = k_val
+                V[b][i][j] = v_val
 
-    out = np.zeros((batch, seq_len, d_model), dtype=X.dtype)
+    out = [[[0.0] * d_model for _ in range(seq_len)] for _ in range(batch)]
     scale = math.sqrt(head_dim)
 
     for b in range(batch):
@@ -42,8 +47,8 @@ def mha_forward(
                 for j in range(seq_len):
                     score = 0.0
                     for d in range(head_dim):
-                        q_elem = Q[b, i, head_offset + d]
-                        k_elem = K[b, j, head_offset + d]
+                        q_elem = Q[b][i][head_offset + d]
+                        k_elem = K[b][j][head_offset + d]
                         score += q_elem * k_elem
                     score /= scale
                     scores.append(score)
@@ -62,16 +67,16 @@ def mha_forward(
                 for d in range(head_dim):
                     val = 0.0
                     for j in range(seq_len):
-                        val += attn[j] * V[b, j, head_offset + d]
-                    out[b, i, head_offset + d] = val
+                        val += attn[j] * V[b][j][head_offset + d]
+                    out[b][i][head_offset + d] = val
 
-    Y = np.zeros((batch, seq_len, d_model), dtype=X.dtype)
+    Y = [[[0.0] * d_model for _ in range(seq_len)] for _ in range(batch)]
     for b in range(batch):
         for i in range(seq_len):
             for j in range(d_model):
                 y_val = 0.0
                 for k in range(d_model):
-                    y_val += out[b, i, k] * Wo[k, j]
-                Y[b, i, j] = y_val
+                    y_val += out[b][i][k] * Wo[k][j]
+                Y[b][i][j] = y_val
 
     return Y

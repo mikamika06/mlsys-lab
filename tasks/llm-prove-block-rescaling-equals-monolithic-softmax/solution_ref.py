@@ -1,16 +1,14 @@
 import math
-import numpy as np
 
-def block_rescale_softmax(logits: np.ndarray, block_size: int) -> np.ndarray:
+def block_rescale_softmax(logits: list[float], block_size: int) -> list[float]:
     """
     Compute softmax of `logits` using a block‑wise rescaling strategy.
-    The result is identical to the monolithic softmax computed with NumPy.
+    The result is identical to the monolithic softmax.
     """
-    logits = np.asarray(logits, dtype=np.float64)
-    n = logits.size
+    n = len(logits)
     if block_size <= 0:
         raise ValueError("block_size must be positive")
-    
+
     if n == 0:
         M = float('-inf')
     else:
@@ -20,12 +18,12 @@ def block_rescale_softmax(logits: np.ndarray, block_size: int) -> np.ndarray:
             if val > M:
                 M = val
 
-    exp_scaled = np.empty_like(logits)
+    exp_scaled = [0.0] * n
     denom = 0.0
 
     for start in range(0, n, block_size):
         end = min(start + block_size, n)
-        
+
         m_b = float(logits[start])
         for i in range(start + 1, end):
             val = float(logits[i])

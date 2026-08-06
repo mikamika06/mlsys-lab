@@ -1,4 +1,2 @@
-import numpy as np
-
-def mro_isinstance(mro_adj: np.ndarray, pairs: np.ndarray) -> np.ndarray:
+def mro_isinstance(mro_adj: list[list[int]], pairs: list[list[int]]) -> list[bool]:
     raise NotImplementedError('your code here')

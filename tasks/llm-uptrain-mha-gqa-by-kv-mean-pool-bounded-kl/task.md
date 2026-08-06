@@ -33,12 +33,7 @@ zero KL divergence against the reference representation.
 Implement `uptrain_mha_to_gqa(q, k, v, groups)`:
 
 ```python
-def uptrain_mha_to_gqa(
-    q: np.ndarray,
-    k: np.ndarray,
-    v: np.ndarray,
-    groups: int
-) -> tuple[np.ndarray, np.ndarray]:
+def uptrain_mha_to_gqa(q, k, v, groups):
     ...
 ```
 
@@ -55,15 +50,14 @@ $(B, G, T_k, d)$.
 Heads are assigned contiguously. If $H=8$ and $G=2$, heads $0$ through $3$
 form one group and heads $4$ through $7$ form the second group.
 
-Use NumPy operations only.
+Use Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-q = np.zeros((1, 4, 2, 3))
-k = np.arange(24).reshape(1, 4, 2, 3)
+q = [[[[0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0]]]]
+k = list(range(24)).reshape(1, 4, 2, 3)
 v = k.copy()
 
 kg, vg = uptrain_mha_to_gqa(q, k, v, 2)

@@ -1,0 +1,45 @@
+{
+  "id": "m-build-a-minimal-mpsgraph-matmul-relu-via-pyobjc-comp",
+  "title": "Minimal MPSGraph MatMul+ReLU via PyObjC",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Metal Performance Shaders Graph (MPSGraph) fundamentals",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "mpsgraph/graph.py",
+    "mpsgraph/mapping.py",
+    "mpsgraph/benchmark.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Build a minimal MPSGraph MatMul+ReLU and compare with NumPy",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "max_abs_err", "op": "<=", "threshold": 0.00001},
+        {"metric": "graph_built", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Map recorded ops to MPSGraph primitives",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "mapping_accuracy", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for benchmarking and precision",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_flawed_benchmarks", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

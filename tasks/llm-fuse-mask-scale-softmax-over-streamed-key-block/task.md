@@ -2,9 +2,7 @@
 
 In the context of neural networks, particularly in transformer architectures, the scaled dot-product attention mechanism is crucial for processing sequences. The attention mechanism computes a weighted sum of values based on the similarity of keys and queries. The scaled dot-product attention can be expressed mathematically as:
 
-$$
-\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}} + M\right)V
-$$
+$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}} + M\right)V$$
 
 where $M$ is a mask that prevents attending to certain positions (e.g., future tokens in causal attention).
 
@@ -13,27 +11,30 @@ where $M$ is a mask that prevents attending to certain positions (e.g., future t
 Implement the function `fuse_mask_scale_softmax(keys, values, mask, scale)`:
 
 ```python
-def fuse_mask_scale_softmax(keys: np.ndarray, values: np.ndarray, mask: np.ndarray, scale: float) -> np.ndarray:
+def fuse_mask_scale_softmax(keys: list[list[float]], values: list[list[float]], mask: list[list[float]], scale: float) -> list[list[float]]:
     ...
 ```
 
 This function takes:
-- `keys`: a 2-D NumPy array of shape $(n, d_k)$ representing the keys.
-- `values`: a 2-D NumPy array of shape $(n, d_v)$ representing the values.
-- `mask`: a 2-D NumPy array of shape $(n, n)$ for the causal mask.
+
+- `keys`: a list of lists of floats of shape $(n, d_k)$ representing the keys.
+- `values`: a list of lists of floats of shape $(n, d_v)$ representing the values.
+- `mask`: a list of lists of floats of shape $(n, n)$ for the causal mask.
 - `scale`: a float representing the scaling factor.
 
-The function should return a 2-D NumPy array of shape $(n, n)$ containing the attention scores after applying the mask and softmax. The result must be of type `float64`.
+
+The function should return a list of lists of floats of shape $(n, n)$ containing the attention scores after applying the mask and softmax. The result must be of type `float64`.
 
 ## Example
 
 ```python
-import numpy as np
+import math
+import random
 
-keys = np.random.rand(10, 64)
-values = np.random.rand(10, 64)
-mask = np.random.rand(10, 10) * -1e9  # Causal mask
-scale = 1 / np.sqrt(64)
+keys = [[random.random() for _ in range(64)] for _ in range(10)]
+values = [[random.random() for _ in range(64)] for _ in range(10)]
+mask = [[random.random() * -1e9 for _ in range(10)] for _ in range(10)]  # Causal mask
+scale = 1 / math.sqrt(64)
 
 attention_scores = fuse_mask_scale_softmax(keys, values, mask, scale)
 ```

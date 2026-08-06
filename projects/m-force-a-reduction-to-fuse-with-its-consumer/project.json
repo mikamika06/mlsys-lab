@@ -1,0 +1,21 @@
+{
+  "id": "m-force-a-reduction-to-fuse-with-its-consumer",
+  "title": "Force a reduction to fuse with its consumer",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Reading Inductor output code (Triton / C++)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["fusion/analyzer.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Classify kernels in an Inductor dump", "check": "harness/m1.py",
+     "gates": [{"metric": "classes_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Count vectorized loops in CPU C++ output", "check": "harness/m2.py",
+     "gates": [{"metric": "vector_loops_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches un-fused reductions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_fusion", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "id": "m-implement-quantize-dequantize-for-q4-0",
+  "title": "Legacy Quant Block Packing for Q4_0, Q4_1, and Q5_1",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "legacy-quant-blocks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "qblocks/q4_0.py",
+    "qblocks/q4_1.py",
+    "qblocks/q5_1.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantize and dequantize symmetric Q4_0 blocks",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "q4_0_exact_matches",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantize and dequantize affine Q4_1 and high-bit packed Q5_1 blocks",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "q4_1_exact_matches",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "q5_1_exact_matches",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: Regression suite detecting quantizer distortion",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_q51_packing",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

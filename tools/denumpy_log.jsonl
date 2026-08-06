@@ -481,3 +481,12 @@
 {"id": "pyt-aggregate-footprint-of-an-object-graph", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
 {"id": "pyt-cut-gc-collections-under-a-budget-without-leaking", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
 {"id": "pyt-footprint-sweep-dict-slots-namedtuple-key-shared", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "pyt-c-contiguous-vs-non-contiguous-classifier", "ok": false, "why": "3-6-flash:numpy still in solution_ref.py; 3-1-pro:solution_ref.py: SyntaxError line 1; 3-1-pro:function renamed predict_c_contiguous -> solve"}
+{"id": "pyt-gil-held-vs-gil-released-op-classifier", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "pyt-implement-c3-linearization-from-scratch", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1"]}
+{"id": "pyt-isinstance-from-an-mro-without-isinstance", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "pyt-boxed-int-list-vs-numpy-int64-footprint-ratio", "ok": false, "why": "3-6-flash:numpy still in starter.py; 3-1-pro:function renamed list_footprint_ratio -> calculate_stats; 3-1-pro:parameters changed ['values'] -> ['data']"}
+{"id": "pyt-fixed-vs-variable-size-classifier", "ok": false, "why": "3-6-flash:TASK_FAIL: reference does not pass gates | exact_match=0 (gate ==1)  <-- FAILED; 3-1-pro:no files; 3-1-pro:function renamed classify_objects -> classify_tensor"}
+{"id": "llm-fuse-wq-wk-wv-into-one-qkv-matmul", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-stable-softmax-survives-300-logits", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "num-naive-triple-loop-matmul", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}

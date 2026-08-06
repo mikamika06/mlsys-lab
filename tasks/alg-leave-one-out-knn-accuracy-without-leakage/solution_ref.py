@@ -1,12 +1,6 @@
-import numpy as np
-
-
-def loo_knn_predict(X: np.ndarray, y: np.ndarray, k: int, n_classes: int) -> np.ndarray:
-    X = np.asarray(X, dtype=np.float64)
-    y = np.asarray(y, dtype=np.int64)
-
-    n_samples = X.shape[0]
-    n_features = X.shape[1]
+def loo_knn_predict(X: list[list[float]], y: list[int], k: int, n_classes: int) -> list[int]:
+    n_samples = len(X)
+    n_features = len(X[0])
 
     predictions = []
 
@@ -18,7 +12,7 @@ def loo_knn_predict(X: np.ndarray, y: np.ndarray, k: int, n_classes: int) -> np.
             else:
                 dist = 0.0
                 for d in range(n_features):
-                    diff = X[i, d] - X[j, d]
+                    diff = X[i][d] - X[j][d]
                     dist += diff * diff
                 distances.append(dist)
 
@@ -39,4 +33,4 @@ def loo_knn_predict(X: np.ndarray, y: np.ndarray, k: int, n_classes: int) -> np.
 
         predictions.append(best_class)
 
-    return np.asarray(predictions, dtype=np.int64)
+    return predictions

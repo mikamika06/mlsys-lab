@@ -1,0 +1,7 @@
+# Cache Routing & Affinity Under Rescaling
+
+During a recent scale-up event, the prompt-cache routing layer for our LLM serving fleet was scaled from 4 replicas to 5 replicas. Immediately following the rollout, downstream metrics flagged a severe performance regression: cache hit rates plummeted unexpectedly, GPU memory pressure on specific nodes spiked causing localized OOMs, and latency SLAs were repeatedly breached.
+
+Ops reports indicate that key remapping behavior across ring node additions was improperly configured, leading to massive cache churn and key reassignment well beyond the theoretical minimal fraction. Additionally, routing logs show an extreme imbalance in request distribution where certain replicas receive a disproportionate volume of prompt traffic. Investigation suggests that sticky session-affinity rules configured on the fronting proxies are interacting poorly with TTL settings, keeping hot cache keys pinned to overloaded nodes long after capacity constraints are reached.
+
+Your task is to fix the cache-aware routing engine to minimize key movement during scale-out, implement automated log analysis to diagnose hot replicas and routing key skew, and balance session-affinity TTLs to maintain high hit rates without overloading individual replicas. Finally, you will write a suite of regression tests to ensure that misconfigured affinity or suboptimal hashing algorithms are automatically caught before deployment.

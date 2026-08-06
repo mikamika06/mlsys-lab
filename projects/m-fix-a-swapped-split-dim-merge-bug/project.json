@@ -1,0 +1,21 @@
+{
+  "id": "m-fix-a-swapped-split-dim-merge-bug",
+  "title": "Fix a Swapped Split-Dim Merge Bug in Universal Checkpointing",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "Distributed checkpoint format conversion & universal checkpointing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ucp/mapping.py", "ucp/converter.py", "ucp/fix.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct Fragment to Parameter Mapping", "check": "harness/m1.py",
+     "gates": [{"metric": "mappings_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Predict ds_to_universal.py Output", "check": "harness/m2.py",
+     "gates": [{"metric": "outputs_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching swapped split-dim merge", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_swapped_merge", "op": "==", "threshold": 1}]}
+  ]
+}

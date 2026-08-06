@@ -1,0 +1,64 @@
+{
+  "id": "m-manifest-json-spec-summary-without-coremltools",
+  "title": "Manifest, byte attribution, and MIL weight headers without coremltools",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": ".mlpackage container anatomy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mlpackage/manifest.py",
+    "mlpackage/bytes.py",
+    "mlpackage/mil.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Manifest and model spec summary without coremltools",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "manifest_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Byte attribution across mlpackage assets",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bytes_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "MIL weight blob header parser and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_header",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

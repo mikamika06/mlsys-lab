@@ -1,0 +1,5 @@
+The speculative decoding engine is experiencing a drastic drop in acceptance rates after the recent refactor to the new serving architecture. We track a significant amount of generated tokens being discarded, and the overall speedup benchmark is frequently reporting negative net gains or failing entirely.
+
+It appears that the fallback distribution logic is occasionally throwing NaN or generating gibberish when we reject a drafted token. Furthermore, our analytical speedup model seems to be miscalculating the expected tokens, adding the per-position probabilities instead of appropriately chaining them as a sequence of conditional probabilities.
+
+We need the speculative rejection-sampling acceptance logic rewritten from scratch to ensure we correctly evaluate uniform random samples against the target-to-draft probability ratios, and construct the correct residual distribution for the first rejected token. Additionally, the analytical expected tokens formula and the speedup factor calculation must be re-implemented so we can correctly tune our draft batch size and cost ratios in production.

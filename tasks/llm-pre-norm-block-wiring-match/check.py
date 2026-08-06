@@ -65,8 +65,10 @@ def grade(sol, fx) -> dict:
         expected = _ref_block(x, gamma1, beta1, gamma2, beta2,
                               Wq, Wk, Wv, Wo, W1, b1, W2, b2)
         try:
-            got = sol.pre_norm_block(x, gamma1, beta1, gamma2, beta2,
-                                     Wq, Wk, Wv, Wo, W1, b1, W2, b2)
+            got = sol.pre_norm_block(
+                x.tolist(), gamma1.tolist(), beta1.tolist(), gamma2.tolist(), beta2.tolist(),
+                Wq.tolist(), Wk.tolist(), Wv.tolist(), Wo.tolist(), W1.tolist(), b1.tolist(), W2.tolist(), b2.tolist()
+            )
             got = np.asarray(got, dtype=np.float64)
             if got.shape != expected.shape:
                 return {"max_abs_err": float("inf")}

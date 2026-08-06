@@ -1,0 +1,63 @@
+{
+  "id": "m-custom-scale-for-qk-normed-models",
+  "title": "Custom scale for QK-normed models",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "score-modifiers-softcap-alibi-scale",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "qknorm/attention.py",
+    "qknorm/config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Normalized QK attention scores with custom scaling",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.0001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Soft-capped QK-norm attention logits",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.0001
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch unscaled QK-norm bug",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unscaled_qknorm",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

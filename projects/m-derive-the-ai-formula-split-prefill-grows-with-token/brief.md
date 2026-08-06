@@ -1,0 +1,9 @@
+# Ticket: LLM Inference Profiling Inconsistencies Between Prefill and Decode Phases
+
+## Symptom Report
+
+We have observed significant discrepancies in our automated inference profiling pipeline when evaluating large language models across mixed prefill and generation workloads. Specifically, our performance tracking dashboards report erratic operational intensity metrics and incorrect bottleneck classifications when switching from prompt processing (prefill) to token generation (decode).
+
+During long-context prefill phases, the profiler occasionally miscalculates the expected floating-point operations (FLOPs) and memory traffic, leading to false alerts that the hardware is memory-bandwidth bound even when compute units are fully saturated. Conversely, during the decode phase, where generation occurs token by token, the measured memory bandwidth utilization deviates wildly from hardware specifications, often reporting values that exceed physical memory limits or drop implausibly low.
+
+Engineers attempting to analyze Apple Silicon (Mac) deployment efficiency find that the implied memory bandwidth calculations during token generation do not align with baseline hardware specs, breaking our roofline model analysis. Furthermore, unit tests in our profiling suite fail to catch regressions when hardware specifications or token scaling factors are incorrectly hardcoded by third-party extensions. We need a rigorous analytical foundation implemented in our profiling modules (`profiling/derivation.py`, `profiling/classify.py`, and `profiling/bandwidth.py`) to correctly derive the prefill-versus-decode formula split, accurately classify phase-bound behavior using real token throughput and byte movement metrics, and reliably compute implied memory bandwidth on target hardware with verified regression safeguards.

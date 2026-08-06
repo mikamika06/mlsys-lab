@@ -1,5 +1,4 @@
-import numpy as np
+import math
 
-def pairwise_mahalanobis(X: np.ndarray, cov_inv: np.ndarray) -> np.ndarray:
-    # TODO: Implement fast pairwise Mahalanobis distance
-    return np.zeros((X.shape[0], X.shape[0]))
+def pairwise_mahalanobis(X: list[list[float]], cov_inv: list[list[float]]) -> list[list[float]]:
+    raise NotImplementedError('your code here')

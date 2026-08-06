@@ -1,0 +1,21 @@
+{
+  "id": "m-hybrid-model-effective-bytes-token-with-interleaved-",
+  "title": "Hybrid model effective bytes per token with interleaved windows",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-cache-memory-math",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["hybridkv/config.py", "hybridkv/memory.py", "hybridkv/predict.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Classify attention variant from config fields", "check": "harness/m1.py",
+     "gates": [{"metric": "classification_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Hybrid model effective bytes per token with interleaved sliding windows", "check": "harness/m2.py",
+     "gates": [{"metric": "effective_bytes_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: prediction versus formula verification test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_prediction", "op": "==", "threshold": 1}]}
+  ]
+}

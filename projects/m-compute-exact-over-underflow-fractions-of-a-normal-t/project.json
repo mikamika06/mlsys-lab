@@ -1,0 +1,69 @@
+{
+  "id": "m-compute-exact-over-underflow-fractions-of-a-normal-t",
+  "title": "Compute over/underflow fractions and numerical diagnostics",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "numerical-failure-modes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "numdiag/overflow.py",
+    "numdiag/classifier.py",
+    "numdiag/quantization.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute exact overflow and underflow fractions for FP16 and BF16",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 1e-5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify training log symptoms and simulate NF4 error compounding",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "classification_accuracy",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "simulation_rel_err",
+          "op": "<=",
+          "threshold": 1e-5
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard test catches erroneous anomaly classification logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_classifier",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

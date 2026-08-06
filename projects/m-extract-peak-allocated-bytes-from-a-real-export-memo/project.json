@@ -1,0 +1,40 @@
+{
+  "id": "m-extract-peak-allocated-bytes-from-a-real-export-memo",
+  "title": "Extract peak allocated bytes and simulate allocator fragmentation from memory exports",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "torch-profiler-memory-snapshot-and-oom",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "memprof/timeline.py",
+    "memprof/oom.py",
+    "memprof/fragmentation.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract peak allocated bytes from timeline export",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "peak_bytes_rel_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 2,
+      "title": "Find largest live allocation before OOM",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "largest_alloc_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Simulate caching allocator fragmentation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_fragmentation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

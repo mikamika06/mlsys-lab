@@ -1,0 +1,21 @@
+{
+  "id": "m-diagnose-a-0-flop-row-from-flopcountermode-as-an-unr",
+  "title": "Diagnosing zero-FLOP rows, linear counts, and MFU ranking",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "torch-profiler-flops-and-mfu",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flopdiag/diagnose.py", "flopdiag/count.py", "flopdiag/mfu.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Diagnose zero-FLOP custom ops", "check": "harness/m1.py",
+     "gates": [{"metric": "diagnosis_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Cross-check linear-layer count", "check": "harness/m2.py",
+     "gates": [{"metric": "count_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Rank model configs by MFU and regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "m-full-shard-vs-shard-grad-op-real-memory-call-count",
+  "title": "FSDP memory and call count analysis for sharding strategies",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP sharding strategies & wrap-policy granularity",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["fsdp_analysis/model.py", "fsdp_analysis/memory.py", "fsdp_analysis/optimal.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "FULL_SHARD vs SHARD_GRAD_OP memory and call counts", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_matched", "op": ">=", "threshold": 4}]},
+    {"n": 2, "title": "Predict FSDP-unit count and optimal wrap granularity", "check": "harness/m2.py",
+     "gates": [{"metric": "units_match", "op": "==", "threshold": 1},
+               {"metric": "closed_form_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid sharding trade-offs", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_tradeoff", "op": "==", "threshold": 1}]}
+  ]
+}

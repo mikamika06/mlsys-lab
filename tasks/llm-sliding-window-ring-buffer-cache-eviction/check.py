@@ -64,8 +64,12 @@ def grade(sol, fx) -> dict:
         ref_out = _windowed_reference(Q, K, V, W)
         ref_Kbuf, ref_Vbuf = _ring_layout(K, V, W)
 
+        Q_list = Q.tolist()
+        K_list = K.tolist()
+        V_list = V.tolist()
+
         try:
-            got_out, got_Kbuf, got_Vbuf = sol.windowed_ring_attention(Q, K, V, W)
+            got_out, got_Kbuf, got_Vbuf = sol.windowed_ring_attention(Q_list, K_list, V_list, W)
             got_out = np.asarray(got_out, dtype=np.float64)
             got_Kbuf = np.asarray(got_Kbuf, dtype=np.float64)
             got_Vbuf = np.asarray(got_Vbuf, dtype=np.float64)

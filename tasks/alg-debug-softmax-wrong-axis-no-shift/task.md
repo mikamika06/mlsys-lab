@@ -21,9 +21,8 @@ Your task is to debug and fix `softmax(x, axis)` so that it applies the max-shif
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1000.0, 1001.0], [1000.0, 1000.0]])
+x = [[1000.0, 1001.0], [1000.0, 1000.0]]
 out = softmax(x, axis=-1)
 
 # Expected Output:

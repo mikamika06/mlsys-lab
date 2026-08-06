@@ -8,13 +8,13 @@ def _np_softmax(x):
 
 def grade(sol, fx) -> dict:
     test_vectors = [
-        np.array([1.0, 2.0, 3.0]),
-        np.array([0.0, 0.0, 0.0]),
-        np.array([1000.0, 1001.0, 1002.0]),
-        np.array([-500.0, -499.0, -498.0]),
-        np.array([1e6, 1e6, 1e6]),
-        np.array([-10.0, -5.0, 0.0, 5.0, 10.0]),
-        np.array([500.0, 500.0, 500.0, 500.0]),
+        [1.0, 2.0, 3.0],
+        [0.0, 0.0, 0.0],
+        [1000.0, 1001.0, 1002.0],
+        [-500.0, -499.0, -498.0],
+        [1e6, 1e6, 1e6],
+        [-10.0, -5.0, 0.0, 5.0, 10.0],
+        [500.0, 500.0, 500.0, 500.0],
     ]
 
     shifts = [0.0, 1.0, -1.0, 100.0, -100.0, 1000.0, -1000.0]
@@ -39,7 +39,8 @@ def grade(sol, fx) -> dict:
             return {"accuracy": float("inf"), "shift_invariance": float("inf")}
         for c in shifts:
             try:
-                s2 = np.asarray(sol.softmax(x - c), dtype=np.float64)
+                x_shifted = [val - c for val in x]
+                s2 = np.asarray(sol.softmax(x_shifted), dtype=np.float64)
                 err = float(np.max(np.abs(s1 - s2)))
             except Exception:
                 return {"accuracy": float("inf"), "shift_invariance": float("inf")}

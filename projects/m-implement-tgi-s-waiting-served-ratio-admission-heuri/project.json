@@ -1,0 +1,35 @@
+{
+  "id": "m-implement-tgi-s-waiting-served-ratio-admission-heuri",
+  "title": "TGI Admission Control and Token Utilization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "TGI Router Continuous Batching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["router/admission.py", "router/utilization.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Implement the waiting-served-ratio Admission Heuristic",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "cases_matched", "op": "==", "threshold": 6}]
+    },
+    {
+      "n": 2,
+      "title": "Compute Batch-Token Utilization From a Recorded TGI Router Log",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "util_matched", "op": "==", "threshold": 2}]
+    },
+    {
+      "n": 3,
+      "title": "Diagnose an OOM: max-batch-total-tokens vs max-batch-prefill-tokens",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_generated", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

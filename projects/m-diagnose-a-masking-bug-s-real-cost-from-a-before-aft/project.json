@@ -1,0 +1,63 @@
+{
+  "id": "m-diagnose-a-masking-bug-s-real-cost-from-a-before-aft",
+  "title": "Diagnose a masking bug's real cost from a before/after Nsight Compute diff",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Profiling real kernels (Nsight Compute / Proton / torch.profiler)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ncu_diag/parser.py",
+    "ncu_diag/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse and load before/after Nsight Compute summaries",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "metrics_parsed_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantify instruction overhead and stall cycle cost",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cost_diff_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for profile analysis",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_parser",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

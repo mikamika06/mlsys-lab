@@ -1,0 +1,40 @@
+{
+  "id": "m-detect-client-server-version-skew-and-name-the-field",
+  "title": "Detect client/server version skew and daemon host binding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "runner-architecture-and-daemon",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["runnerdiag/skew.py", "runnerdiag/binding.py", "runnerdiag/latency.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect client/server version skew and name proving field",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "skew_detected", "op": "==", "threshold": 1},
+        {"metric": "field_named", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reconcile bound host/port with OLLAMA_HOST",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "binding_reconciled", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for version skew detection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_skew", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

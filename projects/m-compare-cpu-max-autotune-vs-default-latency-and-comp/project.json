@@ -1,0 +1,43 @@
+{
+  "id": "m-compare-cpu-max-autotune-vs-default-latency-and-comp",
+  "title": "Compare CPU max-autotune vs default latency, parse autotuning logs, and trace CUDA graphs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "max-autotune kernel autotuning & CUDA graphs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "autotune_metrics/analyzer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compare CPU max-autotune vs default latency and compile-time",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "latency_ratio_match", "op": "==", "threshold": 1},
+        {"metric": "compile_time_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Find the argmin config in a recorded GPU max-autotune benchmarking log",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "argmin_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Locate the CUDA-graph recapture event in a recorded reduce-overhead trace",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_recapture", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

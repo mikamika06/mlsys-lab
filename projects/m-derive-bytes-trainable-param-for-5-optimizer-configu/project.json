@@ -1,0 +1,44 @@
+{
+  "id": "m-derive-bytes-trainable-param-for-5-optimizer-configu",
+  "title": "Derive optimizer bytes and fine-tuning memory footprint",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "optimizer-state-memory",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "optmem/derive.py",
+    "optmem/memory.py",
+    "optmem/gap.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive bytes per trainable parameter for 5 optimizer configurations",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "bytes_matched", "op": "==", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive total full-fine-tune memory under AdamW-fp32-mixed-precision",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "total_memory_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches incorrect memory multiplier gap",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_gap", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

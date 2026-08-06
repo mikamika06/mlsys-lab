@@ -23,11 +23,11 @@ The selected row is swapped into position $k$. The values below the pivot are st
 Implement `lu_partial_pivot(A)`:
 
 ```python
-def lu_partial_pivot(A: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def lu_partial_pivot(A: list[list[float]]) -> tuple[list[list[float]], list[list[float]], list[list[float]]]:
     ...
 ```
 
-The function receives a square floating-point NumPy array and returns `(P, L, U)` satisfying:
+The function receives a square floating-point list and returns `(P, L, U)` satisfying:
 
 $$
 PA \approx LU.
@@ -43,10 +43,9 @@ Requirements:
 ## Example
 
 ```python
-import numpy as np
 
-A = np.array([[2., 1.],
-              [4., 3.]])
+A = [[2., 1.],
+              [4., 3.]]
 
 P, L, U = lu_partial_pivot(A)
 
@@ -55,7 +54,7 @@ P, L, U = lu_partial_pivot(A)
 
 ## What the gate checks
 
-The gate builds a reference decomposition using the same mathematical algorithm with a NumPy-based oracle implementation. It compares the returned $P$, $L$, and $U$ against the oracle result and also verifies the reconstruction.
+The gate builds a reference decomposition using the same mathematical algorithm with a Python-based oracle implementation. It compares the returned $P$, $L$, and $U$ against the oracle result and also verifies the reconstruction.
 
 The checked error is
 

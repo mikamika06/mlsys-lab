@@ -1,0 +1,22 @@
+{
+  "id": "m-blocked-tag-channel-block-size-derivation-by-isa",
+  "title": "Blocked-tag channel block size derivation by ISA",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "oneDNN memory formats & blocked layouts",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["layout/derivation.py", "layout/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Channel block size derivation by ISA", "check": "harness/m1.py",
+     "gates": [{"metric": "derivations_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Reorder-op count and overhead fraction", "check": "harness/m2.py",
+     "gates": [{"metric": "reorder_counts_matched", "op": "==", "threshold": 1},
+               {"metric": "overhead_fraction_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for layout rules", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_derivation", "op": "==", "threshold": 1}]}
+  ]
+}

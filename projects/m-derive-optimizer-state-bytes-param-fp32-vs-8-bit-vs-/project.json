@@ -1,0 +1,45 @@
+{
+  "id": "m-derive-optimizer-state-bytes-param-fp32-vs-8-bit-vs-",
+  "title": "Derive optimizer-state bytes, QLoRA memory budget, and paged Adam spillover step",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "paged-optimizers-8bit-adam",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "optbudget/bytes.py",
+    "optbudget/budget.py",
+    "optbudget/spill.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive optimizer-state bytes per parameter for FP32, 8-bit, and SGD",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "bytes_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive total QLoRA training memory budget and paged-Adam spillover step",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "budget_matched", "op": "==", "threshold": 1},
+        {"metric": "step_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catches incorrect optimizer state byte computation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_bytes", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

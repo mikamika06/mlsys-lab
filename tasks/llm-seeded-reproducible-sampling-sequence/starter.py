@@ -1,7 +1,7 @@
-import numpy as np
+import math
+import random
 
-
-def sample_sequence(logits: np.ndarray, temperature: float, seed: int) -> np.ndarray:
+def sample_sequence(logits: list[list[float]], temperature: float, seed: int) -> list[int]:
     """Reproduce the seeded temperature-sampled id sequence.
 
     Args:
@@ -12,4 +12,4 @@ def sample_sequence(logits: np.ndarray, temperature: float, seed: int) -> np.nda
     Returns:
         int64 array of shape (T,) with the sampled token id at each step.
     """
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')

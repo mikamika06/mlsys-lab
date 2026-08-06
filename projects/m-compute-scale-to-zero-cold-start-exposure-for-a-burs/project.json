@@ -1,0 +1,43 @@
+{
+  "id": "m-compute-scale-to-zero-cold-start-exposure-for-a-burs",
+  "title": "Compute Scale-to-Zero Cold-Start Exposure",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Ray Serve Autoscaling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "scalezero/simulator.py",
+    "scalezero/optimizer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate scale-to-zero transitions",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "cases_matched", "op": "==", "threshold": 60}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Find the optimal idle timeout",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "cases_matched", "op": "==", "threshold": 30}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching non-minimal timeout",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_max_timeout_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

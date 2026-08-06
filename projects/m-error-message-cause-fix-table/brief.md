@@ -1,0 +1,5 @@
+We are observing intermittent failures in our FlashAttention integration when running sequences with mixed configuration parameters under high-concurrency kernels. During multi-head attention execution, certain non-standard block sizes and causal mask configurations trigger silent degradation or kernel aborts without clear stack traces.
+
+The primary symptom manifests as obscure CUDA kernel launch errors or raw hexadecimal memory fault codes returned to the host runtime, making it exceptionally difficult for engineers to trace the root cause back to the offending sequence configuration or parameter combination.
+
+Your task is to build a comprehensive triage framework for this FlashAttention tracking area. Specifically, you need to implement an error triage engine that maps raw error messages to their underlying causes and definitive fixes, a preflight configuration validator that catches illegal parameter combinations before kernel launch, and a minimal reproducible example generator that extracts failing test cases into isolated standalone scripts.

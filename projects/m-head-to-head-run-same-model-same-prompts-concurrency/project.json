@@ -1,0 +1,21 @@
+{
+  "id": "m-head-to-head-run-same-model-same-prompts-concurrency",
+  "title": "Head-to-head engine throughput comparison under varying concurrency",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "engine-selection-and-comparison",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["enginebench/runner.py", "enginebench/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse and normalize engine execution configs", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Throughput ratio calculation across concurrency tiers", "check": "harness/m2.py",
+     "gates": [{"metric": "throughput_ratio_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches invalid ratios", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_ratio", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -12,19 +12,21 @@ def grade(sol, fx) -> dict:
     ]
     block_sizes = [1, 3, 7, 13]
     max_err = 0.0
-    for logits in test_cases:
+    for logits_arr in test_cases:
         # Ensure float64 dtype
-        logits = np.asarray(logits, dtype=np.float64)
-        M = np.max(logits)
-        ref = np.exp(logits - M) / np.sum(np.exp(logits - M))
+        logits_arr = np.asarray(logits_arr, dtype=np.float64)
+        M = np.max(logits_arr)
+        ref = np.exp(logits_arr - M) / np.sum(np.exp(logits_arr - M))
+        logits_list = logits_arr.tolist()
         for bs in block_sizes:
             try:
-                cand = sol.block_rescale_softmax(logits, bs)
+                cand = sol.block_rescale_softmax(logits_list, bs)
             except Exception:
                 return {"max_abs_err": float("inf")}
-            if cand.shape != logits.shape or cand.dtype != np.float64:
+            if not isinstance(cand, list) or len(cand) != len(logits_list):
                 return {"max_abs_err": float("inf")}
-            err = np.max(np.abs(cand - ref))
+            cand_arr = np.array(cand, dtype=np.float64)
+            err = np.max(np.abs(cand_arr - ref))
             if err > max_err:
                 max_err = err
     return {"max_abs_err": max_err}

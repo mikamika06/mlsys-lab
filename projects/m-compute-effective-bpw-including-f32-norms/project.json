@@ -1,0 +1,22 @@
+{
+  "id": "m-compute-effective-bpw-including-f32-norms",
+  "title": "Effective BPW and VRAM budgeting",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "size-bpw-accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["effbpw/compute.py", "effbpw/budget.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute effective bpw including F32 norms", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Choose a quant under a VRAM budget including KV cache", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5},
+               {"metric": "selected_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch ignored F32 norms", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ignored_norms", "op": "==", "threshold": 1}]}
+  ]
+}

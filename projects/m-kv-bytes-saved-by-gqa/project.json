@@ -1,0 +1,68 @@
+{
+  "id": "m-kv-bytes-saved-by-gqa",
+  "title": "KV bytes saved by GQA",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "gqa-mqa-head-mapping",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gqa_opt/classifier.py",
+    "gqa_opt/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Config classification and head mapping",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Native GQA memory savings vs expanded KV",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bytes_saved_rel_err",
+          "op": "<=",
+          "threshold": 1e-05
+        },
+        {
+          "metric": "expansion_ratio_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching false expansion OOMs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_eager_expansion",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

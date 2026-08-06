@@ -1,22 +1,24 @@
+import math
 import numpy as np
 from mlsys import scorers
 
 
 def _central_diff_reference(f, x, eps):
-    x = np.asarray(x, dtype=np.float64)
-    y = np.asarray(f(x), dtype=np.float64)
-    m = y.shape[0]
-    n = x.shape[0]
-    J = np.empty((m, n), dtype=np.float64)
+    x_list = [float(v) for v in x]
+    y_list = [float(v) for v in f(x_list)]
+    m = len(y_list)
+    n = len(x_list)
+    J = [[0.0 for _ in range(n)] for _ in range(m)]
 
     for j in range(n):
-        xp = x.copy()
-        xm = x.copy()
+        xp = list(x_list)
+        xm = list(x_list)
         xp[j] += eps
         xm[j] -= eps
-        yp = np.asarray(f(xp), dtype=np.float64)
-        ym = np.asarray(f(xm), dtype=np.float64)
-        J[:, j] = (yp - ym) / (2.0 * eps)
+        yp = [float(v) for v in f(xp)]
+        ym = [float(v) for v in f(xm)]
+        for i in range(m):
+            J[i][j] = (yp[i] - ym[i]) / (2.0 * eps)
 
     return J
 
@@ -24,35 +26,35 @@ def _central_diff_reference(f, x, eps):
 def grade(sol, fx) -> dict:
     cases = [
         (
-            lambda x: np.array([
+            lambda x: [
                 x[0] ** 2 + x[1],
-                np.sin(x[0]) * x[1],
-            ]),
-            np.array([1.3, -0.7]),
+                math.sin(x[0]) * x[1],
+            ],
+            [1.3, -0.7],
             1e-6,
         ),
         (
-            lambda x: np.array([
-                np.exp(x[0]) + x[1] * x[2],
-                x[0] * x[1] - np.cos(x[2]),
+            lambda x: [
+                math.exp(x[0]) + x[1] * x[2],
+                x[0] * x[1] - math.cos(x[2]),
                 x[0] + x[2] ** 3,
-            ]),
-            np.array([0.2, -1.1, 0.8]),
+            ],
+            [0.2, -1.1, 0.8],
             1e-6,
         ),
         (
-            lambda x: np.array([
-                x[0] ** 3 - 2.0 * x[1] + np.sin(x[0] * x[1]),
-            ]),
-            np.array([0.4, 2.5]),
+            lambda x: [
+                x[0] ** 3 - 2.0 * x[1] + math.sin(x[0] * x[1]),
+            ],
+            [0.4, 2.5],
             1e-6,
         ),
         (
-            lambda x: np.array([
+            lambda x: [
                 x[0] * x[1],
-                x[1] ** 2 + np.exp(x[0]),
-            ]),
-            np.array([-1.2, 0.6]),
+                x[1] ** 2 + math.exp(x[0]),
+            ],
+            [-1.2, 0.6],
             1e-6,
         ),
     ]
@@ -65,6 +67,6 @@ def grade(sol, fx) -> dict:
         except Exception:
             return {"rel_err": float("inf")}
 
-        errors.append(scorers.rel_err(ref, got))
+        errors.append(scorers.rel_err(np.array(ref), np.array(got)))
 
     return {"rel_err": float(max(errors))}

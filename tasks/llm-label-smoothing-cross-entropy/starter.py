@@ -1,4 +1,6 @@
-import numpy as np
+import math
 
-def label_smoothed_cross_entropy(logits: np.ndarray, targets: np.ndarray, eps: float=0.1) -> float:
+def label_smoothed_cross_entropy(logits: list[list[float]],
+                                 targets: list[int],
+                                 eps: float = 0.1) -> float:
     raise NotImplementedError('your code here')

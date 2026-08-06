@@ -1,8 +1,7 @@
 import sys
-import numpy as np
 
 
-def aggregate_footprint(adjacency, payloads):
+def aggregate_footprint(adjacency: list[list[int]], payloads: list[list[int]]) -> float:
     nodes = []
     for payload in payloads:
         nodes.append({"payload": list(payload), "children": []})
@@ -10,7 +9,7 @@ def aggregate_footprint(adjacency, payloads):
     n = len(nodes)
     for i in range(n):
         for j in range(n):
-            if adjacency[i, j] != 0:
+            if adjacency[i][j] != 0:
                 nodes[i]["children"].append(nodes[j])
 
     seen = set()
@@ -35,5 +34,6 @@ def aggregate_footprint(adjacency, payloads):
     for node in nodes:
         total += deep_size(node)
 
-    flat = np.asarray([x for payload in payloads for x in payload], dtype=np.int64)
-    return float(total / flat.nbytes)
+    flat_count = sum(len(payload) for payload in payloads)
+    flat_bytes = flat_count * 8
+    return float(total / flat_bytes)

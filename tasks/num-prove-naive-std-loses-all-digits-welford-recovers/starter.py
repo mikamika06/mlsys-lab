@@ -1,7 +1,6 @@
-import numpy as np
+import random
 
-
-def pathological_variance_input() -> np.ndarray:
+def pathological_variance_input() -> list[float]:
     """Construct and return a 1-D float array x (len >= 8, finite, honest
     non-degenerate variance) on which the naive one-pass variance formula
     E[X^2] - E[X]^2 is catastrophically wrong (rel err > 0.5) while

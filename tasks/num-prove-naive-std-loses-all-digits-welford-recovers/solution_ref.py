@@ -1,7 +1,7 @@
-import numpy as np
+import random
 
 
-def pathological_variance_input() -> np.ndarray:
+def pathological_variance_input() -> list[float]:
     """A counterexample where the naive one-pass variance formula fails
     catastrophically while Welford's algorithm stays accurate.
 
@@ -10,7 +10,6 @@ def pathological_variance_input() -> np.ndarray:
     correct digit of the O(1) true variance. Welford never forms that huge
     intermediate, so it stays accurate to machine precision regardless.
     """
-    rng = np.random.default_rng(0)
+    rng = random.Random(0)
     n = 100
-    x = 1e8 + rng.standard_normal(n)
-    return x
+    return [1e8 + rng.gauss(0.0, 1.0) for _ in range(n)]

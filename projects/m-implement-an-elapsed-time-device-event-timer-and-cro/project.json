@@ -1,0 +1,22 @@
+{
+  "id": "m-implement-an-elapsed-time-device-event-timer-and-cro",
+  "title": "Elapsed-time device event timer and regime profiler",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "cuda-sync-and-timing-correctness",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["timer/events.py", "timer/regimes.py", "timer/profiler.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Implement elapsed time device event timer", "check": "harness/m1.py",
+     "gates": [{"metric": "events_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Rank host-overhead vs kernel-time timing regimes", "check": "harness/m2.py",
+     "gates": [{"metric": "regimes_matched", "op": "==", "threshold": 1},
+               {"metric": "rel_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: regression test catches broken timing sync", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unsynced", "op": "==", "threshold": 1}]}
+  ]
+}

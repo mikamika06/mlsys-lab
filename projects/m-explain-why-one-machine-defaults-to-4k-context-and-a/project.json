@@ -1,0 +1,45 @@
+{
+  "id": "m-explain-why-one-machine-defaults-to-4k-context-and-a",
+  "title": "Explain machine context defaults and memory cliffs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "context-length-and-kv-memory",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "runner/config.py",
+    "runner/memory.py",
+    "runner/slots.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Explain context defaults across machine profiles",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "defaults_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Model num_ctx division across parallel slots",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "slots_matched", "op": "==", "threshold": 1},
+        {"metric": "effective_ctx_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch memory cliff miscalculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_cliff", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

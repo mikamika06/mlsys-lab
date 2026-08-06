@@ -29,11 +29,11 @@ are well-conditioned and do not require row exchanges.
 Implement `lu_no_pivot(A)`:
 
 ```python
-def lu_no_pivot(A: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def lu_no_pivot(A: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
     ...
 ```
 
-The function receives a square NumPy array and returns `(L, U)` from Doolittle LU
+The function receives a square list and returns `(L, U)` from Doolittle LU
 decomposition without pivoting. Do not call external LU decomposition routines or
 perform row pivoting.
 
@@ -44,12 +44,11 @@ factorization of the input matrix.
 ## Example
 
 ```python
-import numpy as np
 
-A = np.array([
+A = [
     [4.0, 3.0],
     [6.0, 3.0],
-])
+]
 
 L, U = lu_no_pivot(A)
 

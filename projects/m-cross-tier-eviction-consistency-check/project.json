@@ -1,0 +1,68 @@
+{
+  "id": "m-cross-tier-eviction-consistency-check",
+  "title": "Cross-tier eviction consistency check",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "hierarchical-cache-and-admission-policy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "eviction/checker.py",
+    "eviction/manager.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Cross-tier state validation",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "scenarios_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Consistent cross-tier eviction execution",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "evictions_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "invariants_preserved",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch ignored secondary tier invalidation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_ignored_invalidation",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

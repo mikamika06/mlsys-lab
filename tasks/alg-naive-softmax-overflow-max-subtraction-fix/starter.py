@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def softmax(logits):
+def softmax(logits: list[float]) -> list[float]:
     raise NotImplementedError('your code here')

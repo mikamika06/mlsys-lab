@@ -1,0 +1,74 @@
+{
+  "id": "m-compute-lora-adapter-bytes-from-a-peft-adapter-config",
+  "title": "Multi-LoRA adapter bytes and batch scheduling",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "multi-lora-serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "loraserve/config.py",
+    "loraserve/budget.py",
+    "loraserve/scheduler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute adapter memory footprint from PEFT config",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Calculate preallocated server budget and batch schedule",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "budget_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "fit_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "schedule_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching unoptimized adapter switches",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_naive_scheduler",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

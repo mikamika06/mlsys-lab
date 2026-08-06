@@ -2,9 +2,7 @@
 
 The log-sum-exp function
 
-$$
-\mathrm{LSE}(x) = \log\left(\sum_{i=1}^{n} e^{x_i}\right)
-$$
+$$\mathrm{LSE}(x) = \log\left(\sum_{i=1}^{n} e^{x_i}\right)$$
 
 shows up everywhere probabilities are combined in log-space (softmax
 normalizers, mixture-model log-likelihoods, cross-entropy). Computed
@@ -19,9 +17,7 @@ strays outside a narrow range:
 
 The standard fix shifts by the maximum entry before exponentiating:
 
-$$
-\mathrm{LSE}(x) = m + \log\left(\sum_{i=1}^{n} e^{x_i - m}\right), \qquad m = \max_i x_i.
-$$
+$$\mathrm{LSE}(x) = m + \log\left(\sum_{i=1}^{n} e^{x_i - m}\right), \qquad m = \max_i x_i.$$
 
 Now every exponent $x_i - m \le 0$, so $e^{x_i-m} \in (0, 1]$ — it can never
 overflow, and it underflows to $0$ only for terms that are negligible next
@@ -33,39 +29,27 @@ result.
 Implement `logsumexp_stable`:
 
 ```python
-def logsumexp_stable(x: np.ndarray) -> float:
+def logsumexp_stable(x: list[float]) -> float:
     ...
 ```
 
-* `x` — 1-D NumPy array of floats, possibly containing very large positive
-  or very large negative entries.
+- `x` — list of floats of floats, possibly containing very large positive or very large negative entries.
 
-Return $\mathrm{LSE}(x)$ as a plain Python `float`, using the max-shift
-trick so the result stays finite and accurate no matter how extreme the
-entries of `x` are.
+
+Return $\mathrm{LSE}(x)$ as a plain Python `float`, using the max-shift trick so the result stays finite and accurate no matter how extreme the entries of `x` are.
 
 ## Example
 
 ```python
-import numpy as np
-x = np.array([1000.0, 1000.5, 999.0])
+x = [1000.0, 1000.5, 999.0]
 print(logsumexp_stable(x))   # ~1001.157..., NOT inf
 
-x2 = np.array([-1000.0, -1000.5, -999.0])
+x2 = [-1000.0, -1000.5, -999.0]
 print(logsumexp_stable(x2))  # ~-998.536..., NOT -inf
 ```
 
-The naive `float(np.log(np.sum(np.exp(x))))` returns `inf` on the first
-example and `-inf` on the second.
+The naive `float(math.log(sum(math.exp(v) for v in x)))` returns `inf` on the first example and `-inf` on the second.
 
 ## What the gate checks
 
-A single gate named **rel_err** compares your output against a real
-high-precision oracle: the same sum-of-exponentials computed with `mpmath`
-at 50 decimal digits of precision (immune to float64 overflow/underflow),
-then converted back to a `float`. It runs on the overflow and underflow
-fixtures, a mixed-extreme-range case, and several ordinary random arrays.
-The threshold is $10^{-13}$ — a correct stable implementation matches the
-oracle to within float64 rounding error on every case, while the naive
-formula returns a non-finite value on the extreme cases and is scored as
-failing.
+A single gate named **rel_err** compares your output against a real high-precision oracle: the same sum-of-exponentials computed with `mpmath` at 50 decimal digits of precision (immune to float64 overflow/underflow), then converted back to a `float`. It runs on the overflow and underflow fixtures, a mixed-extreme-range case, and several ordinary random lists. The threshold is $10^{-13}$ — a correct stable implementation matches the oracle to within float64 rounding error on every case, while the naive formula returns a non-finite value on the extreme cases and is scored as failing.

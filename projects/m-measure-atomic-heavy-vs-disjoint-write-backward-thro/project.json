@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-atomic-heavy-vs-disjoint-write-backward-thro",
+  "title": "Measure atomic-heavy vs disjoint-write backward throughput",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Backward-pass gradient kernels & atomics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["triton_bw/kernels.py", "triton_bw/measure.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Atomic-heavy and disjoint-write kernel correctness", "check": "harness/m1.py",
+     "gates": [{"metric": "correctness_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Throughput ratio measurement against oracle baseline", "check": "harness/m2.py",
+     "gates": [{"metric": "throughput_ratio", "op": ">=", "threshold": 0.8}]},
+    {"n": 3, "title": "Safety net: regression test catching atomic fallback", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_atomic_fallback", "op": "==", "threshold": 1}]}
+  ]
+}

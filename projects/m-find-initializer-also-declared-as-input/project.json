@@ -1,0 +1,62 @@
+{
+  "id": "m-find-initializer-also-declared-as-input",
+  "title": "Initializer overlap, external data ranges, and 2GB protobuf limits",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ONNX file format, ModelProto structure & external data",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "onnxtools/analyzer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Find initializers also declared as inputs",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "overlaps_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Resolve external data tensor byte ranges",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ranges_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Predict which tools hit the 2GB ceiling",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_ceiling",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "m-batch-index-remapping-with-cache-batch-idx",
+  "title": "Batch-index remapping with cache_batch_idx",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "kv-cache-decode-api",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "batchremap/mapping.py",
+    "batchremap/cache.py",
+    "batchremap/decode.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Build and remap cache batch index vectors",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "mappings_matched", "op": "==", "threshold": 1},
+        {"metric": "remaps_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "KV cache write and gather using physical batch indices",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "updates_matched", "op": "==", "threshold": 1},
+        {"metric": "gathers_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch unmapped batch index access",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unmapped_access", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

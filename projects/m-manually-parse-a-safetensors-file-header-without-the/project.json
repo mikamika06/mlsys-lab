@@ -1,0 +1,46 @@
+{
+  "id": "m-manually-parse-a-safetensors-file-header-without-the",
+  "title": "Parse safetensors headers and handle GGUF/MLX format interop",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Model format interop (safetensors / GGUF / HF <-> MLX)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "safetensors_interop/header.py",
+    "safetensors_interop/compare.py",
+    "safetensors_interop/remap.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse safetensors file header and payload manually",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "headers_parsed", "op": "==", "threshold": 1},
+        {"metric": "tensors_extracted", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verify bit-identical f16 tensors across safetensors and GGUF",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "gguf_parsed", "op": "==", "threshold": 1},
+        {"metric": "bit_identical_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch HF weight name mismatches when importing to MLX",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unmapped_keys", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

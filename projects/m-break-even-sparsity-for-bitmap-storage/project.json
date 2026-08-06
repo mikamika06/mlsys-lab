@@ -1,0 +1,24 @@
+{
+  "id": "m-break-even-sparsity-for-bitmap-storage",
+  "title": "Break-even sparsity for bitmap storage",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Sparsity and pruning for edge formats",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["edge_prune/pruning.py", "edge_prune/storage.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-layer and global pruning masks", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<", "threshold": 0.01},
+               {"metric": "layer_ok", "op": "==", "threshold": 1},
+               {"metric": "global_ok", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Break-even sparsity and theoretical size", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<", "threshold": 0.01},
+               {"metric": "break_even_ok", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard: catching omitted bitmap overhead", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_missing_bitmap", "op": "==", "threshold": 1}]}
+  ]
+}

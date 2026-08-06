@@ -1,0 +1,45 @@
+{
+  "id": "m-isolate-the-fp16-nan-layer",
+  "title": "Isolate the fp16 NaN layer",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT precision modes & strongly typed networks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "engine.py",
+    "transform.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Evaluate and isolate the NaN layer",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "invalid_layer_matches", "op": "==", "threshold": 1},
+        {"metric": "tensor_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Inject cast nodes for fp32 islands",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "graph_structure", "op": "==", "threshold": 1},
+        {"metric": "max_abs_err", "op": "<", "threshold": 0.005}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for cast injection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_cast", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

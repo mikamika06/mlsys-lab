@@ -13,7 +13,7 @@ For a dataset $X \in \mathbb{R}^{n \times d}$ with labels $y$, the LOO predictio
 Implement `loo_knn_predict(X, y, k, n_classes)`:
 
 ```python
-def loo_knn_predict(X: np.ndarray, y: np.ndarray, k: int, n_classes: int) -> np.ndarray:
+def loo_knn_predict(X: list[list[float]], y: list[int], k: int, n_classes: int) -> list[int]:
     ...
 ```
 
@@ -23,20 +23,19 @@ The function receives:
 - `k`: the number of neighbors to use.
 - `n_classes`: the number of possible classes.
 
-Return an integer NumPy array of shape $(n,)$ containing the LOO kNN predictions.
+Return an integer list of shape $(n,)$ containing the LOO kNN predictions.
 
-The implementation must exclude each sample from its own neighbor search. Use NumPy operations rather than fitting an external model.
+The implementation must exclude each sample from its own neighbor search. Use Python operations rather than fitting an external model.
 
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[0.0, 0.0],
+X = [[0.0, 0.0],
               [0.1, 0.0],
               [2.0, 2.0],
-              [2.1, 2.0]])
-y = np.array([0, 0, 1, 1])
+              [2.1, 2.0]]
+y = [0, 0, 1, 1]
 
 pred = loo_knn_predict(X, y, 1, 2)
 # array([0, 0, 1, 1])
@@ -44,6 +43,6 @@ pred = loo_knn_predict(X, y, 1, 2)
 
 ## What the gate checks
 
-The gate computes a reference LOO kNN implementation directly from NumPy operations. It compares the submitted predictions against the oracle predictions using `argmax_agreement`.
+The gate computes a reference LOO kNN implementation directly from Python operations. It compares the submitted predictions against the oracle predictions using `argmax_agreement`.
 
 A prediction array passes only when the fraction of matching predicted classes is $1.0$. Cases include duplicate points and values where accidentally keeping the zero self-distance changes the result.

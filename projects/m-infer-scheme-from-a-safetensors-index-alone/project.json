@@ -1,0 +1,22 @@
+{
+  "id": "m-infer-scheme-from-a-safetensors-index-alone",
+  "title": "Infer scheme from a safetensors index alone",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "compressed-tensors checkpoint format",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ctinspect/scheme.py", "ctinspect/repair.py", "ctinspect/calc.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Infer quantization scheme from index alone", "check": "harness/m1.py",
+     "gates": [{"metric": "schemes_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Repair missing weight_shape and compute byte sizes", "check": "harness/m2.py",
+     "gates": [{"metric": "repairs_matched", "op": "==", "threshold": 1},
+               {"metric": "bytes_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test suite catches broken weight_shape restoration", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_repair", "op": "==", "threshold": 1}]}
+  ]
+}

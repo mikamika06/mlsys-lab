@@ -1,0 +1,7 @@
+An edge deployment pipeline targeting Apple Silicon via PyTorch's MPS backend is experiencing sudden, erratic execution stalls and severe performance degradation when running specific transformer models. While most layers execute smoothly and efficiently on the GPU, execution profiling reveals unpredictable latency spikes during certain forward pass operations.
+
+Investigation shows that certain custom tensor manipulations and unsupported operators are falling back to the CPU silently. When these operations occur, data must be transferred back and forth between host system memory and the GPU device memory across the unified memory bus, incurring massive synchronization overhead and latency penalties.
+
+Without explicit isolation, it is difficult to identify which specific operations trigger these CPU fallback events. Furthermore, changing environment variables related to fallback behavior either masks the issue by allowing silent, unoptimized execution paths or triggers hard application crashes without providing diagnostic insight into the offending code paths.
+
+Your task is to build a diagnostic and optimization utility that identifies CPU fallback operators in a model using torch.profiler device-copy events, measures the performance impact and latency cliff between fallback and native MPS execution, and implements a safety net regression test to prevent silent fallbacks from returning in future iterations.

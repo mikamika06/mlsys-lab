@@ -1,0 +1,8 @@
+# Incident Ticket: CUDA Out-Of-Memory During Large-Scale Fine-Tuning Runs
+
+**Symptom Description:**
+Our distributed fine-tuning cluster is experiencing intermittent, catastrophic CUDA Out-Of-Memory (OOM) failures during long training jobs. Specifically, runs across multiple nodes abort abruptly after several hundred steps with standard PyTorch `RuntimeError: CUDA out of memory` exceptions, despite monitoring tools showing aggregate GPU memory utilization hovering well below 95% total capacity prior to the crash.
+
+Engineers report that these crashes do not correlate with predictable batch size increases or sequence length spikes. Instead, jobs fail seemingly at random points during backward passes or optimizer step allocations. Attempts to simply reduce the per-device batch size have failed to resolve the underlying instability, only pushing the crash event further down the training timeline. Furthermore, standard allocator logs dump dense blocks of memory statistics, fragmentation metrics, and allocation traceback addresses, but our current operations tooling cannot automatically parse these raw diagnostic dumps to extract actionable root causes.
+
+We urgently require a robust, programmatic diagnostic toolkit integrated directly into our low-level runtime pipeline. This utility must ingest raw OOM crash dumps, parse memory allocation snapshots, analyze fragmentation states, identify peak allocation sites from historical logs, and accurately extrapolate pre-OOM memory trends to predict the exact failure step before crashes occur. Resolving this visibility gap is critical to maintaining high cluster utilization and preventing aborted training runs.

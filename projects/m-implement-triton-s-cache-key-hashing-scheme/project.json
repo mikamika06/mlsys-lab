@@ -1,0 +1,21 @@
+{
+  "id": "m-implement-triton-s-cache-key-hashing-scheme",
+  "title": "Triton Cache-Key Hashing Scheme and Latency/Memory Telemetry",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Triton Response Cache",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tcache/hashing.py", "tcache/metrics.py", "tcache/safety.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Implement Triton's Cache-Key Hashing Scheme", "check": "harness/m1.py",
+     "gates": [{"metric": "hashes_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compute Latency Savings and Memory Cost From Recorded Counters", "check": "harness/m2.py",
+     "gates": [{"metric": "metrics_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: flag unsafe model configs for response caching", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unsafe_config", "op": "==", "threshold": 1}]}
+  ]
+}

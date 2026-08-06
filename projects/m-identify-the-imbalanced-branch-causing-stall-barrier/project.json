@@ -1,0 +1,21 @@
+{
+  "id": "m-identify-the-imbalanced-branch-causing-stall-barrier",
+  "title": "Identify the imbalanced branch causing stall_barrier",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "warp-stall-reasons-and-scheduler-stats",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["stallprof/analyzer.py", "stallprof/verifier.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify the imbalanced branch from warp stats", "check": "harness/m1.py",
+     "gates": [{"metric": "branch_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Verify synchronization removal drop against speedup", "check": "harness/m2.py",
+     "gates": [{"metric": "verification_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for stall verification", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

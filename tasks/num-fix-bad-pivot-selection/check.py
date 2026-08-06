@@ -9,7 +9,7 @@ def _bad_matrix(n, seed, tiny):
     signs = rng.choice([-1.0, 1.0], size=(n, n))
     A = rng.uniform(0.5, 2.0, size=(n, n)) * signs
     A[0, 0] = tiny
-    return A
+    return A.tolist()
 
 
 def _structure_ok(P, U, L, n):
@@ -39,7 +39,7 @@ def _structure_ok(P, U, L, n):
 
 
 def grade(sol, fx) -> dict:
-    cases = [np.asarray(fx["A"], dtype=np.float64)]
+    cases = [fx["A"]]
     # extra, independently generated ill-scaled matrices (different size,
     # tiny magnitude and sign) so a fix that only special-cases the fixture
     # values cannot pass.
@@ -47,10 +47,11 @@ def grade(sol, fx) -> dict:
     cases.append(_bad_matrix(9, seed=42, tiny=-6.1e-12))
 
     worst_err = 0.0
-    for A in cases:
+    for A_list in cases:
+        A = np.asarray(A_list, dtype=np.float64)
         n = A.shape[0]
         try:
-            out = sol.lu_partial_pivot(A)
+            out = sol.lu_partial_pivot(A_list)
             P, L, U = out[0], out[1], out[2]
         except Exception:
             return {"max_abs_err": float("inf")}

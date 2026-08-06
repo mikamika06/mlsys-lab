@@ -1,29 +1,64 @@
-import numpy as np
+import math
 
-def _silu(x):
+def _silu(x: float) -> float:
     """Sigmoid‑linear unit."""
-    return x / (1.0 + np.exp(-x))
+    return x / (1.0 + math.exp(-x))
 
 def swiglu(
-    X: np.ndarray,
-    W_gate: np.ndarray,
-    W_up: np.ndarray,
-    b_gate: np.ndarray | None = None,
-    b_up: np.ndarray | None = None
-) -> np.ndarray:
+    X: list[list[float]],
+    W_gate: list[list[float]],
+    W_up: list[list[float]],
+    b_gate: list[float] | None = None,
+    b_up: list[float] | None = None
+) -> list[list[float]]:
     """
-    Compute the SwiGLU activation.
+    Compute the SwiGLU activation using plain Python lists and loops.
 
     Parameters
     ----------
-    X : (n, d_in) array of inputs.
+    X : (n, d_in) list of inputs.
     W_gate, W_up : weight matrices of shape (d_in, d_out).
     b_gate, b_up : optional bias vectors of length d_out; treated as zero if None.
 
     Returns
     -------
-    Y : (n, d_out) array of SwiGLU outputs.
+    Y : (n, d_out) list of SwiGLU outputs.
     """
-    gate = X @ W_gate + (b_gate if b_gate is not None else 0.0)
-    up   = X @ W_up   + (b_up   if b_up   is not None else 0.0)
-    return gate * _silu(up)
+    n = len(X)
+    d_in = len(X[0])
+    d_out = len(W_gate[0])
+
+    gate = []
+    for i in range(n):
+        row = []
+        for j in range(d_out):
+            val = 0.0
+            for k in range(d_in):
+                val += X[i][k] * W_gate[k][j]
+            if b_gate is not None:
+                val += b_gate[j]
+            row.append(val)
+        gate.append(row)
+
+    up = []
+    for i in range(n):
+        row = []
+        for j in range(d_out):
+            val = 0.0
+            for k in range(d_in):
+                val += X[i][k] * W_up[k][j]
+            if b_up is not None:
+                val += b_up[j]
+            row.append(val)
+        up.append(row)
+
+    Y = []
+    for i in range(n):
+        row = []
+        for j in range(d_out):
+            g_val = gate[i][j]
+            u_val = _silu(up[i][j])
+            row.append(g_val * u_val)
+        Y.append(row)
+
+    return Y

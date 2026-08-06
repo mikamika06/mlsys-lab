@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def log_softmax(x: np.ndarray) -> np.ndarray:
+def log_softmax(x: list[list[float]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

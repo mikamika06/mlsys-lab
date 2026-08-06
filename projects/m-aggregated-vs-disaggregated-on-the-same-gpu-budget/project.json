@@ -1,0 +1,68 @@
+{
+  "id": "m-aggregated-vs-disaggregated-on-the-same-gpu-budget",
+  "title": "Aggregated vs Disaggregated Serving on the Same GPU Budget",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "disaggregated-prefill-and-kv-transfer",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "disagg/simulator.py",
+    "disagg/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate aggregated vs disaggregated serving dynamics",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "simulation_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Evaluate latency ratios under identical GPU budget",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "latency_ratio",
+          "op": ">=",
+          "threshold": 0.8
+        },
+        {
+          "metric": "metrics_valid",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching zero-overhead disaggregation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_zero_transfer_bug",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,6 @@
-import numpy as np
+import math
 
-def compare_pi_ntk(base_logits: np.ndarray, pi_logits: np.ndarray, ntk_logits: np.ndarray) -> tuple[float, float]:
+def compare_pi_ntk(base_logits: list[list[float]],
+                   pi_logits: list[list[float]],
+                   ntk_logits: list[list[float]]) -> tuple[float, float]:
     raise NotImplementedError('your code here')

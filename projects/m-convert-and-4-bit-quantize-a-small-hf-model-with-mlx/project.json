@@ -1,0 +1,64 @@
+{
+  "id": "m-convert-and-4-bit-quantize-a-small-hf-model-with-mlx",
+  "title": "Convert, quantize, and serve verification for small MLX models",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "mlx-lm CLI workflow (convert / quantize / generate / server)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mlxflow/convert.py",
+    "mlxflow/bench.py",
+    "mlxflow/server_check.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parameterize model conversion and 4-bit quantization",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute token generation throughput ratios",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ratio_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for schema validation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_schema",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

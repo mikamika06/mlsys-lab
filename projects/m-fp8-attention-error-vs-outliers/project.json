@@ -1,0 +1,64 @@
+{
+  "id": "m-fp8-attention-error-vs-outliers",
+  "title": "FP8 attention error, outliers, and Hadamard processing on Hopper",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "fp8-and-low-precision-attention",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "fp8att/analysis.py",
+    "fp8att/hadamard.py",
+    "fp8att/hopper.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantization error and relative error metrics against bf16",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.05
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Hadamard incoherence transformation for outlier suppression",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "incoherence_score",
+          "op": ">=",
+          "threshold": 0.9
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching faulty transforms",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_transform",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

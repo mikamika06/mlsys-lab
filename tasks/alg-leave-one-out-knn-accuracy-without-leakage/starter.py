@@ -1,4 +1,2 @@
-import numpy as np
-
-def loo_knn_predict(X: np.ndarray, y: np.ndarray, k: int, n_classes: int) -> np.ndarray:
+def loo_knn_predict(X: list[list[float]], y: list[int], k: int, n_classes: int) -> list[int]:
     raise NotImplementedError('your code here')

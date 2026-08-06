@@ -1,0 +1,26 @@
+{
+  "id": "m-activation-memory-tp-only-vs-tp-sp",
+  "title": "Sequence parallelism in TP regions",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Sequence parallelism in TP regions (Megatron SP)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tp_sp/memory.py", "tp_sp/forward.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Memory and communication profiling", "check": "harness/m1.py",
+     "gates": [{"metric": "mem_err", "op": "<", "threshold": 0.01},
+               {"metric": "comm_err", "op": "<", "threshold": 0.01}]},
+    {"n": 2, "title": "Toy SP forward operations", "check": "harness/m2.py",
+     "gates": [{"metric": "ag_ok", "op": "==", "threshold": 1},
+               {"metric": "rs_ok", "op": "==", "threshold": 1},
+               {"metric": "fw_tp_ok", "op": "==", "threshold": 1},
+               {"metric": "fw_sp_ok", "op": "==", "threshold": 1},
+               {"metric": "sp_matches_tp", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard invariants test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_memory_bug", "op": "==", "threshold": 1}]}
+  ]
+}

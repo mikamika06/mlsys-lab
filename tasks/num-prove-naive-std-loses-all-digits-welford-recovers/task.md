@@ -36,11 +36,11 @@ bounded by $O(u)$ regardless of how large $\mu$ is.
 Implement:
 
 ```python
-def pathological_variance_input() -> np.ndarray:
+def pathological_variance_input() -> list[float]:
     ...
 ```
 
-Construct and return a 1-D NumPy array `x` (at least 8 elements, all finite)
+Construct and return a list of floats `x` (at least 8 elements, all finite)
 with an **honest, non-degenerate variance** (say $\operatorname{Var}(X)
 \approx 1$, not exactly $0$) chosen so that on `x`:
 
@@ -56,12 +56,11 @@ here, you are constructing the counterexample.
 ## Example
 
 ```python
-import numpy as np
 
 x = pathological_variance_input()
-mean = np.mean(x)
-naive_var = np.mean(x**2) - mean**2          # catastrophically wrong
-# a properly centered computation, e.g. np.mean((x - mean)**2) or Welford,
+mean = sum(x) / len(x)
+naive_var = sum(val**2 for val in x) / len(x) - mean**2 # catastrophically wrong
+# a properly centered computation, e.g. sum((val - mean)2 for val in x) / len(x) or Welford,
 # stays close to the true variance
 ```
 

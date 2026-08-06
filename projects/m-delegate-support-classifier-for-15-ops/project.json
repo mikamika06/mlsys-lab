@@ -1,0 +1,21 @@
+{
+  "id": "m-delegate-support-classifier-for-15-ops",
+  "title": "Delegate support classifier, zero-node postmortem, and partition cost model",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Delegates, accelerators and op partitioning (Android)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["delpipeline/classifier.py", "delpipeline/postmortem.py", "delpipeline/costmodel.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Delegate support classifier for 15 ops", "check": "harness/m1.py",
+     "gates": [{"metric": "classifier_match", "op": ">=", "threshold": 1.0}]},
+    {"n": 2, "title": "Zero-node delegation postmortem", "check": "harness/m2.py",
+     "gates": [{"metric": "postmortem_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: partition cost regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_cost", "op": "==", "threshold": 1}]}
+  ]
+}

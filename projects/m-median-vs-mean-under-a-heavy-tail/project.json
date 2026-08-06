@@ -1,0 +1,44 @@
+{
+  "id": "m-median-vs-mean-under-a-heavy-tail",
+  "title": "Median vs mean under a heavy tail",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "benchmark-methodology",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bench/metrics.py",
+    "bench/warmup.py",
+    "bench/sync.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Robust central tendency under heavy tails",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "median_accuracy", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantifying warm-up inflation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "warmup_inflation_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid timing agreements",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_sync", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

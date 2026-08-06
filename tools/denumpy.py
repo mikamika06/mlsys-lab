@@ -676,7 +676,13 @@ def rebuild_starter(old_starter, reference):
     m = re.search(r"^def\s+\w+\s*\([^)]*\)\s*(?:->[^:]+)?:\s*\n(\s+(?:\"\"\"|\'\'\')(?:.|\n)*?(?:\"\"\"|\'\'\'))",
                   old_starter or "", re.M)
     if m:
+        # The docstring is inherited from the starter the learner had, and it
+        # describes the arguments — "a 1-D NumPy array of float64" — so it needs
+        # the same substitutions the statement gets, or numpy survives in the
+        # one file the learner opens first.
         doc = m.group(1).rstrip() + "\n"
+        for pat, rep in CTOR + PROSE:
+            doc = pat.sub(rep, doc)
     head = ""
     for line in (reference or "").split("\n"):
         if line.startswith("def "):

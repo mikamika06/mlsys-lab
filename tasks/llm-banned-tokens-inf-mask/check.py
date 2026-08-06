@@ -10,10 +10,10 @@ def _reference(logits, banned):
 
 def grade(sol, fx) -> dict:
     cases = [
-        (np.array([0.5, -1.2, 3.4]), [1, 2]),
-        (np.array([[0.5, -1.2, 3.4], [1.0, 0.0, -0.5]]), [1, 2]),
-        (np.array([1.0, 2.0, 3.0]), []),
-        (np.array([[1.0, 2.0], [3.0, 4.0]]), [0]),
+        ([0.5, -1.2, 3.4], [1, 2]),
+        ([[0.5, -1.2, 3.4], [1.0, 0.0, -0.5]], [1, 2]),
+        ([1.0, 2.0, 3.0], []),
+        ([[1.0, 2.0], [3.0, 4.0]], [0]),
     ]
     ok = 1.0
     for logits, banned in cases:
@@ -21,8 +21,8 @@ def grade(sol, fx) -> dict:
             got = sol.mask_banned_tokens(logits, banned)
         except Exception:
             return {"exact_match": 0.0}
-        expected = _reference(logits, banned)
-        if not np.array_equal(got, expected):
+        expected = _reference(np.array(logits), banned)
+        if not np.array_equal(np.array(got), expected):
             ok = 0.0
             break
     return {"exact_match": ok}

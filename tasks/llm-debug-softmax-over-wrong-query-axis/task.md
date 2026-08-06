@@ -14,28 +14,27 @@ The softmax must be applied over the **key** dimension $N_k$ (the last axis of t
 Implement `sdpa(query, key, value, scale=None)`:
 
 ```python
-def sdpa(query: np.ndarray,
-         key: np.ndarray,
-         value: np.ndarray,
-         scale: float | None = None) -> np.ndarray:
+def sdpa(query: list[list[list[float]]],
+         key: list[list[list[float]]],
+         value: list[list[list[float]]],
+         scale: float | None = None) -> list[list[list[float]]]:
     ...
 ```
 
-* `query`, `key` and `value` are 3‑D NumPy arrays with shapes  
+* `query`, `key` and `value` are 3‑D list with shapes  
   $(B, N_q, d_k)$, $(B, N_k, d_k)$ and $(B, N_k, d_v)$ respectively.
 * If `scale` is `None`, use the default scaling factor $1/\sqrt{d_k}$.
-* Return a NumPy array of shape $(B, N_q, d_v)$ containing the attention output.
+* Return a list of shape $(B, N_q, d_v)$ containing the attention output.
 
 The implementation must be fully vectorised; no explicit Python loops over batch or sequence indices are allowed.  The function should raise a `ValueError` if the input shapes are incompatible.
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[[1., 0.], [0., 1.]]])          # shape (1,2,2)
-K = np.array([[[1., 0.], [0., 1.], [1., 1.]]])# shape (1,3,2)
-V = np.array([[[1., 0.], [0., 1.], [1., 1.]]])# shape (1,3,2)
+Q = [[[1., 0.], [0., 1.]]]          # shape (1,2,2)
+K = [[[1., 0.], [0., 1.], [1., 1.]]]# shape (1,3,2)
+V = [[[1., 0.], [0., 1.], [1., 1.]]]# shape (1,3,2)
 
 out = sdpa(Q, K, V)
 print(out.shape)   # (1, 2, 2)
@@ -48,7 +47,7 @@ The output should be a $(2\times 2)$ matrix of attention values.
 
 Two metrics are evaluated:
 
-* **max_abs_err** – the maximum absolute difference between your result and a NumPy reference implementation.  
+* **max_abs_err** – the maximum absolute difference between your result and a Python reference implementation.  
   The gate requires `max_abs_err <= 1e-6`.
 
-The grader uses a real NumPy oracle to compute the reference, so any hard‑coded expected values will not pass.
+The grader uses a real Python oracle to compute the reference, so any hard‑coded expected values will not pass.

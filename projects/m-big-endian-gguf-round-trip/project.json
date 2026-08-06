@@ -1,0 +1,46 @@
+{
+  "id": "m-big-endian-gguf-round-trip",
+  "title": "Big-endian GGUF round-trip and zero-copy extraction",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-container-format",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "gguf_be/writer.py",
+    "gguf_be/reader.py",
+    "gguf_be/zero_copy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Header and KV metadata big-endian round-trip",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "metadata_exact", "op": "==", "threshold": 1},
+        {"metric": "byte_exact_fraction", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Tensor alignment and zero-copy extraction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "zero_copy_exact", "op": "==", "threshold": 1},
+        {"metric": "byte_exact_fraction", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches tensor offset misalignment",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_offset_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

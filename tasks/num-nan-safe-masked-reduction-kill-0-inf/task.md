@@ -17,11 +17,11 @@ the entire sum becomes NaN — even though the offending infinity was supposed
 to be excluded.
 
 The standard fix replaces the multiply-mask with an explicit selection that
-never forms the forbidden product. Two idiomatic NumPy alternatives are:
+never forms the forbidden product. Two idiomatic Python alternatives are:
 
 * **Fancy indexing** — `data[mask]` extracts only the selected elements before
   reduction, so masked-out values never participate.
-* **`np.where`** — `np.where(mask, data, 0.0)` substitutes `0.0` (a finite
+* **Conditional selection** — substituting `0.0` (a finite
   value) for every unmasked position, producing a clean sum without any
   $0 \times \infty$ intermediate.
 
@@ -30,7 +30,7 @@ never forms the forbidden product. Two idiomatic NumPy alternatives are:
 Fix the function `masked_sum` in `starter.py`:
 
 ```python
-def masked_sum(data: np.ndarray, mask: np.ndarray) -> float:
+def masked_sum(data: list[float], mask: list[bool]) -> float:
     ...
 ```
 
@@ -45,10 +45,9 @@ pattern with a NaN-safe alternative.
 ## Example
 
 ```python
-import numpy as np
 
-data = np.array([1.0, np.inf, 3.0])
-mask = np.array([True, False, True])
+data = [1.0, float('inf'), 3.0]
+mask = [True, False, True]
 masked_sum(data, mask)   # → 4.0   (not NaN!)
 ```
 
@@ -58,7 +57,7 @@ The buggy starter returns `NaN` because `False * inf` evaluates to
 ## What the gate checks
 
 One gate — **exact_match**. The returned float must equal the reference result
-computed by `np.sum(data[mask])` across all test cases. The suite covers:
+computed by `sum(d for d, m in zip(data, mask) if m)` across all test cases. The suite covers:
 basic finite sums, masked-out infinities (the $0 \times \infty$ trap),
 NaN propagation from masked-in values, mixed special values, and empty
 reductions where every position is masked out.

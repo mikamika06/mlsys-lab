@@ -1,6 +1,5 @@
-import numpy as np
+import math
 
 def stable_softmax(logits):
     """Compute softmax along the last axis, numerically stable."""
-    e = np.exp(logits)
-    return e / np.sum(e, axis=-1, keepdims=True)
+    raise NotImplementedError('your code here')

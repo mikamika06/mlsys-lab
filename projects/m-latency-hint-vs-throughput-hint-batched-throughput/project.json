@@ -1,0 +1,23 @@
+{
+  "id": "m-latency-hint-vs-throughput-hint-batched-throughput",
+  "title": "CPU Inference Hints and Scheduling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "Performance hints & stream/thread scheduling",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["cpuhints/scheduler.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Cache directory and stream configuration", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": "==", "threshold": 1},
+               {"metric": "cache_speedup", "op": ">=", "threshold": 10}]},
+    {"n": 2, "title": "Batched throughput estimation", "check": "harness/m2.py",
+     "gates": [{"metric": "throughput_match", "op": "==", "threshold": 1},
+               {"metric": "throughput_ratio", "op": ">=", "threshold": 1.5}]},
+    {"n": 3, "title": "Safety net: throughput scaling invariant", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_config", "op": "==", "threshold": 1}]}
+  ]
+}

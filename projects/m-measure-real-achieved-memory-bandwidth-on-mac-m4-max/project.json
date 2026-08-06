@@ -1,0 +1,39 @@
+{
+  "id": "m-measure-real-achieved-memory-bandwidth-on-mac-m4-max",
+  "title": "Real memory bandwidth and empirical roofline on Mac M4 Max",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "roofline-in-practice-real-kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "macroofline/bandwidth.py",
+    "macroofline/roofline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure achieved bandwidth and peak efficiency",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-4}]
+    },
+    {
+      "n": 2,
+      "title": "Fit empirical roofline across matmul AI regimes",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-4}]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for knee point and memory bound classification",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_inverted_roofline", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

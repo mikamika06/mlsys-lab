@@ -29,7 +29,7 @@ def grade(sol, fx) -> dict:
     sequential_error = _rel_err(_sequential_sum(values), reference)
 
     try:
-        candidate = np.float32(sol.tree_sum(values))
+        candidate = float(sol.tree_sum(values.tolist()))
     except Exception:
         return {"rel_err": 1.0}
 

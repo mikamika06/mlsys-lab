@@ -1,0 +1,22 @@
+{
+  "id": "m-compute-kv-transfer-bytes-per-request-and-time-at-25",
+  "title": "KV transfer bytes, network time, break-even, and sizing for disaggregated serving",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "disaggregated-prefill-decode-and-kv-connectors",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kvtransfer/transfer.py", "kvtransfer/breakeven.py", "kvtransfer/sizing.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute KV transfer bytes and transfer time", "check": "harness/m1.py",
+     "gates": [{"metric": "bytes_and_time_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Break-even prompt length and prefill-to-decode ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "breakeven_match", "op": "==", "threshold": 1},
+               {"metric": "sizing_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for transfer and sizing invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_logic", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,9 @@
+# Ticket #8492: Sudden Throughput Degradation and Latency Spikes in Triton Inference Server Pool
+
+## Symptom Description
+Over the past 48 hours, the Triton inference serving cluster deployed in production has experienced intermittent, severe throughput drops accompanied by dramatic latency inflation at the P99 level. On-call engineers noticed that client inference requests are taking significantly longer to complete end-to-end, yet GPU utilization metrics reported by Prometheus show erratic and counterintuitive patterns—sometimes peaking near 100% while request completion rates plummet, and other times sitting at surprisingly low levels despite a massive backlog of pending requests accumulating in the server-side inference queue.
+
+Initial high-level dashboards indicate that end-to-end request latency has more than tripled, but standard infrastructure monitoring fails to clarify whether requests are stalling due to client-side network bottlenecks, excessive time spent waiting in the server-side dynamic batching queue, or internal kernel execution slowdowns on the underlying hardware accelerators. Furthermore, operators are unable to quantify the effective batching efficiency ratio from raw Prometheus scrape logs, making it impossible to determine if the dynamic batcher is successfully grouping concurrent requests or if requests are executing sequentially in isolation.
+
+## Requirements
+We need a programmatic toolkit to parse raw Prometheus dump logs, compute the true batching efficiency ratio against configured maximum limits, decompose end-to-end request latency into distinct queueing versus execution time fractions, and automatically diagnose whether a given throughput drop stems from an inflated queueing delay or degraded compute execution time. This module must operate deterministically on mock or recorded metrics dumps without relying on live network scrapers or external runtime dependencies.

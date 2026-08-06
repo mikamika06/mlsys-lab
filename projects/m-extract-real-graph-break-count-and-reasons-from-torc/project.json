@@ -1,0 +1,64 @@
+{
+  "id": "m-extract-real-graph-break-count-and-reasons-from-torc",
+  "title": "Extract real graph-break count and reasons from torch.compile PEFT",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "torch-compile-peft-interactions",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "peftcomp/analyzer.py",
+    "peftcomp/warmup.py",
+    "peftcomp/recompile.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract graph breaks and reasons from dynamo explain",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "breaks_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure real warmup cost as compile vs cached gap",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "warmup_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Verify sequence length trigger and repeat non-recompilation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_recompile",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

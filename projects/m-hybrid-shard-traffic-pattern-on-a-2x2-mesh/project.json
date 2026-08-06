@@ -1,0 +1,40 @@
+{
+  "id": "m-hybrid-shard-traffic-pattern-on-a-2x2-mesh",
+  "title": "Hybrid Shard Traffic Pattern on a 2x2 Mesh",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP sharding strategies & wrap-policy granularity",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mesh/traffic.py",
+    "mesh/policy.py",
+    "mesh/strategy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "HYBRID_SHARD Traffic Pattern on a 2x2 Mesh",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "traffic_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose a Misconfigured Wrap Policy",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "policies_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 3,
+      "title": "Choosing a Strategy Under a Memory Budget",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_suboptimal_strategy", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

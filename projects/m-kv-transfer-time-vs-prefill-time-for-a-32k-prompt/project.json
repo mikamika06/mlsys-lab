@@ -1,0 +1,47 @@
+{
+  "id": "m-kv-transfer-time-vs-prefill-time-for-a-32k-prompt",
+  "title": "KV transfer time vs prefill time for a 32k prompt",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "disaggregated-prefill-and-kv-transfer",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "disagg/transfer.py",
+    "disagg/sizing.py",
+    "disagg/sim.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "KV cache size and transfer time vs prefill time",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "transfer_rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "prefill_rel_err", "op": "<=", "threshold": 0.001}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "P:D replica sizing and pipeline simulator",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ratio_rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "sim_rel_err", "op": "<=", "threshold": 0.001}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for transfer and sizing invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_halved_kv_size", "op": "==", "threshold": 1},
+        {"metric": "catches_ignored_transfer", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "m-artifact-sharing-across-a-deployment-matrix",
+  "title": "Artifact sharing across a deployment matrix",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Production deployment: serving, cold start, CI engine builds, batching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "matrix/artifact.py",
+    "matrix/slo.py",
+    "matrix/canary.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Artifact sharing across a deployment matrix",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "matrix_resolved",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "cache_hit_ratio",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Instance count for a p99 SLO",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "instances_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "slo_satisfied",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression canary gate",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_layout_regression",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

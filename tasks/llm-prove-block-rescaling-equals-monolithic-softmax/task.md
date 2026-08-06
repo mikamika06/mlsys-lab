@@ -41,28 +41,27 @@ Thus a correct block‑wise implementation must:
 Implement the function
 
 ```python
-def block_rescale_softmax(logits: np.ndarray, block_size: int) -> np.ndarray:
+def block_rescale_softmax(logits: list[float], block_size: int) -> list[float]:
     ...
 ```
 
-It takes a 1‑D NumPy array of logits and an integer `block_size`.  
+It takes a 1‑D list of logits and an integer `block_size`.  
 Return a 1‑D array of softmax probabilities with dtype `float64`.  
-The implementation must use only NumPy operations; the only Python loop allowed is to iterate over blocks.
+The implementation must use only Python operations; the only Python loop allowed is to iterate over blocks.
 
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([0.2, -1.5, 3.0, 0.7])
+logits = [0.2, -1.5, 3.0, 0.7]
 D = block_rescale_softmax(logits, block_size=2)
 # D ≈ [0.0144, 0.0006, 0.9838, 0.0012]
 ```
 
-The result matches `np.exp(logits - np.max(logits)) / np.sum(np.exp(logits - np.max(logits)))` to machine precision.
+The result matches `[math.exp(x - max(logits)) / sum(math.exp(x - max(logits)) for x in logits) for x in logits]` to machine precision.
 
 ## What the gate checks
 
-The grader computes a reference softmax using NumPy and compares it with the candidate’s output for several random test cases and block sizes.  
+The grader computes a reference softmax using Python and compares it with the candidate’s output for several random test cases and block sizes.  
 It reports the maximum absolute error:
 
 $$\mathrm{err} = \max_i |\,\hat p_i - p_i\,|.$$

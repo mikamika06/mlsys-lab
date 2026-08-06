@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def softmax_streaming(logits: np.ndarray) -> np.ndarray:
+def softmax_streaming(logits: list[list[float]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

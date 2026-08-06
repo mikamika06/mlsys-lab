@@ -5,19 +5,19 @@ def generate():
     arr = np.array(arr, dtype=np.float32)
     np.random.seed(42)
     np.random.shuffle(arr)
-    return arr
+    return arr.tolist()
 
 def grade(sol, fx) -> dict:
     arr = generate()
     # Reference float64 sum
-    expected = np.sum(arr.astype(np.float64))
-    
+    expected = float(np.sum(np.array(arr, dtype=np.float64)))
+
     # Student's float32 compensated sum
     ans = sol.compensated_sum(arr)
-    
+
     # Relative error
     rel_err = abs(ans - expected) / max(abs(expected), 1e-15)
-    
+
     return {
         "rel_err": float(rel_err)
     }

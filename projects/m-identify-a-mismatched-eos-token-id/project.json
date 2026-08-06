@@ -1,0 +1,69 @@
+{
+  "id": "m-identify-a-mismatched-eos-token-id",
+  "title": "Identify a mismatched EOS token id",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-metadata-kv-schema",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_meta/eos.py",
+    "gguf_meta/context.py",
+    "gguf_meta/rope.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect mismatched EOS token IDs across metadata keys",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "detected_mismatches",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "In-place context length modification and RoPE scale decoding",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "context_updates_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "rope_decodes_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for metadata reconciliation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_ignored_tokenizer_eos",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

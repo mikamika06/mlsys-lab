@@ -1,0 +1,5 @@
+We have a major problem with our CPU MLPs crashing in production when deployed with `torch.compile`. The model runs perfectly fine in eager mode during training, but when we turn on `torch.compile`, it spits out a massive stack trace deep inside the inductor code. We do not know if the issue is in Dynamo failing to capture the graph properly, AOTAutograd failing during tracing, or Inductor failing during code generation. 
+
+We need an automated ablation tool that automatically ladders through the backends. It should evaluate the model using `eager`, `aot_eager`, and `inductor` backends, returning the prediction results for comparison so we can isolate exactly which layer of the compile stack is diverging or crashing. Additionally, we need to extract `dynamo.explain` metrics to see if graph breaks are causing silent fallbacks that mess up the expected tensor shapes.
+
+Finally, our logs contain raw string dumps of the FX `graph_code`. We need a script to parse these raw strings and rebuild the exact sequence of PyTorch operators that were scheduled for execution, so we can visually diff the operations against our expected eager execution path.

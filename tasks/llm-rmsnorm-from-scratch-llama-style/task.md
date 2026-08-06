@@ -10,19 +10,18 @@ where $\varepsilon$ is a small constant added for numerical stability (typically
 
 ## Task
 
-Implement the function `rmsnorm(x, weight, eps=1e-6)` that takes two NumPy arrays of identical shape and returns the RMS‑normalized result. The input may be any numeric dtype; the output should have the same dtype as the input.  Use only NumPy operations—no explicit Python loops.
+Implement the function `rmsnorm(x, weight, eps=1e-6)` that takes two list of identical shape and returns the RMS‑normalized result. The input may be any numeric dtype; the output should have the same dtype as the input.  Use only Python operations—no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
-x = np.array([1.0, 2.0, 3.0])
-w = np.array([0.5, 1.0, 1.5])
+x = [1.0, 2.0, 3.0]
+w = [0.5, 1.0, 1.5]
 y = rmsnorm(x, w)
-print(y)   # [0.40824829 0.81649658 1.22474487]
+print(y)  # [0.23145500014438916, 0.9258200005775566, 2.0830950012995024]
 ```
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares your output with it via the scorer `max_abs_err`.  The maximum absolute difference must be at most $10^{-6}$.  
+The grader computes a reference implementation using Python and compares your output with it via the scorer `max_abs_err`.  The maximum absolute difference must be at most $10^{-6}$.  
 Additionally, the Jacobian of the function is numerically estimated by central finite differences; its maximum absolute error compared to the analytic Jacobian (derived from the formula above) must not exceed $5\times10^{-5}$.

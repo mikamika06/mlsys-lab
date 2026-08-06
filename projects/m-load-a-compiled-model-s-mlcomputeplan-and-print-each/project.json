@@ -1,0 +1,22 @@
+{
+  "id": "m-load-a-compiled-model-s-mlcomputeplan-and-print-each",
+  "title": "Inspect MLComputePlan routing and ANE fallback reasons",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Core ML compute-unit routing & ANE profiling (MLComputePlan)",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["mlplan/plan.py", "mlplan/profile.py", "mlplan/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse compute plan and resolve op device dispatch", "check": "harness/m1.py",
+     "gates": [{"metric": "plans_parsed", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Compute device routing fractions and identify ANE rejections", "check": "harness/m2.py",
+     "gates": [{"metric": "fractions_match", "op": "==", "threshold": 1},
+               {"metric": "rejections_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches unhandled ANE rejections", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ignored_rejections", "op": "==", "threshold": 1}]}
+  ]
+}

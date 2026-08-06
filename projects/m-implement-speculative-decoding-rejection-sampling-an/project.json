@@ -1,0 +1,23 @@
+{
+  "id": "m-implement-speculative-decoding-rejection-sampling-an",
+  "title": "Speculative Decoding Rejection Sampling and Speedup Optimization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Speculative Decoding in Serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["specdec/sampling.py", "specdec/metrics.py", "specdec/optimize.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Implement rejection sampling and verify distribution match", "check": "harness/m1.py",
+     "gates": [{"metric": "sampling_correct", "op": "==", "threshold": 1},
+               {"metric": "dist_mse", "op": "<=", "threshold": 0.005}]},
+    {"n": 2, "title": "Compute realized vs theoretical speedup from acceptance traces", "check": "harness/m2.py",
+     "gates": [{"metric": "speedup_match", "op": "==", "threshold": 1},
+               {"metric": "trace_metrics_exact", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Optimize draft horizon k and write regression safeguards", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_suboptimal_k", "op": "==", "threshold": 1}]}
+  ]
+}

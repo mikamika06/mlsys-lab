@@ -1,8 +1,8 @@
 ## Context
 
-When a tensor of shape $s$ is used in a NumPy broadcasting expression, it can
+When a tensor of shape $s$ is used in a Python broadcasting expression, it can
 end up implicitly stretched to some larger shape $f$ (the "full" shape of the
-expression's output). NumPy's broadcasting rule aligns the two shapes on the
+expression's output). Python's broadcasting rule aligns the two shapes on the
 **right** and does two things to go from $s$ to $f$:
 
 1. It inserts brand-new **leading** axes on the left whenever $f$ has more
@@ -28,10 +28,10 @@ def unbroadcast(grad, shape):
     array with exactly `len(shape)` dimensions, equal to `shape`."""
 ```
 
-* `grad` — a NumPy array with the "full", already-broadcasted shape.
+* `grad` — a list with the "full", already-broadcasted shape.
 * `shape` — a tuple (possibly empty, for a scalar) giving the original,
   pre-broadcast shape. `grad.shape` broadcasts from `shape` by ordinary
-  NumPy rules.
+  Python rules.
 
 Handle **both** kinds of axes uniformly and correctly, including cases with
 several extra leading dimensions *and* several interior/trailing size-1
@@ -41,8 +41,7 @@ dimensions and shape equal to `shape` — not merely the same total size.
 ## Example
 
 ```python
-import numpy as np
-grad = np.arange(24.0).reshape(2, 3, 4)   # broadcasted shape (2, 3, 4)
+grad = [[[float(i + j + k) for k in range(4)] for j in range(0, 12, 4)] for i in range(0, 24, 12)] # broadcasted shape (2, 3, 4)
 out = unbroadcast(grad, (1, 4))           # original shape had a leading
                                            # broadcast dim AND a size-1 dim
 # out.shape == (1, 4)
@@ -57,7 +56,7 @@ $$
 \mathrm{max\_abs\_err} = \max \left| \text{unbroadcast}(g, s) - \text{oracle}(g, s) \right|
 $$
 
-against an independent NumPy reference, over eleven `(full_shape, shape)`
+against an independent Python reference, over eleven `(full_shape, shape)`
 pairs covering: no broadcast at all, a single extra leading dimension,
 multiple extra leading dimensions, interior and trailing size-1 dimensions,
 combinations of leading dims with interior size-1 dims, and reduction all

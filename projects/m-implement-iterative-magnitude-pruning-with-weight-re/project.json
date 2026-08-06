@@ -1,0 +1,43 @@
+{
+  "id": "m-implement-iterative-magnitude-pruning-with-weight-re",
+  "title": "Iterative magnitude pruning with weight rewinding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Iterative pruning & the lottery ticket hypothesis",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "prune/imp.py",
+    "prune/sweep.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Iterative magnitude pruning and weight rewinding",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "imp_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Pruning-round sweep to find the sparsity cliff",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "sweep_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid mask updates",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_masks", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

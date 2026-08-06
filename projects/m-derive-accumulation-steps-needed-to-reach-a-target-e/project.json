@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-accumulation-steps-needed-to-reach-a-target-e",
+  "title": "Gradient accumulation steps, magnitude scaling, and memory invariants",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "gradient-accumulation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["accum/derivation.py", "accum/scaling.py", "accum/profiling.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive accumulation steps and batch parameters", "check": "harness/m1.py",
+     "gates": [{"metric": "steps_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Derive gradient magnitude inflation factor", "check": "harness/m2.py",
+     "gates": [{"metric": "inflation_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches missing loss scaling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_missing_scaling", "op": "==", "threshold": 1}]}
+  ]
+}

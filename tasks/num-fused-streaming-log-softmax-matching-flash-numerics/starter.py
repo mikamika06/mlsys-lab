@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def streaming_log_softmax(x: np.ndarray) -> np.ndarray:
+def streaming_log_softmax(x: list[float]) -> list[float]:
     raise NotImplementedError('your code here')

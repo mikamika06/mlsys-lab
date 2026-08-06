@@ -1,0 +1,44 @@
+{
+  "id": "m-benchmark-the-same-gguf-via-llamafile-and-via-ollama",
+  "title": "Benchmarking and deployment analysis for GGUF runners",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "llamafile-and-single-file-distribution",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "benchrunner/benchmark.py",
+    "benchrunner/selector.py",
+    "benchrunner/portability.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Benchmark attribution between llamafile and Ollama",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "benchmarks_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Runner selection for deployment scenarios",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "selections_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Portability diagnosis and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_portability", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -28,16 +28,16 @@ for each stored head index $i$.
 Implement `expand_gqa_kv(kv, num_query_heads)`:
 
 ```python
-def expand_gqa_kv(kv: np.ndarray, num_query_heads: int) -> np.ndarray:
+def expand_gqa_kv(kv: list[list[list[list[float]]]], num_query_heads: int) -> list[list[list[list[float]]]]:
     ...
 ```
 
-The input `kv` is a NumPy array with shape $(B, n_{kv}, S, d)$ containing grouped key
+The input `kv` is a list with shape $(B, n_{kv}, S, d)$ containing grouped key
 or value heads. Return an array with shape
 $(B, n_q, S, d)$ where every stored head has been repeated enough times to match
 the query head count.
 
-Use NumPy operations only. The output must preserve the input values and use
+Use Python operations only. The output must preserve the input values and use
 `float32` output dtype.
 
 You may assume that $n_q$ is divisible by $n_{kv}$.
@@ -45,16 +45,15 @@ You may assume that $n_q$ is divisible by $n_{kv}$.
 ## Example
 
 ```python
-import numpy as np
 
-kv = np.array(
+kv = [
     [
         [
             [[1.0, 2.0]],
             [[3.0, 4.0]],
         ]
     ],
-    dtype=np.float32,
+    dtype=float,
 )
 
 full = expand_gqa_kv(kv, 4)
@@ -66,7 +65,7 @@ full = expand_gqa_kv(kv, 4)
 
 ## What the gate checks
 
-The gate compares the implementation against a NumPy oracle that reconstructs the
+The gate compares the implementation against a Python oracle that reconstructs the
 full MHA-equivalent tensor using exact head repetition. The maximum absolute error
 
 $$

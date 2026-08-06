@@ -1,0 +1,40 @@
+{
+  "id": "m-compare-compile-warmup-latency-vs-steady-state-laten",
+  "title": "MPS Compile Warmup, Autotune, and Dynamic Shapes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "torch.compile on the MPS backend",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mpscompile/warmup.py",
+    "mpscompile/autotune.py",
+    "mpscompile/dynamic.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Warmup vs steady-state latency ratio",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "latency_ratio", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Autotune behavior and error detection",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "autotune_handled", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Dynamic shapes recompilation safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_dynamic", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

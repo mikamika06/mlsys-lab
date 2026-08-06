@@ -23,29 +23,28 @@ A Jacobian is constructed column by column. The $j$-th column contains the deriv
 Implement `jacobian_fd(f, x, eps)`:
 
 ```python
-def jacobian_fd(f, x, eps=1e-6):
+def jacobian_fd(f, x, eps=1e-06):
     ...
 ```
 
 The function receives:
-- `f`: a callable that accepts a one-dimensional NumPy array and returns a one-dimensional NumPy array.
-- `x`: the input point as a one-dimensional NumPy array with shape $(n,)$.
+- `f`: a callable that accepts a list of floats and returns a list of floats.
+- `x`: the input point as a list of floats with shape $(n,)$.
 - `eps`: the finite difference step size.
 
-Return a NumPy array of shape $(m, n)$ containing the Jacobian of $f$ at $x$. Use central finite differences and preserve the output ordering of `f`.
+Return a list of shape $(m, n)$ containing the Jacobian of $f$ at $x$. Use central finite differences and preserve the output ordering of `f`.
 
 ## Example
 
 ```python
-import numpy as np
 
 def f(x):
-    return np.array([
+    return [
         x[0] ** 2 + x[1],
-        np.sin(x[0]) * x[1]
+math.sin(x[0] * x[1])
     ])
 
-J = jacobian_fd(f, np.array([2.0, 3.0]))
+J = jacobian_fd(f, [2.0, 3.0])
 
 # Approximately:
 # [[4.0, 1.0],

@@ -1,0 +1,44 @@
+{
+  "id": "m-attention-flop-formula-suite",
+  "title": "Attention and Transformer FLOP formula suite",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "flops-tflops-and-mfu-accounting",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "flopcount/attention.py",
+    "flopcount/varlen.py",
+    "flopcount/transformer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Attention core FLOP formulas for GQA and causal masks",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Varlen packed attention FLOPs and histogram accounting",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression tests for transformer FLOP accounting",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_flawed_counter", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

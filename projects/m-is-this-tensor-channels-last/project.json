@@ -1,0 +1,45 @@
+{
+  "id": "m-is-this-tensor-channels-last",
+  "title": "Channels Last and Pinned Memory Pipeline",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "Host-side pipeline: DataLoader, pinning, transfers, layout",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "layout/strides.py",
+    "layout/pipeline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "NCHW to NHWC stride derivation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "strides_matched", "op": ">=", "threshold": 3},
+        {"metric": "is_cl_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Why non_blocking gave no overlap",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "pipeline_matched", "op": ">=", "threshold": 6}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch silent fallback and false strides",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_is_cl", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_pipeline", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

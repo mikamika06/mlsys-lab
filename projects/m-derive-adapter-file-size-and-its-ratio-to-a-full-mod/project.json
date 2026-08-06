@@ -1,0 +1,43 @@
+{
+  "id": "m-derive-adapter-file-size-and-its-ratio-to-a-full-mod",
+  "title": "Adapter Merging and Quantization Analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "adapter-merging-deployment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "adapter_merge/sizing.py",
+    "adapter_merge/numerical.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Calculate adapter vs base sizes",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "ratio_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive quantization error and verify merged forward pass",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "err_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: catch broken merge equivalence",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_merge", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

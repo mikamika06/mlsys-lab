@@ -1,0 +1,44 @@
+{
+  "id": "m-cold-start-latency-eager-vs-aotinductor-package",
+  "title": "Cold-start latency and export verification for AOTInductor packages",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "torch.export and AOTInductor packaging",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "pack/export.py",
+    "pack/latency.py",
+    "pack/shapes.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify clean model exports and compatibility",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "export_verified", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Cold-start latency and overhead ratio analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "latency_ratio_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Derive and validate dynamic shape assertions",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_assertions", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

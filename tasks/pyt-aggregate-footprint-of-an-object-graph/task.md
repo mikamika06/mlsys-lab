@@ -10,10 +10,10 @@ $$
 
 where $R(G)$ is the set of objects reachable from the graph roots and `sizeof` is the CPython `sys.getsizeof` result.
 
-A flat numerical representation stores only the payload values in a contiguous NumPy array. Its footprint is
+A flat numerical representation stores only the payload values in a contiguous list. Its footprint is
 
 $$
-S_{\mathrm{flat}} = \operatorname{nbytes}(\mathrm{numpy\_array}).
+S_{\mathrm{flat}} = \operatorname{nbytes}(\mathrm{list}).
 $$
 
 The ratio
@@ -28,7 +28,7 @@ shows how much larger the Python object representation is compared with a compac
 
 Implement `aggregate_footprint(adjacency, payloads)`.
 
-`adjacency` is a square NumPy integer matrix of shape $(n,n)$. Entry `adjacency[i, j]` is non-zero when object node $i$ references object node $j$.
+`adjacency` is a square Python integer matrix of shape $(n,n)$. Entry `adjacency[i, j]` is non-zero when object node $i$ references object node $j$.
 
 `payloads` is a list of integer lists. Node $i$ stores its corresponding payload list.
 
@@ -37,21 +37,20 @@ The function must:
 1. Build an object graph where every node is a Python dictionary containing its payload and child references.
 2. Traverse all nodes reachable from the graph roots.
 3. Compute the deep footprint by summing `sys.getsizeof` once per unique object identity.
-4. Build a flat NumPy `int64` array containing all payload integers and compare against its `nbytes`.
+4. Build a flat Python `int64` array containing all payload integers and compare against its `nbytes`.
 5. Return the footprint ratio $\rho$ as a `float`.
 
-The traversal must deduplicate objects using identity, not equality. Use only the Python standard library and NumPy.
+The traversal must deduplicate objects using identity, not equality. Use only the Python standard library and Python.
 
 ## Example
 
 ```python
-import numpy as np
 
-adjacency = np.array([
+adjacency = [
     [0, 1, 0],
     [0, 0, 1],
     [0, 0, 0],
-], dtype=np.int64)
+]
 
 payloads = [[1, 2], [3], [4, 5]]
 

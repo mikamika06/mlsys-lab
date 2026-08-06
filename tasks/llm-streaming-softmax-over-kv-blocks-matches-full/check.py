@@ -19,16 +19,18 @@ def grade(sol, fx) -> dict:
     worst = 0.0
 
     for n, d, dv, block_size in cases:
-        Q = rng.normal(size=(n, d)).astype(np.float64)
-        K = rng.normal(size=(n, d)).astype(np.float64)
-        V = rng.normal(size=(n, dv)).astype(np.float64)
+        Q_np = rng.normal(size=(n, d)).astype(np.float64)
+        K_np = rng.normal(size=(n, d)).astype(np.float64)
+        V_np = rng.normal(size=(n, dv)).astype(np.float64)
 
-        ref = _full_attention(Q, K, V)
+        Q = Q_np.tolist()
+        K = K_np.tolist()
+        V = V_np.tolist()
+
+        ref = _full_attention(Q_np, K_np, V_np)
         try:
-            got = np.asarray(
-                sol.streaming_softmax_attention(Q, K, V, block_size),
-                dtype=np.float64,
-            )
+            got_raw = sol.streaming_softmax_attention(Q, K, V, block_size)
+            got = np.asarray(got_raw, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
 

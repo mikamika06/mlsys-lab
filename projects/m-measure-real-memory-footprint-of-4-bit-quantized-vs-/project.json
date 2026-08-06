@@ -1,0 +1,40 @@
+{
+  "id": "m-measure-real-memory-footprint-of-4-bit-quantized-vs-",
+  "title": "Real memory footprint and precision of 4-bit quantized weights",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "qlora-4bit-quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "qlora_mem/measure.py",
+    "qlora_mem/nf4.py",
+    "qlora_mem/double.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure real memory footprint of 4-bit quantized vs original tensors",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "footprint_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Verify NF4 beats naive uniform INT4 on real pretrained weights",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "nf4_verified", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching broken quantization behavior",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_behavior", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

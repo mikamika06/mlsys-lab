@@ -10,11 +10,12 @@ def grade(sol, fx) -> dict:
     ]
     for arr in tests:
         try:
-            got = sol.lane_reduce_sum(arr)
+            got = sol.lane_reduce_sum(arr.tolist())
         except Exception:
             return {"byte_exact_fraction": 0.0}
         expected = np.array(np.sum(arr), dtype=arr.dtype)
-        frac = scorers.byte_exact_fraction(expected, got)
+        got_arr = np.array(got, dtype=arr.dtype)
+        frac = scorers.byte_exact_fraction(expected, got_arr)
         if frac < 1.0:
             return {"byte_exact_fraction": 0.0}
     return {"byte_exact_fraction": 1.0}

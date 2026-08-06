@@ -1,0 +1,40 @@
+{
+  "id": "m-boundary-safe-load-store-on-a-non-power-of-2-length",
+  "title": "Boundary-safe load/store on a non-power-of-2 length",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Pointer arithmetic, tl.load/tl.store, and masking",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["triton_bounds/ops.py", "triton_bounds/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Boundary-safe load and store for odd lengths",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "correct_outputs", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Catch interpreter exceptions and compute wasted-lane fraction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "exception_caught", "op": "==", "threshold": 1.0},
+        {"metric": "wasted_fraction_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches unmasked stores",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_unmasked_store", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

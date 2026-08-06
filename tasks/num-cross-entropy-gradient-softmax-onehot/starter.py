@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def cross_entropy_backward(logits: np.ndarray, labels: np.ndarray) -> np.ndarray:
+def cross_entropy_backward(logits: list[list[float]], labels: list[int]) -> list[list[float]]:
     """Gradient of the mean softmax cross-entropy loss with respect to ``logits``.
 
     Args:

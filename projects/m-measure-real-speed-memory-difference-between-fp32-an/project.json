@@ -1,0 +1,44 @@
+{
+  "id": "m-measure-real-speed-memory-difference-between-fp32-an",
+  "title": "Measure real speed and memory difference between FP32 and autocast",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "mixed-precision-autocast",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "autoperf/profile.py",
+    "autoperf/nested.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure real speed and memory difference",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "latency_ratio_valid", "op": "==", "threshold": 1},
+        {"metric": "memory_measured", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verify nested disabled autocast forces FP32",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "nested_forces_fp32", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for nested autocast enforcement",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_nesting", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

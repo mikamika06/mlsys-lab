@@ -11,12 +11,13 @@ def _reference(logits, T):
 
 def grade(sol, fx) -> dict:
     rng = np.random.default_rng(0)
-    logits = rng.standard_normal((5,))
+    logits_arr = rng.standard_normal((5,))
+    logits = logits_arr.tolist()
     T = 0.75
     try:
         cand = sol.temperature_scale(logits, T)
     except Exception:
         return {"mean_kl": float("inf")}
-    ref = _reference(logits, T)
+    ref = _reference(logits_arr, T)
     kl = scorers.mean_kl(ref, cand)
     return {"mean_kl": kl}

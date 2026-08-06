@@ -37,20 +37,20 @@ long sequences of probabilities.
 Fix `log_likelihood(probs)`:
 
 ```python
-def log_likelihood(probs: np.ndarray) -> float:
+def log_likelihood(probs: list[float]) -> float:
     ...
 ```
 
-The input is a 1-D NumPy array of probabilities, each in $(0, 1]$. Return the
+The input is a list of floats of probabilities, each in $(0, 1]$. Return the
 log-likelihood as a Python `float`, computed as the sum of the elementwise
 logarithms rather than the log of the product.
 
 The current implementation is:
 
 ```python
-def log_likelihood(probs: np.ndarray) -> float:
-    probs = np.asarray(probs, dtype=np.float64)
-    return float(np.log(np.prod(probs)))
+def log_likelihood(probs: list[float]) -> float:
+probs = [float(p) for p in probs]
+return float(math.log(math.prod(probs)))
 ```
 
 This matches the mathematical definition but underflows for long arrays of
@@ -59,11 +59,10 @@ small probabilities, returning `-inf` instead of the true (finite) value.
 ## Example
 
 ```python
-import numpy as np
-probs = np.full(3000, 0.5, dtype=np.float64)
+probs = [0.5] * 3000
 log_likelihood(probs)
 # correct: -3000 * log(2) ≈ -2079.44
-# broken:  np.prod(probs) underflows to 0.0 -> log(0.0) = -inf
+# broken: math.prod(probs) underflows to 0.0 -> log(0.0) = -inf
 ```
 
 ## What the gate checks
@@ -78,5 +77,5 @@ $$
 $$
 
 The gate requires $\mathrm{rel\_err} \le 10^{-10}$ on every test case. The
-`np.log(np.prod(...))` form returns `-inf` on the underflowing case, which is
+`math.log(math.prod(...))` form returns `-inf` on the underflowing case, which is
 non-finite and fails the gate immediately.

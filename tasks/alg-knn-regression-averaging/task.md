@@ -14,31 +14,30 @@ $$\hat y(x) = \frac{1}{k}\sum_{i\in\mathcal N_k(x)} y_{\text{train},i}.$$
 Implement `knn_regression_average`:
 
 ```python
-def knn_regression_average(X_train: np.ndarray,
-                           y_train: np.ndarray,
-                           X_query: np.ndarray,
-                           k: int) -> np.ndarray:
+def knn_regression_average(X_train: list[list[float]],
+                           y_train: list[float],
+                           X_query: list[list[float]],
+                           k: int) -> list[float]:
     ...
 ```
 
-The function must return a one‑dimensional NumPy array of shape `(m,)`, where `m` is the number of rows in `X_query`. Each entry should be the mean target value of the $k$ nearest neighbors from `X_train`. The implementation must use only vectorized NumPy operations; explicit Python loops over samples are disallowed. The result must have dtype `float64`.
+The function must return a list of floats of shape `(m,)`, where `m` is the number of rows in `X_query`. Each entry should be the mean target value of the $k$ nearest neighbors from `X_train`. The implementation must use only vectorized Python operations; explicit Python loops over samples are disallowed. The result must have dtype `float64`.
 
 If `k > X_train.shape[0]` a `ValueError` should be raised.
 
 ## Example
 
 ```python
-import numpy as np
-X_train = np.array([[0., 0.], [1., 0.], [0., 2.]])
-y_train = np.array([10., 20., 30.])
-X_query = np.array([[0.5, 0.5]])
+X_train = [[0., 0.], [1., 0.], [0., 2.]]
+y_train = [10., 20., 30.]
+X_query = [[0.5, 0.5]]
 preds = knn_regression_average(X_train, y_train, X_query, k=2)
 print(preds)   # [15.]
 ```
 
 ## What the gate checks
 
-The grader computes a reference prediction using NumPy and compares it to your output with the global relative L2 error  
+The grader computes a reference prediction using Python and compares it to your output with the global relative L2 error  
 $$\mathrm{rel\_err} = \frac{\lVert \hat y_{\text{ref}} - \hat y_{\text{cand}}\rVert}
 {\lVert \hat y_{\text{ref}}\rVert + 10^{-12}}.$$  
 The solution must satisfy $\mathrm{rel\_err}\le 1\times10^{-8}$ on a set of random test cases. Additionally, the output must be `float64` and have the correct shape.

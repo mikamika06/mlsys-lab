@@ -1,0 +1,63 @@
+{
+  "id": "m-diff-numeric-outputs-of-relay-imported-vs-relax-impo",
+  "title": "Relay vs Relax ONNX Migration Analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TVM Relay legacy vs Relax migration & deployment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "migration/diff.py",
+    "migration/artifact.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Numerical difference between Relay and Relax importers",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Round-trip library export and load validation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "roundtrip_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Artifact size profiling across optimization levels",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_profiling",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

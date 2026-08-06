@@ -32,8 +32,16 @@ def grade(sol, fx) -> dict:
     Wk = rng.standard_normal((d_model, d_model))
     Wv = rng.standard_normal((d_model, d_model))
     Wo = rng.standard_normal((d_model, d_model))
+
+    X_list = X.tolist()
+    Wq_list = Wq.tolist()
+    Wk_list = Wk.tolist()
+    Wv_list = Wv.tolist()
+    Wo_list = Wo.tolist()
+
     try:
-        got = sol.mha_forward(X, Wq, Wk, Wv, Wo)
+        got_list = sol.mha_forward(X_list, Wq_list, Wk_list, Wv_list, Wo_list)
+        got = np.array(got_list)
     except Exception:
         return {"max_abs_err": float("inf")}
     ref = _reference_mha(X, Wq, Wk, Wv, Wo)

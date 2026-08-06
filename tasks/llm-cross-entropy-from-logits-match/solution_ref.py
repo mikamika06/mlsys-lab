@@ -1,13 +1,13 @@
 import math
-import numpy as np
 
-def cross_entropy_from_logits(logits: np.ndarray, targets: np.ndarray) -> float:
-    n_samples, n_classes = logits.shape
+def cross_entropy_from_logits(logits: list[list[float]], targets: list[int]) -> float:
+    n_samples = len(logits)
+    n_classes = len(logits[0])
     ce_sum = 0.0
 
     for i in range(n_samples):
         row = logits[i]
-        
+
         m = row[0]
         for j in range(1, n_classes):
             val = row[j]

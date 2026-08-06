@@ -1,0 +1,69 @@
+{
+  "id": "m-kv-bytes-and-the-fp8-context-length-gain",
+  "title": "KV bytes and FP8 context-length gain",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "KV cache and attention quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvfp8/bytes.py",
+    "kvfp8/quant.py",
+    "kvfp8/attn.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "KV bytes and FP8 context length gains",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 1e-05
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-head FP8 KV quantization and attention error",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "quant_rel_err",
+          "op": "<=",
+          "threshold": 1e-03
+        },
+        {
+          "metric": "attn_rel_err",
+          "op": "<=",
+          "threshold": 1e-02
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching non-per-head quantization",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_global_quant",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

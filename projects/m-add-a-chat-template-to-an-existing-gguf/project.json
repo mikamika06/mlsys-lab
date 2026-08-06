@@ -1,0 +1,24 @@
+{
+  "id": "m-add-a-chat-template-to-an-existing-gguf",
+  "title": "Add a chat template to an existing GGUF",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-py-library",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["gguf_chat/modifier.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Extract the current template safely", "check": "harness/m1.py",
+     "gates": [{"metric": "works_missing", "op": "==", "threshold": 1},
+               {"metric": "works_present", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Backup and set the new template", "check": "harness/m2.py",
+     "gates": [{"metric": "sets_new", "op": "==", "threshold": 1},
+               {"metric": "backs_up_current", "op": "==", "threshold": 1},
+               {"metric": "preserves_old_backup", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Regression test for backup preservation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_overwritten_backup", "op": "==", "threshold": 1}]}
+  ]
+}

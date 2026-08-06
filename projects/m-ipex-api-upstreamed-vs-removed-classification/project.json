@@ -1,0 +1,63 @@
+{
+  "id": "m-ipex-api-upstreamed-vs-removed-classification",
+  "title": "IPEX API Migration and Op-Graph Optimization Audit",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "Intel Extension for PyTorch optimize & graph capture",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ipexaudit/classify.py",
+    "ipexaudit/graph.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify IPEX APIs into upstreamed, removed, or retained",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "classified_correctly",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analyze op-graph differences between ipex.optimize and manual layout conversion",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "diff_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests that catch missed graph optimizations",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unoptimized_graph",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

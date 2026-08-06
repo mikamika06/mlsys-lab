@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 
 class _KDNode:
@@ -18,9 +17,9 @@ def _sort_indices(indices, points, axis):
     n = len(idx_list)
     for i in range(1, n):
         key = idx_list[i]
-        key_val = points[key, axis]
+        key_val = points[key][axis]
         j = i - 1
-        while j >= 0 and points[idx_list[j], axis] > key_val:
+        while j >= 0 and points[idx_list[j]][axis] > key_val:
             idx_list[j + 1] = idx_list[j]
             j -= 1
         idx_list[j + 1] = key
@@ -30,7 +29,7 @@ def _sort_indices(indices, points, axis):
 def _build(points, indices, depth=0):
     if len(indices) == 0:
         return None
-    axis = depth % points.shape[1]
+    axis = depth % len(points[0])
     sorted_idx = _sort_indices(indices, points, axis)
     median = len(sorted_idx) // 2
     node = _KDNode(points[sorted_idx[median]], sorted_idx[median], axis)
@@ -73,12 +72,12 @@ def _search(node, q, query_idx, k, best, counter):
         _search(second, q, query_idx, k, best, counter)
 
 
-def count_distance_computations(points: np.ndarray, k: int) -> tuple[int, int]:
+def count_distance_computations(points: list[list[float]], k: int) -> tuple[int, int]:
     """
     Return the exact number of distance evaluations performed by a
     brute‑force search and by a kd‑tree search.
     """
-    n = points.shape[0]
+    n = len(points)
     brute_count = n * (n - 1)
     initial_indices = [i for i in range(n)]
     root = _build(points, initial_indices)

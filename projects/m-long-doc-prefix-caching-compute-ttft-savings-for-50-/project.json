@@ -1,0 +1,20 @@
+{
+  "id": "m-long-doc-prefix-caching-compute-ttft-savings-for-50-questions",
+  "title": "Compute TTFT savings for long-doc prefix caching",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "long-context-serving",
+  "difficulty": 2,
+  "edits": ["ttft/savings.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Model the prefill cost function", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.00001}]},
+    {"n": 2, "title": "Simulate the baseline vs cached batch", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.00001}]},
+    {"n": 3, "title": "Safety net: test for ignored prefix caches", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ignored_prefix", "op": "==", "threshold": 1}]}
+  ]
+}

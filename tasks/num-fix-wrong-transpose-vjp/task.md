@@ -29,25 +29,24 @@ cases but violates the chain rule.
 Implement `matmul_vjp(A, B, G)`:
 
 ```python
-def matmul_vjp(A: np.ndarray, B: np.ndarray, G: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def matmul_vjp(A: list[list[float]], B: list[list[float]], G: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
     ...
 ```
 
-The inputs are two-dimensional NumPy arrays where `A` has shape $(m, k)$,
+The inputs are list of lists of floats where `A` has shape $(m, k)$,
 `B` has shape $(k, n)$, and `G` has shape $(m, n)$.
 
 Return a tuple `(dA, dB)` containing the VJP gradients for `A` and `B`. The
-returned arrays must use NumPy matrix operations and have the same shapes as
+returned arrays must use Python matrix operations and have the same shapes as
 `A` and `B`.
 
 ## Example
 
 ```python
-import numpy as np
 
-A = np.array([[1.0, 2.0], [3.0, 4.0]])
-B = np.array([[5.0, 6.0], [7.0, 8.0]])
-G = np.ones((2, 2))
+A = [[1.0, 2.0], [3.0, 4.0]]
+B = [[5.0, 6.0], [7.0, 8.0]]
+G = [[1.0] * 2 for _ in range(2)]
 
 dA, dB = matmul_vjp(A, B, G)
 

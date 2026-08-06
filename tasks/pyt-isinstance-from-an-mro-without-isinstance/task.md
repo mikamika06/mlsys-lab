@@ -17,36 +17,35 @@ A pair $(o, t)$ should be classified as true when the target class $t$ is in the
 Implement `mro_isinstance(mro_adj, pairs)`:
 
 ```python
-def mro_isinstance(mro_adj: np.ndarray, pairs: np.ndarray) -> np.ndarray:
+def mro_isinstance(mro_adj: list[list[int]], pairs: list[list[int]]) -> list[bool]:
     ...
 ```
 
 The inputs are:
 
-- `mro_adj`: a square integer NumPy array describing class MRO edges.
-- `pairs`: a two-column integer NumPy array. Each row contains `(obj_class_index, target_class_index)`.
+- `mro_adj`: a square integer list describing class MRO edges.
+- `pairs`: a two-column integer list. Each row contains `(obj_class_index, target_class_index)`.
 
-Return a boolean NumPy array with one element per row of `pairs`. The result at position $i$ must indicate whether the target class is reachable from the object class in the supplied MRO graph.
+Return a boolean list with one element per row of `pairs`. The result at position $i$ must indicate whether the target class is reachable from the object class in the supplied MRO graph.
 
 Only the supplied graph may be used. Do not call Python `isinstance`, inspect real classes, or use object metadata.
 
 ## Example
 
 ```python
-import numpy as np
 
-mro = np.array([
+mro = [
     [1, 0, 1, 0],
     [0, 1, 0, 0],
     [0, 1, 1, 0],
     [0, 0, 0, 1],
-], dtype=int)
+]
 
-pairs = np.array([
+pairs = [
     [0, 1],
     [3, 0],
     [2, 1],
-])
+]
 
 print(mro_isinstance(mro, pairs))
 # [ True False  True]

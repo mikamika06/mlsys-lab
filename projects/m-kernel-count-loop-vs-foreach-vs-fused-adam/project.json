@@ -1,0 +1,43 @@
+{
+  "id": "m-kernel-count-loop-vs-foreach-vs-fused-adam",
+  "title": "Kernel count: loop vs foreach vs fused Adam",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "Optimizer-step and training-loop overheads",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["opt/grouping.py", "opt/adam.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parameter grouping and kernel count estimation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "groups_matched", "op": "==", "threshold": 1.0},
+        {"metric": "kernel_counts_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Adam execution modes and numerical equivalence",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "loop_matches_ref", "op": "==", "threshold": 1.0},
+        {"metric": "foreach_matches_ref", "op": "==", "threshold": 1.0},
+        {"metric": "fused_matches_ref", "op": "==", "threshold": 1.0},
+        {"metric": "numerics_aligned", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite for optimizer correctness",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_grouping", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

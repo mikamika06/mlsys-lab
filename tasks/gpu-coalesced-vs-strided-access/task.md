@@ -24,20 +24,19 @@ This quantity equals the number of memory transactions required for that warp.
 
 ## Task
 
-Implement `count_transactions(arr: np.ndarray, stride: int) -> int`:
+Implement `count_transactions(arr: list[float], stride: int) -> int`:
 
 ```python
-def count_transactions(arr: np.ndarray, stride: int) -> int:
+def count_transactions(arr, stride):
     ...
 ```
 
-The function receives a one‑dimensional NumPy array of type `float32`. It should return the number of 128‑byte memory transactions that a single warp would perform when each thread reads an element spaced by `stride` starting at index 0. The result must be an integer.
+The function receives a list of floats of type `float32`. It should return the number of 128‑byte memory transactions that a single warp would perform when each thread reads an element spaced by `stride` starting at index 0. The result must be an integer.
 
 ## Example
 
 ```python
-import numpy as np
-arr = np.arange(128, dtype=np.float32)
+arr = list(range(128))
 
 # stride 1 → indices 0–31; all in the first segment
 print(count_transactions(arr, 1))   # 1

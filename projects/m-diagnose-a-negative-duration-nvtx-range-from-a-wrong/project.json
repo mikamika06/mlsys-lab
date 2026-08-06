@@ -1,0 +1,21 @@
+{
+  "id": "m-diagnose-a-negative-duration-nvtx-range-from-a-wrong",
+  "title": "Diagnose a negative-duration NVTX range and rank Mac phases",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "nvtx-annotation-and-correlation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["nvdiag/analyzer.py", "nvdiag/ranking.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Diagnose the negative-duration NVTX range", "check": "harness/m1.py",
+     "gates": [{"metric": "range_diagnosed", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Rank top 5 record_function phases by self time", "check": "harness/m2.py",
+     "gates": [{"metric": "ranking_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for correct NVTX stack handling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_clamping", "op": "==", "threshold": 1}]}
+  ]
+}

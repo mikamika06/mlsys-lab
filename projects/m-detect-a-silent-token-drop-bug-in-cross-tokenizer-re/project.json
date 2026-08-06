@@ -1,0 +1,43 @@
+{
+  "id": "m-detect-a-silent-token-drop-bug-in-cross-tokenizer-re",
+  "title": "Detect a silent token-drop bug in cross-tokenizer realignment",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Cross-tokenizer / universal assisted decoding",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "realign/aligner.py",
+    "realign/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Trace token mapping and detect dropped tokens",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "alignments_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute byte-exact fraction and alignment error ratios",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "byte_exact_fraction", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching silent token drops",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_silent_drop", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

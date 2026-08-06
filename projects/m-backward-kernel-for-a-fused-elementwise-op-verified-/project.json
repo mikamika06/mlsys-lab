@@ -1,0 +1,68 @@
+{
+  "id": "m-backward-kernel-for-a-fused-elementwise-op-verified-",
+  "title": "Backward kernel for a fused elementwise op verified with finite differences",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Backward-pass gradient kernels & atomics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fused_grad/backward.py",
+    "fused_grad/atomic_analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Fused elementwise backward kernel verified by finite differences",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "backward_matches_fd",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify atomic requirement and analyze gradient determinism",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "classification_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "determinism_analysis_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching non-atomic updates on overlapping writes",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_non_atomic_overlap",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

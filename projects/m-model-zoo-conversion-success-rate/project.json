@@ -1,0 +1,27 @@
+{
+  "id": "m-model-zoo-conversion-success-rate",
+  "title": "Model-zoo conversion success rate and error diagnostics",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "LiteRT/TFLite conversion pipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "conv/reader.py",
+    "conv/classifier.py",
+    "conv/success.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Standalone signature-def reader", "check": "harness/m1.py",
+     "gates": [{"metric": "signatures_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Converter error root cause classifier and success rate", "check": "harness/m2.py",
+     "gates": [{"metric": "errors_classified", "op": ">=", "threshold": 3},
+               {"metric": "success_rate_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: conversion success rate regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_success", "op": "==", "threshold": 1}]}
+  ]
+}

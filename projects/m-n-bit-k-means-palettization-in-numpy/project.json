@@ -1,0 +1,21 @@
+{
+  "id": "m-n-bit-k-means-palettization-in-numpy",
+  "title": "N-bit k-means palettization in numpy",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-edge-export",
+  "track": "Palettization and lookup-table compression",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["palettize/kmeans.py", "palettize/bytes.py", "palettize/compare.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "N-bit k-means codebook generation and quantization", "check": "harness/m1.py",
+     "gates": [{"metric": "mse_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Exact byte count for scalar and vector palettized tensors", "check": "harness/m2.py",
+     "gates": [{"metric": "bytes_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching invalid bitpacks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_bitpack", "op": "==", "threshold": 1}]}
+  ]
+}

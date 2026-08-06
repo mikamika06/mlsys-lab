@@ -1,0 +1,41 @@
+{
+  "id": "m-bias-int32-scale-derivation",
+  "title": "Bias int32 scale derivation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Quantization parameters and the dequantization contract",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantizer/scales.py", "quantizer/conv.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1, 
+      "title": "Bias scales and weight dequantization", 
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "max_abs_err_bias_scale", "op": "<", "threshold": 1e-6},
+        {"metric": "max_abs_err_dequant_w", "op": "<", "threshold": 1e-6},
+        {"metric": "max_abs_err_quant_b", "op": "==", "threshold": 0}
+      ]
+    },
+    {
+      "n": 2, 
+      "title": "Integer convolution and accumulation", 
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "max_abs_err_accum", "op": "==", "threshold": 0}
+      ]
+    },
+    {
+      "n": 3, 
+      "title": "Safeguard against bad zero-point math", 
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_zp", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

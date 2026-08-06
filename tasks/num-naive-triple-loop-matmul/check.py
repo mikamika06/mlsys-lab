@@ -11,12 +11,14 @@ def grade(sol, fx) -> dict:
     ]
     max_err = 0.0
     for A,B in cases:
+        A_flt = A.astype(np.float64)
+        B_flt = B.astype(np.float64)
         try:
-            got = sol.naive_matmul(A.astype(np.float64), B.astype(np.float64))
+            got = sol.naive_matmul(A_flt.tolist(), B_flt.tolist())
         except Exception:
             return {"max_abs_err": float("inf")}
-        ref = np.matmul(A.astype(np.float64), B.astype(np.float64))
-        err = max_abs_err(ref, got)
+        ref = np.matmul(A_flt, B_flt)
+        err = max_abs_err(ref, np.array(got, dtype=np.float64))
         if err > max_err:
             max_err = err
     return {"max_abs_err": max_err}

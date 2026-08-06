@@ -36,7 +36,12 @@ def grade(sol, fx) -> dict:
     for x, gate_w, up_w, down_w in cases:
         ref = _swiglu_oracle(x, gate_w, up_w, down_w)
         try:
-            got = sol.swiglu_ffn(x, gate_w, up_w, down_w)
+            got = sol.swiglu_ffn(
+                x.tolist(),
+                gate_w.tolist(),
+                up_w.tolist(),
+                down_w.tolist(),
+            )
             got = np.asarray(got, dtype=np.float64)
             err = float(np.max(np.abs(ref - got)))
         except Exception:

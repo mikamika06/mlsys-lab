@@ -2,19 +2,19 @@ import numpy as np
 from mlsys.scorers import max_abs_err
 
 def _reference(z):
-    z = np.asarray(z, dtype=np.float64)
+    z_arr = np.asarray(z, dtype=np.float64)
     return np.where(
-        z >= 0,
-        1.0 / (1.0 + np.exp(-z)),
-        np.exp(z) / (1.0 + np.exp(z))
+        z_arr >= 0,
+        1.0 / (1.0 + np.exp(-z_arr)),
+        np.exp(z_arr) / (1.0 + np.exp(z_arr))
     )
 
 def grade(sol, fx) -> dict:
     rng = np.random.default_rng(12345)
     tests = [
-        np.array([-1000., -10., -1., 0., 1., 10., 1000.]),
-        rng.uniform(-1000, 1000, size=(5, 4)),
-        rng.standard_normal(size=10000) * 500,
+        [-1000.0, -10.0, -1.0, 0.0, 1.0, 10.0, 1000.0],
+        rng.uniform(-1000, 1000, size=(20,)).tolist(),
+        (rng.standard_normal(size=1000) * 500).tolist(),
     ]
     max_err = 0.0
     for z in tests:

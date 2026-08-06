@@ -1,0 +1,21 @@
+{
+  "id": "m-convert-a-tiny-hf-model-to-gguf-and-validate",
+  "title": "Convert a tiny HF model to GGUF and validate",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "convert-hf-to-gguf-pipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ggufconv/converter.py", "ggufconv/precision.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Register a converter subclass for a synthetic architecture", "check": "harness/m1.py",
+     "gates": [{"metric": "classes_registered", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "f16 vs bf16 outtype representation error", "check": "harness/m2.py",
+     "gates": [{"metric": "precision_error_bounded", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid tensor conversions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

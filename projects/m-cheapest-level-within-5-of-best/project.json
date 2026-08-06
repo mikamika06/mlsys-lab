@@ -1,0 +1,69 @@
+{
+  "id": "m-cheapest-level-within-5-of-best",
+  "title": "Cheapest ORT Optimization Level Within 5% of Best",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT graph optimizations: levels, online vs offline, .ort format",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "ortopt/levels.py",
+    "ortopt/fused.py",
+    "ortopt/costs.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Select cheapest level within 5% threshold",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "levels_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Count com.microsoft fused nodes and offline vs online cost",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "fused_counts_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "costs_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catches tolerance violation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_tolerance_bug",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

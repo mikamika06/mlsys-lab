@@ -1,0 +1,7 @@
+# Attention Backend KV Cache Block Alignment Failure Report
+
+During peak traffic serving on our heterogeneous inference cluster, multiple GPU worker nodes running custom attention backends (e.g., FlashAttention v2 and FP8/INT4 quantized kernels) reported sudden worker process terminations or memory access violations. In several high-throughput LLM deployments, sequence generation crashed unexpectedly with runtime illegal memory access errors or kernel launch assertion failures during long-context decoding.
+
+Telemetry logs indicate that when requests trigger dynamic block allocations in the paged KV cache manager, certain configured block sizes cause invalid memory address offsets during tensor store operations. In quantized KV cache deployments, specific block sizes result in invalid scale indexing or unexpected kernel panics when launching matrix-multiply tiles. Furthermore, memory allocation telemetry shows sudden out-of-memory (OOM) exceptions on nodes serving variable batch sizes, even when total token count remains well below global GPU memory capacity.
+
+Infrastructure engineers suspect that the runtime cache manager is assigning block sizes without verifying hardware memory alignment constraints, kernel tile multiples, or quantization group boundaries. We need an alignment validation framework and memory planner that screens candidate block sizes against backend constraints and selects valid sizes that minimize internal fragmentation under strict memory budgets.

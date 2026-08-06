@@ -1,30 +1,27 @@
 import math
-import numpy as np
 
 
-def fused_cross_entropy(logits: np.ndarray, targets: np.ndarray) -> np.ndarray:
+def fused_cross_entropy(logits: list[list[float]], targets: list[int]) -> list[float]:
     """Per-example cross-entropy loss ell_i = logsumexp(logits[i]) - logits[i, targets[i]],
-    computed via the numerically-stable log-sum-exp trick (fully vectorised)."""
-    logits = np.asarray(logits, dtype=np.float64)
-    targets = np.asarray(targets, dtype=np.int64)
-    
-    num_rows = logits.shape[0]
-    num_cols = logits.shape[1]
-    
-    result = np.zeros(num_rows, dtype=np.float64)
-    
+    computed via the numerically-stable log-sum-exp trick."""
+    num_rows = len(logits)
+    num_cols = len(logits[0])
+
+    result = [0.0] * num_rows
+
     for i in range(num_rows):
-        max_val = logits[i, 0]
+        row = logits[i]
+        max_val = row[0]
         for j in range(1, num_cols):
-            if logits[i, j] > max_val:
-                max_val = logits[i, j]
-                
+            if row[j] > max_val:
+                max_val = row[j]
+
         sum_exp = 0.0
         for j in range(num_cols):
-            sum_exp += math.exp(logits[i, j] - max_val)
-            
+            sum_exp += math.exp(row[j] - max_val)
+
         lse = max_val + math.log(sum_exp)
-        tgt_logit = logits[i, targets[i]]
+        tgt_logit = row[targets[i]]
         result[i] = lse - tgt_logit
-        
+
     return result

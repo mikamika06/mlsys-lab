@@ -1,7 +1,9 @@
-import numpy as np
+import math
 
 
-def log_likelihood(probs: np.ndarray) -> float:
+def log_likelihood(probs: list[float]) -> float:
     """Log-likelihood via sum of logs (avoids underflow from multiplying probabilities directly)."""
-    probs = np.asarray(probs, dtype=np.float64)
-    return float(np.sum(np.log(probs)))
+    total = 0.0
+    for p in probs:
+        total += math.log(p)
+    return total

@@ -1,0 +1,22 @@
+{
+  "id": "m-drive-a-real-server-past-capacity-and-correlate-pree",
+  "title": "Drive server past capacity and correlate preemption with p99 latency",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "preemption-swapping-and-scheduling-policy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["servermon/metrics.py", "servermon/correlate.py", "servermon/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse and load server load traces", "check": "harness/m1.py",
+     "gates": [{"metric": "traces_parsed", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute preemption and p99 correlation", "check": "harness/m2.py",
+     "gates": [{"metric": "correlation_match", "op": "==", "threshold": 1},
+               {"metric": "p99_accuracy", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for correlation anomalies", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_correlation", "op": "==", "threshold": 1}]}
+  ]
+}

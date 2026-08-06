@@ -11,7 +11,8 @@ def grade(sol, fx) -> dict:
         except Exception:
             return {"max_abs_err": float("inf")}
         ref = np.tril(np.ones((n, n), dtype=np.float64))
-        err = max_abs_err(ref, got)
+        got_arr = np.array(got, dtype=np.float64)
+        err = max_abs_err(ref, got_arr)
         if err > max_error:
             max_error = err
     return {"max_abs_err": max_error}

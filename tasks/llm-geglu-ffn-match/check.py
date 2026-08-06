@@ -13,7 +13,7 @@ def grade(sol, fx) -> dict:
     W_up   = rng.standard_normal((d_in, d_out), dtype=np.float64)
 
     try:
-        cand = sol.geglu_ffn(X, W_gate, W_up)
+        cand = sol.geglu_ffn(X.tolist(), W_gate.tolist(), W_up.tolist())
     except Exception:
         return {"max_abs_err": float("inf")}
 
@@ -21,5 +21,5 @@ def grade(sol, fx) -> dict:
     up_ref   = X @ W_up
     ref = _gelu(gate_ref) * up_ref
 
-    err = np.max(np.abs(cand - ref))
+    err = np.max(np.abs(np.array(cand) - ref))
     return {"max_abs_err": float(err)}

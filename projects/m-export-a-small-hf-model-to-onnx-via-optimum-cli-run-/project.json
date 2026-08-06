@@ -1,0 +1,40 @@
+{
+  "id": "m-export-a-small-hf-model-to-onnx-via-optimum-cli-run-",
+  "title": "Edge ONNX export, CoreML EP execution, and node placement audit",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Edge-deployment alternatives on Apple Silicon (ONNX Runtime CoreML EP, optimum)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "edgeonnx/export.py",
+    "edgeonnx/runner.py",
+    "edgeonnx/inspect.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Model export config and dual-provider numerical parity",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 2,
+      "title": "Provider latency profiling and comparison",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "latency_ratio_valid", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: node placement audit regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_fallback_nodes", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

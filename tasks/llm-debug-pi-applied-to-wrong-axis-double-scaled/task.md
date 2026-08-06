@@ -28,38 +28,37 @@ The buggy function below double-scales by multiplying both the position and the
 frequency:
 
 ```python
-def rope_pi(seq_len, dim, L_train, L_new):
+import math
+
+def rope_pi(seq_len: int, dim: int, L_train: float, L_new: float) -> tuple[list[list[float]], list[list[float]]]:
     # positions
-    pos = np.arange(seq_len, dtype=np.float64)
+    pos = list(range(seq_len))
     scale = L_train / L_new
     # BUG: scale applied to BOTH pos AND theta
-    pos_scaled = pos * scale
-    k = np.arange(dim // 2, dtype=np.float64)
-    theta = 1.0 / (10000.0 ** (2 * k / dim)) * scale   # <-- extra * scale is the bug
-    angles = np.outer(pos_scaled, theta)
-    cos = np.cos(angles)
-    sin = np.sin(angles)
+    pos_scaled = [p * scale for p in pos]
+    k = list(range(dim // 2))
+    theta = [1.0 / (10000.0 ** (2 * i / dim)) * scale for i in k]   # <-- extra * scale is the bug
+    angles = [[p * t for t in theta] for p in pos_scaled]
+    cos = [[math.cos(a) for a in row] for row in angles]
+    sin = [[math.sin(a) for a in row] for row in angles]
     return cos, sin
 ```
 
 Fix it so that the scale appears **only** in the position:
 
 ```python
-pos_scaled = pos * scale
-theta = 1.0 / (10000.0 ** (2 * k / dim))   # no scale here
+pos_scaled = [p * scale for p in pos]
+theta = [1.0 / (10000.0 ** (2 * i / dim)) for i in k]   # no scale here
 ```
 
 ## Example
 
 ```python
-import numpy as np
 cos, sin = rope_pi(4, 8, L_train=2048, L_new=4096)
-# cos.shape == (4, 4), sin.shape == (4, 4)
+# len(cos) == 4, len(cos[0]) == 4
 # At position 0: all angles are 0, so cos row 0 == [1, 1, 1, 1]
 ```
 
 ## What the gate checks
 
-`check.py` computes the reference `(cos, sin)` tensors using the correct formula
-(scale only the positions), then checks that your output matches within
-$\mathrm{max\_abs\_err} \le 10^{-6}$.
+`check.py` computes the reference `(cos, sin)` tensors using the correct formula (scale only the positions), then checks that your output matches within $\mathrm{max\_abs\_err} \le 10^{-6}$.

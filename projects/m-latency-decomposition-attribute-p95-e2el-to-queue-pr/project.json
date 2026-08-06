@@ -1,0 +1,45 @@
+{
+  "id": "m-latency-decomposition-attribute-p95-e2el-to-queue-pr",
+  "title": "Latency decomposition and SLO goodput ranking in vLLM",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "latency-metrics-slo-and-goodput",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "latmetrics/decomposition.py",
+    "latmetrics/goodput.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Percentile estimators and p95 latency decomposition",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "percentile_rel_err", "op": "<=", "threshold": 1e-5},
+        {"metric": "decomposition_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "SLO-aware config selection by goodput",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ranking_matched", "op": "==", "threshold": 1},
+        {"metric": "goodput_computed", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches throughput-based config ranking",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_throughput_ranking", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

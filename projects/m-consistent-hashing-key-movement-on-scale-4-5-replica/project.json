@@ -1,0 +1,47 @@
+{
+  "id": "m-consistent-hashing-key-movement-on-scale-4-5-replica",
+  "title": "Consistent hashing key movement on scale 4-5 replica",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "cache-aware-routing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "chash/router.py",
+    "chash/diagnostics.py",
+    "chash/affinity.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Minimal key movement under ring scaling",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "remapping_ratio_ok", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 0.05}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Hot-replica diagnosis and affinity TTL trade-offs",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "hot_replica_detected", "op": "==", "threshold": 1},
+        {"metric": "affinity_ttl_optimal", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for routing invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_hashing", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_affinity", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

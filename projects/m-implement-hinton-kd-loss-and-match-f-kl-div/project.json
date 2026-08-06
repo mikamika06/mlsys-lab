@@ -1,0 +1,21 @@
+{
+  "id": "m-implement-hinton-kd-loss-and-match-f-kl-div",
+  "title": "Implement Hinton KD loss and match F.kl_div",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-pruning-distill",
+  "track": "Distillation loss fundamentals (Hinton KD)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["distill/loss.py", "distill/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Implement Hinton KD loss matching F.kl_div", "check": "harness/m1.py",
+     "gates": [{"metric": "loss_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Temperature vs softmax entropy curve", "check": "harness/m2.py",
+     "gates": [{"metric": "entropy_matched", "op": ">=", "threshold": 4}]},
+    {"n": 3, "title": "Safety net: regression test catching missing T^2 scaling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_missing_t2", "op": "==", "threshold": 1}]}
+  ]
+}

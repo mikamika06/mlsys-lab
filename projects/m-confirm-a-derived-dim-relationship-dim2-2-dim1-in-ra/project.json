@@ -1,0 +1,19 @@
+{
+  "id": "m-confirm-a-derived-dim-relationship-dim2-2-dim1-in-ra",
+  "title": "Dynamic shapes & export constraints",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Dynamic shapes & export constraints",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["shapes/verifier.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Confirm derived dimensions", "check": "harness/m1.py",
+     "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}]},
+    {"n": 2, "title": "Propagate shapes", "check": "harness/m2.py",
+     "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "exact_match", "op": "==", "threshold": 1.0}]}
+  ]
+}

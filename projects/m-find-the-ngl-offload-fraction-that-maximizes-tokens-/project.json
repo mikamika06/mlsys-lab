@@ -1,0 +1,44 @@
+{
+  "id": "m-find-the-ngl-offload-fraction-that-maximizes-tokens-",
+  "title": "Find the -ngl offload fraction that maximizes tokens/sec",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "GGUF format & llama.cpp Metal backend",
+  "difficulty": 3,
+  "edits": [
+    "metalopt/offload.py",
+    "metalopt/quant.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Find the optimal -ngl offload fraction maximizing throughput ratio",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "optimal_ngl_matched", "op": "==", "threshold": 1},
+        {"metric": "throughput_ratio_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reproduce and catch llama-quantize dimension constraint errors",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "error_raised", "op": "==", "threshold": 1},
+        {"metric": "dimensions_checked", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for offload boundaries and quantization comparison",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_offload", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

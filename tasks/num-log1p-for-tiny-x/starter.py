@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def log1p_tiny(x: np.ndarray) -> np.ndarray:
+def log1p_tiny(x: list[float]) -> list[float]:
     raise NotImplementedError('your code here')

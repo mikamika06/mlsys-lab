@@ -1,0 +1,26 @@
+{
+  "id": "m-best-fit-caching-allocator-simulator",
+  "title": "Best-Fit Caching Allocator Simulator",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "The caching allocator, fragmentation and OOM triage",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["allocator/simulator.py", "allocator/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Best-fit allocator simulation with segment expansion", "check": "harness/m1.py",
+     "gates": [{"metric": "traces_passed", "op": ">=", "threshold": 5},
+               {"metric": "exact_matches", "op": "==", "threshold": 5}]},
+    {"n": 2, "title": "Peak allocated, reserved, and fragmentation gap metrics", "check": "harness/m2.py",
+     "gates": [{"metric": "peak_allocated_match", "op": "==", "threshold": 1},
+               {"metric": "peak_reserved_match", "op": "==", "threshold": 1},
+               {"metric": "fragmentation_match", "op": "==", "threshold": 1},
+               {"metric": "deltas_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test suite catching first-fit or coalescing regressions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_first_fit", "op": "==", "threshold": 1},
+               {"metric": "catches_no_coalesce", "op": "==", "threshold": 1}]}
+  ]
+}

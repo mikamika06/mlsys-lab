@@ -1,0 +1,44 @@
+{
+  "id": "m-break-even-step-count-for-max-autotune",
+  "title": "Break-even step count and mode selection for Inductor max-autotune",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Compile modes and Inductor tuning knobs",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "autotune/delta.py",
+    "autotune/breakeven.py",
+    "autotune/budget.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Mode-to-config flag delta",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "delta_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Break-even step count calculation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: mode selection under serving budget",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_budget", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

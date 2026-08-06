@@ -9,7 +9,8 @@ def grade(sol, fx) -> dict:
         try:
             emb = rng.standard_normal(shape).astype(np.float64)
             ref = emb / np.sqrt(shape[1])
-            got = sol.normalize_embeddings(emb)
+            got_list = sol.normalize_embeddings(emb.tolist())
+            got = np.array(got_list, dtype=np.float64)
             err = max_abs_err(ref, got)
             if err > max_err:
                 max_err = err

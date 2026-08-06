@@ -1,0 +1,21 @@
+{
+  "id": "m-e2m1-value-set-enumeration",
+  "title": "E2M1 value-set enumeration and quantization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "FP4 microscaling: NVFP4 vs MXFP4",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["e2m1/enumeration.py", "e2m1/quantize.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Enumerate E2M1 bit patterns and decoded values", "check": "harness/m1.py",
+     "gates": [{"metric": "enumeration_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Quantize float arrays to E2M1", "check": "harness/m2.py",
+     "gates": [{"metric": "quantization_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for E2M1 logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

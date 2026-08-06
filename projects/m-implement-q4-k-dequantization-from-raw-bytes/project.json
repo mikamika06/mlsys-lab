@@ -1,0 +1,36 @@
+{
+  "id": "m-implement-q4-k-dequantization-from-raw-bytes",
+  "title": "K-Quants Dequantization: Q4_K and Q6_K",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "k-quant-superblocks",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["dequant.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Unpack the 6-bit scales and mins",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "matches", "op": "==", "threshold": 10}]
+    },
+    {
+      "n": 2,
+      "title": "Dequantize Q4_K blocks",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "matches", "op": "==", "threshold": 10}]
+    },
+    {
+      "n": 3,
+      "title": "Dequantize Q6_K blocks and test scale signs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "q6_matches", "op": "==", "threshold": 10},
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_q6", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

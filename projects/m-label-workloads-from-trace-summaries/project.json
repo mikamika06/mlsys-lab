@@ -1,0 +1,64 @@
+{
+  "id": "m-label-workloads-from-trace-summaries",
+  "title": "Workloads from trace summaries",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Launch-bound vs compute-bound diagnosis",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "diag/labels.py",
+    "diag/roofline.py",
+    "diag/sync.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Label workloads from trace summaries",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "traces_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Roofline bound for an op mix",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "roofline_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Find the hidden device sync",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_ignored_syncs",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

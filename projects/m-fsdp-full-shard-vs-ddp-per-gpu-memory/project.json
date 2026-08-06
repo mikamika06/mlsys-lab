@@ -1,0 +1,64 @@
+{
+  "id": "m-fsdp-full-shard-vs-ddp-per-gpu-memory",
+  "title": "FSDP memory, trace patterns, and DDP graph breaks",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "Distributed and multi-GPU interactions",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "distmem/memory.py",
+    "distmem/traces.py",
+    "distmem/optimizer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "FSDP full-shard vs DDP per-GPU memory calculation",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "memory_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify multi-rank trace patterns",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "traces_classified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for memory and graph stability",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_invariant",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

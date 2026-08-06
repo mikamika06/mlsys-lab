@@ -1,0 +1,21 @@
+{
+  "id": "m-marlin-eligibility-predictor-for-quantizeconfig",
+  "title": "Marlin-eligibility predictor for QuantizeConfig",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "GPTQModel API and quantization knobs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["marlin/eligibility.py", "marlin/validator.py", "marlin/persistence.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Marlin-eligibility predictor", "check": "harness/m1.py",
+     "gates": [{"metric": "predictions_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "QuantizeConfig validation and error raising", "check": "harness/m2.py",
+     "gates": [{"metric": "validation_passed", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: round-trip config preservation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_roundtrip", "op": "==", "threshold": 1}]}
+  ]
+}

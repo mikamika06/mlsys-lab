@@ -1,0 +1,44 @@
+{
+  "id": "m-classify-which-term-dominates-memory-for-5-given-tra",
+  "title": "Classify and measure transformer activation memory",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "activation-memory-accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "actmem/classify.py",
+    "actmem/profile.py",
+    "actmem/scaling.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify dominating memory term",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "classification_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure real peak activation memory",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.15}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test regression on scaling behavior",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_scaling", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

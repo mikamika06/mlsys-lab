@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-the-crossover-concurrency-where-continuous-ba",
+  "title": "Crossover concurrency and benchmark normalization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "engine-selection-and-comparison",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["crossover/derive.py", "crossover/normalize.py", "crossover/audit.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive the crossover concurrency", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 2, "title": "Normalize benchmarks to tokens/s per GPU", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Audit benchmarks for unfairness", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unfair_audit", "op": "==", "threshold": 1}]}
+  ]
+}

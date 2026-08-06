@@ -22,27 +22,26 @@ $$
 \mathrm{rel\_err}(x,r)=\frac{|x-r|}{|r|+\epsilon}.
 $$
 
-The reference value in this task is computed using NumPy float64 accumulation.
+The reference value in this task is computed using Python float64 accumulation.
 
 ## Task
 
 Implement `tree_sum(values)`:
 
 ```python
-def tree_sum(values: np.ndarray) -> np.float32:
+def tree_sum(values: list[float]) -> float:
     ...
 ```
 
-The function receives a one-dimensional NumPy array of `float32` values and returns a `float32` sum using a pairwise tree reduction. Do not convert the full input to `float64`. The intermediate additions should remain in `float32`.
+The function receives a list of floats of `float32` values and returns a `float32` sum using a pairwise tree reduction. Do not convert the full input to `float64`. The intermediate additions should remain in `float32`.
 
 The reduction should continue pairing values until a single value remains. If a reduction level has an odd number of values, you may handle the remaining value in a way that preserves the tree structure.
 
 ## Example
 
 ```python
-import numpy as np
 
-values = np.array([1e8, 1, 1, 1, -1e8], dtype=np.float32)
+values = [1e8, 1, 1, 1, -1e8]
 
 result = tree_sum(values)
 ```
@@ -51,7 +50,7 @@ A sequential float32 reduction may lose small contributions depending on the ord
 
 ## What the gate checks
 
-The gate computes a float64 NumPy reduction as the oracle. It also computes the error of a sequential float32 reduction and the error of the submitted tree reduction on the same fixture.
+The gate computes a float64 Python reduction as the oracle. It also computes the error of a sequential float32 reduction and the error of the submitted tree reduction on the same fixture.
 
 The reported `rel_err` is the ratio:
 

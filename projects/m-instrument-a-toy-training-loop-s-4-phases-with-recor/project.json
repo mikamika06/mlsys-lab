@@ -1,0 +1,63 @@
+{
+  "id": "m-instrument-a-toy-training-loop-s-4-phases-with-recor",
+  "title": "Instrument a toy training loop's 4 phases with record_function",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "nvtx-annotation-and-correlation",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "profiler/loop.py",
+    "profiler/trace.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Phase breakdown with record_function",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.05
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Unbalanced push/pop detection",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "mismatch_accuracy",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test for scope imbalance",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_unbalanced_ranges",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

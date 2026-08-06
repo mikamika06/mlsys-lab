@@ -1,0 +1,46 @@
+{
+  "id": "m-compute-perplexity-with-llama-cpp-s-chunking-convent",
+  "title": "Perplexity and KL divergence evaluation with llama.cpp chunking",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "quality-measurement-ppl-kld",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "ppl/chunking.py",
+    "ppl/metrics.py",
+    "ppl/quant_eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute perplexity using llama.cpp chunking convention",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "ppl_rel_err", "op": "<=", "threshold": 0.0001},
+        {"metric": "chunks_evaluated", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute mean KLD and top-1 agreement between logit distributions",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "kld_rel_err", "op": "<=", "threshold": 0.0001},
+        {"metric": "top1_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Dump F16 reference logits, score quantization quality, and test safeguards",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_shifted_logits", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

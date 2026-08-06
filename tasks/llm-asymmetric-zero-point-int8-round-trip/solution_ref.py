@@ -1,13 +1,8 @@
-import numpy as np
-
-
-def asymmetric_quant_round_trip(x):
+def asymmetric_quant_round_trip(x: list[float]) -> tuple[list[float], int]:
     """Asymmetric quantization round trip."""
-    x = np.asarray(x, dtype=np.float64)
-    x_flat = x.flat
-    min_val = float(x_flat[0])
-    max_val = float(x_flat[0])
-    for v in x_flat:
+    min_val = float(x[0])
+    max_val = float(x[0])
+    for v in x:
         v_f = float(v)
         if v_f < min_val:
             min_val = v_f
@@ -26,14 +21,13 @@ def asymmetric_quant_round_trip(x):
     elif zp > 127:
         zp = 127
 
-    deq = np.empty(x.shape, dtype=np.float64)
-    deq_flat = deq.flat
-    for i in range(x.size):
-        q_val = int(round(float(x_flat[i]) / s + zp))
+    deq = []
+    for i in range(len(x)):
+        q_val = int(round(float(x[i]) / s + zp))
         if q_val < -128:
             q_val = -128
         elif q_val > 127:
             q_val = 127
-        deq_flat[i] = (float(q_val) - zp) * s
+        deq.append((float(q_val) - zp) * s)
 
     return deq, int(zp)

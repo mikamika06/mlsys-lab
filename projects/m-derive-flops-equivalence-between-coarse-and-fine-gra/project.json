@@ -1,0 +1,45 @@
+{
+  "id": "m-derive-flops-equivalence-between-coarse-and-fine-gra",
+  "title": "FLOPs Equivalence and Shared Fine-Grained MoE Routing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "shared-fine-grained-experts",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moe/flops.py",
+    "moe/block.py",
+    "moe/combinatorics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive FLOPs equivalence between coarse and fine-grained experts",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "flops_match", "op": "==", "threshold": 1},
+        {"metric": "splits_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Implement shared-expert and routed-experts MoE block",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "forward_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching combination degeneracy and FLOP mismatch",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_coarse_restriction", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

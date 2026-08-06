@@ -13,13 +13,12 @@ For a sequence of identical tokens, let's look at the structure of $S$:
 Write `classify_positional_scheme(S)`:
 
 ```python
-import numpy as np
 
-def classify_positional_scheme(S: np.ndarray) -> str:
+def classify_positional_scheme(S: list[list[float]]) -> str:
     ...
 ```
 
-Given a 2D float NumPy array `S` (an attention score matrix for a sequence of identical tokens), return one of `"none"`, `"sinusoidal"`, `"rope"`, or `"alibi"`.
+Given a 2D float list `S` (an attention score matrix for a sequence of identical tokens), return one of `"none"`, `"sinusoidal"`, `"rope"`, or `"alibi"`.
 
 Use a tolerance of `1e-4` for floating-point comparisons.
 - `"none"`: All elements in `S` are equal.
@@ -30,15 +29,14 @@ Use a tolerance of `1e-4` for floating-point comparisons.
 ## Example
 
 ```python
-import numpy as np
 
 # A 4x4 ALiBi score matrix
-S = np.array([
+S = [
     [10.0,  9.0,  8.0,  7.0],
     [ 9.0, 10.0,  9.0,  8.0],
     [ 8.0,  9.0, 10.0,  9.0],
     [ 7.0,  8.0,  9.0, 10.0]
-])
+]
 
 classify_positional_scheme(S)
 # Returns: "alibi"

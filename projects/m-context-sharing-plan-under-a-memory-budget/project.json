@@ -1,0 +1,21 @@
+{
+  "id": "m-context-sharing-plan-under-a-memory-budget",
+  "title": "Context sharing plan under a memory budget",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Memory, workspace and OOM in build and runtime",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ctxplan/plan.py", "ctxplan/classifier.py", "ctxplan/evidence.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Context sharing plan under a memory budget", "check": "harness/m1.py",
+     "gates": [{"metric": "plans_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Build-time vs runtime OOM classifier", "check": "harness/m2.py",
+     "gates": [{"metric": "classification_accuracy", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid exclusion evidence", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_evidence", "op": "==", "threshold": 1}]}
+  ]
+}

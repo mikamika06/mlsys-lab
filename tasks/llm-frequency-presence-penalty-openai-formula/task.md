@@ -28,27 +28,26 @@ Implement a function that applies this penalty to an array of logits.
 
 ```python
 def apply_frequency_presence_penalty(
-    logits: np.ndarray,
-    token_counts: np.ndarray,
+    logits: list[float],
+    token_counts: list[int],
     freq_penalty: float,
     presence_penalty: float
-) -> np.ndarray:
+) -> list[float]:
     ...
 ```
 
-* `logits` is a 1‑D NumPy array of shape `(vocab_size,)` containing the raw logits for each token.
+* `logits` is a 1‑D list of shape `(vocab_size,)` containing the raw logits for each token.
 * `token_counts` is a 1‑D integer array of the same shape, giving $c_t$ for every token.
 * `freq_penalty` and `presence_penalty` are floats $\alpha_{\text{freq}}$, $\alpha_{\text{pres}}$.
 
-The function must return a new NumPy array of type `float64` containing the penalised logits.  No loops or explicit Python iteration may be used; rely on vectorised NumPy operations only.
+The function must return a new list of type `float64` containing the penalised logits.  No loops or explicit Python iteration may be used; rely on vectorised Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([0.5, -1.2, 3.4], dtype=np.float64)
-token_counts = np.array([2, 0, 1], dtype=np.int64)
+logits = [0.5, -1.2, 3.4]
+token_counts = [2, 0, 1]
 
 # Frequency penalty 0.1, presence penalty 0.05
 penalised = apply_frequency_presence_penalty(
@@ -63,7 +62,7 @@ print(penalised)
 Output:
 
 ```
-[0.3   -1.2   3.25]
+[0.25, -1.2, 3.25]
 ```
 
 Explanation:  
@@ -73,7 +72,7 @@ Token 2 appears once → penalty $1·0.1 + 0.05 = 0.15$.
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares your output to it with the metric  
+The grader computes a reference implementation using Python and compares your output to it with the metric  
 
 $$
 \max_{t} \bigl|\, {l'}_t^{\text{your}} - {l'}_t^{\text{reference}} \bigr| .

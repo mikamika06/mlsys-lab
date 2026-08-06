@@ -1,0 +1,19 @@
+{
+  "id": "m-eager-vs-compiled-latency-harness-on-cpu",
+  "title": "Eager vs compiled latency harness on CPU",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "torch.compile programming model & modes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["cpuharness/harness.py", "cpuharness/modes.py", "cpuharness/safety.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Latency harness across CPU compile modes", "check": "harness/m1.py",
+     "gates": [{"metric": "modes_compared", "op": ">=", "threshold": 3}, {"metric": "latency_ratio_valid", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Fullgraph capture and exact exception verification", "check": "harness/m2.py",
+     "gates": [{"metric": "exception_caught", "op": "==", "threshold": 1}, {"metric": "fallback_handled", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for harness invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1}, {"metric": "passes_on_good", "op": "==", "threshold": 1}, {"metric": "catches_broken_ratio", "op": "==", "threshold": 1}]}
+  ]
+}

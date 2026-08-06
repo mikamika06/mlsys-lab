@@ -1,0 +1,21 @@
+{
+  "id": "m-bucket-schedule-that-stays-under-the-recompile-budge",
+  "title": "Bucket schedule and specialization guards for low recompilation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Guards and recompilation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["recomp/buckets.py", "recomp/specialization.py", "recomp/guards.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Bucket schedule within recompile budget", "check": "harness/m1.py",
+     "gates": [{"metric": "buckets_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Minimal specializations for shape traces", "check": "harness/m2.py",
+     "gates": [{"metric": "specializations_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching invalid guard schedules", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_guard", "op": "==", "threshold": 1}]}
+  ]
+}

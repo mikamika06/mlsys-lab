@@ -13,14 +13,18 @@ def grade(sol, fx) -> dict:
         ok = 1.0
         for _ in range(5):
             size = rng.integers(2, 20)
-            probs = rng.random(size)
+            probs_arr = rng.random(size)
             min_p = rng.random() * 0.9 + 0.1  # between 0.1 and 1.0
-            expected = reference(probs, min_p)
-            got = sol.minp_filter(probs, min_p)
-            if not isinstance(got, np.ndarray) or got.shape != probs.shape:
+            expected_arr = reference(probs_arr, min_p)
+
+            probs_list = probs_arr.tolist()
+            expected_list = expected_arr.tolist()
+
+            got = sol.minp_filter(probs_list, min_p)
+            if not isinstance(got, list) or len(got) != len(probs_list):
                 ok = 0.0
                 break
-            if not np.array_equal(got, expected):
+            if got != expected_list:
                 ok = 0.0
                 break
     except Exception:

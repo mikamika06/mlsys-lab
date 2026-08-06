@@ -1,15 +1,13 @@
-import numpy as np
-
-def apply_repetition_penalty(logits: np.ndarray,
+def apply_repetition_penalty(logits: list[float],
                              seen_tokens: list[int],
-                             penalty: float) -> np.ndarray:
+                             penalty: float) -> list[float]:
     """
     Apply the Hugging Face style repetition penalty to a vector of logits.
 
     Parameters
     ----------
-    logits : np.ndarray
-        1‑D array of shape (V,) with dtype float64.
+    logits : list[float]
+        List of logits.
     seen_tokens : list[int]
         Token indices that have already appeared in the context.
     penalty : float
@@ -17,19 +15,16 @@ def apply_repetition_penalty(logits: np.ndarray,
 
     Returns
     -------
-    np.ndarray
-        New logits array with the penalty applied only to tokens in `seen_tokens`.
+    list[float]
+        New logits list with the penalty applied only to tokens in `seen_tokens`.
     """
-    logits = np.asarray(logits, dtype=np.float64)
-    out = logits.copy()
-    if len(seen_tokens) == 0:
-        return out
-
-    mask = np.zeros_like(out, dtype=bool)
-    mask[list(seen_tokens)] = True
-    pos_mask = mask & (out > 0)
-    neg_mask = mask & (out <= 0)
-
-    out[pos_mask] /= penalty
-    out[neg_mask] *= penalty
+    out = list(logits)
+    seen_set = set(seen_tokens)
+    for i in range(len(out)):
+        if i in seen_set:
+            val = out[i]
+            if val > 0:
+                out[i] = val / penalty
+            elif val <= 0:
+                out[i] = val * penalty
     return out

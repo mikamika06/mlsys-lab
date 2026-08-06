@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def stable_sigmoid(z: np.ndarray) -> np.ndarray:
+def stable_sigmoid(z: list[float]) -> list[float]:
     raise NotImplementedError('your code here')

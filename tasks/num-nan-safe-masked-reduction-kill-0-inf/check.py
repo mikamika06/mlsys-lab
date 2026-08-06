@@ -1,10 +1,12 @@
-import numpy as np
+import math
 
 def _ref(data, mask):
-    """Oracle: sum via fancy indexing — never forms 0*inf."""
-    d = np.asarray(data, dtype=np.float64)
-    m = np.asarray(mask, dtype=bool)
-    return float(np.sum(d[m]))
+    """Oracle: sum via filtered elements — never forms 0*inf."""
+    total = 0.0
+    for d, m in zip(data, mask):
+        if m:
+            total += d
+    return float(total)
 
 def grade(sol, fx) -> dict:
     cases = [
@@ -29,10 +31,7 @@ def grade(sol, fx) -> dict:
     ok = 1.0
     for data, mask in cases:
         try:
-            got = sol.masked_sum(
-                np.array(data, dtype=np.float64),
-                np.array(mask, dtype=bool),
-            )
+            got = sol.masked_sum(list(data), list(mask))
         except Exception:
             ok = 0.0
             break
@@ -40,8 +39,8 @@ def grade(sol, fx) -> dict:
         expected = _ref(data, mask)
 
         # NaN-safe comparison
-        if np.isnan(expected):
-            if not np.isnan(got):
+        if math.isnan(expected):
+            if not math.isnan(got):
                 ok = 0.0
                 break
         elif got != expected:

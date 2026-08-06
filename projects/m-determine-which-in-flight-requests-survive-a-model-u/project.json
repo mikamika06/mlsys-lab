@@ -1,0 +1,35 @@
+{
+  "id": "m-determine-which-in-flight-requests-survive-a-model-u",
+  "title": "Determine in-flight request survival and minimum drain timeout",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Triton Model Control & Versioning Rollout",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tritondrain/survival.py", "tritondrain/timeout.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Determine surviving requests during model unload",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "survivors_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Derive minimum drain timeout to prevent request loss",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "timeouts_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches ignored queue delays in drain timeout",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_ignored_queue_delay", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

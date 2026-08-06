@@ -1,0 +1,64 @@
+{
+  "id": "m-memory-quality-frontier-across-k-v-type-pairs",
+  "title": "Memory-quality frontier and kernel fallback across KV quant types",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "llamacpp-and-local-kv-quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvquant/frontier.py",
+    "kvquant/fallback.py",
+    "kvquant/capacity.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Pareto frontier of KV cache precision pairs",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "frontier_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Detecting silent FlashAttention kernel fallbacks",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "fallbacks_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for KV capacity and fallback",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_ignored_fallback",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

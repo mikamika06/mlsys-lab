@@ -1,0 +1,40 @@
+{
+  "id": "m-compute-the-effective-option-set-from-modelfile-requ",
+  "title": "Effective option set, load-time splitting, and reload detection for local runners",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "option-precedence-and-reload-triggers",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "runneropts/options.py",
+    "runneropts/split.py",
+    "runneropts/reload.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute effective option set",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "options_matched", "op": ">=", "threshold": 5}]
+    },
+    {
+      "n": 2,
+      "title": "Split load-time vs sample-time options",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "split_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for runner option logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_logic", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

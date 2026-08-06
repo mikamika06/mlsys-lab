@@ -1,0 +1,7 @@
+# Quantization Pipeline Regression: Imatrix Sensitivity and Bit Allocation
+
+Our quantization pipeline for GGML/GGUF model exports exhibits unpredictable perplexity spikes during aggressive quantization (under 4.5 bits per weight). Downstream evaluations show that at certain bit-width targets, applying importance matrix (imatrix) guidance produces dramatic quality improvements on specific weight tensor roles, while on other tensors or at higher average bit-widths, the imatrix weighting provides negligible benefit compared to uniform rounding.
+
+Engineers currently assign quantization formats (such as Q2_K, Q3_K, Q4_K, Q5_K, Q6_K, Q8_0) across model layers using ad-hoc heuristics. This results in inefficient bit allocations that either exceed target memory budgets or fail to allocate bits to the most imatrix-sensitive tensor roles (e.g. attention projections vs feed-forward down-projections). Furthermore, we lack automated detection for the critical bits-per-weight (BPW) threshold where imatrix guidance stops providing measurable quality gains over standard unweighted quantization error.
+
+We need a structured bit-allocation framework that evaluates tensor-level imatrix sensitivities, computes exact weighted mean squared error (WMSE) for candidate quantization formats, identifies the critical BPW convergence point, and optimizes format choices across all model tensors under a strict target BPW budget.

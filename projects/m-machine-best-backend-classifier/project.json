@@ -1,0 +1,69 @@
+{
+  "id": "m-machine-best-backend-classifier",
+  "title": "Machine to best backend classifier",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "portability-and-fallbacks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fa_backend/classifier.py",
+    "fa_backend/failure.py",
+    "fa_backend/cost.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify best backend and diagnose platform failures",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "backends_matched",
+          "op": ">=",
+          "threshold": 1.0
+        },
+        {
+          "metric": "failures_matched",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantify fallback costs across target machines",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "costs_matched",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test suite catches improper backend selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_backend",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

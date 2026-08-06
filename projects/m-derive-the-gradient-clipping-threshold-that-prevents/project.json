@@ -1,0 +1,40 @@
+{
+  "id": "m-derive-the-gradient-clipping-threshold-that-prevents",
+  "title": "Numerical stability and gradient clipping thresholds",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "numerical-failure-modes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "numerics/threshold.py",
+    "numerics/overflow.py",
+    "numerics/underflow.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive the gradient-clipping threshold",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "exact_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Reproduce fp16 overflow and bf16 stability",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "overflow_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Gradient underflow and scaling behavior",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_scaling", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

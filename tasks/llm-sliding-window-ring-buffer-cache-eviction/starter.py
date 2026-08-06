@@ -1,7 +1,11 @@
-import numpy as np
+import math
 
-
-def windowed_ring_attention(Q, K, V, W):
+def windowed_ring_attention(
+    Q: list[list[float]],
+    K: list[list[float]],
+    V: list[list[float]],
+    W: int,
+) -> tuple[list[list[float]], list[list[float]], list[list[float]]]:
     """Sliding-window attention backed by a fixed-size ring buffer.
 
     Args:
@@ -20,4 +24,4 @@ def windowed_ring_attention(Q, K, V, W):
         Kbuf : (W, d)   final physical contents of the key ring buffer
         Vbuf : (W, dv)  final physical contents of the value ring buffer
     """
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')

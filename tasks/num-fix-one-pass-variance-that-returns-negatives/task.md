@@ -22,11 +22,11 @@ negative.
 Implement `stable_variance(x)`:
 
 ```python
-def stable_variance(x: np.ndarray) -> float:
+def stable_variance(x: list[float]) -> float:
     ...
 ```
 
-`x` is a 1-D NumPy array of floats. Return the **population variance**
+`x` is a list of floats of floats. Return the **population variance**
 (divide by $n$, i.e. `ddof=0`) as a Python `float`, computed with an
 algorithm that stays accurate even when the data has a large offset.
 
@@ -47,9 +47,8 @@ The input array must not be modified.
 ## Example
 
 ```python
-import numpy as np
 
-x = 1e8 + np.array([1.0, -2.0, 3.0, 0.5, -1.5])
+x = 1e8 + [1.0, -2.0, 3.0, 0.5, -1.5]
 v = stable_variance(x)
 # naive E[x^2] - E[x]^2 on this data is dominated by float64 rounding
 # noise near 1e16 and can even come out negative; stable_variance must not.
@@ -60,8 +59,8 @@ v = stable_variance(x)
 The gate builds several test arrays of the form `offset + noise` with
 offsets ranging from `0` up to `1e8` (and negative offsets too) and noise
 of order 1–5, using a seeded generator. For each array it computes the
-reference variance directly with `np.var(x, ddof=0)` (itself numerically
-well-behaved because NumPy does not use the naive cancelling formula) and
+reference variance directly with `sum((val - sum(x) / len(x)) ** 2 for val in x) / len(x)` (itself numerically
+well-behaved because Python does not use the naive cancelling formula) and
 compares it against `stable_variance(x)` via the relative error
 
 $$

@@ -1,0 +1,27 @@
+{
+  "id": "m-fraction-of-parameters-actually-quantized",
+  "title": "Fraction of parameters actually quantized in multimodal and language models",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Module targeting and ignore lists",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant_target/targeting.py",
+    "quant_target/metrics.py",
+    "quant_target/analyzer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Identify quantized modules and language-only scopes", "check": "harness/m1.py",
+     "gates": [{"metric": "targets_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute fraction of parameters and lm_head cost", "check": "harness/m2.py",
+     "gates": [{"metric": "fraction_match", "op": "==", "threshold": 1},
+               {"metric": "head_cost_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches incorrect scope filtering", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_scope", "op": "==", "threshold": 1}]}
+  ]
+}

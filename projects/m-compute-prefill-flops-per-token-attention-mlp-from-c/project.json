@@ -1,0 +1,44 @@
+{
+  "id": "m-compute-prefill-flops-per-token-attention-mlp-from-c",
+  "title": "Prefill FLOPs and decode roofline from config",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "prefill-decode-roofline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "roofline/model.py",
+    "roofline/predict.py",
+    "roofline/analyzer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute prefill FLOPs per token from config",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "flops_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute decode memory bytes per step",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "bytes_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: roofline predictor regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_roofline", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

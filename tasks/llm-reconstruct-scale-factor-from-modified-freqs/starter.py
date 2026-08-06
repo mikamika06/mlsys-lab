@@ -1,4 +1,3 @@
-import numpy as np
-
-def recover_scale_factor(orig_freqs: np.ndarray, mod_freqs: np.ndarray) -> float:
+def recover_scale_factor(orig_freqs: list[float],
+                         mod_freqs: list[float]) -> float:
     raise NotImplementedError('your code here')

@@ -40,12 +40,15 @@ def grade(sol, fx) -> dict:
 
     max_err = 0.0
     for logits, targets, mask in cases:
+        logits_list = logits.tolist()
+        targets_list = targets.tolist()
+        mask_list = mask.tolist() if mask is not None else None
         try:
-            got = sol.cross_entropy_loss(logits, targets, mask)
+            got = sol.cross_entropy_loss(logits_list, targets_list, mask_list)
         except Exception:
             return {"max_abs_err": float("inf")}
         ref = _ref(logits, targets, mask)
-        err = scorers.max_abs_err(ref, got)
+        err = scorers.max_abs_err(ref, np.array(got, dtype=np.float64))
         if err > max_err:
             max_err = err
     return {"max_abs_err": max_err}

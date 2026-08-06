@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-how-the-launched-grid-shape-changes-across-au",
+  "title": "Derive grid shape changes across autotuned configs",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Grid launch configuration (1D/2D/meta-parameter grids)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["grid_analyzer/core.py", "grid_analyzer/validate.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive grid shape for a single config", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compare grid shapes across multiple autotuned configs", "check": "harness/m2.py",
+     "gates": [{"metric": "comparison_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches incorrect grid rounding", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_rounding", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -25,7 +25,7 @@ The buggy function below uses `sqrt(var) + eps`.  Fix it so that $\varepsilon$ i
 **inside** the square root: `sqrt(var + eps)`.
 
 ```python
-def layer_norm(x, gamma, beta, eps=1e-5):
+def layer_norm(x: list[float], gamma: list[float], beta: list[float], eps: float = 1e-5) -> list[float]:
     mu  = x.mean()
     var = ((x - mu) ** 2).mean()
     # BUG: eps is outside the sqrt
@@ -38,10 +38,9 @@ Fix the single line so that `std = (var + eps) ** 0.5`.
 ## Example
 
 ```python
-import numpy as np
-x     = np.array([1.0, 2.0, 3.0])
-gamma = np.ones(3)
-beta  = np.zeros(3)
+x     = [1.0, 2.0, 3.0]
+gamma = [1.0] * 3
+beta  = [0.0] * 3
 # Correct result:
 layer_norm(x, gamma, beta)
 # array([-1.22474487,  0.        ,  1.22474487])

@@ -1,0 +1,22 @@
+{
+  "id": "m-bf16-vs-fp16-error-tradeoff",
+  "title": "BF16 vs FP16 Error Tradeoff and Blockwise Attention Correctness",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "numerical-correctness-and-tolerances",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["fa_tradeoff/precision.py", "fa_tradeoff/attention.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "BF16 vs FP16 precision and relative error profile", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err_match", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Fully-masked row NaN elimination in blockwise attention", "check": "harness/m2.py",
+     "gates": [{"metric": "no_nan", "op": "==", "threshold": 1},
+               {"metric": "blockwise_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for exact blockwise attention", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_blockwise", "op": "==", "threshold": 1}]}
+  ]
+}

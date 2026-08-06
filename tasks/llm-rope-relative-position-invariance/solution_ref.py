@@ -1,12 +1,11 @@
 import math
-import numpy as np
 
-def rope_relative_dot(q, k, pos_q, pos_k):
-    d = q.shape[0]
+def rope_relative_dot(q: list[float], k: list[float], pos_q: int, pos_k: int) -> float:
+    d = len(q)
     if d % 2 != 0:
         raise ValueError("q and k must have even length")
-    q_rot = np.empty_like(q)
-    k_rot = np.empty_like(k)
+    q_rot = [0.0] * d
+    k_rot = [0.0] * d
     for i in range(0, d, 2):
         inv_freq = 1.0 / (10000.0 ** (i / d))
         pos_q_val = pos_q * inv_freq

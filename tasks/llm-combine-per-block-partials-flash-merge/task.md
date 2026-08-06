@@ -14,34 +14,41 @@ To merge these $k$ block-level partials into the mathematically exact global att
 Write `merge_attention_blocks(m_blocks, l_blocks, O_blocks)`:
 
 ```python
-import numpy as np
-
 def merge_attention_blocks(
-    m_blocks: np.ndarray, 
-    l_blocks: np.ndarray, 
-    O_blocks: np.ndarray
-) -> np.ndarray:
+    m_blocks: list[list[list[float]]],
+    l_blocks: list[list[list[float]]],
+    O_blocks: list[list[list[float]]]
+) -> list[list[float]]:
     ...
 ```
 
-Given the partial components for $k$ blocks, combine them to compute the final attention output. 
+Given the partial components for $k$ blocks, combine them to compute the final attention output.
 
 Input array shapes:
+
 - `m_blocks`: `(num_blocks, seq_len, 1)`
 - `l_blocks`: `(num_blocks, seq_len, 1)`
 - `O_blocks`: `(num_blocks, seq_len, d_v)`
+
 
 Return the final combined output `O` of shape `(seq_len, d_v)`.
 
 ## Example
 
 ```python
-import numpy as np
-
 # Suppose we have 2 blocks, sequence length of 3, and d_v of 4
-m_blocks = np.random.randn(2, 3, 1)
-l_blocks = np.random.uniform(1, 10, size=(2, 3, 1))
-O_blocks = np.random.randn(2, 3, 4)
+m_blocks = [
+    [[0.1], [0.2], [0.3]],
+    [[0.4], [0.5], [0.6]]
+]
+l_blocks = [
+    [[1.0], [2.0], [3.0]],
+    [[4.0], [5.0], [6.0]]
+]
+O_blocks = [
+    [[0.1, 0.2, 0.3, 0.4], [0.5, 0.6, 0.7, 0.8], [0.9, 1.0, 1.1, 1.2]],
+    [[1.3, 1.4, 1.5, 1.6], [1.7, 1.8, 1.9, 2.0], [2.1, 2.2, 2.3, 2.4]]
+]
 
 O_final = merge_attention_blocks(m_blocks, l_blocks, O_blocks)
 # O_final shape: (3, 4)

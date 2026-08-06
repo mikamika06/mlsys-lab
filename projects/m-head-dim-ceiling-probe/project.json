@@ -1,0 +1,22 @@
+{
+  "id": "m-head-dim-ceiling-probe",
+  "title": "Head dimension ceiling probe and FA gating analysis",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "version-and-hardware-gating",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["probe/head_dim.py", "probe/throughput.py", "probe/fp8_gating.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Head dimension ceiling probe", "check": "harness/m1.py",
+     "gates": [{"metric": "ceilings_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "FA2 vs FA3 throughput and FP8 availability", "check": "harness/m2.py",
+     "gates": [{"metric": "throughput_match", "op": "==", "threshold": 1},
+               {"metric": "fp8_reason_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for gating logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_gating", "op": "==", "threshold": 1}]}
+  ]
+}

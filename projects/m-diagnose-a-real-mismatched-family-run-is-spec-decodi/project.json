@@ -1,0 +1,38 @@
+{
+  "id": "m-diagnose-a-real-mismatched-family-run-is-spec-decodi",
+  "title": "Diagnose mismatched-family speculative decoding runs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "llama.cpp local speculative decoding",
+  "difficulty": 3,
+  "edits": [
+    "specdiag/metrics.py",
+    "specdiag/diagnose.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute acceptance rates and expected token yield",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "metrics_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose net-helping status and breakeven threshold",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "diagnosis_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches false net-helping reports",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_diagnosis", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

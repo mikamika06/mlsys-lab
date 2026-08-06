@@ -1,7 +1,5 @@
-import numpy as np
+import math
 
-
-def log_likelihood(probs: np.ndarray) -> float:
+def log_likelihood(probs: list[float]) -> float:
     """Log-likelihood computed by multiplying probabilities then taking the log."""
-    probs = np.asarray(probs, dtype=np.float64)
-    return float(np.log(np.prod(probs)))
+    raise NotImplementedError('your code here')

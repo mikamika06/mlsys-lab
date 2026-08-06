@@ -1,0 +1,40 @@
+{
+  "id": "m-grid-sweep-temperature-x-alpha-on-tiny-kd-task",
+  "title": "Grid-sweep temperature and alpha on tiny KD task",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Distillation hyperparameter sensitivity (temperature, alpha)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kd_sweep/sweep.py",
+    "kd_sweep/gradient.py",
+    "kd_sweep/noise.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Grid-sweep temperature and alpha optimization",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "sweep_rel_err", "op": "<=", "threshold": 1e-4}]
+    },
+    {
+      "n": 2,
+      "title": "Numerical verification of the T^2 gradient factor",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "grad_rel_err", "op": "<=", "threshold": 1e-4}]
+    },
+    {
+      "n": 3,
+      "title": "Effective-temperature shift under noisy teacher logits and safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

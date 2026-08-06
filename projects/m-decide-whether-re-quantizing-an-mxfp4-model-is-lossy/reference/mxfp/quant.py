@@ -1,0 +1,4 @@
+def is_requantizing_lossy(src_format, dst_format, block_size):
+    if src_format == dst_format and block_size > 0:
+        return False
+    return True

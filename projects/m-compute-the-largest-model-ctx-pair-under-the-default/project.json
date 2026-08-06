@@ -1,0 +1,40 @@
+{
+  "id": "m-compute-the-largest-model-ctx-pair-under-the-default",
+  "title": "Apple Silicon memory limits, swap thrash, and crash log triage",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "apple-silicon-unified-memory-limits",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "runner_limits/sizing.py",
+    "runner_limits/thrash.py",
+    "runner_limits/diagnose.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute the largest model and context pair",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "sizing_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Detect swap thrash and performance collapse",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "thrash_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Diagnose failure logs and pass regression tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_diagnosis", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

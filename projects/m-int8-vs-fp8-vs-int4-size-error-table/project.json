@@ -1,0 +1,35 @@
+{
+  "id": "m-int8-vs-fp8-vs-int4-size-error-table",
+  "title": "PTQ Size/Error Table and Calibration",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT Model Optimizer (modelopt) PTQ for ONNX and TRT",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["qsim/quant.py", "qsim/eval.py", "qsim/calibrate.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantization formats and size/error table",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "table_matches", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "In-domain vs out-of-domain calibration",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "calibration_matches", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch poisoned calibration data",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_detect", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

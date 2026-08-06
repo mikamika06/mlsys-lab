@@ -1,0 +1,74 @@
+{
+  "id": "m-bit-exact-bf16-rounding-in-numpy",
+  "title": "Bit-exact BF16 rounding and low-precision numerics",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Low-precision numerics: bf16, fp16, fp32, TF32",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "bf16num/bf16.py",
+    "bf16num/fp16.py",
+    "bf16num/ulp.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Bit-exact BF16 rounding in numpy",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "byte_exact_fraction",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "FP16 subnormals, ULP, and max range limits",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "subnormals_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "ulp_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "max_val_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for low-precision numerics",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_imprecise_rounding",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

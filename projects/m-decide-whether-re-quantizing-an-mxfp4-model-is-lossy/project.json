@@ -1,0 +1,21 @@
+{
+  "id": "m-decide-whether-re-quantizing-an-mxfp4-model-is-lossy",
+  "title": "MXFP4 Re-quantization Loss and MoE Size Share",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "mxfp4-shared-exponent",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mxfp4/analysis.py", "mxfp4/moe.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Decide whether re-quantizing MXFP4 is lossy", "check": "harness/m1.py",
+     "gates": [{"metric": "decisions_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Compute MXFP4 share of MoE file size", "check": "harness/m2.py",
+     "gates": [{"metric": "share_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for model analysis", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

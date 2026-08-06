@@ -1,0 +1,21 @@
+{
+  "id": "m-fixed-gamma-vs-adaptive-heuristic-under-a-drifting-a",
+  "title": "Adaptive draft length tuning under drifting acceptance rates",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Draft length (gamma) tuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["specadapt/tuning.py", "specadapt/simulation.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Estimate local acceptance rate alpha from history", "check": "harness/m1.py",
+     "gates": [{"metric": "alpha_error", "op": "<=", "threshold": 0.05}]},
+    {"n": 2, "title": "Adaptive gamma outperforms fixed gamma on throughput ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "throughput_ratio", "op": ">=", "threshold": 1.15}]},
+    {"n": 3, "title": "Safety net: regression test for adaptive heuristic bounds", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_bounds", "op": "==", "threshold": 1}]}
+  ]
+}

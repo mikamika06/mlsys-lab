@@ -28,11 +28,11 @@ $\displaystyle \theta_i = p\,\omega_i$.  This simple operation preserves dot‑p
 Implement `apply_rope(x, pos)`:
 
 ```python
-def apply_rope(x: np.ndarray, pos: int) -> np.ndarray:
+def apply_rope(x: list[list[float]], pos: int) -> list[list[float]]:
     ...
 ```
 
-`x` is a 2‑D NumPy array of shape $(n,d)$ with even $d$.  
+`x` is a 2‑D list of shape $(n,d)$ with even $d$.  
 The function must return a new array of the same shape and dtype `float64`.  
 For each pair of columns $(2i,2i+1)$ compute the rotation angle
 
@@ -46,9 +46,8 @@ The implementation must be fully vectorised; no explicit Python loops over rows 
 ## Example
 
 ```python
-import numpy as np
-x = np.array([[1., 0., 0., 1.],
-              [0., 1., 1., 0.]])
+x = [[1., 0., 0., 1.],
+              [0., 1., 1., 0.]]
 # d=4 → two frequency values: ω₀≈0.01, ω₁≈0.99
 out = apply_rope(x, pos=2)
 print(out)
@@ -60,7 +59,7 @@ The output will be a rotated version of `x` with the specified angles.
 
 Two metrics are evaluated:
 
-* **max_abs_err** – the maximum absolute difference between your result and a NumPy reference implementation. The solution must satisfy $\mathrm{max\_abs\_err} \le 10^{-6}$.
+* **max_abs_err** – the maximum absolute difference between your result and a Python reference implementation. The solution must satisfy $\mathrm{max\_abs\_err} \le 10^{-6}$.
 * **shape_and_dtype** – the output shape must match the input shape and the dtype must be `float64`.
 
 The gate will fail if either condition is not met.

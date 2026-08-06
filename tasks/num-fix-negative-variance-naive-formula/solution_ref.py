@@ -1,12 +1,8 @@
-import numpy as np
-
-
-def stable_variance(x: np.ndarray) -> float:
-    values = np.asarray(x, dtype=np.float64)
-    if values.size == 0:
+def stable_variance(x: list[float]) -> float:
+    if not x:
         return float("nan")
 
-    centered = values - values[0]
+    centered = [val - x[0] for val in x]
 
     mean = 0.0
     m2 = 0.0

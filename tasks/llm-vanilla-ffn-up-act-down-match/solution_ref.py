@@ -1,30 +1,35 @@
 import math
-import numpy as np
 
-def ffn_forward(x, W_up, b_up, W_down, b_down):
+def ffn_forward(
+    x: list[float],
+    W_up: list[list[float]],
+    b_up: list[float],
+    W_down: list[list[float]],
+    b_down: list[float],
+) -> list[float]:
     """Vanilla FFN forward: down_proj(gelu(up_proj(x)))."""
-    d_hidden = W_up.shape[0]
-    d = W_down.shape[0]
-    
-    h = np.zeros(d_hidden, dtype=W_up.dtype)
+    d_hidden = len(W_up)
+    d = len(W_down)
+
+    h = [0.0] * d_hidden
     for i in range(d_hidden):
         acc = b_up[i]
-        for j in range(x.shape[0]):
-            acc += W_up[i, j] * x[j]
+        for j in range(len(x)):
+            acc += W_up[i][j] * x[j]
         h[i] = acc
-        
-    a = np.zeros(d_hidden, dtype=h.dtype)
+
+    a = [0.0] * d_hidden
     const = math.sqrt(2.0 / math.pi)
     for i in range(d_hidden):
         val = h[i]
         gelu_val = 0.5 * val * (1.0 + math.tanh(const * (val + 0.044715 * (val ** 3))))
         a[i] = gelu_val
-        
-    res = np.zeros(d, dtype=W_down.dtype)
+
+    res = [0.0] * d
     for i in range(d):
         acc = b_down[i]
         for j in range(d_hidden):
-            acc += W_down[i, j] * a[j]
+            acc += W_down[i][j] * a[j]
         res[i] = acc
-        
+
     return res

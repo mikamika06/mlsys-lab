@@ -1,0 +1,21 @@
+{
+  "id": "m-global-l1-unstructured-pruning-to-exact-target-spars",
+  "title": "Global L1 unstructured pruning and CPU zero-speedup analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Unstructured magnitude pruning fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["prune/global.py", "prune/speedup.py", "prune/alloc.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Global L1 unstructured pruning to exact target sparsity", "check": "harness/m1.py",
+     "gates": [{"metric": "sparsity_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "CPU zero-speedup measurement for sparse models", "check": "harness/m2.py",
+     "gates": [{"metric": "speedup_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Per-layer allocation and safety net", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_allocation", "op": "==", "threshold": 1}]}
+  ]
+}

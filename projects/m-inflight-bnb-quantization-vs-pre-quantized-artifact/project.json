@@ -1,0 +1,45 @@
+{
+  "id": "m-inflight-bnb-quantization-vs-pre-quantized-artifact",
+  "title": "Inflight BnB Quantization vs Pre-quantized Artifact",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-quant-libs",
+  "track": "Serving quantized models in production (vLLM)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bnb_quant/loader.py",
+    "bnb_quant/bench.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantization artifact loader and inflight transformer",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "models_checked", "op": ">=", "threshold": 3},
+        {"metric": "load_accuracy", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure inflight vs pre-quantized loading latency ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "latency_ratio", "op": ">=", "threshold": 2.0},
+        {"metric": "bytes_saved_ratio", "op": ">=", "threshold": 1.5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: Regression test for dynamic quantization layout shifts",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_layout_shift", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -22,28 +22,25 @@ The task below asks you to implement the correct additive‑masking routine and 
 Implement `masked_softmax(logits, mask)`:
 
 ```python
-def masked_softmax(logits: np.ndarray, mask: np.ndarray) -> np.ndarray:
+def masked_softmax(logits: list[list[float]], mask: list[list[int]]) -> list[list[float]]:
     ...
 ```
 
-* `logits` is a 2‑D NumPy array of shape `(batch, seq_len)` containing raw attention scores.
+* `logits` is a 2‑D list of shape `(batch, seq_len)` containing raw attention scores.
 * `mask` has the same shape and contains boolean or integer values (`1`/`0`) indicating which positions are allowed to attend.
 * The function must return a probability matrix of the same shape where masked entries are exactly zero and each row sums to one.
-* Use only vectorised NumPy operations; no explicit Python loops.
+* Use only vectorised Python operations; no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([[1.0, 2.0, -1.0],
-                   [0.5, 0.0, 3.0]])
-mask   = np.array([[1, 0, 1],
-                   [1, 1, 0]])
+logits = [[1.0, 2.0, -1.0],
+                   [0.5, 0.0, 3.0]]
+mask   = [[1, 0, 1],
+                   [1, 1, 0]]
 
 probs = masked_softmax(logits, mask)
-print(probs)
-# [[0.73105858 0.         0.26894142]
-#  [0.11920292 0.88079708 0.        ]]
+print(probs)  # [[0.8807970779778823, 0.0, 0.11920292202211755], [0.6224593312018546, 0.37754066879814546, 0.0]]
 ```
 
 ## What the gate checks

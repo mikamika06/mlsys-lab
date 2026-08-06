@@ -1,7 +1,6 @@
-import numpy as np
-
 def recover_sublayer_contribution(in_, out_):
     """Return the sublayer contribution from residual write."""
-    in_arr = np.asarray(in_)
-    out_arr = np.asarray(out_)
-    return (out_arr - in_arr).astype(np.float64)
+    if isinstance(in_[0], list):
+        return [[o - i for i, o in zip(row_in, row_out)] for row_in, row_out in zip(in_, out_)]
+    else:
+        return [o - i for i, o in zip(in_, out_)]

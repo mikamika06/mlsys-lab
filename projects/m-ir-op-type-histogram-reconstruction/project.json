@@ -1,0 +1,21 @@
+{
+  "id": "m-ir-op-type-histogram-reconstruction",
+  "title": "IR op-type histogram reconstruction and numeric agreement",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "OpenVINO IR conversion & model representation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["irhist/parser.py", "irhist/histogram.py", "irhist/agreement.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse IR and build op-type histogram", "check": "harness/m1.py",
+     "gates": [{"metric": "histogram_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "ONNX-path vs direct-path IR numeric agreement", "check": "harness/m2.py",
+     "gates": [{"metric": "agreement_score", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches structural op mismatch", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_structural_mismatch", "op": "==", "threshold": 1}]}
+  ]
+}

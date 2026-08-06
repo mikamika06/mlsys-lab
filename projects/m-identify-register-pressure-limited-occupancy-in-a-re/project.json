@@ -1,0 +1,21 @@
+{
+  "id": "m-identify-register-pressure-limited-occupancy-in-a-re",
+  "title": "Identify register pressure occupancy and build local per-block timing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "triton-kernel-profiling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["profiler/occupancy.py", "profiler/interpreter.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify register-pressure-limited occupancy from NCU metrics", "check": "harness/m1.py",
+     "gates": [{"metric": "occupancy_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Build per-block timing table using interpretation mode", "check": "harness/m2.py",
+     "gates": [{"metric": "table_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching broken occupancy calculation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_occupancy", "op": "==", "threshold": 1}]}
+  ]
+}

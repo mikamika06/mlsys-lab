@@ -1,8 +1,19 @@
-import numpy as np
+import math
 
 def log_softmax(x):
     """Compute log(softmax(x)) along the last axis (numerically stable)."""
-    x = np.asarray(x, dtype=np.float64)
-    x_max = np.max(x, axis=-1, keepdims=True)
-    log_sum_exp = np.log(np.sum(np.exp(x - x_max), axis=-1, keepdims=True)) + x_max
-    return x - log_sum_exp
+    if not x:
+        return []
+    if isinstance(x[0], (int, float)):
+        max_val = max(x)
+        sum_exp = sum(math.exp(v - max_val) for v in x)
+        lse = math.log(sum_exp) + max_val
+        return [v - lse for v in x]
+
+    res = []
+    for row in x:
+        max_val = max(row)
+        sum_exp = sum(math.exp(v - max_val) for v in row)
+        lse = math.log(sum_exp) + max_val
+        res.append([v - lse for v in row])
+    return res

@@ -36,9 +36,9 @@ def grade(sol, fx) -> dict:
 
     try:
         dx_ref = numeric_grad(x.copy(), dy, gamma, beta)
-        dx_sol = sol.compute_dx(dy, x, gamma, beta)
+        dx_sol = sol.compute_dx(dy.tolist(), x.tolist(), gamma.tolist(), beta.tolist())
     except Exception as e:
         return {"rel_err": float("inf")}
 
-    err = rel_err(dx_ref, dx_sol)
+    err = rel_err(dx_ref, np.array(dx_sol))
     return {"rel_err": err}

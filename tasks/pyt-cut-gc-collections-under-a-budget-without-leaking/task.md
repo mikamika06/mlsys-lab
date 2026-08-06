@@ -21,7 +21,7 @@ generation are never reclaimed for the life of the process, because `gc.collect(
 Implement `cut_gc_collections_under_budget()`:
 
 ```python
-def cut_gc_collections_under_budget(n_cycles: int) -> tuple[int, int]:
+def cut_gc_collections_under_budget(n_cycles):
     ...
 ```
 
@@ -69,7 +69,7 @@ that the scans do not have to walk the heap that existed before.
 Note what is *not* measured, and why. An earlier version of this task compared
 `len(gc.get_objects())` before and after the workload as a leak indicator. That counts
 every tracked object in the interpreter, not yours: once the grading process had imported
-numpy the count moved for unrelated reasons, and the reference solution failed its own
+the count moved for unrelated reasons, and the reference solution failed its own
 task depending on who called it. The return value of `gc.collect()` is a property of your
 own allocations and measures the same thing — that the cycles were actually reclaimed —
 without depending on the host.

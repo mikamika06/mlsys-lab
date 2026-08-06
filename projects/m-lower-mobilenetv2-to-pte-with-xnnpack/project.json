@@ -1,0 +1,21 @@
+{
+  "id": "m-lower-mobilenetv2-to-pte-with-xnnpack",
+  "title": "Lower MobileNetV2 to .pte with XNNPACK",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "ExecuTorch export and lowering pipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["edge_export/lower.py", "edge_export/census.py", "edge_export/repair.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Lower MobileNetV2 graph to XNNPACK target", "check": "harness/m1.py",
+     "gates": [{"metric": "lower_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Delegated vs fallback node census", "check": "harness/m2.py",
+     "gates": [{"metric": "census_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Edge-dialect verifier failure repair safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_repair", "op": "==", "threshold": 1}]}
+  ]
+}

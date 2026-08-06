@@ -17,11 +17,11 @@ def grade(sol, fx) -> dict:
     targets = rng.integers(low=0, high=V, size=N)
 
     try:
-        got = sol.perplexity_from_cross_entropy(logits, targets)
+        got = sol.perplexity_from_cross_entropy(logits.tolist(), targets.tolist())
     except Exception:
         return {"rel_err": 1.0}
 
-    if not isinstance(got, (float, np.floating)):
+    if not isinstance(got, float):
         return {"rel_err": 1.0}
 
     ref = _reference(logits, targets)

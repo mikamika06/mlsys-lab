@@ -1,0 +1,21 @@
+{
+  "id": "m-classify-6-real-kernels-as-compute-bound-memory-boun",
+  "title": "Classifying real kernels by Speed-of-Light throughput metrics",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "speed-of-light-throughput-metrics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kernelperf/classify.py", "kernelperf/bandwidth.py", "kernelperf/gflops.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Classify kernels as compute, memory, or latency bound", "check": "harness/m1.py",
+     "gates": [{"metric": "classification_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compute achieved GB/s and cross-check DRAM bytes", "check": "harness/m2.py",
+     "gates": [{"metric": "bandwidth_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Rank kernels by achieved GFLOP/s and regression safety net", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

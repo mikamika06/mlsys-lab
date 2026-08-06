@@ -1,0 +1,40 @@
+{
+  "id": "m-find-the-recompute-swap-crossover-and-choose-the-che",
+  "title": "vLLM Preemption Cost Model",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "vLLM Preemption Cost Model",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "preemption/crossover.py",
+    "preemption/overhead.py",
+    "preemption/policy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Find the Recompute-Swap Crossover",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "crossover_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Compute Wasted-Compute Overhead",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "overhead_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Choose Cheaper Mode and Regression Safety Net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_suboptimal_policy", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

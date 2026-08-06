@@ -1,6 +1,6 @@
-import numpy as np
+import math
 
-def rope_pi(seq_len, dim, L_train, L_new):
+def rope_pi(seq_len: int, dim: int, L_train: float, L_new: float) -> tuple[list[list[float]], list[list[float]]]:
     """RoPE with Position Interpolation.
 
     BUG: the scale factor is applied to BOTH the positions AND the frequencies.
@@ -8,12 +8,4 @@ def rope_pi(seq_len, dim, L_train, L_new):
 
     Returns: (cos, sin) each of shape (seq_len, dim // 2)
     """
-    pos = np.arange(seq_len, dtype=np.float64)
-    scale = L_train / L_new
-    pos_scaled = pos * scale
-    k = np.arange(dim // 2, dtype=np.float64)
-    theta = 1.0 / (10000.0 ** (2.0 * k / dim)) * scale   # BUG: extra * scale
-    angles = np.outer(pos_scaled, theta)
-    cos = np.cos(angles)
-    sin = np.sin(angles)
-    return cos, sin
+    raise NotImplementedError('your code here')

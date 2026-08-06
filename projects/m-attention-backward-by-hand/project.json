@@ -1,0 +1,68 @@
+{
+  "id": "m-attention-backward-by-hand",
+  "title": "Attention backward pass and recomputation accounting",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "backward-pass-determinism-and-dropout",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "attnbwd/backward.py",
+    "attnbwd/overhead.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Attention backward pass with reproducible dropout",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.0001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Backward FLOPs and recompute overhead",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "flops_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "overhead_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching non-deterministic dropout mask",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_non_deterministic_dropout",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

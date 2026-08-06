@@ -13,13 +13,17 @@ def _oracle(logits: np.ndarray, targets: np.ndarray) -> np.ndarray:
 
 
 def grade(sol, fx) -> dict:
-    logits = np.asarray(fx["logits"], dtype=np.float64)
-    targets = np.asarray(fx["targets"], dtype=np.int64)
+    logits_np = np.asarray(fx["logits"], dtype=np.float64)
+    targets_np = np.asarray(fx["targets"], dtype=np.int64)
 
-    ref = _oracle(logits, targets)
+    ref = _oracle(logits_np, targets_np)
+
+    logits_list = logits_np.tolist()
+    targets_list = targets_np.tolist()
 
     try:
-        got = np.asarray(sol.fused_cross_entropy(logits, targets), dtype=np.float64)
+        got_raw = sol.fused_cross_entropy(logits_list, targets_list)
+        got = np.asarray(got_raw, dtype=np.float64)
     except Exception:
         return {"rel_err": float("inf")}
 

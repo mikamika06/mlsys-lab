@@ -1,0 +1,22 @@
+{
+  "id": "m-diagnose-a-near-0-l2-hit-rate-as-a-working-set-large",
+  "title": "Diagnose near-0 percent L2 hit rate and verify tiling DRAM reduction",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "memory-workload-cache-and-coalescing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["profiler/diagnose.py", "profiler/tiling.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Diagnose working set size versus L2 capacity", "check": "harness/m1.py",
+     "gates": [{"metric": "diagnosis_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Verify shared-memory tiling DRAM byte reduction", "check": "harness/m2.py",
+     "gates": [{"metric": "dram_bytes_verified", "op": "==", "threshold": 1},
+               {"metric": "speedup_explained", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching fake tiling bandwidth reductions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_tiling", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "m-apply-split-reorder-vectorize-parallel-by-hand-to-a-",
+  "title": "Manual TensorIR Schedule Transformations for MatMul",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TVM TensorIR schedule primitives",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tirsched/schedule.py", "tirsched/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Apply schedule primitives by hand and verify step correctness", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-4},
+               {"metric": "axes_mapped", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Measure speedup ratio against naive TIR matmul baseline", "check": "harness/m2.py",
+     "gates": [{"metric": "speedup_ratio", "op": ">=", "threshold": 1.2}]},
+    {"n": 3, "title": "Safety net: test suite catching unvectorized or invalid schedules", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_missing_vectorization", "op": "==", "threshold": 1}]}
+  ]
+}

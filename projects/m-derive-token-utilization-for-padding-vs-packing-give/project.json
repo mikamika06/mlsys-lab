@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-token-utilization-for-padding-vs-packing",
+  "title": "Token utilization and parameter verification for packed SFT",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "qlora-end-to-end-pipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["packutil/metrics.py", "packutil/train.py", "packutil/verify.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive token-utilization for padding vs packing", "check": "harness/m1.py",
+     "gates": [{"metric": "utilization_matched", "op": ">=", "threshold": 1.0}]},
+    {"n": 2, "title": "Short fine-tune run and loss decrease verification", "check": "harness/m2.py",
+     "gates": [{"metric": "loss_decreased", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: verify only adapter parameters change", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_unfrozen_base", "op": "==", "threshold": 1.0}]}
+  ]
+}

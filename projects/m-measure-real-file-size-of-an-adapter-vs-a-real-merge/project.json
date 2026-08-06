@@ -1,0 +1,40 @@
+{
+  "id": "m-measure-real-file-size-of-an-adapter-vs-a-real-merge",
+  "title": "Real file size, quantization error, and clean unload of adapter merges",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "adapter-merging-deployment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "adaptermerge/measure.py",
+    "adaptermerge/quantize.py",
+    "adaptermerge/unload.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure real file size ratio of adapter vs merged model",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "size_ratio_matched", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Quantization error of re-quantizing a merged model",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "error_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: verify no LoRA parameters remain after merge_and_unload",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_leaked_lora", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

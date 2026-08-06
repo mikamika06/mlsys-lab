@@ -1,0 +1,40 @@
+{
+  "id": "m-delegate-partition-counter",
+  "title": "Delegate partition counter and optimizer",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Delegates, accelerators and op partitioning (Android)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "delegate_partition/counter.py",
+    "delegate_partition/optimizer.py",
+    "delegate_partition/profiler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Count delegate partitions",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "partitions_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Reduce partitions by op substitution",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "reduction_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for partition logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_counter", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

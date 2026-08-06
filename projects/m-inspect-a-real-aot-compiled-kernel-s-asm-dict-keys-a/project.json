@@ -1,0 +1,22 @@
+{
+  "id": "m-inspect-a-real-aot-compiled-kernel-s-asm-dict-keys-a",
+  "title": "AOT ASM Inspection and Portability",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Production/AOT compilation & cross-backend portability",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["inspector/asm.py", "inspector/stages.py", "inspector/portability.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Inspect ASM Dict Keys", "check": "harness/m1.py",
+     "gates": [{"metric": "matches_ref", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compare Stages and Classify Backend", "check": "harness/m2.py",
+     "gates": [{"metric": "stages_matches", "op": "==", "threshold": 1},
+               {"metric": "classify_matches", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch naive instruction counting", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_naive_counter", "op": "==", "threshold": 1}]}
+  ]
+}

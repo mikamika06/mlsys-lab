@@ -1,0 +1,21 @@
+{
+  "id": "m-compare-onnxruntime-coreml-ep-vs-native-coremltools",
+  "title": "Compare ONNX Runtime CoreML EP vs Native CoreML",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Edge-deployment alternatives on Apple Silicon (ONNX Runtime CoreML EP, optimum)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["edgecomp/runner.py", "edgecomp/fallback.py", "edgecomp/options.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compare CoreML EP and native execution latency and outputs", "check": "harness/m1.py",
+     "gates": [{"metric": "latency_ratio_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Quantify cost of unsupported ONNX op partition fallbacks", "check": "harness/m2.py",
+     "gates": [{"metric": "fallback_cost_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Force CPUOnly execution option and verify correctness and slowdown", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

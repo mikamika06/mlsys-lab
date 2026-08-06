@@ -1,0 +1,47 @@
+{
+  "id": "m-k-c-m-c-block-size-derivation-from-l2-cache-size",
+  "title": "m_C and k_C block-size derivation from L2 cache size",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "BRGeMM microkernel & cache-blocking math",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "blocking/registers.py",
+    "blocking/cache.py",
+    "blocking/matmul.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive register tile shape and L2 cache block dimensions",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "register_tiles_matched", "op": "==", "threshold": 1},
+        {"metric": "cache_blocks_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Evaluate cache-blocked vs naive matrix multiplication speed scaling",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "naive_correctness", "op": "==", "threshold": 1},
+        {"metric": "blocked_correctness", "op": "==", "threshold": 1},
+        {"metric": "speedup_achieved", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test catching invalid tile parameters",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_tile", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

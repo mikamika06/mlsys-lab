@@ -1,0 +1,22 @@
+{
+  "id": "m-inferencesession-output-parity-vs-reference",
+  "title": "ONNX Runtime CPU Inference Parity and Scaling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "ONNX Runtime CPU execution provider",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["ortinfer/session.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "InferenceSession output parity", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<", "threshold": 1e-5}]},
+    {"n": 2, "title": "Node optimization and thread scaling", "check": "harness/m2.py",
+     "gates": [{"metric": "node_reduction_valid", "op": "==", "threshold": 1},
+               {"metric": "scaling_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test suite", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_parity", "op": "==", "threshold": 1}]}
+  ]
+}

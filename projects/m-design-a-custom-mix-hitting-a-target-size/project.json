@@ -1,0 +1,45 @@
+{
+  "id": "m-design-a-custom-mix-hitting-a-target-size",
+  "title": "Design a custom mix hitting a target size",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "ftype-recipes-mixed-precision",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mixplan/mix.py",
+    "mixplan/tensor_check.py",
+    "mixplan/budget.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Design a custom mix hitting a target size",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "mix_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verify 1D tensors stay F32 under every ftype",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "tensors_f32", "op": "==", "threshold": 1},
+        {"metric": "size_ratio", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Choose a quant under a hard size budget",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_budget", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "m-max-single-pass-amx-tile-shape-for-bf16-vs-int8",
+  "title": "Max single-pass AMX tile shape and TMUL throughput model",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "AMX tile architecture & TMUL throughput model",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "amxtile/shape.py",
+    "amxtile/throughput.py",
+    "amxtile/classify.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Max single-pass AMX tile shape for bf16 vs int8",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "shapes_matched", "op": ">=", "threshold": 2}]
+    },
+    {
+      "n": 2,
+      "title": "TMUL peak FLOPs/cycle vs AVX-512 FMA peak",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "throughput_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid tile configurations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_tiles", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -11,7 +11,7 @@ This task uses a behavioral classifier. It does not inspect implementation detai
 Implement `classify_gil_release(ops)`:
 
 ```python
-def classify_gil_release(ops: list[str]) -> dict[str, bool]:
+def classify_gil_release(ops):
     ...
 ```
 
@@ -20,7 +20,7 @@ The input is a list of operation names. Return a dictionary mapping every operat
 The supported operation names are:
 
 - `"sleep"`: a `time.sleep` call.
-- `"dot"`: a large NumPy matrix multiplication.
+- `"dot"`: a large Python matrix multiplication.
 - `"hash"`: a large hashlib SHA-256 update.
 - `"python_loop"`: a pure Python arithmetic loop.
 - `"socket_recv"`: a blocking socket receive.

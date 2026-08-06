@@ -1,0 +1,61 @@
+{
+  "id": "m-explain-prompt-eval-count-0-on-a-900-token-prompt",
+  "title": "Prompt evaluation count anomalies and TTFT breakdown",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "timing-counters-and-throughput-math",
+  "edits": [
+    "runner_metrics/analyzer.py",
+    "runner_metrics/ttft.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Explain prompt_eval_count = 0 and compare runners",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "analysis_matched",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute TTFT and identify dominant component at 4k context",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ttft_matched",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for counter invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_bad_counters",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

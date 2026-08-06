@@ -1,0 +1,27 @@
+{
+  "id": "m-detect-baked-in-python-ints-in-a-traced-graph",
+  "title": "Detect baked-in Python ints, rewrite control flow, and classify export failures",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Graph capture: torch.export vs torch.jit.trace",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "graphguard/__init__.py",
+    "graphguard/detector.py",
+    "graphguard/conditioner.py",
+    "graphguard/classifier.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Detect baked-in Python ints in traced graphs", "check": "harness/m1.py",
+     "gates": [{"metric": "exact_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Replace static conditional with dynamic control flow", "check": "harness/m2.py",
+     "gates": [{"metric": "equivalence_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard: regression tests for failure classifier", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_classifier", "op": "==", "threshold": 1}]}
+  ]
+}

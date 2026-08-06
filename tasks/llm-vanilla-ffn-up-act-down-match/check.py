@@ -33,8 +33,15 @@ def grade(sol, fx) -> dict:
         x      = rng.randn(d) * 2.0
 
         ref = _ffn_ref(x, W_up, b_up, W_down, b_down)
+
+        x_list      = x.tolist()
+        W_up_list   = W_up.tolist()
+        b_up_list   = b_up.tolist()
+        W_down_list = W_down.tolist()
+        b_down_list = b_down.tolist()
+
         try:
-            got = sol.ffn_forward(x, W_up, b_up, W_down, b_down)
+            got = sol.ffn_forward(x_list, W_up_list, b_up_list, W_down_list, b_down_list)
         except Exception:
             return {"max_abs_err": float("inf")}
         err = _max_abs_err(ref, got)

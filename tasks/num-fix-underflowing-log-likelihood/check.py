@@ -4,10 +4,10 @@ import numpy as np
 def grade(sol, fx) -> dict:
     rng = np.random.default_rng(0)
     cases = [
-        rng.uniform(1e-3, 0.9, size=3000).astype(np.float64),
-        rng.uniform(0.01, 0.5, size=500).astype(np.float64),
-        np.full(3000, 0.5, dtype=np.float64),
-        np.array([0.5, 0.5, 0.5, 0.5], dtype=np.float64),
+        rng.uniform(1e-3, 0.9, size=3000).astype(np.float64).tolist(),
+        rng.uniform(0.01, 0.5, size=500).astype(np.float64).tolist(),
+        [0.5] * 3000,
+        [0.5, 0.5, 0.5, 0.5],
     ]
 
     max_rel = 0.0

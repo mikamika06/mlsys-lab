@@ -1,5 +1,5 @@
-import numpy as np
-
-def lookup_embeddings(ids: np.ndarray, weights: np.ndarray) -> np.ndarray:
-    ids_arr = np.asarray(ids, dtype=np.int64)
-    return np.take(weights, ids_arr, axis=0).astype(np.float64)
+def lookup_embeddings(ids: list[int], weights: list[list[float]]) -> list[list[float]]:
+    result = []
+    for idx in ids:
+        result.append(list(weights[idx]))
+    return result

@@ -15,15 +15,15 @@ Implement the function `knn_grid_labels`:
 
 ```python
 def knn_grid_labels(
-    train_points: np.ndarray,
-    train_labels: np.ndarray,
-    grid_points: np.ndarray,
+    train_points: list[list[float]],
+    train_labels: list[int],
+    grid_points: list[list[float]],
     k: int = 3
-) -> np.ndarray:
+) -> list[list[float]]:
     ...
 ```
 
-* `train_points` – shape `(N, d)` NumPy array of training samples.  
+* `train_points` – shape `(N, d)` list of training samples.  
 * `train_labels` – shape `(N,)` integer labels (0 … C‑1).  
 * `grid_points` – shape `(M, d)` query points on a regular grid.  
 * `k` – number of neighbours to consider (default 3).
@@ -33,17 +33,16 @@ The function must return an array of shape `(M, C)` containing one‑hot encoded
 ## Example
 
 ```python
-import numpy as np
 from your_module import knn_grid_labels
 
 # Two training points in 2‑D
-train_points = np.array([[0, 0], [1, 1]])
-train_labels = np.array([0, 1])
+train_points = [[0, 0], [1, 1]]
+train_labels = [0, 1]
 
 # Three grid points
-grid_points = np.array([[0.2, 0.2],
+grid_points = [[0.2, 0.2],
                         [0.5, 0.5],
-                        [0.8, 0.8]])
+                        [0.8, 0.8]]
 
 preds = knn_grid_labels(train_points, train_labels, grid_points, k=1)
 print(preds)
@@ -54,7 +53,7 @@ print(preds)
 
 ## What the gate checks
 
-The grader computes a reference prediction using NumPy and compares it to your output with the `argmax_agreement` scorer from `arena.scorers`.  
+The grader computes a reference prediction using Python and compares it to your output with the `argmax_agreement` scorer from `arena.scorers`.  
 Your solution must achieve an agreement of at least **99.9 %**:
 
 $$

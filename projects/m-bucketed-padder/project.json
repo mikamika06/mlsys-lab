@@ -1,0 +1,46 @@
+{
+  "id": "m-bucketed-padder",
+  "title": "Optimal bucketed padder for variable-length sequences",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Dynamic shapes and the symbolic shape env",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "padder/bucket.py",
+    "padder/cost.py",
+    "padder/ladder.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Bucketed padder assignment and padding tensor construction",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "bucket_assignment_match", "op": "==", "threshold": 1},
+        {"metric": "padded_tensors_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Padding waste analysis and optimal bucket ladder construction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "waste_computation_match", "op": "==", "threshold": 1},
+        {"metric": "optimal_ladder_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test suite catches unaligned bucket bounds",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unaligned_ladder", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

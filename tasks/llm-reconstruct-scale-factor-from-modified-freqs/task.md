@@ -12,18 +12,17 @@ In practice, due to numerical rounding or additional processing, each entry may 
 Implement `recover_scale_factor`:
 
 ```python
-def recover_scale_factor(orig_freqs: np.ndarray,
-                         mod_freqs: np.ndarray) -> float:
+def recover_scale_factor(orig_freqs: list[float],
+                         mod_freqs: list[float]) -> float:
     ...
 ```
 
-The function receives two 1‑D NumPy arrays of equal length containing the original and modified frequencies, respectively. It must return a single Python `float` that estimates the true scaling factor $s$.
+The function receives two 1‑D list of equal length containing the original and modified frequencies, respectively. It must return a single Python `float` that estimates the true scaling factor $s$.
 
 ## Example
 
 ```python
-import numpy as np
-orig = np.array([0.5, 1.0, 2.0])
+orig = [0.5, 1.0, 2.0]
 mod  = orig * 1.75
 s_est = recover_scale_factor(orig, mod)
 print(s_est)   # 1.75

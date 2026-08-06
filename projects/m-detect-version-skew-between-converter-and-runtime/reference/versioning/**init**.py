@@ -1,0 +1,1 @@
+"""Versioning detection package."""

@@ -20,30 +20,26 @@ This form is numerically stable for any real input.
 
 ## Task
 
-Implement the function `log_softmax` that takes a 2‑D NumPy array of shape $(n, k)$ and returns an array of the same shape containing the log‑softmax values computed in a numerically stable way. The result must be of type `float64`.
+Implement the function `log_softmax` that takes a 2‑D list of shape $(n, k)$ and returns an array of the same shape containing the log‑softmax values computed in a numerically stable way. The result must be of type `float64`.
 
 ```python
-def log_softmax(x: np.ndarray) -> np.ndarray:
+def log_softmax(x: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
 ## Example
 
 ```python
-import numpy as np
-x = np.array([[0, 1, 2],
+x = [[0, 1, 2],
               [1000, 1000, 1000],
-              [-1000, -999, -998]])
+              [-1000, -999, -998]]
 y = log_softmax(x)
-print(y)
-# [[-2.40760596 -1.40760596 -0.40760596]
-#  [0.         0.         0.]
-#  [-3.00000000 -2.00000000 -1.00000000]]
+print(y)  # [[-2.4076059644443806, -1.4076059644443806, -0.4076059644443806], [-1.0986122886681642, -1.0986122886681642, -1.0986122886681642], [-2.4076059644444285, -1.4076059644444285, -0.40760596444442854]]
 ```
 
 ## What the gate checks
 
-The grader computes a reference log‑softmax using NumPy’s stable formulation and compares it to your output with the metric `max_abs_err`. The candidate passes only if
+The grader computes a reference log‑softmax using Python’s stable formulation and compares it to your output with the metric `max_abs_err`. The candidate passes only if
 
 $$\mathrm{max\_abs\_err} \le 10^{-9}.$$
 

@@ -1,0 +1,46 @@
+{
+  "id": "m-allocated-bytes-timeline-from-a-snapshot",
+  "title": "Allocated-bytes timeline from a snapshot",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Memory snapshots and leak hunting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "snaptool/timeline.py",
+    "snaptool/frames.py",
+    "snaptool/footprint.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct allocated-bytes timeline from snapshot",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "timeline_matched", "op": "==", "threshold": 1},
+        {"metric": "peak_bytes_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Identify retaining stack frames and memory leaks",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "retaining_frame_matched", "op": "==", "threshold": 1},
+        {"metric": "leak_bytes_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches unanalyzed leaks",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_ignored_leaks", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

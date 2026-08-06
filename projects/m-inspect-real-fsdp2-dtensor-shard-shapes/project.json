@@ -1,0 +1,69 @@
+{
+  "id": "m-inspect-real-fsdp2-dtensor-shard-shapes",
+  "title": "Inspect Real FSDP2 DTensor Shard Shapes and Memory Profile",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP2 per-parameter sharding & DTensor",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fsdpshards/sharding.py",
+    "fsdpshards/padding.py",
+    "fsdpshards/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Inspect DTensor shard shapes and rank offsets",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "shards_matched",
+          "op": ">=",
+          "threshold": 10
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compare FSDP1 padding vs FSDP2 uneven chunking",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "chunking_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "padding_diff_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Profile reshard_after_forward memory tradeoffs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_reshard_bug",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

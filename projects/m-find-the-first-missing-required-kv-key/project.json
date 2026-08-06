@@ -1,0 +1,21 @@
+{
+  "id": "m-find-the-first-missing-required-kv-key",
+  "title": "Find the first missing required KV key and derive GQA parameters",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-metadata-kv-schema",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ggufschema/validator.py", "ggufschema/parser.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Find the first missing required KV key", "check": "harness/m1.py",
+     "gates": [{"metric": "missing_keys_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Derive GQA ratio and head dimension", "check": "harness/m2.py",
+     "gates": [{"metric": "params_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid schemas", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_schema", "op": "==", "threshold": 1}]}
+  ]
+}

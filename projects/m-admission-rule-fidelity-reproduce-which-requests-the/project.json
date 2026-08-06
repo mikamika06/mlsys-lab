@@ -1,0 +1,45 @@
+{
+  "id": "m-admission-rule-fidelity-reproduce-which-requests-the",
+  "title": "Admission-rule fidelity and continuous batching scheduling",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "continuous-batching-scheduler",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "vllmsched/admission.py",
+    "vllmsched/latency.py",
+    "vllmsched/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Admission rule simulation fidelity",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "schedules_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Find optimal max_num_seqs and quantify HoL blocking",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "opt_max_seqs_matched", "op": "==", "threshold": 1.0},
+        {"metric": "hol_delay_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for capacity-violating admissions",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_capacity_violation", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

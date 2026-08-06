@@ -1,0 +1,63 @@
+{
+  "id": "m-detect-the-garbage-output-signature-repeated-degener",
+  "title": "Detect garbage output signatures and estimate crash blast radius",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "engine-failure-modes-and-debugging",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "engine/detector.py",
+    "engine/blast.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect garbage output signatures",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "signatures_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Estimate crash blast radius and retries",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "blast_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching silent degeneracy",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_logic",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

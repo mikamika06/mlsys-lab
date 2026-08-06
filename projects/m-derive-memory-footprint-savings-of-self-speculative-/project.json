@@ -1,0 +1,68 @@
+{
+  "id": "m-derive-memory-footprint-savings-of-self-speculative-",
+  "title": "Derive memory-footprint savings of self-speculative vs separate-draft",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Self-speculative decoding & early exit (LayerSkip)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "speculative/memory.py",
+    "speculative/derive.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Model and KV cache footprint calculation",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "footprints_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Deriving relative savings with error bounds",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "savings_positive",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid memory savings",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_savings",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

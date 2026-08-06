@@ -1,38 +1,30 @@
 ## Context
 
-Binary floating‑point formats are defined by a sign bit, an exponent field of $e$ bits and a fraction (mantissa) field of $m$ bits.  
-For IEEE‑style binary formats the bias is  
+Binary floating‑point formats are defined by a sign bit, an exponent field of $e$ bits and a fraction (mantissa) field of $m$ bits.
+For IEEE‑style binary formats the bias is
 
 $$\text{bias} = 2^{\,e-1}-1,$$
 
-the largest normal exponent field value is $2^e-2$ (all ones are reserved for Inf/NaN), and the smallest normal exponent field value is $1$.  
+the largest normal exponent field value is $2^e-2$ (all ones are reserved for Inf/NaN), and the smallest normal exponent field value is $1$.
 With these conventions the numerical range of a format can be expressed exactly:
 
-* **Largest finite value**  
+* **Largest finite value**
 
-$$
-V_{\max} = \bigl( 2 - 2^{-m}\bigr)\; 2^{\,E_{\max}-\text{bias}},
-$$
+$$V_{\max} = \bigl( 2 - 2^{-m}\bigr)\; 2^{\,E_{\max}-\text{bias}},$$
 
 where $E_{\max}=2^e-2$.
 
-* **Smallest normal positive value**  
+* **Smallest normal positive value**
 
-$$
-V_{\min}^{\text{norm}} = 2^{\,1-\text{bias}} .
-$$
+$$V_{\min}^{\text{norm}} = 2^{\,1-\text{bias}} .$$
 
-* **Smallest subnormal positive value** (if the format has subnormals)  
+* **Smallest subnormal positive value** (if the format has subnormals)
 
-$$
-V_{\min}^{\text{sub}} = 2^{\,1-\text{bias}-m}.
-$$
+$$V_{\min}^{\text{sub}} = 2^{\,1-\text{bias}-m}.$$
 
-The representable set is therefore  
+The representable set is therefore
 
-$$
-\{-x,0,x: x \in [V_{\min}^{\text{sub}}, V_{\max}]\}\cup\{\pm V_{\min}^{\text{norm}}\},
-$$
+$$\{-x,0,x: x \in [V_{\min}^{\text{sub}}, V_{\max}]\}\cup\{\pm V_{\min}^{\text{norm}}\},$$
 
 with the convention that $\pm\infty$ and NaN are *not* representable.
 
@@ -50,24 +42,24 @@ Thus the e5m2 format can represent a much wider range of magnitudes than e4m3.
 Implement the function
 
 ```python
-def fp8_representability(values: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+def fp8_representability(values: list[float]) -> tuple[list[bool], list[bool]]:
     ...
 ```
 
-* `values` is any NumPy array of real numbers (float32 or float64).  
-* The function must return a tuple `(mask_e4m3, mask_e5m2)` where each element is a boolean array of the same shape as `values`.  
-  * `mask_e4m3[i]` is `True` iff `values[i]` can be represented exactly in the e4m3 format.  
-  * `mask_e5m2[i]` is `True` iff `values[i]` can be represented exactly in the e5m2 format.  
+- `values` is any list of real numbers (float32 or float64).
+- The function must return a tuple `(mask_e4m3, mask_e5m2)` where each element is a boolean list of the same shape as `values`.
+  - `mask_e4m3[i]` is `True` iff `values[i]` can be represented exactly in the e4m3 format.
+  - `mask_e5m2[i]` is `True` iff `values[i]` can be represented exactly in the e5m2 format.
 
-The implementation must use only NumPy vectorised operations; no explicit Python loops are allowed.
+
+The implementation must use only Python vectorised operations; no explicit Python loops are allowed.
 
 ## Example
 
 ```python
-import numpy as np
 from fp8 import fp8_representability  # your solution will live here
 
-A = np.array([0, 1e-4, 0.02, 100, 200, 250, 300, np.nan, np.inf])
+A = [0, 1e-4, 0.02, 100, 200, 250, 300, float('nan'), float('inf')]
 mask_e4m3, mask_e5m2 = fp8_representability(A)
 
 print(mask_e4m3)
@@ -81,6 +73,8 @@ In this example, `250` is too large for e4m3 but fits in e5m2; subnormal values 
 
 ## What the gate checks
 
-The grader computes a reference solution using the exact formulas above and compares your output element‑wise.  
-If every boolean value matches, the metric `exact_match` is 1.0; otherwise it is 0.0.  
+The grader computes a reference solution using the exact formulas above and compares your output element‑wise.
+
+If every boolean value matches, the metric `exact_match` is 1.0; otherwise it is 0.0.
+
 No other performance or style metrics are enforced for this task.

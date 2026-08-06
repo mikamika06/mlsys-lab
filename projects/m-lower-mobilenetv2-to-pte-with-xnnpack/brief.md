@@ -1,0 +1,7 @@
+# Ticket: Edge export pipeline failing on MobileNetV2 XNNPACK lowering and verification
+
+We are encountering severe pipeline failures when attempting to export and lower MobileNetV2 models down to ExecuTorch `.pte` binaries targeting the XNNPACK backend. During integration runs across multiple edge target profiles, the export job terminates unexpectedly or produces binaries that trigger runtime exceptions and verifier crashes on the target runtime.
+
+Specifically, operators originating from early inverted residual blocks and depthwise separable convolutions are failing to map correctly into the delegated XNNPACK execution path, leading to an excessive count of fallback nodes executed on the reference CPU runtime rather than being properly delegated. Furthermore, intermediate graphs emitted by the lowerer contain type mismatches and unsupported attribute configurations that bypass initial checks only to fail during the strict edge-dialect verification pass. Engineers report that output `.pte` artifacts are either rejected outright by the verifier or exhibit severe performance degradation due to fragmented delegation boundaries.
+
+We need to implement the core lowering logic to correctly translate MobileNetV2 subgraphs, accurately compute the delegated versus fallback node census to track backend coverage, and implement the necessary edge-dialect verifier failure repair pass to ensure all graphs pass verification cleanly.

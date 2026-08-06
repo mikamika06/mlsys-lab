@@ -20,8 +20,9 @@ def grade(sol, fx) -> dict:
         kv = rng.normal(size=(b, hkv, s, d)).astype(np.float32)
         expected = _ref_expand(kv, hq)
         try:
-            got = sol.expand_kv_heads(kv, hq)
-            err = scorers.max_abs_err(expected, got)
+            got = sol.expand_kv_heads(kv.tolist(), hq)
+            got_np = np.array(got, dtype=np.float32)
+            err = scorers.max_abs_err(expected, got_np)
         except Exception:
             err = float("inf")
         errs.append(err)

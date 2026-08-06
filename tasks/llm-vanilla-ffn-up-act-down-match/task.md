@@ -19,36 +19,41 @@ $$\text{GELU}(x) \;\approx\; \frac{1}{2}\,x\!\left(1 + \tanh\!\left(\sqrt{\frac{
 Implement `ffn_forward`:
 
 ```python
-def ffn_forward(x, W_up, b_up, W_down, b_down):
+def ffn_forward(
+    x: list[float],
+    W_up: list[list[float]],
+    b_up: list[float],
+    W_down: list[list[float]],
+    b_down: list[float],
+) -> list[float]:
     """Compute a vanilla FFN forward pass with GELU activation.
 
     Parameters
     ----------
-    x     : np.ndarray, shape (d,)
-    W_up  : np.ndarray, shape (d_hidden, d)
-    b_up  : np.ndarray, shape (d_hidden,)
-    W_down: np.ndarray, shape (d, d_hidden)
-    b_down: np.ndarray, shape (d,)
+    x     : list[float], shape (d,)
+    W_up  : list[list[float]], shape (d_hidden, d)
+    b_up  : list[float], shape (d_hidden,)
+    W_down: list[list[float]], shape (d, d_hidden)
+    b_down: list[float], shape (d,)
 
     Returns
     -------
-    np.ndarray, shape (d,)
+    list[float], shape (d,)
     """
 ```
 
-Compute $y = W_{\text{down}}\,\text{GELU}(W_{\text{up}}\,x + b_{\text{up}}) + b_{\text{down}}$ using NumPy. Use the tanh approximation for GELU shown above. The weight matrices and biases are provided as arguments.
+Compute $y = W_{\text{down}}\,\text{GELU}(W_{\text{up}}\,x + b_{\text{up}}) + b_{\text{down}}$ using Python. Use the tanh approximation for GELU shown above. The weight matrices and biases are provided as arguments.
 
 ## Example
 
 ```python
-import numpy as np
 
 d = 4
-x     = np.array([1.0, -1.0, 0.5, -0.5])
-W_up  = np.eye(d)          # identity
-b_up  = np.zeros(d)
-W_down = np.eye(d)
-b_down = np.zeros(d)
+x     = [1.0, -1.0, 0.5, -0.5]
+W_up  = [[1.0 if i == j else 0.0 for j in range(d)] for i in range(d)]          # identity
+b_up  = [0.0] * d
+W_down = [[1.0 if i == j else 0.0 for j in range(d)] for i in range(d)]
+b_down = [0.0] * d
 
 y = ffn_forward(x, W_up, b_up, W_down, b_down)
 # Each entry y_i = GELU(x_i) since all matrices are identity and biases are zero.
@@ -57,6 +62,6 @@ y = ffn_forward(x, W_up, b_up, W_down, b_down)
 
 ## What the gate checks
 
-The grader computes a reference output using the same tanh-approximation GELU formula and NumPy `@` operator on several test cases (fixed-seed random weights and inputs), then measures `max_abs_err` between your output and the reference. The worst error across all cases is reported.
+The grader computes a reference output using the same tanh-approximation GELU formula and Python `@` operator on several test cases (fixed-seed random weights and inputs), then measures `max_abs_err` between your output and the reference. The worst error across all cases is reported.
 
-The gate passes when `max_abs_err < 1e-5`. This checks that you applied the correct sequence of operations (linear $\to$ GELU $\to$ linear) with the exact GELU tanh approximation, and that your matrix-vector products use `@` or `np.dot` rather than element-wise `*`.
+The gate passes when `max_abs_err < 1e-5`. This checks that you applied the correct sequence of operations (linear $\to$ GELU $\to$ linear) with the exact GELU tanh approximation, and that your matrix-vector products use matrix multiplication rather than element-wise `*`.

@@ -1,0 +1,44 @@
+{
+  "id": "m-hang-vs-crash-discriminator-from-a-stuck-server-s-me",
+  "title": "Hang vs crash discriminator from a stuck server's metrics and logs",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "engine-failure-modes-and-debugging",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "serverdiag/parser.py",
+    "serverdiag/metrics.py",
+    "serverdiag/detector.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse raw logs and metric streams into unified timelines",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "timelines_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify hang versus crash from telemetry signatures",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "classification_accuracy", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catching flawed discriminators",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_logic", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

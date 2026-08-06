@@ -21,10 +21,10 @@ def grade(sol, fx):
         logits = rng.standard_normal((N, C)).astype(np.float64)
         targets = rng.integers(0, C, size=N).astype(np.int64)
         try:
-            got = sol.fused_cross_entropy(logits, targets)
+            got = sol.fused_cross_entropy(logits.tolist(), targets.tolist())
         except Exception:
             return {"max_abs_err": float("inf")}
-        ref = _ref(logits, targets)
+        ref = _ref(logits.tolist(), targets.tolist())
         err = abs(got - ref)
         if err > max_err:
             max_err = err

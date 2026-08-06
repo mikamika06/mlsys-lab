@@ -1,0 +1,63 @@
+{
+  "id": "m-estimate-page-cache-resident-size-vs-file-size",
+  "title": "Estimate page-cache resident size vs file size",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "size-bpw-accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "pagecache/estimator.py",
+    "pagecache/tracker.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Calculate page-aligned resident bytes from access ranges",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.01
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Track dynamic page-cache footprint across access sequences",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.01
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test that catches unaligned page boundary leaks",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unaligned_faults",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

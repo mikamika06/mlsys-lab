@@ -35,13 +35,14 @@ def grade(sol, fx) -> dict:
 
         try:
             ref = _ref_sdpa(Q, K, V)
-            got = sol.sdpa(Q, K, V)
+            got = sol.sdpa(Q.tolist(), K.tolist(), V.tolist())
+            got_arr = np.array(got)
         except Exception as e:
             return {"max_abs_err": 1e6}
 
-        if got.shape != ref.shape:
+        if got_arr.shape != ref.shape:
             return {"max_abs_err": 1e6}
-        err = max_abs_err(ref, got)
+        err = max_abs_err(ref, got_arr)
         if err > max_err:
             max_err = err
     return {"max_abs_err": max_err}

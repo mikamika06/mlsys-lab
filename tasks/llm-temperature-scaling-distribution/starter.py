@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def temperature_scale(logits, T):
+def temperature_scale(logits: list[float], T: float) -> list[float]:
     raise NotImplementedError('your code here')
