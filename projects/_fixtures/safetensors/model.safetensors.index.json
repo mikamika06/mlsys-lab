@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "total_size": 577216
+  },
+  "weight_map": {
+    "blk_0_attn_k_weight.bf16": "model-00001-of-00002.safetensors",
+    "blk_0_attn_k_weight.f16": "model-00001-of-00002.safetensors",
+    "blk_0_attn_k_weight.f32": "model-00001-of-00002.safetensors",
+    "blk_0_attn_norm_weight.f16": "model-00002-of-00002.safetensors",
+    "blk_0_attn_norm_weight.f32": "model-00002-of-00002.safetensors",
+    "blk_0_attn_v_weight.f16": "model-00002-of-00002.safetensors",
+    "blk_0_attn_v_weight.f32": "model-00002-of-00002.safetensors"
+  }
+}

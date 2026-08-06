@@ -1,0 +1,62 @@
+{
+  "id": "l-checkpoint-conversion",
+  "title": "Converting a checkpoint: names, shapes, shards and what it costs",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "Checkpoint formats and cold start",
+  "part": 2,
+  "difficulty": 4,
+  "fixtures": ["_fixtures/gguf", "_fixtures/safetensors", "_fixtures/mlx"],
+  "edits": [
+    "convertkit/safetensors.py",
+    "convertkit/shards.py",
+    "convertkit/names.py",
+    "convertkit/shapes.py",
+    "convertkit/plan.py",
+    "tests/test_convert.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "safetensors header without the library", "check": "harness/m1.py",
+     "gates": [
+       {"metric": "entries_match", "op": "==", "threshold": 1},
+       {"metric": "offsets_match", "op": "==", "threshold": 1},
+       {"metric": "metadata_match", "op": "==", "threshold": 1},
+       {"metric": "clean_accepted", "op": "==", "threshold": 1},
+       {"metric": "damaged_rejected", "op": "==", "threshold": 1},
+       {"metric": "damaged_named", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "The shard index and what it promises", "check": "harness/m2.py",
+     "gates": [
+       {"metric": "index_loaded", "op": "==", "threshold": 1},
+       {"metric": "resolve_match", "op": "==", "threshold": 1},
+       {"metric": "clean_index_ok", "op": "==", "threshold": 1},
+       {"metric": "catches_missing", "op": "==", "threshold": 1},
+       {"metric": "catches_size", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Every name, including the ones that fan out", "check": "harness/m3.py",
+     "gates": [
+       {"metric": "llama_complete", "op": "==", "threshold": 1},
+       {"metric": "llama_match", "op": "==", "threshold": 1},
+       {"metric": "moe_fanout", "op": "==", "threshold": 1},
+       {"metric": "moe_target_count", "op": "==", "threshold": 1},
+       {"metric": "no_false_mapping", "op": "==", "threshold": 1}]},
+    {"n": 4, "title": "Shapes, grouped attention, and a cross-check", "check": "harness/m4.py",
+     "gates": [
+       {"metric": "shape_reversed", "op": "==", "threshold": 1},
+       {"metric": "attention_ok", "op": "==", "threshold": 1},
+       {"metric": "gqa_detected", "op": "==", "threshold": 1},
+       {"metric": "head_dim_from_metadata", "op": "==", "threshold": 1},
+       {"metric": "matches_mlx_layer", "op": "==", "threshold": 1}]},
+    {"n": 5, "title": "The plan and the bill", "check": "harness/m5.py",
+     "gates": [
+       {"metric": "bytes_match", "op": "==", "threshold": 1},
+       {"metric": "expansion_match", "op": "==", "threshold": 1},
+       {"metric": "dequant_count", "op": "==", "threshold": 1},
+       {"metric": "shards_cover", "op": "==", "threshold": 1},
+       {"metric": "shard_limit", "op": "==", "threshold": 1}]},
+    {"n": 6, "title": "An audit that refuses the bad conversion", "check": "harness/m6.py",
+     "gates": [
+       {"metric": "flags_expansion", "op": "==", "threshold": 1},
+       {"metric": "flags_missing_experts", "op": "==", "threshold": 1},
+       {"metric": "clean_silent", "op": "==", "threshold": 1}]}
+  ]
+}

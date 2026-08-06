@@ -1,0 +1,7 @@
+{
+  "file": "model-damaged.safetensors",
+  "tensor": "blk_0_attn_v_weight.f32",
+  "field": "data_offsets[1]",
+  "shift_bytes": 4096,
+  "why": "declared end runs past the end of the file"
+}

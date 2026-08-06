@@ -1,42 +1,95 @@
 {
-  "header_bytes": 328,
-  "header": {
-    "__metadata__": {
-      "format": "pt",
-      "produced_by": "safetensors writer"
-    },
-    "blk_0_attn_norm_weight": {
-      "dtype": "F32",
-      "shape": [
-        5120
-      ],
-      "data_offsets": [
-        0,
-        20480
-      ]
-    },
-    "blk_0_attn_v_weight": {
-      "dtype": "F32",
-      "shape": [
-        64,
-        5120
-      ],
-      "data_offsets": [
-        20480,
-        1331200
-      ]
-    },
-    "blk_0_attn_k_weight": {
-      "dtype": "F16",
-      "shape": [
-        64,
-        5120
-      ],
-      "data_offsets": [
-        1331200,
-        1986560
-      ]
+  "model-00001-of-00002.safetensors": {
+    "header_bytes": 304,
+    "file_bytes": 327992,
+    "header": {
+      "__metadata__": {
+        "format": "np"
+      },
+      "blk_0_attn_k_weight.f32": {
+        "dtype": "F32",
+        "shape": [
+          8,
+          5120
+        ],
+        "data_offsets": [
+          0,
+          163840
+        ]
+      },
+      "blk_0_attn_k_weight.f16": {
+        "dtype": "F16",
+        "shape": [
+          8,
+          5120
+        ],
+        "data_offsets": [
+          163840,
+          245760
+        ]
+      },
+      "blk_0_attn_k_weight.bf16": {
+        "dtype": "U16",
+        "shape": [
+          8,
+          5120
+        ],
+        "data_offsets": [
+          245760,
+          327680
+        ]
+      }
     }
   },
-  "file_bytes": 1986896
+  "model-00002-of-00002.safetensors": {
+    "header_bytes": 384,
+    "file_bytes": 249224,
+    "header": {
+      "__metadata__": {
+        "format": "np"
+      },
+      "blk_0_attn_norm_weight.f32": {
+        "dtype": "F32",
+        "shape": [
+          512
+        ],
+        "data_offsets": [
+          0,
+          2048
+        ]
+      },
+      "blk_0_attn_v_weight.f32": {
+        "dtype": "F32",
+        "shape": [
+          8,
+          5120
+        ],
+        "data_offsets": [
+          2048,
+          165888
+        ]
+      },
+      "blk_0_attn_norm_weight.f16": {
+        "dtype": "F16",
+        "shape": [
+          512
+        ],
+        "data_offsets": [
+          165888,
+          166912
+        ]
+      },
+      "blk_0_attn_v_weight.f16": {
+        "dtype": "F16",
+        "shape": [
+          8,
+          5120
+        ],
+        "data_offsets": [
+          166912,
+          248832
+        ]
+      }
+    }
+  }
 }

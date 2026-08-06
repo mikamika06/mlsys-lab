@@ -1,39 +1,92 @@
 {
-  "module": "mlx.nn transformer block",
+  "module": "mlx.nn llama-shaped model, 2 layers",
   "mlx_version": "0.31.2",
+  "config": {
+    "layers": 2,
+    "hidden": 256,
+    "heads": 8,
+    "kv_heads": 2,
+    "ffn": 512,
+    "vocab": 1000
+  },
   "params": {
-    "attention.key_proj.weight": [
-      256,
+    "embed_tokens.weight": [
+      1000,
       256
     ],
-    "attention.out_proj.weight": [
-      256,
+    "layers.0.input_layernorm.weight": [
       256
     ],
-    "attention.query_proj.weight": [
-      256,
-      256
-    ],
-    "attention.value_proj.weight": [
-      256,
-      256
-    ],
-    "linear1.weight": [
-      512,
-      256
-    ],
-    "linear2.weight": [
-      512,
-      256
-    ],
-    "linear3.weight": [
+    "layers.0.mlp.down_proj.weight": [
       256,
       512
     ],
-    "ln1.weight": [
+    "layers.0.mlp.gate_proj.weight": [
+      512,
       256
     ],
-    "ln2.weight": [
+    "layers.0.mlp.up_proj.weight": [
+      512,
+      256
+    ],
+    "layers.0.post_attention_layernorm.weight": [
+      256
+    ],
+    "layers.0.self_attn.k_proj.weight": [
+      64,
+      256
+    ],
+    "layers.0.self_attn.o_proj.weight": [
+      256,
+      256
+    ],
+    "layers.0.self_attn.q_proj.weight": [
+      256,
+      256
+    ],
+    "layers.0.self_attn.v_proj.weight": [
+      64,
+      256
+    ],
+    "layers.1.input_layernorm.weight": [
+      256
+    ],
+    "layers.1.mlp.down_proj.weight": [
+      256,
+      512
+    ],
+    "layers.1.mlp.gate_proj.weight": [
+      512,
+      256
+    ],
+    "layers.1.mlp.up_proj.weight": [
+      512,
+      256
+    ],
+    "layers.1.post_attention_layernorm.weight": [
+      256
+    ],
+    "layers.1.self_attn.k_proj.weight": [
+      64,
+      256
+    ],
+    "layers.1.self_attn.o_proj.weight": [
+      256,
+      256
+    ],
+    "layers.1.self_attn.q_proj.weight": [
+      256,
+      256
+    ],
+    "layers.1.self_attn.v_proj.weight": [
+      64,
+      256
+    ],
+    "lm_head.weight": [
+      1000,
+      256
+    ],
+    "norm.weight": [
       256
     ]
   }
