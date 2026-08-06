@@ -87,7 +87,7 @@ def _wait_for_gateway(reason):
     GATE.set()
 
 
-def ask(model, prompt, conv_key, timeout=600, tries=4):
+def ask(model, prompt, conv_key, timeout=600, tries=4, expect_files=False):
     body = {"model": model, "conversation_key": conv_key,
             "messages": [{"role": "user", "content": prompt}]}
     payload = json.dumps(body).encode()
@@ -122,7 +122,17 @@ def ask(model, prompt, conv_key, timeout=600, tries=4):
     if not ch:
         err = d.get("error") or d
         raise RuntimeError("no choices: " + json.dumps(err, ensure_ascii=False)[:200])
-    return ch[0]["message"]["content"]
+    content = ch[0]["message"]["content"]
+    # A reply of forty bytes carrying the model's thinking header and nothing
+    # else — "Defining the Exercise\nОтвет Gemini" — is a transport failure, not
+    # an answer. Spending a whole turn on it is the expensive way to find out,
+    # so when files were expected and none arrived, the request is simply made
+    # again.
+    if expect_files and "FILE:" not in content and len(content.strip()) < 400:
+        if tries > 1:
+            time.sleep(3)
+            return ask(model, prompt, conv_key, timeout, tries - 1, expect_files)
+    return content
 
 
 UI = re.compile(r"^\s*(Повідомлення Gemini|Gemini said|Gemini сказал[а]?|Ответ Gemini|Відповідь Gemini)\s*", re.I)
@@ -337,7 +347,7 @@ def build(unit_id: str, turns: int) -> dict:
         if not briefed:
             prompt = contract(spec)
         try:
-            reply = ask(model, prompt, conv)
+            reply = ask(model, prompt, conv, expect_files=True)
         except Exception as e:  # noqa: BLE001
             history.append(f"{model}:{type(e).__name__}: {str(e)[:60]}")
             if not os.path.isfile(os.path.join(pdir, "project.json")):

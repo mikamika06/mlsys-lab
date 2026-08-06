@@ -711,7 +711,7 @@ def one(tid, turns):
     for turn in range(turns):
         model = LADDER[min(turn // 2, len(LADDER) - 1)]
         try:
-            reply = bu.ask(model, prompt, conv)
+            reply = bu.ask(model, prompt, conv, expect_files=True)
         except Exception as e:  # noqa: BLE001
             history.append("%s:%s" % (model, str(e)[:60]))
             continue
