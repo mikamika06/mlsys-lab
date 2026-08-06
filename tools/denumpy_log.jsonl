@@ -361,3 +361,28 @@
 {"id": "llm-pre-norm-block-wiring-match", "ok": false, "why": "3-6-flash:no choices: {\"id\": \"875e631a-c8d5-4584-a866-62ad35b0239f\", \"; 3-1-pro:no files; 3-1-pro:no files"}
 {"id": "llm-perplexity-from-cross-entropy", "ok": false, "why": "3-6-flash:no choices: {\"id\": \"2d1abda2-b246-432c-ab96-6aa2b4f0c2bb\", \"; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
 {"id": "llm-repetition-penalty-applied-to-logits", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-causal-additive-mask-applied-before-softmax", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "alg-count-distance-computations-brute-vs-kd-tree", "ok": false, "why": "3-6-flash:function renamed count_distance_computations -> _sort_indices; 3-1-pro:no files; 3-1-pro:parameters changed ['points', 'k'] -> ['indices']"}
+{"id": "llm-causal-streaming-softmax-with-block-skipping", "ok": false, "why": "3-6-flash:statement shows numpy-printed output; 3-1-pro:statement shows numpy-printed output; 3-1-pro:statement shows numpy-printed output"}
+{"id": "alg-prove-logsumexp-shift-invariance", "ok": false, "why": "3-6-flash:no files; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "llm-debug-accidental-mean-centering-in-rmsnorm", "ok": false, "why": "3-6-flash:statement shows numpy-printed output; 3-1-pro:statement shows numpy-printed output; 3-1-pro:check.py: IndentationError line 7"}
+{"id": "llm-debug-mha-missing-transpose-head-seq-mix", "ok": false, "why": "3-6-flash:function renamed _softmax -> mha_forward; 3-1-pro:function renamed _softmax -> mha_forward; 3-1-pro:no files"}
+{"id": "llm-compare-penalty-before-vs-after-temperature-kl", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "alg-vectorized-pairwise-l2-matrix-no-cdist", "ok": false, "why": "3-6-flash:no files; 3-1-pro:function renamed pairwise_l2_matrix -> main; 3-1-pro:no choices: {\"id\": \"66a56e16-7189-4837-a714-de5db5b747d2\", \""}
+{"id": "llm-fuse-wq-wk-wv-into-one-qkv-matmul", "ok": false, "why": "3-6-flash:no files; 3-1-pro:function renamed fused_qkv_projection -> solve; 3-1-pro:function renamed fused_qkv_projection -> solve"}
+{"id": "llm-kv-cache-append-decode-step-matches-full-recompute", "ok": false, "why": "3-6-flash:no files; 3-1-pro:function renamed decode_steps -> _softmax; 3-1-pro:no files"}
+{"id": "llm-perplexity-from-cross-entropy", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-ntk-aware-base-scaling", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-pre-norm-block-wiring-match", "ok": false, "why": "3-6-flash:function renamed pre_norm_block -> _matmul; 3-1-pro:no files; 3-1-pro:eError: module 'mlsys_task_llm_pre_norm_block_wiring_match_check' has no attribute 'grade'"}
+{"id": "llm-prove-block-rescaling-equals-monolithic-softmax", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-split-merge-round-trip-identity", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-layernorm-forward-from-scratch", "ok": false, "why": "3-6-flash:statement shows numpy-printed output; 3-1-pro:no choices: {\"id\": \"64913d9c-e43d-47f8-a4c4-400e882b5331\", \"; 3-1-pro:no choices: {\"id\": \"1b240f05-8459-4b52-a986-d57eb8c07d0a\", \""}
+{"id": "llm-prefill-decode-equivalence-to-no-cache", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:eference does not pass gates | raised: ModuleNotFoundError: No module named 'solution_ref'"]}
+{"id": "llm-uptrain-mha-gqa-by-kv-mean-pool-bounded-kl", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "llm-stable-softmax-survives-300-logits", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "llm-seeded-reproducible-sampling-sequence", "ok": false, "why": "3-6-flash:numpy still in starter.py; 3-1-pro:defaults changed {} -> {'temperature': '1.0', 'seed': 'None'}; 3-1-pro:no files"}
+{"id": "num-batched-matmul-from-scratch", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:function renamed batched_matmul -> solve; 3-1-pro:numpy still in task.md"}
+{"id": "num-complex-step-differentiation", "ok": false, "why": "3-6-flash:numpy still in task.md; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "num-expm1-for-tiny-x", "ok": false, "why": "3-6-flash:no files; 3-1-pro:function renamed exp_minus_one -> solve; 3-1-pro:function renamed exp_minus_one -> solve"}
+{"id": "llm-causal-streaming-softmax-with-block-skipping", "ok": false, "why": "3-6-flash:no signature in reference; 3-1-pro:no signature in reference; 3-1-pro:no signature in reference"}
+{"id": "alg-prove-logsumexp-shift-invariance", "ok": false, "why": "3-6-flash:function renamed logsumexp -> solve; 3-1-pro:no files; 3-1-pro:no files"}

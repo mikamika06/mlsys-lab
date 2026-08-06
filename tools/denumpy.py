@@ -356,13 +356,46 @@ def rewrite_statement(text, signature):
     return text
 
 
-def params_of(source):
-    """(name, [(param, default_repr)]) of the first top-level function."""
+def entry_name(source):
+    """The name of the function the task is about.
+
+    The first def in a file is not it: a rewritten reference often opens with a
+    helper — _softmax, _matmul — and taking that one made the signature check
+    report a rename that never happened and built a starter for the wrong
+    function.
+    """
     try:
-        tree = ast.parse(source)
+        tree = ast.parse(source or "")
+    except SyntaxError:
+        return None
+    names = [n.name for n in tree.body
+             if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+    public = [n for n in names if not n.startswith("_")]
+    return (public or names or [None])[0]
+
+
+def _func(source, want=None):
+    try:
+        tree = ast.parse(source or "")
+    except SyntaxError:
+        return None
+    funcs = [n for n in tree.body
+             if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+    if want:
+        for n in funcs:
+            if n.name == want:
+                return n
+    public = [n for n in funcs if not n.name.startswith("_")]
+    return (public or funcs or [None])[0]
+
+
+def params_of(source, want=None):
+    """(name, [(param, default_repr)]) of the task's function."""
+    try:
+        ast.parse(source)
     except SyntaxError:
         return None, []
-    for node in tree.body:
+    for node in [_func(source, want)] if _func(source, want) else []:
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             args = node.args
             names = [a.arg for a in args.posonlyargs + args.args + args.kwonlyargs]
@@ -374,12 +407,13 @@ def params_of(source):
 
 def signature_drift(old_starter, new_reference):
     """The rewrite must not change the interface the learner already has."""
-    on, od = params_of(old_starter or "")
-    nn, nd = params_of(new_reference or "")
+    want = entry_name(old_starter)
+    on, od = params_of(old_starter or "", want)
+    nn, nd = params_of(new_reference or "", want)
     if on and nn and on != nn:
         return "function renamed %s -> %s" % (on, nn)
-    o_names = [a.arg for a in _arglist(old_starter)]
-    n_names = [a.arg for a in _arglist(new_reference)]
+    o_names = [a.arg for a in _arglist(old_starter, want)]
+    n_names = [a.arg for a in _arglist(new_reference, want)]
     if o_names and n_names and o_names != n_names:
         return "parameters changed %s -> %s" % (o_names, n_names)
     if dict(od) != dict(nd):
@@ -387,20 +421,20 @@ def signature_drift(old_starter, new_reference):
     return None
 
 
-def _arglist(source):
-    try:
-        tree = ast.parse(source or "")
-    except SyntaxError:
+def _arglist(source, want=None):
+    node = _func(source, want)
+    if node is None:
         return []
-    for node in tree.body:
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            a = node.args
-            return a.posonlyargs + a.args + a.kwonlyargs
-    return []
+    a = node.args
+    return a.posonlyargs + a.args + a.kwonlyargs
 
 
-def signature_of(source):
-    m = re.search(r"^def\s+\w+\s*\(.*?\)\s*(?:->[^:]+)?:", source, re.S | re.M)
+def signature_of(source, want=None):
+    node = _func(source, want)
+    if node is None:
+        return ""
+    m = re.search(r"^def\s+" + re.escape(node.name) + r"\s*\(.*?\)\s*(?:->[^:]+)?:",
+                  source, re.S | re.M)
     return m.group(0)[:-1] if m else ""
 
 
@@ -505,6 +539,9 @@ def refresh_output(md, reference_src, tid):
     return md[:om.start(2)] + r.stdout.rstrip() + "\n" + md[om.end(2):]
 
 
+WHY = []
+
+
 def _run_example(reference_src, code):
     with tempfile.TemporaryDirectory() as tmp:
         rp = os.path.join(tmp, "solution_ref.py")
@@ -520,6 +557,7 @@ def _run_example(reference_src, code):
         except subprocess.TimeoutExpired:
             return None
     if "OK" not in r.stderr:
+        WHY.append("run: " + (r.stderr.strip().splitlines() or ["?"])[-1][:90])
         return None
     return r.stdout
 
@@ -579,7 +617,7 @@ def statement_intact(before, after):
 
 def rebuild_starter(old_starter, reference):
     """The starter that goes with a reference: same signature, no body."""
-    sig = signature_of(reference)
+    sig = signature_of(reference, entry_name(old_starter))
     if not sig:
         return None
     doc = ""
@@ -674,7 +712,8 @@ def one(tid, turns):
         # The statement follows the code: its signature block is taken from the
         # starter that was just written, so the two cannot disagree.
         before = files["task.md"] or ""
-        after = rewrite_statement(before, signature_of(got.get("solution_ref.py", "")))
+        after = rewrite_statement(before, signature_of(
+            got.get("solution_ref.py", ""), entry_name(files.get("starter.py"))))
         if LEFTOVER.search(after):
             after = rewrite_numpy_lines(
                 after, signature_of(got.get("solution_ref.py", "")),
@@ -682,11 +721,17 @@ def one(tid, turns):
 
         broke = statement_intact(before, after)
         if not broke and NPPRINT.search(after):
+            WHY.clear()
             fresh = (refresh_output(after, got.get("solution_ref.py", ""), tid)
                      or refresh_inline_output(after, got.get("solution_ref.py", ""), tid))
             if fresh and not NPPRINT.search(fresh):
                 after = fresh
                 broke = statement_intact(before, after)
+            else:
+                why = (WHY[-1] if WHY else
+                       ("still numpy-shaped after regeneration" if fresh
+                        else "no regeneration path matched"))
+                history.append("%s:output %s" % (model, why))
         if not broke and NPPRINT.search(after):
             # The statement shows an array printed the way numpy prints one.
             # Rewriting that honestly means running the reference, which is a
