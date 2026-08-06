@@ -132,6 +132,15 @@ def ask(model, prompt, conv_key, timeout=600, tries=4, expect_files=False):
         if tries > 1:
             time.sleep(3)
             return ask(model, prompt, conv_key, timeout, tries - 1, expect_files)
+    # The other shape of the same failure: the files arrive but every newline
+    # inside them is gone, so a checker reads `import ref import numpy as np`
+    # and `def check(workdir): from x import y` on two lines. No model writes
+    # that; it is the reply losing its structure on the way back.
+    if expect_files and "FILE:" in content:
+        lines = content.count("\n") or 1
+        if len(content) / lines > 150 and tries > 1:
+            time.sleep(3)
+            return ask(model, prompt, conv_key, timeout, tries - 1, expect_files)
     return content
 
 

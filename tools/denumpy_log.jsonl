@@ -478,3 +478,6 @@
 {"id": "num-vjp-of-softmax", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
 {"id": "num-vjp-of-log-softmax", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
 {"id": "num-vjp-of-broadcasted-add-mul", "ok": false, "why": "3-6-flash:numpy still in starter.py; 3-1-pro:solution_ref.py: SyntaxError line 2; 3-1-pro:solution_ref.py: SyntaxError line 2"}
+{"id": "pyt-aggregate-footprint-of-an-object-graph", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "pyt-cut-gc-collections-under-a-budget-without-leaking", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "pyt-footprint-sweep-dict-slots-namedtuple-key-shared", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
