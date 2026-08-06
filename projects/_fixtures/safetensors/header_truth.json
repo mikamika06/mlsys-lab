@@ -1,0 +1,42 @@
+{
+  "header_bytes": 328,
+  "header": {
+    "__metadata__": {
+      "format": "pt",
+      "produced_by": "safetensors writer"
+    },
+    "blk_0_attn_norm_weight": {
+      "dtype": "F32",
+      "shape": [
+        5120
+      ],
+      "data_offsets": [
+        0,
+        20480
+      ]
+    },
+    "blk_0_attn_v_weight": {
+      "dtype": "F32",
+      "shape": [
+        64,
+        5120
+      ],
+      "data_offsets": [
+        20480,
+        1331200
+      ]
+    },
+    "blk_0_attn_k_weight": {
+      "dtype": "F16",
+      "shape": [
+        64,
+        5120
+      ],
+      "data_offsets": [
+        1331200,
+        1986560
+      ]
+    }
+  },
+  "file_bytes": 1986896
+}

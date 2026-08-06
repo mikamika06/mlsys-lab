@@ -1,0 +1,1 @@
+{{ $last := -1 }}{{ range $i, $m := .Messages }}{{ if eq $m.Role "user" }}{{ $last = $i }}{{ end }}{{ end }}last={{ $last }}

@@ -1,0 +1,22 @@
+{
+  "01_single_user": {"messages":[{"role":"user","content":"What is a KV cache?"}]},
+  "02_system_user": {"messages":[{"role":"system","content":"You are terse."},{"role":"user","content":"Explain paging."}]},
+  "03_multi_turn": {"messages":[{"role":"user","content":"first"},{"role":"assistant","content":"ack"},{"role":"user","content":"second"}]},
+  "04_two_systems": {"messages":[{"role":"system","content":"A"},{"role":"system","content":"B"},{"role":"user","content":"go"}]},
+  "05_system_last": {"messages":[{"role":"user","content":"hi"},{"role":"system","content":"late system"}]},
+  "06_trailing_assistant": {"messages":[{"role":"user","content":"hi"},{"role":"assistant","content":"partial"}]},
+  "07_empty": {"messages":[]},
+  "08_empty_content": {"messages":[{"role":"user","content":""}]},
+  "09_newlines": {"messages":[{"role":"user","content":"line1\nline2\n\nline4"}]},
+  "10_unicode": {"messages":[{"role":"user","content":"кирилиця, 中文, emoji 🙂"}]},
+  "11_one_tool": {"messages":[{"role":"user","content":"weather in Kyiv"}],"tools":[{"type":"function","function":{"name":"get_weather","description":"Current weather","parameters":{"type":"object","properties":{"city":{"type":"string","description":"City name"}},"required":["city"]}}}]},
+  "12_two_tools": {"messages":[{"role":"user","content":"plan a trip"}],"tools":[{"type":"function","function":{"name":"get_weather","parameters":{"type":"object","properties":{"city":{"type":"string"},"days":{"type":"integer","description":"Forecast horizon"}}}}},{"type":"function","function":{"name":"book","description":"Book a seat","parameters":{"type":"object","properties":{"flight":{"type":"string"},"window":{"type":"boolean"}}}}}]},
+  "13_tool_enum": {"messages":[{"role":"user","content":"convert"}],"tools":[{"type":"function","function":{"name":"convert","parameters":{"type":"object","properties":{"unit":{"type":"string","enum":["c","f","k"]},"values":{"type":"array","items":{"type":"number"}}}}}}]},
+  "14_tool_no_params": {"messages":[{"role":"user","content":"ping"}],"tools":[{"type":"function","function":{"name":"ping","description":"No arguments","parameters":{"type":"object","properties":{}}}}]},
+  "15_tool_call_result": {"messages":[{"role":"user","content":"weather in Kyiv"},{"role":"assistant","content":"","tool_calls":[{"function":{"name":"get_weather","arguments":{"city":"Kyiv"}}}]},{"role":"tool","content":"18C","tool_name":"get_weather"},{"role":"user","content":"and tomorrow?"}],"tools":[{"type":"function","function":{"name":"get_weather","parameters":{"type":"object","properties":{"city":{"type":"string"}}}}}]},
+  "16_two_tool_calls": {"messages":[{"role":"user","content":"both"},{"role":"assistant","content":"","tool_calls":[{"function":{"name":"a","arguments":{"x":1}}},{"function":{"name":"b","arguments":{"y":"two"}}}]},{"role":"tool","content":"1"},{"role":"tool","content":"2"}]},
+  "17_thinking": {"messages":[{"role":"user","content":"riddle"},{"role":"assistant","content":"answer","thinking":"chain of thought"},{"role":"user","content":"why?"}]},
+  "18_system_field": {"messages":[{"role":"user","content":"hi"}],"system":"top level system"},
+  "19_long_system": {"messages":[{"role":"system","content":"You are an assistant that must always answer in exactly one sentence, must never speculate, and must cite the tool it used."},{"role":"user","content":"status?"}]},
+  "20_alternating_long": {"messages":[{"role":"user","content":"u1"},{"role":"assistant","content":"a1"},{"role":"user","content":"u2"},{"role":"assistant","content":"a2"},{"role":"user","content":"u3"},{"role":"assistant","content":"a3"},{"role":"user","content":"u4"}]}
+}

@@ -1,0 +1,4 @@
+start
+{{ range .Messages -}}
+{{ .Role }} {{ end -}}
+end

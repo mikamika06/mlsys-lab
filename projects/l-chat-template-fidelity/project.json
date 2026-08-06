@@ -1,0 +1,68 @@
+{
+  "id": "l-chat-template-fidelity",
+  "title": "Rendering a runner's chat template byte for byte",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-serving-runtimes",
+  "track": "Prompt assembly and template fidelity",
+  "part": 2,
+  "difficulty": 5,
+  "fixtures": ["_fixtures/templates", "_fixtures/ollama"],
+  "edits": [
+    "gotmpl/lexer.py",
+    "gotmpl/parser.py",
+    "gotmpl/eval.py",
+    "gotmpl/render.py",
+    "tests/test_templates.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Tokeniser, trim markers and simple actions",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "basic_render", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Pipelines, scoping, map order, assignment",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "semantics_render", "op": ">=", "threshold": 1.0},
+        {"metric": "map_sorted", "op": ">=", "threshold": 1.0},
+        {"metric": "assignment", "op": ">=", "threshold": 1.0},
+        {"metric": "pipelines", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "A real chat template, conversation only",
+      "check": "harness/m3.py",
+      "gates": [{"metric": "devstral_plain", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 4,
+      "title": "The same template with tools and tool results",
+      "check": "harness/m4.py",
+      "gates": [{"metric": "devstral_tools", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 5,
+      "title": "Harmony: channels and TypeScript tool schemas",
+      "check": "harness/m5.py",
+      "gates": [
+        {"metric": "harmony_plain", "op": ">=", "threshold": 1.0},
+        {"metric": "harmony_tools", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Malformed input and a suite that can fail",
+      "check": "harness/m6.py",
+      "gates": [
+        {"metric": "rejects_malformed", "op": ">=", "threshold": 1.0},
+        {"metric": "suite_passes", "op": "==", "threshold": 1},
+        {"metric": "suite_catches", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

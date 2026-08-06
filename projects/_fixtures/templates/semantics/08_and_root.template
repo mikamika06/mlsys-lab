@@ -1,0 +1,1 @@
+{{ range .Messages }}{{ if and (eq .Role "user") $.System }}both{{ else if eq .Role "user" }}user{{ else }}other{{ end }},{{ end }}

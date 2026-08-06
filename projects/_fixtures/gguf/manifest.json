@@ -1,0 +1,65 @@
+{
+  "source_arch": "llama",
+  "source_tensors": 363,
+  "kept_tensors": 3,
+  "kv_fields_copied": 43,
+  "kv_fields_skipped": 0,
+  "tensor_bytes": 7270400,
+  "truncated": {
+    "tokenizer.ggml.merges": [
+      269443,
+      2048
+    ],
+    "tokenizer.ggml.token_type": [
+      131072,
+      2048
+    ],
+    "tokenizer.ggml.tokens": [
+      131072,
+      2048
+    ],
+    "blk.0.attn_k.weight": [
+      1024,
+      64
+    ],
+    "blk.0.attn_v.weight": [
+      1024,
+      64
+    ]
+  },
+  "file_bytes": 548288,
+  "tensors": [
+    {
+      "name": "blk.0.attn_norm.weight",
+      "ggml_type": "F32",
+      "ggml_type_id": 0,
+      "shape": [
+        5120
+      ],
+      "n_bytes": 20480,
+      "dequant_sha_prefix": 509.85882568359375
+    },
+    {
+      "name": "blk.0.attn_k.weight",
+      "ggml_type": "Q4_K",
+      "ggml_type_id": 12,
+      "shape": [
+        5120,
+        64
+      ],
+      "n_bytes": 184320,
+      "dequant_sha_prefix": 1522.185791015625
+    },
+    {
+      "name": "blk.0.attn_v.weight",
+      "ggml_type": "Q6_K",
+      "ggml_type_id": 14,
+      "shape": [
+        5120,
+        64
+      ],
+      "n_bytes": 268800,
+      "dequant_sha_prefix": 470.3573913574219
+    }
+  ]
+}

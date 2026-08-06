@@ -1,0 +1,411 @@
+{
+  "cases": [
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "01_single_user",
+      "expected": "[INST]What is a KV cache?[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "02_system_user",
+      "expected": "[SYSTEM_PROMPT]You are terse.[/SYSTEM_PROMPT][INST]Explain paging.[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "03_multi_turn",
+      "expected": "[INST]first[/INST]ack</s>[INST]second[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "04_two_systems",
+      "expected": "[SYSTEM_PROMPT]A[/SYSTEM_PROMPT][SYSTEM_PROMPT]B[/SYSTEM_PROMPT][INST]go[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "05_system_last",
+      "expected": "[INST]hi[/INST][SYSTEM_PROMPT]late system[/SYSTEM_PROMPT]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "06_trailing_assistant",
+      "expected": "[INST]hi[/INST]partial"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "07_empty",
+      "expected": ""
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "08_empty_content",
+      "expected": "[INST][/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "09_newlines",
+      "expected": "[INST]line1\nline2\n\nline4[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "10_unicode",
+      "expected": "[INST]кирилиця, 中文, emoji 🙂[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "11_one_tool",
+      "expected": "[AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Current weather\",\"parameters\":{\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\",\"description\":\"City name\"}},\"required\":[\"city\"]}}}][/AVAILABLE_TOOLS][INST]weather in Kyiv[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "12_two_tools",
+      "expected": "[AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"parameters\":{\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\"},\"days\":{\"type\":\"integer\",\"description\":\"Forecast horizon\"}}}}},{\"type\":\"function\",\"function\":{\"name\":\"book\",\"description\":\"Book a seat\",\"parameters\":{\"type\":\"object\",\"properties\":{\"flight\":{\"type\":\"string\"},\"window\":{\"type\":\"boolean\"}}}}}][/AVAILABLE_TOOLS][INST]plan a trip[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "13_tool_enum",
+      "expected": "[AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"convert\",\"parameters\":{\"type\":\"object\",\"properties\":{\"unit\":{\"type\":\"string\",\"enum\":[\"c\",\"f\",\"k\"]},\"values\":{\"type\":\"array\",\"items\":{\"type\":\"number\"}}}}}}][/AVAILABLE_TOOLS][INST]convert[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "14_tool_no_params",
+      "expected": "[AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"ping\",\"description\":\"No arguments\",\"parameters\":{\"type\":\"object\",\"properties\":{}}}}][/AVAILABLE_TOOLS][INST]ping[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "15_tool_call_result",
+      "expected": "[INST]weather in Kyiv[/INST][TOOL_CALLS][{\"name\": \"get_weather\", \"arguments\": {\"city\":\"Kyiv\"}}]</s>[TOOL_RESULTS]{\"content\": 18C}[/TOOL_RESULTS][AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"parameters\":{\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\"}}}}}][/AVAILABLE_TOOLS][INST]and tomorrow?[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "16_two_tool_calls",
+      "expected": "[INST]both[/INST][TOOL_CALLS][{\"name\": \"a\", \"arguments\": {\"x\":1}}{\"name\": \"b\", \"arguments\": {\"y\":\"two\"}}]</s>[TOOL_RESULTS]{\"content\": 1}[/TOOL_RESULTS][TOOL_RESULTS]{\"content\": 2}[/TOOL_RESULTS]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "17_thinking",
+      "expected": "[INST]riddle[/INST]answer</s>[INST]why?[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "18_system_field",
+      "expected": "[INST]hi[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "19_long_system",
+      "expected": "[SYSTEM_PROMPT]You are an assistant that must always answer in exactly one sentence, must never speculate, and must cite the tool it used.[/SYSTEM_PROMPT][INST]status?[/INST]"
+    },
+    {
+      "template": "devstral-24k_latest.template",
+      "input": "20_alternating_long",
+      "expected": "[INST]u1[/INST]a1</s>[INST]u2[/INST]a2</s>[INST]u3[/INST]a3</s>[INST]u4[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "01_single_user",
+      "expected": "[INST]What is a KV cache?[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "02_system_user",
+      "expected": "[SYSTEM_PROMPT]You are terse.[/SYSTEM_PROMPT][INST]Explain paging.[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "03_multi_turn",
+      "expected": "[INST]first[/INST]ack</s>[INST]second[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "04_two_systems",
+      "expected": "[SYSTEM_PROMPT]A[/SYSTEM_PROMPT][SYSTEM_PROMPT]B[/SYSTEM_PROMPT][INST]go[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "05_system_last",
+      "expected": "[INST]hi[/INST][SYSTEM_PROMPT]late system[/SYSTEM_PROMPT]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "06_trailing_assistant",
+      "expected": "[INST]hi[/INST]partial"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "07_empty",
+      "expected": ""
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "08_empty_content",
+      "expected": "[INST][/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "09_newlines",
+      "expected": "[INST]line1\nline2\n\nline4[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "10_unicode",
+      "expected": "[INST]кирилиця, 中文, emoji 🙂[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "11_one_tool",
+      "expected": "[AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Current weather\",\"parameters\":{\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\",\"description\":\"City name\"}},\"required\":[\"city\"]}}}][/AVAILABLE_TOOLS][INST]weather in Kyiv[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "12_two_tools",
+      "expected": "[AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"parameters\":{\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\"},\"days\":{\"type\":\"integer\",\"description\":\"Forecast horizon\"}}}}},{\"type\":\"function\",\"function\":{\"name\":\"book\",\"description\":\"Book a seat\",\"parameters\":{\"type\":\"object\",\"properties\":{\"flight\":{\"type\":\"string\"},\"window\":{\"type\":\"boolean\"}}}}}][/AVAILABLE_TOOLS][INST]plan a trip[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "13_tool_enum",
+      "expected": "[AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"convert\",\"parameters\":{\"type\":\"object\",\"properties\":{\"unit\":{\"type\":\"string\",\"enum\":[\"c\",\"f\",\"k\"]},\"values\":{\"type\":\"array\",\"items\":{\"type\":\"number\"}}}}}}][/AVAILABLE_TOOLS][INST]convert[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "14_tool_no_params",
+      "expected": "[AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"ping\",\"description\":\"No arguments\",\"parameters\":{\"type\":\"object\",\"properties\":{}}}}][/AVAILABLE_TOOLS][INST]ping[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "15_tool_call_result",
+      "expected": "[INST]weather in Kyiv[/INST][TOOL_CALLS][{\"name\": \"get_weather\", \"arguments\": {\"city\":\"Kyiv\"}}]</s>[TOOL_RESULTS]{\"content\": 18C}[/TOOL_RESULTS][AVAILABLE_TOOLS][{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"parameters\":{\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\"}}}}}][/AVAILABLE_TOOLS][INST]and tomorrow?[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "16_two_tool_calls",
+      "expected": "[INST]both[/INST][TOOL_CALLS][{\"name\": \"a\", \"arguments\": {\"x\":1}}{\"name\": \"b\", \"arguments\": {\"y\":\"two\"}}]</s>[TOOL_RESULTS]{\"content\": 1}[/TOOL_RESULTS][TOOL_RESULTS]{\"content\": 2}[/TOOL_RESULTS]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "17_thinking",
+      "expected": "[INST]riddle[/INST]answer</s>[INST]why?[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "18_system_field",
+      "expected": "[INST]hi[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "19_long_system",
+      "expected": "[SYSTEM_PROMPT]You are an assistant that must always answer in exactly one sentence, must never speculate, and must cite the tool it used.[/SYSTEM_PROMPT][INST]status?[/INST]"
+    },
+    {
+      "template": "devstral_latest.template",
+      "input": "20_alternating_long",
+      "expected": "[INST]u1[/INST]a1</s>[INST]u2[/INST]a2</s>[INST]u3[/INST]a3</s>[INST]u4[/INST]"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "01_single_user",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>What is a KV cache?<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "02_system_user",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>Explain paging.<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "03_multi_turn",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>first<|end|><|start|>assistant<|channel|>final<|message|>ack<|end|><|start|>user<|message|>second<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "04_two_systems",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>go<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "05_system_last",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>hi<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "06_trailing_assistant",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>hi<|end|><|start|>assistant<|channel|>final<|message|>partial"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "07_empty",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "08_empty_content",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|><|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "09_newlines",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>line1\nline2\n\nline4<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "10_unicode",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>кирилиця, 中文, emoji 🙂<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "11_one_tool",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\n// Current weather\ntype get_weather = (_: {\n  // City name\n  city: string,\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>weather in Kyiv<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "12_two_tools",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\ntype get_weather = (_: {\n  city: string,\n  // Forecast horizon\n  days: number,\n}) => any;\n\n// Book a seat\ntype book = (_: {\n  flight: string,\n  window: boolean,\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>plan a trip<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "13_tool_enum",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\ntype convert = (_: {\n  unit: \"c\" | \"f\" | \"k\",\n  values: number[],\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>convert<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "14_tool_no_params",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\n// No arguments\ntype ping = () => any;\n\n} // namespace functions<|end|><|start|>user<|message|>ping<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "15_tool_call_result",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\ntype get_weather = (_: {\n  city: string,\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>weather in Kyiv<|end|><|start|>assistant<|channel|>commentary to=functions.get_weather <|constrain|>json<|message|>{\"city\":\"Kyiv\"}<|call|><|start|>functions.get_weather to=assistant<|message|>18C<|end|><|start|>user<|message|>and tomorrow?<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "16_two_tool_calls",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>both<|end|><|start|>assistant<|channel|>commentary to=functions.a <|constrain|>json<|message|>{\"x\":1}<|call|><|start|>assistant<|channel|>commentary to=functions.b <|constrain|>json<|message|>{\"y\":\"two\"}<|call|><|start|>functions. to=assistant<|message|>1<|end|><|start|>functions. to=assistant<|message|>2<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "17_thinking",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>riddle<|end|><|start|>assistant<|channel|>final<|message|>answer<|end|><|start|>user<|message|>why?<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "18_system_field",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>developer<|message|>\n\n# Instructions\n\ntop level system<|end|><|start|>user<|message|>hi<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "19_long_system",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>status?<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss-24k_latest.template",
+      "input": "20_alternating_long",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>u1<|end|><|start|>assistant<|channel|>final<|message|>a1<|end|><|start|>user<|message|>u2<|end|><|start|>assistant<|channel|>final<|message|>a2<|end|><|start|>user<|message|>u3<|end|><|start|>assistant<|channel|>final<|message|>a3<|end|><|start|>user<|message|>u4<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "01_single_user",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>What is a KV cache?<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "02_system_user",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>Explain paging.<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "03_multi_turn",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>first<|end|><|start|>assistant<|channel|>final<|message|>ack<|end|><|start|>user<|message|>second<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "04_two_systems",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>go<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "05_system_last",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>hi<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "06_trailing_assistant",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>hi<|end|><|start|>assistant<|channel|>final<|message|>partial"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "07_empty",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "08_empty_content",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|><|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "09_newlines",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>line1\nline2\n\nline4<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "10_unicode",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>кирилиця, 中文, emoji 🙂<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "11_one_tool",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\n// Current weather\ntype get_weather = (_: {\n  // City name\n  city: string,\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>weather in Kyiv<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "12_two_tools",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\ntype get_weather = (_: {\n  city: string,\n  // Forecast horizon\n  days: number,\n}) => any;\n\n// Book a seat\ntype book = (_: {\n  flight: string,\n  window: boolean,\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>plan a trip<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "13_tool_enum",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\ntype convert = (_: {\n  unit: \"c\" | \"f\" | \"k\",\n  values: number[],\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>convert<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "14_tool_no_params",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\n// No arguments\ntype ping = () => any;\n\n} // namespace functions<|end|><|start|>user<|message|>ping<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "15_tool_call_result",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\ntype get_weather = (_: {\n  city: string,\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>weather in Kyiv<|end|><|start|>assistant<|channel|>commentary to=functions.get_weather <|constrain|>json<|message|>{\"city\":\"Kyiv\"}<|call|><|start|>functions.get_weather to=assistant<|message|>18C<|end|><|start|>user<|message|>and tomorrow?<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "16_two_tool_calls",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>both<|end|><|start|>assistant<|channel|>commentary to=functions.a <|constrain|>json<|message|>{\"x\":1}<|call|><|start|>assistant<|channel|>commentary to=functions.b <|constrain|>json<|message|>{\"y\":\"two\"}<|call|><|start|>functions. to=assistant<|message|>1<|end|><|start|>functions. to=assistant<|message|>2<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "17_thinking",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>riddle<|end|><|start|>assistant<|channel|>final<|message|>answer<|end|><|start|>user<|message|>why?<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "18_system_field",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>developer<|message|>\n\n# Instructions\n\ntop level system<|end|><|start|>user<|message|>hi<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "19_long_system",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>status?<|end|><|start|>assistant"
+    },
+    {
+      "template": "gpt-oss_20b.template",
+      "input": "20_alternating_long",
+      "expected": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-08-06\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>u1<|end|><|start|>assistant<|channel|>final<|message|>a1<|end|><|start|>user<|message|>u2<|end|><|start|>assistant<|channel|>final<|message|>a2<|end|><|start|>user<|message|>u3<|end|><|start|>assistant<|channel|>final<|message|>a3<|end|><|start|>user<|message|>u4<|end|><|start|>assistant"
+    }
+  ],
+  "helpers": {
+    "currentDate": "fixed to 2026-08-06 so renderings are reproducible",
+    "json/toJson": "encoding/json Marshal",
+    "slice": "Go slice expression over messages",
+    "toTypeScriptType": "reimplemented from the documented JSON-schema mapping"
+  },
+  "produced_by": "go version go1.25.2 darwin/arm64"
+}

@@ -1,0 +1,1 @@
+{{ range $i, $m := .Messages }}[{{ $i }}:{{ $m.Role }}]{{ end }}

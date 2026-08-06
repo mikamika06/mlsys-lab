@@ -1,0 +1,40 @@
+{
+  "module": "mlx.nn transformer block",
+  "mlx_version": "0.31.2",
+  "params": {
+    "attention.key_proj.weight": [
+      256,
+      256
+    ],
+    "attention.out_proj.weight": [
+      256,
+      256
+    ],
+    "attention.query_proj.weight": [
+      256,
+      256
+    ],
+    "attention.value_proj.weight": [
+      256,
+      256
+    ],
+    "linear1.weight": [
+      512,
+      256
+    ],
+    "linear2.weight": [
+      512,
+      256
+    ],
+    "linear3.weight": [
+      256,
+      512
+    ],
+    "ln1.weight": [
+      256
+    ],
+    "ln2.weight": [
+      256
+    ]
+  }
+}

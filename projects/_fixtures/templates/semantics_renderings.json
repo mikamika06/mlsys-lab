@@ -1,0 +1,1411 @@
+{
+  "cases": [
+    {
+      "template": "01_literal.template",
+      "input": "01_single_user",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "02_system_user",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "03_multi_turn",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "04_two_systems",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "05_system_last",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "06_trailing_assistant",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "07_empty",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "08_empty_content",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "09_newlines",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "10_unicode",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "11_one_tool",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "12_two_tools",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "13_tool_enum",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "14_tool_no_params",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "15_tool_call_result",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "16_two_tool_calls",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "17_thinking",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "18_system_field",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "19_long_system",
+      "expected": "AxB"
+    },
+    {
+      "template": "01_literal.template",
+      "input": "20_alternating_long",
+      "expected": "AxB"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "01_single_user",
+      "expected": "start\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "02_system_user",
+      "expected": "start\nsystem\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "03_multi_turn",
+      "expected": "start\nuser\nassistant\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "04_two_systems",
+      "expected": "start\nsystem\nsystem\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "05_system_last",
+      "expected": "start\nuser\nsystem\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "06_trailing_assistant",
+      "expected": "start\nuser\nassistant\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "07_empty",
+      "expected": "start\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "08_empty_content",
+      "expected": "start\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "09_newlines",
+      "expected": "start\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "10_unicode",
+      "expected": "start\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "11_one_tool",
+      "expected": "start\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "12_two_tools",
+      "expected": "start\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "13_tool_enum",
+      "expected": "start\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "14_tool_no_params",
+      "expected": "start\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "15_tool_call_result",
+      "expected": "start\nuser\nassistant\ntool\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "16_two_tool_calls",
+      "expected": "start\nuser\nassistant\ntool\ntool\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "17_thinking",
+      "expected": "start\nuser\nassistant\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "18_system_field",
+      "expected": "start\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "19_long_system",
+      "expected": "start\nsystem\nuser\nend"
+    },
+    {
+      "template": "02_trim_left.template",
+      "input": "20_alternating_long",
+      "expected": "start\nuser\nassistant\nuser\nassistant\nuser\nassistant\nuser\nend"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "01_single_user",
+      "expected": "start\nuser end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "02_system_user",
+      "expected": "start\nsystem user end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "03_multi_turn",
+      "expected": "start\nuser assistant user end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "04_two_systems",
+      "expected": "start\nsystem system user end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "05_system_last",
+      "expected": "start\nuser system end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "06_trailing_assistant",
+      "expected": "start\nuser assistant end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "07_empty",
+      "expected": "start\nend"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "08_empty_content",
+      "expected": "start\nuser end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "09_newlines",
+      "expected": "start\nuser end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "10_unicode",
+      "expected": "start\nuser end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "11_one_tool",
+      "expected": "start\nuser end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "12_two_tools",
+      "expected": "start\nuser end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "13_tool_enum",
+      "expected": "start\nuser end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "14_tool_no_params",
+      "expected": "start\nuser end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "15_tool_call_result",
+      "expected": "start\nuser assistant tool user end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "16_two_tool_calls",
+      "expected": "start\nuser assistant tool tool end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "17_thinking",
+      "expected": "start\nuser assistant user end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "18_system_field",
+      "expected": "start\nuser end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "19_long_system",
+      "expected": "start\nsystem user end"
+    },
+    {
+      "template": "03_trim_right.template",
+      "input": "20_alternating_long",
+      "expected": "start\nuser assistant user assistant user assistant user end"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "01_single_user",
+      "expected": "[0:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "02_system_user",
+      "expected": "[0:system][1:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "03_multi_turn",
+      "expected": "[0:user][1:assistant][2:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "04_two_systems",
+      "expected": "[0:system][1:system][2:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "05_system_last",
+      "expected": "[0:user][1:system]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "06_trailing_assistant",
+      "expected": "[0:user][1:assistant]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "07_empty",
+      "expected": ""
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "08_empty_content",
+      "expected": "[0:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "09_newlines",
+      "expected": "[0:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "10_unicode",
+      "expected": "[0:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "11_one_tool",
+      "expected": "[0:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "12_two_tools",
+      "expected": "[0:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "13_tool_enum",
+      "expected": "[0:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "14_tool_no_params",
+      "expected": "[0:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "15_tool_call_result",
+      "expected": "[0:user][1:assistant][2:tool][3:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "16_two_tool_calls",
+      "expected": "[0:user][1:assistant][2:tool][3:tool]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "17_thinking",
+      "expected": "[0:user][1:assistant][2:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "18_system_field",
+      "expected": "[0:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "19_long_system",
+      "expected": "[0:system][1:user]"
+    },
+    {
+      "template": "04_range_index.template",
+      "input": "20_alternating_long",
+      "expected": "[0:user][1:assistant][2:user][3:assistant][4:user][5:assistant][6:user]"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "01_single_user",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "02_system_user",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "03_multi_turn",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "04_two_systems",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "05_system_last",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "06_trailing_assistant",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "07_empty",
+      "expected": "none|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "08_empty_content",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "09_newlines",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "10_unicode",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "11_one_tool",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "12_two_tools",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "13_tool_enum",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "14_tool_no_params",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "15_tool_call_result",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "16_two_tool_calls",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "17_thinking",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "18_system_field",
+      "expected": "have|sys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "19_long_system",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "05_if_empty.template",
+      "input": "20_alternating_long",
+      "expected": "have|nosys"
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "01_single_user",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "02_system_user",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "03_multi_turn",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "04_two_systems",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "05_system_last",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "06_trailing_assistant",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "07_empty",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "08_empty_content",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "09_newlines",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "10_unicode",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "11_one_tool",
+      "expected": "city=string;"
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "12_two_tools",
+      "expected": "city=string;days=integer;flight=string;window=boolean;"
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "13_tool_enum",
+      "expected": "unit=string;values=array;"
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "14_tool_no_params",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "15_tool_call_result",
+      "expected": "city=string;"
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "16_two_tool_calls",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "17_thinking",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "18_system_field",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "19_long_system",
+      "expected": ""
+    },
+    {
+      "template": "06_map_order.template",
+      "input": "20_alternating_long",
+      "expected": ""
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "01_single_user",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "02_system_user",
+      "expected": "last=1"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "03_multi_turn",
+      "expected": "last=2"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "04_two_systems",
+      "expected": "last=2"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "05_system_last",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "06_trailing_assistant",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "07_empty",
+      "expected": "last=-1"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "08_empty_content",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "09_newlines",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "10_unicode",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "11_one_tool",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "12_two_tools",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "13_tool_enum",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "14_tool_no_params",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "15_tool_call_result",
+      "expected": "last=3"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "16_two_tool_calls",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "17_thinking",
+      "expected": "last=2"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "18_system_field",
+      "expected": "last=0"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "19_long_system",
+      "expected": "last=1"
+    },
+    {
+      "template": "07_var_assign.template",
+      "input": "20_alternating_long",
+      "expected": "last=6"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "01_single_user",
+      "expected": "user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "02_system_user",
+      "expected": "other,user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "03_multi_turn",
+      "expected": "user,other,user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "04_two_systems",
+      "expected": "other,other,user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "05_system_last",
+      "expected": "user,other,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "06_trailing_assistant",
+      "expected": "user,other,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "07_empty",
+      "expected": ""
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "08_empty_content",
+      "expected": "user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "09_newlines",
+      "expected": "user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "10_unicode",
+      "expected": "user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "11_one_tool",
+      "expected": "user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "12_two_tools",
+      "expected": "user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "13_tool_enum",
+      "expected": "user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "14_tool_no_params",
+      "expected": "user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "15_tool_call_result",
+      "expected": "user,other,other,user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "16_two_tool_calls",
+      "expected": "user,other,other,other,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "17_thinking",
+      "expected": "user,other,user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "18_system_field",
+      "expected": "both,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "19_long_system",
+      "expected": "other,user,"
+    },
+    {
+      "template": "08_and_root.template",
+      "input": "20_alternating_long",
+      "expected": "user,other,user,other,user,other,user,"
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "01_single_user",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "02_system_user",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "03_multi_turn",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "04_two_systems",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "05_system_last",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "06_trailing_assistant",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "07_empty",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "08_empty_content",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "09_newlines",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "10_unicode",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "11_one_tool",
+      "expected": "city:string "
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "12_two_tools",
+      "expected": "city:string days:number flight:string window:boolean "
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "13_tool_enum",
+      "expected": "unit:\"c\" | \"f\" | \"k\" values:number[] "
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "14_tool_no_params",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "15_tool_call_result",
+      "expected": "city:string "
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "16_two_tool_calls",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "17_thinking",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "18_system_field",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "19_long_system",
+      "expected": ""
+    },
+    {
+      "template": "09_pipeline.template",
+      "input": "20_alternating_long",
+      "expected": ""
+    },
+    {
+      "template": "10_len.template",
+      "input": "01_single_user",
+      "expected": "count=1 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "02_system_user",
+      "expected": "count=2 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "03_multi_turn",
+      "expected": "count=3 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "04_two_systems",
+      "expected": "count=3 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "05_system_last",
+      "expected": "count=2 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "06_trailing_assistant",
+      "expected": "count=2 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "07_empty",
+      "expected": "count=0 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "08_empty_content",
+      "expected": "count=1 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "09_newlines",
+      "expected": "count=1 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "10_unicode",
+      "expected": "count=1 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "11_one_tool",
+      "expected": "count=1 tools=1"
+    },
+    {
+      "template": "10_len.template",
+      "input": "12_two_tools",
+      "expected": "count=1 tools=2"
+    },
+    {
+      "template": "10_len.template",
+      "input": "13_tool_enum",
+      "expected": "count=1 tools=1"
+    },
+    {
+      "template": "10_len.template",
+      "input": "14_tool_no_params",
+      "expected": "count=1 tools=1"
+    },
+    {
+      "template": "10_len.template",
+      "input": "15_tool_call_result",
+      "expected": "count=4 tools=1"
+    },
+    {
+      "template": "10_len.template",
+      "input": "16_two_tool_calls",
+      "expected": "count=4 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "17_thinking",
+      "expected": "count=3 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "18_system_field",
+      "expected": "count=1 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "19_long_system",
+      "expected": "count=2 tools=0"
+    },
+    {
+      "template": "10_len.template",
+      "input": "20_alternating_long",
+      "expected": "count=7 tools=0"
+    },
+    {
+      "template": "11_with.template",
+      "input": "01_single_user",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "02_system_user",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "03_multi_turn",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "04_two_systems",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "05_system_last",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "06_trailing_assistant",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "07_empty",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "08_empty_content",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "09_newlines",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "10_unicode",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "11_one_tool",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "12_two_tools",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "13_tool_enum",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "14_tool_no_params",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "15_tool_call_result",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "16_two_tool_calls",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "17_thinking",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "18_system_field",
+      "expected": "SYS[top level system]"
+    },
+    {
+      "template": "11_with.template",
+      "input": "19_long_system",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "11_with.template",
+      "input": "20_alternating_long",
+      "expected": "NOSYS"
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "01_single_user",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "02_system_user",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "03_multi_turn",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "04_two_systems",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "05_system_last",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "06_trailing_assistant",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "07_empty",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "08_empty_content",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "09_newlines",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "10_unicode",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "11_one_tool",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "12_two_tools",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "13_tool_enum",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "14_tool_no_params",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "15_tool_call_result",
+      "expected": "get_weather({\"city\":\"Kyiv\"})"
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "16_two_tool_calls",
+      "expected": "a({\"x\":1})b({\"y\":\"two\"})"
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "17_thinking",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "18_system_field",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "19_long_system",
+      "expected": ""
+    },
+    {
+      "template": "12_toolcalls.template",
+      "input": "20_alternating_long",
+      "expected": ""
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "01_single_user",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "02_system_user",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "03_multi_turn",
+      "expected": "long/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "04_two_systems",
+      "expected": "long/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "05_system_last",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "06_trailing_assistant",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "07_empty",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "08_empty_content",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "09_newlines",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "10_unicode",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "11_one_tool",
+      "expected": "short/"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "12_two_tools",
+      "expected": "short/"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "13_tool_enum",
+      "expected": "short/"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "14_tool_no_params",
+      "expected": "short/"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "15_tool_call_result",
+      "expected": "long/"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "16_two_tool_calls",
+      "expected": "long/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "17_thinking",
+      "expected": "long/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "18_system_field",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "19_long_system",
+      "expected": "short/notools"
+    },
+    {
+      "template": "13_gt_not.template",
+      "input": "20_alternating_long",
+      "expected": "long/notools"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "01_single_user",
+      "expected": "What is a KV cache?"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "02_system_user",
+      "expected": "You are terse.|Explain paging."
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "03_multi_turn",
+      "expected": "first|ack|second"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "04_two_systems",
+      "expected": "A|B|go"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "05_system_last",
+      "expected": "hi|late system"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "06_trailing_assistant",
+      "expected": "hi|partial"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "07_empty",
+      "expected": ""
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "08_empty_content",
+      "expected": ""
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "09_newlines",
+      "expected": "line1\nline2\n\nline4"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "10_unicode",
+      "expected": "кирилиця, 中文, emoji 🙂"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "11_one_tool",
+      "expected": "weather in Kyiv"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "12_two_tools",
+      "expected": "plan a trip"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "13_tool_enum",
+      "expected": "convert"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "14_tool_no_params",
+      "expected": "ping"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "15_tool_call_result",
+      "expected": "weather in Kyiv||18C|and tomorrow?"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "16_two_tool_calls",
+      "expected": "both||1|2"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "17_thinking",
+      "expected": "riddle|answer|why?"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "18_system_field",
+      "expected": "hi"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "19_long_system",
+      "expected": "You are an assistant that must always answer in exactly one sentence, must never speculate, and must cite the tool it used.|status?"
+    },
+    {
+      "template": "14_truthy_int.template",
+      "input": "20_alternating_long",
+      "expected": "u1|a1|u2|a2|u3|a3|u4"
+    }
+  ],
+  "helpers": {
+    "currentDate": "fixed to 2026-08-06 so renderings are reproducible",
+    "json/toJson": "encoding/json Marshal",
+    "slice": "Go slice expression over messages",
+    "toTypeScriptType": "reimplemented from the documented JSON-schema mapping"
+  },
+  "produced_by": "go version go1.25.2 darwin/arm64"
+}

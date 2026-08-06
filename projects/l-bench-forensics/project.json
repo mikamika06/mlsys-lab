@@ -1,0 +1,55 @@
+{
+  "id": "l-bench-forensics",
+  "title": "Benchmark forensics: what these numbers are allowed to prove",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-serving-runtimes",
+  "track": "Measurement discipline",
+  "part": 2,
+  "difficulty": 4,
+  "fixtures": ["_fixtures/llama_bench"],
+  "edits": [
+    "benchkit/parse.py",
+    "benchkit/stats.py",
+    "benchkit/compare.py",
+    "benchkit/decay.py",
+    "benchkit/report.py",
+    "tests/test_bench.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Parse and derive", "check": "harness/m1.py",
+     "gates": [
+       {"metric": "row_count", "op": "==", "threshold": 1},
+       {"metric": "kind_match", "op": "==", "threshold": 1},
+       {"metric": "throughput_match", "op": "==", "threshold": 1},
+       {"metric": "ms_per_token_match", "op": "==", "threshold": 1},
+       {"metric": "reps_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Statistics that can say no", "check": "harness/m2.py",
+     "gates": [
+       {"metric": "median_match", "op": "==", "threshold": 1},
+       {"metric": "iqr_match", "op": "==", "threshold": 1},
+       {"metric": "separable_match", "op": "==", "threshold": 1},
+       {"metric": "separable_uses_iqr", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Which comparisons are controlled", "check": "harness/m3.py",
+     "gates": [
+       {"metric": "differences_match", "op": "==", "threshold": 1},
+       {"metric": "controlled_found", "op": "==", "threshold": 1},
+       {"metric": "confounded_found", "op": "==", "threshold": 1}]},
+    {"n": 4, "title": "Throughput against context depth", "check": "harness/m4.py",
+     "gates": [
+       {"metric": "table_match", "op": "==", "threshold": 1},
+       {"metric": "separability_match", "op": "==", "threshold": 1},
+       {"metric": "slope_sign", "op": "==", "threshold": 1},
+       {"metric": "catches_speedup", "op": "==", "threshold": 1}]},
+    {"n": 5, "title": "A recommendation with its evidence", "check": "harness/m5.py",
+     "gates": [
+       {"metric": "split_match", "op": "==", "threshold": 1},
+       {"metric": "ubatch_choice", "op": "==", "threshold": 1},
+       {"metric": "floor_respected", "op": "==", "threshold": 1},
+       {"metric": "bandwidth_order", "op": "==", "threshold": 1}]},
+    {"n": 6, "title": "An audit that stays quiet on clean data", "check": "harness/m6.py",
+     "gates": [
+       {"metric": "flags_real_anomaly", "op": "==", "threshold": 1},
+       {"metric": "clean_data_silent", "op": "==", "threshold": 1}]}
+  ]
+}

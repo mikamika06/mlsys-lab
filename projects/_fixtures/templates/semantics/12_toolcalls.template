@@ -1,0 +1,1 @@
+{{ range .Messages }}{{ if .ToolCalls }}{{ range .ToolCalls }}{{ .Function.Name }}({{ .Function.Arguments | json }}){{ end }}{{ end }}{{ end }}

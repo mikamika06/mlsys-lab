@@ -1,0 +1,1 @@
+{{ range .Tools }}{{ range $k, $v := .Function.Parameters.Properties }}{{ $k }}={{ $v.Type }};{{ end }}{{ end }}

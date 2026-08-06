@@ -53,17 +53,66 @@ def log(row):
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
-def ask(model, prompt, conv_key, timeout=600):
+GATE = threading.Event()
+GATE.set()
+
+
+def _wait_for_gateway(reason):
+    """Hold every worker until the gateway answers again.
+
+    A gateway that stops accepting connections fails a unit in milliseconds, so
+    nine workers can burn the entire queue between two progress reports — which
+    is exactly what happened: 1,217 units "failed" in one outage without a single
+    request being answered. A transport error is not a fact about the unit, so it
+    must not consume it.
+    """
+    if not GATE.is_set():
+        GATE.wait()
+        return
+    GATE.clear()
+    print(f"gateway unreachable ({reason}); pausing", flush=True)
+    delay = 5
+    while True:
+        try:
+            with urllib.request.urlopen(BASE + "/health", timeout=15) as r:
+                if json.load(r).get("ok"):
+                    break
+        except Exception:  # noqa: BLE001
+            pass
+        time.sleep(delay)
+        delay = min(delay * 2, 120)
+    print("gateway back; resuming", flush=True)
+    GATE.set()
+
+
+def ask(model, prompt, conv_key, timeout=600, tries=4):
     body = {"model": model, "conversation_key": conv_key,
             "messages": [{"role": "user", "content": prompt}]}
-    req = urllib.request.Request(
-        BASE + "/v1/chat/completions", data=json.dumps(body).encode(),
-        headers={"Authorization": "Bearer " + open(KEYFILE).read().strip(),
-                 "Content-Type": "application/json"})
-    try:
-        d = json.load(urllib.request.urlopen(req, timeout=timeout))
-    except urllib.error.HTTPError as e:
-        raise RuntimeError(f"HTTP {e.code}: {e.read().decode('utf-8','replace')[:160]}") from None
+    payload = json.dumps(body).encode()
+    last = None
+    for attempt in range(tries):
+        GATE.wait()
+        req = urllib.request.Request(
+            BASE + "/v1/chat/completions", data=payload,
+            headers={"Authorization": "Bearer " + open(KEYFILE).read().strip(),
+                     "Content-Type": "application/json"})
+        try:
+            d = json.load(urllib.request.urlopen(req, timeout=timeout))
+            break
+        except urllib.error.HTTPError as e:
+            code = e.code
+            text = e.read().decode("utf-8", "replace")[:160]
+            if code in (429, 500, 502, 503, 504) and attempt + 1 < tries:
+                last = f"HTTP {code}: {text}"
+                time.sleep(min(20 * (attempt + 1), 90))
+                continue
+            raise RuntimeError(f"HTTP {code}: {text}") from None
+        except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as e:
+            last = f"{type(e).__name__}: {str(e)[:80]}"
+            _wait_for_gateway(last)
+            continue
+    else:
+        raise RuntimeError("gateway unreachable: " + str(last))
     # The gateway usually answers with choices, but a refused or errored job comes
     # back shaped differently; reading it blind turned that into KeyError('choices')
     # and cost a whole turn with no explanation.
@@ -231,15 +280,20 @@ def build(unit_id: str, turns: int) -> dict:
     conv = f"mlsys-build-{unit_id}"
     prompt = contract(spec)
     history = []
+    restarts = 0
+    have: dict[str, str] = {}
     for turn in range(turns):
         model = LADDER[min(turn // 2, len(LADDER) - 1)]
         try:
             reply = ask(model, prompt, conv)
         except Exception as e:  # noqa: BLE001
             history.append(f"{model}:{type(e).__name__}: {str(e)[:60]}")
-            prompt = (contract(spec)
-                      if not os.path.isfile(os.path.join(pdir, "project.json"))
-                      else "The previous reply did not arrive. Send the files again.")
+            if not os.path.isfile(os.path.join(pdir, "project.json")):
+                restarts += 1
+                conv = f"mlsys-build-{unit_id}-r{restarts}"
+                prompt = contract(spec)
+            else:
+                prompt = "The previous reply did not arrive. Send the files again."
             continue
 
         files = parse_files(reply)
@@ -248,12 +302,32 @@ def build(unit_id: str, turns: int) -> dict:
         # set back would reject exactly the reply that was requested — and wiping the
         # directory first would throw away everything it did not resend.
         need_all = first
+        if first:
+            # A long unit does not always fit in one reply. Whatever arrived is
+            # already written work; keep it and ask for the remainder rather than
+            # paying for the whole set again and truncating in the same place.
+            have.update(files)
+            files = dict(have)
         if not files or (need_all and "project.json" not in files):
             history.append(f"{model}:no files ({len(files)})")
-            prompt = (contract(spec) if first else
-                      "I received no usable files. Reply again, every file as a line "
-                      "`FILE: <path>` followed by the file content in a fenced block. "
-                      "Nothing else, no commentary.")
+            if not files:
+                # Nothing at all came back, so there is no context worth keeping;
+                # resending the contract into the same chat only buries it under a
+                # duplicate and the model answers the wrong copy.
+                restarts += 1
+                conv = f"mlsys-build-{unit_id}-r{restarts}"
+                have.clear()
+                prompt = contract(spec)
+            elif first:
+                got = ", ".join(sorted(files)[:12])
+                prompt = ("The reply stopped early. I already have: " + got +
+                          ". Send the files that are still missing — project.json "
+                          "first — in the same FILE:/fenced-block format. Do not "
+                          "resend what I already have.")
+            else:
+                prompt = ("I received no usable files. Reply again, every file as a line "
+                          "`FILE: <path>` followed by the file content in a fenced block. "
+                          "Nothing else, no commentary.")
             continue
 
         if first:

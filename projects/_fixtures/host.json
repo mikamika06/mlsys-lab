@@ -1,0 +1,10 @@
+{
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "python": "3.11.14",
+  "machdep.cpu.brand_string": "Apple M4 Max",
+  "hw.memsize": "38654705664",
+  "hw.perflevel0.physicalcpu": "10",
+  "hw.perflevel1.physicalcpu": "4",
+  "llama_bench_version": "ggml_metal_device_init: tensor API disabled for pre-M5 and pre-A19 devices"
+}

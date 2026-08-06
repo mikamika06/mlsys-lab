@@ -1,0 +1,90 @@
+{
+  "source": "ollama local blob store",
+  "models": [
+    {
+      "model": "devstral-24k/latest",
+      "layers": {
+        "template": {
+          "file": "devstral-24k_latest.template",
+          "bytes": 823,
+          "digest": "ea9ec42474e0b116"
+        },
+        "system": {
+          "file": "devstral-24k_latest.system",
+          "bytes": 5651,
+          "digest": "5725afc40acd80cb"
+        },
+        "params": {
+          "file": "devstral-24k_latest.params",
+          "bytes": 18,
+          "digest": "f8b4a54e1395483b"
+        }
+      }
+    },
+    {
+      "model": "devstral/latest",
+      "layers": {
+        "template": {
+          "file": "devstral_latest.template",
+          "bytes": 823,
+          "digest": "ea9ec42474e0b116"
+        },
+        "system": {
+          "file": "devstral_latest.system",
+          "bytes": 5651,
+          "digest": "5725afc40acd80cb"
+        }
+      }
+    },
+    {
+      "model": "gpt-oss-24k/latest",
+      "layers": {
+        "template": {
+          "file": "gpt-oss-24k_latest.template",
+          "bytes": 7240,
+          "digest": "fa6710a93d78da62"
+        },
+        "params": {
+          "file": "gpt-oss-24k_latest.params",
+          "bytes": 34,
+          "digest": "fab21666fee38356"
+        }
+      }
+    },
+    {
+      "model": "gpt-oss/20b",
+      "layers": {
+        "template": {
+          "file": "gpt-oss_20b.template",
+          "bytes": 7240,
+          "digest": "fa6710a93d78da62"
+        },
+        "params": {
+          "file": "gpt-oss_20b.params",
+          "bytes": 18,
+          "digest": "d8ba2f9a17b3bbde"
+        }
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-24k/latest",
+      "layers": {
+        "params": {
+          "file": "qwen3-coder-30b-24k_latest.params",
+          "bytes": 164,
+          "digest": "7d0d77b354347ef3"
+        }
+      }
+    },
+    {
+      "model": "qwen3-coder/30b",
+      "layers": {
+        "params": {
+          "file": "qwen3-coder_30b.params",
+          "bytes": 148,
+          "digest": "69aa441ea44ff5e1"
+        }
+      }
+    }
+  ]
+}

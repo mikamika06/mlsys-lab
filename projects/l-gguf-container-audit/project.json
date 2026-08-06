@@ -1,0 +1,84 @@
+{
+  "id": "l-gguf-container-audit",
+  "title": "GGUF checkpoint audit: container, K-quants and a load plan",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "Checkpoint formats and cold start",
+  "part": 2,
+  "difficulty": 5,
+  "fixtures": ["_fixtures/gguf"],
+  "edits": [
+    "ggufkit/container.py",
+    "ggufkit/quants.py",
+    "ggufkit/plan.py",
+    "tests/test_container.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Header and key/value section",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "header_match", "op": "==", "threshold": 1},
+        {"metric": "kv_count_match", "op": "==", "threshold": 1},
+        {"metric": "kv_values_match", "op": "==", "threshold": 1},
+        {"metric": "kv_types_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Tensor index, alignment and validation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "index_match", "op": "==", "threshold": 1},
+        {"metric": "alignment_match", "op": "==", "threshold": 1},
+        {"metric": "offsets_match", "op": "==", "threshold": 1},
+        {"metric": "clean_accepted", "op": "==", "threshold": 1},
+        {"metric": "corrupt_rejected", "op": "==", "threshold": 1},
+        {"metric": "names_the_tensor", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Q4_K dequantisation from raw bytes",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "half_match", "op": "==", "threshold": 1},
+        {"metric": "q4k_block_match", "op": "==", "threshold": 1},
+        {"metric": "q4k_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Q6_K and F32 dequantisation",
+      "check": "harness/m4.py",
+      "gates": [
+        {"metric": "q6k_block_match", "op": "==", "threshold": 1},
+        {"metric": "q6k_match", "op": "==", "threshold": 1},
+        {"metric": "f32_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Page-level load plan",
+      "check": "harness/m5.py",
+      "gates": [
+        {"metric": "split_match", "op": "==", "threshold": 1},
+        {"metric": "pages_match", "op": "==", "threshold": 1},
+        {"metric": "subset_smaller", "op": "==", "threshold": 1},
+        {"metric": "waste_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Regression test in the serving path",
+      "check": "harness/m6.py",
+      "gates": [
+        {"metric": "accepts_clean", "op": "==", "threshold": 1},
+        {"metric": "rejects_corrupt", "op": "==", "threshold": 1},
+        {"metric": "message_names_tensor", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

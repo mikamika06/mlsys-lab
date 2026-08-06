@@ -1,0 +1,9 @@
+{
+  "file": "slice_corrupt.gguf",
+  "damaged_field": "tensor_info.offset",
+  "damaged_tensor": "blk.0.attn_v.weight",
+  "byte_position": 74652,
+  "original_value": 204800,
+  "written_value": 2193152,
+  "why_it_is_invalid": "tensor data offset points beyond end of file"
+}

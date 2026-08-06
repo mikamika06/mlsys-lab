@@ -1,0 +1,1 @@
+count={{ len .Messages }} tools={{ len .Tools }}
