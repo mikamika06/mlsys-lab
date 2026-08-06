@@ -95,21 +95,39 @@ def classify(tid):
     files = {n: read(tid, n) for n in ALL_FILES}
     if files["solution_ref.py"] is None:
         return "no reference", files
+    # Judged on what the learner reads. check.py is allowed to keep numpy in its
+    # oracle, so counting it here left finished tasks in the queue for ever and
+    # would have had a restart redo work that was already done.
+    learner = "\n".join(files[n] for n in LEARNER_FILES if files.get(n))
     blob = "\n".join(v for v in files.values() if v)
-    if "import numpy" not in blob:
+    if not NUMPY.search(learner):
         return "clean", files
     if SUBJECT.search(blob):
         return "subject", files
     return "container", files
 
 
-def queue():
-    out = []
+def queue(include_printed=False):
+    """Tasks worth spending a turn on.
+
+    A statement that shows an array printed the numpy way is rejected by a gate
+    that only fires after the model has been paid four times. Those are held
+    back here instead: rewriting them honestly means running the reference to
+    get the real output, which is a separate pass.
+    """
+    out, deferred = [], []
     for d in sorted(glob.glob(os.path.join(ROOT, "tasks", "*", ""))):
         tid = os.path.basename(d.rstrip("/"))
-        kind, _ = classify(tid)
-        if kind == "container":
-            out.append(tid)
+        kind, files = classify(tid)
+        if kind != "container":
+            continue
+        if not include_printed and NPPRINT.search(files.get("task.md") or ""):
+            deferred.append(tid)
+            continue
+        out.append(tid)
+    if deferred:
+        with open(os.path.join(ROOT, "tools", "denumpy_deferred.txt"), "w") as f:
+            f.write("\n".join(deferred) + "\n")
     return out
 
 
@@ -548,6 +566,8 @@ def main():
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("-j", type=int, default=4)
     ap.add_argument("--turns", type=int, default=4)
+    ap.add_argument("--include-printed", action="store_true",
+                    help="also take the statements that show numpy-printed output")
     ap.add_argument("ids", nargs="*")
     a = ap.parse_args()
 
@@ -560,7 +580,7 @@ def main():
             print("%-14s %d" % (k, v))
         return 0
 
-    ids = a.ids or queue()
+    ids = a.ids or queue(a.include_printed)
     if a.limit:
         ids = ids[:a.limit]
     say("%d tasks · %d at a time · up to %d turns" % (len(ids), a.j, a.turns))

@@ -40,6 +40,7 @@ LOG = os.path.join(ROOT, "tools", "build_unit_log.jsonl")
 TEMPLATE_M = "projects/m-build-kv-cache-groups-from-a-hybrid-model-config"
 TEMPLATE_L = "projects/p-continuous-batching-scheduler"
 
+RAW_DUMP = []
 _lock = threading.Lock()
 
 
@@ -292,15 +293,29 @@ def build(unit_id: str, turns: int) -> dict:
     spec = json.load(open(spec_path, encoding="utf-8"))
     pdir = os.path.join(ROOT, "projects", unit_id)
     if os.path.isdir(pdir) and os.path.isfile(os.path.join(pdir, "project.json")):
-        return {"id": unit_id, "ok": True, "skipped": True, "why": "already built"}
+        ok, line = verify(unit_id)
+        if ok:
+            return {"id": unit_id, "ok": True, "skipped": True, "why": "already built"}
+        # A directory left behind by a killed run is not a starting point: it is
+        # a unit that never passed. Clear it and build from the contract.
+        shutil.rmtree(pdir, ignore_errors=True)
 
     conv = f"mlsys-build-{unit_id}"
     prompt = contract(spec)
     history = []
     restarts = 0
+    nudged = False
+    # Whether the contract has been sent in this conversation, which is not the
+    # same question as whether files exist on disk. A restart used to leave a
+    # half-built directory behind, the next run read it as "already started" and
+    # sent a repair prompt into a chat that had never seen the unit — the model
+    # then asked for the files, which parsed to nothing and burned every turn.
+    briefed = False
     have: dict[str, str] = {}
     for turn in range(turns):
         model = LADDER[min(turn // 2, len(LADDER) - 1)]
+        if not briefed:
+            prompt = contract(spec)
         try:
             reply = ask(model, prompt, conv)
         except Exception as e:  # noqa: BLE001
@@ -314,6 +329,12 @@ def build(unit_id: str, turns: int) -> dict:
             continue
 
         files = parse_files(reply)
+        if not files:
+            # Keep the reply that produced nothing. Whether it carries a FILE:
+            # marker decides whether this is a parser defect or something the
+            # model never sent, and that is not worth guessing at.
+            with open(f"/tmp/nofiles_{unit_id[:40]}_{turn}.txt", "w") as fh:
+                fh.write(reply)
         first = not os.path.isfile(os.path.join(pdir, "project.json"))
         # A repair turn is asked to resend only what changed, so demanding the whole
         # set back would reject exactly the reply that was requested — and wiping the
@@ -328,13 +349,21 @@ def build(unit_id: str, turns: int) -> dict:
         if not files or (need_all and "project.json" not in files):
             history.append(f"{model}:no files ({len(files)})")
             if not files:
-                # Nothing at all came back, so there is no context worth keeping;
-                # resending the contract into the same chat only buries it under a
-                # duplicate and the model answers the wrong copy.
-                restarts += 1
-                conv = f"mlsys-build-{unit_id}-r{restarts}"
-                have.clear()
-                prompt = contract(spec)
+                # The contract is already in this chat, so the first miss gets a
+                # nudge rather than a second copy of 6 kB — the reply that came
+                # back was empty of files, not evidence the chat is unusable.
+                # Only a second miss in a row starts a clean conversation.
+                if nudged:
+                    restarts += 1
+                    conv = f"mlsys-build-{unit_id}-r{restarts}"
+                    have.clear()
+                    nudged = False
+                    prompt = contract(spec)
+                else:
+                    nudged = True
+                    prompt = ("Send the unit now. Every file as a line "
+                              "`FILE: <path>` followed by its contents in a "
+                              "fenced block, project.json first. No commentary.")
             elif first:
                 got = ", ".join(sorted(files)[:12])
                 prompt = ("The reply stopped early. I already have: " + got +
