@@ -211,7 +211,10 @@ THE SHAPE — a worked example of the same shape, read it and copy the structure
 {read(tpl + "/harness/m1.py", 1600)}
 
 --- last milestone checker, the safeguard
-{read(tpl + ("/harness/m3.py" if kind == "M" else "/harness/m7.py"), 2000)}
+{read(tpl + ("/harness/m3.py" if kind == "M" else "/harness/m7.py"), 2600)}
+
+--- the regression test the reference ships, which is what makes that checker pass
+{read(tpl + "/reference/tests/test_regression.py", 2200)}
 
 RULES A MACHINE CHECKS
   * reference/ must clear every milestone; skeleton/ must clear none. Both halves

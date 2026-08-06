@@ -404,133 +404,67 @@ def signature_of(source):
     return m.group(0)[:-1] if m else ""
 
 
-STATEMENT_PROMPT = """Remove numpy from one exercise statement. Nothing else changes.
+LINES_PROMPT = """Rewrite these lines so they do not mention numpy.
 
-The statement is Markdown with LaTeX. Keep every heading, every sentence of the
-explanation, every formula and every code fence exactly as they are. The only
-edits allowed are the ones that take numpy out:
-
-  * drop `import numpy as np`
-  * array constructors become list literals or comprehensions
-  * `np.random.<x>` in an example becomes something from `random`, seeded the
-    same way, or a literal list if that is simpler and shorter
-  * computations shown in an example become plain Python
-  * prose that says "NumPy array" says "list"
-
-Do not reword the explanation. Do not touch the mathematics. Do not add or
-remove sections, and do not change how many code fences there are.
+They come from an exercise statement whose code now uses plain Python lists
+instead of numpy arrays. Each line has to keep saying what it says: same claim,
+same formula, same example, same LaTeX, only expressed without numpy. An array
+constructor becomes a list literal, `np.sum(...)` becomes the plain Python that
+computes the same thing, "NumPy array" becomes "list".
 
 The function signature is now:
 
 {signature}
 
-Reply with one file only:
+Reply with exactly one line per input line, in the same order, each prefixed by
+its number and a tab:
 
-FILE: task.md
+1\t<rewritten line>
+2\t<rewritten line>
 
-followed by the complete Markdown in a fenced block. No commentary.
+No commentary, no extra lines, no code fences. If a line needs no change, send
+it back unchanged.
 
-=== current statement
-
-{body}
+=== lines
+{lines}
 """
 
 
-EXAMPLE = re.compile(r"```python\n(.*?)```", re.S)
-OUTPUT_FENCE = re.compile(r"(\n(?:Output|Result)[^\n]*\n+```[a-z]*\n)(.*?)(```)", re.S | re.I)
+def rewrite_numpy_lines(after, signature, ask_one):
+    """Rewrite only the lines that still mention numpy, and splice them back.
 
-
-def refresh_output(md, reference_src, tid):
-    """Replace the illustrative output with what the example actually prints.
-
-    These statements show an array the way numpy prints one. After the rewrite
-    the code returns a list, so the block is no longer describing anything that
-    happens. Running it is the only honest way to say what it prints now.
+    Sending the whole statement to be rewritten cost a formula: the model
+    returned clean prose and silently dropped a display-math block from the
+    section about the gate. Handing it only the offending lines makes the rest
+    of the statement untouchable by construction, and it is a much smaller
+    prompt.
     """
-    # The first python fence in a statement is the signature block, not the
-    # example; searching from the top runs `def f(...): ...` and gets an
-    # IndentationError instead of an output.
-    head = re.search(r"^#+\s*Example", md, re.M | re.I)
-    start = head.start() if head else 0
-    m = EXAMPLE.search(md, start)
-    om = OUTPUT_FENCE.search(md, start)
-    if not m or not om:
-        return None
-    with tempfile.TemporaryDirectory() as tmp:
-        rp = os.path.join(tmp, "reference.py")
-        ep = os.path.join(tmp, "example.py")
-        with open(rp, "w", encoding="utf-8") as f:
-            f.write(reference_src)
-        with open(ep, "w", encoding="utf-8") as f:
-            f.write(m.group(1))
-        try:
-            r = subprocess.run(
-                [sys.executable, os.path.join(ROOT, "tools", "run_example.py"), rp, ep],
-                capture_output=True, text=True, timeout=30)
-        except subprocess.TimeoutExpired:
-            return None
-    if "OK" not in r.stderr or not r.stdout.strip():
-        return None
-    return md[:om.start(2)] + r.stdout.rstrip() + "\n" + md[om.end(2):]
-
-
-def _run_example(reference_src, code):
-    with tempfile.TemporaryDirectory() as tmp:
-        rp = os.path.join(tmp, "reference.py")
-        ep = os.path.join(tmp, "example.py")
-        with open(rp, "w", encoding="utf-8") as f:
-            f.write(reference_src)
-        with open(ep, "w", encoding="utf-8") as f:
-            f.write(code)
-        try:
-            r = subprocess.run(
-                [sys.executable, os.path.join(ROOT, "tools", "run_example.py"), rp, ep],
-                capture_output=True, text=True, timeout=30)
-        except subprocess.TimeoutExpired:
-            return None
-    if "OK" not in r.stderr:
-        return None
-    return r.stdout
-
-
-def refresh_inline_output(md, reference_src, tid):
-    """Rewrite the output a statement shows as a comment beside its print.
-
-    Most of these statements do not label the output at all: they write
-    `print(preds)  # [1 1]`, or follow the print with a block of `#` lines. Once
-    the code returns lists those comments describe an array that no longer
-    exists, and the only honest replacement is what the example now prints.
-    Handled for a single print, which is the shape they all use; anything else
-    is left alone rather than guessed at.
-    """
-    head = re.search(r"^#+\s*Example", md, re.M | re.I)
-    start = head.start() if head else 0
-    m = EXAMPLE.search(md, start)
-    if not m:
-        return None
-    code = m.group(1)
-    if code.count("print(") != 1:
-        return None
-    out = _run_example(reference_src, code)
-    if not out or not out.strip():
-        return None
-    lines = out.rstrip("\n").split("\n")
-
-    src = code.split("\n")
-    idx = next((i for i, ln in enumerate(src) if "print(" in ln), None)
-    if idx is None:
-        return None
-    src[idx] = re.sub(r"\s*#.*$", "", src[idx]).rstrip()
-    tail = idx + 1
-    while tail < len(src) and src[tail].lstrip().startswith("#"):
-        tail += 1
-    comment = ["# " + ln if ln else "#" for ln in lines]
-    if len(lines) == 1:
-        src[idx] = src[idx] + "  " + comment[0]
-        new = src[:idx + 1] + src[tail:]
-    else:
-        new = src[:idx + 1] + comment + src[tail:]
-    return md[:m.start(1)] + "\n".join(new) + md[m.end(1):]
+    lines = after.split("\n")
+    idx = [i for i, ln in enumerate(lines) if LEFTOVER.search(ln)]
+    if not idx:
+        return after
+    numbered = "\n".join("%d\t%s" % (n + 1, lines[i]) for n, i in enumerate(idx))
+    try:
+        reply = ask_one(LINES_PROMPT.format(signature=signature, lines=numbered))
+    except Exception:  # noqa: BLE001
+        return after
+    got = {}
+    for raw in reply.split("\n"):
+        # The tab in the reply comes back as a space, so the separator has to
+        # be any of them; anchoring on the tab alone threw away answers that
+        # were otherwise exactly right.
+        m = re.match(r"\s*(\d+)(?:\t|\.\s|\)\s|\s)(.*)$", raw)
+        if m:
+            got[int(m.group(1))] = m.group(2)
+    if len(got) != len(idx):
+        return after
+    out = list(lines)
+    for n, i in enumerate(idx):
+        repl = got.get(n + 1)
+        if repl is None or LEFTOVER.search(repl):
+            return after
+        out[i] = repl
+    return "\n".join(out)
 
 
 def statement_intact(before, after):
@@ -644,29 +578,10 @@ def one(tid, turns):
         # starter that was just written, so the two cannot disagree.
         before = files["task.md"] or ""
         after = rewrite_statement(before, signature_of(got.get("solution_ref.py", "")))
-        # Substitution got as far as it can. The gateway preserves fences,
-        # indentation and LaTeX now, so the rest is worth asking for — under the
-        # same integrity checks, which is what makes it safe to ask. Two rounds,
-        # because what survives is usually one sentence comparing the result to
-        # numpy, and naming that line is what gets it rewritten.
-        for attempt in range(2):
-            if not LEFTOVER.search(after):
-                break
-            stubborn = [ln.strip() for ln in after.split("\n") if LEFTOVER.search(ln)]
-            body = after
-            if attempt:
-                body = ("These lines still mention numpy and must be rewritten in "
-                        "plain Python without changing what they say:\n  "
-                        + "\n  ".join(stubborn[:6]) + "\n\n" + after)
-            try:
-                reply = bu.ask(model, STATEMENT_PROMPT.format(
-                    signature=signature_of(got.get("solution_ref.py", "")),
-                    body=body), "%s-md%d" % (conv, attempt))
-                md = bu.parse_files(reply).get("task.md")
-            except Exception:  # noqa: BLE001
-                md = None
-            if md and not statement_intact(before, md):
-                after = md
+        if LEFTOVER.search(after):
+            after = rewrite_numpy_lines(
+                after, signature_of(got.get("solution_ref.py", "")),
+                lambda pr: bu.ask(model, pr, conv + "-lines"))
 
         broke = statement_intact(before, after)
         if not broke and NPPRINT.search(after):
