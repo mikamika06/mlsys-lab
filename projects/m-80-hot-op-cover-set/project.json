@@ -1,0 +1,40 @@
+{
+  "id": "m-80-hot-op-cover-set",
+  "title": "ORT profiling & attributing time to operators",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT profiling & attributing time to operators",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["profiler/analyzer.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Warmup detection & hot-op cover",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "warmup_match", "op": "==", "threshold": 1},
+        {"metric": "cover_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Attribute speedup per operator",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "attrib_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Regression test for cover sets",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_undercover", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

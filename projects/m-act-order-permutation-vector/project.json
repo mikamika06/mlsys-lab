@@ -1,0 +1,24 @@
+{
+  "id": "m-act-order-permutation-vector",
+  "title": "GPTQ algorithm mechanics",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "GPTQ algorithm mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gptq/core.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Permutation and Cholesky damping", "check": "harness/m1.py",
+     "gates": [{"metric": "perm_match", "op": "==", "threshold": 1},
+               {"metric": "damp_match", "op": "==", "threshold": 1},
+               {"metric": "argmin_index", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Lazy batch updates", "check": "harness/m2.py",
+     "gates": [{"metric": "block_update_match", "op": "==", "threshold": 1},
+               {"metric": "preserves_output", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard: act_order direction", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_ascending_order", "op": "==", "threshold": 1}]}
+  ]
+}

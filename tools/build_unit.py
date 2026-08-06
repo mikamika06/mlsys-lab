@@ -1,0 +1,348 @@
+#!/usr/bin/env python3
+"""Build Part-2 units through the local Gemini gateway.
+
+A unit is a directory of files that must agree with each other: a ticket, a
+skeleton that fails, a reference that passes, and a checker per milestone. Getting
+that right is rarely a single shot, so the build is a conversation — the gateway's
+`conversation_key` keeps one chat per unit, and a repair turn says only what broke
+instead of restating the whole contract. Without it every retry starts from
+amnesia and re-derives the same wrong thing.
+
+    python3 tools/build_unit.py m-foo-bar            # one
+    python3 tools/build_unit.py --tier T0 --limit 20 # a slice of the queue
+    python3 tools/build_unit.py --all -j8
+
+The contract is machine-checked, not taken on the model's word:
+tools/verify_project.py must report `reference N/N, skeleton 0/N`.
+"""
+from __future__ import annotations
+
+import argparse
+import concurrent.futures as cf
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import threading
+import time
+import urllib.error
+import urllib.request
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SPECS = os.path.join(ROOT, "tools", "specs2")
+KEYFILE = os.path.expanduser("~/.config/gemini-account-gateway/api.key")
+BASE = "http://127.0.0.1:8787"
+LADDER = ["3-6-flash", "3-1-pro"]
+LOG = os.path.join(ROOT, "tools", "build_unit_log.jsonl")
+TEMPLATE_M = "projects/m-build-kv-cache-groups-from-a-hybrid-model-config"
+TEMPLATE_L = "projects/p-continuous-batching-scheduler"
+
+_lock = threading.Lock()
+
+
+def say(m):
+    with _lock:
+        print(m, flush=True)
+
+
+def log(row):
+    with _lock:
+        with open(LOG, "a", encoding="utf-8") as f:
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
+def ask(model, prompt, conv_key, timeout=600):
+    body = {"model": model, "conversation_key": conv_key,
+            "messages": [{"role": "user", "content": prompt}]}
+    req = urllib.request.Request(
+        BASE + "/v1/chat/completions", data=json.dumps(body).encode(),
+        headers={"Authorization": "Bearer " + open(KEYFILE).read().strip(),
+                 "Content-Type": "application/json"})
+    try:
+        d = json.load(urllib.request.urlopen(req, timeout=timeout))
+    except urllib.error.HTTPError as e:
+        raise RuntimeError(f"HTTP {e.code}: {e.read().decode('utf-8','replace')[:160]}") from None
+    # The gateway usually answers with choices, but a refused or errored job comes
+    # back shaped differently; reading it blind turned that into KeyError('choices')
+    # and cost a whole turn with no explanation.
+    ch = d.get("choices")
+    if not ch:
+        err = d.get("error") or d
+        raise RuntimeError("no choices: " + json.dumps(err, ensure_ascii=False)[:200])
+    return ch[0]["message"]["content"]
+
+
+UI = re.compile(r"^\s*(Повідомлення Gemini|Gemini said|Gemini сказал[а]?)\s*", re.I)
+MARK = re.compile(r"^FILE:\s*(\S+)\s*$", re.M)
+# The gateway renders markdown and hands back text, so the ``` fences never survive
+# — what arrives is the block's language name on a line of its own. Indentation
+# does survive, which is the part that matters, so the file boundary is the FILE:
+# marker and the label is simply dropped.
+LABEL = re.compile(r"^(?:Python|python|JSON|json|Markdown|markdown|Text|text|Bash|bash|py)\s*$")
+
+
+def parse_files(reply: str) -> dict[str, str]:
+    s = UI.sub("", reply)
+    marks = list(MARK.finditer(s))
+    out = {}
+    for i, m in enumerate(marks):
+        path = m.group(1).strip().strip("`")
+        # The FILE: line sits outside the code block, so markdown treats __init__ as
+        # bold and hands back "init.py". Inside a block the dunder survives; only the
+        # path needs putting back together.
+        path = re.sub(r"(^|/)init\.py$", r"\1__init__.py", path)
+        path = re.sub(r"(^|/)main\.py$", r"\1__main__.py", path) if path.endswith("/main.py") and False else path
+        end = marks[i + 1].start() if i + 1 < len(marks) else len(s)
+        body = s[m.end():end]
+        lines = body.split("\n")
+        while lines and (not lines[0].strip() or LABEL.match(lines[0].strip())
+                         or lines[0].strip().startswith("```")):
+            lines.pop(0)
+        while lines and (not lines[-1].strip() or lines[-1].strip().startswith("```")):
+            lines.pop()
+        if ".." in path or path.startswith("/") or not lines:
+            continue
+        out[path] = "\n".join(lines).rstrip() + "\n"
+    return out
+
+
+def read(p, limit=None):
+    with open(os.path.join(ROOT, p), encoding="utf-8", errors="replace") as f:
+        s = f.read()
+    return s[:limit] if limit else s
+
+
+def contract(spec) -> str:
+    kind = spec.get("kind", "M")
+    n = 3 if kind == "M" else len(spec.get("milestones") or []) or 7
+    tpl = TEMPLATE_M if kind == "M" else TEMPLATE_L
+    nl = chr(10)
+    ideas = nl.join(f"  - {i}" for i in spec.get("ideas", []))
+    miles = nl.join(f"  {i+1}. {t}" for i, t in enumerate(spec.get("milestones") or []))
+    title_line = ("  title     " + spec["title"]) if spec.get("title") else ""
+    ticket_line = ("  ticket    " + spec["brief"]) if spec.get("brief") else ""
+    miles_block = ("MILESTONE TITLES, use these exactly:" + nl + miles) if miles else ""
+    return f"""You are building one exercise unit for mlsys-lab, a bank of auto-graded
+exercises in low-level ML systems. Everything is in English.
+
+THE UNIT
+  id        {spec['id']}
+  area      {spec['area']}
+  track     {spec.get('track','')}
+  tier      {spec.get('tier','T0')}
+  size      {kind} — exactly {n} milestones
+  gate hint {spec.get('gate_metric','')}
+{title_line}
+{ticket_line}
+
+IDEAS IT MUST COVER (from the research; do not invent a different topic)
+{ideas or "  (none listed — use the track name)"}
+{miles_block}
+
+THE SHAPE — a worked example of the same shape, read it and copy the structure:
+
+--- {tpl}/project.json
+{read(tpl + "/project.json", 2200)}
+
+--- {tpl}/harness/m1.py
+{read(tpl + "/harness/m1.py", 1600)}
+
+--- last milestone checker, the safeguard
+{read(tpl + ("/harness/m3.py" if kind == "M" else "/harness/m7.py"), 2000)}
+
+RULES A MACHINE CHECKS
+  * reference/ must clear every milestone; skeleton/ must clear none. Both halves
+    matter: a skeleton that passes means the gate measures nothing.
+  * brief.md is a ticket: it states a SYMPTOM, never the diagnosis. 150+ words.
+  * A gate is never wall-clock time. Use an invariant, a ratio against the
+    learner's own baseline, or a comparison with an oracle you compute in
+    harness/ref.py from the same inputs. Never hard-code an expected answer.
+  * Deterministic: fixed seed, integer arithmetic where possible, no network,
+    no binary fixtures. Generate fixtures in harness/ref.py.
+  * Python and numpy only. Grading must finish in under 20 seconds.
+  * No comments in code. A short docstring is fine.
+  * The LAST milestone is always a safeguard: the learner writes
+    tests/test_regression.py, the checker monkeypatches something in their own code
+    to a broken version, and the test must then fail. The injected fault has to
+    break an INVARIANT — not merely be a different valid implementation.
+  * skeleton/ mirrors reference/ file for file; every function raises
+    NotImplementedError. tests/test_regression.py in the skeleton raises too.
+
+OUTPUT FORMAT — every file, each as:
+
+FILE: brief.md
+```markdown
+...
+```
+
+FILE: project.json
+```json
+...
+```
+
+FILE: skeleton/<pkg>/<mod>.py
+```python
+...
+```
+
+...and so on for reference/, harness/ref.py, harness/m1.py … harness/m{n}.py,
+skeleton/tests/test_regression.py, reference/tests/test_regression.py.
+
+The fences are required: without them the indentation is lost in transit.
+Nothing outside the FILE:/fence pairs. Do not explain."""
+
+
+def write_unit(pdir: str, files: dict[str, str]) -> int:
+    for rel, body in files.items():
+        dest = os.path.join(pdir, rel)
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        with open(dest, "w", encoding="utf-8") as f:
+            f.write(body)
+    for pkg_root in ("reference", "skeleton"):
+        for cur, _dirs, fs in os.walk(os.path.join(pdir, pkg_root)):
+            if any(x.endswith(".py") for x in fs) and "__init__.py" not in fs \
+               and os.path.basename(cur) not in ("tests",):
+                open(os.path.join(cur, "__init__.py"), "w").close()
+    return len(files)
+
+
+def verify(unit_id: str) -> tuple[bool, str]:
+    try:
+        r = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "verify_project.py"), unit_id],
+                           capture_output=True, text=True, cwd=ROOT, timeout=420)
+    except subprocess.TimeoutExpired:
+        return False, "verification timed out"
+    txt = re.sub(r"\x1b\[[0-9;]*m", "", r.stdout)
+    line = next((l.strip() for l in txt.splitlines() if unit_id in l), txt.strip()[:200])
+    return ("skeleton 0/" in line and "FAIL" not in line), line
+
+
+def build(unit_id: str, turns: int) -> dict:
+    spec_path = os.path.join(SPECS, unit_id + ".json")
+    if not os.path.isfile(spec_path):
+        return {"id": unit_id, "ok": False, "why": "no spec"}
+    spec = json.load(open(spec_path, encoding="utf-8"))
+    pdir = os.path.join(ROOT, "projects", unit_id)
+    if os.path.isdir(pdir) and os.path.isfile(os.path.join(pdir, "project.json")):
+        return {"id": unit_id, "ok": True, "skipped": True, "why": "already built"}
+
+    conv = f"mlsys-build-{unit_id}"
+    prompt = contract(spec)
+    history = []
+    for turn in range(turns):
+        model = LADDER[min(turn // 2, len(LADDER) - 1)]
+        try:
+            reply = ask(model, prompt, conv)
+        except Exception as e:  # noqa: BLE001
+            history.append(f"{model}:{type(e).__name__}: {str(e)[:60]}")
+            prompt = (contract(spec)
+                      if not os.path.isfile(os.path.join(pdir, "project.json"))
+                      else "The previous reply did not arrive. Send the files again.")
+            continue
+
+        files = parse_files(reply)
+        first = not os.path.isfile(os.path.join(pdir, "project.json"))
+        # A repair turn is asked to resend only what changed, so demanding the whole
+        # set back would reject exactly the reply that was requested — and wiping the
+        # directory first would throw away everything it did not resend.
+        need_all = first
+        if not files or (need_all and "project.json" not in files):
+            history.append(f"{model}:no files ({len(files)})")
+            prompt = (contract(spec) if first else
+                      "I received no usable files. Reply again, every file as a line "
+                      "`FILE: <path>` followed by the file content in a fenced block. "
+                      "Nothing else, no commentary.")
+            continue
+
+        if first:
+            shutil.rmtree(pdir, ignore_errors=True)
+        try:
+            n = write_unit(pdir, files)
+        except Exception as e:  # noqa: BLE001
+            history.append(f"{model}:write {type(e).__name__}: {str(e)[:60]}")
+            continue
+
+        ok, line = verify(unit_id)
+        if ok:
+            return {"id": unit_id, "ok": True, "model": model, "turn": turn + 1,
+                    "files": n, "history": history, "line": line}
+        history.append(f"{model}:{line[-90:]}")
+        prompt = (f"`python3 tools/verify_project.py {unit_id}` reports:\n\n    {line}\n\n"
+                  "Fix it and resend ONLY the files that change, in the same "
+                  "FILE:/fenced-block format. Remember: the reference has to clear every "
+                  "milestone and the skeleton has to clear none, so if the skeleton is "
+                  "passing, the gate is not measuring anything and needs to be stricter.")
+
+    shutil.rmtree(pdir, ignore_errors=True)
+    return {"id": unit_id, "ok": False, "why": "; ".join(history[-3:])}
+
+
+def queue(a) -> list[str]:
+    out = []
+    for f in sorted(os.listdir(SPECS)):
+        if not f.endswith(".json"):
+            continue
+        spec = json.load(open(os.path.join(SPECS, f), encoding="utf-8"))
+        if os.path.isfile(os.path.join(ROOT, "projects", spec["id"], "project.json")):
+            continue
+        if a.tier and not spec.get("tier", "").startswith(a.tier):
+            continue
+        if a.area and a.area not in spec.get("area", ""):
+            continue
+        if a.kind and spec.get("kind") != a.kind.upper():
+            continue
+        out.append(spec["id"])
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("ids", nargs="*")
+    ap.add_argument("--tier", default=None)
+    ap.add_argument("--area", default=None)
+    ap.add_argument("--kind", default=None, choices=["m", "l"])
+    ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--all", action="store_true")
+    ap.add_argument("-j", type=int, default=8)
+    ap.add_argument("--turns", type=int, default=4)
+    a = ap.parse_args()
+
+    ids = a.ids or queue(a)
+    if a.limit:
+        ids = ids[:a.limit]
+    if not ids:
+        print("nothing to build")
+        return 0
+    if not a.ids and not a.limit and not a.all:
+        print(f"{len(ids)} units queued; pass --all to build them")
+        return 0
+
+    say(f"{len(ids)} units · {min(a.j,10)} at a time · up to {a.turns} turns each")
+    ok = bad = 0
+    t0 = time.time()
+    with cf.ThreadPoolExecutor(max_workers=min(a.j, 10)) as ex:
+        futs = {ex.submit(build, i, a.turns): i for i in ids}
+        for fut in cf.as_completed(futs):
+            try:
+                r = fut.result()
+            except Exception as e:  # noqa: BLE001
+                import traceback
+                r = {"id": futs[fut], "ok": False,
+                     "why": f"{type(e).__name__}: {e}",
+                     "trace": traceback.format_exc()[-400:]}
+            log(dict(r, at=time.strftime("%H:%M:%S")))
+            if r["ok"] and not r.get("skipped"):
+                ok += 1
+                say(f"  ok   {r['id']:<50} {r.get('model','-')} turn {r.get('turn','-')} "
+                    f"{r.get('files','')} files")
+            elif not r["ok"]:
+                bad += 1
+                say(f"  FAIL {r['id']:<50} {str(r.get('why',''))[:90]}")
+    say(f"\n{ok} built, {bad} failed, {(time.time()-t0)/60:.0f} min")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
