@@ -555,10 +555,33 @@ def refresh_output(md, reference_src, tid):
 WHY = []
 
 
+STDLIB_OK = {"math", "random", "itertools", "collections", "functools", "heapq",
+             "bisect", "struct", "json", "sys", "os", "typing", "numpy", "time"}
+
+
+def _example_modules(code):
+    """Module names an example imports that only the reference can satisfy.
+
+    Statements import the solution under whatever name reads well —
+    `from your_module import layer_norm`, `from pairwise_l2_matrix import ...` —
+    so the reference has to be importable under each of them.
+    """
+    names = {"solution_ref", "solution"}
+    for m in re.finditer(r"^\s*(?:from\s+([\w.]+)\s+import|import\s+([\w.]+))",
+                         code, re.M):
+        name = (m.group(1) or m.group(2) or "").split(".")[0]
+        if name and name not in STDLIB_OK:
+            names.add(name)
+    return names
+
+
 def _run_example(reference_src, code):
     with tempfile.TemporaryDirectory() as tmp:
         rp = os.path.join(tmp, "solution_ref.py")
         ep = os.path.join(tmp, "example.py")
+        for name in _example_modules(code):
+            with open(os.path.join(tmp, name + ".py"), "w", encoding="utf-8") as f:
+                f.write(reference_src)
         with open(rp, "w", encoding="utf-8") as f:
             f.write(reference_src)
         with open(ep, "w", encoding="utf-8") as f:
@@ -718,7 +741,12 @@ def one(tid, turns):
             continue
         starter = rebuild_starter(files.get("starter.py"), got.get("solution_ref.py", ""))
         if not starter:
-            history.append("%s:no signature in reference" % model)
+            want = entry_name(files.get("starter.py")) or "the task function"
+            history.append("%s:reference does not define %s" % (model, want))
+            prompt = ("solution_ref.py does not define `%s`. That is the function "
+                      "the task is about and the name cannot change. Send "
+                      "solution_ref.py again, defining it at module level."
+                      % want)
             continue
         got["starter.py"] = starter
         written = write_files(tid, got)
