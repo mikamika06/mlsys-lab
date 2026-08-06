@@ -18,6 +18,7 @@ tools/verify_project.py must report `reference N/N, skeleton 0/N`.
 from __future__ import annotations
 
 import argparse
+import ast
 import concurrent.futures as cf
 import json
 import os
@@ -243,6 +244,22 @@ The fences are required: without them the indentation is lost in transit.
 Nothing outside the FILE:/fence pairs. Do not explain."""
 
 
+def syntax_error(files: dict[str, str]) -> str | None:
+    """Reject a reply that cannot be Python before it reaches the disk.
+
+    The gateway mangles indentation occasionally. Writing the file anyway spends
+    a whole verification run to learn what ast.parse knows for nothing.
+    """
+    for name, body in files.items():
+        if not name.endswith(".py"):
+            continue
+        try:
+            ast.parse(body)
+        except SyntaxError as e:
+            return f"{name}: {type(e).__name__} line {e.lineno}"
+    return None
+
+
 def write_unit(pdir: str, files: dict[str, str]) -> int:
     for rel, body in files.items():
         dest = os.path.join(pdir, rel)
@@ -328,6 +345,20 @@ def build(unit_id: str, turns: int) -> dict:
                 prompt = ("I received no usable files. Reply again, every file as a line "
                           "`FILE: <path>` followed by the file content in a fenced block. "
                           "Nothing else, no commentary.")
+            continue
+
+        broken = syntax_error(files)
+        if broken:
+            history.append(f"{model}:{broken}")
+            if first:
+                have.clear()
+                restarts += 1
+                conv = f"mlsys-build-{unit_id}-s{restarts}"
+                prompt = contract(spec)
+            else:
+                prompt = ("That reply did not parse as Python (" + broken +
+                          "). Send the affected files again in the same "
+                          "FILE:/fenced-block format.")
             continue
 
         if first:
