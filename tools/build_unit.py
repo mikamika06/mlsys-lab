@@ -121,7 +121,16 @@ def ask(model, prompt, conv_key, timeout=600, tries=4, expect_files=False):
     ch = d.get("choices")
     if not ch:
         err = d.get("error") or d
-        raise RuntimeError("no choices: " + json.dumps(err, ensure_ascii=False)[:200])
+        text = json.dumps(err, ensure_ascii=False)[:200]
+        # A cold browser pool answers `execution_failed: Chrome ...` for the
+        # first jobs after a gateway restart. That is the pool warming up, not
+        # anything about this unit, so it is retried like a dropped connection.
+        transient = ("execution_failed" in text or "Chrome" in text
+                     or "browser" in text.lower())
+        if transient and tries > 1:
+            time.sleep(min(15 * (5 - tries), 45))
+            return ask(model, prompt, conv_key, timeout, tries - 1, expect_files)
+        raise RuntimeError("no choices: " + text)
     content = ch[0]["message"]["content"]
     # A reply of forty bytes carrying the model's thinking header and nothing
     # else — "Defining the Exercise\nОтвет Gemini" — is a transport failure, not
