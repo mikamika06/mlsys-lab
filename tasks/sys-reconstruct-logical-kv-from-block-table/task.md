@@ -29,14 +29,8 @@ element.
 Implement `reconstruct_logical_kv`:
 
 ```python
-import numpy as np
 
-def reconstruct_logical_kv(
-    physical_store: np.ndarray,   # shape (P, B, D), dtype float32
-    block_table: list[int],       # maps logical block -> physical block
-    block_size: int,              # B
-    num_valid_tokens: int,        # T, may not fill last block
-) -> np.ndarray:
+def reconstruct_logical_kv(physical_store, block_table, block_size, num_valid_tokens):
     """Return contiguous logical KV of shape (T, D), dtype float32."""
     ...
 ```
@@ -46,18 +40,17 @@ Constraints:
 - $1 \le T \le \lvert\text{block\_table}\rvert \times B$.
 - Every entry in `block_table` is a valid index into the first axis of
   `physical_store`.
-- Use NumPy only; no Python-level loops over tokens in the final solution.
+- Use Python only; no Python-level loops over tokens in the final solution.
 
 ## Example
 
 ```python
-import numpy as np
 
-physical_store = np.array([
+physical_store = [
     [[10, 20], [30, 40]],   # physical block 0
     [[50, 60], [70, 80]],   # physical block 1
     [[ 1,  2], [ 3,  4]],   # physical block 2
-], dtype=np.float32)
+]
 
 block_table = [2, 0]        # logical 0 → phys 2, logical 1 → phys 0
 block_size = 2
@@ -77,7 +70,7 @@ result = reconstruct_logical_kv(physical_store, block_table, block_size, num_val
 
 The single gate metric is `byte_exact_fraction`. The grader builds several
 deterministic (seeded) physical stores and block tables, computes the reference
-logical KV using direct NumPy fancy indexing, then compares the student's output
+logical KV using direct Python fancy indexing, then compares the student's output
 byte-for-byte. The gate passes only when `byte_exact_fraction == 1.0` across
 **every** test case — any off-by-one index, wrong dtype, or shape mismatch
 produces a 0 result.

@@ -1,0 +1,99 @@
+{
+  "id": "p-mlx-custom-metal-kernel",
+  "title": "Власне Metal-ядро під вузьке місце",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "mlx-custom-metal-kernel",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "metal_op/kernel.py",
+    "metal_op/model.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти базовий час операції",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "baseline_measured",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "написати ядро",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "kernel_compiled",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірити коректність на межових формах",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "boundary_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти виграш відношенням до себе",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "speedup_achieved",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "інтегрувати в модель без регресії",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "integration_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка при неканонічних формах визначена",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

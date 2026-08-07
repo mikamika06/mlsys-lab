@@ -1,12 +1,5 @@
-# Ticket: Export HF Model to GGUF Quantizations with Automated Quality Verification
+We need to publish a clean, efficient pipeline to convert models from Hugging Face format to GGUF, establish rigorous baseline recipes, apply importance matrix quantization, and produce an audited, reproducible report on model size, perplexity, and inference speed.
 
-## Symptom
-Our deployment pipeline requires exporting fine-tuned models from HuggingFace `safetensors` format into GGUF binary models for local execution via llama.cpp.
-Currently, our release process stops at training export: we have raw weights in FP16/BF16 precision and no automated mechanism to convert tensors, build tokenizer vocabularies, perform quantized weight conversions, or verify output accuracy.
+Currently, we only possess raw safetensors weights downloaded from the hub. There are no quantized GGUF variants, no tokenization verification metrics, no Kullback-Leibler divergence or perplexity measurements against fp16, and no empirical throughput numbers across different quantization levels. Without these components, we cannot ship any compressed weights to production or verify that our quantization recipes preserve foundational model performance.
 
-Engineers are forced to manually invoke disparate scripts without standard metrics on model degradation or throughput.
-We lack structured measurements comparing perplexity (PPL), KL-divergence (KLD), and generation speed across quantization recipes such as Q8_0, Q4_0, and importance-matrix (imatrix) guided variants.
-Without an end-to-end converter, quantization runner, and evaluation suite, we risk shipping corrupted model binaries, incorrect token mappings, or unverified quantizations that break downstream edge deployments.
-
-## Objective
-Implement a robust python library (`gguf_pipeline`) that converts raw HF model tensors and tokenizers into valid GGUF binaries, applies standard and imatrix-guided quantization algorithms, measures perplexity and KL-divergence against the FP16 baseline, benchmarks throughput across recipes, and generates an automated summary report.
+Your task is to build a complete Python-based lab module that drives and validates the entire conversion, quantization, perplexity calculation, KLD evaluation, and benchmarking pipeline. You must implement the necessary drivers, metrics collectors, and regression test suites to ensure that every milestone meets strict behavioral and numerical invariants.

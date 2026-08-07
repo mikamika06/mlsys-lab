@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 
 def _merge(a, b):
@@ -52,13 +51,12 @@ def _check(parts):
 
 
 def check_block_merge_associativity(rows):
-    rows = np.asarray(rows, dtype=np.float64)
     answer = []
     for row in rows:
         valid = True
         n = len(row)
         for count in range(2, 6):
-            cuts = np.linspace(0, n, count + 1, dtype=int)
+            cuts = [int(i * n / count) for i in range(count + 1)]
             blocks = []
             for i in range(count):
                 block = row[cuts[i]:cuts[i + 1]]
@@ -74,4 +72,4 @@ def check_block_merge_associativity(rows):
                 valid = False
                 break
         answer.append(valid)
-    return np.asarray(answer, dtype=bool)
+    return answer

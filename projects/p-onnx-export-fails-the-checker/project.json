@@ -1,0 +1,90 @@
+{
+  "id": "p-onnx-export-fails-the-checker",
+  "title": "Експорт в ONNX не проходить перевірку",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "onnx-export",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "exporter/model.py",
+    "exporter/fixer.py",
+    "exporter/optimizer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "класифікувати помилки checker",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "errors_classified",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "полагодити виведення форм і символьні розміри",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "shapes_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "хірургія графа для проблемного шару",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "nodes_replaced",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "спростити граф без зміни семантики",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "graph_simplified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "вихід збігається з torch у межах толерансу",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "max_diff",
+          "op": "<=",
+          "threshold": 0.0001
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "модель вантажиться і біжить у рантаймі",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

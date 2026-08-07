@@ -1,0 +1,107 @@
+{
+  "id": "p-distributed-profile-merge",
+  "title": "Звести профілі з усіх процесів",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw3-profiling",
+  "track": "distributed-profile-merge",
+  "difficulty": 4,
+  "edits": [
+    "profiler/merge.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "привести годинники до спільної шкали",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "clock_sync_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "звести профілі в один вигляд",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "profiles_merged",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "знайти процес-відстаючий",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "straggler_identified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "показати причину відставання",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "cause_explained",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "відстаючий названий і підтверджений",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "straggler_confirmed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт будується однією командою",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_clock_drift",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_false_straggler",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

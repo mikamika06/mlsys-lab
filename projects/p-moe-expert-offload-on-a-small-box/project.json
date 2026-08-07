@@ -1,0 +1,112 @@
+{
+  "id": "p-moe-expert-offload-on-a-small-box",
+  "title": "MoE на машині, у яку вона не влазить",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "moe-expert-offload",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "moe/profiler.py",
+    "moe/cost.py",
+    "moe/cache.py",
+    "moe/prefetch.py",
+    "moe/policy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти розподіл активації експертів",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "distribution_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "модель вартості підкачки експерта",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cost_accuracy",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "кеш гарячих експертів",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "cache_hit_rate",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "передвибірка за маршрутизацією",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "prefetch_coverage",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "затримка під порогом на реальному трафіку",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "latency_under_threshold",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "пам'ять під лімітом машини",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_memory_overflow",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_cache",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

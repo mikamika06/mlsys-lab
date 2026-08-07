@@ -24,7 +24,7 @@ subtraction and one `exp`.
 Implement `recompute_probs_from_lse`:
 
 ```python
-def recompute_probs_from_lse(Q: np.ndarray, K: np.ndarray, lse: np.ndarray) -> np.ndarray:
+def recompute_probs_from_lse(Q: list[list[float]], K: list[list[float]], lse: list[float]) -> list[list[float]]:
     ...
 ```
 
@@ -45,16 +45,15 @@ keeps every intermediate value finite.
 ## Example
 
 ```python
-import numpy as np
-Q = np.random.default_rng(0).normal(size=(3, 4))
-K = np.random.default_rng(1).normal(size=(5, 4))
+Q = [[1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0]]
+K = [[1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0], [1.0, 1.0, 1.0, 1.0]]
 d = Q.shape[1]
-S = (Q @ K.T) / np.sqrt(d)
+S = [[sum(q * k for q, k in zip(row_q, col_k)) / (d 0.5) for col_k in zip(*K)] for row_q in Q]
 m = S.max(axis=1, keepdims=True)
-lse = m[:, 0] + np.log(np.exp(S - m).sum(axis=1))   # how lse was produced
+lse = [m_i[0] + math.log(sum(math.exp(s_ij - m_i[0]) for s_ij in row_s)) for row_s, m_i in zip(S, m)] # how lse was produced
 
 P = recompute_probs_from_lse(Q, K, lse)
-assert np.allclose(P.sum(axis=1), 1.0)
+assert all(abs(sum(row) - 1.0) < 1e-5 for row in P)
 ```
 
 ## What the gate checks

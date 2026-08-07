@@ -1,0 +1,98 @@
+{
+  "id": "p-moe-tensor-override-offload",
+  "title": "Вивантажити експертів вибірково",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "moe-offload",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "moe_offload/offload.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти частоту активації по тензорах",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "freq_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "правила перевизначення розміщення",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rules_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти швидкість під кожним правилом",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "latency_profile_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити коректність виходу",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "accuracy_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "швидкість вище порога при потрібній пам'яті",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "memory_speed_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "правило переноситься на іншу MoE",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

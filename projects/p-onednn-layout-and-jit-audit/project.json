@@ -1,0 +1,104 @@
+{
+  "id": "p-onednn-layout-and-jit-audit",
+  "title": "Розкладки й вибір ядер на CPU",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "onednn-layout-and-jit-audit",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "audit/engine.py",
+    "audit/model.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "увімкнути детальний лог і прочитати його",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "log_active",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "events_parsed",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати переходи розкладок",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "transitions_detected",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "знайти зайві переупаковки",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "redundant_found",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перебудувати послідовність шарів",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "sequence_optimized",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "частка часу в переупаковці нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "reorder_ratio",
+          "op": "<=",
+          "threshold": 0.15
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "висновок підтверджено другим прогоном",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

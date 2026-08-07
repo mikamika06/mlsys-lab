@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def streaming_logsumexp(chunks):
+def streaming_logsumexp(chunks: list[list[list[float]]]) -> list[float]:
     """Per-row log-sum-exp computed by streaming over column chunks.
 
     chunks: list of (N, w_k) float arrays tiling a full (N, D) matrix along

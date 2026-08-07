@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def recompute_probs_from_lse(Q: np.ndarray, K: np.ndarray, lse: np.ndarray) -> np.ndarray:
+def recompute_probs_from_lse(Q: list[list[float]], K: list[list[float]], lse: list[float]) -> list[list[float]]:
     """Recompute attention probabilities from Q, K and a stored per-row
     logsumexp, without ever computing a row max or normalizing by a row sum.
 

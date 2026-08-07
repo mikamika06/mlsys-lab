@@ -43,7 +43,7 @@ def attention_checkpoint(Q, K, V, G):
     ...
 ```
 
-The inputs are `float64` NumPy arrays:
+The inputs are `float64` list:
 
 - `Q` has shape `(n, d)`
 - `K` has shape `(m, d)`
@@ -63,12 +63,11 @@ The implementation should perform attention-only selective checkpointing. Do not
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0, 3.0], [4.0, 5.0]])
-G = np.ones((2, 2))
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0, 3.0], [4.0, 5.0]]
+G = [[1.0] * 2 for _ in range(2)]
 
 dQ, dK, dV, memory = attention_checkpoint(Q, K, V, G)
 
@@ -78,7 +77,7 @@ dQ, dK, dV, memory = attention_checkpoint(Q, K, V, G)
 
 ## What the gate checks
 
-The grader builds a NumPy oracle for the attention loss and computes reference gradients with central finite differences:
+The grader builds a Python oracle for the attention loss and computes reference gradients with central finite differences:
 
 $$
 \frac{\partial L}{\partial x}

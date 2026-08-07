@@ -1,0 +1,93 @@
+{
+  "id": "p-fused-attention-kernel",
+  "title": "Злите ядро уваги",
+  "kind": "project",
+  "tier": "T3+T1",
+  "area": "rw3-triton-real",
+  "track": "fused-attention-kernel",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "fused_attn/kernel.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "онлайн-софтмакс у ядрі",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "online_softmax_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "тайлінг і маскування",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "tiling_mask_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "коректність проти референсу",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "reference_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "каузальна маска",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "causal_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "виграш на трьох довжинах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "lengths_passed",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "зворотний прохід або чесне обмеження",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

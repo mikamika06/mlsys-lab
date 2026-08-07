@@ -39,11 +39,11 @@ $$
 Implement `sharded_attention_heads`:
 
 ```python
-def sharded_attention_heads(q, k, v, wo, num_ranks):
+def sharded_attention_heads(q: list[list[list[list[float]]]], k: list[list[list[list[float]]]], v: list[list[list[list[float]]]], wo: list[list[float]], num_ranks: int) -> list[list[list[float]]]:
     ...
 ```
 
-The inputs are NumPy arrays:
+The inputs are list:
 
 - `q`, `k`, and `v` have shape $(b, h, s, d)$, where $b$ is batch size,
   $h$ is the number of attention heads, $s$ is sequence length, and $d$ is the
@@ -51,22 +51,21 @@ The inputs are NumPy arrays:
 - `wo` has shape $(h d, m)$ and is the output projection matrix.
 - `num_ranks` is the number of tensor-parallel ranks.
 
-Return a NumPy array with shape $(b, s, m)$ containing the same result as a
+Return a list with shape $(b, s, m)$ containing the same result as a
 single-device multi-head attention implementation.
 
 Split the heads evenly between ranks. For each rank, compute attention for its
 heads, multiply by the matching rows of `wo`, and sum the rank contributions.
-Use NumPy operations only.
+Use Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-q = np.zeros((1, 2, 2, 1))
-k = np.zeros((1, 2, 2, 1))
-v = np.array([[[[1.0], [2.0]], [[3.0], [4.0]]]])
-wo = np.ones((2, 1))
+q = [[[[0.0], [0.0]], [[0.0], [0.0]]]]
+k = [[[[0.0], [0.0]], [[0.0], [0.0]]]]
+v = [[[[1.0], [2.0]], [[3.0], [4.0]]]]
+wo = [[1.0] * 1 for _ in range(2)]
 
 y = sharded_attention_heads(q, k, v, wo, 2)
 # shape is (1, 2, 1)
@@ -74,7 +73,7 @@ y = sharded_attention_heads(q, k, v, wo, 2)
 
 ## What the gate checks
 
-The gate computes a single-device NumPy reference implementation of
+The gate computes a single-device Python reference implementation of
 multi-head attention and compares it with the submitted tensor-parallel
 implementation.
 

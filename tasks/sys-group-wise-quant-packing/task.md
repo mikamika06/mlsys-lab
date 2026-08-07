@@ -28,18 +28,18 @@ order.
 Implement `pack_groupwise_int4(x)`:
 
 ```python
-def pack_groupwise_int4(x: np.ndarray) -> bytes:
+def pack_groupwise_int4(x: list[float]) -> bytes:
     ...
 ```
 
-The input is a one-dimensional NumPy array of float values. Its length is always
+The input is a list of floats of float values. Its length is always
 a multiple of 8. Convert it to float32 for quantization.
 
 For each consecutive group of 8 values:
 
 1. Compute the scale using the formula above with $b=4$. If the maximum absolute
    value is zero, use scale $1.0$.
-2. Compute integer values with NumPy rounding and clip them to $[-8, 7]$.
+2. Compute integer values with Python rounding and clip them to $[-8, 7]$.
 3. Add $8$ to each integer to obtain nibbles in the range $[0, 15]$.
 4. Pack nibble pairs as `(low_nibble) | (high_nibble << 4)`.
 5. Append the scale as little-endian float32 bytes, then append the four packed
@@ -50,9 +50,8 @@ Return the complete byte blob.
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([0, 1, -1, 2, -2, 3, -3, 4], dtype=np.float32)
+x = [0, 1, -1, 2, -2, 3, -3, 4]
 blob = pack_groupwise_int4(x)
 ```
 
@@ -61,7 +60,7 @@ followed by the four bytes containing the eight quantized nibbles.
 
 ## What the gate checks
 
-The gate builds the reference blob using NumPy float32 operations and the
+The gate builds the reference blob using Python float32 operations and the
 specified packing procedure. The returned bytes must have
 $\mathrm{byte\_exact\_fraction}=1.0$ compared with the oracle output.
 

@@ -1,4 +1,4 @@
-def accumulate_grad(micro_batches, w):
+def accumulate_grad(micro_batches: list[tuple[list[list[float]], list[float]]], w: list[float]) -> list[float]:
     """
     Given a list of (X_i, y_i) micro-batches and a weight vector w, return
     the gradient of mean squared error loss w.r.t. w, computed by

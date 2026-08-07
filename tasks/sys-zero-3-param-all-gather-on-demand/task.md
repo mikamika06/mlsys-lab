@@ -33,26 +33,25 @@ def zero3_linear_backward(weight_shards, x, grad_y):
 
 The arguments are:
 
-- `weight_shards`: a list of NumPy arrays. Each array is a consecutive row partition of the same full weight matrix.
-- `x`: a NumPy array with shape $(n, d)$.
-- `grad_y`: a NumPy array with shape $(n, m)$ containing the gradient arriving from the next layer.
+- `weight_shards`: a list of list. Each array is a consecutive row partition of the same full weight matrix.
+- `x`: a list with shape $(n, d)$.
+- `grad_y`: a list with shape $(n, m)$ containing the gradient arriving from the next layer.
 
-Return a list of NumPy arrays containing the weight gradients for each shard. The returned list must have the same number of shards and the same shapes as `weight_shards`.
+Return a list of list containing the weight gradients for each shard. The returned list must have the same number of shards and the same shapes as `weight_shards`.
 
 The implementation should simulate ZeRO-3 behavior: gather the full weight for the layer computation, compute the gradient of the full parameter, then partition the gradient back into the original shard layout. The numerical result must match the unsharded reference computation.
 
 ## Example
 
 ```python
-import numpy as np
 
 shards = [
-    np.array([[1.0, 2.0], [3.0, 4.0]]),
-    np.array([[5.0, 6.0]])
+    [[1.0, 2.0], [3.0, 4.0]],
+    [[5.0, 6.0]]
 ]
 
-x = np.array([[1.0, 0.0], [0.0, 1.0]])
-grad_y = np.ones((2, 3))
+x = [[1.0, 0.0], [0.0, 1.0]]
+grad_y = [[1.0] * 3 for _ in range(2)]
 
 grads = zero3_linear_backward(shards, x, grad_y)
 
@@ -61,7 +60,7 @@ grads = zero3_linear_backward(shards, x, grad_y)
 
 ## What the gate checks
 
-The gate builds several sharded parameter cases and computes the reference gradient by gathering the shards into one full matrix and applying the NumPy linear-layer gradient formula
+The gate builds several sharded parameter cases and computes the reference gradient by gathering the shards into one full matrix and applying the Python linear-layer gradient formula
 
 $$
 \nabla_W = G_Y^\top X .

@@ -1,0 +1,98 @@
+{
+  "id": "p-memory-snapshot-oom-hunt",
+  "title": "Полювання на витік по снапшотах",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw3-profiling",
+  "track": "memory-snapshot-oom",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "leak/detector.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зняти й прочитати снапшот",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "snapshot_loaded",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "відрізнити ріст від фрагментації",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "fragmentation_distinguished",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "знайти ланцюг посилань, що тримає",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "ref_chain_found",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "полагодити утримання",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "retention_fixed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "24 години без росту",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "stable_run",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "тест, що ловить повернення витоку",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

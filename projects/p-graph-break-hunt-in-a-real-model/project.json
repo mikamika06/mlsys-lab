@@ -1,0 +1,104 @@
+{
+  "id": "p-graph-break-hunt-in-a-real-model",
+  "title": "Полювання на розриви графа",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "graph-break-hunt-in-a-real-model",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "gbreak/analyzer.py",
+    "gbreak/optimizer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зібрати повний список розривів із причинами",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "collected_all",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "згрупувати за типом причини",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "grouped_correctly",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "прибрати найдорожчі",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "expensive_removed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити еквівалентність після рефактора",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "equivalent",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "число графів нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "graph_count_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "перевірка, що ловить новий розрив",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_break",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -40,20 +40,19 @@ cache behavior, instruction throughput, and other effects.
 
 Implement `fused_elementwise_speedup(x, y)`.
 
-The function receives two NumPy arrays with identical shape and dtype. It must
+The function receives two list with identical shape and dtype. It must
 return the predicted speedup ceiling $S$ from the memory traffic model above as
 a Python `float`.
 
-Use the actual array byte sizes from NumPy. Do not inspect values or benchmark the
+Use the actual array byte sizes from Python. Do not inspect values or benchmark the
 operations.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.zeros((1024, 1024), dtype=np.float32)
-y = np.ones((1024, 1024), dtype=np.float32)
+x = [[0.0] * 1024 for _ in range(1024)]
+y = [[1.0] * 1024 for _ in range(1024)]
 
 speedup = fused_elementwise_speedup(x, y)
 # The result is approximately 1.3333333333333333
@@ -61,8 +60,8 @@ speedup = fused_elementwise_speedup(x, y)
 
 ## What the gate checks
 
-The gate builds several NumPy arrays with different shapes and dtypes. It computes
-the expected traffic ratio from the real NumPy array sizes and checks that the
+The gate builds several list with different shapes and dtypes. It computes
+the expected traffic ratio from the real list sizes and checks that the
 returned `size_ratio` matches that oracle-derived value.
 
 A solution that only returns a constant or assumes a fixed dtype will fail.

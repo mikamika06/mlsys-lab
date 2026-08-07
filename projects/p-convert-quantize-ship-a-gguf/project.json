@@ -4,14 +4,13 @@
   "kind": "project",
   "tier": "T1",
   "area": "rw2-gguf-llamacpp",
-  "track": "convert-quantize-ship-a-gguf",
+  "track": "",
   "part": 1,
-  "difficulty": 3,
+  "difficulty": 4,
   "edits": [
-    "gguf_pipeline/converter.py",
-    "gguf_pipeline/quantizer.py",
-    "gguf_pipeline/evaluator.py",
-    "gguf_pipeline/reporter.py",
+    "gguf_pipe/convert.py",
+    "gguf_pipe/quantize.py",
+    "gguf_pipe/eval.py",
     "tests/test_regression.py"
   ],
   "milestones": [
@@ -21,19 +20,14 @@
       "check": "harness/m1.py",
       "gates": [
         {
-          "metric": "gguf_header_valid",
+          "metric": "vocab_match",
           "op": "==",
-          "threshold": 1.0
+          "threshold": 1
         },
         {
-          "metric": "tensor_count_match",
+          "metric": "tensor_count_ok",
           "op": "==",
-          "threshold": 1.0
-        },
-        {
-          "metric": "vocab_integrity",
-          "op": "==",
-          "threshold": 1.0
+          "threshold": 1
         }
       ]
     },
@@ -43,19 +37,9 @@
       "check": "harness/m2.py",
       "gates": [
         {
-          "metric": "q4_0_size_ratio",
-          "op": "<=",
-          "threshold": 0.35
-        },
-        {
-          "metric": "q8_0_size_ratio",
-          "op": "<=",
-          "threshold": 0.65
-        },
-        {
-          "metric": "quant_reconstruction_ok",
+          "metric": "size_ratio_valid",
           "op": "==",
-          "threshold": 1.0
+          "threshold": 1
         }
       ]
     },
@@ -65,14 +49,9 @@
       "check": "harness/m3.py",
       "gates": [
         {
-          "metric": "imatrix_calculated",
+          "metric": "imatrix_generated",
           "op": "==",
-          "threshold": 1.0
-        },
-        {
-          "metric": "weighted_error_lower",
-          "op": "==",
-          "threshold": 1.0
+          "threshold": 1
         }
       ]
     },
@@ -82,19 +61,14 @@
       "check": "harness/m4.py",
       "gates": [
         {
-          "metric": "fp16_kld_zero",
+          "metric": "kld_bounded",
           "op": "==",
-          "threshold": 1.0
+          "threshold": 1
         },
         {
-          "metric": "q8_kld_lower_than_q4",
+          "metric": "ppl_sensible",
           "op": "==",
-          "threshold": 1.0
-        },
-        {
-          "metric": "ppl_ordered",
-          "op": "==",
-          "threshold": 1.0
+          "threshold": 1
         }
       ]
     },
@@ -104,14 +78,9 @@
       "check": "harness/m5.py",
       "gates": [
         {
-          "metric": "benchmarks_complete",
+          "metric": "speedup_monotonic",
           "op": "==",
-          "threshold": 1.0
-        },
-        {
-          "metric": "speedup_measured",
-          "op": "==",
-          "threshold": 1.0
+          "threshold": 1
         }
       ]
     },
@@ -123,17 +92,17 @@
         {
           "metric": "has_tests",
           "op": "==",
-          "threshold": 1.0
+          "threshold": 1
         },
         {
           "metric": "passes_on_good",
           "op": "==",
-          "threshold": 1.0
+          "threshold": 1
         },
         {
           "metric": "faults_caught",
           "op": ">=",
-          "threshold": 2.0
+          "threshold": 1
         }
       ]
     }

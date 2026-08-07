@@ -63,7 +63,7 @@ speculative_speedup(alpha=1.0, gamma=4, cost_ratio=0.2)
 ## What the gate checks
 
 The grader evaluates 13 cases — 10 random `(alpha, gamma, cost_ratio)`
-triples (`np.random.default_rng` seeded) plus `alpha=0`, `alpha=1`
+triples (randomly generated) plus `alpha=0`, `alpha=1`
 exactly, and `gamma=1` — against the same formula computed independently
 in `check.py`. The gate metric `size_ratio` is
 `min(got/expected, expected/got)` (1.0 = exact match), required

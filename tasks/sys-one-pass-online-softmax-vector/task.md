@@ -21,7 +21,7 @@ Implement `online_softmax_weighted_sum`, processing `scores` and `V` in
 contiguous blocks of size `block_size` (the last block may be shorter):
 
 ```python
-def online_softmax_weighted_sum(scores: np.ndarray, V: np.ndarray, block_size: int) -> np.ndarray:
+def online_softmax_weighted_sum(scores: list[float], V: list[list[float]], block_size: int) -> list[float]:
     ...
 ```
 
@@ -56,9 +56,8 @@ defeats the point of streaming and is checked at grading time.
 ## Example
 
 ```python
-import numpy as np
-scores = np.array([1.0, 3.0, -1.0, 0.5, 2.0])
-V = np.array([[1., 0.], [0., 1.], [1., 1.], [2., 0.], [0., 2.]])
+scores = [1.0, 3.0, -1.0, 0.5, 2.0]
+V = [[1., 0.], [0., 1.], [1., 1.], [2., 0.], [0., 2.]]
 out = online_softmax_weighted_sum(scores, V, block_size=2)
 # equals softmax(scores) @ V, computed two elements at a time
 ```
@@ -70,7 +69,7 @@ out = online_softmax_weighted_sum(scores, V, block_size=2)
   to within `1e-5`, across several cases with different `N`, `block_size`
   (including `block_size` that doesn't evenly divide `N`, and large-magnitude
   scores where naive unstabilized exponentials would overflow).
-* **blockwise** — during grading, `numpy.exp` is instrumented to record the
+* **blockwise** — during grading, `math.exp` is instrumented to record the
   length of every array passed to it. If any call's array has length equal
   to the full `N` (and `N > block_size`), the case is flagged and this gate
   is `0.0`. A solution that computes the whole softmax vector up front and

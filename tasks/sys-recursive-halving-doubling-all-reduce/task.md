@@ -27,22 +27,21 @@ def recursive_halving_doubling_all_reduce(buffers):
     ...
 ```
 
-`buffers` is a list of one-dimensional NumPy arrays. The number of buffers is a power of two. All arrays have the same shape and contain floating point values.
+`buffers` is a list of list of floats. The number of buffers is a power of two. All arrays have the same shape and contain floating point values.
 
-Return a list of NumPy arrays. The returned list must have one entry per input rank, and every entry must contain the elementwise sum of all input buffers.
+Return a list of list. The returned list must have one entry per input rank, and every entry must contain the elementwise sum of all input buffers.
 
 Do not modify the input arrays in-place. Simulate the communication algorithm locally without using distributed communication libraries.
 
 ## Example
 
 ```python
-import numpy as np
 
 buffers = [
-    np.array([1.0, 2.0]),
-    np.array([3.0, 4.0]),
-    np.array([5.0, 6.0]),
-    np.array([7.0, 8.0]),
+    [1.0, 2.0],
+    [3.0, 4.0],
+    [5.0, 6.0],
+    [7.0, 8.0],
 ]
 
 out = recursive_halving_doubling_all_reduce(buffers)
@@ -53,7 +52,7 @@ out = recursive_halving_doubling_all_reduce(buffers)
 
 ## What the gate checks
 
-The gate computes the oracle result using NumPy:
+The gate computes the oracle result using Python:
 
 $$
 S_{\mathrm{ref}} = \operatorname{sum}(B_0, B_1, \ldots, B_{p-1})

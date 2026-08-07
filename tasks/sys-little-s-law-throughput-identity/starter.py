@@ -1,4 +1,2 @@
-import numpy as np
-
-def compute_throughput(concurrency: np.ndarray, latency: np.ndarray) -> np.ndarray:
+def compute_throughput(concurrency: list[float], latency: list[float]) -> list[float]:
     raise NotImplementedError('your code here')

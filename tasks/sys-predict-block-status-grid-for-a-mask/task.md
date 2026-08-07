@@ -39,34 +39,32 @@ $$\text{status}_{pq} =
 Implement `block_status_grid(mask, tile_h, tile_w)`:
 
 ```python
-import numpy as np
 
-def block_status_grid(mask: np.ndarray, tile_h: int, tile_w: int) -> np.ndarray:
+def block_status_grid(mask: list[list[bool]], tile_h: int, tile_w: int) -> list[list[int]]:
     ...
 ```
 
 **Parameters:**
 
-- `mask`: a boolean 2-D NumPy array of shape $(H, W)$. `True` means the cell is masked.
+- `mask`: a boolean list of lists of floats of shape $(H, W)$. `True` means the cell is masked.
 - `tile_h`, `tile_w`: positive integers that evenly divide $H$ and $W$ respectively.
 
-**Returns:** an `int32` NumPy array of shape $\bigl(H / s_h,\; W / s_w\bigr)$ where 
+**Returns:** an `int32` list of shape $\bigl(H / s_h,\; W / s_w\bigr)$ where 
 entry $(p, q)$ is $0$ (fully masked), $1$ (partially masked), or $2$ (fully 
 unmasked / dense).
 
-Use vectorized NumPy operations — no Python `for` loops over individual tiles.
+Use vectorized Python operations — no Python `for` loops over individual tiles.
 
 ## Example
 
 ```python
-import numpy as np
 
-mask = np.array([
+mask = [
     [True,  True,  False, False],
     [True,  False, False, False],
     [False, False, False, True ],
     [False, False, True,  True ],
-], dtype=bool)
+]
 
 S = block_status_grid(mask, 2, 2)
 # Tile (0,0): rows 0-1, cols 0-1 → [T,T; T,F] → sum=3 → partial → 1
@@ -79,10 +77,10 @@ S = block_status_grid(mask, 2, 2)
 
 ## What the gate checks
 
-The gate builds eight deterministic test cases using a seeded NumPy RNG 
-(`np.random.RandomState(42)`). The cases include: all-masked, all-unmasked, 
+The gate builds eight deterministic test cases using a seeded Python RNG 
+(`random.RandomState(42)`). The cases include: all-masked, all-unmasked,
 random 50 % masks with square and rectangular tiles, 1×1 tiles, a 
 non-square mask, and an upper-triangular mask. For each case the grader 
-computes the ground-truth status matrix with a NumPy reshape-and-sum oracle 
-and checks **byte-exact** agreement (`np.array_equal`) with your output. 
+computes the ground-truth status matrix with a Python reshape-and-sum oracle 
+and checks **byte-exact** agreement (`==`) with your output.
 Any wrong value, wrong shape, or exception causes failure.

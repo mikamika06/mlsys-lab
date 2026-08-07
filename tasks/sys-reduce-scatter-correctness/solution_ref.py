@@ -1,12 +1,11 @@
-import numpy as np
-
-
-def reduce_scatter_sum(chunks):
+def reduce_scatter_sum(chunks: list[list[list[float]]]) -> list[list[float]]:
     ranks = len(chunks)
     result = []
     for i in range(ranks):
-        total = np.zeros_like(chunks[0][i], dtype=np.float64)
+        chunk_len = len(chunks[0][i])
+        total = [0.0] * chunk_len
         for r in range(ranks):
-            total = total + chunks[r][i]
+            for k in range(chunk_len):
+                total[k] += chunks[r][i][k]
         result.append(total)
     return result

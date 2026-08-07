@@ -1,0 +1,98 @@
+{
+  "id": "p-prefix-cache-multitenancy-leak",
+  "title": "Префіксний кеш протікає між орендарями",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-cache-multitenancy",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "prefix_cache/cache.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "відтворити перетин префіксів",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "leak_detected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "ввести ключ ізоляції у хешування",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "isolated_hash_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти падіння hit rate від ізоляції",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "hit_rate_measured",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "повернути частину виграшу через спільні системні префікси",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "recovery_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "нуль перетинів на тесті з двома орендарями",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "zero_intersections",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "hit rate не нижче порога",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

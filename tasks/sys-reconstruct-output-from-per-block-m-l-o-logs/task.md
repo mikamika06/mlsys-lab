@@ -37,8 +37,7 @@ is $o_{\text{final}} / l_{\text{final}}$.
 Implement `reconstruct_attention_from_block_logs`:
 
 ```python
-def reconstruct_attention_from_block_logs(block_m: np.ndarray, block_l: np.ndarray,
-                                           block_o: np.ndarray) -> np.ndarray:
+def reconstruct_attention_from_block_logs(block_m: list[float], block_l: list[float], block_o: list[list[float]]) -> list[float]:
     ...
 ```
 
@@ -57,12 +56,11 @@ final normalized output vector, shape `(d,)`.
 ## Example
 
 ```python
-import numpy as np
 
 # 2 blocks of one key each, values are 1-D (d=1), for hand-checkable numbers
-block_m = np.array([1.0, 2.0])                 # local maxes
-block_l = np.array([1.0, 1.0])                 # each block: single key -> l = exp(0) = 1
-block_o = np.array([[1.0], [2.0]])              # o_k = exp(0) * v_k, with v = [1.0, 2.0]
+block_m = [1.0, 2.0]                 # local maxes
+block_l = [1.0, 1.0]                 # each block: single key -> l = exp(0) = 1
+block_o = [[1.0], [2.0]]              # o_k = exp(0) * v_k, with v = [1.0, 2.0]
 
 out = reconstruct_attention_from_block_logs(block_m, block_l, block_o)
 # global scores are [1.0, 2.0] -> softmax = [exp(-1), 1] / (exp(-1)+1)

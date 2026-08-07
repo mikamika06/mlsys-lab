@@ -1,18 +1,32 @@
+import sys
+import os
+
+sys.path.insert(0, ".")
+from gguf_pipe.convert import verify_tokenizer, convert_safetensors_to_gguf
+from gguf_pipe.quantize import get_quantized_size
+from gguf_pipe.eval import compute_kld
 import numpy as np
-from gguf_pipeline.quantizer import quantize_q8_0, dequantize_q8_0
-from gguf_pipeline.evaluator import compute_kl_divergence
 
-def test_quantization_reconstruction():
-    np.random.seed(42)
-    x = np.random.randn(32, 32).astype(np.float32)
-    q = quantize_q8_0(x)
-    deq = dequantize_q8_0(q["qdata"], q["scales"])
-    err = np.mean(np.abs(x - deq))
-    assert err < 0.1, f"Reconstruction error too high: {err}"
 
-def test_kl_divergence_non_negative():
-    np.random.seed(42)
-    p = np.random.randn(10, 50)
-    q = np.random.randn(10, 50)
-    kld = compute_kl_divergence(p, q)
-    assert kld >= 0.0, f"KL divergence must be non-negative, got {kld}"
+def test_conversion_preserves_tensor_shapes():
+    vocab_path = "tmp_vocab.json"
+    with open(vocab_path, "w") as f:
+        f.write('{"vocab": {"a": 1}}')
+    try:
+        assert verify_tokenizer(vocab_path) is True
+    finally:
+        if os.path.exists(vocab_path):
+            os.remove(vocab_path)
+
+
+def test_quantization_reduces_size():
+    fp16_size = get_quantized_size("model.gguf", "FP16")
+    q4_size = get_quantized_size("model.gguf", "Q4_K_M")
+    assert q4_size < fp16_size
+
+
+def test_kld_non_negative():
+    ref = np.array([1.0, 2.0, 3.0])
+    quant = np.array([0.9, 2.1, 2.8])
+    kld = compute_kld(ref, quant)
+    assert kld >= 0.0

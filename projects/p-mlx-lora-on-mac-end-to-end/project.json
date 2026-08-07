@@ -1,0 +1,98 @@
+{
+  "id": "p-mlx-lora-on-mac-end-to-end",
+  "title": "LoRA на Apple Silicon від даних до сервера",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "mlx-lora-on-mac",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "lora_pipe/engine.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "підготувати дані у форматі рушія",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "format_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "запустити LoRA і зняти криву втрат",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "loss_converged",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "злити адаптер і сконвертувати",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "merge_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "квантизувати під розмір машини",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "quant_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "підняти сервер і пройти клієнтські тести",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "server_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "до/після на власному eval-сеті з числом",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

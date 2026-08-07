@@ -1,0 +1,99 @@
+{
+  "id": "p-migrate-a-service-off-openai-to-local",
+  "title": "Перевести сервіс з OpenAI на локальний рушій",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "migrate-openai-to-local",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "runner/adapter.py",
+    "runner/compat.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "скласти матрицю сумісності: що з API реально підтримано",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "matrix_complete",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "переключити базовий URL, зібрати список поламаного",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "failures_collected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "полагодити стрімінг і рахунок токенів",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "streaming_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "tokens_counted",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "полагодити tool calling або зробити чесний фолбек",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "tools_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "усі наявні тести клієнта зелені на локальному рушії",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "all_tests_passed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "таблиця відмінностей поведінки, яку не можна приховати",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

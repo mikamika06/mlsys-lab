@@ -21,11 +21,11 @@ After the reduction, rank $i$ owns only chunk $s_i$. This reduces the amount of 
 Implement `reduce_scatter_sum(chunks)`:
 
 ```python
-def reduce_scatter_sum(chunks):
+def reduce_scatter_sum(chunks: list[list[list[float]]]) -> list[list[float]]:
     ...
 ```
 
-The input is a list of length $p$. Element `chunks[r]` is the data held by rank $r` and must be a list of $p$ NumPy arrays:
+The input is a list of length $p$. Element `chunks[r]` is the data held by rank $r` and must be a list of $p$ list:
 
 ```python
 chunks[r][i]
@@ -39,16 +39,15 @@ Return a list of length $p`. The element at index `i` must be the reduced chunk 
 result[i] == sum(chunks[r][i] for r in range(p))
 ```
 
-The implementation should support floating point NumPy arrays and preserve the numerical result of the reduction.
+The implementation should support floating point list and preserve the numerical result of the reduction.
 
 ## Example
 
 ```python
-import numpy as np
 
 chunks = [
-    [np.array([1.0, 2.0]), np.array([3.0, 4.0])],
-    [np.array([5.0, 6.0]), np.array([7.0, 8.0])],
+    [[1.0, 2.0], [3.0, 4.0]],
+    [[5.0, 6.0], [7.0, 8.0]],
 ]
 
 result = reduce_scatter_sum(chunks)
@@ -59,7 +58,7 @@ result = reduce_scatter_sum(chunks)
 
 ## What the gate checks
 
-The gate builds several reduce-scatter inputs and computes the expected result using NumPy element-wise summation. It compares the submitted implementation with this oracle using the maximum absolute error:
+The gate builds several reduce-scatter inputs and computes the expected result using Python element-wise summation. It compares the submitted implementation with this oracle using the maximum absolute error:
 
 $$
 \mathrm{max\_abs\_err} = \max_i |y_i - \hat{y}_i|.

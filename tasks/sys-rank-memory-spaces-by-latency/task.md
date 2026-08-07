@@ -1,6 +1,6 @@
 ## Context
 
-In a typical GPU memory hierarchy the access time increases from registers to shared memory, then to L2 cache and finally global memory. We can model each memory space by a representative Python object whose allocation size is correlated with its access latency in CPython: small integers are stored in a fast internal pool, lists require more bookkeeping, NumPy arrays involve contiguous C buffers, and dictionaries have the largest overhead.
+In a typical GPU memory hierarchy the access time increases from registers to shared memory, then to L2 cache and finally global memory. We can model each memory space by a representative Python object whose allocation size is correlated with its access latency in CPython: small integers are stored in a fast internal pool, lists require more bookkeeping, list involve contiguous C buffers, and dictionaries have the largest overhead.
 
 Let $L_{\text{reg}}, L_{\text{sh}}, L_{\text{L2}}, L_{\text{glb}}$ denote the relative latency of each space. We want to return a list sorted from smallest to largest latency.
 
@@ -9,11 +9,11 @@ Let $L_{\text{reg}}, L_{\text{sh}}, L_{\text{L2}}, L_{\text{glb}}$ denote the re
 Implement `rank_memory_spaces()`:
 
 ```python
-def rank_memory_spaces() -> List[str]:
+def rank_memory_spaces():
     ...
 ```
 
-It should return a list of the four memory‑space names in order of increasing access latency: `'register'`, `'shared'`, `'L2'`, `'global'`. The implementation must use only standard library modules (`sys`, `numpy`) and no hard‑coded ordering.
+It should return a list of the four memory‑space names in order of increasing access latency: `'register'`, `'shared'`, `'L2'`, `'global'`. The implementation must use only standard library modules (`sys`) and no hard‑coded ordering.
 
 ## Example
 

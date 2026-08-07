@@ -24,7 +24,7 @@ fusion.
 Implement `fused_tile_pipeline(A, B, C, tile_size)`:
 
 ```python
-def fused_tile_pipeline(A: np.ndarray, B: np.ndarray, C: np.ndarray, tile_size: int) -> tuple[np.ndarray, float]:
+def fused_tile_pipeline(A: list[float], B: list[float], C: list[float], tile_size: int):
     ...
 ```
 
@@ -44,9 +44,9 @@ separate final pass over `E`).
 ## Example
 
 ```python
-A = np.array([1.0, -2.0, 3.0, 0.5])
-B = np.array([0.0,  1.0, -1.0, 2.0])
-C = np.array([2.0,  1.0,  1.0, 1.0])
+A = [1.0, -2.0, 3.0, 0.5]
+B = [0.0,  1.0, -1.0, 2.0]
+C = [2.0,  1.0,  1.0, 1.0]
 E, F = fused_tile_pipeline(A, B, C, tile_size=3)
 # D = [2.0, -1.0, 2.0, 2.5]
 # E = relu(D) - A = [1.0, 0.0, -1.0, 2.0]
@@ -55,11 +55,11 @@ E, F = fused_tile_pipeline(A, B, C, tile_size=3)
 
 ## What the gate checks
 
-The grader runs 12 deterministic cases (`np.random.default_rng` seeded)
+The grader runs 12 deterministic cases (`random` seeded)
 with varying array length and `tile_size` — including lengths that are
 an exact multiple of `tile_size` and lengths that leave a remainder
-tile — against a baseline computed with plain full-array NumPy ops
-(`D=(A+B)*C; E=np.maximum(D,0)-A; F=np.sum(E)`). `max_abs_err <= 1e-6`,
+tile — against a baseline computed with plain full-array Python ops
+(`D=(A+B)*C; E=[max(d, 0) for d in D]-A; F=sum(E)`). `max_abs_err <= 1e-6`,
 taken as the worse of the elementwise error on `E` and the scalar error
 on `F`. Dropping or double-processing elements at a tile boundary,
 mishandling the final short tile, or forgetting to subtract `A` inside

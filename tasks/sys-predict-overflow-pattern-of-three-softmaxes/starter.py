@@ -1,4 +1,6 @@
-def classify_softmax_overflow(z) -> tuple:
+import math
+
+def classify_softmax_overflow(z: list[float]) -> tuple[bool, bool, bool]:
     """
     Given a 1-D array of raw scores z, run three softmax implementations
     on it and report whether each one's output probability vector

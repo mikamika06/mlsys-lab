@@ -5,6 +5,10 @@ def speculative_speedup(alpha: float, gamma: int, cost_ratio: float) -> float:
     `alpha`, `gamma` draft tokens proposed per round, and `cost_ratio` =
     cost(one draft forward) / cost(one target verification pass).
     """
-    expected_tokens = sum(alpha ** k for k in range(gamma + 1))
+    expected_tokens = 0.0
+    term = 1.0
+    for _ in range(gamma + 1):
+        expected_tokens += term
+        term *= alpha
     cost_per_round = gamma * cost_ratio + 1.0
     return expected_tokens / cost_per_round

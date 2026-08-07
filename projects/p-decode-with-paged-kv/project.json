@@ -1,0 +1,99 @@
+{
+  "id": "p-decode-with-paged-kv",
+  "title": "Декодування з пейджованим KV",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "paged-kv",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "pagedkv/cache.py",
+    "pagedkv/batch.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "перевести кеш на блоки",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "api_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "побудувати таблиці блоків для батча",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "table_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "підтримати змінні довжини в батчі",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "variable_lens_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "еквівалентність із суцільним кешем",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "equivalent",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "виміряний виграш на довжині 4k",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "gain_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "пам'ять не фрагментується на 1000 кроків",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

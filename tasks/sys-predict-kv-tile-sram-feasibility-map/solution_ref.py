@@ -1,7 +1,6 @@
-import numpy as np
-
-
 def kv_tile_sram_feasibility_map(configs):
-    arr = np.asarray(configs, dtype=np.int64)
-    required = arr[:, 0] * arr[:, 1] * 4
-    return list(required <= arr[:, 2])
+    result = []
+    for seq, d, sram_bytes in configs:
+        required = 2 * seq * d * 2
+        result.append(required <= sram_bytes)
+    return result

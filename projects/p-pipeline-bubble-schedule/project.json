@@ -1,0 +1,108 @@
+{
+  "id": "p-pipeline-bubble-schedule",
+  "title": "Prune the pipeline bubble",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "pipeline-bubble-schedule",
+  "part": 1,
+  "difficulty": 5,
+  "edits": [
+    "sched/pipeline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "модель бульбашки для GPipe",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "utilization_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "реалізувати 1F1B і виміряти",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "steady_state_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "інтерлівінг і його ціна в пам'яті",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "interleaved_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "zero-bubble розклад",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "zb_schedule_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "утилізація вище порога на моделі трафіку",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "traffic_util_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "пам'ять активацій не перевищує бюджет",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_activation",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_schedule",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

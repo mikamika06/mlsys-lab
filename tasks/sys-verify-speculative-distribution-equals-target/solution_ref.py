@@ -1,17 +1,21 @@
-import numpy as np
+import random
 
 
-def speculative_distribution(draft_probs, target_probs, steps, seed):
-    q = np.asarray(draft_probs, dtype=np.float64)
-    p = np.asarray(target_probs, dtype=np.float64)
-    rng = np.random.default_rng(seed)
+def speculative_distribution(
+    draft_probs: list[float],
+    target_probs: list[float],
+    steps: int,
+    seed: int,
+) -> list[float]:
+    q = list(draft_probs)
+    p = list(target_probs)
+    rng = random.Random(seed)
 
     n = len(p)
-    residual_list = []
+    residual = []
     for i in range(n):
         diff = p[i] - q[i]
-        residual_list.append(diff if diff > 0.0 else 0.0)
-    residual = np.asarray(residual_list, dtype=np.float64)
+        residual.append(diff if diff > 0.0 else 0.0)
 
     total = 0.0
     for i in range(n):
@@ -21,10 +25,10 @@ def speculative_distribution(draft_probs, target_probs, steps, seed):
         for i in range(n):
             residual[i] /= total
 
-    counts = np.zeros(n, dtype=np.int64)
+    counts = [0] * n
 
     for _ in range(steps):
-        token = int(rng.choice(len(q), p=q))
+        token = rng.choices(range(len(q)), weights=q, k=1)[0]
         if q[token] == 0:
             accept = 0.0
         else:
@@ -33,11 +37,11 @@ def speculative_distribution(draft_probs, target_probs, steps, seed):
         if rng.random() < accept:
             out = token
         else:
-            out = int(rng.choice(len(q), p=residual))
+            out = rng.choices(range(len(q)), weights=residual, k=1)[0]
 
         counts[out] += 1
 
-    ret = np.zeros(n, dtype=np.float64)
+    ret = [0.0] * n
     for i in range(n):
         ret[i] = counts[i] / float(steps)
     return ret

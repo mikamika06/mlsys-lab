@@ -1,0 +1,105 @@
+{
+  "id": "p-flexattention-custom-mask",
+  "title": "Кастомна маска уваги без власного ядра",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "flexattention-custom-mask",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mask_engine/predicate.py",
+    "mask_engine/block.py",
+    "mask_engine/compile.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "описати маску як предикат",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "predicate_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перевірити збіг із наївною реалізацією",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "matches_naive",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "побудувати блокову маску і виміряти економію",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "memory_savings_ratio",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити на змінних довжинах",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "variable_lengths_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "пам'ять нижче порога, вихід збігається",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "max_memory_mb",
+          "op": "<=",
+          "threshold": 50.0
+        },
+        {
+          "metric": "output_matches",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка під компіляцією не ламається",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

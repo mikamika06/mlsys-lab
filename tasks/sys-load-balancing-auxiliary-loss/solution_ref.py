@@ -1,16 +1,13 @@
-import numpy as np
-
-
-def load_balancing_aux_loss(router_probs: np.ndarray) -> float:
-    probs = np.asarray(router_probs, dtype=np.float64)
-    n, e = probs.shape
+def load_balancing_aux_loss(router_probs: list[list[float]]) -> float:
+    n = len(router_probs)
+    e = len(router_probs[0])
     assignments = [0] * n
     for i in range(n):
-        max_val = probs[i, 0]
+        max_val = router_probs[i][0]
         max_idx = 0
         for j in range(1, e):
-            if probs[i, j] > max_val:
-                max_val = probs[i, j]
+            if router_probs[i][j] > max_val:
+                max_val = router_probs[i][j]
                 max_idx = j
         assignments[i] = max_idx
 
@@ -26,7 +23,7 @@ def load_balancing_aux_loss(router_probs: np.ndarray) -> float:
     for j in range(e):
         col_sum = 0.0
         for i in range(n):
-            col_sum += probs[i, j]
+            col_sum += router_probs[i][j]
         p[j] = col_sum / float(n)
 
     total_sum = 0.0

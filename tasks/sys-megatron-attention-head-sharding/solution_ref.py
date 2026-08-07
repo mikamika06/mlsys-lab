@@ -1,79 +1,115 @@
 import math
-import numpy as np
 
 
-def sharded_attention_heads(q, k, v, wo, num_ranks):
-    b, h, s, d = q.shape
-    out = np.zeros((b, s, wo.shape[1]), dtype=np.float64)
+def sharded_attention_heads(
+    q: list[list[list[list[float]]]],
+    k: list[list[list[list[float]]]],
+    v: list[list[list[list[float]]]],
+    wo: list[list[float]],
+    num_ranks: int,
+) -> list[list[list[float]]]:
+    b = len(q)
+    h = len(q[0])
+    s = len(q[0][0])
+    d = len(q[0][0][0])
+    wo_dim = len(wo[0])
+
+    out = [[[0.0 for _ in range(wo_dim)] for _ in range(s)] for _ in range(b)]
     heads_per_rank = h // num_ranks
     scale = math.sqrt(float(d))
-    wo_dim = wo.shape[1]
 
     for rank in range(num_ranks):
         start = rank * heads_per_rank
         end = start + heads_per_rank
-        partial = np.zeros_like(out)
+        partial = [[[0.0 for _ in range(wo_dim)] for _ in range(s)] for _ in range(b)]
 
         for head in range(start, end):
-            q_h = q[:, head]
-            k_h = k[:, head]
-            v_h = v[:, head]
-
-            scores = np.zeros((b, s, s), dtype=np.float64)
+            scores = [[[0.0 for _ in range(s)] for _ in range(s)] for _ in range(b)]
             for bi in range(b):
+                q_bi_h = q[bi][head]
+                k_bi_h = k[bi][head]
                 for i in range(s):
+                    q_bi_h_i = q_bi_h[i]
                     for j in range(s):
+                        k_bi_h_j = k_bi_h[j]
                         dot_val = 0.0
                         for l in range(d):
-                            dot_val += q_h[bi, i, l] * k_h[bi, j, l]
-                        scores[bi, i, j] = dot_val / scale
+                            dot_val += q_bi_h_i[l] * k_bi_h_j[l]
+                        scores[bi][i][j] = dot_val / scale
 
-            max_scores = np.zeros((b, s, 1), dtype=np.float64)
+            max_scores = [[0.0 for _ in range(s)] for _ in range(b)]
             for bi in range(b):
+                scores_bi = scores[bi]
+                max_scores_bi = max_scores[bi]
                 for i in range(s):
-                    m_val = scores[bi, i, 0]
+                    scores_bi_i = scores_bi[i]
+                    m_val = scores_bi_i[0]
                     for j in range(1, s):
-                        if scores[bi, i, j] > m_val:
-                            m_val = scores[bi, i, j]
-                    max_scores[bi, i, 0] = m_val
+                        if scores_bi_i[j] > m_val:
+                            m_val = scores_bi_i[j]
+                    max_scores_bi[i] = m_val
 
-            probs = np.zeros((b, s, s), dtype=np.float64)
-            sum_probs = np.zeros((b, s, 1), dtype=np.float64)
+            probs = [[[0.0 for _ in range(s)] for _ in range(s)] for _ in range(b)]
+            sum_probs = [[0.0 for _ in range(s)] for _ in range(b)]
             for bi in range(b):
+                scores_bi = scores[bi]
+                max_scores_bi = max_scores[bi]
+                probs_bi = probs[bi]
+                sum_probs_bi = sum_probs[bi]
                 for i in range(s):
+                    scores_bi_i = scores_bi[i]
+                    max_val = max_scores_bi[i]
+                    probs_bi_i = probs_bi[i]
                     s_val = 0.0
                     for j in range(s):
-                        val = math.exp(scores[bi, i, j] - max_scores[bi, i, 0])
-                        probs[bi, i, j] = val
+                        val = math.exp(scores_bi_i[j] - max_val)
+                        probs_bi_i[j] = val
                         s_val += val
-                    sum_probs[bi, i, 0] = s_val
+                    sum_probs_bi[i] = s_val
 
             for bi in range(b):
+                probs_bi = probs[bi]
+                sum_probs_bi = sum_probs[bi]
                 for i in range(s):
+                    s_val = sum_probs_bi[i]
+                    probs_bi_i = probs_bi[i]
                     for j in range(s):
-                        probs[bi, i, j] /= sum_probs[bi, i, 0]
+                        probs_bi_i[j] /= s_val
 
-            head_out = np.zeros((b, s, d), dtype=np.float64)
+            head_out = [[[0.0 for _ in range(d)] for _ in range(s)] for _ in range(b)]
             for bi in range(b):
+                probs_bi = probs[bi]
+                v_bi_h = v[bi][head]
+                head_out_bi = head_out[bi]
                 for i in range(s):
+                    probs_bi_i = probs_bi[i]
+                    head_out_bi_i = head_out_bi[i]
                     for l in range(d):
                         acc = 0.0
                         for j in range(s):
-                            acc += probs[bi, i, j] * v_h[bi, j, l]
-                        head_out[bi, i, l] = acc
+                            acc += probs_bi_i[j] * v_bi_h[j][l]
+                        head_out_bi_i[l] = acc
 
             row_start = head * d
             for bi in range(b):
+                head_out_bi = head_out[bi]
+                partial_bi = partial[bi]
                 for i in range(s):
+                    head_out_bi_i = head_out_bi[i]
+                    partial_bi_i = partial_bi[i]
                     for m_idx in range(wo_dim):
                         acc_wo = 0.0
                         for l in range(d):
-                            acc_wo += head_out[bi, i, l] * wo[row_start + l, m_idx]
-                        partial[bi, i, m_idx] += acc_wo
+                            acc_wo += head_out_bi_i[l] * wo[row_start + l][m_idx]
+                        partial_bi_i[m_idx] += acc_wo
 
         for bi in range(b):
+            out_bi = out[bi]
+            partial_bi = partial[bi]
             for i in range(s):
+                out_bi_i = out_bi[i]
+                partial_bi_i = partial_bi[i]
                 for m_idx in range(wo_dim):
-                    out[bi, i, m_idx] += partial[bi, i, m_idx]
+                    out_bi_i[m_idx] += partial_bi_i[m_idx]
 
     return out

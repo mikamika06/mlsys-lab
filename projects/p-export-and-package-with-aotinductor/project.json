@@ -1,0 +1,126 @@
+{
+  "id": "p-export-and-package-with-aotinductor",
+  "title": "Запакувати модель для рантайму без Python",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "aotinductor-export",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "exporter/custom_ops.py",
+    "exporter/export_pipeline.py",
+    "exporter/aot_builder.py",
+    "exporter/runtime_runner.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "torch.export із коректними обмеженнями форм",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "export_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "dynamic_shapes_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "зареєструвати кастомну операцію для трасування",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "custom_op_registered",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "abstract_impl_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "зібрати AOTInductor-артефакт",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "artifact_built",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "so_file_exists",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити еквівалентність на 200 входах",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "num_passed",
+          "op": "==",
+          "threshold": 200
+        },
+        {
+          "metric": "max_abs_diff",
+          "op": "<=",
+          "threshold": 0.0001
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "виміряти холодний старт і затримку",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "benchmark_completed",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "latency_ratio_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "артефакт запускається без torch-python",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

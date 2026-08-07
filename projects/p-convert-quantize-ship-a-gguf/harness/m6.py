@@ -1,18 +1,19 @@
 import importlib.util
 import os
-import sys
-import numpy as np
+
 
 def _run(path):
     spec = importlib.util.spec_from_file_location("learner_regression", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    fns = [getattr(mod, n) for n in dir(mod) if n.startswith("test_") and callable(getattr(mod, n))]
+    fns = [getattr(mod, n) for n in dir(mod)
+           if n.startswith("test_") and callable(getattr(mod, n))]
     if not fns:
         return None
     for fn in fns:
         fn()
     return True
+
 
 def _survives(path):
     try:
@@ -20,43 +21,39 @@ def _survives(path):
     except Exception:
         return False
 
+
 def check(workdir):
     path = os.path.join(workdir, "tests", "test_regression.py")
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "faults_caught": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0,
+           "catches_broken_kld": 0.0, "faults_caught": 0.0}
     if not os.path.isfile(path):
-        out["_note"] = "tests/test_regression.py missing"
+        out["_note"] = "tests/test_regression.py is missing"
         return out
 
-    sys.path.insert(0, workdir)
+    import gguf_pipe.eval as ev
 
     try:
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail on valid code: {e}"
+        out["_note"] = f"the tests fail on a correct implementation: {type(e).__name__}: {e}"
         return out
-
     if first is None:
         out["_note"] = "no test_* functions found"
         return out
-
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import gguf_pipeline.quantizer as quantizer
-    import gguf_pipeline.evaluator as evaluator
+    good_kld = ev.compute_kld
 
-    good_quant = quantizer.quantize_q8_0
-    quantizer.quantize_q8_0 = lambda tensor: {"qdata": np.zeros_like(tensor, dtype=np.int8), "scales": np.ones((tensor.shape[0], 1), dtype=np.float32)}
+    def broken_kld(r, q):
+        return -1.0
 
-    fault1 = 0.0 if _survives(path) else 1.0
-    quantizer.quantize_q8_0 = good_quant
+    ev.compute_kld = broken_kld
+    try:
+        out["catches_broken_kld"] = 0.0 if _survives(path) else 1.0
+    finally:
+        ev.compute_kld = good_kld
 
-    good_kl = evaluator.compute_kl_divergence
-    evaluator.compute_kl_divergence = lambda p, q: -1.0
-
-    fault2 = 0.0 if _survives(path) else 1.0
-    evaluator.compute_kl_divergence = good_kl
-
-    out["faults_caught"] = fault1 + fault2
+    out["faults_caught"] = out["catches_broken_kld"]
     return out

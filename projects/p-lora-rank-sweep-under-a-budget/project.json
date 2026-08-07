@@ -1,0 +1,120 @@
+{
+  "id": "p-lora-rank-sweep-under-a-budget",
+  "title": "Підібрати ранг і цілі під бюджет",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "lora-rank-sweep",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "lora_sweep/config.py",
+    "lora_sweep/engine.py",
+    "lora_sweep/optimizer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зафіксувати eval і базлайн",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "baseline_loss",
+          "op": "<=",
+          "threshold": 2.5
+        },
+        {
+          "metric": "eval_stable",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "розгортка рангів із однаковим бюджетом кроків",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "sweep_completed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "step_budget_respected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "вплив вибору цільових модулів",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "modules_evaluated",
+          "op": ">=",
+          "threshold": 3.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "залежність якості від alpha/rank",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "scaling_analyzed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "рекомендація з кривою якість-вартість",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "pareto_found",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "перевірка рекомендації на другому домені",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_budget",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_scaling",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

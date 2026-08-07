@@ -1,0 +1,124 @@
+{
+  "id": "p-model-rollout-without-downtime",
+  "title": "Викотити нову версію без простою",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "model-rollout-without-downtime",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "rollout/manager.py",
+    "rollout/policy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "політика версій і паралельне завантаження",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "version_load_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "parallel_active",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "прогрів нової версії до перемикання",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "warmup_executed",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "cold_start_latency_avoided",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "поступове перемикання трафіку",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "traffic_weights_valid",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "step_shift_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "відкат за метрикою",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "rollback_triggered",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "fallback_version_active",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "нуль помилок під час викату",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "zero_dropped_requests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "error_rate_bounded",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "процедура відтворюється",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

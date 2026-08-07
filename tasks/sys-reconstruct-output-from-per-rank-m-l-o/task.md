@@ -40,7 +40,7 @@ def reconstruct_output(states):
 
 Ranks do not hold equal numbers of keys, and their logits do not share a range.
 
-Return a tuple of three `float64` NumPy arrays:
+Return a tuple of three `float64` list:
 
 1. `output` — shape $(n, d_v)$: the attention output, identical to concatenating
    every rank's logits and values and taking one softmax over the whole row.
@@ -53,11 +53,10 @@ Return a tuple of three `float64` NumPy arrays:
 ## Example
 
 ```python
-import numpy as np
 
 states = [
-    (np.array([2.0]), np.array([1.5]), np.array([[3.0, 6.0]])),
-    (np.array([1.0]), np.array([2.0]), np.array([[4.0, 8.0]])),
+    ([2.0], [1.5], [[3.0, 6.0]]),
+    ([1.0], [2.0], [[4.0, 8.0]]),
 ]
 
 output, global_lse, rank_mass = reconstruct_output(states)
@@ -70,7 +69,7 @@ though it shipped the smaller $l$.
 ## What the gate checks
 
 Three metrics, all against an oracle that rebuilds the full logit matrix in
-NumPy and never touches the per-rank summaries.
+Python and never touches the per-rank summaries.
 
 `max_abs_err` — the output. Below $10^{-6}$.
 

@@ -1,4 +1,2 @@
-import numpy as np
-
-def load_balancing_aux_loss(router_probs: np.ndarray) -> float:
+def load_balancing_aux_loss(router_probs: list[list[float]]) -> float:
     raise NotImplementedError('your code here')

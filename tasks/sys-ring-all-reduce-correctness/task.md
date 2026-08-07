@@ -27,7 +27,7 @@ $$
 Implement `ring_all_reduce(buffers)`:
 
 ```python
-def ring_all_reduce(buffers: list[np.ndarray]) -> list[np.ndarray]:
+def ring_all_reduce(buffers: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
@@ -43,20 +43,20 @@ input buffers.
 ## Example
 
 ```python
-buffers = [np.array([1.0, 2.0, 3.0, 4.0]),
-           np.array([10.0, 20.0, 30.0, 40.0]),
-           np.array([100.0, 200.0, 300.0, 400.0]),
-           np.array([1000.0, 2000.0, 3000.0, 4000.0])]
+buffers = [[1.0, 2.0, 3.0, 4.0],
+           [10.0, 20.0, 30.0, 40.0],
+           [100.0, 200.0, 300.0, 400.0],
+           [1000.0, 2000.0, 3000.0, 4000.0]]
 result = ring_all_reduce(buffers)
 # every rank's buffer ends up [1111., 2222., 3333., 4444.]
 ```
 
 ## What the gate checks
 
-The grader runs 8 randomly generated cases (`np.random.default_rng`
+The grader runs 8 randomly generated cases (`random`
 seeded, `N` ranks between 2 and 5, chunk size between 1 and 3 per rank)
 plus the fixed example above, and compares every returned rank's buffer
-to the elementwise sum of all inputs computed directly with NumPy.
+to the elementwise sum of all inputs computed directly with Python.
 `max_abs_err <= 1e-6` across all ranks and all cases. A reduce-scatter
 that overwrites instead of accumulates, or an all-gather that runs the
 wrong number of rounds so some chunks never finish propagating, will

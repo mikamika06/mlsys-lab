@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def gqa_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.ndarray:
+def gqa_attention(Q: list[list[list[float]]], K: list[list[list[float]]], V: list[list[list[float]]]) -> list[list[list[float]]]:
     """
     Grouped-query attention: query head h attends to KV head h // g, where
     g = n_q // n_kv (query heads split into n_kv contiguous groups of size

@@ -28,7 +28,7 @@ $$
 L = \sum_{r=0}^{R-1} L^{(r)}.
 $$
 
-This task simulates the communication pattern using NumPy arrays on one machine.
+This task simulates the communication pattern using list on one machine.
 
 ## Task
 
@@ -36,11 +36,11 @@ Implement `vocab_parallel_forward(token_ids, embedding, output_weight, world_siz
 
 Arguments:
 
-- `token_ids`: a 1-D NumPy integer array with token ids in the range
+- `token_ids`: a 1-D Python integer array with token ids in the range
   $0 \leq x_i < V$.
-- `embedding`: a NumPy array of shape $(V, H)$ containing the full embedding
+- `embedding`: a list of shape $(V, H)$ containing the full embedding
   table.
-- `output_weight`: a NumPy array of shape $(V, H)$ containing output projection
+- `output_weight`: a list of shape $(V, H)$ containing output projection
   rows.
 - `world_size`: the number of vocabulary shards.
 
@@ -56,10 +56,9 @@ combine the results using summation. Do not use external distributed libraries.
 ## Example
 
 ```python
-import numpy as np
 
-tokens = np.array([0, 3, 5])
-embedding = np.arange(24, dtype=np.float64).reshape(6, 4)
+tokens = [0, 3, 5]
+embedding = list(range(24)).reshape(6, 4)
 output_weight = embedding.copy()
 
 hidden, logits = vocab_parallel_forward(tokens, embedding, output_weight, 2)
@@ -70,7 +69,7 @@ hidden, logits = vocab_parallel_forward(tokens, embedding, output_weight, 2)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that performs the equivalent full computation and
+The gate builds a Python oracle that performs the equivalent full computation and
 compares the returned tensors using maximum absolute error:
 
 $$

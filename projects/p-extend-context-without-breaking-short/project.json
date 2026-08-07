@@ -1,0 +1,113 @@
+{
+  "id": "p-extend-context-without-breaking-short",
+  "title": "Розширити контекст, не зламавши короткі промпти",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "extend-context-without-breaking-short",
+  "difficulty": 4,
+  "edits": [
+    "ctx/scaling.py",
+    "ctx/rope.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти деградацію на коротких",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "short_degradation_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "порівняти методи масштабування на однаковому eval",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "methods_compared",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "підібрати параметри під обидва режими",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "dual_params_tuned",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити на завданні пошуку в контексті",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "retrieval_verified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "короткі не гірші за базлайн, довгі кращі",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "short_no_regression",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "long_improved",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "eval-набір, що ловить обидві регресії",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_short_regression",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_long_failure",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

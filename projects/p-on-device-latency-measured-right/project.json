@@ -1,0 +1,98 @@
+{
+  "id": "p-on-device-latency-measured-right",
+  "title": "Виміряти затримку на пристрої чесно",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "on-device-latency",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "edgelat/profiler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "врахувати прогрів і тротлінг",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "warmup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "розділити перший виклик і сталий режим",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "separation_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти холодний старт окремо",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "cold_start_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "порахувати потрібне число повторів",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "sample_size_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "три сесії дають перекриття інтервалів",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "sessions_overlap",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт, який можна показати менеджеру",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

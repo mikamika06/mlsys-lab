@@ -1,7 +1,5 @@
 import math
 
-import numpy as np
-
 
 def _naive(z):
     ez_list = []
@@ -23,7 +21,7 @@ def _naive(z):
             except ZeroDivisionError:
                 res_val = math.nan
         res.append(res_val)
-    return np.array(res, dtype=np.float64)
+    return res
 
 
 def _lse(z):
@@ -50,7 +48,7 @@ def _lse(z):
             except ZeroDivisionError:
                 res_val = math.nan
         res.append(res_val)
-    return np.array(res, dtype=np.float64)
+    return res
 
 
 def _online(z):
@@ -82,7 +80,7 @@ def _online(z):
             except ZeroDivisionError:
                 res_val = math.nan
         res.append(res_val)
-    return np.array(res, dtype=np.float64)
+    return res
 
 
 def _overflowed(p):
@@ -92,7 +90,7 @@ def _overflowed(p):
     return False
 
 
-def classify_softmax_overflow(z) -> tuple:
+def classify_softmax_overflow(z: list[float]) -> tuple[bool, bool, bool]:
     """
     Run three softmax implementations on 1-D score vector z and report
     whether each one's output probability vector contains any inf/nan:
@@ -103,5 +101,4 @@ def classify_softmax_overflow(z) -> tuple:
 
     Return (naive_overflow, lse_overflow, online_overflow).
     """
-    z = np.asarray(z, dtype=np.float64)
     return (_overflowed(_naive(z)), _overflowed(_lse(z)), _overflowed(_online(z)))

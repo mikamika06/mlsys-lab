@@ -1,4 +1,4 @@
-def fused_tile_pipeline(A, B, C, tile_size):
+def fused_tile_pipeline(A: list[float], B: list[float], C: list[float], tile_size: int):
     """
     Compute D = (A + B) * C; E = relu(D) - A; F = sum(E), processing the
     1-D arrays A, B, C tile-by-tile: for each contiguous tile of up to

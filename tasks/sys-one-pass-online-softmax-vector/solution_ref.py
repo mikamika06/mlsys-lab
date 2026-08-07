@@ -1,24 +1,21 @@
 import math
-import numpy as np
 
 
-def online_softmax_weighted_sum(scores: np.ndarray, V: np.ndarray, block_size: int) -> np.ndarray:
+def online_softmax_weighted_sum(scores: list[float], V: list[list[float]], block_size: int) -> list[float]:
     """softmax(scores) @ V, computed one block at a time via the online-softmax
     running (m, l, o) update -- never calling exp on the full-length score
     vector. See task.md for the update rule.
     """
-    scores = np.asarray(scores, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-    n = scores.shape[0]
-    d = V.shape[1]
+    n = len(scores)
+    d = len(V[0]) if n > 0 else 0
 
     m = -float('inf')
     l = 0.0
-    o = np.zeros(d, dtype=np.float64)
+    o = [0.0] * d
 
     for start in range(0, n, block_size):
         end = min(start + block_size, n)
-        
+
         m_block = -float('inf')
         for i in range(start, end):
             val = float(scores[i])
@@ -47,11 +44,11 @@ def online_softmax_weighted_sum(scores: np.ndarray, V: np.ndarray, block_size: i
         for i_idx, i in enumerate(range(start, end)):
             p_val = p_list[i_idx]
             for j in range(d):
-                o[j] += p_val * float(V[i, j])
+                o[j] += p_val * float(V[i][j])
 
         m = m_new
 
-    result = np.empty(d, dtype=np.float64)
+    result = [0.0] * d
     for j in range(d):
         result[j] = o[j] / l
 

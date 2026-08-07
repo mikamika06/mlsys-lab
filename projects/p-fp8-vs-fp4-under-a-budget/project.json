@@ -1,0 +1,115 @@
+{
+  "id": "p-fp8-vs-fp4-under-a-budget",
+  "title": "Choosing sub-byte formats under a memory budget",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "fp8-vs-fp4-budget",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "quant/budget.py",
+    "quant/evaluator.py",
+    "quant/selector.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "порахувати реальні bpw кожного формату",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "bpw_calculated_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "overhead_accounted",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "виміряти похибку на реальних вагах",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "error_measured_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти якість наскрізно",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "end_to_end_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "врахувати підтримку ядрами",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "kernel_support_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "рекомендація з числами",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "recommendation_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "перевірка на другій архітектурі",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_budget",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_missing_overhead",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": "==",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

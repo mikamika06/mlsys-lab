@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
 def check_block_merge_associativity(rows):
     raise NotImplementedError('your code here')

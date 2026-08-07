@@ -55,11 +55,11 @@ A tiled implementation processes blocks of rows and columns instead of creating 
 Implement `flash_backward`:
 
 ```python
-def flash_backward(Q, K, V, O, LSE, dO, tile_size=32):
+def flash_backward(Q: list[list[float]], K: list[list[float]], V: list[list[float]], O: list[list[float]], LSE: list[float], dO: list[list[float]], tile_size: int=32) -> tuple[list[list[float]], list[list[float]], list[list[float]]]:
     ...
 ```
 
-The inputs are NumPy arrays:
+The inputs are list:
 
 - `Q` has shape $(n, d)$.
 - `K` has shape $(n, d)$.
@@ -75,15 +75,14 @@ The returned arrays must use floating point values.
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0], [3.0]])
-S = Q @ K.T / np.sqrt(2.0)
-LSE = np.log(np.exp(S).sum(axis=1))
-O = (np.exp(S - LSE[:, None]) @ V)
-dO = np.ones_like(O)
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0], [3.0]]
+S = [[sum(q * k for q, k in zip(row_q, col_k)) / (2.0 0.5) for col_k in zip(*K)] for row_q in Q]
+LSE = [math.log(sum(math.exp(x) for x in row)) for row in S]
+O = [[sum(math.exp(S[i][j] - LSE[i]) * V[j][k] for j in range(len(V))) for k in range(len(V[0]))] for i in range(len(S))]
+dO = [[1.0 for _ in row] for row in O]
 
 dQ, dK, dV = flash_backward(Q, K, V, O, LSE, dO)
 ```
@@ -92,7 +91,7 @@ The result should match the gradients from the mathematical backward equations.
 
 ## What the gate checks
 
-The gate builds random small attention problems, computes the reference gradients with a NumPy implementation of the same backward equations, and compares all returned tensors.
+The gate builds random small attention problems, computes the reference gradients with a Python implementation of the same backward equations, and compares all returned tensors.
 
 The reported metric is
 

@@ -1,5 +1,6 @@
-def test_quantization_reconstruction():
+def test_conversion_preserves_tensor_shapes():
     raise NotImplementedError
 
-def test_kl_divergence_non_negative():
+
+def test_quantization_reduces_size():
     raise NotImplementedError

@@ -1,0 +1,104 @@
+{
+  "id": "p-matmul-with-grouped-scheduling",
+  "title": "Матмул із плануванням під кеш",
+  "kind": "project",
+  "tier": "T3+T1",
+  "area": "rw3-triton-real",
+  "track": "matmul-with-grouped-scheduling",
+  "part": 1,
+  "difficulty": 5,
+  "edits": [
+    "triton_matmul/kernel.py",
+    "triton_matmul/tuning.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "базове ядро з тайлінгом",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "compiles_and_runs",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "correctness",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перевірити коректність на межових формах",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "edge_shapes_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "згруповане впорядкування програм",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "grouped_order_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "автотюнінг конфігурацій",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "autotune_picks_fastest",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "частка від бібліотечного вище порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "perf_ratio",
+          "op": ">=",
+          "threshold": 0.7
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "коректність на 30 формах",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

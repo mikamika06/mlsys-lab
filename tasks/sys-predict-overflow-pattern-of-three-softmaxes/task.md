@@ -33,7 +33,7 @@ answer incrementally, one score at a time.
 Implement `classify_softmax_overflow(z)`:
 
 ```python
-def classify_softmax_overflow(z) -> tuple:
+def classify_softmax_overflow(z: list[float]) -> tuple[bool, bool, bool]:
     ...
 ```
 
@@ -53,7 +53,7 @@ least one `inf` or `nan`.
 ## Example
 
 ```python
-classify_softmax_overflow(np.array([10000.0, 0.0, -10000.0]))
+classify_softmax_overflow([10000.0, 0.0, -10000.0])
 # naive:  exp(10000) overflows to inf -> True
 # lse:    max-subtracted, every exponent <= 0            -> False
 # online: correctly rescaled running sum, same as lse     -> False
@@ -64,9 +64,9 @@ classify_softmax_overflow(np.array([10000.0, 0.0, -10000.0]))
 
 The grader runs a handful of fixed extreme cases (scores up to $10^4$
 in magnitude, including all-equal and all-very-negative vectors) plus 8
-randomly scaled vectors (`np.random.default_rng` seeded, scale factors
+randomly scaled vectors (seeded generator, scale factors
 from 1 up to 10000) through an independent oracle that implements the
-same three algorithms directly and checks `np.isfinite` on each output.
+same three algorithms directly and checks `math.isfinite` on each output.
 `exact_match` requires all three booleans to match on every case. A
 common bug — implementing "online" as a naive running sum of raw
 `exp(z_i)` without ever rescaling by `exp(old_m - new_m)` when the max

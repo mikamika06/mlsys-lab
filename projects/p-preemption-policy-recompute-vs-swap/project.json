@@ -1,0 +1,110 @@
+{
+  "id": "p-preemption-policy-recompute-vs-swap",
+  "title": "Політика витіснення: перерахунок чи swap",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "preemption-policy-recompute-vs-swap",
+  "part": 1,
+  "difficulty": 5,
+  "edits": [
+    "preempt/model.py",
+    "preempt/policy.py",
+    "preempt/scheduler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "модель вартості перерахунку",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "recompute_cost_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "модель вартості swap з урахуванням PCIe",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "swap_cost_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "точка беззбитковості за довжиною контексту",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "breakeven_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "політика вибору на трасі",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "policy_selection_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "p99 нижче базової політики на записаному навантаженні",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "p99_improved",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка не гірша за жодну з чистих політик",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_policy",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_cost",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

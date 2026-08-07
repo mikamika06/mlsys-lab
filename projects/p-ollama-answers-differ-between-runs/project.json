@@ -1,0 +1,99 @@
+{
+  "id": "p-ollama-answers-differ-between-runs",
+  "title": "Однакові запити дають різні відповіді",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "ollama-answers-differ",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "runner/config.py",
+    "runner/client.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "відтворити розбіжність і виміряти її частоту",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "divergence_measured",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "побудувати таблицю пріоритету опцій: Modelfile < API < per-request",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "priority_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "знайти, які саме параметри не доїжджають до рушія",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "params_forwarded",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "зафіксувати seed/temperature/num_predict так, щоб вихід був байт-у-байт",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "byte_for_byte",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "10 прогонів поспіль дають однаковий хеш",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "ten_runs_hash",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "лишити в репо перевірку, що ловить розфіксування (ми ламаємо — має впіймати)",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

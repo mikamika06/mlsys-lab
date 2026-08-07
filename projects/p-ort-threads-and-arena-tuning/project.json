@@ -1,0 +1,112 @@
+{
+  "id": "p-ort-threads-and-arena-tuning",
+  "title": "Налаштувати потоки й арену рантайму",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ort-threads-and-arena-tuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ort_tune/threads.py",
+    "ort_tune/arena.py",
+    "ort_tune/io_binding.py",
+    "ort_tune/optimizer.py",
+    "ort_tune/config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти залежність від числа потоків",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "thread_scaling_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "розібрати роль арени пам'яті",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "arena_config_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "прибрати зайві копіювання через IOBinding",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "io_binding_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "підібрати рівень графових оптимізацій",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "optimizer_level_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "затримка під порогом",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "latency_target_met",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "конфіг обґрунтований вимірами",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_threads",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_disabled_arena",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

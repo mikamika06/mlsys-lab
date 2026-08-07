@@ -1,0 +1,110 @@
+{
+  "id": "p-ngram-prompt-lookup",
+  "title": "Чернетка без моделі",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "ngram-prompt-lookup",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "ngram/index.py",
+    "ngram/policy.py",
+    "ngram/engine.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "побудувати індекс n-грам промпту",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "index_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "правило вибору кандидата",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "candidates_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти прийняття по типах задач",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "acceptance_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "поріг, за яким вимикати",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "threshold_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "виграш на повторюваних текстах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "speedup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "нуль регресії на неповторюваних",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_index",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_policy",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

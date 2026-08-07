@@ -11,14 +11,13 @@ In many performance‑analysis scenarios we are given measurements of concurrenc
 Implement `compute_throughput(concurrency, latency)`:
 
 ```python
-def compute_throughput(concurrency: np.ndarray,
-                       latency: np.ndarray) -> np.ndarray:
+def compute_throughput(concurrency: list[float], latency: list[float]) -> list[float]:
     ...
 ```
 
-The function receives two 1‑D NumPy arrays of equal length.  
+The function receives two 1‑D list of equal length.  
 `concurrency[i]` is the average number of concurrent requests for workload *i*, and `latency[i]` is the mean service time (in seconds).  
-Return a NumPy array containing the throughput for each workload, computed as
+Return a list containing the throughput for each workload, computed as
 
 $$\text{throughput}_i = \frac{\text{concurrency}_i}{\text{latency}_i}\;.$$
 
@@ -27,20 +26,19 @@ The result must be of type `float64` and have the same shape as the inputs.
 ## Example
 
 ```python
-import numpy as np
 from compute_throughput import compute_throughput
 
-concurrency = np.array([10, 20, 30], dtype=np.float64)
-latency     = np.array([0.5, 1.0, 2.0], dtype=np.float64)
+concurrency = [10, 20, 30]
+latency     = [0.5, 1.0, 2.0]
 
 throughput = compute_throughput(concurrency, latency)
-print(throughput)   # [20. 20. 15.]
+print(throughput)  # [20.0, 20.0, 15.0]
 ```
 
 ## What the gate checks
 
-The grader computes a reference throughput using NumPy division and compares it to your output with the global relative L2 error
+The grader computes a reference throughput using Python division and compares it to your output with the global relative L2 error
 
 $$\text{rel\_err} = \frac{\lVert \hat y - y\rVert}{\lVert y\rVert}\;.$$
 
-Your solution must achieve $\text{rel\_err}\le 10^{-9}$ on all automatically generated test cases. The gate will fail if the error exceeds this threshold or if your function does not return a NumPy array of type `float64`.
+Your solution must achieve $\text{rel\_err}\le 10^{-9}$ on all automatically generated test cases. The gate will fail if the error exceeds this threshold or if your function does not return a list of type `float64`.

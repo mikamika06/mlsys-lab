@@ -1,0 +1,104 @@
+{
+  "id": "p-custom-backend-registration",
+  "title": "Свій бекенд компіляції",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "custom-backend-registration",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "compiler/backend.py",
+    "compiler/passes.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зареєструвати бекенд",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "registered_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "отримати граф у придатному вигляді",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "graph_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "реалізувати прохід",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "pass_applied",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити еквівалентність",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "equivalent",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "прохід спрацьовує на цільових вузлах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "target_nodes_hit",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "фолбек, коли прохід не застосовний",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_equivalence",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

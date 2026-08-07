@@ -1,0 +1,109 @@
+{
+  "id": "p-nvtx-correlated-timeline",
+  "title": "Зв'язати таймлайн із кодом",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw3-profiling",
+  "track": "",
+  "difficulty": 4,
+  "edits": [
+    "profiler/annotations.py",
+    "profiler/correlation.py",
+    "profiler/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "розставити анотації по фазах",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "phases_annotated",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "зіставити діапазони з ядрами",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "kernels_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "знайти найдорожчу фазу",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "cost_identified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "показати, що саме стоїть у дірках",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "gaps_explained",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "звіт по фазах відтворюється",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "report_reproduced",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "найдорожча фаза підтверджена другою трасою",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_wrong_phase",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_correlation",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

@@ -25,22 +25,20 @@ The task is to implement this rule in a vectorised way.
 Implement the function `greedy_speculative(draft_logits, target_logits)`:
 
 ```python
-def greedy_speculative(draft_logits: np.ndarray,
-                       target_logits: np.ndarray) -> List[int]:
+def greedy_speculative(draft_logits: list[list[float]], target_logits: list[list[float]]) -> list[int]:
     ...
 ```
 
-`draft_logits` and `target_logits` are 2‑D NumPy arrays of shape `(T, V)` where `T` is the number of decoding steps and `V` the vocabulary size. The function must return a list of length `T` containing the token indices chosen by speculative decoding as defined above. Use only NumPy operations; no explicit Python loops over tokens.
+`draft_logits` and `target_logits` are 2‑D list of shape `(T, V)` where `T` is the number of decoding steps and `V` the vocabulary size. The function must return a list of length `T` containing the token indices chosen by speculative decoding as defined above. Use only Python operations; no explicit Python loops over tokens.
 
 ## Example
 
 ```python
-import numpy as np
 
-draft = np.array([[0.1, 2.5, 0.3],
-                  [1.0, 0.2, 0.9]])
-target = np.array([[0.4, 2.6, 0.2],
-                   [0.8, 0.1, 1.1]])
+draft = [[0.1, 2.5, 0.3],
+                  [1.0, 0.2, 0.9]]
+target = [[0.4, 2.6, 0.2],
+                   [0.8, 0.1, 1.1]]
 
 tokens = greedy_speculative(draft, target)
 print(tokens)   # [1, 2]

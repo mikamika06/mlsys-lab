@@ -36,7 +36,7 @@ exactly why that bug can hide behind a passing MHA-only sanity check.
 Implement:
 
 ```python
-def gqa_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.ndarray:
+def gqa_attention(Q: list[list[list[float]]], K: list[list[list[float]]], V: list[list[list[float]]]) -> list[list[list[float]]]:
     ...
 ```
 
@@ -57,7 +57,6 @@ With $n_q=4$, $n_{kv}=2$ (so $g=2$): query heads $0,1$ both attend to KV
 head $0$; query heads $2,3$ both attend to KV head $1$.
 
 ```python
-import numpy as np
 O = gqa_attention(Q, K, V)   # Q: (4,n,d), K,V: (2,n,d)
 # O[0], O[1] were computed against K[0], V[0]
 # O[2], O[3] were computed against K[1], V[1]
@@ -68,7 +67,7 @@ O = gqa_attention(Q, K, V)   # Q: (4,n,d), K,V: (2,n,d)
 A single gate, **max_abs_err**, generates several seeded random instances —
 including plain MHA ($n_{kv}=n_q$), MQA ($n_{kv}=1$), and general GQA with
 $n_{kv}$ strictly between $1$ and $n_q$ — computes the reference output
-per-head directly with NumPy (looping over query heads, indexing KV head
+per-head directly with Python (looping over query heads, indexing KV head
 $\lfloor h/g\rfloor$, doing a numerically-stable softmax), and compares it
 element-wise to your function's output. The maximum absolute error across
 all trials must be $\le 10^{-5}$; any exception or wrong output shape

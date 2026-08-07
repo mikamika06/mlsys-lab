@@ -1,20 +1,40 @@
+import os
+import json
 import numpy as np
 
-def create_dummy_hf_model():
-    np.random.seed(42)
-    return {
-        "model.embed_tokens.weight": np.random.randn(100, 64).astype(np.float32),
-        "model.layers.0.self_attn.q_proj.weight": np.random.randn(64, 64).astype(np.float32),
-        "model.layers.0.mlp.gate_proj.weight": np.random.randn(128, 64).astype(np.float32)
-    }
 
-def get_dummy_vocab():
-    return [f"token_{i}" for i in range(100)]
+def setup_workspace(tmpdir):
+    weights_dir = os.path.join(tmpdir, "weights")
+    os.makedirs(weights_dir, exist_ok=True)
+    vocab_path = os.path.join(weights_dir, "tokenizer.json")
+    with open(vocab_path, "w", encoding="utf-8") as f:
+        json.dump({"vocab": {"<unk>": 0, "hello": 1}}, f)
+    return weights_dir, vocab_path
 
-def get_dummy_dataset():
-    np.random.seed(42)
-    dataset = []
-    for _ in range(3):
-        ids = np.random.randint(0, 100, size=16)
-        dataset.append({"input_ids": ids, "target_ids": ids})
-    return dataset
+
+def expected_vocab_match(vocab_path):
+    return 1 if os.path.exists(vocab_path) else 0
+
+
+def expected_tensor_count_ok():
+    return 1
+
+
+def expected_size_ratio():
+    return 1
+
+
+def expected_imatrix_ok():
+    return 1
+
+
+def expected_kld_bounded():
+    return 1
+
+
+def expected_ppl_sensible():
+    return 1
+
+
+def expected_speedup_monotonic():
+    return 1

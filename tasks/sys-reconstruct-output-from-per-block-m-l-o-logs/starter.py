@@ -1,8 +1,6 @@
-import numpy as np
+import math
 
-
-def reconstruct_attention_from_block_logs(block_m: np.ndarray, block_l: np.ndarray,
-                                           block_o: np.ndarray) -> np.ndarray:
+def reconstruct_attention_from_block_logs(block_m: list[float], block_l: list[float], block_o: list[list[float]]) -> list[float]:
     """Reconstruct the single global, correctly-normalized attention output
     vector from K blocks' LOCAL online-softmax summaries -- no raw scores
     or values are available, only:

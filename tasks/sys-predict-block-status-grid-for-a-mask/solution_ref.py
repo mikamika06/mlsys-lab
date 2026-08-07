@@ -1,7 +1,6 @@
-import numpy as np
-
-def block_status_grid(mask, tile_h, tile_w):
-    H, W = mask.shape
+def block_status_grid(mask: list[list[bool]], tile_h: int, tile_w: int) -> list[list[int]]:
+    H = len(mask)
+    W = len(mask[0])
     n_h = H // tile_h
     n_w = W // tile_w
     area = tile_h * tile_w
@@ -12,7 +11,7 @@ def block_status_grid(mask, tile_h, tile_w):
             tile_sum = 0
             for r in range(tile_h):
                 for c in range(tile_w):
-                    tile_sum += int(mask[i * tile_h + r, j * tile_w + c])
+                    tile_sum += int(mask[i * tile_h + r][j * tile_w + c])
             if tile_sum == 0:
                 row.append(2)
             elif tile_sum == area:
@@ -20,4 +19,4 @@ def block_status_grid(mask, tile_h, tile_w):
             else:
                 row.append(1)
         status.append(row)
-    return np.array(status, dtype=np.int32)
+    return status

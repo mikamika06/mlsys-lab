@@ -1,5 +1,4 @@
 import struct
-import numpy as np
 
-def pack_groupwise_int4(x: np.ndarray) -> bytes:
+def pack_groupwise_int4(x: list[float]) -> bytes:
     raise NotImplementedError('your code here')

@@ -1,10 +1,8 @@
-import numpy as np
-
-
-def tiled_matmul(A: np.ndarray, B: np.ndarray, tile: int) -> np.ndarray:
-    n, m = A.shape
-    _, p = B.shape
-    C = np.zeros((n, p), dtype=np.float64)
+def tiled_matmul(A: list[list[float]], B: list[list[float]], tile: int) -> list[list[float]]:
+    n = len(A)
+    m = len(A[0])
+    p = len(B[0])
+    C = [[0.0] * p for _ in range(n)]
 
     for ii in range(0, n, tile):
         for jj in range(0, p, tile):
@@ -15,8 +13,8 @@ def tiled_matmul(A: np.ndarray, B: np.ndarray, tile: int) -> np.ndarray:
 
                 for i in range(ii, i_end):
                     for k in range(kk, k_end):
-                        a = A[i, k]
+                        a = A[i][k]
                         for j in range(jj, j_end):
-                            C[i, j] += a * B[k, j]
+                            C[i][j] += a * B[k][j]
 
     return C

@@ -1,0 +1,103 @@
+{
+  "id": "p-polygraphy-debug-reduce",
+  "title": "Звузити граф до однієї винної операції",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "polygraphy-debug-reduce",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "poly/reducer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "налаштувати покрокове порівняння",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "step_compare_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "бісекція графа до мінімального прикладу",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bisection_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "підтвердити винуватця на ізольованому тесті",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "isolated_test_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "полагодити або замінити операцію",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "patch_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "паритет відновлено",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "parity_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "мінімальний репро лишається в репо",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_fault",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

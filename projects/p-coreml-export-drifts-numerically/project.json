@@ -1,0 +1,104 @@
+{
+  "id": "p-coreml-export-drifts-numerically",
+  "title": "Експорт у Core ML зсуває числа",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "coreml-export-drifts",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "coreml_export/comparator.py",
+    "coreml_export/converter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "побудувати пошарове порівняння",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "layers_compared",
+          "op": ">=",
+          "threshold": 3
+        },
+        {
+          "metric": "max_diff_tracked",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти шари з найбільшим внеском у розбіжність",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "top_culprit_identified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірити контракт входу: layout, dtype, препроцес",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "contract_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "полагодити конвертацію проблемних операцій",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "conversion_fixed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "argmax збігається на 1000 прикладах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "argmax_match_rate",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "регресійний тест паритету",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

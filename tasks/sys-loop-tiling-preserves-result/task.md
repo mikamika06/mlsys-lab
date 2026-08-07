@@ -30,12 +30,12 @@ must not change the mathematical meaning of the operation.
 Implement `tiled_matmul(A, B, tile)`:
 
 ```python
-def tiled_matmul(A: np.ndarray, B: np.ndarray, tile: int) -> np.ndarray:
+def tiled_matmul(A: list[list[float]], B: list[list[float]], tile: int) -> list[list[float]]:
     ...
 ```
 
 Return the matrix product of `A` and `B` using a tiled loop structure. Do not
-call `np.matmul`, `@`, or `np.dot`. The input matrices contain `float64`
+perform matrix multiplication. The input matrices contain `float`
 values and have compatible shapes.
 
 The implementation should support matrix sizes that are not multiples of
@@ -44,10 +44,9 @@ The implementation should support matrix sizes that are not multiples of
 ## Example
 
 ```python
-import numpy as np
 
-A = np.array([[1., 2., 3.], [4., 5., 6.]])
-B = np.array([[1., 0.], [0., 1.], [1., 1.]])
+A = [[1., 2., 3.], [4., 5., 6.]]
+B = [[1., 0.], [0., 1.], [1., 1.]]
 
 C = tiled_matmul(A, B, 2)
 
@@ -58,11 +57,11 @@ C = tiled_matmul(A, B, 2)
 
 ## What the gate checks
 
-The gate compares the implementation against the NumPy matrix multiplication
+The gate compares the implementation against the Python matrix multiplication
 oracle. The maximum absolute error
 
 $$
-\max_{i,j} |C_{ij}^{candidate} - C_{ij}^{numpy}|
+\max_{i,j} |C_{ij}^{candidate} - C_{ij}^{list}|
 $$
 
 must be less than $10^{-6}$ across several matrix sizes and tile sizes. A

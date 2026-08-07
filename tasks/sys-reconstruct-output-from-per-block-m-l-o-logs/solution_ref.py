@@ -1,9 +1,8 @@
 import math
-import numpy as np
 
 
-def reconstruct_attention_from_block_logs(block_m: np.ndarray, block_l: np.ndarray,
-                                           block_o: np.ndarray) -> np.ndarray:
+def reconstruct_attention_from_block_logs(block_m: list[float], block_l: list[float],
+                                           block_o: list[list[float]]) -> list[float]:
     """Reconstruct the single global, correctly-normalized attention output
     vector from K blocks' LOCAL online-softmax summaries -- no raw scores
     or values are available, only:
@@ -25,22 +24,18 @@ def reconstruct_attention_from_block_logs(block_m: np.ndarray, block_l: np.ndarr
     which is exact (associative/commutative) regardless of merge order.
     The final output is o_final / l_final.
     """
-    block_m = np.asarray(block_m, dtype=np.float64)
-    block_l = np.asarray(block_l, dtype=np.float64)
-    block_o = np.asarray(block_o, dtype=np.float64)
-
-    K = block_m.shape[0]
+    K = len(block_m)
     m = block_m[0]
     l = block_l[0]
-    
+
     o_src = block_o[0]
-    d = o_src.shape[0]
-    o = np.empty(d, dtype=np.float64)
+    d = len(o_src)
+    o = [0.0] * d
     for j in range(d):
-        o[j] = o_src[j]
+        o[j] = float(o_src[j])
 
     for k in range(1, K):
-        mk = block_m[k]
+        mk = float(block_m[k])
         if m > mk:
             m_new = m
         else:
@@ -49,15 +44,15 @@ def reconstruct_attention_from_block_logs(block_m: np.ndarray, block_l: np.ndarr
         scale_old = math.exp(m - m_new)
         scale_new = math.exp(mk - m_new)
 
-        l = l * scale_old + block_l[k] * scale_new
+        l = l * scale_old + float(block_l[k]) * scale_new
 
         bk_o = block_o[k]
         for j in range(d):
-            o[j] = o[j] * scale_old + bk_o[j] * scale_new
+            o[j] = o[j] * scale_old + float(bk_o[j]) * scale_new
 
         m = m_new
 
-    result = np.empty(d, dtype=np.float64)
+    result = [0.0] * d
     for j in range(d):
         result[j] = o[j] / l
 

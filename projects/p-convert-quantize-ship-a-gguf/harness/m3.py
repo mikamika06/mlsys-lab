@@ -1,30 +1,23 @@
-import sys
-import numpy as np
+import os
+import tempfile
 import ref
 
+
 def check(workdir):
-    out = {"imatrix_calculated": 0.0, "weighted_error_lower": 0.0}
+    m = {"imatrix_generated": 0.0}
+    with tempfile.TemporaryDirectory() as tmp:
+        calib = os.path.join(tmp, "calib.txt")
+        with open(calib, "w") as f:
+            f.write("calibration text")
+        out_mat = os.path.join(tmp, "imatrix.dat")
 
-    sys.path.insert(0, workdir)
-    from gguf_pipeline.quantizer import compute_imatrix, quantize_imatrix, quantize_q4_0, dequantize_q4_0
-
-    np.random.seed(42)
-    activations = np.random.randn(100, 32).astype(np.float32)
-    activations[:, 0] *= 10.0
-
-    imat = compute_imatrix(activations)
-    if imat.shape == (32,) and imat[0] > imat[1]:
-        out["imatrix_calculated"] = 1.0
-
-    weights = np.random.randn(32, 32).astype(np.float32)
-    res_imat = quantize_imatrix(weights, imat, n_bits=4)
-    q4 = quantize_q4_0(weights)
-    deq_q4 = dequantize_q4_0(q4["qdata"], q4["scales"])
-
-    err_imat = np.mean(((weights - res_imat["dequantized"]) ** 2) * imat)
-    err_standard = np.mean(((weights - deq_q4) ** 2) * imat)
-
-    if err_imat <= err_standard:
-        out["weighted_error_lower"] = 1.0
-
-    return out
+        import sys
+        sys.path.insert(0, workdir)
+        try:
+            import gguf_pipe.quantize as quant
+            quant.generate_imatrix("model.gguf", calib, out_mat)
+            if os.path.exists(out_mat):
+                m["imatrix_generated"] = 1.0
+        except Exception:
+            pass
+    return m

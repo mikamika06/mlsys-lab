@@ -54,6 +54,6 @@ result = kv_tile_sram_feasibility_map(configs)
 
 ## What the gate checks
 
-The gate computes the expected feasibility map using a NumPy-based SRAM budget oracle and compares the returned boolean list exactly.
+The gate computes the expected feasibility map using a Python-based SRAM budget oracle and compares the returned boolean list exactly.
 
 A single incorrect boundary decision causes the exact match gate to fail. The implementation must correctly apply the KV tile byte model for all tested sequence lengths, dimensions, and SRAM budgets.

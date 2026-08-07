@@ -1,18 +1,19 @@
-import numpy as np
-
-def compute_throughput(concurrency: np.ndarray,
-                       latency: np.ndarray) -> np.ndarray:
+def compute_throughput(concurrency: list[float],
+                       latency: list[float]) -> list[float]:
     """
     Compute throughput from concurrency and mean latency using Little's Law.
     Parameters
     ----------
-    concurrency : np.ndarray
-        Average number of concurrent requests (shape (n,)).
-    latency : np.ndarray
-        Mean service time in seconds (shape (n,)).
+    concurrency : list[float]
+        Average number of concurrent requests.
+    latency : list[float]
+        Mean service time in seconds.
     Returns
     -------
-    np.ndarray
-        Throughput values (float64) with shape (n,).
+    list[float]
+        Throughput values.
     """
-    return np.asarray(concurrency, dtype=np.float64) / np.asarray(latency, dtype=np.float64)
+    result = []
+    for c, l in zip(concurrency, latency):
+        result.append(c / l)
+    return result

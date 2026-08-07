@@ -1,4 +1,2 @@
-import numpy as np
-
-def reduce_scatter_sum(chunks):
+def reduce_scatter_sum(chunks: list[list[list[float]]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

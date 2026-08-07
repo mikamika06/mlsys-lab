@@ -21,16 +21,11 @@ The accepted-or-resampled output distribution should match the target distributi
 Implement `speculative_distribution(draft_probs, target_probs, steps, seed)`:
 
 ```python
-def speculative_distribution(
-    draft_probs: np.ndarray,
-    target_probs: np.ndarray,
-    steps: int,
-    seed: int,
-) -> np.ndarray:
+def speculative_distribution(draft_probs: list[float], target_probs: list[float], steps: int, seed: int) -> list[float]:
     ...
 ```
 
-The inputs are one-dimensional probability arrays of equal length. They contain non-negative values that sum to $1$. The function must simulate speculative decoding for `steps` generated tokens and return the empirical token distribution as a one-dimensional `float64` NumPy array.
+The inputs are one-dimensional probability arrays of equal length. They contain non-negative values that sum to $1$. The function must simulate speculative decoding for `steps` generated tokens and return the empirical token distribution as a one-dimensional `float64` list.
 
 For each step:
 
@@ -38,15 +33,14 @@ For each step:
 2. Accept it with probability $\min(1, p(x)/q(x))$.
 3. Otherwise sample from the normalized residual distribution.
 
-Use the provided seed with NumPy's random generator so that the result is deterministic.
+Use the provided seed with Python's random generator so that the result is deterministic.
 
 ## Example
 
 ```python
-import numpy as np
 
-draft = np.array([0.70, 0.20, 0.10])
-target = np.array([0.40, 0.35, 0.25])
+draft = [0.70, 0.20, 0.10]
+target = [0.40, 0.35, 0.25]
 
 out = speculative_distribution(draft, target, 100000, 7)
 
@@ -56,7 +50,7 @@ out = speculative_distribution(draft, target, 100000, 7)
 
 ## What the gate checks
 
-The gate independently implements the speculative decoding sampler using NumPy as the oracle. It runs several seeded cases and measures
+The gate independently implements the speculative decoding sampler using Python as the oracle. It runs several seeded cases and measures
 
 $$
 \mathrm{KL}(p \Vert \hat{p}) =

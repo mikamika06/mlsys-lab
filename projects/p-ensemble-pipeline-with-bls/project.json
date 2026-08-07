@@ -1,0 +1,104 @@
+{
+  "id": "p-ensemble-pipeline-with-bls",
+  "title": "Пайплайн із кількох моделей",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "ensemble-pipeline-with-bls",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "pipeline/ensemble.py",
+    "pipeline/bls.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "описати пайплайн як ансамбль",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "dag_valid",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "stages_count",
+          "op": "==",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перенести логіку в серверну композицію",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bls_execution_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти економію на переходах",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "bytes_saved_ratio",
+          "op": ">=",
+          "threshold": 0.4
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити ідентичність виходу",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "outputs_identical",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "затримка нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "latency_speedup",
+          "op": ">=",
+          "threshold": 1.8
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка при відмові однієї ланки",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

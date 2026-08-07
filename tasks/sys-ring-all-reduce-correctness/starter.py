@@ -1,4 +1,4 @@
-def ring_all_reduce(buffers):
+def ring_all_reduce(buffers: list[list[float]]) -> list[list[float]]:
     """
     Simulate ring all-reduce (reduce-scatter followed by all-gather)
     across N = len(buffers) ranks arranged in a ring, where rank i's

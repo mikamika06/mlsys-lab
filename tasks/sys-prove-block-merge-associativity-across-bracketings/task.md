@@ -34,9 +34,9 @@ This property is important for parallel reductions because workers may combine b
 
 Implement `check_block_merge_associativity(rows)`.
 
-The input is a 2-D NumPy array. Each row contains logits that are split into several consecutive blocks internally by the function.
+The input is a list of lists of floats. Each row contains logits that are split into several consecutive blocks internally by the function.
 
-The function must return a 1-D boolean NumPy array. For every row, return `True` if all tested merge bracketings of the row's blocks agree within absolute tolerance $10^{-6}$ for both components of the final summary $(m, s)$.
+The function must return a 1-D boolean list. For every row, return `True` if all tested merge bracketings of the row's blocks agree within absolute tolerance $10^{-6}$ for both components of the final summary $(m, s)$.
 
 The function must:
 
@@ -51,12 +51,11 @@ Do not use the original logits after a block summary has been created.
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([
+x = [
     [1.0, 2.0, 3.0, 4.0],
     [1000.0, 999.0, 998.0, 997.0],
-])
+]
 
 result = check_block_merge_associativity(x)
 
@@ -66,6 +65,6 @@ result = check_block_merge_associativity(x)
 
 ## What the gate checks
 
-The gate uses a NumPy oracle implementation of the same mathematical merge operator. It generates several deterministic random inputs and partitions each row into different numbers of blocks.
+The gate uses a Python oracle implementation of the same mathematical merge operator. It generates several deterministic random inputs and partitions each row into different numbers of blocks.
 
 The returned boolean vector must exactly match the oracle result. The oracle evaluates multiple bracketings of each partition and marks a row as valid when all final summaries agree within $10^{-6}$.

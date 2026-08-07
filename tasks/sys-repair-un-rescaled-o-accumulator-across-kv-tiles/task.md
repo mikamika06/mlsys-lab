@@ -39,9 +39,9 @@ whenever a later tile contains larger attention scores.
 Repair `flash_attention_tiled(Q, K, V, tile_size)`.
 
 The function receives:
-- `Q`: a NumPy array of shape $(n,d)$,
-- `K`: a NumPy array of shape $(m,d)$,
-- `V`: a NumPy array of shape $(m,d)$,
+- `Q`: a list of shape $(n,d)$,
+- `K`: a list of shape $(m,d)$,
+- `V`: a list of shape $(m,d)$,
 - `tile_size`: a positive integer.
 
 Return the tiled FlashAttention output with shape $(n,d)$ and dtype `float64`.
@@ -50,18 +50,17 @@ The implementation should keep the running tiled softmax structure. Do not repla
 with a direct dense attention expression.
 
 ```python
-def flash_attention_tiled(Q: np.ndarray, K: np.ndarray, V: np.ndarray, tile_size: int) -> np.ndarray:
+def flash_attention_tiled(Q: list[list[float]], K: list[list[float]], V: list[list[float]], tile_size: int) -> list[list[float]]:
     ...
 ```
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0, 0.0], [0.0, 3.0]])
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0, 0.0], [0.0, 3.0]]
 
 O = flash_attention_tiled(Q, K, V, 1)
 ```
@@ -74,7 +73,7 @@ $$
 
 ## What the gate checks
 
-The gate builds a dense NumPy attention reference and compares the repaired tiled
+The gate builds a dense Python attention reference and compares the repaired tiled
 implementation using
 
 $$

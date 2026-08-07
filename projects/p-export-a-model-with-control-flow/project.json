@@ -1,0 +1,99 @@
+{
+  "id": "p-export-a-model-with-control-flow",
+  "title": "Експортувати модель з умовною логікою",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "export-a-model-with-control-flow",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "exporter/model.py",
+    "exporter/core.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "локалізувати місця зупинки експорту",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "unsupported_nodes_found",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перевести гілку у підтримуваний примітив",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "primitive_translated",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "оголосити динамічні розміри й обмеження",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "dynamic_shapes_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити еквівалентність на всіх гілках",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "branches_equivalent",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "експорт проходить, вихід збігається",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "export_matches",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "обмеження задокументовані як контракт",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "id": "p-mps-silent-cpu-fallback",
+  "title": "Операції тихо падають на CPU",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "mps-silent-cpu-fallback",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mps/engine.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "перелічити операції, що не мають реалізації",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "unimplemented_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати частку часу у фолбеку",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "fallback_share_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "замінити або переписати проблемні операції",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "rewrite_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти виграш відношенням до себе",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "speedup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "нуль фолбеків у гарячому шляху",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "zero_fallback_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "перевірка, що ловить появу нового фолбеку",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

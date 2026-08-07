@@ -25,7 +25,7 @@ toward whichever micro-batches happen to be larger or smaller.
 Implement `accumulate_grad(micro_batches, w)`:
 
 ```python
-def accumulate_grad(micro_batches: list[tuple[np.ndarray, np.ndarray]], w: np.ndarray) -> np.ndarray:
+def accumulate_grad(micro_batches: list[tuple[list[list[float]], list[float]]], w: list[float]) -> list[float]:
     ...
 ```
 
@@ -42,9 +42,9 @@ example count `N = sum(b_i)` exactly once, at the end.
 ## Example
 
 ```python
-X1, y1 = np.array([[1.0]]), np.array([2.0])          # 1 example
-X2, y2 = np.array([[2.0], [3.0]]), np.array([4.0, 5.0])  # 2 examples
-w = np.array([1.0])
+X1, y1 = [[1.0]], [2.0]          # 1 example
+X2, y2 = [[2.0], [3.0]], [4.0, 5.0]  # 2 examples
+w = [1.0]
 accumulate_grad([(X1, y1), (X2, y2)], w)
 # equals the gradient computed on the concatenated batch
 # X = [[1],[2],[3]], y = [2,4,5]  ->  N = 3
@@ -52,11 +52,11 @@ accumulate_grad([(X1, y1), (X2, y2)], w)
 
 ## What the gate checks
 
-The grader builds 8 deterministic random cases (`np.random.default_rng`
+The grader builds 8 deterministic random cases (random number generator, gradient, Python) on concatenation of all micro-batches. `max_abs_err
 seeded) — half with equal micro-batch sizes, half with **unequal**
 sizes specifically to catch normalization bugs — and compares your
 output to the gradient computed directly (real closed-form MSE
-gradient, NumPy) on `np.concatenate` of all micro-batches. `max_abs_err
+`max_abs_err
 <= 1e-6`. Dividing by the number of micro-batches `K` instead of the
 total example count `N`, or averaging each micro-batch's own gradient
 with equal weight regardless of its size, matches only when all
