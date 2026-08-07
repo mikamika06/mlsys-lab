@@ -1,21 +1,21 @@
 {
   "id": "m-quantify-naive-ring-causal-mask-compute-imbalance",
-  "title": "Quantify naive-ring causal mask compute imbalance",
+  "title": "Compute imbalance in naive ring causal attention",
   "kind": "project",
   "tier": "T1",
   "area": "rw3-moe-longctx",
   "track": "ring-attention-core",
   "part": 1,
   "difficulty": 3,
-  "edits": ["ringattn/imbalance.py", "ringattn/simulate.py", "tests/test_regression.py"],
+  "edits": ["ring/imbalance.py", "ring/simulate.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Quantify naive-ring causal-mask compute imbalance", "check": "harness/m1.py",
-     "gates": [{"metric": "imbalance_matched", "op": ">=", "threshold": 3}]},
-    {"n": 2, "title": "Ring attention execution matches single-process reference", "check": "harness/m2.py",
-     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
-    {"n": 3, "title": "Safety net: regression test catches broken invariant", "check": "harness/m3.py",
+    {"n": 1, "title": "Quantify causal mask imbalance", "check": "harness/m1.py",
+     "gates": [{"metric": "imbalance_correct", "op": "==", "threshold": 4}]},
+    {"n": 2, "title": "Simulate naive ring attention", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<", "threshold": 1e-4}]},
+    {"n": 3, "title": "Safeguard: regression tests", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
-               {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}]}
+               {"metric": "catches_missing_causal_mask", "op": "==", "threshold": 1}]}
   ]
 }

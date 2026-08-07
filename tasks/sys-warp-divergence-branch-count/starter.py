@@ -1,4 +1,2 @@
-import numpy as np
-
-def warp_divergence_branch_count(preds: np.ndarray, warp_size: int=32) -> np.ndarray:
+def warp_divergence_branch_count(preds: list[int], warp_size: int=32) -> list[int]:
     raise NotImplementedError('your code here')

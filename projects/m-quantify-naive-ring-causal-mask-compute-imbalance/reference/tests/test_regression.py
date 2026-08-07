@@ -1,22 +1,37 @@
 import sys
 import numpy as np
-
 sys.path.insert(0, ".")
-from ringattn.imbalance import compute_imbalance
-from ringattn.simulate import ring_attention_simulate, single_process_reference
 
+from ring.imbalance import analyze_naive_ring
+from ring.simulate import ring_attention_simulate
 
-def test_imbalance_bounds():
-    res = compute_imbalance(1024, 4)
-    assert res["imbalance_ratio"] > 1.0
-    assert len(res["workloads"]) == 4
+def test_imbalance_total_blocks():
+    res = analyze_naive_ring(4)
+    for row in res:
+        assert row["fully_unmasked"] + row["partially_unmasked"] + row["fully_masked"] == 4
 
-
-def test_ring_matches_reference():
+def test_simulate_causality():
     np.random.seed(42)
-    q = np.random.randn(64, 32)
-    k = np.random.randn(64, 32)
-    v = np.random.randn(64, 32)
-    out_ref = single_process_reference(q, k, v)
-    out_ring = ring_attention_simulate(q, k, v, 4)
-    np.testing.assert_allclose(out_ref, out_ring, atol=1e-5, rtol=1e-5)
+    q = [np.random.randn(4, 8) for _ in range(3)]
+    k = [np.random.randn(4, 8) for _ in range(3)]
+    v = [np.random.randn(4, 8) for _ in range(3)]
+
+    out = ring_attention_simulate(q, k, v)
+
+    Q = np.concatenate(q, axis=0)
+    K = np.concatenate(k, axis=0)
+    V = np.concatenate(v, axis=0)
+
+    scores = Q @ K.T
+    mask = np.triu(np.ones_like(scores, dtype=bool), k=1)
+    scores[mask] = -np.inf
+
+    m = np.max(scores, axis=-1, keepdims=True)
+    exp_scores = np.exp(scores - m)
+    P = exp_scores / np.sum(exp_scores, axis=-1, keepdims=True)
+    O = P @ V
+
+    O_shards = np.split(O, 3, axis=0)
+
+    for i in range(3):
+        np.testing.assert_allclose(out[i], O_shards[i], atol=1e-5)

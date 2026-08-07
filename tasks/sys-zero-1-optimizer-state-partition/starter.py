@@ -1,5 +1,5 @@
-import numpy as np
+import math
 
-def zero_one_adam(params, grads, num_ranks, lr=0.001, beta1=0.9, beta2=0.999, eps=1e-8):
+def zero_one_adam(params: list[float], grads: list[list[float]], num_ranks: int, lr: float=0.001, beta1: float=0.9, beta2: float=0.999, eps: float=1e-08) -> list[float]:
     """ZeRO-1 Adam: partition optimizer states across num_ranks."""
-    raise NotImplementedError("Implement ZeRO-1 partitioned Adam")
+    raise NotImplementedError('your code here')

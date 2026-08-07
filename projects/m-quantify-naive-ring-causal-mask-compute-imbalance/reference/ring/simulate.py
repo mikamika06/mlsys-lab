@@ -1,16 +1,5 @@
 import numpy as np
 
-def analyze_naive_ring(num_devices):
-    out = []
-    for i in range(num_devices):
-        out.append({
-            "rank": i,
-            "fully_unmasked": i,
-            "partially_unmasked": 1,
-            "fully_masked": num_devices - 1 - i
-        })
-    return out
-
 def ring_attention_simulate(q_shards, k_shards, v_shards):
     C = len(q_shards)
     out_shards = []
@@ -49,10 +38,3 @@ def ring_attention_simulate(q_shards, k_shards, v_shards):
         out_shards.append(o_unnorm / l)
 
     return out_shards
-
-def generate_fixtures():
-    np.random.seed(42)
-    q = [np.random.randn(4, 8) for _ in range(3)]
-    k = [np.random.randn(4, 8) for _ in range(3)]
-    v = [np.random.randn(4, 8) for _ in range(3)]
-    return q, k, v

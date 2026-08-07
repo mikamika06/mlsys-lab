@@ -1,35 +1,66 @@
-import numpy as np
-
-def _ref(preds, warp_size):
-    preds = np.asarray(preds)
-    n = len(preds)
-    if n % warp_size != 0:
-        raise ValueError("Length not multiple of warp_size")
-    reshaped = preds.reshape(-1, warp_size)
-    out = np.empty(reshaped.shape[0], dtype=int)
-    for i, block in enumerate(reshaped):
-        out[i] = len(np.unique(block))
-    return out
-
 def grade(sol, fx) -> dict:
-    cases = [
-        (np.array([True]*32), 32),
-        (np.array([False]*64), 32),
-        (np.arange(64)%2, 32),
-        (np.random.randint(0,5,size=96), 32),
-        (np.array([1]*16 + [2]*8 + [3]*8), 32),
+    fn = getattr(sol, "warp_divergence_branch_count", None)
+    if fn is None:
+        return {"exact_match": 0.0}
+
+    def ref_warp_divergence_branch_count(preds, warp_size=32):
+        if not isinstance(preds, list) or any(isinstance(item, list) for item in preds):
+            raise ValueError("preds must be a 1D list")
+        n = len(preds)
+        if n % warp_size != 0:
+            raise ValueError(f"Length {n} is not a multiple of warp_size {warp_size}")
+        num_blocks = n // warp_size
+        out = []
+        for i in range(num_blocks):
+            block = preds[i * warp_size : (i + 1) * warp_size]
+            seen = []
+            for item in block:
+                if item not in seen:
+                    seen.append(item)
+            out.append(len(seen))
+        return out
+
+    test_cases = [
+        ([0, 1] * 16, 32),
+        ([0] * 64 + [1] * 64, 32),
+        ([0, 1, 2, 3] * 8, 16),
+        ([i % 7 for i in range(128)], 32),
+        ([1] * 96, 32),
     ]
-    ok = 1.0
-    for preds, warp_size in cases:
+
+    for preds, warp_size in test_cases:
         try:
-            got = sol.warp_divergence_branch_count(preds, warp_size)
-            ref = _ref(preds, warp_size)
+            expected = ref_warp_divergence_branch_count(preds, warp_size)
+            got = fn(preds, warp_size)
+            if got != expected:
+                return {"exact_match": 0.0}
         except Exception:
             return {"exact_match": 0.0}
-        if not isinstance(got, np.ndarray) or got.shape != ref.shape or not np.issubdtype(got.dtype, np.integer):
-            ok = 0.0
-            break
-        if not np.array_equal(got, ref):
-            ok = 0.0
-            break
-    return {"exact_match": ok}
+
+    # Test default parameter (warp_size=32)
+    try:
+        preds_default = [0, 1] * 16
+        if fn(preds_default) != ref_warp_divergence_branch_count(preds_default):
+            return {"exact_match": 0.0}
+    except Exception:
+        return {"exact_match": 0.0}
+
+    # Verify exception when input length is not a multiple of warp_size
+    try:
+        fn([0] * 30, 32)
+        return {"exact_match": 0.0}
+    except ValueError:
+        pass
+    except Exception:
+        return {"exact_match": 0.0}
+
+    # Verify exception when input is not a 1D list
+    try:
+        fn([[0, 1], [1, 0]], 2)
+        return {"exact_match": 0.0}
+    except ValueError:
+        pass
+    except Exception:
+        return {"exact_match": 0.0}
+
+    return {"exact_match": 1.0}
