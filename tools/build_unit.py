@@ -137,10 +137,13 @@ def ask(model, prompt, conv_key, timeout=600, tries=4, expect_files=False):
     # an answer. Spending a whole turn on it is the expensive way to find out,
     # so when files were expected and none arrived, the request is simply made
     # again.
-    if expect_files and "FILE:" not in content and len(content.strip()) < 400:
-        if tries > 1:
-            time.sleep(3)
-            return ask(model, prompt, conv_key, timeout, tries - 1, expect_files)
+    # Any reply without a single FILE: marker is unusable when files were asked
+    # for, whatever its length: forty bytes of thinking header, or prose about
+    # what it intends to do. Retrying costs one request; letting it through
+    # costs one of the unit's turns.
+    if expect_files and "FILE:" not in content and tries > 1:
+        time.sleep(3)
+        return ask(model, prompt, conv_key, timeout, tries - 1, expect_files)
     # The other shape of the same failure: the files arrive but every newline
     # inside them is gone, so a checker reads `import ref import numpy as np`
     # and `def check(workdir): from x import y` on two lines. No model writes
