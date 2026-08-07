@@ -432,16 +432,16 @@ def build(unit_id: str, turns: int) -> dict:
 
         broken = syntax_error(files)
         if broken:
+            # One file failed to parse, usually because its newlines were lost
+            # on the way back. Everything else in the reply is good work, so it
+            # is kept and only the broken file is asked for again — resending
+            # the contract discards a dozen files to repair one.
             history.append(f"{model}:{broken}")
-            if first:
-                have.clear()
-                restarts += 1
-                conv = f"mlsys-build-{unit_id}-s{restarts}"
-                prompt = contract(spec)
-            else:
-                prompt = ("That reply did not parse as Python (" + broken +
-                          "). Send the affected files again in the same "
-                          "FILE:/fenced-block format.")
+            name = broken.split(":")[0]
+            have.update({k: v for k, v in files.items() if k != name})
+            prompt = ("`" + name + "` did not parse as Python (" + broken +
+                      "). Send that one file again, complete, as `FILE: " + name +
+                      "` followed by a fenced block. Nothing else.")
             continue
 
         if first:

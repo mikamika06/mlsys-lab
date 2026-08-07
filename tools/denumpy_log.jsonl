@@ -880,3 +880,25 @@
 {"id": "rwq-nvfp4-vs-mxfp4-accuracy", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
 {"id": "rwq-one-obq-single-weight-hessian-update", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
 {"id": "rwq-one-half-quadratic-iteration", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "rwq-one-signsgd-rounding-step", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1"]}
+{"id": "rwq-outlier-ratio-before-after-rotation", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "rwq-nf4-beats-symmetric-int4-on-normal-weights", "ok": false, "why": "3-1-pro:no files; 3-1-pro:function renamed nf4_vs_int4_mse -> func; 3-1-pro:parameters changed ['w'] -> ['weights']"}
+{"id": "rwq-mxfp4-e8m0-power-of-two-block-scale", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:no choices: {\"id\": \"a451c8bf-89a9-4b4e-ba64-c6d390a6bedc\", \""]}
+{"id": "rwq-per-64-block-absmax-scales", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "rwq-per-input-channel-importance", "ok": false, "why": "3-1-pro:statement shows numpy-printed output; 3-1-pro:output run: SyntaxError: 'return' outside function; 3-1-pro:statement shows numpy-printed output"}
+{"id": "rwq-per-tensor-and-per-token-fp8-scales", "ok": false, "why": "3-1-pro:check.py: SyntaxError line 17; 3-1-pro:grader still fails: es | raised: AttributeError: 'dict' object has no attribute '__name__'; 3-1-pro:grader still fails: es | raised: AttributeError: 'dict' object has no attribute '__name__'"}
+{"id": "rwq-per-channel-smoothing-scale-vector", "ok": false, "why": "3-1-pro:no files; 3-1-pro:no files; 3-1-pro:grader needs rewriting"}
+{"id": "rwq-snap-to-the-e2m1-fp4-value-grid", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "rwq-q4-0-vs-q8-0-reconstruction-error", "ok": false, "why": "3-1-pro:function renamed q4_q8_reconstruction_mse -> solution_func; 3-1-pro:parameters changed ['W'] -> ['A', 'B', 'dtype']; 3-1-pro:numpy still in task.md"}
+{"id": "rwq-simulate-e4m3-round-to-nearest-even-cast", "ok": false, "why": "3-1-pro:function renamed cast_to_e4m3 -> solution; 3-1-pro:grader needs rewriting; 3-1-pro:grader still fails: does not pass gates | raised: TypeError: 'dict' object is not callable"}
+{"id": "rwq-top-1-salient-channels", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "rwq-percentile-clipping-sweep", "ok": false, "why": "3-1-pro:reference does not define percentile_clip_best; 3-1-pro:no choices: {\"id\": \"fc54f151-4171-4f8c-9c8e-01a85bfb90f6\", \"; 3-1-pro:no files"}
+{"id": "rwq-weight-clipping-search-after-scaling", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "rws-classify-k-for-a-variance-target", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1"]}
+{"id": "rws-classify-the-coupling-map-of-an-attention-block", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "rws-1d-wasserstein-via-cdf-integral", "ok": false, "why": "3-1-pro:grader still fails: e does not pass gates | raised: SyntaxError: 'return' outside function; 3-1-pro:grader still fails: _task_rws_1d_wasserstein_via_cdf_integral_check' has no attribute 'gra; 3-1-pro:grader still fails: _task_rws_1d_wasserstein_via_cdf_integral_check' has no attribute 'gra"}
+{"id": "rws-classify-whether-a-mask-is-a-valid-l1-unstructured-mask-at-s", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1"]}
+{"id": "rwq-straight-through-gradient-of-block-mse-wrt-v", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:statement fence count changed"]}
+{"id": "rws-classify-removable-vs-critical-layers", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 2"]}
+{"id": "rws-combined-logit-intermediate-loss-and-its-gradient", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "rws-count-live-params-sparsity-of-a-mask", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
