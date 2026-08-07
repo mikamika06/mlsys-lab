@@ -1,0 +1,46 @@
+{
+  "id": "m-simulate-chunked-prefill-s-ttft-impact-on-other-in-f",
+  "title": "Chunked Prefill Simulation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "kv-cache-serving-mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "llm_sched/metrics.py",
+    "llm_sched/scheduler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Memory utilization stats",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "mean_rel_err", "op": "<", "threshold": 0.01},
+        {"metric": "max_rel_err", "op": "<", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Chunked prefill simulator",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ttft_rel_err", "op": "<", "threshold": 0.01},
+        {"metric": "stall_rel_err", "op": "<", "threshold": 0.01},
+        {"metric": "total_rel_err", "op": "<", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch monolithic prefill",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_monolithic", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "id": "p-capacity-factor-and-drops",
+  "title": "Фактор ємності й викинуті токени",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "moe-capacity-factor",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "moe_drops/router.py",
+    "moe_drops/model.py",
+    "moe_drops/quality.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "порахувати частку викинутих",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "drop_rate_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "модель залежності від фактора ємності",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "model_fit_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "варіант без викидання і його ціна",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "lossless_cost_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти вплив на якість",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "quality_impact_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "рекомендація з числом",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "recommendation_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка на піковому батчі",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

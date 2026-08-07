@@ -20,9 +20,8 @@ gather, a dropped value, a sign flip), not floating-point noise.
 Implement `dense_vs_compressed24_matmul_error(W, X)`:
 
 ```python
-import numpy as np
 
-def dense_vs_compressed24_matmul_error(W: np.ndarray, X: np.ndarray) -> float:
+def dense_vs_compressed24_matmul_error(W: list[list[float]], X: list[list[float]]) -> float:
     ...
 ```
 
@@ -41,14 +40,13 @@ difference between them:
    at `group_start + position`; then matmul that reconstructed matrix
    against `X` to get `Y_compressed`.
 
-Return `float(np.max(np.abs(Y_dense - Y_compressed)))`.
+Return `float(max(abs(a - b) for row1, row2 in zip(Y_dense, Y_compressed) for a, b in zip(row1, row2)))`.
 
 ## Example
 
 ```python
-import numpy as np
-W = np.array([[4.0, 0.0, 0.0, 3.0]])   # one group of 4, already 2:4 sparse
-X = np.array([[1.0], [1.0], [1.0], [1.0]])
+W = [[4.0, 0.0, 0.0, 3.0]]   # one group of 4, already 2:4 sparse
+X = [[1.0], [1.0], [1.0], [1.0]]
 dense_vs_compressed24_matmul_error(W, X)
 # 0.0 -- both paths compute 4.0*1 + 3.0*1 = 7.0
 ```
@@ -57,7 +55,7 @@ dense_vs_compressed24_matmul_error(W, X)
 
 The grader loads committed fixtures `w24.npy` (`(20, 32)`, already exactly
 2:4 sparse in every group of 4 columns) and `x.npy` (`(32, 5)`), and
-independently computes both paths with a NumPy oracle to get its own
+independently computes both paths with a Python oracle to get its own
 reference discrepancy value.
 
 The gate metric is `max_abs_err`, the absolute difference between your

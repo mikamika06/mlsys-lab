@@ -1,28 +1,8 @@
-import numpy as np
-
-
-def wasserstein1_cdf_integral(u: np.ndarray, v: np.ndarray) -> float:
+def wasserstein1_cdf_integral(u: list[float], v: list[float]) -> float:
     """Exact 1-D Wasserstein-1 distance between two empirical samples of
     possibly unequal length, via the merged-CDF step integral
     W1(u,v) = sum_k |F_U(z_k) - F_V(z_k)| * (z_{k+1} - z_k).
     """
-
-    def _flatten(arr):
-        arr_np = np.asarray(arr, dtype=np.float64)
-        res = []
-
-        def _rec(a):
-            if a.ndim == 0:
-                res.append(float(a.item()))
-            elif a.ndim == 1:
-                for i in range(a.shape[0]):
-                    res.append(float(a[i]))
-            else:
-                for i in range(a.shape[0]):
-                    _rec(a[i])
-
-        _rec(arr_np)
-        return res
 
     def _merge_sort(arr):
         if len(arr) <= 1:
@@ -50,8 +30,8 @@ def wasserstein1_cdf_integral(u: np.ndarray, v: np.ndarray) -> float:
             j += 1
         return res
 
-    u_list = _merge_sort(_flatten(u))
-    v_list = _merge_sort(_flatten(v))
+    u_list = _merge_sort(list(u))
+    v_list = _merge_sort(list(v))
 
     n = len(u_list)
     m = len(v_list)

@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def percentile_clip_best(x: np.ndarray, percentile_grid: np.ndarray, qmax: int):
+def percentile_clip_best(x: list[float], percentile_grid: list[float], qmax: int):
     """
     Return (index, mse): the index into percentile_grid, and the resulting
     reconstruction MSE, of the clip percentile that minimizes MSE when

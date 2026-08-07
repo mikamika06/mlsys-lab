@@ -1,0 +1,7 @@
+# Маршрутизація з урахуванням кешу
+
+Балансувальник шле запити по колу, і префіксний кеш не влучає. Треба маршрутизація, що знає про кеш.
+
+In modern large language model serving architectures, efficient memory utilization and high throughput depend heavily on prefix caching mechanisms that reuse computed key-value pairs across requests sharing common prompt prefixes. However, standard load balancing algorithms such as simple round-robin or random distribution are entirely agnostic to the state of individual replica caches. When incoming requests are scattered randomly across a pool of GPU worker nodes, overlapping prefixes are repeatedly processed from scratch by different instances, destroying the cache locality advantages that continuous batching and prefix caching engines strive to achieve.
+
+This operational inefficiency leads to severely inflated Time to First Token (TTFT), redundant compute cycles, and degraded cluster-wide capacity. The current serving layer suffers from poor cache hit rates under realistic multi-tenant workloads because the router routes requests without inspecting their prompt structures or tracking which replica holds relevant blocks in memory. To solve this problem, you need to design and implement a cache-aware request router that inspects incoming prompt tokens, computes affinity metrics against replica cache states, balances load dynamically without causing severe queue skew or hot-spotting, gracefully handles node failures, and ensures optimal cache reuse across diverse operational traces.

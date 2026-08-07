@@ -1,0 +1,116 @@
+{
+  "id": "p-executorch-pte-memory-plan",
+  "title": "План пам'яті для пристрою",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "executorch-pte-memory-plan",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "pte_plan/__init__.py",
+    "pte_plan/parser.py",
+    "pte_plan/analyzer.py",
+    "pte_plan/planner.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "прочитати структуру артефакту",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "parse_ok",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "tensors_count",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати піковий слід і його джерело",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "peak_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "source_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "розділити програму і дані",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "separation_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перепланувати буфери",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "plan_reduced",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "пік під бюджетом пристрою",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "under_budget",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "бюджет перевіряється у CI",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_bad_plan",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

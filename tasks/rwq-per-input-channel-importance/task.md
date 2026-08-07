@@ -7,39 +7,37 @@ $$
 s_c = \frac{1}{BT}\sum_{b=1}^B\sum_{t=1}^T |X_{b,t,c}|\,,
 $$
 
-which can be computed efficiently with NumPy by averaging over the first two axes.
+which can be computed efficiently with Python by averaging over the first two axes.
 
 ## Task
 
 Implement `per_input_channel_importance`:
 
 ```python
-def per_input_channel_importance(X: np.ndarray) -> np.ndarray:
+def per_input_channel_importance(X: list[list[list[float]]]) -> list[float]:
     ...
 ```
 
-The function receives a 3‑D NumPy array of shape `(B, T, C)` and must return a 1‑D array of length `C`.  
-All computations should use vectorised NumPy only; no explicit Python loops. The result must be of type `float64`.
+The function receives a 3‑D list of shape `(B, T, C)` and must return a 1‑D array of length `C`.  
+All computations should use vectorised Python only; no explicit Python loops. The result must be of type `float64`.
 
 ## Example
 
 ```python
-import numpy as np
-X = np.array([
+X = [
     [[1, -2], [3, 4]],
     [[-5, 6], [7, -8]]
-], dtype=np.float32)   # shape (2, 2, 2)
+]   # shape (2, 2, 2)
 
 s = per_input_channel_importance(X)
-print(s)
-# [ 3.0  4.0]
+print(s)  # [4.0, 5.0]
 ```
 
 The first channel has mean absolute value $(|1|+|3|+|-5|+|7|)/(2\cdot2)=3$, the second channel $ (| -2 | + |4| + |6| + |-8|)/(2\cdot2)=4$.
 
 ## What the gate checks
 
-The grader generates a deterministic tensor and computes the exact NumPy reference:
+The grader generates a deterministic tensor and computes the exact Python reference:
 
 $$
 s_{\text{ref}} = \operatorname{mean}\bigl(|X|\bigr)\quad\text{over axes }(0,1).

@@ -32,12 +32,7 @@ dataset supervision.
 Implement `gkd_mixed_loss`:
 
 ```python
-def gkd_mixed_loss(
-    student_logits: np.ndarray,
-    on_policy_targets: np.ndarray,
-    off_policy_targets: np.ndarray,
-    lam: float,
-) -> float:
+def gkd_mixed_loss(student_logits, on_policy_targets, off_policy_targets, lam):
     ...
 ```
 
@@ -51,11 +46,10 @@ numerically stable log-softmax calculation.
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([[2.0, 0.0], [0.0, 2.0]])
-on_targets = np.array([0, 1])
-off_targets = np.array([1, 0])
+logits = [[2.0, 0.0], [0.0, 2.0]]
+on_targets = [0, 1]
+off_targets = [1, 0]
 
 loss = gkd_mixed_loss(logits, on_targets, off_targets, 0.5)
 ```
@@ -66,6 +60,6 @@ The returned value is the average of the two-token mixed cross-entropy objective
 
 The gate creates several token batches with on-policy targets, off-policy
 targets, a mixing coefficient $\lambda$, and student logits. It recomputes the
-objective with an independent NumPy oracle and compares the returned scalar
+objective with an independent Python oracle and compares the returned scalar
 using relative error. A correct implementation must satisfy
 $\mathrm{rel\_err} \le 10^{-6}$.

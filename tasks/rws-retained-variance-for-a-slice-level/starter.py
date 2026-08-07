@@ -1,6 +1,4 @@
-import numpy as np
-
-def retained_variance_for_slice(eigenvalues, s):
+def retained_variance_for_slice(eigenvalues: list[float], s: float) -> tuple[int, float]:
     """Return (k, retained_ratio) for a given eigenvalue spectrum and target fraction.
 
     Parameters
@@ -18,4 +16,4 @@ def retained_variance_for_slice(eigenvalues, s):
     retained_ratio : float
         The actual cumulative variance fraction after k components.
     """
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')

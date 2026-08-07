@@ -1,0 +1,21 @@
+{
+  "id": "m-run-bitsandbytes-int8-and-match-your-own-reference",
+  "title": "Bitsandbytes int8 mixed-precision decomposition and reference matching",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "bitsandbytes LLM.int8() mixed-precision decomposition",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["bnb_sim/quant.py", "bnb_sim/matmul.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Vector-wise int8 quantization and outlier extraction", "check": "harness/m1.py",
+     "gates": [{"metric": "quant_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Mixed-precision matrix multiplication relative error", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: regression test catches broken quantization", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_quant", "op": "==", "threshold": 1}]}
+  ]
+}

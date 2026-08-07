@@ -1,9 +1,6 @@
-import numpy as np
+import math
 
-RATIOS = tuple(i / 10 for i in range(11))  # 0.0, 0.1, ..., 1.0
-
-
-def awq_ratio_search(W: np.ndarray, X: np.ndarray, n_bits: int = 4):
+def awq_ratio_search(W: list[list[float]], X: list[list[float]], n_bits: int=4) -> tuple[int, float]:
     """
     Search the fixed AWQ ratio grid RATIOS = (0.0, 0.1, ..., 1.0) for the
     ratio that minimizes the calibration-activation-weighted output MSE

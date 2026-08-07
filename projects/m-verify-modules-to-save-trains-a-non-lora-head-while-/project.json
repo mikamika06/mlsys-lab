@@ -1,0 +1,43 @@
+{
+  "id": "m-verify-modules-to-save-trains-a-non-lora-head",
+  "title": "Verify modules_to_save trains a non-LoRA head",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "peft-library-mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "peft_verify/verify.py",
+    "peft_verify/size.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify non-LoRA head receives gradients while base stays frozen",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "verified_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure real adapter-file-size ratio vs the full base model checkpoint",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ratio_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches improper base module unfreezing",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unfrozen_base", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

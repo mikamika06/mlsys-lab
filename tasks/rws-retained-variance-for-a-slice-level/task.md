@@ -30,7 +30,7 @@ projection dimension, and $r_k$ quantifies the information loss.
 Implement `retained_variance_for_slice(eigenvalues, s)`:
 
 ```python
-def retained_variance_for_slice(eigenvalues, s):
+def retained_variance_for_slice(eigenvalues: list[float], s: float) -> tuple[int, float]:
     """Return (k, retained_ratio) for a given eigenvalue spectrum and target fraction.
 
     Parameters
@@ -52,7 +52,7 @@ def retained_variance_for_slice(eigenvalues, s):
 ```
 
 The function must handle edge cases (e.g. all-zero eigenvalues) gracefully.
-Use only standard Python and NumPy.
+Use only standard Python and Python.
 
 ## Example
 
@@ -76,7 +76,7 @@ k, r = retained_variance_for_slice(eigenvalues, 0.9)
 Two gates:
 
 1. **k_accuracy** — the returned component count $k$ must exactly match the
-   NumPy oracle's answer on every test case.  A single mismatch sets this
+   Python oracle's answer on every test case.  A single mismatch sets this
    gate to 0.
 
 2. **ratio_pass** — the retained variance ratio returned by the learner must
@@ -84,5 +84,5 @@ Two gates:
    **every** test case.  If any single case exceeds that tolerance the gate
    is 0.
 
-The oracle recomputes the cumulative-sum threshold from scratch using NumPy,
+The oracle recomputes the cumulative-sum threshold from scratch using Python,
 so neither $k$ nor $r_k$ is hardcoded.

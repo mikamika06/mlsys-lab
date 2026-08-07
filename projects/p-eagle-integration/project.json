@@ -1,0 +1,99 @@
+{
+  "id": "p-eagle-integration",
+  "title": "Інтеграція чернеткової голови",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "rw3-speculative",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "eagle/head.py",
+    "eagle/integration.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "під'єднати голову до цільової моделі",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "head_connected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перевірити коректність вибірки",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "sampling_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти прийняття",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "acceptance_rate_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "порівняти з окремою чернеткою по пам'яті",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "memory_saved",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "сумарне прискорення вище порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "speedup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка при зміні температури",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

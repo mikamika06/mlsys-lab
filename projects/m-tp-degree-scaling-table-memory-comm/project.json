@@ -1,0 +1,40 @@
+{
+  "id": "m-tp-degree-scaling-table-memory-comm",
+  "title": "Tensor parallelism scaling table, row-parallel fix, and sweet spot optimization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Tensor parallelism mechanics (column/row parallel, f/g operators)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "tpscaling/table.py",
+    "tpscaling/rowparallel.py",
+    "tpscaling/sweetspot.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "TP-Degree Scaling Table: Memory & Comm",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "max_rel_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 2,
+      "title": "Fix a Broken Row-Parallel Implementation",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "max_rel_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 3,
+      "title": "Optimal TP-Degree Sweet Spot and Regression Safety",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_sweetspot", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

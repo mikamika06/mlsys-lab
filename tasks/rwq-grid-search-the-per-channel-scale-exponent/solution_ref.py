@@ -1,18 +1,18 @@
 import math
-import numpy as np
 
 RATIOS = tuple(i / 10 for i in range(11))  # 0.0, 0.1, ..., 1.0
 
 
-def _quantize_symmetric_rows(Wm: np.ndarray, n_bits: int) -> np.ndarray:
+def _quantize_symmetric_rows(Wm: list[list[float]], n_bits: int) -> list[list[float]]:
     """Per-output-row symmetric round-to-nearest quantization, dequantized back."""
     qmax = 2 ** (n_bits - 1) - 1
-    rows, cols = Wm.shape
-    row_scale = np.zeros((rows, 1), dtype=np.float64)
+    rows = len(Wm)
+    cols = len(Wm[0])
+    row_scale = [0.0] * rows
     for i in range(rows):
         max_val = 0.0
         for j in range(cols):
-            val = Wm[i, j]
+            val = Wm[i][j]
             if val < 0:
                 val = -val
             if val > max_val:
@@ -20,64 +20,62 @@ def _quantize_symmetric_rows(Wm: np.ndarray, n_bits: int) -> np.ndarray:
         scale = max_val / qmax
         if scale == 0:
             scale = 1.0
-        row_scale[i, 0] = scale
+        row_scale[i] = scale
 
-    q = np.zeros((rows, cols), dtype=np.float64)
+    q = [[0.0] * cols for _ in range(rows)]
     for i in range(rows):
-        scale = row_scale[i, 0]
+        scale = row_scale[i]
         for j in range(cols):
-            val = Wm[i, j] / scale
+            val = Wm[i][j] / scale
             rounded = round(val)
             if rounded < -qmax - 1:
                 rounded = -qmax - 1
             elif rounded > qmax:
                 rounded = qmax
-            q[i, j] = rounded
+            q[i][j] = float(rounded)
 
-    res = np.zeros((rows, cols), dtype=np.float64)
+    res = [[0.0] * cols for _ in range(rows)]
     for i in range(rows):
-        scale = row_scale[i, 0]
+        scale = row_scale[i]
         for j in range(cols):
-            res[i, j] = q[i, j] * scale
+            res[i][j] = q[i][j] * scale
     return res
 
 
-def awq_ratio_search(W: np.ndarray, X: np.ndarray, n_bits: int = 4):
+def awq_ratio_search(W: list[list[float]], X: list[list[float]], n_bits: int = 4) -> tuple[int, float]:
     """
     Search the fixed AWQ ratio grid RATIOS = (0.0, 0.1, ..., 1.0) for the
     ratio that minimizes the calibration-activation-weighted output MSE
     after quantizing the (scaled) weights to `n_bits`.
 
     For each ratio r in RATIOS:
-      s_x = mean(|X|, axis=0)              # per-input-channel activation scale
+      s_x = mean absolute activation per input channel
       s = s_x ** r
-      s = s / sqrt(s.max() * s.min())      # keep dynamic range balanced
-      W_scaled = W * s[None, :]
-      W_hat = dequantize(quantize_per_row(W_scaled, n_bits)) / s[None, :]
-      mse = mean((X @ W.T - X @ W_hat.T) ** 2)
+      s = s / sqrt(max(s) * min(s))        # keep dynamic range balanced
+      W_scaled = W scaled by s per column
+      W_hat = dequantize(quantize_per_row(W_scaled, n_bits)) / s per column
+      mse = mean squared error between original output and quantized output
 
     Returns (best_ratio_index, best_mse): the index into RATIOS achieving
     the smallest mse, and that mse value.
     """
-    W64 = np.asarray(W, dtype=np.float64)
-    X64 = np.asarray(X, dtype=np.float64)
-    
-    n_samp, in_f = X64.shape
-    out_f = W64.shape[0]
+    n_samp = len(X)
+    in_f = len(X[0])
+    out_f = len(W)
 
-    Y = np.zeros((n_samp, out_f), dtype=np.float64)
+    Y = [[0.0] * out_f for _ in range(n_samp)]
     for i in range(n_samp):
         for j in range(out_f):
             acc = 0.0
             for k in range(in_f):
-                acc += X64[i, k] * W64[j, k]
-            Y[i, j] = acc
+                acc += X[i][k] * W[j][k]
+            Y[i][j] = acc
 
-    s_x = np.zeros((in_f,), dtype=np.float64)
+    s_x = [0.0] * in_f
     for k in range(in_f):
         acc = 0.0
         for i in range(n_samp):
-            val = X64[i, k]
+            val = X[i][k]
             if val < 0:
                 val = -val
             acc += val
@@ -89,7 +87,7 @@ def awq_ratio_search(W: np.ndarray, X: np.ndarray, n_bits: int = 4):
 
     mses = []
     for r_idx, r in enumerate(RATIOS):
-        s = np.zeros((in_f,), dtype=np.float64)
+        s = [0.0] * in_f
         for k in range(in_f):
             s[k] = s_x[k] ** r
 
@@ -106,31 +104,31 @@ def awq_ratio_search(W: np.ndarray, X: np.ndarray, n_bits: int = 4):
         for k in range(in_f):
             s[k] = s[k] / denom
 
-        Wsc = np.zeros((out_f, in_f), dtype=np.float64)
+        Wsc = [[0.0] * in_f for _ in range(out_f)]
         for i in range(out_f):
             for k in range(in_f):
-                Wsc[i, k] = W64[i, k] * s[k]
+                Wsc[i][k] = W[i][k] * s[k]
 
         Wq = _quantize_symmetric_rows(Wsc, n_bits)
 
-        What = np.zeros((out_f, in_f), dtype=np.float64)
+        What = [[0.0] * in_f for _ in range(out_f)]
         for i in range(out_f):
             for k in range(in_f):
-                What[i, k] = Wq[i, k] / s[k]
+                What[i][k] = Wq[i][k] / s[k]
 
-        Yhat = np.zeros((n_samp, out_f), dtype=np.float64)
+        Yhat = [[0.0] * out_f for _ in range(n_samp)]
         for i in range(n_samp):
             for j in range(out_f):
                 acc = 0.0
                 for k in range(in_f):
-                    acc += X64[i, k] * What[j, k]
-                Yhat[i, j] = acc
+                    acc += X[i][k] * What[j][k]
+                Yhat[i][j] = acc
 
         mse_acc = 0.0
         count = 0
         for i in range(n_samp):
             for j in range(out_f):
-                diff = Y[i, j] - Yhat[i, j]
+                diff = Y[i][j] - Yhat[i][j]
                 mse_acc += diff * diff
                 count += 1
         mses.append(mse_acc / count)

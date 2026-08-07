@@ -1,0 +1,64 @@
+{
+  "id": "m-write-a-custom-elementwise-gelu-metal-kernel-match-m",
+  "title": "Custom Metal Kernels for GELU and Tiled Matrix Multiplication",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "MLX custom Metal kernels (mx.fast.metal_kernel)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "metalops/gelu.py",
+    "metalops/matmul.py",
+    "metalops/tune.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Custom elementwise GELU kernel matching reference",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Naive tiled matrix multiplication kernel matching reference",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-4
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net and threadgroup size tuning",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_gelu",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

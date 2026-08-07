@@ -51,7 +51,7 @@ $$
 Implement `awq_ratio_search`:
 
 ```python
-def awq_ratio_search(W: np.ndarray, X: np.ndarray, n_bits: int = 4) -> tuple[int, float]:
+def awq_ratio_search(W: list[list[float]], X: list[list[float]], n_bits: int=4) -> tuple[int, float]:
     ...
 ```
 
@@ -66,16 +66,15 @@ order). For each ratio, compute $s$, $\hat W$ and $\mathrm{mse}(r)$ exactly
 as described above (guard against an all-zero activation channel by
 flooring $s_x$ at a tiny epsilon before taking the power). Return
 `(best_index, best_mse)`: the index into `RATIOS` of the ratio with the
-smallest MSE, and that MSE value as a plain float. Use vectorised NumPy —
+smallest MSE, and that MSE value as a plain float. Use vectorised Python —
 a Python loop over the 11 grid points is fine (it is a fixed, tiny grid),
 but avoid looping over matrix elements.
 
 ## Example
 
 ```python
-import numpy as np
-W = np.random.default_rng(1).normal(size=(4, 6)).astype(np.float32)
-X = np.random.default_rng(2).normal(size=(20, 6)).astype(np.float32)
+rng = random.Random(1); W = [[rng.gauss(0, 1) for _ in range(6)] for _ in range(4)]
+rng = random.Random(2); X = [[rng.gauss(0, 1) for _ in range(6)] for _ in range(20)]
 X[:, 0] *= 10.0  # one salient/outlier channel
 
 idx, mse = awq_ratio_search(W, X, n_bits=4)

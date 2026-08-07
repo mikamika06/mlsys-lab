@@ -1,0 +1,108 @@
+{
+  "id": "p-distill-under-a-pareto-target",
+  "title": "Дистиляція під заданий Парето",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "distill-pareto",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "distill/baseline.py",
+    "distill/logits.py",
+    "distill/hidden.py",
+    "distill/tune.py",
+    "distill/pareto.py",
+    "distill/report.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зафіксувати eval і базлайн вчителя",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "teacher_eval_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "базова дистиляція логітів і вимір",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "logit_distill_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "проміжні шари і їхній внесок",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "hidden_distill_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "чутливість до температури й alpha",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "hyperparam_tune_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "ціль Парето досягнута",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "pareto_target_met",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт, що відтворюється на іншій парі",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_fault",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

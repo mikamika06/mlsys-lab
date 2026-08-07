@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def rtn_group_quantize(W: np.ndarray, group_size: int):
+def rtn_group_quantize(W: list[list[float]], group_size: int) -> tuple[list[list[int]], list[list[float]]]:
     """
     Per-row, per-group symmetric int4 round-to-nearest quantization (no
     error feedback), as described in task.md. `d_in` is guaranteed

@@ -1,0 +1,45 @@
+{
+  "id": "m-show-two-constexpr-block-size-values-trigger-two-dis",
+  "title": "Triton constexpr compilation and kernel caching",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "triton.jit compilation, constexpr, and kernel caching",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "triton_cache/cache_demo.py",
+    "triton_cache/kernel.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify constexpr cache differentiation and non-constexpr error trigger",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "distinct_cache_entries", "op": "==", "threshold": 1},
+        {"metric": "compilation_error_caught", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure cold compile latency vs cache hit latency",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "latency_ratio_valid", "op": "==", "threshold": 1},
+        {"metric": "cache_hit_ratio", "op": ">=", "threshold": 10}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test regression suite catches merged constexpr cache entries",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_cache_bypass", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

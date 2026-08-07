@@ -1,0 +1,45 @@
+{
+  "id": "m-rank-8-model-snippets-by-graph-break-count",
+  "title": "Rank model snippets by graph break count",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TorchDynamo bytecode tracing & graph breaks",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "break_analyzer/tracer.py",
+    "break_analyzer/explainer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Rank 8 model snippets by graph_break_count",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "ranking_accuracy", "op": "==", "threshold": 1},
+        {"metric": "break_counts_matched", "op": "==", "threshold": 8}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Predict graph_count for nested-if functions",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "predictions_matched", "op": "==", "threshold": 1},
+        {"metric": "explain_accuracy", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for graph break analysis",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_break_counter", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

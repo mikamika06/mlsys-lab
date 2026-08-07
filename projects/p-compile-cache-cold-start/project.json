@@ -1,0 +1,103 @@
+{
+  "id": "p-compile-cache-cold-start",
+  "title": "Холодний старт через компіляцію",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "compile-cache",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "compcache/tracer.py",
+    "compcache/cache.py",
+    "compcache/transfer.py",
+    "compcache/warmup.py",
+    "compcache/server.py",
+    "compcache/invalidator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти, що саме компілюється",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "trace_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "увімкнути кеш і виміряти вплив",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cache_hit_ratio",
+          "op": ">=",
+          "threshold": 0.9
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перенести кеш між машинами",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "transfer_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "прогрів на старті",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "warmup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "перший запит під порогом",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "first_request_cost",
+          "op": "<=",
+          "threshold": 2
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "кеш інвалідиться коректно",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

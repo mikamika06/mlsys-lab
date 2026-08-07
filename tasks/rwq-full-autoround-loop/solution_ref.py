@@ -1,11 +1,12 @@
 import math
-import numpy as np
 
 
-def autoround_block(W: np.ndarray, bits: int, steps: int, lr: float, seed: int):
-    np.random.seed(seed)
-    W_arr = np.asarray(W, dtype=np.float64)
-    w_flat = [float(x) for x in W_arr.flat]
+def autoround_block(W: list[list[float]], bits: int, steps: int, lr: float, seed: int):
+    # W is a 2D list of floats
+    rows = len(W)
+    cols = len(W[0]) if rows > 0 else 0
+
+    w_flat = [float(x) for row in W for x in row]
     n = len(w_flat)
 
     qmax = (1 << (bits - 1)) - 1
@@ -66,4 +67,10 @@ def autoround_block(W: np.ndarray, bits: int, steps: int, lr: float, seed: int):
         best = current
         best_mse = current_mse
 
-    return np.array(best, dtype=np.float64).reshape(W_arr.shape), float(best_mse)
+    # Reshape 1D flat output back to 2D list
+    best_2d = [
+        [best[i * cols + j] for j in range(cols)]
+        for i in range(rows)
+    ]
+
+    return best_2d, float(best_mse)

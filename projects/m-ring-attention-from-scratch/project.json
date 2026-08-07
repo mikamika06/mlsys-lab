@@ -1,0 +1,40 @@
+{
+  "id": "m-ring-attention-from-scratch",
+  "title": "Ring Attention and Ulysses Context Parallelism",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Context parallelism for long sequences (Ring Attention vs DeepSpeed-Ulysses)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "ringattn/ring.py",
+    "ringattn/ulysses.py",
+    "ringattn/crossover.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Ring attention block-wise computation",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 2,
+      "title": "All-to-All Ulysses reshuffle",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 3,
+      "title": "Comm volume crossover and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

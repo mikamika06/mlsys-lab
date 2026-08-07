@@ -1,0 +1,46 @@
+{
+  "id": "m-token-level-kl-divergence-and-flip-rate",
+  "title": "Token-level KL divergence and flip rate",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Accuracy evaluation and recovery reporting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "eval_metrics/divergence.py",
+    "eval_metrics/perplexity.py",
+    "eval_metrics/recovery.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Token-level KL divergence and flip rate analysis",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "kl_matched", "op": "==", "threshold": 1},
+        {"metric": "flip_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Perplexity and recovery percentage calculation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ppl_matched", "op": "==", "threshold": 1},
+        {"metric": "recovery_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for divergence invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_non_zero_self_kl", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

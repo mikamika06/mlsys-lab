@@ -23,10 +23,7 @@ The *KV cache* stores all $K_i$ and $V_i$ seen so far.  Incremental decoding app
 Implement a function with the following signature:
 
 ```python
-def incremental_decode(embeddings: np.ndarray,
-                       Wq: np.ndarray,
-                       Wk: np.ndarray,
-                       Wv: np.ndarray) -> np.ndarray:
+def incremental_decode(embeddings: list[list[float]], Wq: list[list[float]], Wk: list[list[float]], Wv: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
@@ -38,9 +35,8 @@ The implementation should maintain a cache of keys and values as tokens are proc
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(42)
+rng = random.Random(42)
 embeddings = rng.standard_normal((3, 4))
 Wq = rng.standard_normal((4, 2))
 Wk = rng.standard_normal((4, 2))

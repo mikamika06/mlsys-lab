@@ -1,4 +1,2 @@
-import numpy as np
-
-def per_input_channel_importance(X: np.ndarray) -> np.ndarray:
+def per_input_channel_importance(X: list[list[list[float]]]) -> list[float]:
     raise NotImplementedError('your code here')

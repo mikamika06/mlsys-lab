@@ -1,0 +1,100 @@
+{
+  "id": "p-cache-aware-routing",
+  "title": "Маршрутизація з урахуванням кешу",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "routing/router.py",
+    "routing/affinity.py",
+    "routing/policy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти hit rate при круговій маршрутизації",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "hit_rate_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "побудувати ключ спорідненості",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "affinity_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "політика з урахуванням завантаження",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "policy_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити на записаній трасі",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "trace_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "hit rate вище порога без перекосу навантаження",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "high_hit_rate_no_skew",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка при падінні репліки",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

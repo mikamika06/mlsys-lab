@@ -19,23 +19,22 @@ These two numbers are useful for estimating how much of a model’s capacity and
 Implement `removed_and_remaining`:
 
 ```python
-def removed_and_remaining(param_counts: np.ndarray, k: int) -> tuple[float, float]:
+def removed_and_remaining(param_counts: list[float], k: int) -> tuple[float, float]:
     ...
 ```
 
-- `param_counts` is a 1‑D NumPy array of non‑negative integers giving the number of parameters in each layer, ordered from first to last.
+- `param_counts` is a 1‑D list of non‑negative integers giving the number of parameters in each layer, ordered from first to last.
 - `k` is the number of layers to drop from the **beginning** of the network (0 ≤ k ≤ len(param_counts)).
 - The function must return a tuple `(removed_fraction, remaining_ratio)` where:
   - `removed_fraction = P_removed / P_total`
   - `remaining_ratio   = (P_total - P_removed) / P_total`
 
-The implementation must use only NumPy operations and no explicit Python loops.
+The implementation must use only Python operations and no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
-pc = np.array([100, 200, 300, 400])
+pc = [100, 200, 300, 400]
 k = 2
 removed_fraction, remaining_ratio = removed_and_remaining(pc, k)
 print(removed_fraction)   # 0.3
@@ -44,5 +43,5 @@ print(remaining_ratio)    # 0.7
 
 ## What the gate checks
 
-The grader computes the reference values with NumPy and compares them to your output using the mean‑squared error (MSE).  
+The grader computes the reference values with Python and compares them to your output using the mean‑squared error (MSE).  
 Your solution must achieve an MSE ≤ $10^{-12}$ on all test cases; otherwise it fails.

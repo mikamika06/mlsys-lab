@@ -1,28 +1,22 @@
 import math
-import numpy as np
 
 
-def percentile_clip_best(x: np.ndarray, percentile_grid: np.ndarray, qmax: int):
+def percentile_clip_best(x: list[float], percentile_grid: list[float], qmax: int):
     """
     Sweep candidate clip percentiles; for each, clip x to the percentile of
     |x|, symmetric-quantize at that range with qmax codes, dequantize, and
     score by MSE against the (unclipped) original x. Return the
     (index, mse) of the grid entry with the smallest MSE.
     """
-    x = np.asarray(x, dtype=np.float64)
-    grid = np.asarray(percentile_grid, dtype=np.float64)
+    n = len(x)
+    grid_len = len(percentile_grid)
 
-    n = x.shape[0]
-    grid_len = grid.shape[0]
-
-    abs_x = np.empty(n, dtype=np.float64)
+    abs_x = [0.0] * n
     for i in range(n):
         val = x[i]
         abs_x[i] = -val if val < 0.0 else val
 
-    sorted_abs = np.empty(n, dtype=np.float64)
-    for i in range(n):
-        sorted_abs[i] = abs_x[i]
+    sorted_abs = list(abs_x)
     for i in range(1, n):
         key = sorted_abs[i]
         j = i - 1
@@ -35,7 +29,7 @@ def percentile_clip_best(x: np.ndarray, percentile_grid: np.ndarray, qmax: int):
     best_mse = float("inf")
 
     for i in range(grid_len):
-        p = grid[i]
+        p = percentile_grid[i]
         k = (p / 100.0) * (n - 1)
         f = math.floor(k)
         c = math.ceil(k)

@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def compare_k_quant_granularity(K: np.ndarray, bits: int):
+def compare_k_quant_granularity(K: list[list[float]], bits: int):
     """
     Compare per-channel vs per-token symmetric quantization of a key cache
     K (n_tokens, d_channels).

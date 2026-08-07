@@ -17,15 +17,11 @@ We will compute the **mean** KL over a batch of logits.
 Implement `compare_penalty_temperature(logits, penalty_fn, temperature)`:
 
 ```python
-def compare_penalty_temperature(
-    logits: np.ndarray,
-    penalty_fn: Callable[[np.ndarray], np.ndarray],
-    temperature: float
-) -> float:
+def compare_penalty_temperature(logits: list[list[float]], penalty_fn: Callable[[list[list[float]]], list[list[float]]], temperature: float) -> float:
     ...
 ```
 
-* `logits` is a 2‑D NumPy array of shape `(batch, vocab)` containing raw model logits.
+* `logits` is a 2‑D list of shape `(batch, vocab)` containing raw model logits.
 * `penalty_fn` takes an array of logits and returns the penalised logits (e.g. subtracting a constant or masking certain tokens).
 * `temperature` is a positive float.
 
@@ -36,17 +32,16 @@ The function must:
    * **After‑temp**: divide logits by `temperature` first, then apply `penalty_fn`, finally softmax.
 2. Return the mean Kullback–Leibler divergence of the two distributions over the batch.
 
-The implementation must use only NumPy (no explicit Python loops) and produce a `float64` result.
+The implementation must use only Python (no explicit Python loops) and produce a `float64` result.
 
 ## Example
 
 ```python
-import numpy as np
 
 def bias_penalty(x):
     return x - 0.5   # simple constant bias
 
-logits = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float64)
+logits = [[1, 2, 3], [4, 5, 6]]
 temp = 1.5
 
 kl = compare_penalty_temperature(logits, bias_penalty, temp)

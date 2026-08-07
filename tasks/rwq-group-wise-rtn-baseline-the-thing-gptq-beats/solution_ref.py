@@ -1,7 +1,6 @@
-import numpy as np
-
-
-def rtn_group_quantize(W: np.ndarray, group_size: int):
+def rtn_group_quantize(
+    W: list[list[float]], group_size: int
+) -> tuple[list[list[int]], list[list[float]]]:
     """
     Per-row, per-group symmetric int4 round-to-nearest quantization, no
     error feedback. `d_in` is guaranteed divisible by `group_size`.
@@ -13,15 +12,17 @@ def rtn_group_quantize(W: np.ndarray, group_size: int):
     Dequantized reconstruction is code * scale.
 
     Returns (codes, Wq):
-      codes -- integer array, same shape as W, values in [-7, 7].
-      Wq    -- float array, same shape as W, the dequantized reconstruction.
+      codes -- integer list of lists, same shape as W, values in [-7, 7].
+      Wq    -- float list of lists, same shape as W, the dequantized reconstruction.
     """
-    W = np.asarray(W, dtype=np.float64)
-    d_out, d_in = W.shape
+    d_out = len(W)
+    if d_out == 0:
+        return [], []
+    d_in = len(W[0])
     n_groups = d_in // group_size
 
-    codes = np.empty((d_out, d_in), dtype=np.int64)
-    Wq = np.empty((d_out, d_in), dtype=np.float64)
+    codes = [[0] * d_in for _ in range(d_out)]
+    Wq = [[0.0] * d_in for _ in range(d_out)]
 
     for g in range(n_groups):
         col_start = g * group_size
@@ -29,7 +30,7 @@ def rtn_group_quantize(W: np.ndarray, group_size: int):
         for r in range(d_out):
             amax = 0.0
             for c in range(col_start, col_end):
-                val = W[r, c]
+                val = W[r][c]
                 abs_val = val if val >= 0.0 else -val
                 if abs_val > amax:
                     amax = abs_val
@@ -40,7 +41,7 @@ def rtn_group_quantize(W: np.ndarray, group_size: int):
                 scale = 1.0
 
             for c in range(col_start, col_end):
-                val = W[r, c]
+                val = W[r][c]
                 scaled = val / scale
                 rounded = round(scaled)
 
@@ -51,7 +52,7 @@ def rtn_group_quantize(W: np.ndarray, group_size: int):
                 else:
                     clipped = int(rounded)
 
-                codes[r, c] = clipped
-                Wq[r, c] = float(clipped) * scale
+                codes[r][c] = clipped
+                Wq[r][c] = float(clipped) * scale
 
     return codes, Wq

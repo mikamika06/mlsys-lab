@@ -54,7 +54,7 @@ $$
 Implement:
 
 ```python
-def hqq_optimize(W, scale, zero0, qmin, qmax, lp_norm, beta0, kappa, iters):
+def hqq_optimize(W: list[float], scale: float, zero0: float, qmin: int, qmax: int, lp_norm: float, beta0: float, kappa: float, iters: int) -> tuple[list[int], float, list[float]]:
     ...
 ```
 
@@ -78,8 +78,7 @@ Return `(W_q, z, W_dequant)`:
 ## Example
 
 ```python
-import numpy as np
-W = np.array([0.1, -0.2, 0.05, 4.0, -0.1])  # 4.0 is an outlier
+W = [0.1, -0.2, 0.05, 4.0, -0.1]  # 4.0 is an outlier
 scale = 2.0
 zero0 = 0.0
 Wq, z, Wdq = hqq_optimize(W, scale, zero0, qmin=0, qmax=15,
@@ -92,7 +91,7 @@ Wq, z, Wdq = hqq_optimize(W, scale, zero0, qmin=0, qmax=15,
 
 * **exact_match** — your final `W_q` (integer codes) must equal, element
   for element, an oracle that runs the identical loop above (same
-  `scale`, `zero0`, shrink operator, and re-quantization step) in NumPy,
+  `scale`, `zero0`, shrink operator, and re-quantization step) in Python,
   on several random weight vectors (with an injected outlier) and
   hyperparameter settings, seeded for determinism.
 * **max_abs_err** — the maximum absolute difference between your

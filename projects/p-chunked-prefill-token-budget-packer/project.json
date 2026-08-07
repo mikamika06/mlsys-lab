@@ -1,0 +1,123 @@
+{
+  "id": "p-chunked-prefill-token-budget-packer",
+  "title": "Пакувальник токенного бюджету",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "rw2-vllm-serving",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "packer/packer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "розбиття prefill на чанки",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "split_chunks",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "finished",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "пакування під токенний бюджет кроку",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "packed_first",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "budget_respected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "гарантія прогресу для decode",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "decode_progress",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "prefill_progress",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "ITL нижче порога на трасі",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "has_decodes",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "itl_below_threshold",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "prefill не подовжується більш ніж на X",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "all_finished",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "fifo_packing",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "roofline: показати, у що впираємось",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

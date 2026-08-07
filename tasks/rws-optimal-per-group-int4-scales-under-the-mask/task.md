@@ -27,9 +27,7 @@ currently is).
 Implement `optimal_group_scales_under_mask`:
 
 ```python
-def optimal_group_scales_under_mask(W: np.ndarray, M: np.ndarray, X: np.ndarray,
-                                     group_size: int, bits: int = 4,
-                                     alphas: np.ndarray = None):
+def optimal_group_scales_under_mask(W: list[list[float]], M: list[list[float]], X: list[list[float]], group_size: int, bits: int=4, alphas: list[float]=None):
     ...
 ```
 
@@ -39,7 +37,7 @@ def optimal_group_scales_under_mask(W: np.ndarray, M: np.ndarray, X: np.ndarray,
 - `group_size`: contiguous groups along axis 1 (`I % group_size == 0`).
 - `bits`: quantizer bit width, $q_{\max}=2^{\text{bits}-1}-1$.
 - `alphas`: 1-D array of scale multipliers to grid-search; if `None`,
-  use `np.linspace(0.6, 1.4, 9)` (note $\alpha=1$ — the naive scale —
+use `[0.6 + i * 0.1 for i in range(9)]` (note $\alpha=1$ — the naive scale —
   is always one of the candidates).
 
 Let `Wm = W * M`.
@@ -67,10 +65,9 @@ Return `(group_scales, mse)`:
 ## Example
 
 ```python
-import numpy as np
-rng = np.random.default_rng(0)
+import random; rng = random.Random(0)
 W = rng.standard_normal((4, 16))
-M = np.ones_like(W)
+M = [[1.0 for _ in range(len(W[0]))] for _ in range(len(W))]
 X = rng.standard_normal((10, 16))
 scales, mse = optimal_group_scales_under_mask(W, M, X, group_size=8)
 # scales.shape == (4, 2); mse is the achieved X-weighted output MSE,
@@ -80,7 +77,7 @@ scales, mse = optimal_group_scales_under_mask(W, M, X, group_size=8)
 ## What the gate checks
 
 The grader builds several seeded `(W, M, X, group_size)` cases and runs
-the exact algorithm above independently in NumPy (same init, same
+the exact algorithm above independently in Python (same init, same
 one-pass greedy sweep, same `alphas` grid) to get a reference `mse`, and
 separately computes the **naive** baseline `mse` (every group at
 `alpha=1`, no search) for comparison.

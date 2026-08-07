@@ -1,0 +1,105 @@
+{
+  "id": "p-loss-spike-at-scale",
+  "title": "Loss spikes at large scale",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw3-distributed",
+  "track": "loss-spike-at-scale",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "loss_spike/model.py",
+    "loss_spike/reducer.py",
+    "loss_spike/detector.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "відтворити на записаних логах",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "replayed_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "відокремити дані від числових причин",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "isolated_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірити детермінізм редукцій",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "deterministic_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "знайти операцію, де накопичується похибка",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "op_found",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "стрибки зникають, збіжність збережена",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "converged_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "детектор, що ловить стрибок рано",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_fault",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

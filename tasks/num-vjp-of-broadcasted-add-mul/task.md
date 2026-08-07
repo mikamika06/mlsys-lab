@@ -2,7 +2,7 @@
 
 When `a` and `b` have different but broadcastable shapes, `out = a + b`
 (or `a * b`) implicitly **stretches** each of them up to
-`np.broadcast_shapes(a.shape, b.shape)`: dimensions of size 1 are
+`broadcast_shapes((len(a),), (len(b),))`: dimensions of size 1 are
 repeated, and missing leading dimensions are inserted. Every one of
 those repeats is really a *sum* in the forward pass ($x$ used $k$ times
 contributes $k\cdot x$), so backward through a broadcast is a *sum*
@@ -35,16 +35,16 @@ where $\odot$ is the (broadcasting) elementwise product.
 Implement the two VJPs:
 
 ```python
-def add_vjp(a: np.ndarray, b: np.ndarray, grad_out: np.ndarray):
+def add_vjp(a: list, b: list, grad_out: list):
     ...
 
-def mul_vjp(a: np.ndarray, b: np.ndarray, grad_out: np.ndarray):
+def mul_vjp(a: list[float], b: list[float], grad_out: list[float]):
     ...
 ```
 
-* `a`, `b` — NumPy arrays with broadcastable (possibly different) shapes.
+* `a`, `b` — list with broadcastable (possibly different) shapes.
 * `grad_out` — the upstream gradient, with shape
-  `np.broadcast_shapes(a.shape, b.shape)`.
+`broadcast_shapes((len(a),), (len(b),)).`
 * Both return `(grad_a, grad_b)`, where `grad_a.shape == a.shape` and
   `grad_b.shape == b.shape` exactly — do not just reshape or slice
   `grad_out`; the broadcast axes must actually be summed.
@@ -52,10 +52,9 @@ def mul_vjp(a: np.ndarray, b: np.ndarray, grad_out: np.ndarray):
 ## Example
 
 ```python
-import numpy as np
-a = np.zeros((3, 1))          # shape (3, 1)
-b = np.zeros((1, 4))          # shape (1, 4)
-grad_out = np.ones((3, 4))    # upstream grad, shape (3, 4)
+a = [[0.0] * 1 for _ in range(3)]          # shape (3, 1)
+b = [[0.0] * 4 for _ in range(1)]          # shape (1, 4)
+grad_out = [[1.0] * 4 for _ in range(3)]    # upstream grad, shape (3, 4)
 
 ga, gb = add_vjp(a, b, grad_out)
 print(ga.shape, gb.shape)     # (3, 1) (1, 4)

@@ -36,7 +36,7 @@ shorter sample with zeros).
 Implement `wasserstein1_cdf_integral`:
 
 ```python
-def wasserstein1_cdf_integral(u: np.ndarray, v: np.ndarray) -> float:
+def wasserstein1_cdf_integral(u: list[float], v: list[float]) -> float:
     ...
 ```
 
@@ -51,9 +51,8 @@ paired sequence).
 ## Example
 
 ```python
-import numpy as np
-u = np.array([0.0, 1.0, 2.0])          # n = 3
-v = np.array([0.0, 3.0])               # m = 2 (unequal length)
+u = [0.0, 1.0, 2.0]          # n = 3
+v = [0.0, 3.0]               # m = 2 (unequal length)
 w1 = wasserstein1_cdf_integral(u, v)
 # merged sorted values: 0, 0, 1, 2, 3 (duplicate 0 -> zero-width gap, skip)
 # on [0,1): F_u=1/3, F_v=1/2 -> |diff|=1/6, width=1 -> 1/6

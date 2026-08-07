@@ -39,7 +39,7 @@ Dequantization: $\hat W_{r,j} = \text{code}_{r,j}\cdot s_{r,g}$.
 Implement `rtn_group_quantize`:
 
 ```python
-def rtn_group_quantize(W: np.ndarray, group_size: int) -> tuple[np.ndarray, np.ndarray]:
+def rtn_group_quantize(W: list[list[float]], group_size: int) -> tuple[list[list[int]], list[list[float]]]:
     ...
 ```
 
@@ -56,8 +56,7 @@ Return `(codes, Wq)`:
 ## Example
 
 ```python
-import numpy as np
-W = np.array([[0.1, -6.0, 0.2, 5.9]])  # d_in=4, two groups of size 2
+W = [[0.1, -6.0, 0.2, 5.9]]  # d_in=4, two groups of size 2
 codes, Wq = rtn_group_quantize(W, group_size=2)
 # group 0 = [0.1, -6.0]: amax=6.0, scale=6.0/7
 # group 1 = [0.2, 5.9]:  amax=5.9, scale=5.9/7
@@ -66,7 +65,7 @@ codes, Wq = rtn_group_quantize(W, group_size=2)
 ## What the gate checks
 
 * **codes_exact_match** — your integer `codes` array must exactly equal a
-  NumPy oracle running the per-row, per-group absmax formula above on the
+  Python oracle running the per-row, per-group absmax formula above on the
   fixed weight fixture (`gptq_w.npy`, group size 128).
 * **recon_max_abs_err** — the max-abs difference between your `Wq` and the
   oracle's dequantized reconstruction on the same fixture.

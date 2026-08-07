@@ -24,7 +24,7 @@ $$
 s(p) = \tau(p) / q_{max}, \qquad
 \widehat{x}_i(p) = \mathrm{clip}\!\big(\mathrm{round}(x^{clip}_i / s(p)),\ -q_{max},\ q_{max}\big)\cdot s(p)
 $$
-(NumPy percentile convention: linear interpolation between the two
+(Python percentile convention: linear interpolation between the two
 nearest ranks.) The reconstruction error is measured against the
 **original, unclipped** $x$:
 $$
@@ -38,7 +38,7 @@ calibrator picks $\arg\min_k E(p_k)$.
 Implement:
 
 ```python
-def percentile_clip_best(x: np.ndarray, percentile_grid: np.ndarray, qmax: int) -> tuple[int, float]:
+def percentile_clip_best(x: list[float], percentile_grid: list[float], qmax: int):
     ...
 ```
 
@@ -54,11 +54,10 @@ minimizing $E(p)$ above, and that minimum MSE value itself.
 ## Example
 
 ```python
-import numpy as np
-rng = np.random.default_rng(1)
+rng = random.Random(1)
 x = rng.normal(size=1000)
 x[[3, 17, 42]] = [5.0, -5.0, 5.0]   # a few rare outliers
-idx, mse = percentile_clip_best(x, np.array([90.0, 95.0, 99.0, 99.5, 99.9, 100.0]), qmax=7)
+idx, mse = percentile_clip_best(x, [90.0, 95.0, 99.0, 99.5, 99.9, 100.0], qmax=7)
 # clipping at 100th percentile (the true max) keeps the outliers exact but
 # wastes most of the 15-level grid's resolution on them; an interior
 # percentile that lets the outliers saturate gives lower overall MSE.
@@ -67,7 +66,7 @@ idx, mse = percentile_clip_best(x, np.array([90.0, 95.0, 99.0, 99.5, 99.9, 100.0
 ## What the gate checks
 
 * **argmin_index** — your returned index must exactly equal the oracle's
-  $\arg\min_k E(p_k)$ (computed with NumPy's percentile + the exact
+  $\arg\min_k E(p_k)$ (computed with Python's percentile + the exact
   clip/quantize/dequantize formulas above) on several random cases, each
   built so the true optimum is an **interior** grid point — neither the
   loosest nor the tightest percentile — so a solution that just returns

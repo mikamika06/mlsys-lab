@@ -1,98 +1,150 @@
-import numpy as np
-
+import math
 
 def _e4m3_value_grid():
-    """Return sorted array of all finite E4M3 representable values."""
     vals = set()
     for bits in range(256):
         sign = -1.0 if (bits >> 7) else 1.0
         exp = (bits >> 3) & 0xF
         mant = bits & 0x7
-        # NaN pattern: exp=15, mant=7
         if exp == 15 and mant == 7:
-            continue  # skip NaN
+            continue
         if exp == 0:
-            # subnormal
             val = sign * (2 ** -6) * (mant / 8.0)
         else:
-            # normal
             val = sign * (2 ** (exp - 7)) * (1.0 + mant / 8.0)
         vals.add(val)
-    return np.array(sorted(vals), dtype=np.float64)
 
+    vals_list = list(vals)
+    n = len(vals_list)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if vals_list[j] > vals_list[j + 1]:
+                temp = vals_list[j]
+                vals_list[j] = vals_list[j + 1]
+                vals_list[j + 1] = temp
 
-def _ref_cast_e4m3(x):
+    return vals_list
+
+def _cast_single(v):
+    if math.isnan(v):
+        return float('nan')
+
+    if v < -448.0:
+        v_clamped = -448.0
+    elif v > 448.0:
+        v_clamped = 448.0
+    else:
+        v_clamped = float(v)
+
     grid = _e4m3_value_grid()
-    x64 = np.asarray(x, dtype=np.float64)
-    out = np.empty_like(x64)
-    flat = x64.ravel()
-    res = np.empty(flat.shape, dtype=np.float64)
-    for i, v in enumerate(flat):
-        if np.isnan(v):
-            res[i] = np.nan
-            continue
-        # clamp to +-448
-        v_clamped = np.clip(v, -448.0, 448.0)
-        diffs = np.abs(grid - v_clamped)
-        min_d = diffs.min()
-        candidates = np.where(diffs == min_d)[0]
-        if len(candidates) == 1:
-            res[i] = grid[candidates[0]]
-        else:
-            # tie-break: pick the one with even mantissa (or smaller magnitude as fallback)
-            # For round-to-nearest-even in a sorted grid: pick even-mantissa candidate
-            # Reconstruct bits for candidates
-            chosen = None
-            for idx in candidates:
-                val = grid[idx]
-                # find bits
-                for bits in range(256):
-                    sign_b = -1.0 if (bits >> 7) else 1.0
-                    exp_b = (bits >> 3) & 0xF
-                    mant_b = bits & 0x7
-                    if exp_b == 15 and mant_b == 7:
-                        continue
-                    if exp_b == 0:
-                        vb = sign_b * (2 ** -6) * (mant_b / 8.0)
-                    else:
-                        vb = sign_b * (2 ** (exp_b - 7)) * (1.0 + mant_b / 8.0)
-                    if abs(vb - val) < 1e-15:
-                        if mant_b % 2 == 0:
-                            chosen = val
-                            break
-                if chosen is not None:
-                    break
-            if chosen is None:
-                chosen = grid[candidates[0]]
-            res[i] = chosen
-    return res.reshape(x64.shape).astype(np.float32)
+    grid_len = len(grid)
 
+    diffs = []
+    for j in range(grid_len):
+        diff = grid[j] - v_clamped
+        if diff < 0.0:
+            diff = -diff
+        diffs.append(diff)
+
+    min_d = diffs[0]
+    for j in range(1, grid_len):
+        if diffs[j] < min_d:
+            min_d = diffs[j]
+
+    candidate_indices = []
+    for j in range(grid_len):
+        d = diffs[j] - min_d
+        if d < 0:
+            d = -d
+        if d < 1e-14:
+            candidate_indices.append(j)
+
+    if len(candidate_indices) == 1:
+        return grid[candidate_indices[0]]
+    else:
+        chosen = None
+        for idx in candidate_indices:
+            val = grid[idx]
+            for bits in range(256):
+                sign_b = -1.0 if (bits >> 7) else 1.0
+                exp_b = (bits >> 3) & 0xF
+                mant_b = bits & 0x7
+                if exp_b == 15 and mant_b == 7:
+                    continue
+                if exp_b == 0:
+                    vb = sign_b * (2 ** -6) * (mant_b / 8.0)
+                else:
+                    vb = sign_b * (2 ** (exp_b - 7)) * (1.0 + mant_b / 8.0)
+
+                diff_v = vb - val
+                if diff_v < 0:
+                    diff_v = -diff_v
+                if diff_v < 1e-15 and mant_b % 2 == 0:
+                    chosen = val
+                    break
+            if chosen is not None:
+                break
+        if chosen is not None:
+            return chosen
+        else:
+            return grid[candidate_indices[0]]
+
+def _process_structure(x):
+    if isinstance(x, (int, float)):
+        return _cast_single(float(x))
+    elif isinstance(x, list):
+        return [_process_structure(item) for item in x]
+    else:
+        return [_process_structure(item) for item in x]
 
 def grade(sol, fx) -> dict:
-    rng = np.random.default_rng(42)
-    # Build test inputs spanning the full range
-    test_vals = []
-    # subnormals
-    test_vals.extend([0.0, -0.0, 2**-9, -2**-9, 2**-7, 3*2**-10])
-    # normal range
-    test_vals.extend([1.0, -1.0, 2.0, 0.5, 448.0, -448.0])
-    # overflow
-    test_vals.extend([500.0, -600.0, 1e6])
-    # random
-    test_vals.extend(rng.uniform(-500, 500, 200).tolist())
-    test_vals.extend(rng.uniform(-1, 1, 100).tolist())
-    x = np.array(test_vals, dtype=np.float32)
+    test_inputs = [
+        0.0,
+        1.0,
+        450.0,
+        -0.002,
+        float('nan'),
+        [0.0, 1.0, 450.0, -0.002, float('nan')],
+        [1.5, 2.5, 3.5, 4.5],
+        [-450.0, 448.0, 0.0]
+    ]
 
-    ref = _ref_cast_e4m3(x)
-    try:
-        got = np.asarray(sol.cast_to_e4m3(x.copy()), dtype=np.float32)
-    except Exception:
-        return {"exact_match": 0.0}
+    total = 0
+    matches = 0
 
-    if got.shape != ref.shape:
-        return {"exact_match": 0.0}
+    for x in test_inputs:
+        expected = _process_structure(x)
+        try:
+            actual = sol.cast_to_e4m3(x)
+        except Exception:
+            actual = None
 
-    # Compare: NaN vs NaN should be equal, others must be exact
-    nan_mask = np.isnan(ref)
-    exact = np.all(ref[~nan_mask] == got[~nan_mask]) and np.all(np.isnan(got[nan_mask]))
-    return {"exact_match": 1.0 if exact else 0.0}
+        def compare_val(e, a):
+            nonlocal total, matches
+            total += 1
+            if math.isnan(e):
+                if isinstance(a, float) and math.isnan(a):
+                    matches += 1
+            else:
+                if isinstance(a, (int, float)) and not math.isnan(a) and abs(e - a) < 1e-12:
+                    matches += 1
+
+        def compare_struct(e, a):
+            if isinstance(e, list):
+                if not isinstance(a, list) or len(e) != len(a):
+                    nonlocal total, matches
+                    total += 1
+                    return
+                for sub_e, sub_a in zip(e, a):
+                    compare_struct(sub_e, sub_a)
+            else:
+                compare_val(e, a)
+
+        compare_struct(expected, actual)
+
+    exact_match = 1.0 if (total > 0 and matches == total) else 0.0
+
+    return {
+        "exact_match": exact_match,
+        "gate": 1.0 if exact_match == 1.0 else 0.0
+    }

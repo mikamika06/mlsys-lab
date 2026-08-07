@@ -33,7 +33,7 @@ channels in that row too.
 Implement `compare_k_quant_granularity(K, bits)`:
 
 ```python
-def compare_k_quant_granularity(K: np.ndarray, bits: int):
+def compare_k_quant_granularity(K: list[list[float]], bits: int):
     ...
 ```
 
@@ -64,7 +64,7 @@ The grader builds several seeded `K` matrices: most channels are small
 Gaussian noise, and a handful of channels (different count/scale per case)
 have a much larger standard deviation, at varying `(n_tokens, d_channels,
 bits)`. For each case it computes the reference `(mse_per_channel,
-mse_per_token)` with a NumPy oracle implementing the exact symmetric
+mse_per_token)` with a Python oracle implementing the exact symmetric
 quantize/dequantize formula above, once grouped by column and once by row.
 
 The gate metric is `rel_err`: the relative L2 error between your returned

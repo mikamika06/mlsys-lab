@@ -19,13 +19,13 @@ zero (except subnormals).
 Implement `cast_to_e4m3(x)`:
 
 ```python
-def cast_to_e4m3(x):
+def cast_to_e4m3(x: list[float]) -> list[float]:
     ...
 ```
 
-- `x`: float32 NumPy array (any shape).
+- `x`: float32 list (any shape).
 
-Return a float32 NumPy array of the same shape containing the nearest E4M3
+Return a float32 list of the same shape containing the nearest E4M3
 representable value for each element. Use round-to-nearest-even tiebreaking and
 clamp finite inputs to $\pm 448$.
 
@@ -36,8 +36,7 @@ proper tie-breaking.
 ## Example
 
 ```python
-import numpy as np
-x = np.array([0.0, 1.0, 450.0, -0.002, float('nan')], dtype=np.float32)
+x = [0.0, 1.0, 450.0, -0.002, float('nan')]
 y = cast_to_e4m3(x)
 # 0.0   -> 0.0
 # 1.0   -> 1.0   (exactly representable)

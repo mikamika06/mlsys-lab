@@ -55,7 +55,7 @@ Keeping the best candidate ensures the optimized result is never worse than the 
 Implement `autoround_block(W, bits, steps, lr, seed)`:
 
 ```python
-def autoround_block(W: np.ndarray, bits: int, steps: int, lr: float, seed: int):
+def autoround_block(W: list[list[float]], bits: int, steps: int, lr: float, seed: int):
     ...
 ```
 
@@ -67,14 +67,13 @@ Requirements:
 - Use the deterministic SignSGD AutoRound loop described above.
 - Track the lowest MSE candidate produced by the loop, including the initial RTN candidate.
 - Return the best quantized reconstruction and its MSE.
-- Use NumPy operations only.
+- Use Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[0.2, -0.8], [1.1, -1.5]], dtype=np.float64)
+W = [[0.2, -0.8], [1.1, -1.5]]
 
 W_q, mse = autoround_block(W, bits=3, steps=10, lr=0.05, seed=0)
 
@@ -87,6 +86,6 @@ print(mse >= 0)
 
 ## What the gate checks
 
-The gate runs an independent NumPy oracle implementing the same optimization loop. The returned reconstruction must exactly match the oracle result, and the reported MSE must match within $10^{-6}$.
+The gate runs an independent Python oracle implementing the same optimization loop. The returned reconstruction must exactly match the oracle result, and the reported MSE must match within $10^{-6}$.
 
 The gate also computes the RTN reconstruction error and verifies that the returned AutoRound result is no worse than RTN. A solution that only returns RTN without running the optimization loop will fail.

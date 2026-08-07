@@ -1,0 +1,46 @@
+{
+  "id": "m-simulate-schedule-policy-lpm-vs-fcfs-report-hit-rate",
+  "title": "Simulate schedule policy and HiCache tiering",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "sglang-radixattention-and-cache-tree",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["serving/simulator.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "LPM vs FCFS Scheduling",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "lpm_hit_rel_err", "op": "<=", "threshold": 0.01},
+        {"metric": "fcfs_hit_rel_err", "op": "<=", "threshold": 0.01},
+        {"metric": "lpm_wait_err", "op": "==", "threshold": 0.0},
+        {"metric": "fcfs_wait_err", "op": "==", "threshold": 0.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Eviction Policies (LRU, LFU, LUS)",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "lru_rel_err", "op": "<=", "threshold": 0.01},
+        {"metric": "lfu_rel_err", "op": "<=", "threshold": 0.01},
+        {"metric": "lus_rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "HiCache Tiering",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "gpu_hit_rel_err", "op": "<=", "threshold": 0.01},
+        {"metric": "host_hit_rel_err", "op": "<=", "threshold": 0.01},
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_tiering", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

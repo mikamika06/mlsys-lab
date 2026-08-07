@@ -1,0 +1,39 @@
+{
+  "id": "m-run-a-20-step-qlora-and-verify-only-adapters-changed",
+  "title": "Run a 20-step QLoRA and verify only adapters changed",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "QLoRA fine-tuning with bitsandbytes and PEFT",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["qlora/layer.py", "qlora/train.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Implement QLoRA forward pass with dequantization",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "forward_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Implement backprop and run a 20-step training loop",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "loss_decreases", "op": "==", "threshold": 1},
+        {"metric": "weights_frozen", "op": "==", "threshold": 1},
+        {"metric": "adapters_changed", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches base weight leakage",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_leaky_weights", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "m-two-entry-points-one-architecture-same-numerics",
+  "title": "Unified LiteRT conversion pipeline for dual entry points",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "LiteRT/TFLite conversion pipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tflite_pipe/converter.py",
+    "tflite_pipe/opdiff.py",
+    "tflite_pipe/flex_opt.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Dual entry points numerical equivalence",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "numerics_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Op-code set difference analysis",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "diff_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: eliminating Flex dependency",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_flex_dependency", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

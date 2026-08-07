@@ -1,0 +1,21 @@
+{
+  "id": "m-verify-scaler-unscale-returns-the-true-unscaled-grad",
+  "title": "Verify scaler.unscale_() returns the true unscaled grad",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "gradscaler-loss-scaling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gradscaler/scaler.py", "gradscaler/verify.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Unscale scaled gradients in-place and return true values", "check": "harness/m1.py",
+     "gates": [{"metric": "unscale_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Verify accuracy of unscaled gradients against reference oracle", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 0.0001}]},
+    {"n": 3, "title": "Safety net: regression test catches broken unscaling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_unscale", "op": "==", "threshold": 1}]}
+  ]
+}

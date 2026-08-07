@@ -1,0 +1,43 @@
+{
+  "id": "m-pick-the-largest-c-that-fits-a-budget",
+  "title": "Pick the largest context and evaluate quantized cache constraints",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-gguf-llamacpp",
+  "track": "kv-cache-and-quantized-cache",
+  "difficulty": 3,
+  "edits": [
+    "kvcache/budget.py",
+    "kvcache/flash.py",
+    "kvcache/asym.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Pick the largest -c that fits a budget",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "argmin_index", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Explain why cache quantization needs flash attention",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "flash_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Measure the fused-path penalty of asymmetric K/V types",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_penalty", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}
