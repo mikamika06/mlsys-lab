@@ -40,9 +40,7 @@ $c \le r$, both measured from the chunk's own start).
 Implement `chunked_causal_prefill`:
 
 ```python
-def chunked_causal_prefill(
-    q: np.ndarray, k: np.ndarray, v: np.ndarray, chunk_sizes: list[int],
-) -> np.ndarray:
+def chunked_causal_prefill(q: list[list[float]], k: list[list[float]], v: list[list[float]], chunk_sizes: list[int]) -> list[list[float]]:
     ...
 ```
 
@@ -62,10 +60,9 @@ dense score matrix for the whole prompt at once.
 ## Example
 
 ```python
-import numpy as np
 
 n, d = 10, 4
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 q = k = v = rng.normal(size=(n, d))
 
 out = chunked_causal_prefill(q, k, v, chunk_sizes=[3, 2, 5])
@@ -76,7 +73,7 @@ out = chunked_causal_prefill(q, k, v, chunk_sizes=[3, 2, 5])
 
 ## What the gate checks
 
-The grader builds several `(n, d)` prompts from a seeded NumPy generator
+The grader builds several `(n, d)` prompts from a seeded Python generator
 and, for each, tests **multiple different chunk schedules** against the
 same `q, k, v` (uneven sizes, a single all-in-one chunk, and many
 size-1 chunks) — plus computes the reference output independently as

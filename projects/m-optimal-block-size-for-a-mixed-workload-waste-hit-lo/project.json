@@ -1,0 +1,45 @@
+{
+  "id": "m-optimal-block-size-for-a-mixed-workload-waste-hit-lo",
+  "title": "Optimal block size for a mixed workload",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "block-size-and-fragmentation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvblock/objective.py",
+    "kvblock/simulator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analytical waste and partial-block truncation loss",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "objective_matched", "op": "==", "threshold": 1},
+        {"metric": "truncation_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Block-size sweep simulation on workload trace",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "sweep_costs_matched", "op": "==", "threshold": 1},
+        {"metric": "optimal_block_size_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching tail truncation oversight",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_ignored_truncation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

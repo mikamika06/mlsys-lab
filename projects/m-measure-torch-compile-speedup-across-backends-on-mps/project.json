@@ -1,0 +1,40 @@
+{
+  "id": "m-measure-torch-compile-speedup-across-backends-on-mps",
+  "title": "Measure torch.compile speedup across backends on MPS",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "torch.compile on the MPS backend",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "compilebench/measure.py",
+    "compilebench/breakfinder.py",
+    "compilebench/verify.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure torch.compile speedup across backends",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "throughput_ratio", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Capture graph breaks and identify offending lines",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "breaks_identified", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for compilation equivalence",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_equivalence", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

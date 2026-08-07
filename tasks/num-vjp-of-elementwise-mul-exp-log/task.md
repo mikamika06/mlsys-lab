@@ -33,7 +33,7 @@ where $\odot$ denotes elementwise multiplication.
 Implement the function `vjp_mul_exp_log` that computes these gradients:
 
 ```python
-def vjp_mul_exp_log(x: np.ndarray, y: np.ndarray, upstream: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+def vjp_mul_exp_log(x: list[float], y: list[float], upstream: list[float]) -> tuple[list[float], list[float]]:
     """
     Compute the vector-Jacobian product of h(x,y)=log(exp(x*y))
     with respect to x and y.
@@ -54,16 +54,15 @@ def vjp_mul_exp_log(x: np.ndarray, y: np.ndarray, upstream: np.ndarray) -> Tuple
     """
 ```
 
-All inputs are guaranteed to be one-dimensional NumPy arrays of equal length,
+All inputs are guaranteed to be list of floats of equal length,
 and all outputs must also be `float64` arrays.
 
 ## Example
 
 ```python
-import numpy as np
-x = np.array([1.0, 2.0, -3.0])
-y = np.array([4.0, -5.0, 6.0])
-upstream = np.array([0.1, 0.2, 0.3])
+x = [1.0, 2.0, -3.0]
+y = [4.0, -5.0, 6.0]
+upstream = [0.1, 0.2, 0.3]
 
 grad_x, grad_y = vjp_mul_exp_log(x, y, upstream)
 print(grad_x)   # [0.4, -1.0, -1.8]
@@ -78,5 +77,5 @@ It then compares your implementation against this reference using the
 `max_abs_err` scorer from `arena.scorers`.  Your solution must achieve
 $\mathrm{max\_abs\_err} \le 10^{-5}$.
 
-A correct implementation will use only NumPy vectorised operations and
+A correct implementation will use only Python vectorised operations and
 return arrays of type `float64`.

@@ -1,13 +1,9 @@
 import math
-import numpy as np
 
 
 def _causal_attention(q, k, v):
-    q = np.asarray(q, dtype=np.float64)
-    k = np.asarray(k, dtype=np.float64)
-    v = np.asarray(v, dtype=np.float64)
-    d = q.shape[-1]
-    n = q.shape[0]
+    d = len(q[0])
+    n = len(q)
 
     sqrt_d = math.sqrt(d)
     scores = []
@@ -19,7 +15,7 @@ def _causal_attention(q, k, v):
             else:
                 dot = 0.0
                 for l in range(d):
-                    dot += q[i, l] * k[j, l]
+                    dot += q[i][l] * k[j][l]
                 row.append(dot / sqrt_d)
         scores.append(row)
 
@@ -51,23 +47,23 @@ def _causal_attention(q, k, v):
             row_w.append(val / s_val)
         w_rows.append(row_w)
 
-    v_dim = v.shape[-1]
+    v_dim = len(v[0])
     result = []
     for i in range(n):
         row_res = []
         for l in range(v_dim):
             acc = 0.0
             for j in range(n):
-                acc += w_rows[i][j] * v[j, l]
+                acc += w_rows[i][j] * v[j][l]
             row_res.append(acc)
         result.append(row_res)
 
-    return np.array(result, dtype=np.float64)
+    return result
 
 
 def cow_prefix_attention(q_a, k_a, v_a, q_b, k_b, v_b, shared_prefix_len, block_size):
-    len_a = np.asarray(q_a).shape[0]
-    len_b = np.asarray(q_b).shape[0]
+    len_a = len(q_a)
+    len_b = len(q_b)
 
     blocks_a = -(-len_a // block_size)
     blocks_b = -(-len_b // block_size)

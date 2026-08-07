@@ -20,7 +20,7 @@ The absorbed projection $W'_O = W_O W_{UV}$ lets the decoder apply one projectio
 
 Implement `absorb_w_uv(W_O, W_UV, P, c_V)`.
 
-The function receives NumPy arrays:
+The function receives list:
 
 - `W_O` with shape $(d_{model}, d_{up})$.
 - `W_UV` with shape $(d_{up}, d_{latent})$.
@@ -33,17 +33,16 @@ $$
 (Pc_V)(W_O W_{UV})^T.
 $$
 
-The returned array must be a NumPy array with floating point values. Do not compute the expanded up-projected value sequence.
+The returned array must be a list with floating point values. Do not compute the expanded up-projected value sequence.
 
 ## Example
 
 ```python
-import numpy as np
 
-W_O = np.array([[2.0, 1.0]])
-W_UV = np.array([[3.0], [4.0]])
-P = np.array([[1.0, 0.0]])
-c_V = np.array([[5.0], [6.0]])
+W_O = [[2.0, 1.0]]
+W_UV = [[3.0], [4.0]]
+P = [[1.0, 0.0]]
+c_V = [[5.0], [6.0]]
 
 Y = absorb_w_uv(W_O, W_UV, P, c_V)
 # Y is [[58.]]

@@ -1,0 +1,21 @@
+{
+  "id": "m-learned-rounding-beats-nearest-rounding",
+  "title": "Learned rounding beats nearest rounding using AutoRound",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "Accuracy recovery: rotations, AutoRound, and EoRA",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantlib/rounding.py", "quantlib/autoround.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Learned rounding beats nearest rounding", "check": "harness/m1.py",
+     "gates": [{"metric": "mse_improved", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Run AutoRoundModifier on a tiny model", "check": "harness/m2.py",
+     "gates": [{"metric": "autoround_converged", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches broken rounding", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_rounding", "op": "==", "threshold": 1}]}
+  ]
+}

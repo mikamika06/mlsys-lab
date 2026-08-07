@@ -1,0 +1,68 @@
+{
+  "id": "m-parse-a-recorded-gpu-trace-to-find-pagedadamw8bit-s-",
+  "title": "Parse GPU trace to find PagedAdamW8bit latency spike",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "paged-optimizers-8bit-adam",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gputrace/parser.py",
+    "gputrace/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract PagedAdamW8bit trace events from JSON log",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "traces_parsed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Identify CPU-spillover spike via index search",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "spillover_index_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "ratio_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catches ignored latency spikes",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_spikes",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

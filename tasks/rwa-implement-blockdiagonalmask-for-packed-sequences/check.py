@@ -42,7 +42,10 @@ def grade(sol, fx) -> dict:
     for Q, K, V, seq_lens in _cases():
         ref = _oracle(Q, K, V, seq_lens)
         try:
-            got = np.asarray(sol.block_diagonal_attention(Q, K, V, list(seq_lens)), dtype=np.float64)
+            got_list = sol.block_diagonal_attention(
+                Q.tolist(), K.tolist(), V.tolist(), list(seq_lens)
+            )
+            got = np.asarray(got_list, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
         if got.shape != ref.shape:

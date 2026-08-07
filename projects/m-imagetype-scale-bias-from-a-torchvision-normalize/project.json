@@ -1,0 +1,45 @@
+{
+  "id": "m-imagetype-scale-bias-from-a-torchvision-normalize",
+  "title": "ImageType scale and bias from torchvision Normalize",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "coremltools ct.convert: the conversion contract",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "export/normalize.py",
+    "export/verify.py",
+    "export/size.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive ImageType scale and bias from torchvision Normalize",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "scale_bias_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Convert CNN, verify output drift, and measure size ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-4},
+        {"metric": "size_ratio_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching inverted scale factors",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_inverted_scale", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

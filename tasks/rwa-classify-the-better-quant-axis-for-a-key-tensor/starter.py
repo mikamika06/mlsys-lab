@@ -1,4 +1,2 @@
-import numpy as np
-
-def classify_quant_axis(K: np.ndarray) -> int:
+def classify_quant_axis(K: list[list[float]]) -> int:
     raise NotImplementedError('your code here')

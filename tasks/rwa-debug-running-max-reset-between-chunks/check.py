@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -34,20 +35,27 @@ def grade(sol, fx) -> dict:
         ((32, 6), [4, 4, 4]),
     ]:
         d, h = dims
-        q = rng.normal(size=d).astype(np.float32)
+        q = rng.normal(size=d).astype(np.float64)
         chunks = []
         for n in sizes:
-            K = rng.normal(size=(n, d)).astype(np.float32)
-            V = rng.normal(size=(n, h)).astype(np.float32)
-            chunks.append((K, V))
-        cases.append((q, chunks))
+            K = rng.normal(size=(n, d)).astype(np.float64)
+            V = rng.normal(size=(n, h)).astype(np.float64)
+            chunks.append((K.tolist(), V.tolist()))
+        cases.append((q.tolist(), chunks))
 
     worst = 0.0
     for q, chunks in cases:
         try:
-            got = np.asarray(sol.chunked_attention(q, chunks), dtype=np.float64)
+            # Pass numpy arrays to the oracle so its shape checks work correctly,
+            # while passing plain lists to the solution function being tested.
+            np_chunks = []
+            for K, V in chunks:
+                np_chunks.append((np.asarray(K, dtype=np.float64), np.asarray(V, dtype=np.float64)))
+            ref = _oracle(np.asarray(q, dtype=np.float64), np_chunks)
+
+            got = sol.chunked_attention(q, chunks)
+            got_arr = np.asarray(got, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
-        ref = _oracle(q, chunks)
-        worst = max(worst, float(np.max(np.abs(got - ref))))
+        worst = max(worst, float(np.max(np.abs(got_arr - ref))))
     return {"max_abs_err": worst}

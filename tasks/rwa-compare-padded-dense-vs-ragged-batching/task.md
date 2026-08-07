@@ -21,11 +21,11 @@ Production attention kernels use the ragged form internally through metadata suc
 Implement `ragged_attention_compare(sequences)`:
 
 ```python
-def ragged_attention_compare(sequences):
+def ragged_attention_compare(sequences: list[list[list[float]]]) -> tuple[list[list[list[float]]], float]:
     ...
 ```
 
-`sequences` is a list of NumPy arrays. Each array has shape $(L_i, d)$ and contains one sequence of query/key/value vectors. The function must return:
+`sequences` is a list of list. Each array has shape $(L_i, d)$ and contains one sequence of query/key/value vectors. The function must return:
 
 ```python
 valid_outputs, pad_waste_ratio
@@ -33,7 +33,7 @@ valid_outputs, pad_waste_ratio
 
 where:
 
-- `valid_outputs` is a list of NumPy arrays, one per input sequence, containing the attention output for valid tokens only.
+- `valid_outputs` is a list of list, one per input sequence, containing the attention output for valid tokens only.
 - `pad_waste_ratio` is the exact floating point value of $R$ computed from the sequence lengths.
 
 Use the scaled dot-product attention formula:
@@ -45,10 +45,9 @@ For this task, each sequence array contains $Q=K=V$. Compute the output separate
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1.0, 0.0], [0.0, 1.0]])
-y = np.array([[1.0, 1.0]])
+x = [[1.0, 0.0], [0.0, 1.0]]
+y = [[1.0, 1.0]]
 
 out, ratio = ragged_attention_compare([x, y])
 
@@ -58,7 +57,7 @@ out, ratio = ragged_attention_compare([x, y])
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that runs masked padded dense attention and ragged attention in `float64`.
+The gate builds a Python oracle that runs masked padded dense attention and ragged attention in `float64`.
 
 The `max_abs_err` metric compares the student's valid-token outputs with the oracle outputs and must satisfy
 

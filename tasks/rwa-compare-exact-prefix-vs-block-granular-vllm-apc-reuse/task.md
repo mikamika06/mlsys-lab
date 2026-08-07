@@ -39,11 +39,7 @@ redoes but RadixAttention would have reused.
 Implement `prefix_reuse_lengths`:
 
 ```python
-def prefix_reuse_lengths(
-    cache: list[list[int]],
-    queries: list[list[int]],
-    block_size: int,
-) -> list[tuple[int, int]]:
+def prefix_reuse_lengths(cache: list[list[int]], queries: list[list[int]], block_size: int) -> list[tuple[int, int]]:
     ...
 ```
 
@@ -77,10 +73,10 @@ The grader builds several `(cache, queries, block_size)` scenarios —
 overlapping prefixes of varying lengths, multiple cache entries where the
 best match isn't the first one, a query shorter than its best-matching
 cache entry, and queries with no match at all — and computes the reference
-`(exact_reuse, block_reuse)` for every query with an independent NumPy
+`(exact_reuse, block_reuse)` for every query with an independent Python
 implementation: pad each `(query, cache-entry)` pair to equal length,
 compare element-wise, and locate the first mismatch with
-`numpy.argmax`/`.all()` on the boolean equality array (never calling your
+`max`/`all()` on the boolean equality list (never calling your
 function, never hardcoding an expected answer).
 
 `exact_match` is the fraction of queries where **both** returned values

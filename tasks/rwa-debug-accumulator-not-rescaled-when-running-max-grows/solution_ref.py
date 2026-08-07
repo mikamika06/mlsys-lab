@@ -1,7 +1,7 @@
-import numpy as np
+import math
 
 
-def tiled_online_softmax_attention(q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int) -> np.ndarray:
+def tiled_online_softmax_attention(q: list[float], K: list[list[float]], V: list[list[float]], block_size: int) -> list[float]:
     """FlashAttention-style single-query forward pass: stream over K/V in
     blocks of `block_size`, maintaining a running max `m`, running
     normalizer `l`, and an UNNORMALIZED output accumulator `O`. Every time
@@ -10,25 +10,27 @@ def tiled_online_softmax_attention(q: np.ndarray, K: np.ndarray, V: np.ndarray, 
     otherwise earlier blocks stay weighted against their own stale local
     max instead of the final global max. Returns O / l, shape (d,).
     """
-    d = K.shape[1]
-    n = K.shape[0]
-    m = -np.inf
+    d = len(q)
+    n = len(K)
+    m = -float("inf")
     l = 0.0
-    O = np.zeros(d, dtype=np.float64)
+    O = [0.0] * d
 
     for start in range(0, n, block_size):
         end = min(start + block_size, n)
         Kb = K[start:end]
         Vb = V[start:end]
 
-        scores = (q @ Kb.T) / np.sqrt(d)
-        m_new = max(m, float(np.max(scores)))
-        correction = np.exp(m - m_new)  # 0.0 on the first block (m == -inf)
+        scores = [sum(qi * kij for qi, kij in zip(q, ki)) / math.sqrt(d) for ki in Kb]
+        m_new = max(m, max(scores))
+        correction = math.exp(m - m_new)  # 0.0 on the first block (m == -inf)
 
-        p = np.exp(scores - m_new)
-        l = l * correction + float(np.sum(p))
-        O = O * correction + p @ Vb  # <-- the accumulator rescale
+        p = [math.exp(s - m_new) for s in scores]
+        sum_p = sum(p)
+        l = l * correction + sum_p
+
+        O = [o_val * correction + sum(pi * vb[j] for pi, vb in zip(p, Vb)) for j, o_val in enumerate(O)]
 
         m = m_new
 
-    return O / l
+    return [o_val / l for o_val in O]

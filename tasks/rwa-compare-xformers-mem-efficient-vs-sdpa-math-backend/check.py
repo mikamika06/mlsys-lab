@@ -27,17 +27,22 @@ def grade(sol, fx) -> dict:
     worst = 0.0
     for Q, K, V, bias in cases:
         try:
-            mem, math = sol.compare_sdpa_backends(Q, K, V, bias)
+            mem, math_out = sol.compare_sdpa_backends(
+                Q.tolist(),
+                K.tolist(),
+                V.tolist(),
+                bias.tolist() if bias is not None else None,
+            )
             mem = np.asarray(mem, dtype=np.float64)
-            math = np.asarray(math, dtype=np.float64)
+            math_out = np.asarray(math_out, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}
 
         ref = _oracle(Q, K, V, bias)
         err = max(
             float(np.max(np.abs(mem - ref))),
-            float(np.max(np.abs(math - ref))),
-            float(np.max(np.abs(mem - math))),
+            float(np.max(np.abs(math_out - ref))),
+            float(np.max(np.abs(mem - math_out))),
         )
         worst = max(worst, err)
 

@@ -1,35 +1,32 @@
 import math
-import numpy as np
 
-def predict_rounding_results(arr: np.ndarray, mode: str) -> np.ndarray:
-    """Return the float32 array that would result from converting each element
+def predict_rounding_results(arr: list[float], mode: str) -> list[float]:
+    """Return the list of floats that would result from converting each element
     of ``arr`` using the specified rounding mode.
 
     Parameters
     ----------
-    arr : np.ndarray
-        One‑dimensional array of dtype ``float64``.
+    arr : list[float]
+        List of float values.
     mode : str
         Either ``"nearest"`` (round‑to‑nearest‑even) or ``"trunc"``
         (round toward zero).
 
     Returns
     -------
-    np.ndarray
-        Array of the same shape, dtype ``float32``.
+    list[float]
+        List of the same length containing the converted values.
     """
     if mode == "nearest":
-        n = len(arr)
-        res = np.zeros(n, dtype=np.float32)
-        for i in range(n):
-            res[i] = float(arr[i])
+        res = []
+        for val in arr:
+            res.append(float(val))
         return res
     elif mode == "trunc":
-        n = len(arr)
-        res = np.zeros(n, dtype=np.float32)
-        for i in range(n):
-            val = float(arr[i])
-            res[i] = math.copysign(float(math.trunc(val)), val)
+        res = []
+        for val in arr:
+            val_f = float(val)
+            res.append(math.copysign(float(math.trunc(val_f)), val_f))
         return res
     else:
         raise ValueError("mode must be 'nearest' or 'trunc'")

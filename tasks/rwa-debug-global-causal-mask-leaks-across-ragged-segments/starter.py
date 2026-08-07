@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def ragged_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, cu_seqlens: np.ndarray) -> np.ndarray:
+def ragged_causal_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], cu_seqlens: list[int]) -> list[list[float]]:
     """Causal self-attention over a PACKED (ragged) batch.
 
     Q, K, V: (n, d) -- multiple variable-length sequences concatenated along
@@ -16,14 +15,4 @@ def ragged_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, cu_seql
     few tokens of segment i therefore still "see" the tail of segment i-1
     (and any earlier segments) -- attention leaks across sequence boundaries.
     """
-    n, d = Q.shape
-    scores = (Q.astype(np.float64) @ K.astype(np.float64).T) / np.sqrt(d)
-
-    row = np.arange(n)[:, None]
-    col = np.arange(n)[None, :]
-    scores = np.where(col > row, -np.inf, scores)  # BUG: no per-segment boundary
-
-    scores = scores - np.max(scores, axis=1, keepdims=True)
-    probs = np.exp(scores)
-    probs = probs / np.sum(probs, axis=1, keepdims=True)
-    return probs @ V.astype(np.float64)
+    raise NotImplementedError('your code here')

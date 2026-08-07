@@ -29,13 +29,7 @@ pairs compared with the dense computation.
 Implement `block_sparse_attention(Q, K, V, mask, block_size)`:
 
 ```python
-def block_sparse_attention(
-    Q: np.ndarray,
-    K: np.ndarray,
-    V: np.ndarray,
-    mask: np.ndarray,
-    block_size: int
-) -> tuple[np.ndarray, int]:
+def block_sparse_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], mask: list[list[bool]], block_size: int) -> tuple[list[list[float]], int]:
     ...
 ```
 
@@ -49,7 +43,7 @@ The inputs are:
 
 Return:
 
-1. The dense-equivalent masked attention output as a `float64` NumPy array of shape $(n, m)$.
+1. The dense-equivalent masked attention output as a `float64` list of shape $(n, m)$.
 2. The number of query-key pairs represented by processed non-empty blocks.
 
 The implementation must skip blocks where the corresponding mask region is entirely `False`. The softmax normalization must still be computed over all allowed keys for each query row, even when the keys are processed block by block.
@@ -57,12 +51,11 @@ The implementation must skip blocks where the corresponding mask region is entir
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0], [4.0]])
-mask = np.array([[True, False], [False, False]])
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0], [4.0]]
+mask = [[True, False], [False, False]]
 
 out, pairs = block_sparse_attention(Q, K, V, mask, 1)
 
@@ -72,7 +65,7 @@ out, pairs = block_sparse_attention(Q, K, V, mask, 1)
 
 ## What the gate checks
 
-The gate computes a NumPy float64 dense masked-attention oracle and compares the returned output using `max_abs_err`.
+The gate computes a Python float64 dense masked-attention oracle and compares the returned output using `max_abs_err`.
 
 The `attended_pairs` value must equal the number of pairs inside non-empty mask blocks:
 

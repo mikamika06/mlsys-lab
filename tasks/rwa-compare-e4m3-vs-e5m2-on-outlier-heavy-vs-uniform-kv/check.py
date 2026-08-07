@@ -82,9 +82,12 @@ def grade(sol, fx) -> dict:
     ref_u4, ref_u5 = _oracle_errors(uniform_kv)
     ref_o4, ref_o5 = _oracle_errors(outlier_kv)
 
+    uniform_kv_list = uniform_kv.tolist()
+    outlier_kv_list = outlier_kv.tolist()
+
     try:
-        got_u = sol.fp8_format_errors(uniform_kv.copy())
-        got_o = sol.fp8_format_errors(outlier_kv.copy())
+        got_u = sol.fp8_format_errors(uniform_kv_list)
+        got_o = sol.fp8_format_errors(outlier_kv_list)
         gu4, gu5 = float(got_u[0]), float(got_u[1])
         go4, go5 = float(got_o[0]), float(got_o[1])
     except Exception:

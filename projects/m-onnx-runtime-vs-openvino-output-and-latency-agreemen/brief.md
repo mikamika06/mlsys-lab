@@ -1,0 +1,5 @@
+Engineers on our cross-platform edge team have reported conflicting runtime performance and numerical agreement metrics across CPU inference engines on Mac (Apple Silicon) and server-grade Intel Xeon machines.
+
+Specifically, when comparing ONNX Runtime against OpenVINO for float32 vs quantized models, test pipelines emit inconsistent latency comparisons, and numerical outputs occasionally drift beyond tolerance. Furthermore, downstream service deployment choices on Xeon clusters rely on an unverified three-way throughput ranking (across PyTorch CPU, ONNX Runtime, and OpenVINO) that does not strictly enforce precision-matched fairness checks.
+
+To establish reliable benchmarking standards and cross-tool validation, you need to build a benchmark and verification toolkit. You will implement output matrix alignment checks, standard latency ratio metrics, recorded Xeon benchmark log aggregation, and a automated precision-fairness evaluator. Finally, you will write a suite of regression tests in `tests/test_regression.py` that guards against unsound evaluation practices—such as comparing quantized models against float models without precision-matching flags.

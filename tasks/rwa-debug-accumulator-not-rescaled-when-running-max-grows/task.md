@@ -44,7 +44,7 @@ block's own stale local max instead of the sequence's final global max.
 Fix the implementation so it matches the dense reference:
 
 ```python
-def tiled_online_softmax_attention(q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int) -> np.ndarray:
+def tiled_online_softmax_attention(q: list[float], K: list[list[float]], V: list[list[float]], block_size: int) -> list[float]:
     ...
 ```
 
@@ -59,9 +59,8 @@ def tiled_online_softmax_attention(q: np.ndarray, K: np.ndarray, V: np.ndarray, 
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+import random; rng = random.Random(0)
 q = rng.standard_normal(4)
 K = rng.standard_normal((20, 4))
 V = rng.standard_normal((20, 4))
@@ -69,12 +68,12 @@ V = rng.standard_normal((20, 4))
 out = tiled_online_softmax_attention(q, K, V, block_size=6)
 
 # reference: dense softmax over the whole sequence at once
-scores = (q @ K.T) / np.sqrt(4)
+scores = [sum(q_i * k_i for q_i, k_i in zip(q, row)) / math.sqrt(4) for row in K]
 scores -= scores.max()
-p = np.exp(scores); p /= p.sum()
+p = [math.exp(s) for s in scores]; p = [x / sum(p) for x in p]
 ref = p @ V
 
-assert np.max(np.abs(out - ref)) < 1e-4
+assert max(abs(o - r) for o, r in zip(out, ref)) < 1e-4
 ```
 
 ## What the gate checks
@@ -83,7 +82,7 @@ The grader runs one deterministic case with a strong outlier key placed
 in a later block (guaranteeing a large accumulator rescale is needed
 after the first block already contributed real mass to `O`), plus several
 seeded random multi-block cases, and compares your output to a dense
-`softmax(qK^T/√d) @ V` computed directly in NumPy — never calling your
+`softmax(qK^T/√d) @ V` computed directly in Python — never calling your
 function, never hardcoding an expected value.
 
 `max_abs_err` is the worst per-case max-abs-error across all cases and

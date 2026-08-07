@@ -48,9 +48,7 @@ mask ($c \le r$ within the tile) applied before folding it into the
 running softmax:
 
 ```python
-def block_sparse_causal_attention(
-    q: np.ndarray, k: np.ndarray, v: np.ndarray, block_size: int,
-) -> np.ndarray:
+def block_sparse_causal_attention(q, k, v, block_size):
     ...
 ```
 
@@ -64,10 +62,9 @@ def block_sparse_causal_attention(
 ## Example
 
 ```python
-import numpy as np
 
 n, d, block_size = 8, 4, 4
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 q = k = v = rng.normal(size=(n, d))
 
 out = block_sparse_causal_attention(q, k, v, block_size)
@@ -80,7 +77,7 @@ out = block_sparse_causal_attention(q, k, v, block_size)
 ## What the gate checks
 
 The grader builds several `(n, d, block_size)` scenarios from a seeded
-NumPy generator (block sizes that tile the sequence evenly, multiple
+Python generator (block sizes that tile the sequence evenly, multiple
 blocks per sequence) and computes the reference output independently as
 **dense** causal attention in float64:
 `softmax(QK^T/sqrt(d) with future positions masked to -inf) @ V`, applied

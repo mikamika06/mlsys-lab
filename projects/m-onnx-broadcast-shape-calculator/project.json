@@ -1,0 +1,44 @@
+{
+  "id": "m-onnx-broadcast-shape-calculator",
+  "title": "ONNX broadcast shape calculator and value_info recovery",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Shape inference, symbolic shapes and the checker",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "onnxcalc/broadcast.py",
+    "onnxcalc/value_info.py",
+    "onnxcalc/checker.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "ONNX multi-directional broadcast shape calculator",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "shapes_matched", "op": ">=", "threshold": 6}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Rebuild missing value_info across graph topology",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "graphs_rebuilt", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching broadcast order and shape mismatches",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_broadcast", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

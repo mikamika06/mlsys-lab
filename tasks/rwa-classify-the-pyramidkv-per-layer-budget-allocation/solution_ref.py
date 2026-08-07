@@ -1,7 +1,4 @@
-import math
-import numpy as np
-
-def pyramidkv_allocation(total_budget: int, num_layers: int) -> np.ndarray:
+def pyramidkv_allocation(total_budget: int, num_layers: int) -> list[int]:
     """
     Compute a pyramidal KV budget allocation.
 
@@ -14,8 +11,8 @@ def pyramidkv_allocation(total_budget: int, num_layers: int) -> np.ndarray:
 
     Returns
     -------
-    numpy.ndarray
-        1‑D array of length `num_layers` with integer allocations that sum to
+    list of int
+        List of length `num_layers` with integer allocations that sum to
         `total_budget`.  Lower indices receive at least as many slots as higher
         ones.
     """
@@ -38,4 +35,4 @@ def pyramidkv_allocation(total_budget: int, num_layers: int) -> np.ndarray:
     for i in range(remainder):
         base_list[num_layers - 1 - i] += 1
 
-    return np.array(base_list, dtype=np.int64)
+    return base_list

@@ -1,8 +1,7 @@
 import math
-import numpy as np
 
 
-def h2o_eviction_trajectory(K: np.ndarray, Q: np.ndarray, prompt_len: int,
+def h2o_eviction_trajectory(K: list[list[float]], Q: list[list[float]], prompt_len: int,
                              budget: int, recent_window: int) -> list[list[int]]:
     """Simulate H2O (Heavy-Hitter Oracle) KV-cache eviction over decode.
 
@@ -33,10 +32,8 @@ def h2o_eviction_trajectory(K: np.ndarray, Q: np.ndarray, prompt_len: int,
     Returns a list of length T; entry t is the sorted list of resident
     position indices immediately after step t.
     """
-    K = np.asarray(K, dtype=np.float64)
-    Q = np.asarray(Q, dtype=np.float64)
-    d = K.shape[1]
-    T = Q.shape[0]
+    d = len(K[0])
+    T = len(Q)
 
     resident = list(range(prompt_len))
     score = {i: 0.0 for i in resident}
@@ -45,7 +42,7 @@ def h2o_eviction_trajectory(K: np.ndarray, Q: np.ndarray, prompt_len: int,
     for t in range(T):
         q = Q[t]
         idx = sorted(resident)
-        Kc = K[idx]
+        Kc = [K[i] for i in idx]
         sqrt_d = math.sqrt(d)
         logits = [
             sum(q[k] * Kc[j][k] for k in range(d)) / sqrt_d

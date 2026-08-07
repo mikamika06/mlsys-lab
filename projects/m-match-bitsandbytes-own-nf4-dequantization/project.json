@@ -1,0 +1,22 @@
+{
+  "id": "m-match-bitsandbytes-own-nf4-dequantization",
+  "title": "Match bitsandbytes own NF4 dequantization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "bitsandbytes 4-bit NF4/FP4 blockwise format",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["nf4/dequant.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "NF4 codebook mapping and nibble unpacking", "check": "harness/m1.py",
+     "gates": [{"metric": "table_max_diff", "op": "<=", "threshold": 1e-7},
+               {"metric": "unpack_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Full blockwise dequantization with absmax scaling", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-7}]},
+    {"n": 3, "title": "Safety net: a test that catches flipped nibbles", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_flipped_nibbles", "op": "==", "threshold": 1}]}
+  ]
+}

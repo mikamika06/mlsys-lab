@@ -1,0 +1,45 @@
+{
+  "id": "m-os-floor-and-excluded-device-computation",
+  "title": "OS floor, bit-reproducible export, and variant selection",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Shipping and maintaining edge models in production",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "edgeexport/filtering.py",
+    "edgeexport/convert.py",
+    "edgeexport/selection.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "OS floor calculation and excluded-device filtering",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "filtering_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Bit-reproducible model variant conversion",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "conversions_matched", "op": ">=", "threshold": 2},
+        {"metric": "bit_exact", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Variant selection under budget and regression safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_budget_violation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

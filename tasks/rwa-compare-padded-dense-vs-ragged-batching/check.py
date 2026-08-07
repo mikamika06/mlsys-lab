@@ -11,7 +11,7 @@ def _softmax(x):
 def _padded_dense_oracle(sequences):
     lengths = [len(x) for x in sequences]
     n = len(sequences)
-    d = sequences[0].shape[1]
+    d = len(sequences[0][0])
     m = max(lengths)
     padded = np.zeros((n, m, d), dtype=np.float64)
     mask = np.zeros((n, m), dtype=bool)
@@ -37,13 +37,13 @@ def _ragged_pair_count(sequences):
 def grade(sol, fx) -> dict:
     cases = [
         [
-            np.array([[1.0, 0.0], [0.0, 1.0]]),
-            np.array([[2.0, 1.0], [0.5, -1.0], [1.0, 3.0]]),
+            [[1.0, 0.0], [0.0, 1.0]],
+            [[2.0, 1.0], [0.5, -1.0], [1.0, 3.0]],
         ],
         [
-            np.array([[1.0, 2.0, 3.0]]),
-            np.array([[0.5, 0.5, 0.5], [1.0, -1.0, 2.0]]),
-            np.array([[2.0, 0.0, 1.0], [3.0, 1.0, -1.0], [0.0, 2.0, 2.0], [1.0, 1.0, 0.0]]),
+            [[1.0, 2.0, 3.0]],
+            [[0.5, 0.5, 0.5], [1.0, -1.0, 2.0]],
+            [[2.0, 0.0, 1.0], [3.0, 1.0, -1.0], [0.0, 2.0, 2.0], [1.0, 1.0, 0.0]],
         ],
     ]
 

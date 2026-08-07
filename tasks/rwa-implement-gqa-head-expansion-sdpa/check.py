@@ -60,7 +60,7 @@ def grade(sol, fx) -> dict:
         ref_out, ref_ratio = _oracle(Q, K, V)
 
         try:
-            got = sol.gqa_head_expansion_attention(Q.copy(), K.copy(), V.copy())
+            got = sol.gqa_head_expansion_attention(Q.tolist(), K.tolist(), V.tolist())
             got_out, got_ratio = got
             got_out = np.asarray(got_out, dtype=np.float64)
             got_ratio = float(got_ratio)

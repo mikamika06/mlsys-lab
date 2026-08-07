@@ -1,0 +1,21 @@
+{
+  "id": "m-name-the-break-parse-a-graph-breaks-log",
+  "title": "Parse a graph breaks log and eliminate breaks",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Graph breaks: causes, detection, elimination",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["graphclean/parser.py", "graphclean/module.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse the graph_breaks log and identify break types", "check": "harness/m1.py",
+     "gates": [{"metric": "parsed_correctly", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Make the module fullgraph-clean", "check": "harness/m2.py",
+     "gates": [{"metric": "fullgraph_clean", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches graph break regressions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_breaks", "op": "==", "threshold": 1}]}
+  ]
+}

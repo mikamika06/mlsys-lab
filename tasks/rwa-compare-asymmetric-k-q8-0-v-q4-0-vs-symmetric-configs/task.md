@@ -29,7 +29,7 @@ The asymmetric configuration keeps the key vectors more accurate. Since keys det
 Implement `kv_config_attention_errors(K, V, q)`:
 
 ```python
-def kv_config_attention_errors(K: np.ndarray, V: np.ndarray, q: np.ndarray) -> np.ndarray:
+def kv_config_attention_errors(K: list[list[float]], V: list[list[float]], q: list[float]) -> list[float]:
     ...
 ```
 
@@ -47,16 +47,15 @@ Return a float64 array of length 3 with errors in this order:
 
 Each value is the maximum absolute difference between the full precision attention output and the output using the quantized $K,V$ pair.
 
-Implement the quantization and attention computation directly with NumPy.
+Implement the quantization and attention computation directly with Python.
 
 ## Example
 
 ```python
-import numpy as np
 
-K = np.array([[1.0, 0.5], [0.0, 2.0], [-1.0, 1.0]])
-V = np.array([[1.0, 0.0], [0.5, 1.0], [-1.0, 0.5]])
-q = np.array([0.5, 1.0])
+K = [[1.0, 0.5], [0.0, 2.0], [-1.0, 1.0]]
+V = [[1.0, 0.0], [0.5, 1.0], [-1.0, 0.5]]
+q = [0.5, 1.0]
 
 errors = kv_config_attention_errors(K, V, q)
 # errors[0] is the q8/q8 error
@@ -66,6 +65,6 @@ errors = kv_config_attention_errors(K, V, q)
 
 ## What the gate checks
 
-The gate computes the same quantization and attention calculation using an independent NumPy oracle. The returned three errors must match the oracle values with maximum absolute error at most $10^{-9}$.
+The gate computes the same quantization and attention calculation using an independent Python oracle. The returned three errors must match the oracle values with maximum absolute error at most $10^{-9}$.
 
 The oracle also verifies the intended comparison property on generated cases: the higher-precision-key configuration $q8/q4$ should improve over the symmetric $q4/q4$ configuration while using a similar KV memory ratio.

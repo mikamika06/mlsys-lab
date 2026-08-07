@@ -38,7 +38,7 @@ def grade(sol, fx) -> dict:
     ok = 1.0
     for K, V, tb in cases:
         try:
-            student_idx = sol.classify_high_bits(K, V, tb)
+            student_idx = sol.classify_high_bits(K.tolist(), V.tolist(), tb)
         except Exception:
             return {"argmin_index": 0.0}
 

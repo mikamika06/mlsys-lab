@@ -19,9 +19,8 @@ The constant $c$ cancels between numerator and denominator. We verify this numer
 Implement `softmax_shift_invariant(logits, shift)`:
 
 ```python
-import numpy as np
 
-def softmax_shift_invariant(logits: np.ndarray, shift: np.ndarray) -> float:
+def softmax_shift_invariant(logits, shift):
     """
     Returns the maximum absolute error between softmax(logits) and
     softmax(logits - shift), proving numerical invariance to constant shifts.
@@ -30,7 +29,7 @@ def softmax_shift_invariant(logits: np.ndarray, shift: np.ndarray) -> float:
 ```
 
 The function takes:
-- `logits`: a NumPy array of shape `(n,)` or `(batch, n)`
+- `logits`: a list of shape `(n,)` or `(batch, n)`
 - `shift`: an array of the same shape (or broadcastable) representing the constant to subtract
 
 Compute numerically stable softmax of both `logits` and `logits - shift`. Return the maximum absolute difference between these two results.
@@ -38,13 +37,12 @@ Compute numerically stable softmax of both `logits` and `logits - shift`. Return
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([1.0, 2.0, 3.0])
-shift = np.array([100.0, 100.0, 100.0])
+logits = [1.0, 2.0, 3.0]
+shift = [100.0, 100.0, 100.0]
 error = softmax_shift_invariant(logits, shift)
 # error < 1e-12
 ```
 
 ## What the gate checks
 
-The gate verifies that `max_abs_err` between the user's result and the NumPy reference result is less than $10^{-7}$. The reference computes both softmax values using stable max-subtraction. A correct implementation returns a value near zero; an incorrect one triggers a failure.
+The gate verifies that `max_abs_err` between the user's result and the Python reference result is less than $10^{-7}$. The reference computes both softmax values using stable max-subtraction. A correct implementation returns a value near zero; an incorrect one triggers a failure.

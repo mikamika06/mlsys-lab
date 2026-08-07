@@ -1,0 +1,21 @@
+{
+  "id": "m-parse-a-metrics-scrape-into-a-typed-metric-family-st",
+  "title": "Parse a metrics scrape into a typed metric family",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "observability-metrics-and-tracing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vllm_metrics/parser.py", "vllm_metrics/stats.py", "vllm_metrics/rates.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse Prometheus exposition text into metric families", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.0001}]},
+    {"n": 2, "title": "Compute p99 TTFT with bounded linear interpolation error", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.0001}]},
+    {"n": 3, "title": "Safety net: a test that catches unhandled counter resets", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_counter_resets", "op": "==", "threshold": 1}]}
+  ]
+}

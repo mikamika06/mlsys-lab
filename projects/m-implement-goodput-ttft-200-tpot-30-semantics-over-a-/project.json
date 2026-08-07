@@ -1,21 +1,21 @@
 {
   "id": "m-implement-goodput-ttft-200-tpot-30-semantics-over-a-",
-  "title": "Goodput, TTFT/TPOT semantics, and preemption analysis",
+  "title": "LLM Serving Goodput and Latency Metric Analysis",
   "kind": "project",
   "tier": "T0",
   "area": "rw2-vllm-serving",
   "track": "latency-metrics-slo-and-goodput",
   "part": 1,
   "difficulty": 3,
-  "edits": ["servingmetrics/analysis.py", "tests/test_regression.py"],
+  "edits": ["goodput/metrics.py", "tests/test_regression.py"],
   "milestones": [
-    {"n": 1, "title": "Goodput filtering under TTFT and TPOT SLO thresholds", "check": "harness/m1.py",
+    {"n": 1, "title": "Goodput calculation for TTFT and TPOT SLOs", "check": "harness/m1.py",
      "gates": [{"metric": "goodput_matched", "op": "==", "threshold": 1}]},
-    {"n": 2, "title": "Quantifying the E2EL preemption gap", "check": "harness/m2.py",
+    {"n": 2, "title": "Quantifying E2EL gap under preemption", "check": "harness/m2.py",
      "gates": [{"metric": "gap_matched", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Safety net: ITL vs TPOT divergence regression test", "check": "harness/m3.py",
+    {"n": 3, "title": "ITL vs TPOT divergence and regression safeguard", "check": "harness/m3.py",
      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
                {"metric": "passes_on_good", "op": "==", "threshold": 1},
-               {"metric": "catches_faulty_metrics", "op": "==", "threshold": 1}]}
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
   ]
 }

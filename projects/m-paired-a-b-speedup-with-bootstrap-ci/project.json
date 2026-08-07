@@ -1,0 +1,21 @@
+{
+  "id": "m-paired-a-b-speedup-with-bootstrap-ci",
+  "title": "Paired A/B speedup with bootstrap CI and compile-excluded benchmarking",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Benchmarking methodology for PyTorch",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["bench/core.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Benchmark compiled step without compile time", "check": "harness/m1.py",
+     "gates": [{"metric": "compile_excluded", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Robust summaries for bimodal samples", "check": "harness/m2.py",
+     "gates": [{"metric": "robust_matched", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "Paired bootstrap CI and regression safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_ci", "op": "==", "threshold": 1}]}
+  ]
+}

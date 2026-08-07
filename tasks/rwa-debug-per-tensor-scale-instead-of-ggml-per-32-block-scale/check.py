@@ -37,7 +37,8 @@ def grade(sol, fx) -> dict:
         ref = _q4_oracle(x)
         buggy = _tensor_scale_bug(x)
         try:
-            got = np.asarray(sol.q4_0_dequantize(x), dtype=np.float64)
+            got_list = sol.q4_0_dequantize(x.tolist())
+            got = np.asarray(got_list, dtype=np.float64)
         except Exception:
             return {"mse": float("inf")}
 

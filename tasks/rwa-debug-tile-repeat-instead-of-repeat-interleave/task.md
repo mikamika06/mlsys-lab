@@ -27,11 +27,11 @@ which assigns query heads to the wrong key/value groups.
 Implement `expand_kv_heads(kv, n_query_heads)`:
 
 ```python
-def expand_kv_heads(kv: np.ndarray, n_query_heads: int) -> np.ndarray:
+def expand_kv_heads(kv: list[list[list[list[float]]]], n_query_heads: int) -> list[list[list[list[float]]]]:
     ...
 ```
 
-The input `kv` is a 4-D NumPy array with shape
+The input `kv` is a 4-D list with shape
 $(B, H_{kv}, S, D)$ representing batch size, key/value heads, sequence length,
 and head dimension. Return a new array with shape
 $(B, H_q, S, D)$ where $H_q$ equals `n_query_heads`.
@@ -42,12 +42,9 @@ array should use `float64` values.
 ## Example
 
 ```python
-import numpy as np
 
-kv = np.array(
-    [[[[1.0], [2.0]],
+kv = [[[[1.0], [2.0]],
       [[3.0], [4.0]]]]
-)
 
 out = expand_kv_heads(kv, 4)
 # out[:, :, :, 0] contains:
@@ -58,9 +55,9 @@ out = expand_kv_heads(kv, 4)
 
 ## What the gate checks
 
-The gate computes a NumPy oracle using `np.repeat` along the head axis and
+The gate computes a Python oracle using list repetition along the head axis and
 compares the submitted implementation against it with maximum absolute error
 $\le 10^{-5}$.
 
-An implementation using `np.tile` produces a different head ordering and fails
+An implementation using list extension produces a different head ordering and fails
 because query heads attend to the wrong key/value groups.

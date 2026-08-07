@@ -44,25 +44,24 @@ Implement `streaming_rope_attention(q, k, v, kept_indices, theta=10000.0)`.
 
 Arguments:
 
-- `q`, `k`, and `v` are NumPy arrays of shape $(n,d)$ containing the original sequence tensors.
-- `kept_indices` is a 1-D integer NumPy array containing the original token indices kept in the cache.
+- `q`, `k`, and `v` are list of shape $(n,d)$ containing the original sequence tensors.
+- `kept_indices` is a 1-D integer list containing the original token indices kept in the cache.
 - `theta` is the RoPE base.
 
 Return the attention output for the kept tokens. The function must select the kept rows from `q`, `k`, and `v`, remap their RoPE positions to cache slots $0,1,\dots,k-1$, apply RoPE to queries and keys using those positions, and compute attention in float64.
 
-Use NumPy operations. The embedding dimension $d$ is even.
+Use Python operations. The embedding dimension $d$ is even.
 
 ## Example
 
 ```python
-import numpy as np
 
-q = np.array([[1., 0.], [0., 1.], [1., 1.]])
-k = np.array([[1., 0.], [1., 1.], [0., 1.]])
-v = np.array([[1., 2.], [3., 4.], [5., 6.]])
+q = [[1., 0.], [0., 1.], [1., 1.]]
+k = [[1., 0.], [1., 1.], [0., 1.]]
+v = [[1., 2.], [3., 4.], [5., 6.]]
 
 out = streaming_rope_attention(
-    q, k, v, np.array([0, 2])
+    q, k, v, [0, 2]
 )
 ```
 
@@ -70,7 +69,7 @@ The two kept tokens have cache positions $0$ and $1$, even though their original
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that selects kept tokens, assigns cache-slot position ids, applies RoPE, and computes float64 attention. The returned array is compared with the oracle using maximum absolute error:
+The gate builds a Python oracle that selects kept tokens, assigns cache-slot position ids, applies RoPE, and computes float64 attention. The returned array is compared with the oracle using maximum absolute error:
 
 $$
 \max_i |y_i-\hat{y}_i| < 10^{-5}.

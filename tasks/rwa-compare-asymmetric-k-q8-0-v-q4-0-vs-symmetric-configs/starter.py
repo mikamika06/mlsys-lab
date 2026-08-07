@@ -1,10 +1,4 @@
-import numpy as np
+import math
 
-def _quantize_symmetric(x, bits):
-    raise NotImplementedError('your code here')
-
-def _attention(K, V, q):
-    raise NotImplementedError('your code here')
-
-def kv_config_attention_errors(K, V, q):
+def kv_config_attention_errors(K: list[list[float]], V: list[list[float]], q: list[float]) -> list[float]:
     raise NotImplementedError('your code here')

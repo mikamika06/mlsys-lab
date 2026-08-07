@@ -1,17 +1,15 @@
 import ref
 
 def check(workdir):
-    from radix.cache import FlatCache, RadixCache
-    fc = FlatCache(capacity=3)
-    rc = RadixCache(capacity=3)
-    fc_hits = 0
-    rc_hits = 0
-    for _ in range(3):
-        for trace in ref.TRACES:
-            if fc.access(trace):
-                fc_hits += 1
-            if rc.access(trace):
-                rc_hits += 1
-    if rc_hits >= fc_hits:
-        return {"radix_beats_flat": 1.0}
-    return {"radix_beats_flat": 0.0, "_note": f"rc_hits {rc_hits} vs fc_hits {fc_hits}"}
+    from radixtree.cache import simulate_cache
+    from radixtree.schedule import schedule_requests
+    from radixtree.tree import TokenRadixTree
+    traces = ref.get_test_traces()
+    res_radix = simulate_cache(traces, "radix")
+    res_flat = simulate_cache(traces, "flat")
+
+    tree = TokenRadixTree()
+    scheduled = schedule_requests(traces, tree, "lpm")
+
+    valid = res_radix["hit_rate"] >= res_flat["hit_rate"] and len(scheduled) == len(traces)
+    return {"cache_and_schedule_match": 1.0 if valid else 0.0}

@@ -32,7 +32,7 @@ def grade(sol, fx) -> dict:
         expected = _oracle(W_O, W_UV, P, c_V)
 
         try:
-            got = sol.absorb_w_uv(W_O, W_UV, P, c_V)
+            got = sol.absorb_w_uv(W_O.tolist(), W_UV.tolist(), P.tolist(), c_V.tolist())
         except Exception:
             return {"max_abs_err": float("inf")}
 

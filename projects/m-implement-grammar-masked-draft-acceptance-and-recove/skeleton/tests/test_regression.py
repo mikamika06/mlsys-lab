@@ -1,8 +1,8 @@
-def test_acceptance_with_grammar():
+def test_grammar_mask_is_enforced():
     raise NotImplementedError
 
-def test_recovery_length():
+def test_measure_loss():
     raise NotImplementedError
 
-def test_diagnostic_flag():
+def test_diagnose():
     raise NotImplementedError

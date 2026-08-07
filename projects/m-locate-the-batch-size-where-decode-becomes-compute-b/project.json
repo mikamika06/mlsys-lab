@@ -1,0 +1,38 @@
+{
+  "id": "m-locate-the-batch-size-where-decode-becomes-compute-b",
+  "title": "Locate the batch size where decode becomes compute-bound",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "prefill-decode-roofline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["roofline/analysis.py", "roofline/workload.py", "roofline/telemetry.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Locate the decode batch transition point",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "transitions_matched", "op": ">=", "threshold": 25}]
+    },
+    {
+      "n": 2,
+      "title": "Classify workloads and extract HBM bandwidth",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "workloads_classified", "op": "==", "threshold": 10},
+        {"metric": "bandwidth_matched", "op": "==", "threshold": 10}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid roofline bounds",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_roofline", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

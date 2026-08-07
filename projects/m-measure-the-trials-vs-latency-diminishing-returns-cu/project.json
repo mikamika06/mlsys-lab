@@ -1,0 +1,63 @@
+{
+  "id": "m-measure-the-trials-vs-latency-diminishing-returns-cu",
+  "title": "Measure trials vs latency diminishing returns and task extraction",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TVM MetaSchedule autotuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "metatune/measure.py",
+    "metatune/tasks.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract tasks and verify counts for multi-PrimFunc IRModules",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "tasks_matched",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure trials vs latency diminishing returns curve",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "curve_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching bad task extraction or curve metrics",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_invariant",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -54,7 +54,7 @@ This is the same log-sum-exp correction used by split-KV attention implementatio
 Implement `merge_split_kv(partials)`:
 
 ```python
-def merge_split_kv(partials):
+def merge_split_kv(partials: list[tuple[float, float, list[float]]]) -> list[float]:
     ...
 ```
 
@@ -62,20 +62,19 @@ def merge_split_kv(partials):
 
 - `m_i` is a scalar float.
 - `l_i` is a scalar float containing the local softmax denominator.
-- `o_i` is a 1-D NumPy array containing the local unnormalized output vector.
+- `o_i` is a list of floats containing the local unnormalized output vector.
 
-Return the final attention output as a NumPy array.
+Return the final attention output as a list.
 
 The implementation must use the log-sum-exp merge rule. Do not assume the partial ranges have equal sizes or similar logit magnitudes.
 
 ## Example
 
 ```python
-import numpy as np
 
 partials = [
-    (2.0, 1.5, np.array([3.0, 6.0])),
-    (3.0, 2.0, np.array([4.0, 8.0])),
+    (2.0, 1.5, [3.0, 6.0]),
+    (3.0, 2.0, [4.0, 8.0]),
 ]
 
 out = merge_split_kv(partials)
@@ -85,7 +84,7 @@ The returned vector is the normalized combination of both partial attention rang
 
 ## What the gate checks
 
-The gate builds multiple independent KV ranges, computes their partial triples, and compares the merged output against a NumPy float64 single-pass attention oracle.
+The gate builds multiple independent KV ranges, computes their partial triples, and compares the merged output against a Python float64 single-pass attention oracle.
 
 The reported metric is `max_abs_err`, the maximum absolute difference between the submitted output and the oracle output. The merge must satisfy
 

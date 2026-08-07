@@ -683,6 +683,12 @@ def rebuild_starter(old_starter, reference):
         doc = m.group(1).rstrip() + "\n"
         for pat, rep in CTOR + PROSE:
             doc = pat.sub(rep, doc)
+        # The substitutions are spelling-specific — "NumPy array", "np.ndarray" —
+        # and a docstring that just says "numpy" survives them and fails the gate
+        # on the one file a learner opens first. An inherited docstring is worth
+        # having, but not worth losing the task over.
+        if NUMPY.search(doc):
+            doc = ""
     head = ""
     for line in (reference or "").split("\n"):
         if line.startswith("def "):

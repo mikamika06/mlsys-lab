@@ -1,0 +1,21 @@
+{
+  "id": "m-merge-shard-manifests-into-one-logical-manifest",
+  "title": "Merge shard manifests into one logical manifest",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-split-sharding",
+  "difficulty": 3,
+  "edits": ["shards/manifest.py", "shards/validate.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Validate shard filenames against naming convention", "check": "harness/m1.py",
+     "gates": [{"metric": "filenames_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Merge shard manifests into one logical manifest", "check": "harness/m2.py",
+     "gates": [{"metric": "manifests_merged", "op": "==", "threshold": 1},
+               {"metric": "tensors_correct", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid shard merges", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_merge", "op": "==", "threshold": 1}]}
+  ]
+}

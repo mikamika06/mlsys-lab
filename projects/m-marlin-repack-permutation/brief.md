@@ -1,0 +1,5 @@
+Our high-throughput LLM inference pipeline failed weight loading validation after integrating custom INT4 quantized weights converted for the Marlin kernel accelerator. The model runner initializes without throwing startup errors, but executing forward passes produces garbage outputs and triggers tensor shape assertion failures inside the low-level Marlin GEMM execution harness.
+
+Profiling the weight loader reveals that the runtime is attempting to perform dynamic weight layout re-packing on the GPU during inference, causing extreme latency spikes and memory overhead. Direct inspection of the pre-converted INT4 weight tensors shows that the weight matrix chunks passed from the quantization pipeline (packed in standard GPTQ uint32 format) do not match the expected physical memory layout and element order required by Marlin's warp-level matrix multiply instructions.
+
+We need a dedicated offline repacking module that converts standard INT4 quantized weight matrices into Marlin's exact tile-permuted uint32 tensor structure, along with inverse unpacking utilities and unit tests to ensure byte-exact layout roundtripping before shipping model weights to production.

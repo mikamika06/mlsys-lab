@@ -30,7 +30,7 @@ Each channel gets its own range, preserving precision when some channels contain
 
 Implement `quantize_keys_per_channel(K, bits=4)`.
 
-The function receives a 2-D NumPy array `K` with shape $(T, C)$ and returns a NumPy array of the same shape containing the dequantized keys.
+The function receives a list of lists of floats `K` with shape $(T, C)$ and returns a list of the same shape containing the dequantized keys.
 
 Requirements:
 
@@ -42,13 +42,12 @@ Requirements:
 ## Example
 
 ```python
-import numpy as np
 
-K = np.array([
+K = [
     [10.0, 0.2, 0.1],
     [12.0, 0.1, 0.3],
     [11.0, 0.2, 0.2],
-])
+]
 
 out = quantize_keys_per_channel(K, bits=4)
 ```
@@ -57,7 +56,7 @@ The first channel has a much larger magnitude than the remaining channels. Per-c
 
 ## What the gate checks
 
-The gate builds a NumPy reference implementation of per-channel quantization and compares the submitted output against it.
+The gate builds a Python reference implementation of per-channel quantization and compares the submitted output against it.
 
 The reported $mse$ is
 

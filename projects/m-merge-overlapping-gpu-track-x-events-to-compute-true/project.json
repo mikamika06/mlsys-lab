@@ -1,0 +1,46 @@
+{
+  "id": "m-merge-overlapping-gpu-track-x-events-to-compute-true",
+  "title": "Merge overlapping GPU track events and compute latencies",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "chrome-trace-and-kineto-json",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gpuprof/events.py",
+    "gpuprof/busy.py",
+    "gpuprof/latency.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse Chrome traces and detect unmatched B events",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "traces_parsed", "op": "==", "threshold": 1},
+        {"metric": "truncation_detected", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute true GPU busy time and launch latencies",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "busy_time_rel_err", "op": "<=", "threshold": 1e-05},
+        {"metric": "latencies_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching non-merged busy time",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unmerged_busy", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

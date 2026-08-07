@@ -1,0 +1,74 @@
+{
+  "id": "m-one-quantizer-four-granularities",
+  "title": "One quantizer, four granularities",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Granularity, symmetry, and quantization parameters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantizer/qparams.py",
+    "quantizer/core.py",
+    "quantizer/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive sym and asym qparams across four granularities",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "qparams_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantize, dequantize, and analyze granularity vs metadata trade-off",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "quantization_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-4
+        },
+        {
+          "metric": "metadata_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for sub-vector boundary handling",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_subvector_alignment_bug",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -55,7 +55,15 @@ def grade(sol, fx) -> dict:
     worst = 0.0
     for q, k, v, kept in cases:
         try:
-            got = np.asarray(sol.streaming_rope_attention(q, k, v, kept), dtype=np.float64)
+            got = np.asarray(
+                sol.streaming_rope_attention(
+                    q.tolist(),
+                    k.tolist(),
+                    v.tolist(),
+                    kept.tolist(),
+                ),
+                dtype=np.float64,
+            )
         except Exception:
             return {"max_abs_err": float("inf")}
         ref = _oracle(q, k, v, kept)

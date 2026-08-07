@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-accuracy-vs-pruning-ratio-with-fine-tune-rec",
+  "title": "Measure accuracy vs pruning ratio with fine-tune recovery",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Structured pruning mechanics & dependency graphs (Torch-Pruning)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["prune_eval/metrics.py", "prune_eval/simulate.py", "prune_eval/finetune.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Pruning ratio vs unrecovered accuracy measurement", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<", "threshold": 0.05}]},
+    {"n": 2, "title": "Fine-tune recovery curve simulation and evaluation", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: regression test for curve invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_recovery", "op": "==", "threshold": 1}]}
+  ]
+}

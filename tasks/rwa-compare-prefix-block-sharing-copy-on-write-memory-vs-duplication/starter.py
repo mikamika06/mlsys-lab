@@ -1,5 +1,4 @@
-import numpy as np
-
+import math
 
 def cow_prefix_attention(q_a, k_a, v_a, q_b, k_b, v_b, shared_prefix_len, block_size):
     """Compare COW prefix block-sharing memory to duplicated KV memory, and

@@ -1,39 +1,45 @@
+import math
 import numpy as np
 
 
 def _oracle_causal(logits):
-    out = np.asarray(logits, dtype=np.float64).copy()
-    q, k = out.shape
-    mask = np.zeros((q, k), dtype=np.float64)
-    mask[np.triu_indices(q, k, 1)] = -np.inf
-    return out + mask
+    q = len(logits)
+    k = len(logits[0]) if q > 0 else 0
+    out = [[float(val) for val in row] for row in logits]
+    for i in range(q):
+        for j in range(k):
+            if j > i:
+                out[i][j] = -math.inf
+    return out
 
 
 def _oracle_alibi(logits, slope):
-    out = np.asarray(logits, dtype=np.float64).copy()
-    q, k = out.shape
-    q_idx = np.arange(q)[:, None]
-    kv_idx = np.arange(k)[None, :]
-    return out + slope * (kv_idx - q_idx)
+    q = len(logits)
+    k = len(logits[0]) if q > 0 else 0
+    out = [[float(val) for val in row] for row in logits]
+    for i in range(q):
+        for j in range(k):
+            out[i][j] += float(slope) * (j - i)
+    return out
 
 
 def _max_abs(a, b):
-    a = np.asarray(a, dtype=np.float64)
-    b = np.asarray(b, dtype=np.float64)
-    finite = np.isfinite(a) & np.isfinite(b)
-    if np.any(a[~finite] != b[~finite]):
+    a_arr = np.asarray(a, dtype=np.float64)
+    b_arr = np.asarray(b, dtype=np.float64)
+    finite = np.isfinite(a_arr) & np.isfinite(b_arr)
+    if np.any(a_arr[~finite] != b_arr[~finite]):
         return float("inf")
     if np.any(finite):
-        return float(np.max(np.abs(a[finite] - b[finite])))
+        return float(np.max(np.abs(a_arr[finite] - b_arr[finite])))
     return 0.0
 
 
 def grade(sol, fx) -> dict:
     try:
         cases = [
-            np.array([[0.0, 1.0], [2.0, 3.0]]),
-            np.arange(12, dtype=np.float64).reshape(3, 4) / 7.0,
-            np.array([[1.5, -2.0, 4.0], [0.0, 1.0, 2.0]]),
+            [[0.0, 1.0], [2.0, 3.0]],
+            [[i / 7.0 for i in range(j, j + 4)] for j in range(0, 12, 4)],
+            [[1.5, -2.0, 4.0], [0.0, 1.0, 2.0]],
         ]
 
         causal_err = 0.0

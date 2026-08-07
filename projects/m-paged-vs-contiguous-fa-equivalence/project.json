@@ -1,0 +1,43 @@
+{
+  "id": "m-paged-vs-contiguous-fa-equivalence",
+  "title": "Paged vs Contiguous FlashAttention Equivalence",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "paged-kv-and-block-tables",
+  "difficulty": 3,
+  "edits": [
+    "paged_fa/utils.py",
+    "paged_fa/attention.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct contiguous KV cache and run standard attention",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "reconstruct_max_abs_err", "op": "<", "threshold": 1e-5},
+        {"metric": "standard_attn_max_abs_err", "op": "<", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute paged attention natively",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "paged_vs_ref_max_abs_err", "op": "<", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch padding inclusion",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_len", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

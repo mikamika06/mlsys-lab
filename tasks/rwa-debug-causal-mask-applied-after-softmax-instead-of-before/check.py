@@ -25,7 +25,10 @@ def grade(sol, fx) -> dict:
 
         ref = _oracle(Q, K, V)
         try:
-            got = np.asarray(sol.causal_self_attention(Q, K, V), dtype=np.float64)
+            got = np.asarray(
+                sol.causal_self_attention(Q.tolist(), K.tolist(), V.tolist()),
+                dtype=np.float64,
+            )
         except Exception:
             return {"max_abs_err": float("inf")}
         if got.shape != ref.shape:

@@ -57,7 +57,7 @@ def grade(sol, fx) -> dict:
     for K, Q, prompt_len, budget, recent_window in _cases():
         ref = _oracle(K, Q, prompt_len, budget, recent_window)
         try:
-            got = sol.h2o_eviction_trajectory(K.copy(), Q.copy(), prompt_len, budget, recent_window)
+            got = sol.h2o_eviction_trajectory(K.tolist(), Q.tolist(), prompt_len, budget, recent_window)
         except Exception:
             total += len(ref)
             continue

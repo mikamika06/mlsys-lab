@@ -1,5 +1,2 @@
-import numpy as np
-import sys
-
-def classify_objects(objs):
+def classify_objects(objs: Iterable[Any]) -> list[bool]:
     raise NotImplementedError('your code here')

@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def ragged_batched_prefill_attention(Q, K, V, cu_seqlens):
+def ragged_batched_prefill_attention(Q: list[list[list[float]]], K: list[list[list[float]]], V: list[list[list[float]]], cu_seqlens: list[int]) -> list[list[list[float]]]:
     """
     Q, K, V: (n_tok, n_heads, d) packed tokens from multiple sequences,
         concatenated along axis 0.

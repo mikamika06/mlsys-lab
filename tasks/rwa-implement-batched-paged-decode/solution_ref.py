@@ -1,23 +1,17 @@
 import math
-import numpy as np
 
 
 def batched_paged_decode(
-    q,
-    k_cache,
-    v_cache,
-    block_tables,
-    seq_lens,
-    block_size,
-):
-    q = np.asarray(q, dtype=np.float64)
-    k_cache = np.asarray(k_cache, dtype=np.float64)
-    v_cache = np.asarray(v_cache, dtype=np.float64)
-    block_tables = np.asarray(block_tables)
-    seq_lens = np.asarray(seq_lens)
-
-    batch, d = q.shape
-    out = np.zeros((batch, d), dtype=np.float64)
+    q: list[list[float]],
+    k_cache: list[list[list[float]]],
+    v_cache: list[list[list[float]]],
+    block_tables: list[list[int]],
+    seq_lens: list[int],
+    block_size: int,
+) -> list[list[float]]:
+    batch = len(q)
+    d = len(q[0])
+    out = [[0.0 for _ in range(d)] for _ in range(batch)]
     scale = math.sqrt(float(d))
 
     for b in range(batch):
@@ -27,15 +21,15 @@ def batched_paged_decode(
         for t in range(length):
             logical_block = t // block_size
             offset = t % block_size
-            physical_block = int(block_tables[b, logical_block])
-            k_list.append(k_cache[physical_block, offset])
-            v_list.append(v_cache[physical_block, offset])
+            physical_block = int(block_tables[b][logical_block])
+            k_list.append(k_cache[physical_block][offset])
+            v_list.append(v_cache[physical_block][offset])
 
         scores = []
         for t in range(length):
             dot_val = 0.0
             for j in range(d):
-                dot_val += k_list[t][j] * q[b, j]
+                dot_val += k_list[t][j] * q[b][j]
             scores.append(dot_val / scale)
 
         max_score = scores[0]
@@ -58,6 +52,6 @@ def batched_paged_decode(
             val = 0.0
             for t in range(length):
                 val += normalized_weights[t] * v_list[t][j]
-            out[b, j] = val
+            out[b][j] = val
 
     return out

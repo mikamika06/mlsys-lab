@@ -1,0 +1,46 @@
+{
+  "id": "m-optimal-per-tensor-offload-target-gpu-cpu-nvme",
+  "title": "Optimal per-tensor offload placement and ZeRO-Infinity log analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "ZeRO-Offload, ZeRO-Infinity & ZeRO++",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "offload_target/placement.py",
+    "offload_target/adam_bench.py",
+    "offload_target/log_parser.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Optimal per-tensor target placement across GPU, CPU, and NVMe",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "placements_matched", "op": ">=", "threshold": 5},
+        {"metric": "valid_capacity_count", "op": "==", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "CPU Adam benchmark modeling and NVMe log parsing",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "adam_benchmarks_matched", "op": "==", "threshold": 1},
+        {"metric": "log_metrics_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for capacity and latency constrained placement",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_capacity_violations", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "m-parse-a-real-gguf-file-header-tensor-table-with-stru",
+  "title": "Parse GGUF headers, tensor tables, and k-quant sizes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "GGUF format & llama.cpp Metal backend",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ggufparser/__init__.py",
+    "ggufparser/parser.py",
+    "ggufparser/quant.py",
+    "ggufparser/converter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse GGUF file header and tensor table",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "header_matched", "op": "==", "threshold": 1}, {"metric": "tensors_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Compute tensor byte size via k-quant block formula",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "sizes_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Quantize and verify size conformity with regression test",
+      "check": "harness/m3.py",
+      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1}, {"metric": "passes_on_good", "op": "==", "threshold": 1}, {"metric": "catches_broken_size", "op": "==", "threshold": 1}]
+    }
+  ]
+}

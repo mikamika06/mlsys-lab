@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def mha_gqa_mqa_reconstruct(Q: np.ndarray, K: np.ndarray, V: np.ndarray, group_sizes):
+def mha_gqa_mqa_reconstruct(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], V: list[list[list[list[float]]]], group_sizes):
     """Reconstruct attention output under several KV-grouping arities.
 
     Q: (batch, seq_q, n_heads, head_dim)

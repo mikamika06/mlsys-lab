@@ -1,0 +1,22 @@
+{
+  "id": "m-optimal-reduce-bucket-size-closed-form",
+  "title": "Optimal ZeRO-2 Reduce Bucket Size and Memory Fragmentation Analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "ZeRO Stage 2 — gradient partitioning + communication volume",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["zero_diag/parser.py", "zero_diag/fragmentation.py", "zero_diag/planner.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse ZeRO-2 memory estimator logs and construct model state profiles", "check": "harness/m1.py",
+     "gates": [{"metric": "logs_parsed", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Analyze non-contiguous gradient fragmentation curve and compute closed-form bucket size", "check": "harness/m2.py",
+     "gates": [{"metric": "fragmentation_matched", "op": "==", "threshold": 1},
+               {"metric": "optimal_bucket_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression suite catching improper bucket estimation and parser failures", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_suboptimal_bucket", "op": "==", "threshold": 1}]}
+  ]
+}

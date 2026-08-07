@@ -1,0 +1,69 @@
+{
+  "id": "m-page-size-unification-find-the-common-block-size",
+  "title": "Page-size unification: find the common block size",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "hybrid-and-sliding-window-cache-management",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvpage/unify.py",
+    "kvpage/alloc.py",
+    "kvpage/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Find the unified common token block size",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Page allocation and waste calculation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "alloc_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "metrics_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches unaligned block choices",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unaligned_choice",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

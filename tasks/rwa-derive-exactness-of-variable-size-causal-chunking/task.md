@@ -21,7 +21,7 @@ causal mask produces the same result as evaluating the full causal attention mat
 
 Implement `causal_chunk_attention(Q, K, V, chunks)`.
 
-The inputs are NumPy arrays:
+The inputs are list:
 - `Q` has shape $(n, d)$.
 - `K` has shape $(n, d)$.
 - `V` has shape $(n, m)$.
@@ -32,17 +32,16 @@ attention in chunks, where each chunk of queries attends to all keys from previo
 chunks and the visible prefix of the current chunk. The output must be numerically
 equivalent to full causal attention.
 
-Use NumPy operations. The implementation should support different chunk sizes for the
+Use Python operations. The implementation should support different chunk sizes for the
 same sequence length.
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1., 0.], [0., 1.], [1., 1.]])
+Q = [[1., 0.], [0., 1.], [1., 1.]]
 K = Q.copy()
-V = np.array([[1.], [2.], [3.]])
+V = [[1.], [2.], [3.]]
 
 out = causal_chunk_attention(Q, K, V, [1, 2])
 ```
@@ -52,7 +51,7 @@ complete visible prefix according to the causal rule.
 
 ## What the gate checks
 
-The gate builds a NumPy fp64 full causal-attention oracle. It runs the submitted
+The gate builds a Python fp64 full causal-attention oracle. It runs the submitted
 chunked implementation on several variable chunk schedules and computes the largest
 absolute difference
 

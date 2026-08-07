@@ -1,0 +1,22 @@
+{
+  "id": "m-noise-aware-latency-regression-flag",
+  "title": "Noise-aware latency regression flag",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Numerical validation and performance regression gating",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["latency/stats.py", "latency/detector.py", "latency/gating.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute robust statistics for latency distributions", "check": "harness/m1.py",
+     "gates": [{"metric": "stats_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Distinguish arithmetic reassociation from silent eager fallback", "check": "harness/m2.py",
+     "gates": [{"metric": "fallback_flagged", "op": "==", "threshold": 1},
+               {"metric": "reassociation_handled", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: CI guard catching silent eager fallbacks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_silent_fallback", "op": "==", "threshold": 1}]}
+  ]
+}

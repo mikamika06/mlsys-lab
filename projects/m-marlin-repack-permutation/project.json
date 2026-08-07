@@ -1,0 +1,21 @@
+{
+  "id": "m-marlin-repack-permutation",
+  "title": "Marlin weight repack permutation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Bit packing and kernel-specific weight layouts",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["repack/permute.py", "repack/pack.py", "repack/unpack.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Permutation map and weight reordering", "check": "harness/m1.py",
+     "gates": [{"metric": "byte_exact_fraction", "op": ">=", "threshold": 1.0}]},
+    {"n": 2, "title": "Standard int4 packing and Marlin repacking", "check": "harness/m2.py",
+     "gates": [{"metric": "byte_exact_fraction", "op": ">=", "threshold": 1.0}]},
+    {"n": 3, "title": "Unpacking and regression tests", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_repack", "op": "==", "threshold": 1}]}
+  ]
+}

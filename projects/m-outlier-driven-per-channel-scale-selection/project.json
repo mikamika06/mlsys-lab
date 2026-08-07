@@ -1,0 +1,43 @@
+{
+  "id": "m-outlier-driven-per-channel-scale-selection",
+  "title": "Outlier-driven per-channel scale selection",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Applied quantization with torchao quantize_",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/scale.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Standard max scale and simulation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "max_scale_match", "op": "==", "threshold": 1},
+        {"metric": "sim_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "MSE-optimal scale search across channels",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "mse_ratio", "op": ">=", "threshold": 1.05}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches naive max scale fallback",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_max_scale", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

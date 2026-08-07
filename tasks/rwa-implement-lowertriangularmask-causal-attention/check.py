@@ -9,10 +9,10 @@ def _ref(logits):
 
 def grade(sol, fx) -> dict:
     cases = [
-        np.random.randn(5, 5),
-        np.random.rand(8, 8) * 10,
-        np.array([[0, 1], [2, 3]], dtype=int),
-        np.full((4, 4), 7.5, dtype=np.float32),
+        np.random.randn(5, 5).tolist(),
+        (np.random.rand(8, 8) * 10).tolist(),
+        [[0, 1], [2, 3]],
+        np.full((4, 4), 7.5, dtype=np.float32).tolist(),
     ]
     max_err = 0.0
     for logits in cases:
@@ -21,9 +21,10 @@ def grade(sol, fx) -> dict:
         except Exception as e:
             return {"max_abs_err": float("inf")}
         ref = _ref(logits)
-        if got.shape != ref.shape:
+        got_arr = np.asarray(got)
+        if got_arr.shape != ref.shape:
             return {"max_abs_err": float("inf")}
-        err = max_abs_err(ref, got)
+        err = max_abs_err(ref, got_arr)
         if err > max_err:
             max_err = err
     return {"max_abs_err": max_err}

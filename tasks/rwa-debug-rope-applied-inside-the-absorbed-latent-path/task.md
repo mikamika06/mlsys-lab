@@ -44,14 +44,13 @@ Do not apply RoPE to the absorbed latent branch.
 ## Example
 
 ```python
-import numpy as np
 
-z = np.array([[1.0, 2.0]])
-head = np.array([[3.0, 4.0]])
-w_latent = np.eye(2)
-w_head = np.eye(2)
-cos = np.array([[1.0]])
-sin = np.array([[0.0]])
+z = [[1.0, 2.0]]
+head = [[3.0, 4.0]]
+w_latent = [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]
+w_head = [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]
+cos = [[1.0]]
+sin = [[0.0]]
 
 out = mla_kv_features(z, head, w_latent, w_head, cos, sin)
 # The latent part stays [1, 2] and the head part is RoPE rotated.
@@ -59,7 +58,7 @@ out = mla_kv_features(z, head, w_latent, w_head, cos, sin)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that performs the absorbed latent computation and applies RoPE only to the decoupled head branch. The returned array is compared with the oracle using maximum absolute error:
+The gate builds a Python oracle that performs the absorbed latent computation and applies RoPE only to the decoupled head branch. The returned array is compared with the oracle using maximum absolute error:
 
 $$
 \max_i |y_i - \hat{y}_i| \le 10^{-4}.

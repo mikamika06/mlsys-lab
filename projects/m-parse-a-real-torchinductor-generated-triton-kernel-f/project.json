@@ -1,0 +1,69 @@
+{
+  "id": "m-parse-a-real-torchinductor-generated-triton-kernel-f",
+  "title": "Parse a real TorchInductor-generated Triton kernel",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "torch.compile / TorchInductor-generated Triton kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "inductor_parse/parser.py",
+    "inductor_parse/diff.py",
+    "inductor_parse/autotune.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse tuning parameters from generated Triton kernels",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "kernels_parsed",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diff autotune candidates and select optimal timing logs",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "diffs_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "argmin_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catching unparsed parameter defaults",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_ignored_defaults",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

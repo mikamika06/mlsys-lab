@@ -1,6 +1,11 @@
-TRACES = [
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 9, 10, 11],
-    [1, 2, 3, 4, 5, 6, 12, 13],
-    [1, 2, 14, 15, 16]
-]
+import random
+
+def get_test_traces():
+    rng = random.Random(42)
+    base = [rng.randint(0, 100) for _ in range(50)]
+    traces = []
+    for _ in range(10):
+        branch_point = rng.randint(10, len(base))
+        branch = base[:branch_point] + [rng.randint(101, 200) for _ in range(30)]
+        traces.append(branch)
+    return traces

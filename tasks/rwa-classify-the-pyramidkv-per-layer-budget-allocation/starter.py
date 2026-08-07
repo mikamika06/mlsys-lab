@@ -1,6 +1,4 @@
-import numpy as np
-
-def pyramidkv_allocation(total_budget: int, num_layers: int) -> np.ndarray:
+def pyramidkv_allocation(total_budget: int, num_layers: int) -> list[int]:
     """WRONG IMPLEMENTATION – distributes the budget equally and then gives
 any remainder to the top layers.  This does not satisfy the pyramidal
 property and will fail the exact‑match gate."""

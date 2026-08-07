@@ -12,32 +12,31 @@ The variance of a set $\{r_i\}$ is
 
 $$\operatorname{var}(\{r_i\})=\frac1n\sum_{i=1}^{n}(r_i-\bar r)^2,$$
 
-where $\bar r$ is the mean range.  In NumPy this can be expressed with `np.ptp` (peak‑to‑peak) and `np.var`.
+where $\bar r$ is the mean range. In Python this can be expressed with `max` and `min` (for peak‑to‑peak) and `statistics.variance`.
 
 ## Task
 
 Implement a function
 
 ```python
-def classify_quant_axis(K: np.ndarray) -> int:
+def classify_quant_axis(K: list[list[float]]) -> int:
     ...
 ```
 
-that takes a 2‑D NumPy array $K$ of shape $(N,D)$ and returns the integer `0` if quantizing along rows is preferable, or `1` if quantizing along columns is preferable.  
+that takes a 2‑D list $K$ of shape $(N,D)$ and returns the integer `0` if quantizing along rows is preferable, or `1` if quantizing along columns is preferable.  
 The decision should be based on comparing
 
 $$\operatorname{var}\bigl(\{\operatorname{range}(K_i)\}_{i=0}^{N-1}\bigr) \quad\text{vs}\quad
 \operatorname{var}\bigl(\{\operatorname{range}(K^j)\}_{j=0}^{D-1}\bigr),$$
 
 where $K_i$ denotes the $i$‑th row and $K^j$ the $j$‑th column.  
-Use only NumPy operations; no explicit Python loops.
+Use only Python operations; no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
-K = np.array([[0, 1, 2],
-              [3, 4, 5]])
+K = [[0, 1, 2],
+              [3, 4, 5]]
 # Row ranges: [2, 2] → variance 0
 # Column ranges: [3, 3, 3] → variance 0
 # Ties are broken by choosing axis 0.

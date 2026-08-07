@@ -1,7 +1,7 @@
 import sys
-import numpy as np
+from typing import Any, Iterable
 
-def classify_objects(objs):
+def classify_objects(objs: Iterable[Any]) -> list[bool]:
     res = []
     for obj in objs:
         t = type(obj)
@@ -11,4 +11,4 @@ def classify_objects(objs):
             res.append(False)
             continue
         res.append(sys.getsizeof(obj) > sys.getsizeof(empty))
-    return np.array(res, dtype=bool)
+    return res

@@ -24,7 +24,7 @@ cross-request information leak, not just a numerical rounding issue.
 Fix `ragged_causal_attention`:
 
 ```python
-def ragged_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, cu_seqlens: np.ndarray) -> np.ndarray:
+def ragged_causal_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], cu_seqlens: list[int]) -> list[list[float]]:
     ...
 ```
 
@@ -47,13 +47,12 @@ restricted to its own segment.
 ## Example
 
 ```python
-import numpy as np
 
 # two 1-token "sequences" packed together: cu_seqlens = [0, 1, 2]
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[10.0, 0.0], [0.0, 20.0]])
-cu_seqlens = np.array([0, 1, 2])
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[10.0, 0.0], [0.0, 20.0]]
+cu_seqlens = [0, 1, 2]
 
 out = ragged_causal_attention(Q, K, V, cu_seqlens)
 # row 1 (segment 1, token 0) may ONLY see column 1 (its own segment) even

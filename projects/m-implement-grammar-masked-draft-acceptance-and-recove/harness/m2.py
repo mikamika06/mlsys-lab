@@ -1,17 +1,33 @@
 import ref
-from reference.speculative.metrics import measure_acceptance_loss as ref_measure
-
 
 def check(workdir):
-    from speculative.metrics import measure_acceptance_loss
-
-    unmasked_drafts, target_probs_list, grammar_masks = ref.generate_fixtures()
-    ref_res = ref_measure(unmasked_drafts, target_probs_list, grammar_masks)
+    import sys
+    sys.path.insert(0, workdir)
     try:
-        got_res = measure_acceptance_loss(unmasked_drafts, target_probs_list, grammar_masks)
-    except Exception:
-        return {"loss_match": 0.0}
+        from speculative.metrics import measure_acceptance_loss
+    except ImportError:
+        return {"loss_match": 0.0, "_note": "ImportError"}
 
-    if isinstance(got_res, dict) and abs(got_res.get("acceptance_loss", -1) - ref_res["acceptance_loss"]) < 1e-5:
-        return {"loss_match": 1.0}
-    return {"loss_match": 0.0}
+    out = {"loss_match": 0.0}
+    want = ref.measure_acceptance_loss(
+        ref.BATCH_DRAFT_TOKENS,
+        ref.BATCH_TARGET_PROBS,
+        ref.BATCH_DRAFT_PROBS,
+        ref.BATCH_GRAMMAR_MASKS,
+        ref.BATCH_RANDOM_SAMPLES
+    )
+
+    try:
+        got = measure_acceptance_loss(
+            ref.BATCH_DRAFT_TOKENS,
+            ref.BATCH_TARGET_PROBS,
+            ref.BATCH_DRAFT_PROBS,
+            ref.BATCH_GRAMMAR_MASKS,
+            ref.BATCH_RANDOM_SAMPLES
+        )
+        if abs(got - want) < 1e-5:
+            out["loss_match"] = 1.0
+    except Exception:
+        pass
+
+    return out

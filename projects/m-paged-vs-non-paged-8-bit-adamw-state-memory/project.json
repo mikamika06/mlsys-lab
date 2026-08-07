@@ -1,0 +1,49 @@
+{
+  "id": "m-paged-vs-non-paged-8-bit-adamw-state-memory",
+  "title": "Paged vs non-paged 8-bit AdamW state memory and QLoRA weight merging",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "QLoRA fine-tuning with bitsandbytes and PEFT",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "qlora_mem/adamw.py",
+    "qlora_mem/planner.py",
+    "qlora_mem/lora_merge.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Paged vs non-paged AdamW state memory and peak VRAM plan",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "adamw_paged_matched", "op": "==", "threshold": 1},
+        {"metric": "planner_bytes_matched", "op": "==", "threshold": 1},
+        {"metric": "fits_vram_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "4-bit dequantization, LoRA delta application, and weight merging",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "dequant_rel_err", "op": "<=", "threshold": 1e-4},
+        {"metric": "merged_rel_err", "op": "<=", "threshold": 1e-4},
+        {"metric": "requant_rel_err", "op": "<=", "threshold": 0.05}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches unpaged memory leaks and missing workspace",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unpaged_leak", "op": "==", "threshold": 1},
+        {"metric": "catches_unscaled_merge", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

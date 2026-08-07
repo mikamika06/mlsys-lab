@@ -1,0 +1,5 @@
+During chat-template evaluation for llama.cpp and GGUF-based inference pipelines, function calling responses intermittently break or trigger Jinja rendering errors. Downstream consumers expect the `arguments` field inside `tool_calls` to be a valid JSON string, but the incoming messages structure sometimes supplies Python dictionaries, nested structures, or pre-formatted JSON strings with inconsistent formatting.
+
+When these unnormalized data structures hit Jinja chat templates, `arguments` fields that are raw dicts fail string operations or get rendered into Python object representations like `{'loc': 'NYC'}` instead of standard JSON like `{"loc": "NYC"}`. This invalidates the JSON payloads expected by tool call parsers and downstream client code.
+
+To resolve this issue, you must implement a robust tool call argument normalization pipeline in `toolutils/normalize.py`. The normalizer must handle various input formats—converting dictionaries or standardizing JSON strings—and process full message lists for Jinja execution. Finally, write a safeguard test suite in `tests/test_regression.py` that verifies normalized JSON argument string invariants.

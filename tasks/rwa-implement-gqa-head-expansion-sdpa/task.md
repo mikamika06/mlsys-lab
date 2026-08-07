@@ -43,11 +43,11 @@ $$
 Implement `gqa_head_expansion_attention(Q, K, V)`:
 
 ```python
-def gqa_head_expansion_attention(Q, K, V):
+def gqa_head_expansion_attention(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], V: list[list[list[list[float]]]]) -> tuple[list[list[list[list[float]]]], float]:
     ...
 ```
 
-Inputs are NumPy arrays:
+Inputs are list:
 - `Q` has shape $(batch, seq_q, n_q, d)$.
 - `K`, `V` have shape $(batch, seq_k, n_{kv}, d)$, with $n_q$ a positive
   integer multiple of $n_{kv}$.
@@ -56,24 +56,23 @@ Steps:
 1. Compute $r = n_q / n_{kv}$.
 2. Expand `K` and `V` from $n_{kv}$ heads to $n_q$ heads by repeating each
    KV head $r$ times consecutively along the head axis (`repeat_interleave`,
-   e.g. `np.repeat(..., r, axis=2)` — **not** `tile`, which would cycle
+e.g. `[x for x in ... for _ in range(r)]` — **not** `tile`, which would cycle
    through all KV heads before repeating any of them).
 3. Run standard scaled dot-product attention between `Q` and the expanded
    `K`/`V`, with scale $1/\sqrt{d}$.
 
 Return a tuple `(output, memory_ratio)`:
-- `output`: `float64` NumPy array of shape $(batch, seq_q, n_q, d)$.
+- `output`: `float64` list of shape $(batch, seq_q, n_q, d)$.
 - `memory_ratio`: a Python float equal to $n_{kv} / n_q$.
 
-Vectorize with NumPy; no explicit Python loop over heads/batch/sequence
+Vectorize with Python; no explicit Python loop over heads/batch/sequence
 positions is required.
 
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 Q = rng.standard_normal((1, 3, 4, 8))   # 4 query heads
 K = rng.standard_normal((1, 3, 2, 8))   # 2 KV heads -> r = 2
 V = rng.standard_normal((1, 3, 2, 8))
@@ -91,7 +90,7 @@ out_mha, ratio_mha = gqa_head_expansion_attention(Q, Kf, Vf)
 
 ## What the gate checks
 
-The gate builds several seeded `(Q, K, V)` cases with `np.random.default_rng(0)`
+The gate builds several seeded `(Q, K, V)` cases with `random.Random(0)`
 across different batch sizes, sequence lengths, and $(n_q, n_{kv})$ pairs,
 including the degenerate $n_{kv} = n_q$ case (must reproduce plain MHA
 exactly) and multiple $r > 1$ groupings. For each case it independently

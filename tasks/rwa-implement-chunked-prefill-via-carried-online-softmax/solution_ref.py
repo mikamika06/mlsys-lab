@@ -1,12 +1,14 @@
 import math
-import numpy as np
 
 
-def chunked_causal_prefill(q, k, v, chunk_sizes):
-    q = np.asarray(q, dtype=np.float64)
-    k = np.asarray(k, dtype=np.float64)
-    v = np.asarray(v, dtype=np.float64)
-    n, d = q.shape
+def chunked_causal_prefill(
+    q: list[list[float]],
+    k: list[list[float]],
+    v: list[list[float]],
+    chunk_sizes: list[int],
+) -> list[list[float]]:
+    n = len(q)
+    d = len(q[0])
     scale = 1.0 / math.sqrt(d)
 
     starts = [0]
@@ -15,7 +17,7 @@ def chunked_causal_prefill(q, k, v, chunk_sizes):
         curr += size
         starts.append(curr)
     num_chunks = len(chunk_sizes)
-    
+
     out = [[0.0] * d for _ in range(n)]
 
     for t in range(num_chunks):
@@ -36,7 +38,7 @@ def chunked_causal_prefill(q, k, v, chunk_sizes):
                 for j in range(ks_len):
                     dot = 0.0
                     for c in range(d):
-                        dot += q[s + i, c] * k[ks + j, c]
+                        dot += q[s + i][c] * k[ks + j][c]
                     sc = dot * scale
                     if u == t and j > i:
                         sc = -float('inf')
@@ -83,7 +85,7 @@ def chunked_causal_prefill(q, k, v, chunk_sizes):
                 for c in range(d):
                     pv_sum = 0.0
                     for j in range(ks_len):
-                        pv_sum += p[i][j] * v[ks + j, c]
+                        pv_sum += p[i][j] * v[ks + j][c]
                     val = acc[i][c] * correction[i] + pv_sum
                     acc_row.append(val)
                 acc_new.append(acc_row)
@@ -96,4 +98,4 @@ def chunked_causal_prefill(q, k, v, chunk_sizes):
             for c in range(d):
                 out[s + i][c] = acc[i][c] * inv_l
 
-    return np.array(out, dtype=np.float64)
+    return out

@@ -59,7 +59,22 @@ def grade(sol, fx) -> dict:
     for args in cases:
         ref = _oracle(*args)
         try:
-            got = np.asarray(sol.batched_paged_decode(*args), dtype=np.float64)
+            q_list = args[0].tolist()
+            k_cache_list = args[1].tolist()
+            v_cache_list = args[2].tolist()
+            block_tables_list = args[3].tolist()
+            seq_lens_list = args[4].tolist()
+            block_size_val = args[5]
+
+            got = np.asarray(sol.batched_paged_decode(
+                q_list,
+                k_cache_list,
+                v_cache_list,
+                block_tables_list,
+                seq_lens_list,
+                block_size_val
+            ), dtype=np.float64)
+
             if got.shape != ref.shape:
                 return {"max_abs_err": float("inf")}
             err = float(np.max(np.abs(got - ref)))

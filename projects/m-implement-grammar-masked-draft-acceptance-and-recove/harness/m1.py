@@ -1,21 +1,36 @@
 import ref
-import numpy as np
-
 
 def check(workdir):
-    from speculative.acceptance import compute_accepted_length
+    import sys
+    sys.path.insert(0, workdir)
+    try:
+        from speculative.acceptance import compute_accepted_length
+    except ImportError:
+        return {"acceptance_rate": 0.0, "_note": "ImportError"}
 
-    unmasked_drafts, target_probs_list, grammar_masks = ref.generate_fixtures()
-    ref_lengths = []
-    for dt, tp, gm in zip(unmasked_drafts, target_probs_list, grammar_masks):
-        dp = [np.ones((ref.VOCAB_SIZE,)) / ref.VOCAB_SIZE for _ in dt]
-        ref_lengths.append(ref.compute_accepted_length(dt, tp, dp, gm))
+    out = {"acceptance_rate": 0.0}
+    ok = 0
+    total = len(ref.BATCH_DRAFT_TOKENS)
+    for i in range(total):
+        want = ref.compute_accepted_length(
+            ref.BATCH_DRAFT_TOKENS[i],
+            ref.BATCH_TARGET_PROBS[i],
+            ref.BATCH_DRAFT_PROBS[i],
+            ref.BATCH_GRAMMAR_MASKS[i],
+            ref.BATCH_RANDOM_SAMPLES[i]
+        )
+        try:
+            got = compute_accepted_length(
+                ref.BATCH_DRAFT_TOKENS[i],
+                ref.BATCH_TARGET_PROBS[i],
+                ref.BATCH_DRAFT_PROBS[i],
+                ref.BATCH_GRAMMAR_MASKS[i],
+                ref.BATCH_RANDOM_SAMPLES[i]
+            )
+            if got == want:
+                ok += 1
+        except Exception:
+            pass
 
-    got_lengths = []
-    for dt, tp, gm in zip(unmasked_drafts, target_probs_list, grammar_masks):
-        dp = [np.ones((ref.VOCAB_SIZE,)) / ref.VOCAB_SIZE for _ in dt]
-        got_lengths.append(compute_accepted_length(dt, tp, dp, gm))
-
-    matches = sum(1 for r, g in zip(ref_lengths, got_lengths) if r == g)
-    rate = float(matches) / float(len(ref_lengths))
-    return {"acceptance_rate": rate}
+    out["acceptance_rate"] = float(ok) / total if total > 0 else 0.0
+    return out

@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def append_paged_kv(k_pool, v_pool, new_k, new_v, cu_new_seqlens, seq_start_pos, block_tables, block_size):
     """Write each request's newly computed K/V vectors into their correct
     physical slots in a paged KV cache pool (PagedAttention-style append).

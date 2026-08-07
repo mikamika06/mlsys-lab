@@ -1,0 +1,46 @@
+{
+  "id": "m-implement-recompute-mode-preemption-and-count-re-exe",
+  "title": "Recompute preemption and PCIe swap cost model",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "preemption-swapping-and-scheduling-policy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "preempt/recompute.py",
+    "preempt/swap.py",
+    "preempt/selector.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Implement recompute-mode preemption and token counting",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "recompute_matched", "op": "==", "threshold": 1},
+        {"metric": "tokens_rel_err", "op": "<=", "threshold": 1e-6}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Swap-mode PCIe cost model and profile policy selection",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "swap_rel_err", "op": "<=", "threshold": 1e-6},
+        {"metric": "profiles_matched", "op": ">=", "threshold": 6}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test suite catching faulty selector logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_inverted_selector", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

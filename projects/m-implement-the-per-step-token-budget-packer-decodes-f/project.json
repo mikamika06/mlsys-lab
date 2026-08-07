@@ -1,0 +1,21 @@
+{
+  "id": "m-implement-the-per-step-token-budget-packer-decodes-f",
+  "title": "Per-step token budget packer and ITL jitter model",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "chunked-prefill-and-token-budget",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tokenpacker/packer.py", "tokenpacker/steps.py", "tokenpacker/jitter.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-step token budget packer", "check": "harness/m1.py",
+     "gates": [{"metric": "packer_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Step count and prefill chunking", "check": "harness/m2.py",
+     "gates": [{"metric": "steps_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: ITL jitter regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_jitter_bug", "op": "==", "threshold": 1}]}
+  ]
+}

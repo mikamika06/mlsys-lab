@@ -1,11 +1,15 @@
 import ref
 
 def check(workdir):
-    from radix.tree import TokenRadixTree
+    from radixtree.tree import TokenRadixTree
     tree = TokenRadixTree()
-    for trace in ref.TRACES:
-        tree.insert(trace, value=True)
-    matched, _ = tree.longest_match([1, 2, 3, 4, 5, 6, 99])
-    if matched == [1, 2, 3, 4, 5, 6]:
-        return {"tree_matched": 1.0}
-    return {"tree_matched": 0.0, "_note": f"got matched {matched}"}
+    traces = ref.get_test_traces()
+    ok = 0
+    total = len(traces)
+    for t in traces:
+        tree.insert(t)
+    for t in traces:
+        matched, _ = tree.longest_match(t)
+        if matched == t:
+            ok += 1
+    return {"tree_match": float(ok >= total)}

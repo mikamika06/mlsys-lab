@@ -1,0 +1,42 @@
+{
+  "id": "m-naive-early-exit-probe-reuse-the-final-unembedding-a",
+  "title": "Naive early-exit probe reusing final unembedding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Self-speculative decoding & early exit (LayerSkip)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "earlyexit/probe.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute naive early-exit agreement",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Sweep exit layers and compare tradeoff curve",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "curve_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for probe behavior",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_probe", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

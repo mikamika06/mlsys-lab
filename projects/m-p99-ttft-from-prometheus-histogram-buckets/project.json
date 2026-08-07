@@ -1,0 +1,46 @@
+{
+  "id": "m-p99-ttft-from-prometheus-histogram-buckets",
+  "title": "p99 TTFT from Prometheus histogram buckets",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-observability-and-slos",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "kvobs/histogram.py",
+    "kvobs/triage.py",
+    "kvobs/alerting.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "p99 TTFT from Prometheus histogram buckets",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "quantiles_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Incident triage and alert hysteresis",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "triage_matched", "op": "==", "threshold": 1},
+        {"metric": "alert_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression tests for telemetry and alerting",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_no_interpolation", "op": "==", "threshold": 1},
+        {"metric": "catches_flapping_alert", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

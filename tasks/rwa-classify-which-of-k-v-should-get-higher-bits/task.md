@@ -12,19 +12,18 @@ When deploying models on hardware with limited precision, we often quantise \(K\
 Implement `classify_high_bits(K, V, total_bits=8)`:
 
 ```python
-def classify_high_bits(K: np.ndarray, V: np.ndarray, total_bits:int=8) -> int:
+def classify_high_bits(K: list[list[float]], V: list[list[float]], total_bits: int=8) -> int:
     ...
 ```
 
 The function must return `0` if allocating the higher precision to \(K\) (and lower to \(V\)) yields a smaller mean‑squared error in the attention output than the opposite allocation; otherwise it should return `1`.  
-Use only NumPy operations; no explicit Python loops.
+Use only Python operations; no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
-K = np.array([[0.0, 1.0], [2.0, -1.0]])
-V = np.array([[1.0, 0.5], [-0.5, 2.0]])
+K = [[0.0, 1.0], [2.0, -1.0]]
+V = [[1.0, 0.5], [-0.5, 2.0]]
 idx = classify_high_bits(K, V, total_bits=8)
 print(idx)   # e.g., 0
 ```

@@ -1,6 +1,8 @@
-def diagnose_collapse(run_a_metrics, run_b_metrics):
-    loss_a = run_a_metrics.get("acceptance_loss", 0.0)
-    loss_b = run_b_metrics.get("acceptance_loss", 0.0)
+def diagnose_collapse(metrics_a, metrics_b):
+    loss_a = metrics_a.get("loss", 0.0)
+    loss_b = metrics_b.get("loss", 0.0)
+    if loss_a > loss_b + 0.2:
+        return "run_a"
     if loss_b > loss_a + 0.2:
-        return "collapsed"
-    return "stable"
+        return "run_b"
+    return "neither"

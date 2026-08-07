@@ -1,0 +1,5 @@
+We are receiving numerous user complaints about low throughput when running our varlen attention kernel in hybrid serving scenarios. It turns out that many users are passing highly skewed sequence lengths in their batches—for example, one sequence of 1000 tokens and thirty sequences of 20 tokens—but are not bothering to prepare `cu_seqlens` for the packed API. Instead, they just pad everything. To make matters worse, some are arbitrarily hardcoding `max_seqlen=2048` even when their longest sequence is much shorter.
+
+We need an internal tool to quantify exactly how much compute they are wasting. The goal is to compute the theoretical FLOP cost (approximated using block-wise layout calculations) for both packed and padded modes, and then calculate a `throughput_ratio`. We also want to measure the degradation caused by mis-specifying `max_seqlen` relative to the optimal padded configuration.
+
+Build a simulator that computes `cu_seqlens`, the base layout costs, and the resulting metrics. This will help us automatically flag inefficient API usage and suggest the optimal `max_seqlen` and packing strategies to the end user.

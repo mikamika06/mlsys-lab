@@ -17,29 +17,27 @@ The base allocation is then
 $$\tilde a_i = \left\lfloor \frac{B\,w_i}{S}\right\rfloor,$$
 which may leave a remainder $R=B-\sum_i \tilde a_i$.  The remaining slots are distributed one by one starting from the bottom layer (largest weight) until all $B$ slots are assigned.
 
-This algorithm is fully deterministic, uses only integer arithmetic and NumPy vectorisation, and guarantees that the resulting allocation respects the pyramid property while exactly exhausting the budget.
+This algorithm is fully deterministic, uses only integer arithmetic and Python vectorisation, and guarantees that the resulting allocation respects the pyramid property while exactly exhausting the budget.
 
 ## Task
 
 Implement the function `pyramidkv_allocation`:
 
 ```python
-import numpy as np
 
-def pyramidkv_allocation(total_budget: int, num_layers: int) -> np.ndarray:
+def pyramidkv_allocation(total_budget: int, num_layers: int) -> list[int]:
     ...
 ```
 
-The function receives an integer total budget and the number of layers, and must return a one‑dimensional NumPy array of length `num_layers`.  Each element should be an integer (any signed dtype is acceptable).  The returned allocation must satisfy the properties described above.
+The function receives an integer total budget and the number of layers, and must return a list of floats of length `num_layers`.  Each element should be an integer (any signed dtype is acceptable).  The returned allocation must satisfy the properties described above.
 
 ## Example
 
 ```python
-import numpy as np
 
 # Total budget B = 7 over N = 4 layers
 alloc = pyramidkv_allocation(7, 4)
-print(alloc)          # [0 1 2 4]
+print(alloc)  # [0, 1, 3, 3]
 ```
 
 Explanation:  
@@ -49,4 +47,4 @@ The remaining slot (`R = 1`) is given to the bottom layer, producing `[0, 1, 2, 
 
 ## What the gate checks
 
-A single exact‑match gate verifies that the returned array equals a reference computed by an oracle implementation.  The grader recomputes the allocation using the same algorithm described above and compares it element‑wise with `np.array_equal`.  No hard‑coded expected values are used; the reference is generated on the fly for each test case.
+A single exact‑match gate verifies that the returned list equals a reference computed by an oracle implementation. The grader recomputes the allocation using the same algorithm described above and compares it element‑wise by checking equality of the lists. No hard‑coded expected values are used; the reference is generated on the fly for each test case.

@@ -1,0 +1,45 @@
+{
+  "id": "m-measure-real-optimizer-state-byte-size-torch-adamw-v",
+  "title": "Measure and verify real optimizer state byte sizes and convergence for AdamW8bit",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "paged-optimizers-8bit-adam",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "optbits/measure.py",
+    "optbits/train.py",
+    "optbits/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure real optimizer-state byte size: torch AdamW vs AdamW8bit",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "size_ratio_valid", "op": "==", "threshold": 1},
+        {"metric": "bytes_counted", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verify AdamW8bit converges on a short CPU training loop",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "converged", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for optimizer memory and convergence invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_memory", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

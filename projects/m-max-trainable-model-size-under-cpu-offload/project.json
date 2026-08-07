@@ -1,0 +1,22 @@
+{
+  "id": "m-max-trainable-model-size-under-cpu-offload",
+  "title": "Max trainable model size and ZeRO++ communication optimization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "ZeRO-Offload, ZeRO-Infinity & ZeRO++",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["offload/model_size.py", "offload/quantize.py", "offload/zero_plus.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Max trainable model size under CPU offload", "check": "harness/m1.py",
+     "gates": [{"metric": "size_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "INT8 block quantization for hpZ all-gather", "check": "harness/m2.py",
+     "gates": [{"metric": "quant_match", "op": "==", "threshold": 1},
+               {"metric": "rel_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: ZeRO++ 4x communication reduction test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_reduction", "op": "==", "threshold": 1}]}
+  ]
+}

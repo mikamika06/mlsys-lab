@@ -1,0 +1,68 @@
+{
+  "id": "m-onnx-runtime-vs-openvino-output-and-latency-agreemen",
+  "title": "Cross-tool CPU inference benchmarking: ONNX Runtime vs OpenVINO",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "Cross-tool CPU inference benchmarking",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bench/agreement.py",
+    "bench/xeon_ranking.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Mac benchmark agreement: numerical tolerance and latency ratio",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "mac_agreements_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Xeon three-way ranking and precision-matched fairness check",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rankings_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "fairness_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test catches mixed-precision comparison",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_mixed_precision",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

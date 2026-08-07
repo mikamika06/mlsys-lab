@@ -8,7 +8,7 @@ def _oracle(total_budget, num_layers):
     # distribute remaining slots from bottom layer upwards
     for i in range(remainder):
         base[num_layers - 1 - i] += 1
-    return base
+    return base.tolist()
 
 def grade(sol, fx) -> dict:
     ok = 1.0
@@ -16,10 +16,10 @@ def grade(sol, fx) -> dict:
         for B, N in [(10, 4), (7, 4), (15, 6), (3, 5), (20, 8)]:
             got = sol.pyramidkv_allocation(B, N)
             ref = _oracle(B, N)
-            if not isinstance(got, np.ndarray) or got.shape != ref.shape:
+            if not isinstance(got, list) or len(got) != len(ref):
                 ok = 0.0
                 break
-            if not np.array_equal(got, ref):
+            if got != ref:
                 ok = 0.0
                 break
     except Exception:

@@ -1,0 +1,21 @@
+{
+  "id": "m-parse-a-streamed-ndjson-response-into-ttft-prefill-t",
+  "title": "Streamed NDJSON Timing and Bottleneck Analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "timing-counters-and-throughput-math",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["streammetrics/parser.py", "streammetrics/bench.py", "streammetrics/classify.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse streamed NDJSON lines into timing metrics", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.001}]},
+    {"n": 2, "title": "Compute median decode throughput with warmup filtering", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.001}]},
+    {"n": 3, "title": "Classify bottleneck and regression safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_inverted_dominance", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-measure-real-optimizer-state-dict-bytes-full-ft-vs-l",
+  "title": "Optimizer State Memory Profiler",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "optimizer-state-memory",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["optmem/measure.py", "optmem/qlora.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure full vs LoRA state bytes", "check": "harness/m1.py",
+     "gates": [{"metric": "ratio_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Quantized optimizer delta", "check": "harness/m2.py",
+     "gates": [{"metric": "delta_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch leaked frozen states", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_leaked_states", "op": "==", "threshold": 1}]}
+  ]
+}

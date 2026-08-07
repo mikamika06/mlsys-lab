@@ -1,0 +1,46 @@
+{
+  "id": "m-packed-vs-padded-throughput",
+  "title": "Modeling packed vs padded sequence throughput",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "varlen-api-and-sequence-packing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "seqpack/core.py",
+    "seqpack/simulate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Packed sequences and cu_seqlens",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "cu_seqlens_matched", "op": "==", "threshold": 1.0},
+        {"metric": "packed_cost_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Throughput ratio and max_seqlen misspecification",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "padded_cost_matched", "op": "==", "threshold": 1.0},
+        {"metric": "throughput_ratio_matched", "op": "==", "threshold": 1.0},
+        {"metric": "effects_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguarding invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_invariant", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -20,14 +20,14 @@ highest values in $s$. Ties are resolved by choosing smaller indices first.
 Implement `select_snapkv_indices(attn, k)`:
 
 ```python
-def select_snapkv_indices(attn: np.ndarray, k: int) -> np.ndarray:
+def select_snapkv_indices(attn: list[list[float]], k: int) -> list[int]:
     ...
 ```
 
-The input `attn` is a 2-D NumPy array of shape $(h, w)$ containing attention
+The input `attn` is a list of lists of floats of shape $(h, w)$ containing attention
 scores for $h$ attention heads over $w$ observation-window tokens.
 
-Return a 1-D NumPy array containing exactly $k$ integer token indices. The indices
+Return a list of floats containing exactly $k$ integer token indices. The indices
 must be sorted in ascending order in the returned array.
 
 The implementation must pool over the head axis to create one score per token.
@@ -36,12 +36,11 @@ Do not pool over the token axis.
 ## Example
 
 ```python
-import numpy as np
 
-attn = np.array([
+attn = [
     [0.1, 0.8, 0.2, 0.4],
     [0.3, 0.6, 0.9, 0.2],
-])
+]
 
 idx = select_snapkv_indices(attn, 2)
 # The token scores are [0.2, 0.7, 0.55, 0.3]
@@ -52,7 +51,7 @@ idx = select_snapkv_indices(attn, 2)
 ## What the gate checks
 
 The gate builds several attention matrices and computes the expected selected
-token indices with a NumPy oracle. It requires the implementation output to
+token indices with a Python oracle. It requires the implementation output to
 exactly match the oracle result. Implementations that average over the
 observation-window token axis instead of the head axis produce head scores rather
 than token scores and fail the check.

@@ -1,0 +1,21 @@
+{
+  "id": "m-p50-p95-with-warmup",
+  "title": "On-device latency measurement done right",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "On-device latency measurement done right",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["measure.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Basic p50/p95 and cold-start measurement", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.001}]},
+    {"n": 2, "title": "Benchmark with outlier rejection", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.001}]},
+    {"n": 3, "title": "Safety net: regression test for outlier rejection", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_rejection", "op": "==", "threshold": 1}]}
+  ]
+}

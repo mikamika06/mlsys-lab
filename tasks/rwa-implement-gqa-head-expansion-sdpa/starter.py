@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def gqa_head_expansion_attention(Q, K, V):
+def gqa_head_expansion_attention(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], V: list[list[list[list[float]]]]) -> tuple[list[list[list[list[float]]]], float]:
     """
     Q: (batch, seq_q, n_q, d) queries.
     K, V: (batch, seq_k, n_kv, d) with n_q a multiple of n_kv.

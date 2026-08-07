@@ -1,0 +1,44 @@
+{
+  "id": "m-numpy-reference-sdpa-with-scale-mask-and-gqa",
+  "title": "Reference SDPA with GQA and Backend Dispatch",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "scaled_dot_product_attention: API and backend dispatch",
+  "size": "M",
+  "difficulty": 3,
+  "edits": [
+    "sdpa/reference.py",
+    "sdpa/dispatch.py",
+    "sdpa/repair.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Numpy reference SDPA with GQA",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "matches", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Predict backend and repair config",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "matches", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches broken causal masks",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_causal", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

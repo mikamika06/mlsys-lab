@@ -1,0 +1,41 @@
+{
+  "id": "m-offloadedcache-equivalence-test",
+  "title": "Offloaded Cache Equivalence and Legacy Tuple Porting",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "hf-transformers-cache-api",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kvcache/legacy.py", "kvcache/offloaded.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect legacy tuple usage and port it",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "is_legacy_correct", "op": "==", "threshold": 1},
+        {"metric": "port_correct", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Implement OffloadedCache",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "update_matches", "op": "==", "threshold": 1},
+        {"metric": "seq_len_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Equivalence Test Safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_offload", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

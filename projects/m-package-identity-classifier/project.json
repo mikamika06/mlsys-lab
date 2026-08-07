@@ -1,0 +1,64 @@
+{
+  "id": "m-package-identity-classifier",
+  "title": "Package-identity classifier",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "version-and-hardware-gating",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fa_classifier/classifier.py",
+    "fa_classifier/gating.py",
+    "fa_classifier/dispatch.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify package identity and binary features",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "packages_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Determine valid kernel target and gating state",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "dispatch_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch invalid hardware feature overrides",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_overrides",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

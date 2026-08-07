@@ -43,12 +43,7 @@ out of attention.
 Implement `cow_prefix_attention`:
 
 ```python
-def cow_prefix_attention(
-    q_a: np.ndarray, k_a: np.ndarray, v_a: np.ndarray,
-    q_b: np.ndarray, k_b: np.ndarray, v_b: np.ndarray,
-    shared_prefix_len: int,
-    block_size: int,
-) -> tuple[float, np.ndarray, np.ndarray]:
+def cow_prefix_attention(q_a, k_a, v_a, q_b, k_b, v_b, shared_prefix_len, block_size):
     ...
 ```
 
@@ -77,11 +72,10 @@ either output.
 ## Example
 
 ```python
-import numpy as np
 
 d = 4
-q_a = k_a = v_a = np.arange(3 * d, dtype=np.float64).reshape(3, d)
-q_b = k_b = v_b = np.arange(3 * d, dtype=np.float64).reshape(3, d)
+q_a = k_a = v_a = [[float(i * d + j) for j in range(d)] for i in range(3)]
+q_b = k_b = v_b = [[float(i * d + j) for j in range(d)] for i in range(3)]
 
 ratio, out_a, out_b = cow_prefix_attention(q_a, k_a, v_a, q_b, k_b, v_b,
                                             shared_prefix_len=3, block_size=2)
@@ -97,7 +91,7 @@ block_size)` scenarios — varying sequence lengths, block sizes that divide
 evenly and ones that leave a remainder, a shared prefix of zero, a shared
 prefix equal to the shorter sequence's full length, and seeded-random
 query/key/value arrays — and computes the reference `size_ratio` and both
-causal attention outputs independently in NumPy (float64 throughout: block
+causal attention outputs independently in Python (float64 throughout: block
 counts from `ceil`/`floor` on the lengths, attention via a masked
 `softmax(QK^T/sqrt(d))V`), never calling your function or hardcoding an
 expected value.

@@ -16,22 +16,18 @@ The masked logits are $L + M$.
 
 ## Task
 
-Implement a function `causal_mask(logits)` that takes a 2‑D NumPy array of shape $(N,N)$ and returns the same shape with $-\infty$ added to all strictly upper‑triangular entries. The function must work for any numeric dtype; the output should be float64.
+Implement a function `causal_mask(logits)` that takes a 2‑D list of shape $(N,N)$ and returns the same shape with $-\infty$ added to all strictly upper‑triangular entries. The function must work for any numeric dtype; the output should be float64.
 
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([[0, 1, 2],
+logits = [[0, 1, 2],
                    [3, 4, 5],
-                   [6, 7, 8]], dtype=float)
+                   [6, 7, 8]]
 masked = causal_mask(logits)
-print(masked)
-# [[ 0.   1.   2.]
-#  [ 3.   4.   5.]
-#  [-inf -inf -inf]]
+print(masked)  # [[0.0, -inf, -inf], [3.0, 4.0, -inf], [6.0, 7.0, 8.0]]
 ```
 
 ## What the gate checks
 
-The grader computes a reference mask using NumPy and compares your output with `max_abs_err`. The error must be at most $10^{-5}$. Additionally, the shape of the returned array must match the input.
+The grader computes a reference mask using Python and compares your output with `max_abs_err`. The error must be at most $10^{-5}$. Additionally, the shape of the returned array must match the input.

@@ -19,7 +19,7 @@ def _survives(path):
         return False
 
 def check(workdir):
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_schedule": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_split": 0.0}
     path = os.path.join(workdir, "tests", "test_regression.py")
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
@@ -28,22 +28,23 @@ def check(workdir):
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail: {e}"
+        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {str(e)[:120]}"
         return out
     if first is None:
-        out["_note"] = "no test functions"
+        out["_note"] = "no test_* functions found"
         return out
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import radix.schedule as s
-    good_sched = s.schedule_requests
-    def broken_sched(requests, policy="fcfs"):
-        return list(reversed(requests))
+    import radixtree.tree as rt
+    orig_insert = rt.TokenRadixTree.insert
 
-    s.schedule_requests = broken_sched
+    def broken_insert(self, tokens, value=None):
+        pass
+
+    rt.TokenRadixTree.insert = broken_insert
     try:
-        out["catches_broken_schedule"] = 0.0 if _survives(path) else 1.0
+        out["catches_broken_split"] = 0.0 if _survives(path) else 1.0
     finally:
-        s.schedule_requests = good_sched
+        rt.TokenRadixTree.insert = orig_insert
     return out

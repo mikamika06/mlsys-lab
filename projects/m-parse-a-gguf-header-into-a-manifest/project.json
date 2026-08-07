@@ -1,0 +1,68 @@
+{
+  "id": "m-parse-a-gguf-header-into-a-manifest",
+  "title": "Parse a GGUF header into a manifest",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-container-format",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_parser/header.py",
+    "gguf_parser/overhead.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse GGUF header and decoding all metadata value types",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "headers_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Calculate container overhead and tensor alignment padding waste",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "overhead_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "waste_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for alignment padding",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unaligned_waste",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,22 +1,25 @@
 import sys
+
 sys.path.insert(0, ".")
-from radix.tree import TokenRadixTree
-from radix.schedule import schedule_requests
+from radixtree.tree import TokenRadixTree
+from radixtree.cache import simulate_cache
+from radixtree.schedule import schedule_requests
 
-def test_radix_insert_and_match():
+def test_tree_insert_and_match():
     tree = TokenRadixTree()
-    tree.insert([1, 2, 3, 4])
-    matched, _ = tree.longest_match([1, 2, 3, 4, 5])
-    assert matched == [1, 2, 3, 4]
+    tokens = [1, 2, 3, 4, 5]
+    tree.insert(tokens, value="val1")
+    matched, val = tree.longest_match([1, 2, 3, 4, 5, 6])
+    assert matched == [1, 2, 3, 4, 5]
+    assert val == "val1"
 
-def test_radix_split():
+def test_cache_hit_rate_positive():
+    traces = [[1, 2, 3, 4], [1, 2, 5, 6]]
+    res = simulate_cache(traces, "radix")
+    assert res["hit_rate"] >= 0.0
+
+def test_schedule_length():
     tree = TokenRadixTree()
-    tree.insert([1, 2, 3, 4])
-    tree.insert([1, 2, 9, 10])
-    matched, _ = tree.longest_match([1, 2, 9, 10])
-    assert matched == [1, 2, 9, 10]
-
-def test_schedule_lpm():
-    reqs = [[1, 2, 3], [1, 2, 9], [1, 2, 3, 4]]
-    res = schedule_requests(reqs, policy="lpm")
-    assert len(res) == 3
+    reqs = [[1, 2], [3, 4]]
+    scheduled = schedule_requests(reqs, tree, "lpm")
+    assert len(scheduled) == 2

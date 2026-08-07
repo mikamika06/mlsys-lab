@@ -26,10 +26,7 @@ by smaller position index).
 Implement `h2o_eviction_trajectory`:
 
 ```python
-def h2o_eviction_trajectory(
-    K: np.ndarray, Q: np.ndarray,
-    prompt_len: int, budget: int, recent_window: int,
-) -> list[list[int]]:
+def h2o_eviction_trajectory(K: list[list[float]], Q: list[list[float]], prompt_len: int, budget: int, recent_window: int) -> list[list[int]]:
     ...
 ```
 
@@ -51,9 +48,8 @@ def h2o_eviction_trajectory(
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 prompt_len, T, d = 3, 5, 4
 K = rng.standard_normal((prompt_len + T, d))
 Q = rng.standard_normal((T, d))
@@ -68,7 +64,7 @@ traj = h2o_eviction_trajectory(K, Q, prompt_len=3, budget=4, recent_window=1)
 
 The grader builds several seeded `(K, Q, prompt_len, budget,
 recent_window)` decode simulations and replays the exact same recurrence
-independently in NumPy — accumulate softmax attention mass into a score
+independently in Python — accumulate softmax attention mass into a score
 dict, append the new position, evict the arg-min-score non-protected
 resident when over budget — never calling your function, never
 hardcoding an expected trajectory.

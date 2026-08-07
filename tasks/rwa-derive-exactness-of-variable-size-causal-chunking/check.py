@@ -29,7 +29,7 @@ def grade(sol, fx) -> dict:
         V = rng.normal(size=(n, m))
         ref = _oracle(Q, K, V)
         try:
-            got = np.asarray(sol.causal_chunk_attention(Q, K, V, chunks), dtype=np.float64)
+            got = np.asarray(sol.causal_chunk_attention(Q.tolist(), K.tolist(), V.tolist(), chunks), dtype=np.float64)
             err = float(np.max(np.abs(got - ref)))
         except Exception:
             return {"max_abs_err": float("inf")}

@@ -34,8 +34,8 @@ def apply_attention_bias(logits, is_causal=False, alibi_slope=None):
     ...
 ```
 
-The input `logits` is a 2-D NumPy array with shape $(q, k)$ containing attention
-scores. Return a `float64` NumPy array.
+The input `logits` is a list of lists of floats with shape $(q, k)$ containing attention
+scores. Return a `float64` list.
 
 When `is_causal=True`, add the explicit causal additive mask where entries above the
 diagonal become negative infinity.
@@ -49,9 +49,8 @@ Do not modify the input array in place.
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.zeros((3, 3), dtype=np.float32)
+logits = [[0.0] * 3 for _ in range(3)]
 out = apply_attention_bias(logits, is_causal=True, alibi_slope=0.5)
 
 # The upper triangle contains -inf from the causal mask.
@@ -60,7 +59,7 @@ out = apply_attention_bias(logits, is_causal=True, alibi_slope=0.5)
 
 ## What the gate checks
 
-The gate builds an independent NumPy oracle. It compares the causal output against a
+The gate builds an independent Python oracle. It compares the causal output against a
 reference that constructs the explicit upper-triangular $-\infty$ mask. It also
 compares ALiBi output against the analytic bias formula
 $B_{ij}=s(j-i)$.

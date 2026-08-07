@@ -1,15 +1,16 @@
 import math
-import numpy as np
 
 
-def causal_chunk_attention(Q, K, V, chunks):
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-
-    N, D = Q.shape
-    M = V.shape[1]
-    out = np.empty((N, M), dtype=np.float64)
+def causal_chunk_attention(
+    Q: list[list[float]],
+    K: list[list[float]],
+    V: list[list[float]],
+    chunks: list[int],
+) -> list[list[float]]:
+    N = len(Q)
+    D = len(Q[0])
+    M = len(V[0])
+    out = [[0.0 for _ in range(M)] for _ in range(N)]
     scale = math.sqrt(D)
 
     start = 0
@@ -24,7 +25,7 @@ def causal_chunk_attention(Q, K, V, chunks):
                 else:
                     dot = 0.0
                     for d in range(D):
-                        dot += Q[q_row_idx, d] * K[j, d]
+                        dot += Q[q_row_idx][d] * K[j][d]
                     scores.append(dot / scale)
 
             max_score = -float("inf")
@@ -46,8 +47,8 @@ def causal_chunk_attention(Q, K, V, chunks):
             for m in range(M):
                 val = 0.0
                 for j in range(end):
-                    val += norm_weights[j] * V[j, m]
-                out[q_row_idx, m] = val
+                    val += norm_weights[j] * V[j][m]
+                out[q_row_idx][m] = val
 
         start = end
 

@@ -59,20 +59,19 @@ the in-place mutation of `k_pool` and `v_pool`.
 ## Example
 
 ```python
-import numpy as np
 
 block_size = 4
-k_pool = np.zeros((3, block_size, 2))
-v_pool = np.zeros((3, block_size, 2))
+k_pool = [[[0 for _ in range(2)] for _ in range(block_size)] for _ in range(3)]
+v_pool = [[[0 for _ in range(2)] for _ in range(block_size)] for _ in range(3)]
 
 # one request, already has 3 tokens cached, now appends 2 more.
 # block_table = [0, 1] -> logical block 0 is physical block 0, logical
 # block 1 is physical block 1.
-new_k = np.array([[1.0, 1.0], [2.0, 2.0]])
-new_v = np.array([[9.0, 9.0], [8.0, 8.0]])
-cu_new_seqlens = np.array([0, 2])
-seq_start_pos = np.array([3])
-block_tables = [np.array([0, 1])]
+new_k = [[1.0, 1.0], [2.0, 2.0]]
+new_v = [[9.0, 9.0], [8.0, 8.0]]
+cu_new_seqlens = [0, 2]
+seq_start_pos = [3]
+block_tables = [[0, 1]]
 
 append_paged_kv(k_pool, v_pool, new_k, new_v, cu_new_seqlens, seq_start_pos, block_tables, block_size)
 # token at logical pos 3 -> block 3//4=0, slot 3 -> k_pool[0, 3] == [1, 1]

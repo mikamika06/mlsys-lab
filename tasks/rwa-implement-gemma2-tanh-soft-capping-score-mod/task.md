@@ -23,28 +23,27 @@ $$\mathrm{softmax}(x_i)=\frac{e^{x_i}}{\sum_j e^{x_j}}.$$
 Implement `attention_with_score_mod(Q, K, V, cap)`:
 
 ```python
-def attention_with_score_mod(Q, K, V, cap):
+def attention_with_score_mod(Q: list[list[float]], K: list[list[float]], V: list[list[float]], cap: float) -> list[list[float]]:
     ...
 ```
 
-The inputs are NumPy arrays:
+The inputs are list:
 - `Q` has shape $(n,d)$.
 - `K` has shape $(m,d)$.
 - `V` has shape $(m,h)$.
 - `cap` is a positive floating point scalar.
 
-Return the attention output as a `float64` NumPy array of shape $(n,h)$.
+Return the attention output as a `float64` list of shape $(n,h)$.
 
-The implementation should apply the tanh soft-capping operation to the scaled attention scores before softmax. Use NumPy operations rather than Python loops.
+The implementation should apply the tanh soft-capping operation to the scaled attention scores before softmax. Use Python operations rather than Python loops.
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0], [4.0]])
+Q = [[1.0, 0.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0], [4.0]]
 
 out = attention_with_score_mod(Q, K, V, 1.0)
 ```
@@ -53,7 +52,7 @@ The output is the weighted value aggregation after soft-capping the two attentio
 
 ## What the gate checks
 
-The gate computes a NumPy reference implementation of Gemma2 tanh score soft-capping in `float64`:
+The gate computes a Python reference implementation of Gemma2 tanh score soft-capping in `float64`:
 
 $$S' = c\tanh(S/c), \quad S = QK^\top/\sqrt{d}.$$
 

@@ -1,0 +1,64 @@
+{
+  "id": "m-measure-real-perplexity-and-needle-recall-before-aft",
+  "title": "Measure real perplexity and needle-recall before/after scaling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "context-extension-training",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "longctx/scaling.py",
+    "longctx/perplexity.py",
+    "longctx/needle.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Perplexity before and after scaling",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "perplexity_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Needle recall before and after scaling",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "recall_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching broken scaling invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_invariant",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

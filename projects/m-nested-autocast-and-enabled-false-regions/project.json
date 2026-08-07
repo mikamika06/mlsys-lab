@@ -1,0 +1,21 @@
+{
+  "id": "m-nested-autocast-and-enabled-false-regions",
+  "title": "Nested autocast state and disabled regions",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "AMP autocast semantics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["nested_cast/core.py", "nested_cast/context.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Tracking nested autocast stack states", "check": "harness/m1.py",
+     "gates": [{"metric": "states_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Resolving effective enabled flag under nested overrides", "check": "harness/m2.py",
+     "gates": [{"metric": "effective_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for nested context switches", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_nesting", "op": "==", "threshold": 1}]}
+  ]
+}

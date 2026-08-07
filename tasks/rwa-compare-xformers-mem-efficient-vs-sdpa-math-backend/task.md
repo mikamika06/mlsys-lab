@@ -24,12 +24,7 @@ the same mathematical result up to floating-point error.
 Implement `compare_sdpa_backends(Q, K, V, bias)`:
 
 ```python
-def compare_sdpa_backends(
-    Q: np.ndarray,
-    K: np.ndarray,
-    V: np.ndarray,
-    bias: np.ndarray | None,
-) -> tuple[np.ndarray, np.ndarray]:
+def compare_sdpa_backends(Q, K, V, bias):
     ...
 ```
 
@@ -45,11 +40,10 @@ The function must support an optional bias matrix with shape $(n, m)$. When `bia
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0, 3.0], [4.0, 5.0]])
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0, 3.0], [4.0, 5.0]]
 bias = None
 
 mem, math = compare_sdpa_backends(Q, K, V, bias)
@@ -59,7 +53,7 @@ mem, math = compare_sdpa_backends(Q, K, V, bias)
 
 ## What the gate checks
 
-The gate computes a NumPy fp64 attention oracle using the same bias and compares both
+The gate computes a Python fp64 attention oracle using the same bias and compares both
 returned backend results against it. It also checks that the two returned arrays agree.
 
 The reported metric is

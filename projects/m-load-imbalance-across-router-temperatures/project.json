@@ -1,0 +1,46 @@
+{
+  "id": "m-load-imbalance-across-router-temperatures",
+  "title": "Fixing All-to-All Hangs in MoE Routing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Mixture-of-Experts parallelism (expert parallel, all-to-all)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moe_routing/router.py",
+    "moe_routing/capacity.py",
+    "moe_routing/comm.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Temperature-scaled routing and load imbalance",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "assignments_match", "op": "==", "threshold": 1},
+        {"metric": "imbalance_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Optimal capacity factor and A2A shapes",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "capacity_match", "op": "==", "threshold": 1},
+        {"metric": "shapes_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: Catch asymmetric All-to-All shapes",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_asymmetric_shapes", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

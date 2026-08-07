@@ -1,8 +1,6 @@
-import numpy as np
+import math
 
-
-def h2o_eviction_trajectory(K: np.ndarray, Q: np.ndarray, prompt_len: int,
-                             budget: int, recent_window: int) -> list[list[int]]:
+def h2o_eviction_trajectory(K: list[list[float]], Q: list[list[float]], prompt_len: int, budget: int, recent_window: int) -> list[list[int]]:
     """Simulate H2O (Heavy-Hitter Oracle) KV-cache eviction over decode.
 
     K          : (prompt_len + T, d) keys for the prompt AND every token

@@ -1,0 +1,5 @@
+An internal compilation pipeline running PyTorch 2.x on our transformer inference workloads has started logging frequent graph breaks during dynamic shape execution. The latency spike on the serving nodes has doubled over the past week as fallback paths trigger repeated python interpreter round-trips during token generation steps.
+
+The compilation logs show multiple entries indicating torch.fx graph fragmentation due to unsupported attribute lookups, dynamic control flow inside forward passes, and uncaptured tensor operations on CPU/GPU boundary transfers. Engineers need to inspect the raw graph_breaks output log provided in the workspace, identify the root causes behind each distinct break type, restructure the target neural network module to achieve fullgraph-clean compilation under `torch.compile(fullgraph=True)`, and verify the break inventory before and after the refactoring work.
+
+Your task is to parse the graph break logs, clean the module to be completely free of graph breaks, and build a test safeguard that ensures future regressions re-introduce no breaks.

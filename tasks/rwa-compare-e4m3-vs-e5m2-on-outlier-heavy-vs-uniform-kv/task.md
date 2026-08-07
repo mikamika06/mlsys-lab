@@ -34,7 +34,7 @@ This produces a real, observable trade-off. Given a tensor of raw
 Implement `fp8_format_errors`:
 
 ```python
-def fp8_format_errors(x: np.ndarray) -> tuple[float, float]:
+def fp8_format_errors(x: list[float] | list[list[float]]) -> tuple[float, float]:
     ...
 ```
 
@@ -61,9 +61,8 @@ $\text{sign}\cdot 2^{(\text{exp}-\text{bias})}\cdot(1+\text{mantissa}/2^m)$.
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1.0, 500.0, 0.002])
+x = [1.0, 500.0, 0.002]
 e4m3_err, e5m2_err = fp8_format_errors(x)
 # 500.0 exceeds E4M3's 448 max -> it saturates to 448.0 -> abs error 52.0
 # dominates e4m3_err. E5M2 represents ~500 as a normal number with only
@@ -72,7 +71,7 @@ e4m3_err, e5m2_err = fp8_format_errors(x)
 
 ## What the gate checks
 
-The grader builds two deterministic KV-like tensors with `numpy`'s
+The grader builds two deterministic KV-like tensors with standard Python's
 `default_rng(7)`:
 
 - a **uniform / well-scaled** tensor (`std ≈ 3`, nothing near either format's

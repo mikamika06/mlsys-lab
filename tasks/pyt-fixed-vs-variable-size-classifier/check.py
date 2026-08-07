@@ -1,5 +1,4 @@
 import sys
-import numpy as np
 
 def _reference_is_variable(obj):
     t = type(obj)
@@ -27,8 +26,8 @@ def grade(sol, fx) -> dict:
         got = sol.classify_objects(fixtures)
     except Exception:
         return {"exact_match": 0.0}
-    if not isinstance(got, np.ndarray) or got.dtype != bool:
+    if not isinstance(got, list) or any(not isinstance(x, bool) for x in got):
         return {"exact_match": 0.0}
-    ref = np.array([_reference_is_variable(o) for o in fixtures], dtype=bool)
-    ok = float(np.array_equal(got, ref))
+    ref = [_reference_is_variable(o) for o in fixtures]
+    ok = float(got == ref)
     return {"exact_match": ok}

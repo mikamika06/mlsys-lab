@@ -1,0 +1,21 @@
+{
+  "id": "m-memory-error-pareto-over-blocksize-and-double-quant",
+  "title": "Memory-error Pareto frontier and footprint with double quantization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Double (nested) quantization and memory accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantplan/pareto.py", "quantplan/budget.py", "quantplan/footprint.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Memory-error Pareto over blocksize and double quant", "check": "harness/m1.py",
+     "gates": [{"metric": "pareto_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Smallest config meeting an MSE budget", "check": "harness/m2.py",
+     "gates": [{"metric": "budget_matched", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "Footprint with non-quantized modules and regression safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_accounting", "op": "==", "threshold": 1}]}
+  ]
+}

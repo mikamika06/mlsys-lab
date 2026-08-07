@@ -1,0 +1,68 @@
+{
+  "id": "m-online-softmax-merge",
+  "title": "Online Softmax Merging and Tolerance Scaling",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "numerical-correctness-and-tolerances",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "onlinesoftmax/merge.py",
+    "onlinesoftmax/harness.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Correct online softmax block merging",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "blocks_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Upstream-style tolerance harness and scaling curve",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "harness_valid",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "scaling_valid",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test suite catches inaccurate merges",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_naive_merge",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

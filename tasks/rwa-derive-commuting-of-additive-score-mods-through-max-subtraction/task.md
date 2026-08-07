@@ -32,12 +32,7 @@ This allows additive score modifiers to be incorporated while computing the same
 Implement `fused_attention_scores(scores, alibi, window, soft_cap)`:
 
 ```python
-def fused_attention_scores(
-    scores: np.ndarray,
-    alibi: np.ndarray,
-    window: int,
-    soft_cap: float,
-) -> np.ndarray:
+def fused_attention_scores(scores, alibi, window, soft_cap):
     ...
 ```
 
@@ -66,10 +61,9 @@ Your implementation may combine these operations into a fused computation, but t
 ## Example
 
 ```python
-import numpy as np
 
-scores = np.array([[1.0, 2.0], [0.5, 0.0]])
-alibi = np.array([[0.0, -0.2], [0.1, 0.0]])
+scores = [[1.0, 2.0], [0.5, 0.0]]
+alibi = [[0.0, -0.2], [0.1, 0.0]]
 
 out = fused_attention_scores(scores, alibi, window=1, soft_cap=2.0)
 
@@ -78,7 +72,7 @@ out = fused_attention_scores(scores, alibi, window=1, soft_cap=2.0)
 
 ## What the gate checks
 
-The gate computes a NumPy oracle by applying the documented sequence of score modifiers and stable softmax operations in `float64`.
+The gate computes a Python oracle by applying the documented sequence of score modifiers and stable softmax operations in `float64`.
 
 The returned matrix is compared with the oracle using the maximum absolute error:
 

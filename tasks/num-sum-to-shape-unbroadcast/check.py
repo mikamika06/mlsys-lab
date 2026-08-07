@@ -33,7 +33,7 @@ def grade(sol, fx) -> dict:
         grad = rng.randn(*target_shape)
         ref = _ref_sum_to_shape(grad, input_shape)
         try:
-            got = sol.sum_to_shape(grad, input_shape)
+            got = sol.sum_to_shape(grad.tolist(), input_shape)
             got = np.asarray(got, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}

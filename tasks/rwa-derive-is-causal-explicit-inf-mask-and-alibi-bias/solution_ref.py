@@ -1,18 +1,16 @@
-import numpy as np
+import math
 
 
 def apply_attention_bias(logits, is_causal=False, alibi_slope=None):
-    out = np.asarray(logits, dtype=np.float64).copy()
-    q, k = out.shape
+    q = len(logits)
+    k = len(logits[0]) if q > 0 else 0
+    out = [[float(val) for val in row] for row in logits]
 
-    if alibi_slope is not None:
-        q_idx = np.arange(q)[:, None]
-        kv_idx = np.arange(k)[None, :]
-        out += float(alibi_slope) * (kv_idx - q_idx)
-
-    if is_causal:
-        mask = np.zeros((q, k), dtype=np.float64)
-        mask[np.triu_indices(q, k, 1)] = -np.inf
-        out += mask
+    for i in range(q):
+        for j in range(k):
+            if alibi_slope is not None:
+                out[i][j] += float(alibi_slope) * (j - i)
+            if is_causal and j > i:
+                out[i][j] = -math.inf
 
     return out

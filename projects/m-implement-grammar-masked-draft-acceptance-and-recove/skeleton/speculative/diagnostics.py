@@ -1,2 +1,2 @@
-def diagnose_collapse(run_a_metrics, run_b_metrics):
+def diagnose_collapse(metrics_a, metrics_b):
     raise NotImplementedError

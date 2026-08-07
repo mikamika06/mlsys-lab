@@ -1,0 +1,22 @@
+{
+  "id": "m-implement-head-importance-scoring-via-expected-sensi",
+  "title": "Head importance scoring and greedy pruning",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Attention-head pruning & importance scoring",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["headprune/importance.py", "headprune/greedy.py", "headprune/latency.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Head importance via expected sensitivity", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-4}]},
+    {"n": 2, "title": "Greedy head-removal order and latency reduction", "check": "harness/m2.py",
+     "gates": [{"metric": "order_match", "op": "==", "threshold": 1},
+               {"metric": "latency_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for pruning invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_pruning", "op": "==", "threshold": 1}]}
+  ]
+}

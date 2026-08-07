@@ -30,14 +30,7 @@ $t \bmod B$ inside that block.
 Implement `batched_paged_decode`:
 
 ```python
-def batched_paged_decode(
-    q: np.ndarray,
-    k_cache: np.ndarray,
-    v_cache: np.ndarray,
-    block_tables: np.ndarray,
-    seq_lens: np.ndarray,
-    block_size: int,
-) -> np.ndarray:
+def batched_paged_decode(q: list[list[float]], k_cache: list[list[list[float]]], v_cache: list[list[list[float]]], block_tables: list[list[int]], seq_lens: list[int], block_size: int) -> list[list[float]]:
     ...
 ```
 
@@ -60,13 +53,12 @@ scaled dot-product attention independently for each request.
 ## Example
 
 ```python
-import numpy as np
 
-q = np.array([[1.0, 0.0]])
-k_cache = np.array([[[1.0, 0.0], [0.0, 1.0]]])
-v_cache = np.array([[[10.0, 0.0], [0.0, 20.0]]])
-block_tables = np.array([[0]])
-seq_lens = np.array([2])
+q = [[1.0, 0.0]]
+k_cache = [[[1.0, 0.0], [0.0, 1.0]]]
+v_cache = [[[10.0, 0.0], [0.0, 20.0]]]
+block_tables = [[0]]
+seq_lens = [2]
 
 out = batched_paged_decode(
     q, k_cache, v_cache, block_tables, seq_lens, 2
@@ -76,7 +68,7 @@ out = batched_paged_decode(
 
 ## What the gate checks
 
-The gate builds several paged KV batches and computes an independent NumPy oracle by
+The gate builds several paged KV batches and computes an independent Python oracle by
 gathering the logical KV sequence and evaluating the attention equation in float64.
 The returned tensor is compared with the oracle using maximum absolute error:
 

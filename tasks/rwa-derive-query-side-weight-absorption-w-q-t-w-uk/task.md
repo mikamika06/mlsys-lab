@@ -38,7 +38,7 @@ or equivalently by applying the absorbed transformation to the query.
 Implement `absorb_query_weight(W_Q, W_UK)`:
 
 ```python
-def absorb_query_weight(W_Q: np.ndarray, W_UK: np.ndarray) -> np.ndarray:
+def absorb_query_weight(W_Q: list[list[float]], W_UK: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
@@ -55,15 +55,14 @@ $$
 
 with shape $(d_{\text{in}}, d_{\text{out}})$ and dtype `float64`.
 
-Use NumPy matrix operations rather than explicit Python loops.
+Use Python matrix operations rather than explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
 
-W_Q = np.array([[1.0, 2.0], [3.0, 4.0]])
-W_UK = np.array([[5.0], [6.0]])
+W_Q = [[1.0, 2.0], [3.0, 4.0]]
+W_UK = [[5.0], [6.0]]
 
 W_absorbed = absorb_query_weight(W_Q, W_UK)
 
@@ -73,7 +72,7 @@ W_absorbed = absorb_query_weight(W_Q, W_UK)
 
 ## What the gate checks
 
-The gate computes a NumPy reference using the original scoring path in float64:
+The gate computes a Python reference using the original scoring path in float64:
 
 $$
 (W_Q x)^\top(W_{UK} c)

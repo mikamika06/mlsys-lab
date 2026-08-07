@@ -34,7 +34,7 @@ into attention.
 Fix `gathered_attention`:
 
 ```python
-def gathered_attention(k_phys, v_phys, block_table, seq_len, q):
+def gathered_attention(k_phys: list[list[list[float]]], v_phys: list[list[list[float]]], block_table: list[int], seq_len: int, q: list[float]) -> list[float]:
     ...
 ```
 

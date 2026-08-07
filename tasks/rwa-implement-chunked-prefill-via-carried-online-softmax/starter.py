@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def chunked_causal_prefill(q, k, v, chunk_sizes):
+def chunked_causal_prefill(q: list[list[float]], k: list[list[float]], v: list[list[float]], chunk_sizes: list[int]) -> list[list[float]]:
     """Causal self-attention over the whole prompt, computed by processing
     `chunk_sizes` in sequential order and carrying a running online-softmax
     state across the KV chunks that precede or equal each query chunk.

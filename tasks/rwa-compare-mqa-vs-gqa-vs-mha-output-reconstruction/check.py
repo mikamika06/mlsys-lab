@@ -64,7 +64,7 @@ def grade(sol, fx) -> dict:
         ref = _oracle(Q, K, V, group_sizes)
 
         try:
-            got = sol.mha_gqa_mqa_reconstruct(Q.copy(), K.copy(), V.copy(), list(group_sizes))
+            got = sol.mha_gqa_mqa_reconstruct(Q.tolist(), K.tolist(), V.tolist(), list(group_sizes))
         except Exception:
             return {"max_abs_err": float("inf"), "size_ratio": 0.0}
 

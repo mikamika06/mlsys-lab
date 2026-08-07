@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def block_diagonal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, seq_lens: list[int]) -> np.ndarray:
+def block_diagonal_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], seq_lens: list[int]) -> list[list[float]]:
     """Attention over several variable-length sequences PACKED into one
     (N, d) tensor along the row axis (xformers' BlockDiagonalMask). Each
     sequence attends only to its own rows -- full (non-causal) attention

@@ -1,0 +1,69 @@
+{
+  "id": "m-map-mlx-module-weight-names-to-hf-module-paths-for-o",
+  "title": "Map MLX weight names to HF paths and inspect safetensors headers",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Model format interop (safetensors / GGUF / HF <-> MLX)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "interop/mapping.py",
+    "interop/diffing.py",
+    "interop/safetensors.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Map MLX module weight names to HF paths",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "mappings_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diff GGUF and converted MLX weight arrays",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "diffs_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "max_diff_below_tol",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safetensors header prefix calculation and regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_header_length",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

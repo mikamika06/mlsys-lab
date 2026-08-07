@@ -1,0 +1,74 @@
+{
+  "id": "m-implement-vllm-s-chained-block-hash-and-prefix-looku",
+  "title": "Chained Block Hash and Prefix Lookup",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "automatic-prefix-caching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "prefix_cache/hash.py",
+    "prefix_cache/lookup.py",
+    "prefix_cache/layout.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Chained block hash and prefix lookup",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "hashes_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "lookups_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Trace hit rate and layout optimizer",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "hit_rate_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "layout_optim_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch independent non-chained hashes",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_non_chained_hash",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

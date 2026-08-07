@@ -1,10 +1,8 @@
-import numpy as np
-
-
-def _quant_dequant_1d(x, bits):
-    x = np.asarray(x, dtype=np.float64)
+def _quant_dequant_1d(x: list[float], bits: int) -> list[float]:
     n = len(x)
     qmax = (1 << bits) - 1
+    if n == 0:
+        return []
     xmin = float(x[0])
     xmax = float(x[0])
     for i in range(1, n):
@@ -14,17 +12,14 @@ def _quant_dequant_1d(x, bits):
         if val > xmax:
             xmax = val
     if xmax <= xmin:
-        out = np.empty(n, dtype=np.float64)
-        for i in range(n):
-            out[i] = float(x[i])
-        return out
+        return [float(v) for v in x]
     scale = (xmax - xmin) / qmax
     zero = round(-xmin / scale)
     if zero < 0:
         zero = 0
     elif zero > qmax:
         zero = qmax
-    res = np.empty(n, dtype=np.float64)
+    res = [0.0] * n
     for i in range(n):
         val = float(x[i]) / scale + zero
         rounded = round(val)
@@ -38,51 +33,50 @@ def _quant_dequant_1d(x, bits):
     return res
 
 
-def _grouped_dequant(W, bits, group_size):
-    W = np.asarray(W, dtype=np.float64)
-    rows, cols = W.shape
+def _grouped_dequant(W: list[list[float]], bits: int, group_size: int | None) -> list[list[float]]:
+    rows = len(W)
+    cols = len(W[0]) if rows > 0 else 0
     if group_size is None:
-        flat = np.empty(rows * cols, dtype=np.float64)
-        idx = 0
+        flat = []
         for r in range(rows):
             for c in range(cols):
-                flat[idx] = W[r, c]
-                idx += 1
+                flat.append(W[r][c])
         dequantized = _quant_dequant_1d(flat, bits)
-        out = np.empty((rows, cols), dtype=np.float64)
+        out = [[0.0] * cols for _ in range(rows)]
         idx = 0
         for r in range(rows):
             for c in range(cols):
-                out[r, c] = dequantized[idx]
+                out[r][c] = dequantized[idx]
                 idx += 1
         return out
 
-    out = np.empty((rows, cols), dtype=np.float64)
+    out = [[0.0] * cols for _ in range(rows)]
     for r in range(rows):
         for start in range(0, cols, group_size):
             end = min(start + group_size, cols)
-            seg_len = end - start
-            seg = np.empty(seg_len, dtype=np.float64)
-            for i in range(seg_len):
-                seg[i] = W[r, start + i]
+            seg = [W[r][start + i] for i in range(end - start)]
             dequant_seg = _quant_dequant_1d(seg, bits)
-            for i in range(seg_len):
-                out[r, start + i] = dequant_seg[i]
+            for i in range(end - start):
+                out[r][start + i] = dequant_seg[i]
     return out
 
 
-def bitwidth_group_mse_frontier(W, bit_options, group_size_options):
-    W = np.asarray(W, dtype=np.float64)
-    rows, cols = W.shape
+def bitwidth_group_mse_frontier(
+    W: list[list[float]],
+    bit_options: list[int],
+    group_size_options: list[int | None],
+) -> list[list[float]]:
+    rows = len(W)
+    cols = len(W[0]) if rows > 0 else 0
     num_elements = rows * cols
-    mse = np.zeros((len(bit_options), len(group_size_options)), dtype=np.float64)
+    mse = [[0.0] * len(group_size_options) for _ in range(len(bit_options))]
     for bi, bits in enumerate(bit_options):
         for gi, g in enumerate(group_size_options):
             W_hat = _grouped_dequant(W, bits, g)
             total_sq_err = 0.0
             for r in range(rows):
                 for c in range(cols):
-                    diff = W_hat[r, c] - W[r, c]
+                    diff = W_hat[r][c] - W[r][c]
                     total_sq_err += diff * diff
-            mse[bi, gi] = total_sq_err / num_elements
+            mse[bi][gi] = total_sq_err / num_elements
     return mse

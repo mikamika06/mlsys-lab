@@ -1,43 +1,7 @@
-import itertools
 import math
-import numpy as np
 
 
-def _softmax(x, axis=-1):
-    shape = x.shape
-    ndim = len(shape)
-    axis = axis % ndim
-    out = np.empty(shape, dtype=np.float64)
-
-    outer_shapes = shape[:axis] + shape[axis + 1 :]
-
-    for outer_idx in itertools.product(*[range(s) for s in outer_shapes]):
-        idx_prefix = outer_idx[:axis]
-        idx_suffix = outer_idx[axis:]
-
-        first_full_idx = idx_prefix + (0,) + idx_suffix
-        max_val = x[first_full_idx]
-        for c in range(1, shape[axis]):
-            full_idx = idx_prefix + (c,) + idx_suffix
-            val = x[full_idx]
-            if val > max_val:
-                max_val = val
-
-        sum_exp = 0.0
-        for c in range(shape[axis]):
-            full_idx = idx_prefix + (c,) + idx_suffix
-            e = math.exp(x[full_idx] - max_val)
-            out[full_idx] = e
-            sum_exp += e
-
-        for c in range(shape[axis]):
-            full_idx = idx_prefix + (c,) + idx_suffix
-            out[full_idx] /= sum_exp
-
-    return out
-
-
-def mha_gqa_mqa_reconstruct(Q: np.ndarray, K: np.ndarray, V: np.ndarray, group_sizes):
+def mha_gqa_mqa_reconstruct(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], V: list[list[list[list[float]]]], group_sizes):
     """
     Reference: same input Q/K/V through several KV-grouping arities.
 
@@ -47,16 +11,19 @@ def mha_gqa_mqa_reconstruct(Q: np.ndarray, K: np.ndarray, V: np.ndarray, group_s
     g == 1 reproduces exact MHA; g == n_heads is MQA; anything in between is
     GQA(g).
     """
-    batch, seq_q, n_heads, d = Q.shape
-    seq_k = K.shape[1]
+    batch = len(Q)
+    seq_q = len(Q[0])
+    n_heads = len(Q[0][0])
+    d = len(Q[0][0][0])
+    seq_k = len(K[0])
     sqrt_d = math.sqrt(d)
 
     results = []
     for g in group_sizes:
         n_kv = n_heads // g
 
-        Kg = np.empty((batch, seq_k, n_kv, d), dtype=np.float64)
-        Vg = np.empty((batch, seq_k, n_kv, d), dtype=np.float64)
+        Kg = [[[[0.0 for _ in range(d)] for _ in range(n_kv)] for _ in range(seq_k)] for _ in range(batch)]
+        Vg = [[[[0.0 for _ in range(d)] for _ in range(n_kv)] for _ in range(seq_k)] for _ in range(batch)]
 
         for b in range(batch):
             for sk in range(seq_k):
@@ -66,12 +33,12 @@ def mha_gqa_mqa_reconstruct(Q: np.ndarray, K: np.ndarray, V: np.ndarray, group_s
                         s_k = 0.0
                         s_v = 0.0
                         for gi in range(g):
-                            s_k += K[b, sk, head_start + gi, di]
-                            s_v += V[b, sk, head_start + gi, di]
-                        Kg[b, sk, kv, di] = s_k / g
-                        Vg[b, sk, kv, di] = s_v / g
+                            s_k += K[b][sk][head_start + gi][di]
+                            s_v += V[b][sk][head_start + gi][di]
+                        Kg[b][sk][kv][di] = s_k / g
+                        Vg[b][sk][kv][di] = s_v / g
 
-        out = np.empty((batch, seq_q, n_heads, d), dtype=np.float64)
+        out = [[[[0.0 for _ in range(d)] for _ in range(n_heads)] for _ in range(seq_q)] for _ in range(batch)]
         weights_sk = [0.0] * seq_k
 
         for b in range(batch):
@@ -82,7 +49,7 @@ def mha_gqa_mqa_reconstruct(Q: np.ndarray, K: np.ndarray, V: np.ndarray, group_s
                     for sk in range(seq_k):
                         score = 0.0
                         for di in range(d):
-                            score += Q[b, sq, h, di] * Kg[b, sk, kv, di]
+                            score += Q[b][sq][h][di] * Kg[b][sk][kv][di]
                         score /= sqrt_d
                         weights_sk[sk] = score
                         if sk == 0 or score > max_score:
@@ -100,8 +67,8 @@ def mha_gqa_mqa_reconstruct(Q: np.ndarray, K: np.ndarray, V: np.ndarray, group_s
                     for di in range(d):
                         val = 0.0
                         for sk in range(seq_k):
-                            val += weights_sk[sk] * Vg[b, sk, kv, di]
-                        out[b, sq, h, di] = val
+                            val += weights_sk[sk] * Vg[b][sk][kv][di]
+                        out[b][sq][h][di] = val
 
         size_ratio = n_kv / n_heads
         results.append((out, size_ratio))

@@ -1,62 +1,61 @@
 import math
-import numpy as np
 
 
 def _attention(Q, K, V, bias):
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-
-    n, d = Q.shape
-    m, h = V.shape
+    n = len(Q)
+    d = len(Q[0])
+    m = len(K)
+    h = len(V[0])
     scale = 1.0 / math.sqrt(d)
 
-    scores = np.zeros((n, m), dtype=np.float64)
+    scores = [[0.0] * m for _ in range(n)]
     for i in range(n):
         for j in range(m):
             acc = 0.0
             for k in range(d):
-                acc += Q[i, k] * K[j, k]
+                acc += Q[i][k] * K[j][k]
             val = acc * scale
             if bias is not None:
-                val += float(bias[i, j])
-            scores[i, j] = val
+                val += float(bias[i][j])
+            scores[i][j] = val
 
-    max_vals = np.zeros((n, 1), dtype=np.float64)
+    max_vals = [0.0] * n
     for i in range(n):
-        m_val = scores[i, 0]
+        m_val = scores[i][0]
         for j in range(1, m):
-            if scores[i, j] > m_val:
-                m_val = scores[i, j]
-        max_vals[i, 0] = m_val
+            if scores[i][j] > m_val:
+                m_val = scores[i][j]
+        max_vals[i] = m_val
 
-    weights = np.zeros((n, m), dtype=np.float64)
+    weights = [[0.0] * m for _ in range(n)]
     for i in range(n):
         for j in range(m):
-            weights[i, j] = math.exp(scores[i, j] - max_vals[i, 0])
+            weights[i][j] = math.exp(scores[i][j] - max_vals[i])
 
-    sum_vals = np.zeros((n, 1), dtype=np.float64)
+    sum_vals = [0.0] * n
     for i in range(n):
         s_val = 0.0
         for j in range(m):
-            s_val += weights[i, j]
-        sum_vals[i, 0] = s_val
+            s_val += weights[i][j]
+        sum_vals[i] = s_val
 
     for i in range(n):
         for j in range(m):
-            weights[i, j] /= sum_vals[i, 0]
+            weights[i][j] /= sum_vals[i]
 
-    out = np.zeros((n, h), dtype=np.float64)
+    out = [[0.0] * h for _ in range(n)]
     for i in range(n):
         for j in range(h):
             acc = 0.0
             for k in range(m):
-                acc += weights[i, k] * V[k, j]
-            out[i, j] = acc
+                acc += weights[i][k] * V[k][j]
+            out[i][j] = acc
 
     return out
 
 
 def compare_sdpa_backends(Q, K, V, bias):
     out = _attention(Q, K, V, bias)
-    return out.copy(), out.copy()
+    out_copy1 = [row[:] for row in out]
+    out_copy2 = [row[:] for row in out]
+    return out_copy1, out_copy2

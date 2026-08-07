@@ -1,0 +1,23 @@
+{
+  "id": "m-nvfp4-two-level-quantize-dequantize",
+  "title": "NVFP4 Two-Level Quantize and Dequantize",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "FP4 microscaling: NVFP4 vs MXFP4",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quant/formats.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "E2M1 rounding and MXFP4", "check": "harness/m1.py",
+     "gates": [{"metric": "e2m1_match", "op": "==", "threshold": 1},
+               {"metric": "mxfp4_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "NVFP4 two-level scaling and effective bits", "check": "harness/m2.py",
+     "gates": [{"metric": "nvfp4_match", "op": "==", "threshold": 1},
+               {"metric": "bits_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches broken vector scales", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_vec_scale", "op": "==", "threshold": 1}]}
+  ]
+}

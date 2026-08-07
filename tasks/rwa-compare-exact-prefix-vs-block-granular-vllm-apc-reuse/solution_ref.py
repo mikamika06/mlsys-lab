@@ -1,4 +1,8 @@
-def prefix_reuse_lengths(cache, queries, block_size):
+def prefix_reuse_lengths(
+    cache: list[list[int]],
+    queries: list[list[int]],
+    block_size: int,
+) -> list[tuple[int, int]]:
     """For each query, (exact_reuse, block_reuse) against the best-matching
     cache entry: exact_reuse is RadixAttention-style token-exact longest
     common prefix over all of `cache`; block_reuse rounds that down to

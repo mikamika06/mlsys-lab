@@ -1,0 +1,45 @@
+{
+  "id": "m-occupancy-based-split-count",
+  "title": "Occupancy-based split count and KV reduction model",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "split-kv-and-decode-parallelism",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "splitkv/occupancy.py",
+    "splitkv/combine.py",
+    "splitkv/cost.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Occupancy-driven split count calculation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "split_counts_matched", "op": ">=", "threshold": 5.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Exact split-and-combine attention reduction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "max_rel_err", "op": "<=", "threshold": 1e-5},
+        {"metric": "exactness_passed", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Reduction cost model and safeguard test suite",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_unscaled_combine", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

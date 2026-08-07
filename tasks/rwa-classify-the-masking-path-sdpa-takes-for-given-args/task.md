@@ -14,8 +14,8 @@ The mapping follows the rules used in the reference implementation of the produc
 
 1. If `is_causal` is `True` and `attn_mask` is `None`, return `"causal"`.
 2. If `is_causal` is `False` and `attn_mask` is `None`, return `"none"`.
-3. If `attn_mask` is a NumPy array of boolean type, return `"bool_mask"`.
-4. If `attn_mask` is a NumPy array of numeric type (int or float), return `"float_mask"`.
+3. If `attn_mask` is a list of boolean type, return `"bool_mask"`.
+4. If `attn_mask` is a list of numeric type (int or float), return `"float_mask"`.
 5. Any other combination (e.g., `is_causal=True` together with an explicit mask) returns `"illegal"`.
 
 The function must be pure: no side effects, and it should raise no exceptions for the inputs described above.
@@ -25,8 +25,7 @@ The function must be pure: no side effects, and it should raise no exceptions fo
 Implement the following function:
 
 ```python
-def classify_masking(is_causal: bool,
-                     attn_mask: Optional[np.ndarray]) -> str:
+def classify_masking(is_causal: bool, attn_mask: list | None) -> str:
     """
     Return a string describing which masking path SDPA will take.
     """
@@ -37,7 +36,6 @@ The function must follow exactly the mapping described in the context section.
 ## Example
 
 ```python
-import numpy as np
 
 print(classify_masking(True, None))
 # 'causal'
@@ -46,15 +44,15 @@ print(classify_masking(False, None))
 # 'none'
 
 print(classify_masking(False,
-                       np.array([[True, False], [False, True]])))
+                       [[True, False], [False, True]]))
 # 'bool_mask'
 
 print(classify_masking(False,
-                       np.array([[0.0, -1e9], [-1e9, 0.0]], dtype=np.float32)))
+                       [[0.0, -1e9], [-1e9, 0.0]]))
 # 'float_mask'
 
 print(classify_masking(True,
-                       np.array([[True, False], [False, True]])))
+                       [[True, False], [False, True]]))
 # 'illegal'
 ```
 

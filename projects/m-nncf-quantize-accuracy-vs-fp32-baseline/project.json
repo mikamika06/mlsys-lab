@@ -1,0 +1,22 @@
+{
+  "id": "m-nncf-quantize-accuracy-vs-fp32-baseline",
+  "title": "NNCF INT8 Quantization Accuracy, Size, and Latency Evaluation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "NNCF post-training INT8 quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quanteval/eval.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Quantized accuracy relative error against FP32 baseline", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "IR size reduction and benchmark latency speedup", "check": "harness/m2.py",
+     "gates": [{"metric": "size_ratio_match", "op": "==", "threshold": 1},
+               {"metric": "latency_gain_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching invariant violations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}]}
+  ]
+}

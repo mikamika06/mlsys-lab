@@ -1,0 +1,22 @@
+{
+  "id": "m-implement-a-pagedattention-block-allocator-alloc-app",
+  "title": "Implement a PagedAttention block allocator",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "paged-kv-blocks-and-block-tables",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kv/allocator.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Basic block allocation and append", "check": "harness/m1.py",
+     "gates": [{"metric": "all_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Copy-on-write fork for beam search", "check": "harness/m2.py",
+     "gates": [{"metric": "logic_match", "op": "==", "threshold": 1},
+               {"metric": "memory_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch missing copy-on-write", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_cow_failure", "op": "==", "threshold": 1}]}
+  ]
+}

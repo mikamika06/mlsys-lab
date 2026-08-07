@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
 def softmax_shift_invariant(logits, shift):
     """

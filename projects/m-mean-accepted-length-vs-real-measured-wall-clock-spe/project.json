@@ -1,0 +1,69 @@
+{
+  "id": "m-mean-accepted-length-vs-real-measured-wall-clock-spe",
+  "title": "Mean accepted length vs real measured wall-clock speedup",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Measuring & profiling speculative decoding",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "specprof/metrics.py",
+    "specprof/profiler.py",
+    "specprof/trace.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Calculate speedup gap and overhead ratio",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "metrics_matched",
+          "op": ">=",
+          "threshold": 4
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Profile draft, target, and verify time split from traces",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "splits_matched",
+          "op": ">=",
+          "threshold": 4
+        },
+        {
+          "metric": "trace_extracted",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for misattributed profiling",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_merged_phases",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

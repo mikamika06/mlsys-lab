@@ -36,11 +36,7 @@ finer group can always fall back to reproducing what a coarser group did
 Implement `bitwidth_group_mse_frontier`:
 
 ```python
-def bitwidth_group_mse_frontier(
-    W: np.ndarray,
-    bit_options: list[int],
-    group_size_options: list[int | None],
-) -> np.ndarray:
+def bitwidth_group_mse_frontier(W: list[list[float]], bit_options: list[int], group_size_options: list[int | None]) -> list[list[float]]:
     ...
 ```
 
@@ -60,9 +56,8 @@ formulas above.
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[0.0, 1.0, 2.0, 100.0]])  # one row, one outlier
+W = [[0.0, 1.0, 2.0, 100.0]]  # one row, one outlier
 bitwidth_group_mse_frontier(W, [4], [None, 2])
 # mse[0, 0] (per-tensor, one group of 4): the outlier stretches the scale
 #   for the whole row, so the small values reconstruct poorly.
@@ -73,13 +68,13 @@ bitwidth_group_mse_frontier(W, [4], [None, 2])
 
 ## What the gate checks
 
-The grader builds a fixed `(rows, cols)` weight matrix from a seeded NumPy
+The grader builds a fixed `(rows, cols)` weight matrix from a seeded Python
 generator (Gaussian values plus a handful of injected outliers, so
 different group sizes are genuinely distinguishable) and sweeps
 `bit_options = [2, 4]` against
 `group_size_options = [None, 128, 64, 32]` (cols is a multiple of all
 three group sizes). It computes the reference `mse` array independently in
-NumPy — same grouped affine quantize/dequantize formulas, applied
+Python — same grouped affine quantize/dequantize formulas, applied
 per-row-per-group and never calling your function or hardcoding numbers.
 
 Two gates apply: `mse` is the relative error between your full `mse` array

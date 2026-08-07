@@ -1,0 +1,46 @@
+{
+  "id": "m-overlap-comm-speedup-closed-form-derivation",
+  "title": "DeepSpeed engine mechanics and overlap math",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "deepspeed-engine-mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "dsengine/overlap.py",
+    "dsengine/scaler.py",
+    "dsengine/batch_config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Closed-form overlap speedup and exposed communication bounds",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "overlap_cases_matched", "op": "==", "threshold": 1},
+        {"metric": "speedup_bounds_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Dynamic loss scaler trajectory simulation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "trajectories_matched", "op": "==", "threshold": 1},
+        {"metric": "overflow_handling_correct", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: batch config consistency and regression test suite",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_batch_formula", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

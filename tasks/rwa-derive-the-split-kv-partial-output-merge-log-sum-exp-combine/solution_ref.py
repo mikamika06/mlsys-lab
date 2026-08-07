@@ -1,8 +1,7 @@
 import math
-import numpy as np
 
 
-def merge_split_kv(partials):
+def merge_split_kv(partials: list[tuple[float, float, list[float]]]) -> list[float]:
     m = max(p[0] for p in partials)
 
     l = 0.0
@@ -16,4 +15,4 @@ def merge_split_kv(partials):
         else:
             numerator = [n + t for n, t in zip(numerator, term)]
 
-    return np.asarray(numerator, dtype=np.float64) / l
+    return [x / l for x in numerator]

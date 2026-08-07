@@ -1,18 +1,14 @@
 import math
-import numpy as np
 
 
 def fused_attention_scores(scores, alibi, window, soft_cap):
-    scores = np.asarray(scores, dtype=np.float64)
-    alibi = np.asarray(alibi, dtype=np.float64)
-
-    n = scores.shape[0]
+    n = len(scores)
     out_list = []
 
     for i in range(n):
         row_vals = []
         for j in range(n):
-            val = float(scores[i, j]) + float(alibi[i, j])
+            val = float(scores[i][j]) + float(alibi[i][j])
             val = soft_cap * math.tanh(val / soft_cap)
             if abs(i - j) > window:
                 val = float('-inf')
@@ -41,4 +37,4 @@ def fused_attention_scores(scores, alibi, window, soft_cap):
 
         out_list.append(norm_row)
 
-    return np.array(out_list, dtype=np.float64)
+    return out_list

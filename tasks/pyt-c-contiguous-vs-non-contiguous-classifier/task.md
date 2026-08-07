@@ -2,8 +2,8 @@
 
 The buffer protocol lets a Python object expose its raw memory to other code
 without copying it. `memoryview(obj)` wraps any object that implements the
-protocol — including a NumPy array — and reports properties of the
-*underlying buffer*, independent of any NumPy-specific bookkeeping. One of
+protocol — including a list — and reports properties of the
+*underlying buffer*, independent of any Python-specific bookkeeping. One of
 those properties is `memoryview.c_contiguous`: whether the buffer's bytes are
 laid out so that stepping through the last axis fastest, then the next axis,
 and so on, visits memory in strictly increasing address order with no gaps.
@@ -20,7 +20,7 @@ strides away from this canonical pattern (often introducing negative or
 enlarged strides), so the resulting view is no longer C-contiguous even
 though it still points into the same underlying buffer. Some operations
 (like `reshape` to a flat shape) cannot always be expressed as a
-strided view of non-contiguous data, so NumPy silently falls back to
+strided view of non-contiguous data, so Python silently falls back to
 allocating a fresh, contiguous buffer — the result is contiguous again,
 regardless of what came before it.
 
@@ -36,7 +36,7 @@ def predict_c_contiguous(ops: list[str]) -> list[bool]:
 The input is a sequence of operation names. Start from the base array
 
 ```python
-np.arange(24, dtype=np.int64).reshape(4, 6)
+list(range(24)).reshape(4, 6)
 ```
 
 and apply each operation in order, carrying the result of one operation into
@@ -61,7 +61,7 @@ predict_c_contiguous(ops)
 
 Transposing a 2-D array swaps its strides away from the canonical C order, so
 the transposed view is not C-contiguous. `reshape(-1)` on that non-contiguous
-data cannot be expressed as a view, so NumPy copies into a fresh contiguous
+data cannot be expressed as a view, so Python copies into a fresh contiguous
 buffer — the flattened result is contiguous again.
 
 ## What the gate checks

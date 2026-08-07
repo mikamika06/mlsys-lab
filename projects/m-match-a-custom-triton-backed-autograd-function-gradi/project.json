@@ -1,0 +1,63 @@
+{
+  "id": "m-match-a-custom-triton-backed-autograd-function-gradi",
+  "title": "Match Triton autograd gradients against torch",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Custom autograd.Function wrapping a Triton kernel",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "triton_autograd/kernels.py",
+    "triton_autograd/func.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Forward pass kernel implementation and matching",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.0001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Autograd Function gradient matching against native torch",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.0001
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for custom backward pass",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_grad",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "m-optimizer-state-memory",
+  "title": "Optimizer State Memory and Step Overhead Profile",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Optimizer-step and training-loop overheads",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "optmem/state.py",
+    "optmem/compile.py",
+    "optmem/zerograd.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Optimizer state memory estimation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "state_memory_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compiled step memory and set_to_none profiling",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "compiled_overhead_matched", "op": "==", "threshold": 1},
+        {"metric": "zerograd_footprint_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for state memory and zerograd",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_state_tracking", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

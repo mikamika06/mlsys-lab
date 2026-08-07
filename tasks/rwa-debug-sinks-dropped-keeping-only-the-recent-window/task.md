@@ -21,9 +21,9 @@ drastically.
 Implement the function `streaming_attention(q, k, v, window_size=4)` that
 processes a sequence of tokens step by step.
 
-- `q`, `k`, `v`: NumPy arrays of shape `(T, d)`.  
+- `q`, `k`, `v`: list of shape `(T, d)`.  
 - `window_size`: number of tokens to retain in the cache (positive integer).  
-- Returns a NumPy array of shape `(T, d)`, the output at each step.
+- Returns a list of shape `(T, d)`, the output at each step.
 
 **Critical requirement**: The very first token (index 0) must **always** be kept
 in the cache as an attention sink.  

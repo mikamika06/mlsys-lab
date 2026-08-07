@@ -2,7 +2,7 @@ import sys
 from array import array
 
 
-def _ref(n):
+def _ref(n: int) -> dict[str, float]:
     values = list(range(n))
     list_bytes = sys.getsizeof(values)
 

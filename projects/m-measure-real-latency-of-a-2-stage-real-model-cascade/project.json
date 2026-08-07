@@ -1,0 +1,40 @@
+{
+  "id": "m-measure-real-latency-of-a-2-stage-real-model-cascade",
+  "title": "Measure real latency of a 2-stage real-model cascade",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Multi-draft & staged speculation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["cascade/measure.py", "cascade/benchmark.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Cascade execution and stage latency measurement",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "benchmarks_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Empirical latency ratio vs single-stage baseline",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ratios_matched", "op": "==", "threshold": 1},
+        {"metric": "latency_ratio", "op": "<=", "threshold": 0.85}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for cascade invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_timing_bypass", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

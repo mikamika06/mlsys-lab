@@ -11,11 +11,11 @@ The Python runtime exposes the size of an object in bytes through ``sys.getsizeo
 Implement `classify_objects(objs)`:
 
 ```python
-def classify_objects(objs: Iterable[Any]) -> np.ndarray:
+def classify_objects(objs: Iterable[Any]) -> list[bool]:
     ...
 ```
 
-It receives an iterable of arbitrary Python objects and returns a NumPy array of shape `(len(objs),)` with dtype ``bool``.  
+It receives an iterable of arbitrary Python objects and returns a list of shape `(len(objs),)` with dtype ``bool``.  
 Each element is ``True`` if the corresponding object is a variable‑size PyVarObject whose size depends on its contents, otherwise ``False``.
 
 The implementation must be deterministic across CPython runs; use only standard library modules.
@@ -23,7 +23,6 @@ The implementation must be deterministic across CPython runs; use only standard 
 ## Example
 
 ```python
-import numpy as np
 
 objs = [[], {}, set(), (), "", b"", bytearray(),
         0, 1.5, True, None,

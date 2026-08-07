@@ -66,7 +66,7 @@ def grade(sol, fx) -> dict:
 
         try:
             got = sol.ragged_batched_prefill_attention(
-                Q.copy(), K.copy(), V.copy(), cu_seqlens.copy()
+                Q.tolist(), K.tolist(), V.tolist(), cu_seqlens.tolist()
             )
             got = np.asarray(got, dtype=np.float64)
         except Exception:

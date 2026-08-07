@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def bitwidth_group_mse_frontier(W, bit_options, group_size_options):
+def bitwidth_group_mse_frontier(W: list[list[float]], bit_options: list[int], group_size_options: list[int | None]) -> list[list[float]]:
     """Sweep grouped affine quantization over bit widths and group sizes,
     reporting reconstruction MSE for each combination.
 

@@ -1,0 +1,23 @@
+{
+  "id": "m-optimal-block-size-for-a-trace",
+  "title": "Optimal Block Size for a Trace",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "paged-kv-and-block-tables",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kvblock/trace.py", "kvblock/cache.py", "kvblock/triage.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Optimal block size selection for a trace", "check": "harness/m1.py",
+     "gates": [{"metric": "argmin_index", "op": "==", "threshold": 1},
+               {"metric": "traces_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Prefix-cache hit-rate simulator and triage", "check": "harness/m2.py",
+     "gates": [{"metric": "sim_matches", "op": "==", "threshold": 1},
+               {"metric": "triage_matches", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catches invalid block allocation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_allocation", "op": "==", "threshold": 1}]}
+  ]
+}

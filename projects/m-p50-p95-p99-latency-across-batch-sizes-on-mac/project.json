@@ -1,0 +1,69 @@
+{
+  "id": "m-p50-p95-p99-latency-across-batch-sizes-on-mac",
+  "title": "p50/p95/p99 latency across batch sizes on Mac",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "Batching & latency/throughput tradeoff for CPU serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "latbench/stats.py",
+    "latbench/tradeoff.py",
+    "latbench/shapes.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute p50, p95, and p99 latency profiles across batch sizes",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "stats_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive latency-optimal vs throughput-optimal batch sizes and static vs dynamic overhead",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "optimal_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "shapes_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test that catches ignoring p99 latency SLOs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_slo",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

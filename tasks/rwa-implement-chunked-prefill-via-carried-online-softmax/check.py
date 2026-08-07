@@ -48,8 +48,11 @@ def grade(sol, fx) -> dict:
     worst = 0.0
     for q, k, v, chunk_sizes in _scenarios():
         ref = _dense_causal_attention(q, k, v)
+        q_list = q.tolist()
+        k_list = k.tolist()
+        v_list = v.tolist()
         try:
-            got = sol.chunked_causal_prefill(q.copy(), k.copy(), v.copy(), list(chunk_sizes))
+            got = sol.chunked_causal_prefill(q_list, k_list, v_list, list(chunk_sizes))
         except Exception:
             return {"max_abs_err": float("inf")}
 

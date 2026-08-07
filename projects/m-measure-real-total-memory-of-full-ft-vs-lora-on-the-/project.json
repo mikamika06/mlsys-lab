@@ -1,0 +1,47 @@
+{
+  "id": "m-measure-real-total-memory-of-full-ft-vs-lora-on-the-",
+  "title": "Total memory footprint of Full Fine-Tuning vs LoRA vs QLoRA",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "full-ft-vs-lora-vs-qlora-tradeoff",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ftmem/model.py",
+    "ftmem/lora.py",
+    "ftmem/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Full fine-tuning vs LoRA memory on a real tiny model",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "full_ft_match", "op": "==", "threshold": 1},
+        {"metric": "lora_bf16_match", "op": "==", "threshold": 1},
+        {"metric": "size_ratio", "op": "<=", "threshold": 0.35}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "LoRA on bf16 base vs QLoRA on 4-bit base memory",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "qlora_mem_match", "op": "==", "threshold": 1},
+        {"metric": "qlora_saves_memory", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: trainable parameter count invariance across LoRA and QLoRA",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_trainable_mismatch", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

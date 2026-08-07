@@ -1,6 +1,4 @@
-import numpy as np
-
-def vjp_mul_exp_log(x: np.ndarray, y: np.ndarray, upstream: np.ndarray):
+def vjp_mul_exp_log(x: list[float], y: list[float], upstream: list[float]) -> tuple[list[float], list[float]]:
     """
     Correct VJP for h(x,y)=log(exp(x*y)).
 
@@ -8,6 +6,6 @@ def vjp_mul_exp_log(x: np.ndarray, y: np.ndarray, upstream: np.ndarray):
     and x (for y).  The vector-Jacobian product therefore reduces to
     elementwise multiplication of the upstream gradient with the other input.
     """
-    grad_x = upstream * y
-    grad_y = upstream * x
-    return grad_x.astype(np.float64), grad_y.astype(np.float64)
+    grad_x = [u * yi for u, yi in zip(upstream, y)]
+    grad_y = [u * xi for u, xi in zip(upstream, x)]
+    return grad_x, grad_y

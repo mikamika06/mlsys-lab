@@ -1,0 +1,69 @@
+{
+  "id": "m-paged-kv-block-plan",
+  "title": "Paged KV Block Plan and Benchmarking",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT-LLM: PyTorch backend, trtllm-bench and trtllm-serve",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvplan/planner.py",
+    "kvplan/bench.py",
+    "kvplan/sweep.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Paged KV Cache Block Planner",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "plans_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Throughput Reporting and Sweep Harness",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "throughput_ratio",
+          "op": ">=",
+          "threshold": 1.0
+        },
+        {
+          "metric": "sweeps_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard Regression Tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_block_math",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -48,7 +48,9 @@ def grade(sol, fx) -> dict:
         ref = _oracle(Q, K, V, cu_seqlens)
         try:
             got = np.asarray(
-                sol.ragged_causal_attention(Q.copy(), K.copy(), V.copy(), cu_seqlens.copy()),
+                sol.ragged_causal_attention(
+                    Q.tolist(), K.tolist(), V.tolist(), cu_seqlens.tolist()
+                ),
                 dtype=np.float64,
             )
         except Exception:

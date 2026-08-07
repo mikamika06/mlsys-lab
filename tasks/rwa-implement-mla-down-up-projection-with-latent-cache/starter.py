@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def mla_forward(x, W_Q, W_down_kv, W_up_K, W_up_V, num_heads):
+def mla_forward(x: list[list[float]], W_Q: list[list[float]], W_down_kv: list[list[float]], W_up_K: list[list[float]], W_up_V: list[list[float]], num_heads: int) -> tuple[list[list[float]], list[list[float]]]:
     """Multi-head Latent Attention forward pass with a shared low-rank KV cache.
 
     x: (n, d_model) float64 hidden states.

@@ -1,0 +1,40 @@
+{
+  "id": "m-oversubscription-throughput-regression",
+  "title": "Oversubscription Throughput Regression and Stream Sweeping",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "Performance hints & stream/thread scheduling",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["oversub/scheduler.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect stream sweep knee point",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "knee_points_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Optimal stream pool throughput ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "throughput_ratio", "op": ">=", "threshold": 1.25},
+        {"metric": "pools_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch oversubscribed stream selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_oversubscribed_pool", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

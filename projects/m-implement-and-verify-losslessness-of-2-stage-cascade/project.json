@@ -1,0 +1,23 @@
+{
+  "id": "m-implement-and-verify-losslessness-of-2-stage-cascade",
+  "title": "2-Stage Cascade & Multi-Draft Speculative Sampling",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Multi-draft & staged speculation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["cascade/sampling.py", "cascade/latency.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Implement lossless cascaded and multi-draft acceptance", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 0.01},
+               {"metric": "lossless_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Derive latency win conditions for 2-stage cascade", "check": "harness/m2.py",
+     "gates": [{"metric": "latency_err", "op": "<=", "threshold": 1e-5},
+               {"metric": "decisions_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests catching invalid acceptance and latency logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_biased_cascade", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -10,21 +10,23 @@ def _stable_softmax(x):
 def grade(sol, fx) -> dict:
     """Grade by comparing user result against NumPy oracle reference."""
     test_cases = [
-        (np.array([1.0, 2.0, 3.0]), np.array([0.0, 0.0, 0.0])),
-        (np.array([1.0, 2.0, 3.0]), np.array([100.0, 100.0, 100.0])),
-        (np.array([10.0, 20.0, 30.0]), np.array([-50.0, -50.0, -50.0])),
-        (np.array([[1.0, 2.0], [3.0, 4.0]]),
-         np.array([[10.0, 10.0], [10.0, 10.0]])),
-        (np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]]),
-         np.array([[100.0, 100.0, 100.0], [-100.0, -100.0, -100.0]])),
+        ([1.0, 2.0, 3.0], [0.0, 0.0, 0.0]),
+        ([1.0, 2.0, 3.0], [100.0, 100.0, 100.0]),
+        ([10.0, 20.0, 30.0], [-50.0, -50.0, -50.0]),
+        ([[1.0, 2.0], [3.0, 4.0]],
+         [[10.0, 10.0], [10.0, 10.0]]),
+        ([[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]],
+         [[100.0, 100.0, 100.0], [-100.0, -100.0, -100.0]]),
     ]
 
     max_abs_err = 0.0
     for logits, shift in test_cases:
         try:
             # --- reference answer via NumPy oracle ---
-            ref_soft = _stable_softmax(logits)
-            ref_shifted = _stable_softmax(logits - shift)
+            logits_np = np.asarray(logits, dtype=np.float64)
+            shift_np = np.asarray(shift, dtype=np.float64)
+            ref_soft = _stable_softmax(logits_np)
+            ref_shifted = _stable_softmax(logits_np - shift_np)
             ref_err = float(np.max(np.abs(ref_soft - ref_shifted)))
 
             # --- user answer ---

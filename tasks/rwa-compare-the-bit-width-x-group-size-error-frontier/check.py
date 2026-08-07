@@ -61,7 +61,7 @@ def grade(sol, fx) -> dict:
     ref = _ref_frontier(W, bit_options, group_size_options)
 
     try:
-        got = sol.bitwidth_group_mse_frontier(W.copy(), list(bit_options), list(group_size_options))
+        got = sol.bitwidth_group_mse_frontier(W.tolist(), list(bit_options), list(group_size_options))
     except Exception:
         return {"mse": float("inf"), "monotone": 0.0}
 

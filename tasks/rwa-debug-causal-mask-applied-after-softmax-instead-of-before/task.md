@@ -35,7 +35,7 @@ contains a broken `causal_self_attention` that masks the probabilities
 after softmax instead of the logits before it. Fix it:
 
 ```python
-def causal_self_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.ndarray:
+def causal_self_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
@@ -49,11 +49,10 @@ def causal_self_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.nda
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
-V = np.array([[10.0, 0.0], [0.0, 10.0], [5.0, 5.0]])
+Q = [[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]]
+V = [[10.0, 0.0], [0.0, 10.0], [5.0, 5.0]]
 
 out = causal_self_attention(Q, K, V)
 # row 0 can only see position 0  -> out[0] == V[0]  == [10, 0]
@@ -65,7 +64,7 @@ out = causal_self_attention(Q, K, V)
 
 The grader draws several random `(Q, K, V)` triples of varying `n`, `d`
 from a seeded RNG and compares your output to a reference that masks the
-logits with `-inf` before softmax, computed independently in NumPy —
+logits with `-inf` before softmax, computed independently in Python —
 never calling your function, never hardcoding an expected value.
 
 `max_abs_err` is the worst per-case max-abs-error across all cases and

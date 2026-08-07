@@ -35,7 +35,7 @@ computed in one batched kernel call.
 Implement `block_diagonal_attention`:
 
 ```python
-def block_diagonal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, seq_lens: list[int]) -> np.ndarray:
+def block_diagonal_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], seq_lens: list[int]) -> list[list[float]]:
     ...
 ```
 
@@ -48,13 +48,12 @@ def block_diagonal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, seq_le
 ## Example
 
 ```python
-import numpy as np
 
 # two packed sequences: rows 0-2 are sequence A, rows 3-4 are sequence B
 seq_lens = [3, 2]
-Q = np.random.default_rng(0).standard_normal((5, 4))
-K = np.random.default_rng(1).standard_normal((5, 4))
-V = np.random.default_rng(2).standard_normal((5, 4))
+rng = random.Random(0); Q = [[rng.gauss(0, 1) for _ in range(4)] for _ in range(5)]
+rng = random.Random(1); K = [[rng.gauss(0, 1) for _ in range(4)] for _ in range(5)]
+rng = random.Random(2); V = [[rng.gauss(0, 1) for _ in range(4)] for _ in range(5)]
 
 out = block_diagonal_attention(Q, K, V, seq_lens)
 # out[:3] depends only on Q[:3], K[:3], V[:3]  (sequence A)
@@ -66,7 +65,7 @@ out = block_diagonal_attention(Q, K, V, seq_lens)
 The grader packs several random-length sequences from a seeded RNG and
 compares your output to an oracle that slices `Q`, `K`, `V` back out by
 `seq_lens` and runs ordinary dense attention independently on each slice
-in NumPy, then concatenates — never calling your function, never
+in Python, then concatenates — never calling your function, never
 hardcoding an expected value, and structurally unable to leak
 cross-sequence information.
 

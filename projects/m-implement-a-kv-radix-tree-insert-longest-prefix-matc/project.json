@@ -1,21 +1,47 @@
 {
   "id": "m-implement-a-kv-radix-tree-insert-longest-prefix-matc",
-  "title": "KV radix tree with longest prefix match and eviction",
+  "title": "Implement a KV Radix Tree with Longest-Prefix Matching and LRU Eviction",
   "kind": "project",
   "tier": "T0",
   "area": "rw2-vllm-serving",
   "track": "sglang-radixattention-and-cache-tree",
   "part": 1,
   "difficulty": 3,
-  "edits": ["kvtree/tree.py", "kvtree/eviction.py", "kvtree/sim.py", "tests/test_regression.py"],
+  "edits": [
+    "kvradix/radix.py",
+    "kvradix/eviction.py",
+    "kvradix/benchmark.py",
+    "tests/test_regression.py"
+  ],
   "milestones": [
-    {"n": 1, "title": "Radix tree insert, longest prefix match, and node splitting", "check": "harness/m1.py",
-     "gates": [{"metric": "tree_matches", "op": "==", "threshold": 1}]},
-    {"n": 2, "title": "Capacity-aware leaf eviction with reference count pinning", "check": "harness/m2.py",
-     "gates": [{"metric": "eviction_matches", "op": "==", "threshold": 1}]},
-    {"n": 3, "title": "Safety net and radix vs flat block hit-rate delta", "check": "harness/m3.py",
-     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
-               {"metric": "passes_on_good", "op": "==", "threshold": 1},
-               {"metric": "catches_bad_eviction", "op": "==", "threshold": 1}]}
+    {
+      "n": 1,
+      "title": "Radix Tree Insertion and Longest-Prefix Matching",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "match_accuracy", "op": "==", "threshold": 1.0},
+        {"metric": "split_correctness", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Radix Eviction under Capacity Constraints",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "capacity_respected", "op": "==", "threshold": 1.0},
+        {"metric": "lru_eviction_correctness", "op": "==", "threshold": 1.0},
+        {"metric": "pinning_respected", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety Net: Catching Prefix Overlap Miscalculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_match", "op": "==", "threshold": 1.0}
+      ]
+    }
   ]
 }

@@ -23,16 +23,16 @@ def _survives(path):
 
 
 def check(workdir):
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_faulty_metrics": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_fault": 0.0}
     path = os.path.join(workdir, "tests", "test_regression.py")
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
         return out
     try:
         first = _run(path)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"the tests fail on a correct implementation: {type(e).__name__}: {str(e)[:120]}"
+        out["_note"] = f"tests fail on good code: {type(e).__name__}: {str(e)[:120]}"
         return out
     if first is None:
         out["_note"] = "no test_* functions found"
@@ -40,17 +40,19 @@ def check(workdir):
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import servingmetrics.analysis as sa
-    good_fn = sa.compute_itl_and_tpot
+    import goodput.metrics as m
+    good_func = m.compute_itl_and_tpot
 
-    def faulty(timestamps):
-        res = good_fn(timestamps)
-        res["divergence"] = 0.0
-        return res
+    def broken_itl(timestamps):
+        t, _ = good_func(timestamps)
+        return t, t
 
-    sa.compute_itl_and_tpot = faulty
+    m.compute_itl_and_tpot = broken_itl
+    import goodput
+    goodput.metrics.compute_itl_and_tpot = broken_itl
     try:
-        out["catches_faulty_metrics"] = 0.0 if _survives(path) else 1.0
+        out["catches_fault"] = 0.0 if _survives(path) else 1.0
     finally:
-        sa.compute_itl_and_tpot = good_fn
+        m.compute_itl_and_tpot = good_func
+        goodput.metrics.compute_itl_and_tpot = good_func
     return out

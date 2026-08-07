@@ -1,0 +1,23 @@
+{
+  "id": "m-num-splits-latency-curve",
+  "title": "Num splits latency curve and paged KV split planning",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "split-kv-and-decode-parallelism",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["splitkv/curve.py", "splitkv/crossover.py", "splitkv/paged_plan.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Num splits latency curve and optimal splits", "check": "harness/m1.py",
+     "gates": [{"metric": "curves_matched", "op": "==", "threshold": 1},
+               {"metric": "optimal_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Crossover batch where splitting stops helping", "check": "harness/m2.py",
+     "gates": [{"metric": "crossover_matched", "op": "==", "threshold": 1},
+               {"metric": "latency_ratio", "op": "<=", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: paged KV split invariants test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_splits", "op": "==", "threshold": 1}]}
+  ]
+}

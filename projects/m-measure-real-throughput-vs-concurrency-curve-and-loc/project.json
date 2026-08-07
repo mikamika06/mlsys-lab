@@ -1,0 +1,68 @@
+{
+  "id": "m-measure-real-throughput-vs-concurrency-curve-and-loc",
+  "title": "Measure real throughput vs concurrency curve and locate the knee",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "continuous-batching-scheduler",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "throughput/bench.py",
+    "throughput/analyzer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Benchmark concurrency vs throughput curve",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "curve_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Locate throughput knee point",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "knee_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "throughput_ratio",
+          "op": ">=",
+          "threshold": 0.95
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for knee detection",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_flat_curve_failure",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

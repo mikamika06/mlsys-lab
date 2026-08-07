@@ -1,0 +1,22 @@
+{
+  "id": "m-inference-tp-degree-sweep-latency-throughput",
+  "title": "Inference TP-Degree Sweep, Latency, and Partition Verification",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "Distributed inference tensor/pipeline parallel serving (AutoTP, KV-cache sharding)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["inference/tp_sweep.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Inference TP-Degree Sweep and Performance Estimation", "check": "harness/m1.py",
+     "gates": [{"metric": "sweeps_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Maximum Valid TP-Degree and Real Server Log Partition Verification", "check": "harness/m2.py",
+     "gates": [{"metric": "max_tp_match", "op": "==", "threshold": 1},
+               {"metric": "logs_verified", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid partition shapes", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_partitions", "op": "==", "threshold": 1}]}
+  ]
+}

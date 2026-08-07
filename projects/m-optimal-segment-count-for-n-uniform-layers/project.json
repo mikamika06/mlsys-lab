@@ -1,0 +1,43 @@
+{
+  "id": "m-optimal-segment-count-for-n-uniform-layers",
+  "title": "Optimal segment count for N uniform layers",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "Activation checkpointing and memory/compute trade",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "checkpointing/sim.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Baseline and checkpointing memory simulators",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "baseline_match", "op": "==", "threshold": 1},
+        {"metric": "sim_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Optimal segment search",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "optimal_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch a simulator that ignores intermediate memory",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_intermediates", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

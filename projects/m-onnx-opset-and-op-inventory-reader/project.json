@@ -1,0 +1,41 @@
+{
+  "id": "m-onnx-opset-and-op-inventory-reader",
+  "title": "Zero-dependency ONNX protobuf scanner",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "ONNX as interchange for edge",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["onnx_reader/reader.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse opset imports from the binary wire format",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs", "op": ">=", "threshold": 3},
+        {"metric": "opsets_matched", "op": "==", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Count operator types and estimate .ort conversion savings",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ops_matched", "op": "==", "threshold": 3},
+        {"metric": "savings_matched", "op": "==", "threshold": 3}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch a broken parser implementation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_scan", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

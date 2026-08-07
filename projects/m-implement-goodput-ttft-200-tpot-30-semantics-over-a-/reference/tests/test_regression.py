@@ -1,26 +1,26 @@
 import sys
 sys.path.insert(0, ".")
-from servingmetrics.analysis import compute_goodput, analyze_preemption_gap, compute_itl_and_tpot
+from goodput.metrics import compute_goodput, compute_e2el_gap, compute_itl_and_tpot
 
-def test_goodput_basic():
-    results = [
-        {"request_id": 1, "status": "success", "arrival_time": 0.0, "first_token_time": 0.1, "token_timestamps": [0.1, 0.15, 0.2]},
-        {"request_id": 2, "status": "success", "arrival_time": 0.0, "first_token_time": 0.3, "token_timestamps": [0.3, 0.4, 0.5]}
+
+def test_goodput_boundaries():
+    traces = [
+        {"ttft": 100.0, "tpot": 20.0, "num_tokens": 5, "timestamps": [0, 100, 120, 140, 160]},
+        {"ttft": 250.0, "tpot": 20.0, "num_tokens": 5, "timestamps": [0, 250, 270, 290, 310]}
     ]
-    ratio, count, acc = compute_goodput(results, 200.0, 30.0)
-    assert count == 1.0
+    gp = compute_goodput(traces, 200.0, 30.0)
+    assert gp == 0.5
 
-def test_preemption_gap_calculation():
-    trace = {
-        "arrival_time": 0.0,
-        "first_token_time": 0.05,
-        "preemption_time": 0.5,
-        "token_timestamps": [0.05, 0.1, 0.7, 0.75]
-    }
-    res = analyze_preemption_gap(trace)
-    assert "actual_gap" in res
 
-def test_itl_tpot_divergence():
-    timestamps = [0.0, 0.1, 0.12, 0.13, 0.5]
-    res = compute_itl_and_tpot(timestamps)
-    assert res["divergence"] > 0.0
+def test_e2el_gap_non_negative():
+    traces = [
+        {"ttft": 100.0, "tpot": 20.0, "num_tokens": 3, "timestamps": [0, 100, 150, 170]}
+    ]
+    gap = compute_e2el_gap(traces)
+    assert gap >= 0.0
+
+
+def test_itl_divergence():
+    ts = [0.0, 100.0, 120.0, 400.0, 420.0]
+    tpot, max_itl = compute_itl_and_tpot(ts)
+    assert max_itl > tpot

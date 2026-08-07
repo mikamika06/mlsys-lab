@@ -1,0 +1,21 @@
+{
+  "id": "m-node-counts-per-optimization-level",
+  "title": "Node counts per optimization level",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT graph optimizations: levels, online vs offline, .ort format",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ortopt/analyzer.py", "ortopt/fusions.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Node counts across optimization levels", "check": "harness/m1.py",
+     "gates": [{"metric": "counts_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Fusion tracking per level", "check": "harness/m2.py",
+     "gates": [{"metric": "fusions_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: regression test on layout portability", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_portability", "op": "==", "threshold": 1}]}
+  ]
+}

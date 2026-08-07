@@ -1,0 +1,21 @@
+{
+  "id": "m-n-cpu-moe-sweep-throughput-and-memory-tradeoff-on-a-real-model",
+  "title": "MoE CPU offload throughput and memory tradeoff",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "expert-offloading-cpu-gpu",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["moe_sweep/sweep.py", "moe_sweep/verify.py", "moe_sweep/bandwidth.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Sweep throughput and memory tradeoff for CPU experts", "check": "harness/m1.py",
+     "gates": [{"metric": "sweep_match", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Verify tensor placement on CPU via override flags", "check": "harness/m2.py",
+     "gates": [{"metric": "placement_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Derive required memory bandwidth for target throughput", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_bandwidth", "op": "==", "threshold": 1}]}
+  ]
+}

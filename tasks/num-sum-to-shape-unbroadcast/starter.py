@@ -1,5 +1,3 @@
-import numpy as np
-
-def sum_to_shape(grad, input_shape):
+def sum_to_shape(grad: list, input_shape: tuple) -> list:
     """Reduce grad by summing along broadcasted dimensions to match input_shape."""
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')

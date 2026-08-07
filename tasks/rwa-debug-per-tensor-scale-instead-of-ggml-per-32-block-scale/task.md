@@ -19,20 +19,19 @@ Using one scale for the entire tensor changes the quantization range of every va
 Implement `q4_0_dequantize(x)`.
 
 ```python
-def q4_0_dequantize(x: np.ndarray) -> np.ndarray:
+def q4_0_dequantize(x: list[float]) -> list[float]:
     ...
 ```
 
-The function receives a one-dimensional `float32` or `float64` NumPy array whose length is a multiple of $32$. Return a `float64` NumPy array containing the Q4_0 reconstruction.
+The function receives a one-dimensional `float32` or `float64` list whose length is a multiple of $32$. Return a `float64` list containing the Q4_0 reconstruction.
 
 The implementation must apply the Q4_0 scale independently for every consecutive block of 32 values. Do not use a single scale computed from the full tensor.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([0.1, 0.2, 0.3, 0.4] + [0.0] * 28 + [10.0] * 32)
+x = [0.1, 0.2, 0.3, 0.4] + [0.0] * 28 + [10.0] * 32
 y = q4_0_dequantize(x)
 
 # The first and second groups use different scales.
@@ -41,7 +40,7 @@ y = q4_0_dequantize(x)
 
 ## What the gate checks
 
-The gate generates tensors with blocks of different magnitudes and compares the reconstruction error against a NumPy oracle implementing the Q4_0 block algorithm.
+The gate generates tensors with blocks of different magnitudes and compares the reconstruction error against a Python oracle implementing the Q4_0 block algorithm.
 
 The measured metric is the mean squared error
 

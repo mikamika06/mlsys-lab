@@ -35,7 +35,7 @@ proportion, by a factor of $g$.
 Implement `mha_gqa_mqa_reconstruct(Q, K, V, group_sizes)`:
 
 ```python
-def mha_gqa_mqa_reconstruct(Q: np.ndarray, K: np.ndarray, V: np.ndarray, group_sizes) -> list:
+def mha_gqa_mqa_reconstruct(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], V: list[list[list[list[float]]]], group_sizes):
     ...
 ```
 
@@ -65,14 +65,13 @@ in the same order:
 - `size_ratio`: a Python float.
 
 No explicit Python loop over heads/batch/sequence positions is needed — use
-vectorised NumPy (`reshape`, `mean`, `repeat`, batched matmul).
+vectorised Python (`reshape`, `mean`, `repeat`, batched matmul).
 
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 Q = rng.standard_normal((1, 3, 4, 8))
 K = rng.standard_normal((1, 3, 4, 8))
 V = rng.standard_normal((1, 3, 4, 8))

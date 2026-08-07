@@ -1,4 +1,4 @@
-def prefix_reuse_lengths(cache, queries, block_size):
+def prefix_reuse_lengths(cache: list[list[int]], queries: list[list[int]], block_size: int) -> list[tuple[int, int]]:
     """For each query, return (exact_reuse, block_reuse):
 
     exact_reuse: length of the longest prefix `q` shares with any single

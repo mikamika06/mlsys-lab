@@ -1,22 +1,12 @@
-import numpy as np
-
-
-def compute_accepted_length(draft_tokens, target_probs, draft_probs, grammar_mask):
-    k = len(draft_tokens)
-    accepted = 0
-    for i in range(k):
-        token = draft_tokens[i]
-        if i < len(grammar_mask) and not grammar_mask[i][token]:
+def compute_accepted_length(draft_tokens, target_probs, draft_probs, grammar_masks, random_samples):
+    accepted_length = 0
+    for i, token in enumerate(draft_tokens):
+        if not grammar_masks[i][token]:
             break
-        p_target = target_probs[i][token]
-        p_draft = max(draft_probs[i][token], 1e-6)
-        ratio = p_target / p_draft
-        if ratio >= 1.0:
-            accepted += 1
+        p = target_probs[i][token]
+        q = draft_probs[i][token]
+        if p >= q or random_samples[i] < (p / q):
+            accepted_length += 1
         else:
-            r = np.random.default_rng(42 + i).random()
-            if r < ratio:
-                accepted += 1
-            else:
-                break
-    return accepted
+            break
+    return accepted_length

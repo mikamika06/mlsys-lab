@@ -1,0 +1,68 @@
+{
+  "id": "m-ovquantizer-one-shot-vs-manual-nncf-quantize-output-parity",
+  "title": "OVQuantizer one-shot vs manual nncf.quantize parity",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "Optimum Intel integration & HF round-trip",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantizer/opset.py",
+    "quantizer/pipeline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Intermediate ONNX opset version identification",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "opsets_matched",
+          "op": ">=",
+          "threshold": 3.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "OVQuantizer and manual nncf.quantize parity",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "parity_matched",
+          "op": ">=",
+          "threshold": 3.0
+        },
+        {
+          "metric": "max_rel_err",
+          "op": "<=",
+          "threshold": 0.0001
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches uncalibrated scale drift",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_scale_drift",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

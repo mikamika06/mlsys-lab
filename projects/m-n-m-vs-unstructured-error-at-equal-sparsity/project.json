@@ -1,0 +1,46 @@
+{
+  "id": "m-n-m-vs-unstructured-error-at-equal-sparsity",
+  "title": "n:m vs unstructured error at equal sparsity",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-edge-export",
+  "track": "Sparsity and pruning for edge formats",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "edge_export/sparsity.py",
+    "edge_export/joint_budget.py",
+    "edge_export/layer_decisions.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Evaluate n:m vs unstructured pruning MSE at equal sparsity",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "evaluations_correct", "op": "==", "threshold": 1},
+        {"metric": "nm_error_higher_or_equal", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Optimize joint prune-then-palettize error budget",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "joint_budget_correct", "op": "==", "threshold": 1},
+        {"metric": "optimal_combination_selected", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches unconstrained global bit budget violations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_budget_violations", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -57,7 +57,12 @@ def grade(sol, fx) -> dict:
 
         try:
             out_got, c_kv_got = sol.mla_forward(
-                x.copy(), W_Q.copy(), W_down_kv.copy(), W_up_K.copy(), W_up_V.copy(), num_heads,
+                x.tolist(),
+                W_Q.tolist(),
+                W_down_kv.tolist(),
+                W_up_K.tolist(),
+                W_up_V.tolist(),
+                num_heads,
             )
         except Exception:
             return {"max_abs_err": float("inf"), "latent_ok": 0.0}

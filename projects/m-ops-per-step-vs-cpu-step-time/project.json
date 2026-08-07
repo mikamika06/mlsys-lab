@@ -1,0 +1,63 @@
+{
+  "id": "m-ops-per-step-vs-cpu-step-time",
+  "title": "Ops per step vs CPU step time",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "Launch-bound vs compute-bound diagnosis",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "launchbound/profiler.py",
+    "launchbound/bounds.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analyze launch overhead and step time",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "step_analysis_matches",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Prune op count to maintain GPU busy fraction > 80%",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "pruning_matches",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Predict speedup and enforce regression safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_ignored_launch_overhead",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

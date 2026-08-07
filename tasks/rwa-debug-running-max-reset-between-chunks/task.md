@@ -22,11 +22,11 @@ The accumulated output is updated using the same rescaling factor. Resetting $m$
 
 Implement `chunked_attention(q, chunks)`.
 
-The argument `q` is a one-dimensional NumPy array with shape $(d,)$.
+The argument `q` is a list of floats with shape $(d,)$.
 `chunks` is a list of pairs `(K_chunk, V_chunk)` where `K_chunk` has shape
 $(n_i, d)$ and `V_chunk` has shape $(n_i, h)$.
 
-Return a NumPy array of shape $(h,)$ containing the attention output over all
+Return a list of shape $(h,)$ containing the attention output over all
 keys and values from all chunks. Use a numerically stable running softmax
 algorithm. The running maximum and normalization state must be carried from one
 chunk to the next. The result must be `float64`.
@@ -34,12 +34,11 @@ chunk to the next. The result must be `float64`.
 ## Example
 
 ```python
-import numpy as np
 
-q = np.array([1.0, 0.0])
+q = [1.0, 0.0]
 chunks = [
-    (np.array([[1.0, 0.0], [0.0, 1.0]]), np.array([[1.0], [2.0]])),
-    (np.array([[10.0, 0.0]]), np.array([[3.0]])),
+    ([[1.0, 0.0], [0.0, 1.0]], [[1.0], [2.0]]),
+    ([[10.0, 0.0]], [[3.0]]),
 ]
 
 y = chunked_attention(q, chunks)
@@ -50,7 +49,7 @@ averaging the outputs of two independent chunk softmax operations.
 
 ## What the gate checks
 
-The gate computes a NumPy reference implementation that performs the full stable
+The gate computes a Python reference implementation that performs the full stable
 online softmax merge with running state in float64. The candidate result is
 compared with the oracle using
 

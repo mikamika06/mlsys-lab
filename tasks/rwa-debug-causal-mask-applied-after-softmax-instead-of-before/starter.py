@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def causal_self_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.ndarray:
+def causal_self_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]]) -> list[list[float]]:
     """Causal scaled dot-product self-attention.
 
     Q, K, V: (n, d). Row i may only attend to keys/values at position
@@ -12,16 +11,4 @@ def causal_self_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.nda
     softmax, so masked rows no longer sum to 1 -- the output is silently
     under-normalized.
     """
-    n, d = Q.shape
-    scores = (Q @ K.T) / np.sqrt(d)
-
-    scores = scores - np.max(scores, axis=1, keepdims=True)
-    probs = np.exp(scores)
-    probs = probs / np.sum(probs, axis=1, keepdims=True)
-
-    row = np.arange(n)[:, None]
-    col = np.arange(n)[None, :]
-    mask = (col <= row).astype(np.float64)
-    probs = probs * mask  # BUG: should have masked the logits pre-softmax
-
-    return probs @ V
+    raise NotImplementedError('your code here')

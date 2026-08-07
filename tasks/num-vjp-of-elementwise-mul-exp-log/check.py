@@ -35,19 +35,23 @@ def grade(sol, fx) -> dict:
     rng = np.random.default_rng(12345)
     for _ in range(5):
         n = rng.integers(3, 10)
-        x = rng.standard_normal(n).astype(np.float64)
-        y = rng.standard_normal(n).astype(np.float64)
-        upstream = rng.standard_normal(n).astype(np.float64)
+        x_np = rng.standard_normal(n).astype(np.float64)
+        y_np = rng.standard_normal(n).astype(np.float64)
+        upstream_np = rng.standard_normal(n).astype(np.float64)
+
+        x_list = x_np.tolist()
+        y_list = y_np.tolist()
+        upstream_list = upstream_np.tolist()
 
         try:
-            got_x, got_y = sol.vjp_mul_exp_log(x, y, upstream)
+            got_x, got_y = sol.vjp_mul_exp_log(x_list, y_list, upstream_list)
         except Exception as e:
             return {"max_abs_err": float("inf")}
 
-        ref_x, ref_y = _finite_diff_vjp(_f, x, y, upstream)
+        ref_x, ref_y = _finite_diff_vjp(_f, x_np, y_np, upstream_np)
 
-        err_x = max_abs_err(got_x, ref_x)
-        err_y = max_abs_err(got_y, ref_y)
+        err_x = max_abs_err(np.array(got_x), ref_x)
+        err_y = max_abs_err(np.array(got_y), ref_y)
         err = max(err_x, err_y)
 
         if err > 1e-5:

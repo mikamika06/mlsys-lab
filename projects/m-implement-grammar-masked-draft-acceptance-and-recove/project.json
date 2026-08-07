@@ -16,28 +16,28 @@
   "milestones": [
     {
       "n": 1,
-      "title": "Grammar-masked draft acceptance and length recovery",
+      "title": "Grammar-masked draft acceptance",
       "check": "harness/m1.py",
       "gates": [
-        {"metric": "acceptance_rate", "op": ">=", "threshold": 0.85}
+        {"metric": "acceptance_rate", "op": ">=", "threshold": 1.0}
       ]
     },
     {
       "n": 2,
-      "title": "Measure real acceptance loss from unmasked drafts",
+      "title": "Measure real acceptance loss",
       "check": "harness/m2.py",
       "gates": [
-        {"metric": "loss_match", "op": "==", "threshold": 1}
+        {"metric": "loss_match", "op": "==", "threshold": 1.0}
       ]
     },
     {
       "n": 3,
-      "title": "Safeguard: regression test catching grammar mismatch collapse",
+      "title": "Safeguard: regression test for grammar evasion",
       "check": "harness/m3.py",
       "gates": [
-        {"metric": "has_tests", "op": "==", "threshold": 1},
-        {"metric": "passes_on_good", "op": "==", "threshold": 1},
-        {"metric": "catches_collapsed_acceptance", "op": "==", "threshold": 1}
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_mask", "op": "==", "threshold": 1.0}
       ]
     }
   ]

@@ -30,7 +30,7 @@ The KV cache must be dequantized with the same calibrated scale before it is use
 
 Implement `fp8_attention_output(Q, K, V)`.
 
-The function receives three `float64` NumPy arrays:
+The function receives three `float64` list:
 
 - `Q` with shape $(m,d)$
 - `K` with shape $(n,d)$
@@ -49,11 +49,10 @@ Do not use a fixed scale of $1.0`; the purpose of the task is to avoid saturatio
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.5]])
-K = np.array([[500.0, 0.0], [-500.0, 1.0]])
-V = np.array([[2.0, 3.0], [4.0, 5.0]])
+Q = [[1.0, 0.5]]
+K = [[500.0, 0.0], [-500.0, 1.0]]
+V = [[2.0, 3.0], [4.0, 5.0]]
 
 out = fp8_attention_output(Q, K, V)
 ```
@@ -62,7 +61,7 @@ The output is computed after the KV tensors have gone through the calibrated FP8
 
 ## What the gate checks
 
-The gate computes an independent NumPy oracle that performs e4m3 quantization with amax-based scaling and compares the submitted attention output.
+The gate computes an independent Python oracle that performs e4m3 quantization with amax-based scaling and compares the submitted attention output.
 
 The returned `max_abs_err` must satisfy
 
