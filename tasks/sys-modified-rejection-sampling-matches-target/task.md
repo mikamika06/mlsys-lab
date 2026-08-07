@@ -31,7 +31,7 @@ speculative decoding lossless.
 Implement `rejection_sample_block`:
 
 ```python
-def rejection_sample_block(P: np.ndarray, Q: np.ndarray, n_draws: int, seed: int) -> np.ndarray:
+def rejection_sample_block(P: list[list[float]], Q: list[list[float]], n_draws: int, seed: int) -> list[list[float]]:
     ...
 ```
 
@@ -40,7 +40,7 @@ def rejection_sample_block(P: np.ndarray, Q: np.ndarray, n_draws: int, seed: int
   over a vocabulary of size $V$, for verification position $k$.
 * `n_draws` — number of independent repetitions of the accept/resample
   procedure to run **per position** $k$.
-* `seed` — integer seed for `np.random.default_rng(seed)`, used to drive
+* `seed` — integer seed for `random.Random(seed)`, used to drive
   your random draws.
 
 For every position $k = 0,\dots,K-1$ independently: repeat `n_draws`
@@ -56,10 +56,9 @@ at position $k$. For large `n_draws`, `E[k]` should closely approximate
 ## Example
 
 ```python
-import numpy as np
 
-P = np.array([[0.70, 0.20, 0.10]])
-Q = np.array([[0.40, 0.35, 0.25]])
+P = [[0.70, 0.20, 0.10]]
+Q = [[0.40, 0.35, 0.25]]
 
 E = rejection_sample_block(P, Q, n_draws=200_000, seed=0)
 print(E)   # ~= [[0.70, 0.20, 0.10]]

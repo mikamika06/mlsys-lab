@@ -21,26 +21,25 @@ The task below asks you to compute these scales for a given weight matrix $W$ an
 Implement the function `fp8_scales(W, X)`:
 
 ```python
-def fp8_scales(W: np.ndarray, X: np.ndarray) -> Tuple[float, np.ndarray]:
+def fp8_scales(W: list[list[float]], X: list) -> tuple[float, list[float]]:
     ...
 ```
 
-* `W` is a 2‑D NumPy array of shape `(out_dim, in_dim)`.
+* `W` is a 2‑D list of shape `(out_dim, in_dim)`.
 * `X` is either a 2‑D array of shape `(batch, dim)` or a higher‑dimensional tensor where the last axis contains the feature dimension.  
   In all cases you should treat each *row* (i.e., slice along all axes except the last one) as an independent token.
 * The function must return:
   1. A single `float` – the per‑tensor scale for `W`.
-  2. A 1‑D NumPy array of shape `(num_tokens,)` – the per‑token scales for `X`.
+  2. A 1‑D list of shape `(num_tokens,)` – the per‑token scales for `X`.
 
 Both outputs should be computed using the formula above with a divisor of **448**.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[0, -3], [4, 1]])
-X = np.array([[2, -5], [-1, 7]])
+W = [[0, -3], [4, 1]]
+X = [[2, -5], [-1, 7]]
 
 tensor_scale, token_scales = fp8_scales(W, X)
 
@@ -50,7 +49,7 @@ print(token_scales)   # array([5/448, 7/448]) ≈ [0.01116071429, 0.015625]
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares your result with it.  
+The grader computes a reference implementation using Python and compares your result with it.  
 It reports the global relative L2 error:
 
 $$\mathrm{rel\_err} = \frac{\lVert \hat{s} - s\rVert}{\lVert s\rVert},$$

@@ -20,7 +20,7 @@ $$Q \in \mathbb{R}^{B \times h \times S \times d_k}, \quad
   K \in \mathbb{R}^{B \times 1 \times S \times d_k}, \quad
   V \in \mathbb{R}^{B \times 1 \times S \times d_k}$$
 
-and NumPy broadcasting handles the head dimension automatically — no explicit
+and Python broadcasting handles the head dimension automatically — no explicit
 expansion is required.
 
 MQA reduces the KV cache by a factor of $h$ during autoregressive inference.
@@ -32,14 +32,13 @@ savings.
 Implement `mha_single_kv_head(Q, K, V)`:
 
 ```python
-import numpy as np
 
-def mha_single_kv_head(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.ndarray:
+def mha_single_kv_head(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], V: list[list[list[list[float]]]]) -> list[list[list[list[float]]]]:
     """Scaled dot-product attention with a single shared KV head."""
     ...
 ```
 
-Inputs are all `float64` NumPy arrays:
+Inputs are all `float64` list:
 
 | Argument | Shape | Description |
 |----------|-------|-------------|
@@ -50,7 +49,7 @@ Inputs are all `float64` NumPy arrays:
 Requirements:
 
 1. Compute the attention score matrix $\frac{QK^\top}{\sqrt{d_k}}$ using
-   `np.matmul` (or equivalent) so that the single KV head broadcasts across
+matrix multiplication (or equivalent) so that the single KV head broadcasts across
    all $h$ query heads.
 2. Apply numerically stable softmax over the last axis (subtract the row-max
    before exponentiation).
@@ -62,9 +61,8 @@ Do **not** manually expand $K$ or $V$ to $h$ copies; use broadcasting.
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.RandomState(0)
+import random; rng = random.Random(0)
 B, h, S, d = 2, 4, 8, 16
 Q = rng.randn(B, h, S, d)
 K = rng.randn(B, 1, S, d)

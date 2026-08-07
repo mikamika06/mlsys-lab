@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def q4_q8_reconstruction_mse(W: np.ndarray):
+def q4_q8_reconstruction_mse(W: list[list[float]]) -> tuple[float, float]:
     """
     Compute (mse_q4_0, mse_q8_0): the mean squared reconstruction error of
     W after ggml-style blockwise symmetric quantization, one block per

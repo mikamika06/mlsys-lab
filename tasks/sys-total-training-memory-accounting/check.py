@@ -1,38 +1,39 @@
 import sys
-import numpy as np
+import math
 
-def _size_of(obj):
-    if isinstance(obj, np.ndarray):
-        return obj.nbytes + sys.getsizeof(obj)
-    elif isinstance(obj, dict):
+def _oracle_size_of(obj):
+    if isinstance(obj, dict):
         size = sys.getsizeof(obj)
         for k, v in obj.items():
-            size += sys.getsizeof(k) + _size_of(v)
+            size += sys.getsizeof(k) + _oracle_size_of(v)
         return size
     elif isinstance(obj, list):
         size = sys.getsizeof(obj)
         for item in obj:
-            size += _size_of(item)
+            size += _oracle_size_of(item)
         return size
     else:
         return sys.getsizeof(obj)
 
 def grade(sol, fx) -> dict:
-    rng = np.random.default_rng(0)
-    params = {"w": rng.standard_normal((5, 7), dtype=np.float32),
-              "b": rng.standard_normal((7,), dtype=np.float32)}
-    grads = {k: rng.standard_normal(v.shape, dtype=v.dtype) for k, v in params.items()}
-    optimizer_state = {"momentum_w": rng.standard_normal(params["w"].shape, dtype=params["w"].dtype),
-                       "velocity_b": rng.standard_normal(params["b"].shape, dtype=params["b"].dtype)}
-    activations = [rng.standard_normal((3, 5), dtype=np.float32) for _ in range(4)]
+    params = {"w": [[0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]}
+    grads = {"w": [[1.0, 1.0, 1.0, 1.0], [1.0, 1.0, 1.0, 1.0], [1.0, 1.0, 1.0, 1.0]]}
+    optimizer_state = {"momentum": [[0.1, 0.1, 0.1, 0.1], [0.1, 0.1, 0.1, 0.1], [0.1, 0.1, 0.1, 0.1]]}
+    activations = [[float(i) for i in range(12)]]
 
-    ref_bytes = (_size_of(params) + _size_of(grads)
-                 + _size_of(optimizer_state) + _size_of(activations))
+    oracle_val = int(_oracle_size_of(params) + _oracle_size_of(grads) +
+                     _oracle_size_of(optimizer_state) + _oracle_size_of(activations))
 
-    try:
-        cand_bytes = sol.total_training_memory(params, grads, optimizer_state, activations)
-    except Exception:
-        return {"size_ratio": 0.0}
+    candidate_val = sol.total_training_memory(params, grads, optimizer_state, activations)
 
-    ratio = float(ref_bytes) / float(cand_bytes)
-    return {"size_ratio": ratio}
+    if candidate_val == 0:
+        ratio = 0.0
+    else:
+        ratio = float(oracle_val) / float(candidate_val)
+
+    passed = math.isclose(ratio, 1.0, abs_tol=1e-9)
+
+    return {
+        "size_ratio": ratio,
+        "passed": passed
+    }

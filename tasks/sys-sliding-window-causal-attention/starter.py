@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def sliding_window_attention_tiled(Q: np.ndarray, K: np.ndarray, V: np.ndarray, window: int, block_size: int) -> np.ndarray:
+def sliding_window_attention_tiled(Q: list[list[float]], K: list[list[float]], V: list[list[float]], window: int, block_size: int) -> list[list[float]]:
     """
     Sliding-window causal attention, computed tile by tile over the query
     axis. For each query tile [qs, qe), only the key/value slice

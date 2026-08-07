@@ -1,0 +1,9 @@
+# Ticket: Q4_K Round-Trip and Error Analysis Pipeline Inconsistencies
+
+During recent integration runs evaluating GGUF quantization formats across mixed-precision inference pipelines, we observed several concerning anomalies in our low-level quantization module. Specifically, when attempting to export weights into the Q4_K format and subsequently reconstructing them for validation, the resulting byte streams occasionally fail bit-exact verification against expected reference byte structures. This causes downstream loaders expecting strict GGUF spec adherence to reject tensors during weight deserialization, throwing subtle alignment and decoding errors.
+
+Furthermore, when profiling quantization noise across large language model weight matrices, engineers noticed that overall superblock mean squared error (MSE) spikes unexpectedly in specific layers, yet current telemetry fails to pinpoint which internal sub-blocks within the 256-element superblocks are driving this degradation. Without granular sub-block attribution, we cannot determine whether outlier scales or min values are responsible for the elevated error profile.
+
+Finally, comparative benchmarks between Q4_K and legacy Q4_0 formats at matched bits-per-weight (bpw) configurations are yielding contradictory fidelity metrics in automated test suites. The current evaluation harness lacks a rigorous, reproducible verification path to confirm whether Q4_K consistently outperforms Q4_0 under equivalent compression constraints, leaving our quantization strategy without empirical backing.
+
+We need a dedicated, robust Python implementation in our quantization workspace that achieves byte-exact round-trip serialization for Q4_K, isolates sub-block error contributions within superblocks, and provides clear comparative metrics against Q4_0 at matched bpw. All modules must adhere to strict deterministic checks without external binary fixtures.

@@ -1,0 +1,43 @@
+{
+  "id": "m-verify-a-real-accumulated-gradient-exactly-matches-a",
+  "title": "Exact Gradient Accumulation and Memory Verification",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "gradient-accumulation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gradacc/accumulate.py",
+    "gradacc/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Accumulated gradient matches full-batch",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "max_abs_err", "op": "<=", "threshold": 1e-6}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Peak memory stays flat across an accumulation sweep",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "memory_ratio", "op": "<=", "threshold": 1.5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching the missing loss division",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unscaled", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

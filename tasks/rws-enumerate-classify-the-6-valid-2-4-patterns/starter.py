@@ -1,4 +1,2 @@
-import numpy as np
-
-def classify_patterns(vectors: np.ndarray) -> np.ndarray:
+def classify_patterns(vectors: list[list[int]]) -> list[int]:
     raise NotImplementedError('your code here')

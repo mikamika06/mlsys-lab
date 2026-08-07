@@ -1,16 +1,15 @@
 import math
-import numpy as np
 
 
 def _quant_block_rows(W, qmax):
-    nrows = W.shape[0]
-    ncols = W.shape[1]
-    
-    d = np.empty(nrows, dtype=np.float64)
+    nrows = len(W)
+    ncols = len(W[0])
+
+    d = [0.0] * nrows
     for i in range(nrows):
         amax = 0.0
         for j in range(ncols):
-            val = W[i, j]
+            val = W[i][j]
             if val < 0:
                 val = -val
             if val > amax:
@@ -20,27 +19,27 @@ def _quant_block_rows(W, qmax):
         else:
             d[i] = 1.0
 
-    codes = np.empty((nrows, ncols), dtype=np.float64)
+    codes = [[0.0] * ncols for _ in range(nrows)]
     for i in range(nrows):
         scale = d[i]
         for j in range(ncols):
-            rounded = round(W[i, j] / scale)
+            rounded = round(W[i][j] / scale)
             if rounded < -qmax:
                 rounded = -qmax
             elif rounded > qmax:
                 rounded = qmax
-            codes[i, j] = rounded
+            codes[i][j] = float(rounded)
 
-    res = np.empty((nrows, ncols), dtype=np.float64)
+    res = [[0.0] * ncols for _ in range(nrows)]
     for i in range(nrows):
         scale = d[i]
         for j in range(ncols):
-            res[i, j] = codes[i, j] * scale
-            
+            res[i][j] = codes[i][j] * scale
+
     return res
 
 
-def q4_q8_reconstruction_mse(W: np.ndarray):
+def q4_q8_reconstruction_mse(W: list[list[float]]) -> tuple[float, float]:
     """
     Blockwise ggml-style symmetric quantization, one block per row
     (block size = row length):
@@ -52,26 +51,25 @@ def q4_q8_reconstruction_mse(W: np.ndarray):
     -- symmetric quantization). Returns (mse4_0, mse8_0): the mean
     squared reconstruction error over every element of W, for each format.
     """
-    W = np.asarray(W, dtype=np.float64)
     q4 = _quant_block_rows(W, 8)
     q8 = _quant_block_rows(W, 127)
-    
-    nrows = W.shape[0]
-    ncols = W.shape[1]
+
+    nrows = len(W)
+    ncols = len(W[0])
     total_elements = nrows * ncols
-    
+
     sum_sq4 = 0.0
     for i in range(nrows):
         for j in range(ncols):
-            diff = q4[i, j] - W[i, j]
+            diff = q4[i][j] - W[i][j]
             sum_sq4 += diff * diff
     mse4 = float(sum_sq4 / total_elements)
-    
+
     sum_sq8 = 0.0
     for i in range(nrows):
         for j in range(ncols):
-            diff = q8[i, j] - W[i, j]
+            diff = q8[i][j] - W[i][j]
             sum_sq8 += diff * diff
     mse8 = float(sum_sq8 / total_elements)
-    
+
     return mse4, mse8

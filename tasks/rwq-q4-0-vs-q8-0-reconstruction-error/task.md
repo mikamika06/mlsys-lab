@@ -33,7 +33,7 @@ $$
 Implement `q4_q8_reconstruction_mse`:
 
 ```python
-def q4_q8_reconstruction_mse(W: np.ndarray) -> tuple[float, float]:
+def q4_q8_reconstruction_mse(W: list[list[float]]) -> tuple[float, float]:
     ...
 ```
 
@@ -49,15 +49,14 @@ Return `(mse_q4_0, mse_q8_0)`:
 ## Example
 
 ```python
-import numpy as np
-W = np.random.default_rng(0).normal(size=(4, 32))
+rng = random.Random(0); W = [[rng.gauss(0, 1) for _ in range(32)] for _ in range(4)]
 mse_q4, mse_q8 = q4_q8_reconstruction_mse(W)
 # mse_q8 << mse_q4 -- 8-bit codes resolve the block far more finely
 ```
 
 ## What the gate checks
 
-* **q4_rel_err** — relative error between your `mse_q4_0` and a NumPy
+* **q4_rel_err** — relative error between your `mse_q4_0` and a Python
   oracle running the Q4_0 recipe above on the fixed weight fixture
   (`gguf_w.npy`).
 * **q8_rel_err** — relative error between your `mse_q8_0` and the

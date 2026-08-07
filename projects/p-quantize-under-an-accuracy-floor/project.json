@@ -1,0 +1,103 @@
+{
+  "id": "p-quantize-under-an-accuracy-floor",
+  "title": "Quantize under an accuracy floor",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "quant-libs",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "quant/eval.py",
+    "quant/calib.py",
+    "quant/recipe.py",
+    "quant/mixed.py",
+    "quant/target.py",
+    "quant/report.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зібрати власний eval, якому можна вірити",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "eval_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "калібрувальний набір і його вплив",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "calib_effective",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "порівняти рецепти на однакових умовах",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "recipe_compared",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "знайти чутливі шари і змішати точність",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "mixed_precision_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "поріг витримано, розмір досягнуто",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "target_reached",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт відтворюється на іншій моделі",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

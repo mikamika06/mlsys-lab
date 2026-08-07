@@ -1,0 +1,22 @@
+{
+  "id": "m-wrap-a-numpy-op-as-a-custom-op-with-a-fake-kernel",
+  "title": "Numpy ops in PyTorch with Fake Kernels and Autograd",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Custom ops, torch.library and compile compatibility",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["custom_op/rbf.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Wrap the NumPy op and write a valid fake kernel", "check": "harness/m1.py",
+     "gates": [{"metric": "fwd_max_abs_err", "op": "<", "threshold": 1e-5},
+               {"metric": "compile_success", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Wire up autograd", "check": "harness/m2.py",
+     "gates": [{"metric": "bwd_max_abs_err", "op": "<", "threshold": 1e-4}]},
+    {"n": 3, "title": "Safety net: regression test catches broken VJP", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_vjp", "op": "==", "threshold": 1}]}
+  ]
+}

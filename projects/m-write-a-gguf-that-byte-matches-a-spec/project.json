@@ -1,0 +1,40 @@
+{
+  "id": "m-write-a-gguf-that-byte-matches-a-spec",
+  "title": "Write a GGUF that byte-matches a spec",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-container-format",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_spec/writer.py",
+    "gguf_spec/classifier.py",
+    "gguf_spec/diff.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Write a GGUF that byte-matches the specification",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "bytes_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Classify five corrupted GGUF fixtures correctly",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "classified_correctly", "op": "==", "threshold": 5}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for structural diffing",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_diff", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

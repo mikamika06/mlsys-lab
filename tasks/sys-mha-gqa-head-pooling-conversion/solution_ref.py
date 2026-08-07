@@ -1,12 +1,13 @@
-import numpy as np
-
-
-def mha_to_gqa_pool(K: np.ndarray, V: np.ndarray, n_kv_heads: int) -> tuple[np.ndarray, np.ndarray]:
+def mha_to_gqa_pool(
+    K: list[list[list[list[float]]]],
+    V: list[list[list[list[float]]]],
+    n_kv_heads: int,
+) -> tuple[list[list[list[list[float]]]], list[list[list[list[float]]]]]:
     """
     Convert MHA key/value tensors to GQA-init key/value tensors by
     mean-pooling contiguous groups of original KV heads.
 
-    K, V: (B, H, T, D) float64 MHA key/value tensors.
+    K, V: (B, H, T, D) nested lists of float MHA key/value tensors.
     n_kv_heads: target number of GQA KV heads G (H must be divisible by G).
 
     Heads are grouped contiguously in index order: heads
@@ -14,13 +15,14 @@ def mha_to_gqa_pool(K: np.ndarray, V: np.ndarray, n_kv_heads: int) -> tuple[np.n
 
     Returns (K_gqa, V_gqa), each of shape (B, G, T, D).
     """
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-    B, H, T, D = K.shape
+    B = len(K)
+    H = len(K[0])
+    T = len(K[0][0])
+    D = len(K[0][0][0])
     r = H // n_kv_heads
 
-    K_gqa = np.empty((B, n_kv_heads, T, D), dtype=np.float64)
-    V_gqa = np.empty((B, n_kv_heads, T, D), dtype=np.float64)
+    K_gqa = [[[[0.0 for _ in range(D)] for _ in range(T)] for _ in range(n_kv_heads)] for _ in range(B)]
+    V_gqa = [[[[0.0 for _ in range(D)] for _ in range(T)] for _ in range(n_kv_heads)] for _ in range(B)]
 
     for b in range(B):
         for g in range(n_kv_heads):
@@ -30,9 +32,9 @@ def mha_to_gqa_pool(K: np.ndarray, V: np.ndarray, n_kv_heads: int) -> tuple[np.n
                     v_sum = 0.0
                     for i in range(r):
                         h = g * r + i
-                        k_sum += K[b, h, t, d]
-                        v_sum += V[b, h, t, d]
-                    K_gqa[b, g, t, d] = k_sum / r
-                    V_gqa[b, g, t, d] = v_sum / r
+                        k_sum += K[b][h][t][d]
+                        v_sum += V[b][h][t][d]
+                    K_gqa[b][g][t][d] = k_sum / r
+                    V_gqa[b][g][t][d] = v_sum / r
 
     return K_gqa, V_gqa

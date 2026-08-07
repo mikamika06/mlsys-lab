@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def mha_to_gqa_pool(K: np.ndarray, V: np.ndarray, n_kv_heads: int) -> tuple[np.ndarray, np.ndarray]:
+def mha_to_gqa_pool(K: list[list[list[list[float]]]], V: list[list[list[list[float]]]], n_kv_heads: int) -> tuple[list[list[list[list[float]]]], list[list[list[list[float]]]]]:
     """
     Convert MHA key/value tensors to GQA-init key/value tensors by
     mean-pooling contiguous groups of original KV heads.

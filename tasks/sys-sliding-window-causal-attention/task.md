@@ -46,7 +46,7 @@ reference.
 Implement `sliding_window_attention_tiled`:
 
 ```python
-def sliding_window_attention_tiled(Q: np.ndarray, K: np.ndarray, V: np.ndarray, window: int, block_size: int) -> np.ndarray:
+def sliding_window_attention_tiled(Q: list[list[float]], K: list[list[float]], V: list[list[float]], window: int, block_size: int) -> list[list[float]]:
     ...
 ```
 
@@ -65,10 +65,9 @@ $(n, d)$ output array. Scores are scaled by $1/\sqrt d$ as usual.
 ## Example
 
 ```python
-import numpy as np
 
 n, d, w, bs = 6, 4, 3, 2
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 Q = rng.standard_normal((n, d))
 K = rng.standard_normal((n, d))
 V = rng.standard_normal((n, d))

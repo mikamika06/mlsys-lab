@@ -1,21 +1,23 @@
 import math
-import numpy as np
 
-def mha_single_kv_head(Q, K, V):
+def mha_single_kv_head(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], V: list[list[list[list[float]]]]) -> list[list[list[list[float]]]]:
     """Compute scaled dot-product attention with a single shared KV head.
 
     Q : (B, H, S, D)  – queries, H heads
     K : (B, 1, S, D)  – keys, one head
     V : (B, 1, S, D)  – values, one head
 
-    Returns (B, H, S, D) via NumPy broadcasting (no explicit KV expansion).
+    Returns (B, H, S, D) using plain Python lists.
     """
-    B, H, S_q, D = Q.shape
-    _, _, S_k, _ = K.shape
+    B = len(Q)
+    H = len(Q[0])
+    S_q = len(Q[0][0])
+    D = len(Q[0][0][0])
+    S_k = len(K[0][0])
 
     scale = D ** -0.5
 
-    output = np.zeros((B, H, S_q, D), dtype=Q.dtype)
+    output = [[[[0.0 for _ in range(D)] for _ in range(S_q)] for _ in range(H)] for _ in range(B)]
 
     for b in range(B):
         for h in range(H):
@@ -24,7 +26,7 @@ def mha_single_kv_head(Q, K, V):
                 for j in range(S_k):
                     dot_val = 0.0
                     for d in range(D):
-                        dot_val += Q[b, h, i, d] * K[b, 0, j, d]
+                        dot_val += Q[b][h][i][d] * K[b][0][j][d]
                     scores_row[j] = dot_val * scale
 
                 max_val = scores_row[0]
@@ -46,7 +48,7 @@ def mha_single_kv_head(Q, K, V):
                 for d in range(D):
                     out_val = 0.0
                     for j in range(S_k):
-                        out_val += weights_row[j] * V[b, 0, j, d]
-                    output[b, h, i, d] = out_val
+                        out_val += weights_row[j] * V[b][0][j][d]
+                    output[b][h][i][d] = out_val
 
     return output

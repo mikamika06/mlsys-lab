@@ -1,43 +1,104 @@
-import numpy as np
-from mlsys.scorers import rel_err
+import math
+import random
 
-def _reference(W, X):
-    # per‑tensor scale
-    tensor_scale = np.max(np.abs(W)) / 448.0
-    # flatten all but last axis for tokens
-    if X.ndim == 2:
-        token_max = np.max(np.abs(X), axis=1)
-    else:
-        token_max = np.max(np.abs(X.reshape(-1, X.shape[-1])), axis=1)
-    token_scales = token_max / 448.0
+
+def _ref_fp8_scales(W: list[list[float]], X: list) -> tuple[float, list[float]]:
+    max_w = -float('inf')
+    for row in W:
+        for val in row:
+            abs_val = abs(val)
+            if abs_val > max_w:
+                max_w = abs_val
+    tensor_scale = max_w / 448.0
+
+    def get_tokens(tensor):
+        if not isinstance(tensor, list):
+            return []
+        if len(tensor) == 0:
+            return []
+        if not isinstance(tensor[0], list):
+            return [tensor]
+        if not isinstance(tensor[0][0], list):
+            return tensor
+        tokens = []
+        for sub in tensor:
+            tokens.extend(get_tokens(sub))
+        return tokens
+
+    tokens = get_tokens(X)
+
+    token_scales = []
+    for token in tokens:
+        max_x = -float('inf')
+        for val in token:
+            abs_val = abs(val)
+            if abs_val > max_x:
+                max_x = abs_val
+        token_scales.append(max_x / 448.0)
+
     return tensor_scale, token_scales
 
+
+def _calc_rel_err(ref_tensor_scale, ref_token_scales, cand_tensor_scale, cand_token_scales):
+    ref_vec = [ref_tensor_scale] + list(ref_token_scales)
+    cand_vec = [cand_tensor_scale] + list(cand_token_scales)
+
+    if len(ref_vec) != len(cand_vec):
+        return float("inf")
+
+    sq_diff = sum((c - r) ** 2 for c, r in zip(cand_vec, ref_vec))
+    sq_ref = sum(r ** 2 for r in ref_vec)
+
+    if sq_ref == 0.0:
+        return 0.0 if sq_diff == 0.0 else float("inf")
+
+    return math.sqrt(sq_diff) / math.sqrt(sq_ref)
+
+
+def _gen_nested_list(shape, rng):
+    if len(shape) == 1:
+        return [rng.uniform(-10.0, 10.0) for _ in range(shape[0])]
+    return [_gen_nested_list(shape[1:], rng) for _ in range(shape[0])]
+
+
 def grade(sol, fx) -> dict:
-    rng = np.random.default_rng(0)
-    cases = [
-        (rng.standard_normal((64, 128)), rng.standard_normal((32, 10, 128))),
-        (rng.standard_normal((3, 5)), rng.standard_normal((7, 9))),
-        (rng.standard_normal((1, 1)), rng.standard_normal((4, 1))),
+    rng = random.Random(42)
+
+    test_cases = [
+        (
+            [[0.0, -3.0], [4.0, 1.0]],
+            [[2.0, -5.0], [-1.0, 7.0]],
+        ),
+        (
+            _gen_nested_list([4, 8], rng),
+            _gen_nested_list([16, 8], rng),
+        ),
+        (
+            _gen_nested_list([5, 10], rng),
+            _gen_nested_list([3, 4, 10], rng),
+        ),
+        (
+            _gen_nested_list([3, 6], rng),
+            _gen_nested_list([2, 3, 2, 6], rng),
+        ),
+        (
+            [[0.0, 0.0], [0.0, 0.0]],
+            [[0.0, 0.0], [0.0, 0.0]],
+        ),
+        (
+            [[-12.5]],
+            [[3.2, -448.0, 100.0]],
+        ),
     ]
-    for W, X in cases:
-        try:
-            got = sol.fp8_scales(W, X)
-            ref_tensor, ref_tokens = _reference(W, X)
-            # concatenate for relative error
-            ref_vec = np.concatenate(([ref_tensor], ref_tokens))
-            got_vec = np.concatenate(([got[0]], got[1]))
-        except Exception:
-            return {"rel_err": 1.0}
-        if not np.allclose(got_vec, ref_vec, rtol=1e-12, atol=0):
-            return {"rel_err": 1.0}
-    # compute global relative error
-    all_ref = []
-    all_got = []
-    for W, X in cases:
-        ref_tensor, ref_tokens = _reference(W, X)
-        got_tensor, got_tokens = sol.fp8_scales(W, X)
-        all_ref.append(np.concatenate(([ref_tensor], ref_tokens)))
-        all_got.append(np.concatenate(([got_tensor], got_tokens)))
-    ref_all = np.concatenate(all_ref)
-    got_all = np.concatenate(all_got)
-    return {"rel_err": rel_err(ref_all, got_all)}
+
+    max_rel_err = 0.0
+
+    for W, X in test_cases:
+        ref_tensor_scale, ref_token_scales = _ref_fp8_scales(W, X)
+        cand_tensor_scale, cand_token_scales = sol.fp8_scales(W, X)
+
+        err = _calc_rel_err(ref_tensor_scale, ref_token_scales, cand_tensor_scale, cand_token_scales)
+        if err > max_rel_err:
+            max_rel_err = err
+
+    return {"rel_err": max_rel_err}

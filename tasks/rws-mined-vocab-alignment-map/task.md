@@ -56,7 +56,7 @@ mined_vocab_align(teacher, student)
 ## What the gate checks
 
 * **exact_match** — your returned index list must equal, element for
-  element, a NumPy/DP oracle computing exact Levenshtein distances and
+  element, a Python/DP oracle computing exact Levenshtein distances and
   taking the first argmin per teacher token, on several random
   teacher/student vocab pairs (fixed seed) — each case includes at least
   one exact-duplicate token to exercise the tie-break rule.

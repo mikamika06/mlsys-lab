@@ -33,7 +33,7 @@ its own private $K[b,h]$, $V[b,h]$.
 Implement `mha_to_gqa_pool`:
 
 ```python
-def mha_to_gqa_pool(K: np.ndarray, V: np.ndarray, n_kv_heads: int) -> tuple[np.ndarray, np.ndarray]:
+def mha_to_gqa_pool(K: list[list[list[list[float]]]], V: list[list[list[list[float]]]], n_kv_heads: int) -> tuple[list[list[list[list[float]]]], list[list[list[list[float]]]]]:
     ...
 ```
 
@@ -52,10 +52,9 @@ Return `(K_gqa, V_gqa)`, each of shape $(B, G, T, D)$.
 ## Example
 
 ```python
-import numpy as np
 
 B, H, T, D, G = 1, 4, 2, 3, 2
-K = np.arange(B * H * T * D, dtype=np.float64).reshape(B, H, T, D)
+K = [[[[float(b * H * T * D + h * T * D + t * D + d) for d in range(D)] for t in range(T)] for h in range(H)] for b in range(B)]
 V = K + 100.0
 
 K_gqa, V_gqa = mha_to_gqa_pool(K, V, G)

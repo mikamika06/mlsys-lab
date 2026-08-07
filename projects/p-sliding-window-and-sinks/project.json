@@ -1,0 +1,124 @@
+{
+  "id": "p-sliding-window-and-sinks",
+  "title": "Вікно уваги і токени-якорі",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "sliding-window-and-sinks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "attn/window_sink.py",
+    "attn/cache.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "реалізувати вікно з якорями",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "api_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "attention_shape_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "sinks_preserved",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перевірити еквівалентність на коротких",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "short_exact_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти пам'ять на довгому діалозі",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "memory_bounded",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "unbounded_ratio",
+          "op": ">=",
+          "threshold": 4
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти якість на завданні пошуку в контексті",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "retrieval_accuracy",
+          "op": ">=",
+          "threshold": 0.85
+        },
+        {
+          "metric": "naive_window_accuracy",
+          "op": "<=",
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "пам'ять під бюджетом, якість у межах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "budget_met",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "quality_retained",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка на межі вікна визначена",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

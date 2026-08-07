@@ -1,4 +1,2 @@
-import numpy as np
-
-def fp8_scales(W: np.ndarray, X: np.ndarray):
+def fp8_scales(W: list[list[float]], X: list) -> tuple[float, list[float]]:
     raise NotImplementedError('your code here')

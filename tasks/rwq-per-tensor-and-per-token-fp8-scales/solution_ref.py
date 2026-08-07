@@ -1,42 +1,50 @@
-import numpy as np
-
-def fp8_scales(W: np.ndarray, X: np.ndarray):
+def fp8_scales(W: list[list[float]], X: list) -> tuple[float, list[float]]:
     """
     Compute per‑tensor and per‑token FP8 scales.
 
     Parameters
     ----------
-    W : np.ndarray
+    W : list[list[float]]
         Weight matrix of shape (out_dim, in_dim).
-    X : np.ndarray
+    X : list
         Activation tensor. Tokens are rows along all axes except the last one.
 
     Returns
     -------
-    tuple[float, np.ndarray]
+    tuple[float, list[float]]
         Per‑tensor scale and per‑token scales.
     """
     max_w = -float('inf')
-    for i in range(W.shape[0]):
-        for j in range(W.shape[1]):
-            val = abs(W[i, j])
-            if val > max_w:
-                max_w = val
+    for row in W:
+        for val in row:
+            abs_val = abs(val)
+            if abs_val > max_w:
+                max_w = abs_val
     tensor_scale = max_w / 448.0
 
-    if X.ndim == 2:
-        X_2d = X
-    else:
-        X_2d = X.reshape(-1, X.shape[-1])
+    def get_tokens(tensor):
+        if not isinstance(tensor, list):
+            return []
+        if len(tensor) == 0:
+            return []
+        if not isinstance(tensor[0], list):
+            return [tensor]
+        if not isinstance(tensor[0][0], list):
+            return tensor
+        tokens = []
+        for sub in tensor:
+            tokens.extend(get_tokens(sub))
+        return tokens
 
-    token_scales_list = []
-    for i in range(X_2d.shape[0]):
+    tokens = get_tokens(X)
+
+    token_scales = []
+    for token in tokens:
         max_x = -float('inf')
-        for j in range(X_2d.shape[1]):
-            val = abs(X_2d[i, j])
-            if val > max_x:
-                max_x = val
-        token_scales_list.append(max_x / 448.0)
+        for val in token:
+            abs_val = abs(val)
+            if abs_val > max_x:
+                max_x = abs_val
+        token_scales.append(max_x / 448.0)
 
-    token_scales = np.array(token_scales_list, dtype=X.dtype)
     return tensor_scale, token_scales
