@@ -759,6 +759,16 @@ def one(tid, turns):
                           "No commentary.")
             continue
 
+        if "solution_ref.py" not in got:
+            # A reply carrying only check.py used to be reported as a reference
+            # that does not define the function, which is true but useless: the
+            # reference never arrived. Ask for the one file that is missing.
+            history.append("%s:no solution_ref.py in the reply" % model)
+            prompt = ("solution_ref.py is missing from that reply. Send it, "
+                      "complete, as `FILE: solution_ref.py` followed by a fenced "
+                      "block. Nothing else.")
+            continue
+
         drift = signature_drift(files.get("starter.py"), got.get("solution_ref.py"))
         if drift:
             history.append("%s:%s" % (model, drift))
