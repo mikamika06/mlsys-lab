@@ -227,7 +227,13 @@ def contract(tid, files):
     for name in ("task.md",) + MODEL_FILES:
         if files.get(name) is None:
             continue
-        parts.append("FILE: %s\n```\n%s\n```" % (name, files[name]))
+        # The statement is context, not a file to send back. Showing it under
+        # the same FILE: marker the reply is supposed to use had the model
+        # mirroring it, and a reply carrying only task.md filtered down to
+        # nothing and burned the turn as "no files".
+        marker = ("--- %s (context only, do not send this back)" % name
+                  if name == "task.md" else "FILE: %s" % name)
+        parts.append("%s\n```\n%s\n```" % (marker, files[name]))
     return PROMPT.format(tid=tid, entry=entry_name(files.get("starter.py")) or "?",
                          files="\n\n".join(parts))
 
@@ -755,7 +761,14 @@ def one(tid, turns):
             # The contract is already in this chat. A nudge costs two lines; a
             # fresh conversation costs the whole contract again, so that is the
             # second answer to an empty reply, not the first.
-            history.append("%s:no files" % model)
+            mirrored = "FILE: task.md" in reply
+            history.append("%s:%s" % (model, "mirrored task.md" if mirrored
+                                      else "no files"))
+            if mirrored:
+                prompt = ("task.md was context, not something to send back. "
+                          "Send `FILE: solution_ref.py` with the rewritten "
+                          "reference. Nothing else.")
+                continue
             if nudged:
                 conv = "mlsys-denumpy-%s-r%d" % (tid, turn)
                 prompt = contract(tid, files)
