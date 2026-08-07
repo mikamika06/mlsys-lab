@@ -871,9 +871,18 @@ def one(tid, turns):
             history.append("%s:grader needs rewriting" % model)
             prompt = ("With the solution on plain lists, the grader now reports:"
                       "\n\n    " + line + "\n\nSend check.py, complete, as "
-                      "`FILE: check.py` followed by a fenced block. Keep the gate, "
-                      "its metric names and its tolerances exactly as they are; "
-                      "only what crosses the boundary to the solution changes.")
+                      "`FILE: check.py` followed by a fenced block.\n\n"
+                      "The grader contract, which the current file already "
+                      "follows and the rewrite must keep:\n"
+                      "  * it defines `def grade(sol, fx) -> dict:` and nothing "
+                      "else is called by the runner;\n"
+                      "  * `sol` IS the learner's module, already imported and "
+                      "passed in. Never import it. `import solution_ref` raises "
+                      "ModuleNotFoundError at grading time, because the file is "
+                      "not on the path under that name;\n"
+                      "  * the metric names and the tolerances stay exactly as "
+                      "they are — only what crosses the boundary to `sol` "
+                      "changes, from arrays to lists.")
             continue
         if not ok and "check.py" in got:
             with open(os.path.join(ROOT, "tasks", tid, "check.py"), "w",
