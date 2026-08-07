@@ -1,0 +1,135 @@
+{
+  "id": "p-int8-engine-loses-accuracy",
+  "title": "INT8-двигун втрачає точність",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw2-tensorrt-onnx",
+  "track": "int8-engine-loses-accuracy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "engine/profile.py",
+    "engine/quantize.py",
+    "engine/calibrate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зібрати пошарове порівняння з fp16",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "layers_profiled",
+          "op": ">=",
+          "threshold": 10
+        },
+        {
+          "metric": "mse_computed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти шари з найбільшою чутливістю",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "sensitive_identified",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "ranking_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "переставити Q/DQ у правильні місця",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "qdq_placed",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "graph_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "підібрати калібрувальний набір",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "calibration_diverse",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "scales_optimized",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "точність у межах 1%, прискорення збережено ≥70%",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "accuracy_recovered",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "speedup_retained",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт чутливості для наступних моделей",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_bad_sensitivity",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_missing_qdq",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

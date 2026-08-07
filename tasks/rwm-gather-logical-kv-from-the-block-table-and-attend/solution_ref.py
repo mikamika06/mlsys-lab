@@ -1,21 +1,31 @@
 import math
-import numpy as np
 
 
-def gather_attention(k_phys, v_phys, block_table, q):
-    k_logical = k_phys[block_table].reshape(-1, k_phys.shape[-1]).astype(np.float64)
-    v_logical = v_phys[block_table].reshape(-1, v_phys.shape[-1]).astype(np.float64)
-    q = q.astype(np.float64)
+def gather_attention(
+    k_phys: list[list[list[float]]],
+    v_phys: list[list[list[float]]],
+    block_table: list[int],
+    q: list[float]
+) -> list[float]:
+    k_logical = []
+    for b_idx in block_table:
+        for row in k_phys[b_idx]:
+            k_logical.append(row)
 
-    N = k_logical.shape[0]
-    D = k_logical.shape[1]
+    v_logical = []
+    for b_idx in block_table:
+        for row in v_phys[b_idx]:
+            v_logical.append(row)
+
+    N = len(k_logical)
+    D = len(q)
 
     scale = 1.0 / math.sqrt(D)
     scores = [0.0] * N
     for i in range(N):
         dot = 0.0
         for j in range(D):
-            dot += k_logical[i, j] * q[j]
+            dot += k_logical[i][j] * q[j]
         scores[i] = dot * scale
 
     max_score = scores[0]
@@ -41,7 +51,7 @@ def gather_attention(k_phys, v_phys, block_table, q):
     for d in range(D):
         acc = 0.0
         for i in range(N):
-            acc += weights[i] * v_logical[i, d]
+            acc += weights[i] * v_logical[i][d]
         result[d] = acc
 
-    return np.array(result, dtype=np.float64)
+    return result

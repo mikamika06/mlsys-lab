@@ -1,0 +1,21 @@
+{
+  "id": "m-per-channel-scale-before-palettization",
+  "title": "Per-channel scaling and Pareto sweep for model palettization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Palettization and lookup-table compression",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["palettize/scale.py", "palettize/decode.py", "palettize/sweep.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-channel scale before palettization", "check": "harness/m1.py",
+     "gates": [{"metric": "mse_score", "op": "<=", "threshold": 0.05}]},
+    {"n": 2, "title": "Decode a palettized mlpackage weight back to fp16", "check": "harness/m2.py",
+     "gates": [{"metric": "decode_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches improper scaling or decoding", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_decode", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,8 +1,6 @@
-import numpy as np
-
-def mark_activations(num_layers: int, seg_lengths) -> np.ndarray:
+def mark_activations(num_layers: int, seg_lengths: list[int]) -> list[int]:
     """
-    Return an array of length `num_layers` where indices that are
+    Return a list of length `num_layers` where indices that are
     checkpoint boundaries (start of each segment) are marked with 1,
     and all other indices are 0.
     """
@@ -13,7 +11,7 @@ def mark_activations(num_layers: int, seg_lengths) -> np.ndarray:
     for length in seg_lengths:
         boundaries.append(current)
         current += length
-    labels = np.zeros(num_layers, dtype=int)
+    labels = [0] * num_layers
     for b in boundaries:
         labels[b] = 1
     return labels

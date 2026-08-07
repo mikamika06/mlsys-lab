@@ -2,15 +2,18 @@ import ref
 
 
 def check(workdir):
-    from zeroproj.partition import assign_partitions
+    from zerodp.partition import partition_flat_contiguous
 
-    sizes = [100, 200, 300, 400, 500, 600]
-    world_size = 3
-    want = assign_partitions(sizes, world_size)
-    try:
-        got = assign_partitions(sizes, world_size)
-    except Exception:
-        got = None
-
-    ok = 1 if got == want and got is not None else 0
-    return {"partitions_matched": float(ok)}
+    out = {"flat_partitions_matched": 0.0, "total": float(len(ref.CONFIGS_M2))}
+    ok = 0
+    for i, cfg in enumerate(ref.CONFIGS_M2):
+        want = ref.partition_flat_contiguous(**cfg)
+        got = partition_flat_contiguous(**cfg)
+        if got == want:
+            ok += 1
+        elif "_note" not in out:
+            out["_note"] = f"cfg {i}: got {got}, want {want}"
+    out["flat_partitions_matched"] = (
+        1.0 if ok == len(ref.CONFIGS_M2) else 0.0
+    )
+    return out

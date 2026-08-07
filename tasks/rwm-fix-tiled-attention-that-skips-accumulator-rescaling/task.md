@@ -34,7 +34,7 @@ The supplied `tiled_attention_forward` has a bug: it updates the running max
 the new max before adding the new block's terms. Fix it.
 
 ```python
-def tiled_attention_forward(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int) -> np.ndarray:
+def tiled_attention_forward(Q: list[list[float]], K: list[list[float]], V: list[list[float]], block_size: int) -> list[list[float]]:
     ...
 ```
 
@@ -54,11 +54,10 @@ independent of `block_size`.
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0]])
-K = np.array([[0.0, 1.0], [1.0, 0.0], [5.0, 0.0]])   # last block has the largest score
-V = np.array([[1.0], [2.0], [10.0]])
+Q = [[1.0, 0.0]]
+K = [[0.0, 1.0], [1.0, 0.0], [5.0, 0.0]]   # last block has the largest score
+V = [[1.0], [2.0], [10.0]]
 
 out = tiled_attention_forward(Q, K, V, block_size=1)
 # The last block (score 5.0) dominates the softmax, so out should be very

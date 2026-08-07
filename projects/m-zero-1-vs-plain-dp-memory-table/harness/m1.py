@@ -2,15 +2,16 @@ import ref
 
 
 def check(workdir):
-    from zeroproj.memory import compute_memory_table
+    from zerodp.memory import calc_memory_table
 
-    matched = 0
-    for model_params, world_size, dtype_bytes in ref.CONFIGS:
-        want = compute_memory_table(model_params, world_size, dtype_bytes)
-        try:
-            got = compute_memory_table(model_params, world_size, dtype_bytes)
-        except Exception:
-            got = None
-        if got == want and got is not None:
-            matched += 1
-    return {"table_matched": float(matched)}
+    out = {"memory_tables_matched": 0.0, "total": float(len(ref.CONFIGS_M1))}
+    ok = 0
+    for i, cfg in enumerate(ref.CONFIGS_M1):
+        want = ref.calc_memory_table(**cfg)
+        got = calc_memory_table(**cfg)
+        if got == want:
+            ok += 1
+        elif "_note" not in out:
+            out["_note"] = f"cfg {i}: got {got}, want {want}"
+    out["memory_tables_matched"] = 1.0 if ok == len(ref.CONFIGS_M1) else 0.0
+    return out

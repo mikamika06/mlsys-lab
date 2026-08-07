@@ -1,8 +1,7 @@
 import math
-import numpy as np
 
 
-def h2o_eviction_set(attn_scores: np.ndarray, budget: int, recent_window: int):
+def h2o_eviction_set(attn_scores: list[list[float]], budget: int, recent_window: int):
     """
     H2O (Heavy-Hitter Oracle) static eviction set.
 
@@ -11,25 +10,25 @@ def h2o_eviction_set(attn_scores: np.ndarray, budget: int, recent_window: int):
     recent_window : number of most-recent positions always kept.
 
     Returns (retained_idx, preserved_mass):
-      retained_idx   : 1-D int64 array, ascending, length == budget.
+      retained_idx   : list of int, ascending, length == budget.
       preserved_mass : float, fraction of total accumulated attention mass
                         captured by the retained set.
     """
-    S = np.asarray(attn_scores, dtype=np.float64)
-    n = S.shape[0]
+    S = attn_scores
+    n = len(S)
 
     P = [[0.0] * n for _ in range(n)]
 
     for i in range(n):
-        row_max = S[i, 0]
+        row_max = S[i][0]
         for j in range(1, i + 1):
-            if S[i, j] > row_max:
-                row_max = S[i, j]
+            if S[i][j] > row_max:
+                row_max = S[i][j]
 
         row_sum = 0.0
         row_exps = [0.0] * (i + 1)
         for j in range(i + 1):
-            val = math.exp(S[i, j] - row_max)
+            val = math.exp(S[i][j] - row_max)
             row_exps[j] = val
             row_sum += val
 
@@ -83,7 +82,7 @@ def h2o_eviction_set(attn_scores: np.ndarray, budget: int, recent_window: int):
             j -= 1
         retained[j + 1] = key
 
-    retained_idx = np.array(retained, dtype=np.int64)
+    retained_idx = retained
 
     retained_mass = 0.0
     for idx in retained:

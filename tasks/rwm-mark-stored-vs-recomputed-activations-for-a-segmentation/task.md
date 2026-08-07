@@ -21,7 +21,7 @@ Activations at indices $b_i$ are stored; all other indices are recomputed.
 Implement `mark_activations`:
 
 ```python
-def mark_activations(num_layers: int, seg_lengths: Sequence[int]) -> np.ndarray:
+def mark_activations(num_layers: int, seg_lengths: list[int]) -> list[int]:
     ...
 ```
 
@@ -29,7 +29,7 @@ def mark_activations(num_layers: int, seg_lengths: Sequence[int]) -> np.ndarray:
 * `seg_lengths`: a sequence of positive integers whose sum equals `num_layers`.
   Each element is the length of one segment.
 
-The function must return a NumPy array of shape `(num_layers,)` and dtype `int`,
+The function must return a list of shape `(num_layers,)` and dtype `int`,
 where entry `$i$` is `1` if activation $i$ lies on a checkpoint boundary
 and `0` otherwise.  
 If the sum of `seg_lengths` does not equal `num_layers`, raise `ValueError`.
@@ -39,7 +39,6 @@ The implementation should be fully vectorised; no explicit Python loops over lay
 ## Example
 
 ```python
-import numpy as np
 
 # 10 layers, split into segments of lengths [3, 4, 3]
 labels = mark_activations(10, [3, 4, 3])
@@ -49,7 +48,7 @@ print(labels)
 Output:
 
 ```
-[1 0 0 1 0 0 0 1 0 0]
+[1, 0, 0, 1, 0, 0, 0, 1, 0, 0]
 ```
 
 The stored activations are at indices `0`, `3`, and `7`.

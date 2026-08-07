@@ -1,0 +1,100 @@
+{
+  "id": "p-gguf-import-produces-garbage-output",
+  "title": "Імпортована GGUF-модель меле дурниці",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "gguf-import",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_engine/importer.py",
+    "gguf_engine/tokenizer.py",
+    "gguf_engine/engine.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "перевірити цілісність і метадані контейнера",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "metadata_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "порівняти чат-шаблон рушія з тим, що очікує модель",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "template_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "показати рівно ті токени, які доїжджають у модель",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "tokens_exact",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "полагодити шаблон і стоп-послідовності",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "stops_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "діалог на 6 реплік тримається, вихід збігається з llama.cpp",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "dialogue_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "чек-лист імпорту, що ловить цю ж помилку на іншій моделі",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

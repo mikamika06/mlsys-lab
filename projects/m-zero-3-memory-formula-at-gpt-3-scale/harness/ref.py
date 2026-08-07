@@ -1,40 +1,50 @@
 CONFIGS = [
-    {"num_params": 175_000_000_000, "bytes_per_param": 4, "dp_degree": 64},
-    {"num_params": 70_000_000_000, "bytes_per_param": 2, "dp_degree": 32},
-    {"num_params": 13_000_000_000, "bytes_per_param": 2, "dp_degree": 16},
+    ([100000000] * 10, 8),
+    ([100, 200, 300, 400], 4),
+    ([500] * 5 + [1000] * 5, 2),
 ]
 
-LAYER_CONFIGS = [
-    [1000000, 2000000, 500000],
-    [500000, 500000, 1000000, 2000000],
-    [1048576, 2097152]
-]
+def zero3_memory_math(layers, num_gpus):
+    total = sum(layers)
+    return {
+        "sharded_bytes": 16 * total // num_gpus,
+        "comm_per_gpu_bytes": 6 * total * (num_gpus - 1) // num_gpus,
+        "baseline_peak_active_bytes": 2 * max(layers)
+    }
 
-def calculate_zero3_memory(num_params, bytes_per_param, dp_degree):
-    optimizer_state_bytes = (12 * num_params) / dp_degree
-    gradient_bytes = (2 * num_params) / dp_degree
-    parameter_bytes = (2 * num_params) / dp_degree
-    activation_bytes = num_params * 0.05
-    total_bytes = optimizer_state_bytes + gradient_bytes + parameter_bytes + activation_bytes
-    return float(total_bytes)
+def build_schedule(num_layers, prefetch):
+    sched = []
+    for i in range(min(prefetch, num_layers)):
+        sched.append(("all_gather_fw", i))
+    for i in range(num_layers):
+        if i + prefetch < num_layers:
+            sched.append(("all_gather_fw", i + prefetch))
+        sched.append(("compute_fw", i))
+        sched.append(("free_fw", i))
 
-def simulate_all_gather_free_cycle(layer_sizes, dp_degree):
-    timeline = []
-    current_mem = 0
-    peak_mem = 0
-    for idx, size in enumerate(layer_sizes):
-        gathered_size = size
-        current_mem += gathered_size
-        if current_mem > peak_mem:
-            peak_mem = current_mem
-        timeline.append({"layer": idx, "action": "all_gather", "memory": current_mem})
-        current_mem -= (size - (size / dp_degree))
-        timeline.append({"layer": idx, "action": "free", "memory": current_mem})
-    return {"timeline": timeline, "peak_memory": float(peak_mem)}
+    for i in range(num_layers - 1, max(-1, num_layers - 1 - prefetch), -1):
+        sched.append(("all_gather_bw", i))
+    for i in range(num_layers - 1, -1, -1):
+        if i - prefetch >= 0:
+            sched.append(("all_gather_bw", i - prefetch))
+        sched.append(("compute_bw", i))
+        sched.append(("reduce_scatter", i))
+        sched.append(("free_bw", i))
+    return sched
 
-def calculate_communication_volume(num_params, bytes_per_param, dp_degree):
-    psi = num_params * bytes_per_param
-    forward_volume = 2.0 * psi * ((dp_degree - 1.0) / dp_degree)
-    backward_volume = 4.0 * psi * ((dp_degree - 1.0) / dp_degree)
-    total_volume = forward_volume + backward_volume
-    return float(total_volume)
+def simulate_peak_memory(layers, schedule):
+    active = set()
+    current = 0
+    peak = 0
+    for op, i in schedule:
+        if op in ("all_gather_fw", "all_gather_bw"):
+            if i not in active:
+                active.add(i)
+                current += layers[i] * 2
+                if current > peak:
+                    peak = current
+        elif op in ("free_fw", "free_bw"):
+            if i in active:
+                active.remove(i)
+                current -= layers[i] * 2
+    return peak

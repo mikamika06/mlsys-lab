@@ -1,22 +1,26 @@
 import ref
 
 def check(workdir):
-    from zerothree.memory import calculate_zero3_memory
+    import sys
+    sys.path.insert(0, workdir)
+    try:
+        from zero3.formula import zero3_memory_math
+    except ImportError:
+        return {"_note": "could not import zero3_memory_math"}
 
-    out = {"memory_matches": 0.0}
+    out = {"math_matched": 0.0, "math_total": float(len(ref.CONFIGS))}
     ok = 0
-    for i, cfg in enumerate(ref.CONFIGS):
-        want = ref.calculate_zero3_memory(cfg["num_params"], cfg["bytes_per_param"], cfg["dp_degree"])
+    for layers, gpus in ref.CONFIGS:
+        want = ref.zero3_memory_math(layers, gpus)
         try:
-            got = calculate_zero3_memory(cfg["num_params"], cfg["bytes_per_param"], cfg["dp_degree"])
+            got = zero3_memory_math(layers, gpus)
+            if got == want:
+                ok += 1
+            else:
+                out["_note"] = f"mismatch: got {got}, want {want}"
         except Exception as e:
-            out["_note"] = f"config {i} raised {type(e).__name__}: {str(e)[:100]}"
-            return out
-
-        if isinstance(got, (int, float)) and abs(got - want) < 1e-2:
-            ok += 1
-        elif "_note" not in out:
-            out["_note"] = f"config {i}: got {got}, reference {want}"
-
-    out["memory_matches"] = float(ok)
+            out["_note"] = f"exception: {e}"
+            break
+    out["math_matched"] = float(ok)
+    sys.path.pop(0)
     return out

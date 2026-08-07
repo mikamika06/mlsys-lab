@@ -1,13 +1,9 @@
-import numpy as np
-
-
-def min_gpu_memory(layer_bytes: np.ndarray, K: int, activation_buffer: int) -> int:
+def min_gpu_memory(layer_bytes: list[int], K: int, activation_buffer: int) -> int:
     """
     Minimum GPU memory to run a layer-streamed model.
     """
-    arr = np.asarray(layer_bytes, dtype=np.int64)
     w = []
-    for x in arr.flat:
+    for x in layer_bytes:
         w.append(int(x))
 
     n = len(w)

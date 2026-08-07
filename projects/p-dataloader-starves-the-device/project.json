@@ -1,0 +1,100 @@
+{
+  "id": "p-dataloader-starves-the-device",
+  "title": "Data loader starvation remediation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "dataloader-starves-the-device",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "dl/profiler.py",
+    "dl/loader.py",
+    "dl/config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти частку кроку всередині даталоадера",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "fraction_measured",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "порахувати мінімальне число воркерів",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "workers_optimal",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "полагодити pinning і копіювання",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "pinning_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "прибрати препроцес із гарячого шляху",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "hotpath_clean",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "утилізація вище порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "utilization_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "передбачення числа воркерів збігається з виміром",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

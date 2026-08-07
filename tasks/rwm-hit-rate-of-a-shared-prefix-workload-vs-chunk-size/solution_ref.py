@@ -1,14 +1,12 @@
 import math
-import numpy as np
 
 
-def prefix_chunk_hit_rate(prefix_lengths: np.ndarray, chunk_size: int) -> float:
-    p = np.asarray(prefix_lengths, dtype=np.float64)
+def prefix_chunk_hit_rate(prefix_lengths: list[int], chunk_size: int) -> float:
     c = float(chunk_size)
     total = 0.0
-    n = len(p)
+    n = len(prefix_lengths)
     for i in range(n):
-        val = p[i]
+        val = float(prefix_lengths[i])
         reused = math.floor(val / c) * c
         total += reused / val
     return float(total / n)

@@ -1,4 +1,4 @@
-def prefix_reuse_savings(trace, chunk_size=512):
+def prefix_reuse_savings(trace: list[list[int]], chunk_size: int = 512) -> int:
     """
     Reference implementation of the prefix‑chunk reuse savings algorithm.
     Uses a set of tuples to store all contiguous subsequences up to `chunk_size`.

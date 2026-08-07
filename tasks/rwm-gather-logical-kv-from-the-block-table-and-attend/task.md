@@ -31,12 +31,7 @@ The implementation must combine block gathering and attention computation to pro
 Implement `gather_attention`:
 
 ```python
-def gather_attention(
-    k_phys: np.ndarray,
-    v_phys: np.ndarray,
-    block_table: np.ndarray,
-    q: np.ndarray
-) -> np.ndarray:
+def gather_attention(k_phys: list[list[list[float]]], v_phys: list[list[list[float]]], block_table: list[int], q: list[float]) -> list[float]:
     ...
 ```
 
@@ -48,20 +43,19 @@ Inputs:
 
 Return a vector of shape $(H)$ containing the attention output in `float64`.
 
-The returned value must match the contiguous-cache attention result. Use NumPy operations for gathering and numerical computation.
+The returned value must match the contiguous-cache attention result. Use Python operations for gathering and numerical computation.
 
 ## Example
 
 ```python
-import numpy as np
 
-k_phys = np.array([
+k_phys = [
     [[1., 0.], [0., 1.]],
     [[2., 0.], [0., 2.]]
-])
+]
 v_phys = k_phys.copy()
-block_table = np.array([1, 0])
-q = np.array([1., 0.])
+block_table = [1, 0]
+q = [1., 0.]
 
 out = gather_attention(k_phys, v_phys, block_table, q)
 ```
@@ -70,7 +64,7 @@ The logical cache begins with physical block `1` and then physical block `0`, so
 
 ## What the gate checks
 
-The gate creates shuffled physical KV blocks and a logical-to-physical block table. It computes the reference output by gathering the logical cache with a NumPy oracle and applying the attention equations.
+The gate creates shuffled physical KV blocks and a logical-to-physical block table. It computes the reference output by gathering the logical cache with a Python oracle and applying the attention equations.
 
 The submission output is compared with the oracle using
 

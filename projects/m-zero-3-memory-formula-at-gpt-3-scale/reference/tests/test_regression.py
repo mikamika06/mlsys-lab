@@ -1,21 +1,16 @@
 import sys
-sys.path.insert(0, ".")
-from zerothree.memory import calculate_zero3_memory
-from zerothree.schedule import simulate_all_gather_free_cycle
-from zerothree.volume import calculate_communication_volume
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-def test_memory_scaling():
-    mem = calculate_zero3_memory(175_000_000_000, 4, 64)
-    assert mem > 0
-    assert isinstance(mem, float)
+from zero3.schedule import build_schedule
 
-def test_schedule_peak():
-    res = simulate_all_gather_free_cycle([1024, 2048, 512], 8)
-    assert "peak_memory" in res
-    assert res["peak_memory"] > 0
-
-def test_communication_volume_multiplier():
-    vol = calculate_communication_volume(1_000_000, 2, 8)
-    psi = 2.0 * 1_000_000
-    expected = 3.0 * psi * (7.0 / 8.0)
-    assert abs(vol - expected) < 1e-5
+def test_compute_requires_active_memory():
+    sched = build_schedule(4, 1)
+    active = set()
+    for op, i in sched:
+        if op in ("all_gather_fw", "all_gather_bw"):
+            active.add(i)
+        elif op in ("free_fw", "free_bw"):
+            active.discard(i)
+        elif op in ("compute_fw", "compute_bw", "reduce_scatter"):
+            assert i in active, f"Layer {i} is not active during {op}"

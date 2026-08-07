@@ -1,0 +1,7 @@
+# Ticket: Performance Profile Shows Normalization Bottleneck in Attention Layers
+
+During recent profiling runs of our large language model workloads on high-throughput GPU clusters, we observed significant execution latency originating from normalization layers and softmax operations. Detailed micro-profiling demonstrates that a substantial fraction of total execution time is wasted on redundant global memory round-trips (HBM traffic), specifically when intermediate tensors such as maximum values, exponent sums, and normalized outputs are repeatedly written to and read from device memory across multiple sequential passes.
+
+The standard multi-kernel framework implementation dispatches separate operations for maximum reduction, exponentiation, sum reduction, and final scaling. Consequently, memory bandwidth utilization becomes the primary performance bottleneck, degrading overall end-to-end throughput and causing us to forfeit valuable performance overhead during self-attention blocks and output classification layers.
+
+Your objective is to design and implement an optimized fused Triton kernel that computes the complete softmax operation in a minimal number of memory passes. Your solution must correctly handle block boundary masking, implement configuration autotuning for varying input dimensions, verify numerical correctness against a framework reference, demonstrate performance speedups across multiple input sizes, and provide a fully integrated autograd wrapper to support gradient backpropagation during training workloads.

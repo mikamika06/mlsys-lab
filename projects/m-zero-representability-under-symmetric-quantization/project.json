@@ -1,0 +1,21 @@
+{
+  "id": "m-zero-representability-under-symmetric-quantization",
+  "title": "Zero representability under symmetric quantization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Granularity, symmetry, and quantization parameters",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["quant/sym.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Symmetric scale and integer mapping", "check": "harness/m1.py",
+     "gates": [{"metric": "scales_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Exact zero preservation and dequantization", "check": "harness/m2.py",
+     "gates": [{"metric": "zero_exact_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for zero-point invariant", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_zero", "op": "==", "threshold": 1}]}
+  ]
+}

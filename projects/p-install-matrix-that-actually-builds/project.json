@@ -1,0 +1,114 @@
+{
+  "id": "p-install-matrix-that-actually-builds",
+  "title": "Збірка, що ставиться на всіх цільових машинах",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "install-matrix",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "install/matrix.py",
+    "install/builder.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "скласти матрицю версій і заліза",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "matrix_complete",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "architectures_covered",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "визначити, що саме гейтить збірку",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bottlenecks_identified",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "exclude_invalid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "зафіксувати сумісний набір",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "set_consistent",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити на трьох конфігураціях",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "configs_passed",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "інсталяція відтворюється з нуля",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "reproducible_zero",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "чесний фолбек, коли залізо не тягне",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_fallback",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

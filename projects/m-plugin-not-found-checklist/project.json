@@ -1,0 +1,69 @@
+{
+  "id": "m-plugin-not-found-checklist",
+  "title": "TensorRT Plugin Diagnostics & Custom Op Decision Matrix",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT plugins & custom ops (IPluginV3 era)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "trtplugin/checklist.py",
+    "trtplugin/serialize.py",
+    "trtplugin/decision.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Plugin-not-found diagnostic checklist",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "diagnostics_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Plugin field serialization round-trip and decision matrix",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "serialize_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "decisions_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for plugin field reconstruction and strategy classification",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_roundtrip",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

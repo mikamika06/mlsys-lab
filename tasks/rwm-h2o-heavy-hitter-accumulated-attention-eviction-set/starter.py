@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def h2o_eviction_set(attn_scores: np.ndarray, budget: int, recent_window: int):
+def h2o_eviction_set(attn_scores: list[list[float]], budget: int, recent_window: int):
     """
     H2O (Heavy-Hitter Oracle) static eviction set.
 

@@ -1,24 +1,31 @@
 import sys
+
 sys.path.insert(0, ".")
-from zeroproj.memory import compute_memory_table
-from zeroproj.partition import assign_partitions
-from zeroproj.binpack import bin_pack_partition
+from zerodp.memory import calc_memory_table
+from zerodp.partition import partition_bin_packing, partition_flat_contiguous
 
-def test_memory_table_structure():
-    table = compute_memory_table([100, 200, 300], 2, dtype_bytes=4)
-    assert "plain" in table
-    assert "zero1" in table
-    assert table["zero1"]["optimizer_states"] < table["plain"]["optimizer_states"]
 
-def test_partition_balance():
-    sizes = [10, 20, 30, 40, 50]
-    parts = assign_partitions(sizes, 2)
-    assert len(parts) == 2
-    assert sum(sizes[i] for i in parts[0]) > 0
+def test_bin_packing_minimizes_max_load():
+    sizes = [10, 50, 30, 20, 40]
+    res = partition_bin_packing(sizes, 2)
+    assert res["max_load"] == 80
+    assert res["imbalance"] == 10
 
-def test_bin_pack_valid():
-    sizes = [10, 10, 10, 10]
-    parts = bin_pack_partition(sizes, 2)
-    assert len(parts) == 2
-    seen = [i for p in parts for i in p]
-    assert sorted(seen) == [0, 1, 2, 3]
+
+def test_bin_packing_structure():
+    sizes = [100, 200, 300, 400]
+    res = partition_bin_packing(sizes, 2)
+    assert sum(res["loads"]) == sum(sizes)
+    all_assigned = [idx for rank in res["assignments"] for idx in rank]
+    assert sorted(all_assigned) == list(range(len(sizes)))
+
+
+def test_memory_table_savings():
+    res = calc_memory_table([1000, 2000], 4)
+    assert res["total_savings_bytes"] > 0
+    assert res["zero1"]["opt_bytes"] == res["plain_dp"]["opt_bytes"] // 4
+
+
+def test_flat_partition_alignment():
+    res = partition_flat_contiguous([100, 200], 2, alignment=8)
+    assert res["per_rank_size"] % 8 == 0

@@ -1,0 +1,111 @@
+{
+  "id": "p-backward-determinism",
+  "title": "Nondeterministic Backward Pass",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "flashattention",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "det/analyzer.py",
+    "det/rng.py",
+    "det/kernels.py",
+    "det/trainer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "локалізувати джерело розбіжності",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "api_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "localized",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "зафіксувати стан генератора",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "seed_fixed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "замінити недетерміновані шляхи",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "deterministic_kernel",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "два прогони дають однакові ваги",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "weights_identical",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "вартість детермінізму виміряна",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "overhead_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "режим перемикається прапорцем",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_toggle_fault",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

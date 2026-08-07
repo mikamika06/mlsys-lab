@@ -1,0 +1,101 @@
+{
+  "id": "p-autoscaling-under-burst",
+  "title": "Autoscaling under burst",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "autoscaling-under-burst",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "scaler/cost.py",
+    "scaler/queue.py",
+    "scaler/policy.py",
+    "scaler/predictor.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти вартість холодного старту",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "cost_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "модель черги під сплеском",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "queue_modeled",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "прогрів і політика допуску",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "admission_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "політика масштабування з випередженням",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "predictive_scaling",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "сплеск ×3 без порушення SLO",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "slo_held",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "вартість не зросла більш ніж на X",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

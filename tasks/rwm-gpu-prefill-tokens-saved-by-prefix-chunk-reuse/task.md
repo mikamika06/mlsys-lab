@@ -25,7 +25,7 @@ This problem asks you to implement a function that, given a trace and a maximum 
 Implement `prefix_reuse_savings(trace, chunk_size=512)`:
 
 ```python
-def prefix_reuse_savings(trace: list[list[int]], chunk_size: int = 512) -> int:
+def prefix_reuse_savings(trace: list[list[int]], chunk_size: int=512) -> int:
     ...
 ```
 
@@ -47,7 +47,6 @@ Your implementation must be fully deterministic and use only standard Python dat
 ## Example
 
 ```python
-import numpy as np
 
 trace = [
     [1, 2, 3],

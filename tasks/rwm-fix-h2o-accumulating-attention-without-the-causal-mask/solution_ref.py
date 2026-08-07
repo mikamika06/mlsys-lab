@@ -1,17 +1,34 @@
-import numpy as np
+import math
 
 
-def select_heavy_hitters(attn_scores: np.ndarray, budget: int) -> np.ndarray:
-    scores = np.asarray(attn_scores, dtype=np.float64)
-    n = scores.shape[0]
+def select_heavy_hitters(attn_scores: list[list[float]], budget: int) -> list[int]:
+    n = len(attn_scores)
 
-    masked = scores.copy()
-    masked[np.triu(np.ones((n, n), dtype=bool), k=1)] = -np.inf
+    masked = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            if j <= i:
+                masked[i][j] = attn_scores[i][j]
+            else:
+                masked[i][j] = -float('inf')
 
-    shifted = masked - np.max(masked, axis=1, keepdims=True)
-    exp_scores = np.exp(shifted)
-    probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
+    probs = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        max_val = max(masked[i])
+        shifted = [val - max_val for val in masked[i]]
+        exps = [math.exp(val) if not math.isinf(val) else 0.0 for val in shifted]
+        sum_exps = sum(exps)
+        if sum_exps > 0:
+            probs[i] = [e / sum_exps for e in exps]
+        else:
+            probs[i] = [0.0] * n
 
-    importance = np.sum(probs, axis=0)
+    importance = [0.0] * n
+    for j in range(n):
+        col_sum = 0.0
+        for i in range(n):
+            col_sum += probs[i][j]
+        importance[j] = col_sum
+
     order = sorted(range(n), key=lambda i: (-importance[i], i))
-    return np.asarray(order[:budget], dtype=np.int64)
+    return order[:budget]

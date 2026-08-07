@@ -21,20 +21,19 @@ This metric models how chunk size affects cache efficiency. Smaller chunks usual
 Implement `prefix_chunk_hit_rate(prefix_lengths, chunk_size)`:
 
 ```python
-def prefix_chunk_hit_rate(prefix_lengths: np.ndarray, chunk_size: int) -> float:
+def prefix_chunk_hit_rate(prefix_lengths: list[int], chunk_size: int) -> float:
     ...
 ```
 
-The function receives a 1-D NumPy array of positive integer prefix lengths and a positive integer chunk size. Return the mean reusable fraction as a Python `float`.
+The function receives a list of floats of positive integer prefix lengths and a positive integer chunk size. Return the mean reusable fraction as a Python `float`.
 
 The implementation should compute the analytic reuse fraction directly. Do not simulate token insertion or build per-token representations.
 
 ## Example
 
 ```python
-import numpy as np
 
-prefixes = np.array([10, 11, 15])
+prefixes = [10, 11, 15]
 rate = prefix_chunk_hit_rate(prefixes, 4)
 
 # reusable tokens:
@@ -45,7 +44,7 @@ rate = prefix_chunk_hit_rate(prefixes, 4)
 
 ## What the gate checks
 
-The gate computes an oracle result using NumPy from the mathematical definition
+The gate computes an oracle result using Python from the mathematical definition
 
 $$
 \frac{1}{n}\sum_i

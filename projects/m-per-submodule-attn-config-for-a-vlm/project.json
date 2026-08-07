@@ -1,0 +1,24 @@
+{
+  "id": "m-per-submodule-attn-config-for-a-vlm",
+  "title": "Per-submodule attention configuration for a VLM",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "huggingface-transformers-integration",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vlmcfg/parser.py", "vlmcfg/memory.py", "vlmcfg/validator.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Extract per-submodule attention configs", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute memory footprints for heterogeneous submodules", "check": "harness/m2.py",
+     "gates": [{"metric": "bytes_match", "op": "==", "threshold": 1},
+               {"metric": "uniform_match", "op": "==", "threshold": 1},
+               {"metric": "saves_memory", "op": "==", "threshold": 1},
+               {"metric": "schedule_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches invalid submodule merges", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_merged_submodules", "op": "==", "threshold": 1}]}
+  ]
+}

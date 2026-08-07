@@ -1,0 +1,22 @@
+{
+  "id": "m-zigzag-assignment-generator",
+  "title": "Zigzag token assignment and communication model for context parallelism",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "context-parallel-and-ring-attention",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["zigzag/assignment.py", "zigzag/comm.py", "zigzag/overlap.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Zigzag token assignment generator", "check": "harness/m1.py",
+     "gates": [{"metric": "assignments_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Communication volume model and overlap feasibility", "check": "harness/m2.py",
+     "gates": [{"metric": "volume_match", "op": "==", "threshold": 1},
+               {"metric": "feasibility_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for zigzag invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_assignment", "op": "==", "threshold": 1}]}
+  ]
+}

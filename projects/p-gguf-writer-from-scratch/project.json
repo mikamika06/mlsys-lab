@@ -1,0 +1,105 @@
+{
+  "id": "p-gguf-writer-from-scratch",
+  "title": "Записати контейнер з нуля",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-writer",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "gguf_writer/writer.py",
+    "gguf_writer/tensor_map.py",
+    "gguf_writer/validator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "записати заголовок і метадані",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "header_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "metadata_count",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "розкласти тензори з правильним іменуванням",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "tensor_mapping_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "вирівнювання і зсуви",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "alignment_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "файл читається сторонньою бібліотекою",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "external_parse_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "модель запускається рушієм",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "runtime_exec_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "валідатор контейнера в репо",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

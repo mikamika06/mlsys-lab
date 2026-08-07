@@ -1,0 +1,99 @@
+{
+  "id": "p-fused-softmax-kernel-beats-torch",
+  "title": "Написати ядро, що обганяє бібліотечне",
+  "kind": "project",
+  "tier": "T3+T1",
+  "area": "rw3-triton-real",
+  "track": "fused-softmax-kernel-beats-torch",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "softmax/kernel.py",
+    "softmax/autograd.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "написати ядро і перевірити в режимі інтерпретації",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "interpreted_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "маскування країв і коректність",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "masked_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "автотюнінг конфігурацій",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "autotune_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "коректність проти торч-референсу",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "max_diff",
+          "op": "<=",
+          "threshold": 1e-4
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "виграш на трьох розмірах входу",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "ratio_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "обгортка autograd, що працює у навчанні",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

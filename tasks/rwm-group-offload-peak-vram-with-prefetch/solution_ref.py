@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def offload_peak_vram(group_sizes: np.ndarray, leaf_sizes: np.ndarray) -> dict:
+def offload_peak_vram(group_sizes: list[float], leaf_sizes: list[float]) -> dict:
     """
     Peak resident bytes under three offload strategies for the same model:
 
@@ -13,23 +10,20 @@ def offload_peak_vram(group_sizes: np.ndarray, leaf_sizes: np.ndarray) -> dict:
     - "model": no offload -> the whole model (sum of all group sizes) is
       resident.
     """
-    group_sizes = np.asarray(group_sizes, dtype=np.float64)
-    leaf_sizes = np.asarray(leaf_sizes, dtype=np.float64)
-
     max_group = group_sizes[0]
-    for i in range(1, group_sizes.shape[0]):
+    for i in range(1, len(group_sizes)):
         val = group_sizes[i]
         if val > max_group:
             max_group = val
 
     max_leaf = leaf_sizes[0]
-    for i in range(1, leaf_sizes.shape[0]):
+    for i in range(1, len(leaf_sizes)):
         val = leaf_sizes[i]
         if val > max_leaf:
             max_leaf = val
 
     sum_group = 0.0
-    for i in range(group_sizes.shape[0]):
+    for i in range(len(group_sizes)):
         sum_group += group_sizes[i]
 
     return {

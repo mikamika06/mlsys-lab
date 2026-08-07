@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def offload_peak_vram(group_sizes: np.ndarray, leaf_sizes: np.ndarray) -> dict:
+def offload_peak_vram(group_sizes: list[float], leaf_sizes: list[float]) -> dict:
     """
     Return a dict with keys "group", "sequential", "model" giving the peak
     resident bytes under group offloading with prefetch, leaf-level

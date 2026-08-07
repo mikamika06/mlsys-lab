@@ -39,11 +39,11 @@ $$
 Implement `h2o_eviction_set`:
 
 ```python
-def h2o_eviction_set(attn_scores: np.ndarray, budget: int, recent_window: int):
+def h2o_eviction_set(attn_scores: list[list[float]], budget: int, recent_window: int):
     ...
 ```
 
-* `attn_scores` — `(n, n)` NumPy array of raw (pre-softmax) attention
+* `attn_scores` — `(n, n)` list of raw (pre-softmax) attention
   logits.
 * `budget` — number of tokens to keep; guaranteed `recent_window <= budget <= n`.
 * `recent_window` — number of most-recent positions always kept;
@@ -58,16 +58,15 @@ Steps:
 4. From the remaining candidates, take the `budget - recent_window` with
    the largest $h_j$ (break ties by the smaller index).
 5. Return `(retained_idx, preserved_mass)`:
-   - `retained_idx`: 1-D `int64` NumPy array of the retained indices, in
+   - `retained_idx`: 1-D `int64` list of the retained indices, in
      **ascending sorted order**, length exactly `budget`.
    - `preserved_mass`: a plain Python `float`, as defined above.
 
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 S = rng.standard_normal((8, 8))
 S[:, 1] += 15.0  # token 1 becomes a clear heavy hitter
 
@@ -81,7 +80,7 @@ retained_idx, preserved_mass = h2o_eviction_set(S, budget=4, recent_window=2)
 ## What the gate checks
 
 The grader builds several seeded `(attn_scores, budget, recent_window)`
-cases with NumPy — including a case with one deliberately dominant column
+cases with Python — including a case with one deliberately dominant column
 to sanity-check the ranking direction — and independently computes the
 causal-masked softmax, column-summed importance, heavy-hitter selection,
 and preserved mass, exactly as described above (never calling your

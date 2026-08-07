@@ -1,33 +1,50 @@
 import ref
 
 def check(workdir):
-    from zerothree.schedule import simulate_all_gather_free_cycle
-
-    out = {"schedule_valid": 0.0, "peak_memory_bounded": 0.0}
-
-    layer_sizes = ref.LAYER_CONFIGS[0]
-    dp_degree = 8
-
+    import sys
+    sys.path.insert(0, workdir)
     try:
-        want = ref.simulate_all_gather_free_cycle(layer_sizes, dp_degree)
-        got = simulate_all_gather_free_cycle(layer_sizes, dp_degree)
-    except Exception as e:
-        out["_note"] = f"schedule function raised {type(e).__name__}: {str(e)[:100]}"
-        return out
+        from zero3.schedule import build_schedule, simulate_peak_memory
+    except ImportError:
+        return {"_note": "could not import zero3.schedule functions"}
 
-    if not isinstance(got, dict) or "peak_memory" not in got or "timeline" not in got:
-        out["_note"] = "return value must be a dictionary with 'peak_memory' and 'timeline'"
-        return out
+    out = {"schedule_matched": 0.0, "simulate_matched": 0.0}
 
-    if abs(got["peak_memory"] - want["peak_memory"]) < 1e-2:
-        out["peak_memory_bounded"] = 1.0
-    else:
-        out["_note"] = f"peak_memory got {got['peak_memory']}, reference {want['peak_memory']}"
-        return out
+    ok_sched = 0
+    test_cases = [(4, 1), (10, 2), (5, 0)]
+    for n, p in test_cases:
+        want = ref.build_schedule(n, p)
+        try:
+            got = build_schedule(n, p)
+            if got == want:
+                ok_sched += 1
+            else:
+                out["_note"] = f"schedule mismatch for n={n}, prefetch={p}"
+                break
+        except Exception as e:
+            out["_note"] = f"build_schedule exception: {e}"
+            break
 
-    if len(got["timeline"]) == len(want["timeline"]):
-        out["schedule_valid"] = 1.0
-    else:
-        out["_note"] = f"timeline length mismatch: got {len(got['timeline'])}, reference {len(want['timeline'])}"
+    if ok_sched == len(test_cases):
+        out["schedule_matched"] = 1.0
 
+    ok_sim = 0
+    for layers, _ in ref.CONFIGS:
+        sched = ref.build_schedule(len(layers), 1)
+        want = ref.simulate_peak_memory(layers, sched)
+        try:
+            got = simulate_peak_memory(layers, sched)
+            if got == want:
+                ok_sim += 1
+            else:
+                out["_note"] = out.get("_note", "") + f" simulate mismatch: got {got}, want {want}"
+                break
+        except Exception as e:
+            out["_note"] = out.get("_note", "") + f" simulate exception: {e}"
+            break
+
+    if ok_sim == len(ref.CONFIGS):
+        out["simulate_matched"] = 1.0
+
+    sys.path.pop(0)
     return out

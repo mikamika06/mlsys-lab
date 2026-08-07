@@ -1,0 +1,116 @@
+{
+  "id": "p-dynamic-batching-tuning",
+  "title": "Налаштувати динамічне батчування під SLO",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "batching-tuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "batching/profiler.py",
+    "batching/window.py",
+    "batching/queues.py",
+    "batching/controller.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти криву затримка-батч",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "profile_computed",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "monotonic_latency",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "підібрати вікно очікування",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "optimal_window_found",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "розділити черги за розміром запиту",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "queues_separated",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити під сплеском",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "surge_handled",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "p99 під SLO при максимальній пропускній",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "slo_satisfied",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "конфіг обґрунтований числами, не підбором",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_window",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unbounded_queue",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

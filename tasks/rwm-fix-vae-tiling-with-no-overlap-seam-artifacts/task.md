@@ -27,7 +27,7 @@ exactly.
 Fix `tiled_decode`:
 
 ```python
-def tiled_decode(image: np.ndarray, decode_fn, tile_size: int, overlap: int) -> np.ndarray:
+def tiled_decode(image, decode_fn, tile_size, overlap):
     ...
 ```
 
@@ -60,13 +60,12 @@ Return the reconstructed `(H, W)` `float64` array.
 ## Example
 
 ```python
-import numpy as np
 
 def blur5(patch):  # local support, shrinks by 2 on every side
-    w = np.lib.stride_tricks.sliding_window_view(patch, (5, 5))
+w = [[[[patch[i + r][j + c] for c in range(5)] for r in range(5)] for j in range(len(patch[0]) - 5 + 1)] for i in range(len(patch) - 5 + 1)]
     return w.mean(axis=(-1, -2))
 
-image = np.random.default_rng(0).normal(size=(24, 24))
+_rng = **import**('random').Random(0); image = [[_rng.gauss(0, 1) for _ in range(24)] for _ in range(24)]
 out = tiled_decode(image, blur5, tile_size=8, overlap=4)
 out.shape  # (24, 24) -- matches the untiled decode of `image`, no seams
 ```

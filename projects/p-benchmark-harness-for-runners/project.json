@@ -1,0 +1,103 @@
+{
+  "id": "p-benchmark-harness-for-runners",
+  "title": "Стенд вимірювання, якому можна вірити",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "benchmark-harness-for-runners",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "runner/core.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "полагодити методологію: warmup, синхронізація, медіана/IQR",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "methodology_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "розділити prefill і decode у вимірі",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "phase_separation_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "порахувати, скільки повторів треба для заданої ширини довірчого інтервалу",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "samples_calc_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "враховувати теплову деградацію на ноутбуці",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "thermal_accounting_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "три прогони підряд дають перекриття довірчих інтервалів",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "consistency_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт у машиночитному форматі для CI",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_fault",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

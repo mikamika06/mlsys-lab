@@ -55,7 +55,7 @@ def flash_backward(Q, K, V, dO, lse):
     ...
 ```
 
-Inputs are NumPy arrays:
+Inputs are list:
 
 - `Q` has shape $(n, d)$.
 - `K` has shape $(n, d)$.
@@ -70,15 +70,14 @@ Reconstruct the softmax probabilities from the stored logsumexp values. Do not u
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0], [3.0]])
-dO = np.ones((2, 1))
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0], [3.0]]
+dO = [[1.0] * 1 for _ in range(2)]
 
-S = Q @ K.T / np.sqrt(2)
-lse = np.log(np.exp(S).sum(axis=1))
+S = [[sum(q * k for q, k in zip(r, c)) / math.sqrt(2) for c in zip(*K)] for r in Q]
+lse = [math.log(sum(math.exp(x) for x in row)) for row in S]
 
 dQ, dK, dV = flash_backward(Q, K, V, dO, lse)
 ```

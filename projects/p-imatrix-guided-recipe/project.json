@@ -1,0 +1,116 @@
+{
+  "id": "p-imatrix-guided-recipe",
+  "title": "Рецепт квантизації з матрицею важливості",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "imatrix-guided-recipe",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_recipe/collector.py",
+    "gguf_recipe/selector.py",
+    "gguf_recipe/quantizer.py",
+    "gguf_recipe/evaluator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зібрати матрицю на репрезентативному корпусі",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "imatrix_shape_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "imatrix_non_trivial",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати, як вона впливає на вибір",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "selection_shifted",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "зібрати рецепт із нею і без",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "recipes_generated",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти ppl і KLD обох",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "metrics_computed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "виграш від матриці виміряний",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "gain_verified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "чутливість до вибору корпусу показана",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_corpus",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_recipe",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": "==",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

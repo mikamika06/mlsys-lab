@@ -1,0 +1,21 @@
+{
+  "id": "m-per-tensor-vs-per-head-kv-scales-at-equal-cost",
+  "title": "Per-tensor vs per-head KV scales and bit allocation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "KV cache and attention quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kvquant/scales.py", "kvquant/alloc.py", "kvquant/decision.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-tensor vs per-head KV scales MSE comparison", "check": "harness/m1.py",
+     "gates": [{"metric": "mse_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Bit allocation between weights and KV cache", "check": "harness/m2.py",
+     "gates": [{"metric": "allocation_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for quantization decision", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_decision", "op": "==", "threshold": 1}]}
+  ]
+}

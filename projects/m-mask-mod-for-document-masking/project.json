@@ -1,0 +1,68 @@
+{
+  "id": "m-mask-mod-for-document-masking",
+  "title": "Document and Prefix Masking with Block-Sparsity for FlashAttention",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "flexattention-and-custom-masks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "docmask/masks.py",
+    "docmask/sparsity.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Document masking mask_mod",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "doc_masks_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Prefix-LM mask_mod and block-sparsity fraction calculator",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "prefix_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "sparsity_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for mask invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_mask",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

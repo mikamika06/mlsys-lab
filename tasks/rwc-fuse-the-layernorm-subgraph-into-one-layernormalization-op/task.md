@@ -40,7 +40,7 @@ Implement `fuse_layernorm_subgraph(nodes, inputs)`.
 - `op`: operation name.
 - `inputs`: input node names.
 
-`inputs` contains NumPy arrays and parameters:
+`inputs` contains list and parameters:
 
 - `"x"`: hidden states with shape $(n,d)$.
 - `"gamma"`: affine scale with shape $(d,)$.
@@ -50,7 +50,7 @@ Return a dictionary with:
 
 - `"fused_span"`: a list of node names belonging to the detected LayerNorm
   subgraph.
-- `"output"`: the fused LayerNormalization result as a NumPy array with dtype
+- `"output"`: the fused LayerNormalization result as a list with dtype
   `float64`.
 
 If the exact LayerNorm pattern is present, return the fused span and compute the
@@ -60,7 +60,6 @@ by the fused operator.
 ## Example
 
 ```python
-import numpy as np
 
 nodes = [
     {"name": "mean", "op": "ReduceMean", "inputs": ["x"]},
@@ -82,7 +81,7 @@ the equivalent LayerNormalization operation.
 
 ## What the gate checks
 
-The gate computes a NumPy oracle for LayerNormalization using the hidden-state
+The gate computes a Python oracle for LayerNormalization using the hidden-state
 fixtures. It compares the returned output with the oracle using the maximum
 absolute error
 

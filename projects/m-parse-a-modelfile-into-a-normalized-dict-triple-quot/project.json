@@ -1,0 +1,22 @@
+{
+  "id": "m-parse-a-modelfile-into-a-normalized-dict-triple-quot",
+  "title": "Parse and Fix Modelfile Stops",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "modelfile-anatomy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["modelfile/parser.py", "modelfile/stops.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse Modelfile to AST", "check": "harness/m1.py",
+     "gates": [{"metric": "fixtures_matched", "op": "==", "threshold": 2}]},
+    {"n": 2, "title": "Round-trip dump and find stops", "check": "harness/m2.py",
+     "gates": [{"metric": "roundtrips", "op": "==", "threshold": 2},
+               {"metric": "missing_found", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch parameter overwriting", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_overwritten_stops", "op": "==", "threshold": 1}]}
+  ]
+}

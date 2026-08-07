@@ -1,0 +1,99 @@
+{
+  "id": "p-bit-packing-and-kernel-layout",
+  "title": "Пакування бітів під ядро",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "bit-packing-and-kernel-layout",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/layout.py",
+    "quant/packing.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "описати очікувану розкладку",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "spec_defined",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "реалізувати пакування й розпакування",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "roundtrip_exact",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірити round-trip",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "random_tensors_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "звірити вихід ядра з референсом",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "kernel_match_ref",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "ядро дає правильний вихід",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "functional_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "розкладка задокументована як контракт",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

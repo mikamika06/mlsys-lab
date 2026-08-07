@@ -48,22 +48,21 @@ Reconstruction (dequantization): $\hat{w}_i^{(b)} = L[c_i^{(b)}] \cdot s_b$.
 Fix `nf4_blockwise_dequant` so it implements the algorithm above:
 
 ```python
-def nf4_blockwise_dequant(w: np.ndarray, block_size: int = 64) -> np.ndarray:
+def nf4_blockwise_dequant(w: list[float], block_size: int=64) -> list[float]:
     ...
 ```
 
-* `w` — 1-D `float64` NumPy array, `len(w)` divisible by `block_size`.
+* `w` — 1-D `float64` list, `len(w)` divisible by `block_size`.
 * Returns a `float64` array of the same shape: the quantize-then-dequantize
   round trip of `w` through the NF4-blockwise codec described above.
 * Use the exact 16-value codebook `L` given above (this is the real NF4
   codebook used by bitsandbytes/QLoRA).
-* Use vectorised NumPy; no explicit Python loops over elements.
+* Use vectorised Python; no explicit Python loops over elements.
 
 ## Example
 
 ```python
-import numpy as np
-w = np.array([0.001, -0.02, 0.0005, 0.03, -0.001, 0.0002, 0.0, 0.025])
+w = [0.001, -0.02, 0.0005, 0.03, -0.001, 0.0002, 0.0, 0.025]
 w_hat = nf4_blockwise_dequant(w, block_size=8)
 # w_hat should stay close to w -- e.g. |w_hat - w| is small relative to
 # max(abs(w)) == 0.03, because the single block's own absmax (0.03) is used
@@ -76,7 +75,7 @@ The grader builds a realistic weight vector (zero-mean Gaussian, fixed seed)
 and compares your reconstruction against two things:
 
 * **rel_err** — relative L2 error between your reconstruction and an
-  independent NumPy oracle that implements the exact algorithm above
+  independent Python oracle that implements the exact algorithm above
   (blockwise absmax + nearest-NF4-level lookup). Tight tolerance: any correct
   implementation of the same deterministic table lookup should match almost
   exactly.

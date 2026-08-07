@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def tiled_decode(image: np.ndarray, decode_fn, tile_size: int, overlap: int) -> np.ndarray:
+def tiled_decode(image, decode_fn, tile_size, overlap):
     """Tile-decode `image` and stitch the tiles back into a full image
     that matches the untiled decode of the whole image.
 
@@ -25,14 +22,4 @@ def tiled_decode(image: np.ndarray, decode_fn, tile_size: int, overlap: int) -> 
     rest of the image -- producing visible discontinuities at every
     internal tile border.
     """
-    H, W = image.shape
-    out = np.zeros((H, W), dtype=np.float64)
-    for r0 in range(0, H, tile_size):
-        for c0 in range(0, W, tile_size):
-            r1 = min(r0 + tile_size, H)
-            c1 = min(c0 + tile_size, W)
-            tile = image[r0:r1, c0:c1].astype(np.float64)
-            padded = np.pad(tile, 2, mode="reflect")
-            decoded = decode_fn(padded)
-            out[r0:r1, c0:c1] = decoded
-    return out
+    raise NotImplementedError('your code here')

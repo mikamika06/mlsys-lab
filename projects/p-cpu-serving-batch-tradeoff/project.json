@@ -1,0 +1,98 @@
+{
+  "id": "p-cpu-serving-batch-tradeoff",
+  "title": "Батч і затримка на CPU",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "serving/engine.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "крива затримка-батч",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "curve_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "вплив числа потоків на криву",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "threads_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "обрати робочу точку під SLO",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "slo_point_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити під сплеском",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "burst_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "SLO тримається при максимальній пропускній",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "max_throughput_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "точка перераховується для іншої моделі",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

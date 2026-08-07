@@ -1,0 +1,21 @@
+{
+  "id": "m-per-tensor-vs-per-row-int8-error",
+  "title": "Per-tensor vs per-row INT8 error and compile speedups",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Applied quantization with torchao quantize_",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantutil/core.py", "quantutil/config.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-tensor vs per-row error calculation", "check": "harness/m1.py",
+     "gates": [{"metric": "errors_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Torchao config selection under error constraints", "check": "harness/m2.py",
+     "gates": [{"metric": "config_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for compilation requirement", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_uncompiled_mode", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -47,13 +47,13 @@ minimizes VRAM at the cost of a transfer stall before almost every leaf.
 Implement:
 
 ```python
-def offload_peak_vram(group_sizes: np.ndarray, leaf_sizes: np.ndarray) -> dict:
+def offload_peak_vram(group_sizes: list[float], leaf_sizes: list[float]) -> dict:
     ...
 ```
 
-* `group_sizes` — 1-D NumPy array of positive numbers, the byte size of each
+* `group_sizes` — list of floats of positive numbers, the byte size of each
   offload group ($g_1,\dots,g_G$).
-* `leaf_sizes` — 1-D NumPy array of positive numbers, the byte size of each
+* `leaf_sizes` — list of floats of positive numbers, the byte size of each
   leaf module of the *same* model ($\ell_1,\dots,\ell_L$), so
   `leaf_sizes.sum() == group_sizes.sum()`.
 
@@ -69,9 +69,8 @@ Return a `dict` with exactly these three keys, each a plain Python `float`:
 ## Example
 
 ```python
-import numpy as np
-group_sizes = np.array([4.0, 6.0, 5.0])   # 3 groups, biggest is 6
-leaf_sizes  = np.array([1.0, 1.0, 2.0, 2.0, 1.0, 3.0, 1.0, 1.0, 3.0])  # same model, finer cut, biggest leaf is 3
+group_sizes = [4.0, 6.0, 5.0]   # 3 groups, biggest is 6
+leaf_sizes  = [1.0, 1.0, 2.0, 2.0, 1.0, 3.0, 1.0, 1.0, 3.0]  # same model, finer cut, biggest leaf is 3
 
 offload_peak_vram(group_sizes, leaf_sizes)
 # -> {"group": 12.0, "sequential": 3.0, "model": 15.0}
@@ -81,6 +80,6 @@ offload_peak_vram(group_sizes, leaf_sizes)
 
 The **exact_match** gate builds several random model partitions (random group
 and leaf sizes with equal totals) and computes the reference peaks with
-NumPy's `max`/`sum`. Your three returned peaks must match the reference
+Python's `max`/`sum`. Your three returned peaks must match the reference
 values exactly (bit-for-bit, since these are simple max/sum reductions with
 no rounding involved) on every trial.

@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 
 def _detect_span(nodes):
@@ -19,54 +18,51 @@ def _detect_span(nodes):
     return []
 
 
-def fuse_layernorm_subgraph(nodes, inputs):
-    x = np.asarray(inputs["x"], dtype=np.float64)
-    gamma = np.asarray(inputs["gamma"], dtype=np.float64)
-    beta = np.asarray(inputs["beta"], dtype=np.float64)
+def _to_python(obj):
+    if hasattr(obj, "tolist"):
+        return obj.tolist()
+    if isinstance(obj, list):
+        return [_to_python(item) for item in obj]
+    return obj
+
+
+def _apply_layernorm_1d(x_1d, gamma, beta, eps):
+    d = len(x_1d)
+    acc = 0.0
+    for j in range(d):
+        acc += float(x_1d[j])
+    mean_val = acc / d
+
+    acc_var = 0.0
+    for j in range(d):
+        diff = float(x_1d[j]) - mean_val
+        acc_var += diff * diff
+    var_val = acc_var / d
+
+    sqrt_val = math.sqrt(var_val + eps)
+
+    out_1d = []
+    for j in range(d):
+        g = float(gamma[j])
+        b = float(beta[j])
+        val = float(x_1d[j])
+        out_1d.append(g * (val - mean_val) / sqrt_val + b)
+    return out_1d
+
+
+def _process_nested(x, gamma, beta, eps):
+    if isinstance(x, list) and x and isinstance(x[0], list):
+        return [_process_nested(sub, gamma, beta, eps) for sub in x]
+    return _apply_layernorm_1d(x, gamma, beta, eps)
+
+
+def fuse_layernorm_subgraph(nodes: list[dict], inputs: dict) -> dict:
+    x = _to_python(inputs["x"])
+    gamma = _to_python(inputs["gamma"])
+    beta = _to_python(inputs["beta"])
     eps = float(inputs.get("epsilon", 1e-5))
 
-    shape = x.shape
-    output = np.empty(shape, dtype=np.float64)
-
-    if x.ndim == 1:
-        n_features = shape[0]
-        acc = 0.0
-        for j in range(n_features):
-            acc += x[j]
-        mean_val = acc / n_features
-
-        acc_var = 0.0
-        for j in range(n_features):
-            diff = x[j] - mean_val
-            acc_var += diff * diff
-        var_val = acc_var / n_features
-
-        sqrt_val = math.sqrt(var_val + eps)
-
-        for j in range(n_features):
-            output[j] = gamma[j] * (x[j] - mean_val) / sqrt_val + beta[j]
-    else:
-        *batch_dims, n_features = shape
-        flat_x = x.reshape(-1, n_features)
-        flat_out = output.reshape(-1, n_features)
-        n_batches = flat_x.shape[0]
-
-        for i in range(n_batches):
-            acc = 0.0
-            for j in range(n_features):
-                acc += flat_x[i, j]
-            mean_val = acc / n_features
-
-            acc_var = 0.0
-            for j in range(n_features):
-                diff = flat_x[i, j] - mean_val
-                acc_var += diff * diff
-            var_val = acc_var / n_features
-
-            sqrt_val = math.sqrt(var_val + eps)
-
-            for j in range(n_features):
-                flat_out[i, j] = gamma[j] * (flat_x[i, j] - mean_val) / sqrt_val + beta[j]
+    output = _process_nested(x, gamma, beta, eps)
 
     return {
         "fused_span": _detect_span(nodes),

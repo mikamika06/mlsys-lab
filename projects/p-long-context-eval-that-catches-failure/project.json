@@ -1,0 +1,120 @@
+{
+  "id": "p-long-context-eval-that-catches-failure",
+  "title": "Eval, який ловить провал на довгому контексті",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "long-context-eval",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "long_ctx/generator.py",
+    "long_ctx/evaluator.py",
+    "long_ctx/analyzer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зібрати завдання з фактом у різних позиціях",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "positions_covered",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "fact_retrievable",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "виміряти криву якості по позиції",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "curve_computed",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "dip_detected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "відокремити провал уваги від провалу токенізації",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "tokenization_isolated",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити на двох методах розширення",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "methods_compared",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "eval ловить відомий провал",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "failure_caught",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "набір відтворюється на іншій моделі",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_middle_loss",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_attention_decay",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": "==",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

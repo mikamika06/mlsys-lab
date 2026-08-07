@@ -1,0 +1,103 @@
+{
+  "id": "p-cudagraphs-capture-fails",
+  "title": "Захоплення графа падає",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "cudagraphs-capture-fails",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "model/net.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "локалізувати операцію, що ламає захоплення",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "faulty_ops_found",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "прибрати динамічні алокації з гарячого шляху",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "dynamic_allocs_count",
+          "op": "==",
+          "threshold": 0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "зафіксувати форми входів",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "shapes_fixed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "полагодити прогрів",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "warmup_passed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "захоплення проходить, вихід збігається",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "capture_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "output_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "виграш на накладних виміряний відношенням до себе",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

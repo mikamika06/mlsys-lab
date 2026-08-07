@@ -1,0 +1,21 @@
+{
+  "id": "m-per-request-cache-hit-attribution-from-otel-spans",
+  "title": "Per-request cache-hit attribution from OTel spans",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-observability-and-slos",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["otel_cache/attribution.py", "otel_cache/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Extract per-request cache hits from spans", "check": "harness/m1.py",
+     "gates": [{"metric": "requests_matched", "op": ">=", "threshold": 10}]},
+    {"n": 2, "title": "Compute relative error of cache-hit efficiency", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_error", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: regression tests for attribution", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_attribution", "op": "==", "threshold": 1}]}
+  ]
+}

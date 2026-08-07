@@ -30,11 +30,11 @@ $$
 Implement `min_gpu_memory`:
 
 ```python
-def min_gpu_memory(layer_bytes: np.ndarray, K: int, activation_buffer: int) -> int:
+def min_gpu_memory(layer_bytes: list[int], K: int, activation_buffer: int) -> int:
     ...
 ```
 
-* `layer_bytes` — 1‑D NumPy array of length $n \ge 1$, the resident size in
+* `layer_bytes` — 1‑D list of length $n \ge 1$, the resident size in
   bytes of each layer, in pipeline order.
 * `K` — window size: how many consecutive layers are kept resident at once
   ($1 \le K$; if $K \ge n$ the whole model is resident simultaneously, i.e.
@@ -49,8 +49,7 @@ sum, plus `activation_buffer`.
 ## Example
 
 ```python
-import numpy as np
-layer_bytes = np.array([10, 40, 5, 30, 20])
+layer_bytes = [10, 40, 5, 30, 20]
 K = 2
 activation_buffer = 100
 
@@ -63,7 +62,7 @@ min_gpu_memory(layer_bytes, K, activation_buffer)
 ## What the gate checks
 
 A single **exact_match** gate generates several random layer-size arrays,
-window sizes $K$, and activation buffers, computes $M_{\min}$ with a NumPy
-sliding-window oracle (`numpy.lib.stride_tricks.sliding_window_view`), and
+window sizes $K$, and activation buffers, computes $M_{\min}$ with a Python
+sliding-window oracle, and
 compares it exactly (after rounding to the nearest integer) against your
 function's return value. Any mismatch or exception fails the gate.

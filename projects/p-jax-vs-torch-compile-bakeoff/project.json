@@ -1,0 +1,104 @@
+{
+  "id": "p-jax-vs-torch-compile-bakeoff",
+  "title": "Порівняти два підходи до компіляції",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "jax-vs-torch-compile-bakeoff",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "bakeoff/models.py",
+    "bakeoff/runner.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "однакова модель у двох стеках",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "structural_equivalence",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "порівняти час компіляції і виконання",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "metrics_valid",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "ratio_bounded",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "порівняти поведінку на динамічних формах",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "dynamic_guard_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "порівняти артефакти експорту",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "artifacts_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "числа з перекриттям інтервалів",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "intervals_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "рекомендація з умовами",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

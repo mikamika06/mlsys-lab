@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def quantize_fp8_e4m3_amax(x):
+def quantize_fp8_e4m3_amax(x: list[float]) -> tuple[float, list[float]]:
     raise NotImplementedError('your code here')

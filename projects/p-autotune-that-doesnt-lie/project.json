@@ -1,0 +1,110 @@
+{
+  "id": "p-autotune-that-doesnt-lie",
+  "title": "A reliable Triton autotuner that respects real shapes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "autotune-that-doesnt-lie",
+  "part": 1,
+  "difficulty": 5,
+  "edits": [
+    "autotune/cache.py",
+    "autotune/tuner.py",
+    "autotune/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "показати, коли кеш конфігурацій промахується",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "cache_miss_detected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "підібрати ключі",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "keys_unique",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "коректна методологія вимірювання всередині тюнера",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "warmup_and_reps_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити на розподілі реальних форм",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "distribution_covered",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "обрана конфігурація не гірша за ручну",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "not_worse_than_manual",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "час тюнінгу під контролем",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_cache_key",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_fake_timing",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

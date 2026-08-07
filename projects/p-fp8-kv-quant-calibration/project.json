@@ -1,0 +1,115 @@
+{
+  "id": "p-fp8-kv-quant-calibration",
+  "title": "Квантизувати KV без втрати якості",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-quant-calibration",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "kvquant/cache.py",
+    "kvquant/quantize.py",
+    "kvquant/calib.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти слід KV до",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "baseline_tracked",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "fp16_bytes_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "реалізувати квантизацію кешу",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "quant_shape_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "dequant_error_bounded",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "калібрування масштабів",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "scale_calibrated",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти якість на довгих діалогах",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "perplexity_delta_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "пам'ять удвічі менша, якість у межах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "memory_ratio",
+          "op": "<=",
+          "threshold": 0.55
+        },
+        {
+          "metric": "quality_retained",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка на викидах перевірена",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

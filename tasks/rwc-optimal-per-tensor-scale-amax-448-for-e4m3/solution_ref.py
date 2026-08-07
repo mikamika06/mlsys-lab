@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 
 def _e4m3_scalar(v):
@@ -22,19 +21,18 @@ def _e4m3_scalar(v):
     return sign * min(448.0, m * step)
 
 
-def quantize_fp8_e4m3_amax(x):
-    x = np.asarray(x, dtype=np.float64)
+def quantize_fp8_e4m3_amax(x: list[float]) -> tuple[float, list[float]]:
     amax = 0.0
-    for i in range(x.size):
-        val = abs(float(x.flat[i]))
+    for val_in in x:
+        val = abs(float(val_in))
         if val > amax:
             amax = val
     if amax == 0:
-        return 1.0, np.zeros_like(x, dtype=np.float64)
+        return 1.0, [0.0 for _ in x]
     scale = amax / 448.0
-    out = np.empty_like(x, dtype=np.float64)
-    for i in range(x.size):
-        v = float(x.flat[i]) / scale
+    out = []
+    for val_in in x:
+        v = float(val_in) / scale
         q = _e4m3_scalar(v)
-        out.flat[i] = q * scale
+        out.append(q * scale)
     return scale, out

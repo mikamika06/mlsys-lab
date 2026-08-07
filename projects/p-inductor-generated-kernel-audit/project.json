@@ -1,0 +1,109 @@
+{
+  "id": "p-inductor-generated-kernel-audit",
+  "title": "Аудит згенерованих компілятором ядер",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "inductor-generated-kernel-audit",
+  "part": 1,
+  "difficulty": 5,
+  "edits": [
+    "audit/core.py",
+    "audit/config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "дістати згенерований код і прочитати його",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "code_extracted",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "зіставити злиття з очікуваним",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "fusion_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "показати, де злиття не відбулось і чому",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "gap_explained",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "керувати вибором через параметри компіляції",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "control_applied",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "приріст на обох розмірах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "speedup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "кеш компіляції скорочує холодний старт",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_cache",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_fusion",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

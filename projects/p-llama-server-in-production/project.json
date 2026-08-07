@@ -1,0 +1,103 @@
+{
+  "id": "p-llama-server-in-production",
+  "title": "Локальний сервер у продакшені",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "llama-server-in-production",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "server/diagnostics.py",
+    "server/templates.py",
+    "server/slots.py",
+    "server/memory.py",
+    "server/engine.py",
+    "server/monitor.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "класифікувати падіння за логами",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "classification_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "полагодити чат-шаблон і спецтокени",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "template_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "налаштувати слоти і квантизацію KV",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "slots_config_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "обмежити ріст пам'яті",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "memory_bounded",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "24 години навантаження без падіння",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "endurance_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "набір перевірок здоров'я для моніторингу",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

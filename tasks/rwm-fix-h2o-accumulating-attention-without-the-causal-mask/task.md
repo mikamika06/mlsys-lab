@@ -36,11 +36,11 @@ H2O selects the tokens with the largest $h_j$ values. Applying the causal mask a
 Implement `select_heavy_hitters(attn_scores, budget)`:
 
 ```python
-def select_heavy_hitters(attn_scores: np.ndarray, budget: int) -> np.ndarray:
+def select_heavy_hitters(attn_scores: list[list[float]], budget: int) -> list[int]:
     ...
 ```
 
-The input is a square NumPy array of attention logits with shape $(n,n)$. Return a 1-D NumPy integer array containing the indices of the `budget` most important tokens according to causal H2O accumulation.
+The input is a square list of attention logits with shape $(n,n)$. Return a 1-D Python integer array containing the indices of the `budget` most important tokens according to causal H2O accumulation.
 
 The implementation must:
 
@@ -53,13 +53,12 @@ The returned array must have dtype `int64`.
 ## Example
 
 ```python
-import numpy as np
 
-scores = np.array([
+scores = [
     [0.0, 8.0, 0.0],
     [0.0, 0.0, 8.0],
     [0.0, 0.0, 0.0],
-])
+]
 
 kept = select_heavy_hitters(scores, 2)
 # The future positions are masked before ranking.
@@ -68,6 +67,6 @@ kept = select_heavy_hitters(scores, 2)
 
 ## What the gate checks
 
-The gate builds several attention score matrices and computes the expected retained set with a NumPy oracle that applies the causal mask before softmax accumulation.
+The gate builds several attention score matrices and computes the expected retained set with a Python oracle that applies the causal mask before softmax accumulation.
 
 The returned indices must exactly match the oracle. An implementation that accumulates the full non-causal attention matrix will produce a different ranking and fail.

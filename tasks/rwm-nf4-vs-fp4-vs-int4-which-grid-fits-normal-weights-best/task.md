@@ -19,18 +19,17 @@ The task is to pick the grid with the smallest $\mathrm{MSE}_g$.
 Implement a function
 
 ```python
-def best_grid(weights: np.ndarray) -> str:
+def best_grid(weights: list[float]) -> str:
     ...
 ```
 
-that receives a one‑dimensional NumPy array of real weights and returns the string `"NF4"`, `"FP4"` or `"INT4"` corresponding to the grid that yields the lowest MSE when quantising `weights`. The function must be pure, use only NumPy vectorised operations and run in $O(n)$ time.
+that receives a list of floats of real weights and returns the string `"NF4"`, `"FP4"` or `"INT4"` corresponding to the grid that yields the lowest MSE when quantising `weights`. The function must be pure, use only Python vectorised operations and run in $O(n)$ time.
 
 ## Example
 
 ```python
-import numpy as np
 
-w = np.array([0.1, -0.5, 2.3, -7.9])
+w = [0.1, -0.5, 2.3, -7.9]
 print(best_grid(w))
 # → "FP4"
 ```
@@ -39,6 +38,6 @@ In this toy example the FP4 grid gives a smaller MSE than NF4 or INT4.
 
 ## What the gate checks
 
-The grader generates a random normal weight vector of length $1000$, computes the exact MSE for each grid using NumPy, and records the label with the smallest error. Your implementation must return that same label; otherwise the `exact_match` metric fails.
+The grader generates a random normal weight vector of length $1000$, computes the exact MSE for each grid using Python, and records the label with the smallest error. Your implementation must return that same label; otherwise the `exact_match` metric fails.
 
 In case of a tie the order **NF4 → FP4 → INT4** is used to break ties.

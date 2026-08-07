@@ -37,11 +37,11 @@ FP8 range without exceeding it.
 Implement `quantize_fp8_e4m3_amax(x)`:
 
 ```python
-def quantize_fp8_e4m3_amax(x: np.ndarray) -> tuple[float, np.ndarray]:
+def quantize_fp8_e4m3_amax(x: list[float]) -> tuple[float, list[float]]:
     ...
 ```
 
-The function receives a NumPy array of arbitrary shape and returns:
+The function receives a list of arbitrary shape and returns:
 
 1. `scale`: a Python float equal to $\mathrm{amax}/448$.
 2. `x_hat`: the dequantized FP8 tensor. The algorithm must divide by the scale,
@@ -53,9 +53,8 @@ tensor by returning scale `1.0` and an all-zero reconstruction.
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1.0, -100.0, 200.0])
+x = [1.0, -100.0, 200.0]
 scale, x_hat = quantize_fp8_e4m3_amax(x)
 
 # scale == 200.0 / 448.0

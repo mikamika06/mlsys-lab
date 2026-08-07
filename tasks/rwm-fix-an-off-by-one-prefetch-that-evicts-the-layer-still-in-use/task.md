@@ -32,21 +32,20 @@ Return a list of attention outputs, one for each layer. The implementation shoul
 
 The `Ks` and `Vs` arguments are unused and are provided only to match a production-style scheduler interface.
 
-The returned arrays must be `float64` NumPy arrays.
+The returned arrays must be `float64` list.
 
 ## Example
 
 ```python
-import numpy as np
 
 layers = [
-    (np.array([[1.0, 0.0]]), np.array([[2.0, 3.0]])),
-    (np.array([[0.0, 1.0]]), np.array([[4.0, 5.0]])),
+    ([[1.0, 0.0]], [[2.0, 3.0]]),
+    ([[0.0, 1.0]], [[4.0, 5.0]]),
 ]
 
 Qs = [
-    np.array([[1.0, 0.0]]),
-    np.array([[0.0, 1.0]]),
+    [[1.0, 0.0]],
+    [[0.0, 1.0]],
 ]
 
 out = scheduled_attention(layers, Qs, None, None)
@@ -56,7 +55,7 @@ The result contains the attention output for layer $0$ followed by the output fo
 
 ## What the gate checks
 
-The gate computes a NumPy oracle that has access to every layer and applies the attention equation directly.
+The gate computes a Python oracle that has access to every layer and applies the attention equation directly.
 
 The returned values are compared using
 
