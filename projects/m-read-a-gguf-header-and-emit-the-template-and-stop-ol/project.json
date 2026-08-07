@@ -1,0 +1,26 @@
+{
+  "id": "m-read-a-gguf-header-and-emit-the-template-and-stop-ol",
+  "title": "GGUF header templates, quantization profiling, and adapter mismatch",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "importing-gguf-safetensors-and-adapters",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "ggufparse/header.py",
+    "ggufparse/quant.py",
+    "ggufparse/adapter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Read GGUF header, template, and stop tokens", "check": "harness/m1.py",
+     "gates": [{"metric": "header_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Import FP16 GGUF at three quantize levels", "check": "harness/m2.py",
+     "gates": [{"metric": "quant_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching mismatched adapters", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_adapter_mismatch", "op": "==", "threshold": 1}]}
+  ]
+}

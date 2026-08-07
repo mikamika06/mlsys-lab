@@ -1,0 +1,64 @@
+{
+  "id": "m-render-a-chat-template-and-match-llama-cpp-output",
+  "title": "Render chat templates and match llama.cpp output",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "chat-templates-jinja-tools",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "chattpl/render.py",
+    "chattpl/extract.py",
+    "chattpl/patch.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Render a chat template and match llama.cpp output",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "renders_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Extract the embedded template from a GGUF",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "extractions_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches non-first system message failures",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_patch",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

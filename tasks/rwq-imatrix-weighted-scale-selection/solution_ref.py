@@ -1,23 +1,16 @@
-import numpy as np
-
-
-def imatrix_best_scale(x: np.ndarray, w: np.ndarray, scale_grid: np.ndarray, qmin: int, qmax: int) -> int:
+def imatrix_best_scale(x: list[float], w: list[float], scale_grid: list[float], qmin: int, qmax: int) -> int:
     """
     Sweep the candidate scale grid; for each scale, symmetric-quantize x
     (round(x/s), clipped to [qmin, qmax]), dequantize, and score with the
     imatrix-weighted squared error sum(w * (x - xhat)**2). Return the index
     of the grid entry with the smallest weighted error (first on ties).
     """
-    x = np.asarray(x, dtype=np.float64)
-    w = np.asarray(w, dtype=np.float64)
-    grid = np.asarray(scale_grid, dtype=np.float64)
-
     best_i = 0
     best_err = float("inf")
-    n = x.shape[0]
+    n = len(x)
 
-    for i in range(grid.shape[0]):
-        s = grid[i]
+    for i in range(len(scale_grid)):
+        s = scale_grid[i]
         err = 0.0
         for j in range(n):
             val = x[j] / s

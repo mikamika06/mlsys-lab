@@ -1,0 +1,22 @@
+{
+  "id": "m-rebuild-the-merges-array-in-llama-cpp-order",
+  "title": "Rebuild merges array and classify vocabulary in llama.cpp order",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "tokenizer-conversion",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["llama_cpp_tok/merges.py", "llama_cpp_tok/vocab.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Rebuild the merges array in llama.cpp order", "check": "harness/m1.py",
+     "gates": [{"metric": "merges_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Classify vocab type and find the wrong token_type", "check": "harness/m2.py",
+     "gates": [{"metric": "vocab_type_match", "op": "==", "threshold": 1},
+               {"metric": "wrong_token_found", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for tokenizer invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_merges", "op": "==", "threshold": 1}]}
+  ]
+}

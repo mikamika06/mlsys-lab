@@ -42,12 +42,12 @@ accuracy/hardware-efficiency tradeoff of shared microscaling formats.
 Implement `mxfp4_full_block_quantize(W)`:
 
 ```python
-def mxfp4_full_block_quantize(W: np.ndarray) -> dict:
+def mxfp4_full_block_quantize(W: list[list[float]]) -> dict:
     ...
 ```
 
-`W` is a NumPy array of shape $(B, 32)$: $B$ independent blocks of 32
-values. Return a dict with three NumPy arrays:
+`W` is a list of shape $(B, 32)$: $B$ independent blocks of 32
+values. Return a dict with three list:
 
 - `"scale"`: shape $(B,)$, float64 — each block's power-of-two scale
   $2^{e}$ as defined above.
@@ -60,8 +60,7 @@ values. Return a dict with three NumPy arrays:
 ## Example
 
 ```python
-import numpy as np
-W = np.zeros((1, 32))
+W = [[0.0] * 32 for _ in range(1)]
 W[0, 0] = 1.2
 W[0, 1] = 12.0          # forces a=12 -> e = ceil(log2(12/6)) = 1 -> scale=2
 out = mxfp4_full_block_quantize(W)
@@ -78,7 +77,7 @@ The grader loads a committed fixture `mx_w.npy` (48 blocks of 32
 "weight"-like values with widely varying per-block magnitude, including an
 all-zero block, an exact power-of-two boundary case, and a block with a
 single dominant outlier next to near-zero values) and computes the
-reference `scale`, `codes`, `dequant` with an independent NumPy oracle
+reference `scale`, `codes`, `dequant` with an independent Python oracle
 using the exact formulas above. Three metrics are reported, each the
 maximum absolute element-wise difference against the oracle:
 

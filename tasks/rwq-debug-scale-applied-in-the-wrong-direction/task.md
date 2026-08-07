@@ -33,7 +33,7 @@ for all $j$).
 Fix `apply_migration_scale` so the invariant holds:
 
 ```python
-def apply_migration_scale(X: np.ndarray, W: np.ndarray, s: np.ndarray) -> tuple:
+def apply_migration_scale(X: list[list[float]], W: list[list[float]], s: list[float]) -> tuple:
     ...
 ```
 
@@ -48,15 +48,14 @@ and `W_prime = W * s[:, None]` (broadcast over rows), so that
 ## Example
 
 ```python
-import numpy as np
-X = np.array([[2.0, 4.0]])
-W = np.array([[1.0], [1.0]])
-s = np.array([2.0, 0.5])
+X = [[2.0, 4.0]]
+W = [[1.0], [1.0]]
+s = [2.0, 0.5]
 
 X_prime, W_prime = apply_migration_scale(X, W, s)
 # X_prime = [[1.0, 8.0]]      (X / s)
 # W_prime = [[2.0], [0.5]]    (W * s[:, None])
-np.allclose(X_prime @ W_prime, X @ W)   # -> True  ( [[6.0]] == [[6.0]] )
+allclose(X_prime @ W_prime, X @ W) # -> True ( [[6.0]] == [[6.0]] )
 ```
 
 ## What the gate checks

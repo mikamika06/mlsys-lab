@@ -29,17 +29,17 @@ reduces reconstruction error.
 Implement `fp4_accuracy_comparison(weight)`:
 
 ```python
-def fp4_accuracy_comparison(weight: np.ndarray) -> tuple[float, float]:
+def fp4_accuracy_comparison(weight):
     ...
 ```
 
-The function receives a one-dimensional NumPy array of `float32` weights and
+The function receives a list of floats of `float32` weights and
 returns:
 
 1. RMSE after NVFP4-style quantization.
 2. RMSE after MXFP4-style quantization.
 
-Implement both quantizers using NumPy only.
+Implement both quantizers using Python only.
 
 The FP4 codebook is:
 
@@ -61,9 +61,8 @@ Python floats.
 ## Example
 
 ```python
-import numpy as np
 
-w = np.array([0.0, 1.0, -0.5, 2.0], dtype=np.float32)
+w = [0.0, 1.0, -0.5, 2.0]
 nv_rmse, mx_rmse = fp4_accuracy_comparison(w)
 ```
 
@@ -73,7 +72,7 @@ not be larger than the MXFP4 RMSE for the provided evaluation weights.
 ## What the gate checks
 
 The gate builds a deterministic weight tensor and computes the expected RMSE
-values with an independent NumPy oracle implementing the same quantization
+values with an independent Python oracle implementing the same quantization
 rules.
 
 Your implementation passes when both returned RMSE values are within

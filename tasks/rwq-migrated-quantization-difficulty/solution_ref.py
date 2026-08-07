@@ -1,9 +1,7 @@
-import numpy as np
-
 _EPS = 1e-12
 
 
-def channel_peakiness_before_after(X, W, alpha=0.5):
+def channel_peakiness_before_after(X: list[list[float]], W: list[list[float]], alpha: float = 0.5) -> tuple[list[float], list[float]]:
     """SmoothQuant channel-imbalance ("quantization difficulty") before/after migration.
 
     A per-tensor activation quantizer sets one scale from the single largest
@@ -14,43 +12,41 @@ def channel_peakiness_before_after(X, W, alpha=0.5):
 
     Parameters
     ----------
-    X : np.ndarray, shape (n_tokens, C)
+    X : list of list of float, shape (n_tokens, C)
         Activation samples (rows = tokens, columns = channels).
-    W : np.ndarray, shape (n_out, C)
+    W : list of list of float, shape (n_out, C)
         Weight matrix; column j lines up with activation channel j.
     alpha : float
         SmoothQuant migration strength in [0, 1].
 
     Returns
     -------
-    ratio_before : np.ndarray, float64, shape (C,)
+    ratio_before : list of float, shape (C,)
         amax_X[j] / mean(amax_X), i.e. how far channel j's peak activation
         magnitude sits above the average channel's peak magnitude.
-    ratio_after : np.ndarray, float64, shape (C,)
+    ratio_after : list of float, shape (C,)
         The same ratio computed after per-channel migration:
         amax_X[j] / s[j], where
         s[j] = amax_X[j] ** alpha / amax_W[j] ** (1 - alpha).
     """
-    X = np.asarray(X, dtype=np.float64)
-    W = np.asarray(W, dtype=np.float64)
-
-    n_tokens, C = X.shape
-    n_out = W.shape[0]
+    n_tokens = len(X)
+    C = len(X[0])
+    n_out = len(W)
 
     amax_X_list = []
     for j in range(C):
-        m = abs(X[0, j])
+        m = abs(X[0][j])
         for i in range(1, n_tokens):
-            val = abs(X[i, j])
+            val = abs(X[i][j])
             if val > m:
                 m = val
         amax_X_list.append(m)
 
     amax_W_list = []
     for j in range(C):
-        m = abs(W[0, j])
+        m = abs(W[0][j])
         for i in range(1, n_out):
-            val = abs(W[i, j])
+            val = abs(W[i][j])
             if val > m:
                 m = val
         amax_W_list.append(m)
@@ -61,9 +57,9 @@ def channel_peakiness_before_after(X, W, alpha=0.5):
     mean_amax_X = sum_amax_X / C
     denom_before = max(mean_amax_X, _EPS)
 
-    ratio_before_list = []
+    ratio_before = []
     for val in amax_X_list:
-        ratio_before_list.append(val / denom_before)
+        ratio_before.append(val / denom_before)
 
     s_list = []
     for j in range(C):
@@ -81,11 +77,8 @@ def channel_peakiness_before_after(X, W, alpha=0.5):
     mean_smoothed = sum_smoothed / C
     denom_after = max(mean_smoothed, _EPS)
 
-    ratio_after_list = []
+    ratio_after = []
     for val in amax_X_smoothed_list:
-        ratio_after_list.append(val / denom_after)
-
-    ratio_before = np.asarray(ratio_before_list, dtype=np.float64)
-    ratio_after = np.asarray(ratio_after_list, dtype=np.float64)
+        ratio_after.append(val / denom_after)
 
     return ratio_before, ratio_after

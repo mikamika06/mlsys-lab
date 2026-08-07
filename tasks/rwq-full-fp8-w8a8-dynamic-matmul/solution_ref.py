@@ -1,9 +1,7 @@
-import numpy as np
-
 E4M3_MAX = 448.0
 
 
-def _e4m3_grid_pos() -> np.ndarray:
+def _e4m3_grid_pos() -> list[float]:
     """All non-negative finite E4M3 (4 exponent bits, 3 mantissa bits, bias 7) values."""
     vals = set()
     for exp in range(16):
@@ -15,16 +13,14 @@ def _e4m3_grid_pos() -> np.ndarray:
             else:
                 v = (2.0 ** (exp - 7)) * (1.0 + mant / 8.0)
             vals.add(v)
-    return np.array(sorted(vals), dtype=np.float64)
+    return sorted(list(vals))
 
 
 _GRID = _e4m3_grid_pos()
 
 
-def _cast_e4m3(x: np.ndarray) -> np.ndarray:
+def _cast_e4m3(x: list[list[float]]) -> list[list[float]]:
     """Round each element to the nearest representable E4M3 value (clamped to +-448)."""
-    x = np.asarray(x, dtype=np.float64)
-
     def cast_scalar(val):
         sign = 1.0 if val > 0 else (-1.0 if val < 0 else 0.0)
         absx = min(max(abs(val), 0.0), E4M3_MAX)
@@ -44,15 +40,14 @@ def _cast_e4m3(x: np.ndarray) -> np.ndarray:
         return sign * snapped
 
     def process_sub(arr):
-        if arr.ndim == 0:
+        if not isinstance(arr, list):
             return cast_scalar(float(arr))
-        return [process_sub(arr[i]) for i in range(arr.shape[0])]
+        return [process_sub(item) for item in arr]
 
-    nested = process_sub(x)
-    return np.array(nested, dtype=np.float64)
+    return process_sub(x)
 
 
-def fp8_dynamic_matmul(W: np.ndarray, X: np.ndarray) -> np.ndarray:
+def fp8_dynamic_matmul(W: list[list[float]], X: list[list[float]]) -> list[list[float]]:
     """
     FP8 E4M3 W8A8 "dynamic" quantized matmul: Y ~= W @ X.
 
@@ -65,17 +60,14 @@ def fp8_dynamic_matmul(W: np.ndarray, X: np.ndarray) -> np.ndarray:
     the matmul, then the integer-like matmul result is dequantized by
     multiplying back by scale_w * scale_x[token].
     """
-    W64 = np.asarray(W, dtype=np.float64)
-    X64 = np.asarray(X, dtype=np.float64)
-
-    M = W64.shape[0]
-    K = W64.shape[1]
-    N = X64.shape[1]
+    M = len(W)
+    K = len(W[0])
+    N = len(X[0])
 
     amax_w = 0.0
     for i in range(M):
         for k in range(K):
-            val = abs(W64[i, k])
+            val = abs(W[i][k])
             if val > amax_w:
                 amax_w = val
     scale_w = amax_w / E4M3_MAX if amax_w > 0 else 1.0
@@ -84,7 +76,7 @@ def fp8_dynamic_matmul(W: np.ndarray, X: np.ndarray) -> np.ndarray:
     for j in range(N):
         max_col = 0.0
         for k in range(K):
-            val = abs(X64[k, j])
+            val = abs(X[k][j])
             if val > max_col:
                 max_col = val
         amax_x.append(max_col)
@@ -95,17 +87,17 @@ def fp8_dynamic_matmul(W: np.ndarray, X: np.ndarray) -> np.ndarray:
     for i in range(M):
         row = []
         for k in range(K):
-            row.append(W64[i, k] / scale_w)
+            row.append(W[i][k] / scale_w)
         Wq_list.append(row)
-    Wq = _cast_e4m3(np.array(Wq_list, dtype=np.float64))
+    Wq = _cast_e4m3(Wq_list)
 
     Xq_list = []
     for k in range(K):
         row = []
         for j in range(N):
-            row.append(X64[k, j] / scale_x[j])
+            row.append(X[k][j] / scale_x[j])
         Xq_list.append(row)
-    Xq = _cast_e4m3(np.array(Xq_list, dtype=np.float64))
+    Xq = _cast_e4m3(Xq_list)
 
     Y_list = []
     for i in range(M):
@@ -113,9 +105,8 @@ def fp8_dynamic_matmul(W: np.ndarray, X: np.ndarray) -> np.ndarray:
         for j in range(N):
             acc = 0.0
             for k in range(K):
-                acc += Wq[i, k] * Xq[k, j]
+                acc += Wq[i][k] * Xq[k][j]
             row.append(acc * scale_w * scale_x[j])
         Y_list.append(row)
 
-    Y = np.array(Y_list, dtype=np.float64)
-    return Y.astype(np.float32)
+    return Y_list

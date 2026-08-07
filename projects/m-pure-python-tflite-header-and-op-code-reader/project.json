@@ -1,0 +1,45 @@
+{
+  "id": "m-pure-python-tflite-header-and-op-code-reader",
+  "title": "Pure-python .tflite header, op-code reader, and weight stripper",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "TFLite flatbuffer anatomy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tflite_tools/parser.py",
+    "tflite_tools/stripper.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse header and operator codes",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "headers_matched", "op": ">=", "threshold": 3},
+        {"metric": "opcodes_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Byte attribution and weight stripping",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "attribution_match", "op": "==", "threshold": 1},
+        {"metric": "stripped_size_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for binary structure",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_parser", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

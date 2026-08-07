@@ -52,15 +52,14 @@ Steps:
    constant commutes with `max(|·|)`).
 5. `ratio_after[j] = amax_X_smoothed[j] / mean(amax_X_smoothed)`.
 
-Return the tuple `(ratio_before, ratio_after)`, both `float64` NumPy arrays
+Return the tuple `(ratio_before, ratio_after)`, both `float64` list
 of shape `(C,)`.
 
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 X = rng.normal(size=(64, 8))
 X[:, 3] *= 40.0        # channel 3 is a big outlier
 W = rng.normal(size=(4, 8)) * 0.1
@@ -72,7 +71,7 @@ assert ratio_after.max() < ratio_before.max()
 
 ## What the gate checks
 
-The gate rebuilds the same computation with an independent NumPy oracle
+The gate rebuilds the same computation with an independent Python oracle
 across several outlier-channel activation tensors (different shapes,
 outlier counts, outlier magnitudes, and `alpha` values):
 

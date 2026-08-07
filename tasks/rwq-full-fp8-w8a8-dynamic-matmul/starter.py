@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def fp8_dynamic_matmul(W: np.ndarray, X: np.ndarray) -> np.ndarray:
+def fp8_dynamic_matmul(W: list[list[float]], X: list[list[float]]) -> list[list[float]]:
     """
     FP8 E4M3 W8A8 "dynamic" quantized matmul: Y ~= W @ X.
 

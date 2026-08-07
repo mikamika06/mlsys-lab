@@ -20,26 +20,25 @@ The task is to pick for each of $K$ and $V$ whether channel‑wise or token‑wi
 Implement `pick_kivi_quant_axis(K, V)`:
 
 ```python
-def pick_kivi_quant_axis(K: np.ndarray, V: np.ndarray) -> tuple[str, str]:
+def pick_kivi_quant_axis(K: list[list[float]], V: list[list[float]]) -> tuple[str, str]:
     ...
 ```
 
-`K` and `V` are 2‑D NumPy arrays of shape `(n, d)`.  
+`K` and `V` are 2‑D list of shape `(n, d)`.  
 Return a tuple `(k_axis, v_axis)` where each element is either the string `"channel"` or `"token"`, indicating the axis that yields the lower group‑quant MSE for that tensor.
 
-The implementation must use only vectorised NumPy operations; no explicit Python loops are allowed.
+The implementation must use only vectorised Python operations; no explicit Python loops are allowed.
 
 ## Example
 
 ```python
-import numpy as np
-K = np.array([[0, 0], [10, 10]])          # token variance is zero
-V = np.array([[0, 5], [0, 5]])            # channel variance is zero
+K = [[0, 0], [10, 10]]          # token variance is zero
+V = [[0, 5], [0, 5]]            # channel variance is zero
 k_axis, v_axis = pick_kivi_quant_axis(K, V)
 print(k_axis, v_axis)   # -> ('token', 'channel')
 ```
 
 ## What the gate checks
 
-The grader computes the exact MSE for both axes on each tensor using NumPy and labels the axis with the lower value.  
+The grader computes the exact MSE for both axes on each tensor using Python and labels the axis with the lower value.  
 It then compares those labels to the tuple returned by your function.  The solution must match exactly; otherwise the `exact_match` gate fails.

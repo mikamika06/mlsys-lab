@@ -1,0 +1,21 @@
+{
+  "id": "m-recover-block-size-and-mask-shape-from-a-recorded-tr",
+  "title": "Recover BLOCK_SIZE and mask shape from a recorded trace",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Interpreter mode & debugging tools",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["triton_trace/recover.py", "triton_trace/mask.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Recover block sizes from memory traces", "check": "harness/m1.py",
+     "gates": [{"metric": "block_sizes_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Reconstruct exact multi-dimensional mask shapes", "check": "harness/m2.py",
+     "gates": [{"metric": "masks_matched", "op": ">=", "threshold": 5}]},
+    {"n": 3, "title": "Safety net: regression test for boundary handling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_mask", "op": "==", "threshold": 1}]}
+  ]
+}

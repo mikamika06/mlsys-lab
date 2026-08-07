@@ -1,0 +1,22 @@
+{
+  "id": "m-pt2e-prepare-convert-graph-node-counts",
+  "title": "PT2E prepare and convert graph node counts",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "torchao quantize_ and tensor subclasses",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["pt2e_counts/analyzer.py", "pt2e_counts/nodes.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Count node types in graph representations", "check": "harness/m1.py",
+     "gates": [{"metric": "counts_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Analyze prepare and convert node deltas", "check": "harness/m2.py",
+     "gates": [{"metric": "deltas_match", "op": "==", "threshold": 1},
+               {"metric": "overhead_ratio", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for node counting invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_counts", "op": "==", "threshold": 1}]}
+  ]
+}

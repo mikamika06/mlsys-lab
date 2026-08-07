@@ -1,0 +1,26 @@
+{
+  "id": "m-predict-per-layer-precision-under-strong-typing",
+  "title": "Predict per-layer precision under strong typing in TensorRT",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT precision modes & strongly typed networks",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "precision/formats.py",
+    "precision/sweep.py",
+    "precision/predictor.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Float format range and ULP table", "check": "harness/m1.py",
+     "gates": [{"metric": "formats_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "FP32 vs TF32 vs FP16 sweep and evaluation", "check": "harness/m2.py",
+     "gates": [{"metric": "sweep_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Predict per-layer precision and safeguard test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_typing", "op": "==", "threshold": 1}]}
+  ]
+}

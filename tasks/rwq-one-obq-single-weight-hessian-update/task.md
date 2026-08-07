@@ -33,9 +33,9 @@ Implement `obq_single_weight_update(w, Hinv, grid)`.
 
 Inputs:
 
-- `w`: a 1-D NumPy array containing the floating point weights.
-- `Hinv`: a square NumPy array containing the inverse Hessian approximation.
-- `grid`: a 1-D NumPy array of allowed quantization values.
+- `w`: a list of floats containing the floating point weights.
+- `Hinv`: a square list containing the inverse Hessian approximation.
+- `grid`: a list of floats of allowed quantization values.
 
 The function must:
 
@@ -43,22 +43,21 @@ The function must:
 2. Compute the OBS cost for each possible single-weight quantization.
 3. Select the index with the smallest cost.
 4. Apply exactly one OBQ Hessian compensation update.
-5. Return the updated weight vector as a NumPy array of type `float64`.
+5. Return the updated weight vector as a list of type `float64`.
 
 No loops over alternative update rules are needed. Use the formulas above directly.
 
 ## Example
 
 ```python
-import numpy as np
 
-w = np.array([0.8, -1.2, 0.3])
-Hinv = np.array([
+w = [0.8, -1.2, 0.3]
+Hinv = [
     [2.0, 0.1, 0.0],
     [0.1, 1.0, 0.2],
     [0.0, 0.2, 3.0],
-])
-grid = np.array([-1.0, -0.5, 0.0, 0.5, 1.0])
+]
+grid = [-1.0, -0.5, 0.0, 0.5, 1.0]
 
 out = obq_single_weight_update(w, Hinv, grid)
 ```
@@ -67,7 +66,7 @@ The function returns the compensated vector after quantizing exactly one weight.
 
 ## What the gate checks
 
-The gate computes an independent NumPy oracle that performs the OBQ selection and
+The gate computes an independent Python oracle that performs the OBQ selection and
 Hessian update from the equations above. The returned vector must have
 
 $$

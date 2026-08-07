@@ -40,7 +40,7 @@ worst-case (max-abs) reconstruction error achievable by *any* affine
 Implement `derive_affine_qparams`:
 
 ```python
-def derive_affine_qparams(x: np.ndarray, nbits: int) -> tuple[float, int]:
+def derive_affine_qparams(x: list[float], nbits: int) -> tuple[float, int]:
     ...
 ```
 
@@ -53,8 +53,7 @@ Python `int`, computed exactly as derived above.
 ## Example
 
 ```python
-import numpy as np
-x = np.array([-2.0, -1.0, 0.5, 3.0])
+x = [-2.0, -1.0, 0.5, 3.0]
 scale, zp = derive_affine_qparams(x, nbits=4)
 # x_min' = -2.0, x_max' = 3.0, scale = 5.0/15 = 0.3333...
 # zp = round(2.0/0.3333...) = 6
@@ -63,7 +62,7 @@ scale, zp = derive_affine_qparams(x, nbits=4)
 ## What the gate checks
 
 Gate **max_abs_err** re-derives `(scale, zero_point)` from the same min/max
-formula with a NumPy oracle, quantizes-then-dequantizes `x` with **both**
+formula with a Python oracle, quantizes-then-dequantizes `x` with **both**
 your `(scale, zero_point)` and the oracle's, and reports the max-abs
 difference between the two reconstructions across several random groups and
 bit widths (including a degenerate constant-array group). A correct

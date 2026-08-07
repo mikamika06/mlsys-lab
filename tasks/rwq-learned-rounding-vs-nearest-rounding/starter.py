@@ -1,7 +1,7 @@
-import numpy as np
+import itertools
+import math
 
-
-def rounding_output_mse(W: np.ndarray, X: np.ndarray, nbits: int):
+def rounding_output_mse(W: list[list[float]], X: list[list[float]], nbits: int) -> tuple[float, float]:
     """
     Compute (mse_learned, mse_rtn) as described in task.md:
 

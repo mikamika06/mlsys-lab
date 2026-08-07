@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def fwht(x: np.ndarray) -> np.ndarray:
+def fwht(x: list[float]) -> list[float]:
     """
     Compute the normalized fast Walsh-Hadamard transform of x (length a
     power of two), equal to (H @ x) / sqrt(n) for the recursively-built

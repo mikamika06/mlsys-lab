@@ -33,11 +33,11 @@ choice.
 Implement `compare_4bit_quantizers(x)`:
 
 ```python
-def compare_4bit_quantizers(x: np.ndarray) -> tuple[float, float]:
+def compare_4bit_quantizers(x: list[float]) -> tuple[float, float]:
     ...
 ```
 
-The input is a one-dimensional `float64` NumPy array of weights. Return a pair
+The input is a one-dimensional `float64` list of weights. Return a pair
 `(hqq_mse, rtn_mse)` containing the reconstruction mean squared error of the HQQ
 and asymmetric RTN 4-bit quantizers.
 
@@ -48,14 +48,13 @@ $L_{0.7}$ objective. Reconstruct using the selected parameters and return its
 MSE.
 
 For asymmetric RTN, use the min/max scale and rounded zero point described in
-the context. Use NumPy operations only.
+the context. Use Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([-2.0, -1.0, 0.0, 1.0, 12.0])
+x = [-2.0, -1.0, 0.0, 1.0, 12.0]
 hqq_mse, rtn_mse = compare_4bit_quantizers(x)
 
 # hqq_mse is lower or equal on this outlier-heavy example

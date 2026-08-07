@@ -26,7 +26,7 @@ A common bug is swapping the optimized variable: the loop updates $s$ while leav
 
 Implement `optimize_zero_point(W, scale, bits, iters)`.
 
-The function receives a NumPy array `W`, a fixed positive scalar `scale`, an integer bit width `bits`, and an iteration count. It must return:
+The function receives a list `W`, a fixed positive scalar `scale`, an integer bit width `bits`, and an iteration count. It must return:
 
 ```python
 W_q, z
@@ -46,9 +46,8 @@ The returned `W_q` must be `float64`.
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([-1.0, 0.2, 1.5, 3.0])
+W = [-1.0, 0.2, 1.5, 3.0]
 W_q, z = optimize_zero_point(W, 0.5, 3, 5)
 
 # z is chosen by minimizing reconstruction error with scale=0.5 fixed.
@@ -57,7 +56,7 @@ W_q, z = optimize_zero_point(W, 0.5, 3, 5)
 
 ## What the gate checks
 
-The gate computes an independent NumPy oracle implementing the fixed-scale zero-point optimization loop. The returned reconstruction is compared with the oracle using
+The gate computes an independent Python oracle implementing the fixed-scale zero-point optimization loop. The returned reconstruction is compared with the oracle using
 
 $$
 \max_i |(W_q)_i - (W_{q,\mathrm{oracle}})_i|.

@@ -27,7 +27,7 @@ offload store at every step — not just the pair that was just pushed to it.
 Implement `offloaded_decode_attention` in `solve.py`:
 
 ```python
-def offloaded_decode_attention(Q, K_new, V_new):
+def offloaded_decode_attention(Q: list[list[list[list[float]]]], K_new: list[list[list[list[float]]]], V_new: list[list[list[list[float]]]]) -> list[list[list[list[float]]]]:
     ...
 ```
 
@@ -46,10 +46,9 @@ Return `out`, a `float64` array of shape `(L, T, H, d)`.
 ## Example
 
 ```python
-import numpy as np
 
 L, T, H, d = 2, 4, 1, 8
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 Q = rng.standard_normal((L, T, H, d))
 K = rng.standard_normal((L, T, H, d))
 V = rng.standard_normal((L, T, H, d))
@@ -63,7 +62,7 @@ out = offloaded_decode_attention(Q, K, V)
 
 The grader builds a fully vectorised "everything stays on device" oracle:
 for each layer and head it forms the whole `(T, T)` score matrix, applies a
-causal mask, and computes softmax-weighted values directly with NumPy — no
+causal mask, and computes softmax-weighted values directly with Python — no
 incremental gather involved, but mathematically the same quantity a
 correctly offloaded decode loop must produce at every step. It then calls
 your `offloaded_decode_attention` on the same `Q, K_new, V_new` tensors

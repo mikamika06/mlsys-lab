@@ -1,6 +1,6 @@
-import numpy as np
+import math
 
-def chunked_attention(Q, K, V, chunk_size):
+def chunked_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], chunk_size: int) -> tuple[list[list[float]], int]:
     """Scaled dot‑product attention with query‑chunking.
 
     Parameters
@@ -22,4 +22,4 @@ def chunked_attention(Q, K, V, chunk_size):
         Largest memory (bytes) occupied by any score matrix chunk
         (= chunk_size * n_k * 8).
     """
-    raise NotImplementedError("Your implementation here.")
+    raise NotImplementedError('your code here')

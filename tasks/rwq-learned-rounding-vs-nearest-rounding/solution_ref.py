@@ -1,8 +1,6 @@
 import itertools
 import math
 
-import numpy as np
-
 
 def _row_scale(w, qmax):
     a = 0.0
@@ -13,7 +11,7 @@ def _row_scale(w, qmax):
     return a / qmax if a > 0 else 1.0
 
 
-def rounding_output_mse(W: np.ndarray, X: np.ndarray, nbits: int):
+def rounding_output_mse(W: list[list[float]], X: list[list[float]], nbits: int) -> tuple[float, float]:
     """
     For each output row (weight vector) independently:
 
@@ -27,20 +25,19 @@ def rounding_output_mse(W: np.ndarray, X: np.ndarray, nbits: int):
     Returns (mse_learned, mse_rtn): each the mean squared output error,
     averaged over all rows and all calibration samples in X.
     """
-    W = np.asarray(W, dtype=np.float64)
-    X = np.asarray(X, dtype=np.float64)
-    d_out, d_in = W.shape
+    d_out = len(W)
+    d_in = len(W[0])
     qmax = (1 << (nbits - 1)) - 1
     combos = list(itertools.product([0, 1], repeat=d_in))
 
     total_learned = 0.0
     total_rtn = 0.0
-    n_cal = X.shape[0]
+    n_cal = len(X)
 
     for i in range(d_out):
         w = W[i]
         s = _row_scale(w, qmax)
-        
+
         y = [0.0] * n_cal
         for k in range(n_cal):
             s_val = 0.0

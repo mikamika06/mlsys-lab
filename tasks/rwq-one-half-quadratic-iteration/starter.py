@@ -1,9 +1,6 @@
-import numpy as np
+import math
 
-
-def hqq_half_quadratic_step(W: np.ndarray, s: np.ndarray, z: np.ndarray,
-                             W_q: np.ndarray, lp: float, beta: float,
-                             qmin: int, qmax: int):
+def hqq_half_quadratic_step(W: list[list[float]], s: list[float], z: list[float], W_q: list[list[float]], lp: float, beta: float, qmin: int, qmax: int) -> tuple[list[list[float]], list[float]]:
     """
     Run one HQQ half-quadratic-splitting iteration (per-row zero-point
     groups), as described in task.md:

@@ -1,0 +1,22 @@
+{
+  "id": "m-ring-all-reduce-from-scratch",
+  "title": "Ring All-Reduce, Alpha-Beta Cost Model, and DDP Bucketing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Data-parallel baseline & NCCL collective mechanics",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["dist/ring.py", "dist/cost.py", "dist/bucket.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Ring All-Reduce from scratch", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Alpha-Beta Cost Model and Ring vs Tree Crossover", "check": "harness/m2.py",
+     "gates": [{"metric": "crossover_match", "op": "==", "threshold": 1},
+               {"metric": "cost_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: DDP Gradient Bucketing regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_bucketing", "op": "==", "threshold": 1}]}
+  ]
+}

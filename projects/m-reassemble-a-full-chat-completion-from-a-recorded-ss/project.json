@@ -1,0 +1,40 @@
+{
+  "id": "m-reassemble-a-full-chat-completion-from-a-recorded-ss",
+  "title": "Reassemble chat completions, render templates, and account tokens",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-vllm-serving",
+  "track": "openai-compatible-api-surface",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "chatparse/stream.py",
+    "chatparse/render.py",
+    "chatparse/tokens.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reassemble chat completion from SSE stream",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "streams_matched", "op": ">=", "threshold": 5}]
+    },
+    {
+      "n": 2,
+      "title": "Reproduce server prompt via template rendering",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "templates_matched", "op": ">=", "threshold": 5}]
+    },
+    {
+      "n": 3,
+      "title": "Token accounting and regression tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_parser", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

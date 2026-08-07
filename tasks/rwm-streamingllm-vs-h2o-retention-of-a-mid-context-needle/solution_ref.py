@@ -1,16 +1,12 @@
-import numpy as np
-
-
 def compare_retention(attention, window_size, budget, needle_index):
-    attention = np.asarray(attention, dtype=np.float64)
-    rows = attention.shape[0]
-    n = attention.shape[1]
+    rows = len(attention)
+    n = len(attention[0]) if rows > 0 else 0
 
     mass = [0.0] * n
     for j in range(n):
         s = 0.0
         for i in range(rows):
-            s += float(attention[i, j])
+            s += float(attention[i][j])
         mass[j] = s
 
     streaming_set = set(range(min(2, n)))

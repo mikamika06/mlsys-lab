@@ -1,44 +1,41 @@
 import math
-import numpy as np
 
-_MAG = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0])
+_MAG = [0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0]
 
 
 def _snap_e2m1(y):
-  y_arr = np.asarray(y, dtype=np.float64)
-  shape = y_arr.shape
-  flat = y_arr.ravel()
   out_list = []
-  for val in flat:
-    abs_val = abs(val)
-    min_diff = float("inf")
-    best_idx = 0
-    for k in range(len(_MAG)):
-      diff = abs(abs_val - _MAG[k])
-      if diff < min_diff:
-        min_diff = diff
-        best_idx = k
-    if val > 0:
-      s = 1.0
-    elif val < 0:
-      s = -1.0
-    else:
-      s = 0.0
-    out_list.append(s * _MAG[best_idx])
-  return np.array(out_list, dtype=np.float64).reshape(shape)
+  for row in y:
+    row_out = []
+    for val in row:
+      abs_val = abs(val)
+      min_diff = float("inf")
+      best_idx = 0
+      for k in range(len(_MAG)):
+        diff = abs(abs_val - _MAG[k])
+        if diff < min_diff:
+          min_diff = diff
+          best_idx = k
+      if val > 0:
+        s = 1.0
+      elif val < 0:
+        s = -1.0
+      else:
+        s = 0.0
+      row_out.append(s * _MAG[best_idx])
+    out_list.append(row_out)
+  return out_list
 
 
-def mxfp4_full_block_quantize(W: np.ndarray) -> dict:
-  x = np.asarray(W, dtype=np.float64)
-  shape = x.shape
-  nrows = shape[0]
-  ncols = shape[1]
+def mxfp4_full_block_quantize(W: list[list[float]]) -> dict:
+  nrows = len(W)
+  ncols = len(W[0]) if nrows > 0 else 0
 
   scale_list = []
   for i in range(nrows):
     m = 0.0
     for j in range(ncols):
-      val = abs(x[i, j])
+      val = abs(W[i][j])
       if val > m:
         m = val
     amax_i = m
@@ -49,24 +46,22 @@ def mxfp4_full_block_quantize(W: np.ndarray) -> dict:
     e_val = max(0, ceil_val)
     scale_list.append(2.0**e_val)
 
-  scale = np.array(scale_list, dtype=np.float64)
-
   y_list = []
   for i in range(nrows):
     row_y = []
+    scale_i = scale_list[i]
     for j in range(ncols):
-      row_y.append(x[i, j] / scale[i])
+      row_y.append(W[i][j] / scale_i)
     y_list.append(row_y)
-  y = np.array(y_list, dtype=np.float64)
 
-  codes = _snap_e2m1(y)
+  codes = _snap_e2m1(y_list)
 
   dequant_list = []
   for i in range(nrows):
     row_dq = []
+    scale_i = scale_list[i]
     for j in range(ncols):
-      row_dq.append(codes[i, j] * scale[i])
+      row_dq.append(codes[i][j] * scale_i)
     dequant_list.append(row_dq)
-  dequant = np.array(dequant_list, dtype=np.float64)
 
-  return {"scale": scale, "codes": codes, "dequant": dequant}
+  return {"scale": scale_list, "codes": codes, "dequant": dequant_list}

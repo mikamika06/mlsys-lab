@@ -1,11 +1,11 @@
 import math
-import numpy as np
 
 
-def online_softmax_blocks(scores, values, block_size):
-    scores = np.asarray(scores, dtype=np.float64)
-    values = np.asarray(values, dtype=np.float64)
-
+def online_softmax_blocks(
+    scores: list[float],
+    values: list[float],
+    block_size: int
+) -> list[list[float]]:
     m_old = -float("inf")
     l_old = 0.0
     a_old = 0.0
@@ -45,4 +45,4 @@ def online_softmax_blocks(scores, values, block_size):
 
         rows.append([m_old, l_old, a_old])
 
-    return np.asarray(rows, dtype=np.float64)
+    return rows

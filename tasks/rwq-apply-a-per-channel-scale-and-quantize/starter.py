@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def awq_scale_and_quantize(W: np.ndarray, X: np.ndarray, s: np.ndarray, group_size: int, bits: int = 4):
+def awq_scale_and_quantize(W: list[list[float]], X: list[list[float]], s: list[float], group_size: int, bits: int=4) -> tuple[list[list[float]], list[list[float]]]:
     """AWQ-style per-channel scale migration + int-`bits` group quant.
 
     W: (out_features, in_features) float64 -- a Linear layer's weight.

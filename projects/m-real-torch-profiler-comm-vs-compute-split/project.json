@@ -1,0 +1,44 @@
+{
+  "id": "m-real-torch-profiler-comm-vs-compute-split",
+  "title": "Real torch.profiler comm-vs-compute split and overlap analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Distributed training performance profiling & comm/compute overlap analysis",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "profiler_analysis/parser.py",
+    "profiler_analysis/overlap.py",
+    "profiler_analysis/classifier.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Comm vs compute split from trace events",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "split_match", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Overlap percentage calculation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "overlap_rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for overlap invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

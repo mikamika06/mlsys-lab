@@ -1,9 +1,0 @@
-Our local runners interact heavily with Ollama and routinely pull down models, inspect their configuration via `ollama show --modelfile`, and generate derived model blueprints for specialized tasks. Recently, several of our production models have started leaking raw chat headers directly into their text responses. Instead of cleanly stopping execution when a turn ends, these models emit structural control tokens such as `<|im_start|>assistant` or `<|eot_id|>` as visible plain text, corrupting outputs and breaking downstream pipeline parsers.
-
-Investigation reveals that this happens because the underlying model configuration uses these special control tokens inside its prompt `TEMPLATE`, but the `Modelfile` configuration failed to declare them under the repeated `PARAMETER stop` list directives. Because Ollama requires every stop delimiter to be explicitly specified as an individual parameter line, omitting them means the inference runtime keeps generating past turn boundaries.
-
-Your task is to implement a robust utility package to parse, inspect, and repair these configuration blueprints:
-1. Build a parser that converts a raw `Modelfile` string into a normalized AST dictionary. It must correctly handle inline comments, multi-line triple-quoted string blocks (`"""`), and crucially aggregate repeated parameters (such as multiple `stop` statements) into lists rather than overwriting earlier definitions.
-2. Implement an emitter function to successfully round-trip dump the normalized dictionary back into a valid string representation.
-3. Write an inspection function that analyzes the `TEMPLATE` section for embedded special tokens matching `<|...|>` and flags any that are missing from the declared `stop` parameters list.
-4. Implement a dedicated regression test file to ensure that the parser preserves all multiple stop parameters without truncation or loss.

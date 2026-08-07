@@ -18,19 +18,18 @@ The result is a 16-element array that matches the published NF4 lookup table.
 
 ## Task
 
-Implement `nf4_levels() -> np.ndarray`:
+Implement `nf4_levels() -> list[float]:
 
 ```python
-def nf4_levels() -> np.ndarray:
+def nf4_levels() -> list[float]:
     ...
 ```
 
-No arguments. Return a NumPy array of shape `(16,)` and dtype `float64` containing the 16 NF4 level values as described above. Rely on `scipy.stats.norm.ppf` to compute the normal quantiles. The implementation must contain no hardcoded constants — derive every value algorithmically.
+No arguments. Return a list of shape `(16,)` and dtype `float64` containing the 16 NF4 level values as described above. Rely on `scipy.stats.norm.ppf` to compute the normal quantiles. The implementation must contain no hardcoded constants — derive every value algorithmically.
 
 ## Example
 
 ```python
-import numpy as np
 from scipy.stats import norm
 
 levels = nf4_levels()

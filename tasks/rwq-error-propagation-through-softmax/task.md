@@ -25,7 +25,7 @@ and $\operatorname{MSE}(O,\hat{O}) = \operatorname{mean}\!\bigl((O - \hat{O})^2\
 Implement `kv_quant_error_propagation(Q, K, V, K_hat, V_hat, scale=None)`:
 
 ```python
-def kv_quant_error_propagation(Q, K, V, K_hat, V_hat, scale=None):
+def kv_quant_error_propagation(Q: list[list[float]], K: list[list[float]], V: list[list[float]], K_hat: list[list[float]], V_hat: list[list[float]], scale: float | None=None) -> dict[str, float]:
     """
     Compute how KV quantization error propagates through softmax attention.
 
@@ -45,19 +45,18 @@ def kv_quant_error_propagation(Q, K, V, K_hat, V_hat, scale=None):
     """
 ```
 
-Compute the reference attention output $O$ and the perturbed output $\hat{O}$ using numerically stable softmax (subtract the row-max before exponentiating). Then return the three quantities defined above. Use NumPy only — no PyTorch or TensorFlow.
+Compute the reference attention output $O$ and the perturbed output $\hat{O}$ using numerically stable softmax (subtract the row-max before exponentiating). Then return the three quantities defined above. Use Python only — no PyTorch or TensorFlow.
 
 ## Example
 
 ```python
-import numpy as np
 d = 4
-scale = 1.0 / np.sqrt(d)
-Q = np.eye(4)
-K = np.eye(4)
-V = np.ones((4, 2))
-K_hat = K + 0.05 * np.ones_like(K)
-V_hat = V + 0.05 * np.ones_like(V)
+scale = 1.0 / (d 0.5)
+Q = [[1.0 if i == j else 0.0 for j in range(4)] for i in range(4)]
+K = [[1.0 if i == j else 0.0 for j in range(4)] for i in range(4)]
+V = [[1.0] * 2 for _ in range(4)]
+K_hat = [[x + 0.05 for x in row] for row in K]
+V_hat = [[x + 0.05 for x in row] for row in V]
 result = kv_quant_error_propagation(Q, K, V, K_hat, V_hat, scale=scale)
 # result["output_mse"]  — some positive float
 # result["kv_error"]    — 0.005
@@ -66,4 +65,4 @@ result = kv_quant_error_propagation(Q, K, V, K_hat, V_hat, scale=scale)
 
 ## What the gate checks
 
-The gate returns the mean squared error between the learner's three output values and a NumPy oracle's values, averaged over five test cases that vary $d \in \{8, 16, 32\}$, sequence lengths, and noise levels $\{0.001, 0.01, 0.1\}$. This metric must be $\le 10^{-6}$. The oracle computes the exact same formulas with the same numerically stable softmax. A solution that hardcodes a wrong formula or returns `NotImplementedError` will produce a large MSE and fail.
+The gate returns the mean squared error between the learner's three output values and a Python oracle's values, averaged over five test cases that vary $d \in \{8, 16, 32\}$, sequence lengths, and noise levels $\{0.001, 0.01, 0.1\}$. This metric must be $\le 10^{-6}$. The oracle computes the exact same formulas with the same numerically stable softmax. A solution that hardcodes a wrong formula or returns `NotImplementedError` will produce a large MSE and fail.

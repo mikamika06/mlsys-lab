@@ -35,9 +35,7 @@ rounding).
 Implement `dual_zero_point_dequant`:
 
 ```python
-def dual_zero_point_dequant(
-    codes: np.ndarray, scale: float, zp_float: float
-) -> tuple[np.ndarray, np.ndarray, float]:
+def dual_zero_point_dequant(codes: list[int], scale: float, zp_float: float):
     ...
 ```
 
@@ -52,16 +50,15 @@ Return a 3-tuple `(deq_float_domain, deq_int_domain, zp_int)`:
   dequantize using $\hat{x} = s\,(q - z)$.
 - `zp_int`: the derived integer-domain zero point $z$ itself (a Python float).
 
-Both dequantized arrays must be `float64` NumPy arrays of the same shape as `codes`, and
+Both dequantized arrays must be `float64` list of the same shape as `codes`, and
 must numerically agree with each other (they are the same real numbers computed two
 ways).
 
 ## Example
 
 ```python
-import numpy as np
 
-codes = np.array([0, 5, 10, 20], dtype=np.int64)
+codes = [0, 5, 10, 20]
 scale = 0.5
 zp_float = -3.0
 
@@ -72,7 +69,7 @@ deq_f, deq_i, zp_int = dual_zero_point_dequant(codes, scale, zp_float)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle with the same two formulas, computing the reference
+The gate builds a Python oracle with the same two formulas, computing the reference
 `zp_int`, `deq_float_domain`, and `deq_int_domain` directly from `scale` and `zp_float`.
 It checks:
 

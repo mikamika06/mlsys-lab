@@ -47,18 +47,17 @@ This construction is used in numerical algorithms that need deterministic orthog
 Implement `normalized_hadamard(n)`:
 
 ```python
-def normalized_hadamard(n: int) -> np.ndarray:
+def normalized_hadamard(n: int) -> list[list[float]]:
     ...
 ```
 
-The input $n$ is a positive power of two. Return the normalized Sylvester-Hadamard matrix as a NumPy array of shape $(n,n)$ with `float64` values.
+The input $n$ is a positive power of two. Return the normalized Sylvester-Hadamard matrix as a list of shape $(n,n)$ with `float64` values.
 
 Build the matrix using the recursive Sylvester construction. The returned matrix must match the deterministic construction and satisfy the orthogonality property.
 
 ## Example
 
 ```python
-import numpy as np
 
 H = normalized_hadamard(4)
 
@@ -68,7 +67,7 @@ H = normalized_hadamard(4)
 #  [ 0.5,  0.5, -0.5, -0.5],
 #  [ 0.5, -0.5, -0.5,  0.5]]
 
-np.allclose(H @ H.T, np.eye(4))
+all(abs(a - b) < 1e-5 for row1, row2 in zip([[sum(H[i][k] * H[j][k] for k in range(4)) for j in range(4)] for i in range(4)], [[1.0 if i == j else 0.0 for j in range(4)] for i in range(4)]) for a, b in zip(row1, row2))
 # True
 ```
 

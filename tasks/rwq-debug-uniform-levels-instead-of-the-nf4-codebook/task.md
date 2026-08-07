@@ -33,7 +33,7 @@ $$
 Fix `nf4_quantize_indices`:
 
 ```python
-def nf4_quantize_indices(w: np.ndarray, block_size: int = 64) -> np.ndarray:
+def nf4_quantize_indices(w: list[float], block_size: int=64) -> list[int]:
     ...
 ```
 
@@ -41,7 +41,7 @@ def nf4_quantize_indices(w: np.ndarray, block_size: int = 64) -> np.ndarray:
 - `block_size`: elements per normalization block (default 64).
 
 The supplied version has **two** bugs: it uses 16 evenly spaced levels
-(`np.linspace(-1, 1, 16)`) instead of the real NF4 codebook above, and
+(`list(linspace(-1, 1, 16))`) instead of the real NF4 codebook above, and
 it normalizes by one global absmax over the whole array instead of a
 separate absmax **per block**. Fix both: split `w` into contiguous
 blocks of `block_size`, normalize each block by its own absmax
@@ -53,9 +53,8 @@ Return a 1-D `int64` array of indices, same length as `w`.
 ## Example
 
 ```python
-import numpy as np
 
-w = np.array([0.02, -0.01, 0.0, 0.019] + [0.0]*60)  # one block of 64
+w = [0.02, -0.01, 0.0, 0.019] + [0.0]*60 # one block of 64
 nf4_quantize_indices(w, block_size=64)
 # block absmax = 0.02 -> normalized = [1.0, -0.5, 0.0, 0.95, 0,0,...]
 # 1.0 snaps to NF4[15]=1.0, -0.5 snaps to NF4[2]=-0.5251 (closest),
@@ -66,7 +65,7 @@ nf4_quantize_indices(w, block_size=64)
 
 The grader builds several seeded `float64` arrays (Gaussian, scaled
 small, length a multiple of 64) and computes the reference index array
-independently in NumPy — per-block absmax normalization against the
+independently in Python — per-block absmax normalization against the
 true NF4 codebook, argmin over the 16 levels — never calling your
 function.
 

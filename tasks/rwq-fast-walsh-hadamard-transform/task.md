@@ -42,7 +42,7 @@ $h$. After $\log_2 n$ passes, divide the whole vector by $\sqrt{n}$.
 Implement:
 
 ```python
-def fwht(x: np.ndarray) -> np.ndarray:
+def fwht(x: list[float]) -> list[float]:
     ...
 ```
 
@@ -54,9 +54,8 @@ def fwht(x: np.ndarray) -> np.ndarray:
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1.0, 0.0, 1.0, 0.0])
+x = [1.0, 0.0, 1.0, 0.0]
 y = fwht(x)
 # H_4 = [[1,1,1,1],[1,-1,1,-1],[1,1,-1,-1],[1,-1,-1,1]]
 # H_4 @ x = [2, 2, 0, 0]  ->  y = [2,2,0,0] / sqrt(4) = [1, 1, 0, 0]

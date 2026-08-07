@@ -34,7 +34,7 @@ for $m\in\{0,\dots,6\}$ — only $m=7$ at $e=15$ is NaN.)
 Implement `nvfp4_block_scales`:
 
 ```python
-def nvfp4_block_scales(W: np.ndarray, group_size: int, per_tensor_scale: float) -> np.ndarray:
+def nvfp4_block_scales(W: list[float], group_size: int, per_tensor_scale: float) -> list[float]:
     ...
 ```
 
@@ -57,8 +57,7 @@ Return the array of per-block E4M3-quantized scales, shape
 ## Example
 
 ```python
-import numpy as np
-W = np.zeros(16)
+W = [0.0] * 16
 W[3] = 12.0          # block absmax = 12.0
 per_tensor_scale = 1.0
 scales = nvfp4_block_scales(W, group_size=16, per_tensor_scale=per_tensor_scale)
@@ -70,7 +69,7 @@ scales = nvfp4_block_scales(W, group_size=16, per_tensor_scale=per_tensor_scale)
 
 The grader builds several seeded `W` / `group_size` / `per_tensor_scale`
 cases spanning a wide range of block magnitudes and computes the
-reference block scales independently in NumPy: the exact same
+reference block scales independently in Python: the exact same
 `max(|block|) / (6 * per_tensor_scale)` formula, then nearest-neighbor
 rounding onto an E4M3 grid built by enumerating all 256 8-bit patterns
 (sign, 4-bit exponent, 3-bit mantissa) and excluding the single NaN

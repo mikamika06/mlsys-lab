@@ -1,0 +1,22 @@
+{
+  "id": "m-run-a-20-step-qlora-and-verify-only-adapters-changed",
+  "title": "Run a 20-step QLoRA and verify only adapters changed",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "QLoRA fine-tuning with bitsandbytes and PEFT",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["qlora/trainer.py", "qlora/verify.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Run a 20-step QLoRA training loop", "check": "harness/m1.py",
+     "gates": [{"metric": "steps_run", "op": "==", "threshold": 20}]},
+    {"n": 2, "title": "Verify only adapter parameters changed", "check": "harness/m2.py",
+     "gates": [{"metric": "adapters_changed", "op": "==", "threshold": 1},
+               {"metric": "base_unchanged", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching unfreezing of base weights", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unfrozen_base", "op": "==", "threshold": 1}]}
+  ]
+}

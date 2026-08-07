@@ -14,7 +14,7 @@ Because the softmax is row‑independent (the output for a query depends only on
 Implement the function  
 
 ```python
-def chunked_attention(Q, K, V, chunk_size):
+def chunked_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], chunk_size: int) -> tuple[list[list[float]], int]:
 ```
 
 It takes arrays `Q` (shape $(n_q,d)$), `K` (shape $(n_k,d)$), `V` (shape $(n_k,d_v)$), and an integer `chunk_size`.  
@@ -28,10 +28,9 @@ You must implement the attention by iterating over chunks of the query dimension
 ## Example
 
 ```python
-import numpy as np
-Q = np.array([[1.0, 0.0], [0.0, 0.0]])
-K = np.array([[1.0, 0.0], [1.0, 0.0]])
-V = np.array([[1.0], [2.0]])
+Q = [[1.0, 0.0], [0.0, 0.0]]
+K = [[1.0, 0.0], [1.0, 0.0]]
+V = [[1.0], [2.0]]
 out, peak = chunked_attention(Q, K, V, chunk_size=1)
 print(out)   # [[1.5], [1.5]]
 print(peak)  # 16   (1 * 2 * 8)

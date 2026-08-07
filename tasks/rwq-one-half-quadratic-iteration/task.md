@@ -46,9 +46,7 @@ current integer codes $W_{q,i} \in \{q_{\min},\dots,q_{\max}\}^{d_{in}}$.
 Implement `hqq_half_quadratic_step`:
 
 ```python
-def hqq_half_quadratic_step(W: np.ndarray, s: np.ndarray, z: np.ndarray,
-                             W_q: np.ndarray, lp: float, beta: float,
-                             qmin: int, qmax: int) -> tuple[np.ndarray, np.ndarray]:
+def hqq_half_quadratic_step(W: list[list[float]], s: list[float], z: list[float], W_q: list[list[float]], lp: float, beta: float, qmin: int, qmax: int) -> tuple[list[list[float]], list[float]]:
     ...
 ```
 
@@ -66,19 +64,18 @@ updated zero-point (step 4), both computed exactly as above.
 ## Example
 
 ```python
-import numpy as np
 d_out, d_in = 4, 16
-W = np.random.default_rng(1).normal(size=(d_out, d_in))
-s = np.full(d_out, 0.3)
-z = np.full(d_out, 8.0)
-W_q = np.clip(np.round(W / s[:, None] + z[:, None]), 0, 15)
+W = [[random.gauss(0, 1) for _ in range(d_in)] for _ in range(d_out)]
+s = [0.3] * d_out
+z = [8.0] * d_out
+W_q = [[max(0, min(15, round(W[i][j] / s[i] + z[i]))) for j in range(len(W[0]))] for i in range(len(W))]
 W_q_new, z_new = hqq_half_quadratic_step(W, s, z, W_q, lp=0.7, beta=10.0, qmin=0, qmax=15)
 ```
 
 ## What the gate checks
 
 * **z_max_abs_err** — max-abs difference between your `z_new` and a
-  NumPy oracle running steps 1-4 above, over several random states and
+  Python oracle running steps 1-4 above, over several random states and
   `(lp, beta)` settings.
 * **wq_exact_match** — your `W_q_new` must exactly equal the oracle's
   re-quantized codes (step 5) on every trial.

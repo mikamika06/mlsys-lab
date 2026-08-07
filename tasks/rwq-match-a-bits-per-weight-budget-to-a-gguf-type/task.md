@@ -37,7 +37,7 @@ Return values:
 - 2 → Q6_K
 - 3 → Q8_0
 
-The implementation must use only NumPy for numeric operations and be deterministic.
+The implementation must use only Python for numeric operations and be deterministic.
 
 ## Example
 
@@ -54,5 +54,5 @@ The implementation must use only NumPy for numeric operations and be determinist
 
 ## What the gate checks
 
-The grader computes the exact bpw values for all four types using NumPy, finds the index of the type with minimal absolute difference to the supplied target, and compares it to the candidate’s output.  
+The grader computes the exact bpw values for all four types using Python, finds the index of the type with minimal absolute difference to the supplied target, and compares it to the candidate’s output.  
 A correct implementation must return exactly that index for every test case.

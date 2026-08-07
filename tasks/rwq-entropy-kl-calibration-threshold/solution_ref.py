@@ -1,10 +1,9 @@
 import math
-import numpy as np
 
 
 def _kl_for_threshold(activations, edges, hist, k):
     threshold = edges[k]
-    qhist = np.zeros(len(edges) - 1, dtype=np.int64)
+    qhist = [0] * (len(edges) - 1)
     for x in activations:
         clipped = x if x < threshold else threshold
         levels = math.floor((clipped / threshold) * k)
@@ -26,7 +25,7 @@ def _kl_for_threshold(activations, edges, hist, k):
     for i in range(len(hist)):
         sum_p += float(hist[i])
 
-    p_norm = np.zeros_like(hist, dtype=np.float64)
+    p_norm = [0.0] * len(hist)
     for i in range(len(hist)):
         p_norm[i] = float(hist[i]) / sum_p
 
@@ -34,7 +33,7 @@ def _kl_for_threshold(activations, edges, hist, k):
     for i in range(len(qhist)):
         sum_q += float(qhist[i])
 
-    q_norm = np.zeros_like(qhist, dtype=np.float64)
+    q_norm = [0.0] * len(qhist)
     for i in range(len(qhist)):
         q_norm[i] = float(qhist[i]) / sum_q
 
@@ -47,18 +46,18 @@ def _kl_for_threshold(activations, edges, hist, k):
     return float(kl_sum)
 
 
-def calibrate_threshold_index(activations, num_bins, candidate_indices):
+def calibrate_threshold_index(activations: list[float], num_bins: int, candidate_indices: list[int]) -> int:
     max_val = activations[0]
     for val in activations:
         if val > max_val:
             max_val = val
     max_val = float(max_val)
 
-    edges = np.zeros(num_bins + 1, dtype=np.float64)
+    edges = [0.0] * (num_bins + 1)
     for i in range(num_bins + 1):
         edges[i] = i * max_val / num_bins
 
-    hist = np.zeros(num_bins, dtype=np.int64)
+    hist = [0] * num_bins
     for x in activations:
         bin_idx = -1
         if x == edges[-1]:

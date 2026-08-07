@@ -1,17 +1,13 @@
-import numpy as np
-
-
-def derive_affine_qparams(x: np.ndarray, nbits: int) -> tuple:
+def derive_affine_qparams(x: list[float], nbits: int) -> tuple[float, int]:
     """
     Standard asymmetric min-max affine quantization params, with the group's
     range extended to always include zero so the mapping is lossless at 0
     and the round-to-nearest reconstruction error is bounded by scale/2.
     """
-    x = np.asarray(x, dtype=np.float64)
     qmax = (1 << nbits) - 1
     mn = 0.0
     mx = 0.0
-    for i in range(x.shape[0]):
+    for i in range(len(x)):
         val = float(x[i])
         if val < mn:
             mn = val

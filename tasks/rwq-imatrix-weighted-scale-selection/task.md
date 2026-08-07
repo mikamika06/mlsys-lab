@@ -39,7 +39,7 @@ and the selected scale is $\arg\min_k E(s_k)$ (smallest index on a tie).
 Implement:
 
 ```python
-def imatrix_best_scale(x: np.ndarray, w: np.ndarray, scale_grid: np.ndarray, qmin: int, qmax: int) -> int:
+def imatrix_best_scale(x: list[float], w: list[float], scale_grid: list[float], qmin: int, qmax: int) -> int:
     ...
 ```
 
@@ -55,10 +55,9 @@ Return the integer index $k$ into `scale_grid` minimizing $E(s_k)$ above
 ## Example
 
 ```python
-import numpy as np
-x = np.array([0.1, 0.11, -0.09, 3.0])       # index 3 is a rare outlier
-w = np.array([10.0, 10.0, 10.0, 0.02])      # imatrix says index 3 barely matters
-grid = np.array([0.02, 0.05, 0.4])
+x = [0.1, 0.11, -0.09, 3.0]       # index 3 is a rare outlier
+w = [10.0, 10.0, 10.0, 0.02]      # imatrix says index 3 barely matters
+grid = [0.02, 0.05, 0.4]
 k = imatrix_best_scale(x, w, grid, qmin=-8, qmax=7)
 # the fine scale (0.02) wins: it reproduces the three important
 # small values almost exactly and lets the down-weighted outlier clip hard.
@@ -69,7 +68,7 @@ k = imatrix_best_scale(x, w, grid, qmin=-8, qmax=7)
 ## What the gate checks
 
 * **argmin_index** — your returned index must exactly equal
-  `argmin_k E(s_k)` computed by a NumPy oracle that quantizes/dequantizes
+  `argmin_k E(s_k)` computed by a Python oracle that quantizes/dequantizes
   every grid candidate and sums the importance-weighted squared error, on
   several random blocks (each with one heavily down-weighted outlier, so
   the weighted argmin provably differs from the plain-MSE argmin — a

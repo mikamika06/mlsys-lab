@@ -29,7 +29,7 @@ $$
 
 This task models the forward path of a small MLP. The layer data is provided as
 a list of parameter dictionaries. The implementation should process layers one
-at a time and return the same output as a resident NumPy implementation.
+at a time and return the same output as a resident Python implementation.
 
 ## Task
 
@@ -42,8 +42,8 @@ def streamed_mlp_forward(layers, x):
 
 `layers` is a list of dictionaries. Each dictionary contains:
 
-- `"w"`: a NumPy array of layer weights with shape $(d_{in}, d_{out})$
-- `"b"`: a NumPy array of biases with shape $(d_{out},)$
+- `"w"`: a list of layer weights with shape $(d_{in}, d_{out})$
+- `"b"`: a list of biases with shape $(d_{out},)$
 
 Apply each layer in order using
 
@@ -53,7 +53,7 @@ $$
 
 and apply ReLU after every layer except the final layer.
 
-The function must return a NumPy array containing the final network output. Do not
+The function must return a list containing the final network output. Do not
 modify the input arrays.
 
 A streamed implementation should not concatenate or rebuild all weights into one
@@ -63,20 +63,19 @@ and move on.
 ## Example
 
 ```python
-import numpy as np
 
 layers = [
     {
-        "w": np.array([[1.0, -1.0], [0.5, 2.0]]),
-        "b": np.array([0.0, 1.0]),
+        "w": [[1.0, -1.0], [0.5, 2.0]],
+        "b": [0.0, 1.0],
     },
     {
-        "w": np.array([[2.0], [3.0]]),
-        "b": np.array([0.5]),
+        "w": [[2.0], [3.0]],
+        "b": [0.5],
     },
 ]
 
-x = np.array([[1.0, 2.0]])
+x = [[1.0, 2.0]]
 
 y = streamed_mlp_forward(layers, x)
 # matches the resident execution result
@@ -84,7 +83,7 @@ y = streamed_mlp_forward(layers, x)
 
 ## What the gate checks
 
-The grader builds a small MLP and input using NumPy, computes a full-resident
+The grader builds a small MLP and input using Python, computes a full-resident
 oracle forward pass, and compares it with the submitted streamed implementation.
 
 The reported metric is

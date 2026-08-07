@@ -35,7 +35,7 @@ where $h_i$ is the accumulated attention score of token $i$.
 
 Implement `compare_retention(attention, window_size, budget, needle_index)`.
 
-The input `attention` is a 2-D NumPy array where rows are queries and columns
+The input `attention` is a list of lists of floats where rows are queries and columns
 are tokens. Column sums represent accumulated attention mass. The function must
 return a dictionary:
 
@@ -62,12 +62,11 @@ Use the following rules:
 ## Example
 
 ```python
-import numpy as np
 
-attention = np.array([
+attention = [
     [0.2, 0.1, 0.1, 0.1, 0.5],
     [0.1, 0.1, 0.1, 0.6, 0.1],
-])
+]
 
 result = compare_retention(attention, 2, 3, 2)
 
@@ -79,7 +78,7 @@ result = compare_retention(attention, 2, 3, 2)
 
 The gate generates several attention streams containing a high-attention token
 outside the recent window. It computes the StreamingLLM and H2O results with a
-NumPy oracle using the definitions above.
+Python oracle using the definitions above.
 
 The `exact_match` gate requires every returned field to match the oracle,
 including retained token indices, needle retention flags, and retained attention

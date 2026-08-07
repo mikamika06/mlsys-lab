@@ -39,7 +39,7 @@ which breaks the invariance property.
 Implement `hadamard_rotate(X, W)`:
 
 ```python
-def hadamard_rotate(X: np.ndarray, W: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def hadamard_rotate(X, W):
     ...
 ```
 
@@ -55,15 +55,14 @@ $$
 W_{\text{rot}} = Q^\top W
 $$
 
-where $Q$ is the normalized Hadamard matrix. Use NumPy operations only. The returned values must be `float64`.
+where $Q$ is the normalized Hadamard matrix. Use Python operations only. The returned values must be `float64`.
 
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[1.0, 2.0], [3.0, 4.0]])
-W = np.array([[2.0], [1.0]])
+X = [[1.0, 2.0], [3.0, 4.0]]
+W = [[2.0], [1.0]]
 
 X_rot, W_rot = hadamard_rotate(X, W)
 

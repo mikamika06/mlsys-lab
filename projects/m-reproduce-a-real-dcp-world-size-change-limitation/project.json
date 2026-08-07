@@ -1,0 +1,21 @@
+{
+  "id": "m-reproduce-a-real-dcp-world-size-change-limitation",
+  "title": "Reproduce and fix DCP world size change limitations via manual stitching",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP distributed checkpointing (DCP)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["dcpfix/parser.py", "dcpfix/stitch.py", "dcpfix/export.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse and reproduce DCP metadata and world-size limits", "check": "harness/m1.py",
+     "gates": [{"metric": "metadata_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Manually stitch sharded checkpoint files", "check": "harness/m2.py",
+     "gates": [{"metric": "stitching_exact", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test suite catching bad world size stitching", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_stitching", "op": "==", "threshold": 1}]}
+  ]
+}

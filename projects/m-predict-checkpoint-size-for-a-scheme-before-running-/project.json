@@ -1,0 +1,43 @@
+{
+  "id": "m-predict-checkpoint-size-for-a-scheme-before-running-",
+  "title": "Predict checkpoint size and validate compression schemes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-vllm-serving",
+  "track": "serving-quantization-formats",
+  "difficulty": 3,
+  "edits": [
+    "compress/predictor.py",
+    "compress/chooser.py",
+    "compress/pipeline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict checkpoint size for a scheme",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "size_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Hardware format chooser for kernels",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "chooser_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches flawed size estimations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_estimation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

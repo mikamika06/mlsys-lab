@@ -1,0 +1,44 @@
+{
+  "id": "m-quantify-the-extra-error-from-allow-requantize",
+  "title": "Quantify extra error from requantization and validate pruned layers",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "llama-quantize-cli",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_quant/analyzer.py",
+    "gguf_quant/validator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantify extra error from requantization and compare recipes",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "error_quantified", "op": "==", "threshold": 1},
+        {"metric": "recipe_compared", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Validate pruned layers and ensure model files load correctly",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "pruned_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches broken quantization invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

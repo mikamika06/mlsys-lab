@@ -1,0 +1,7 @@
+# Ticket: Local Model Runner Emitting Garbled Text and Incorrect Stop Sequences
+
+When deploying imported models through our local runner framework, operators are reporting severe anomalies during chat inference sessions. Specifically, when loading certain newly converted GGUF files, the model completely ignores conversational formatting templates, running user and assistant turns together without proper delimitation. Furthermore, generation fails to halt at natural boundaries, bleeding past designated stop sequences and continuing to hallucinate tokens until hitting the hard generation limit.
+
+Compounding these issues, when attempting to optimize footprint by importing a base FP16 GGUF model into multiple lower-precision quantization levels (such as Q4_K_M and Q8_0), downstream token generation throughput and file footprint metrics behave erratically, occasionally reporting higher memory overhead than the unquantized source while failing to provide expected acceleration. Finally, after attaching domain-specific LoRA adapters to these imported instances, outputs degenerate into complete gibberish or repetitive loops, even though the adapter weights claim compatibility with the base architecture.
+
+We need to implement a robust low-level inspection and import pipeline that correctly extracts GGUF metadata structures, computes precise quantization sizing and performance characteristics, and enforces strict validation checks to prevent mismatched adapter attachments from polluting generation results.

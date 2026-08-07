@@ -1,8 +1,7 @@
 import math
-import numpy as np
 
 
-def normalized_hadamard(n: int) -> np.ndarray:
+def normalized_hadamard(n: int) -> list[list[float]]:
     h = [[1.0]]
     while len(h) < n:
         new_h = []
@@ -16,9 +15,11 @@ def normalized_hadamard(n: int) -> np.ndarray:
         h = new_h
 
     scale = math.sqrt(n)
-    result = np.zeros((n, n), dtype=np.float64)
+    result = []
     for i in range(n):
+        row_result = []
         for j in range(n):
-            result[i, j] = h[i][j] / scale
+            row_result.append(h[i][j] / scale)
+        result.append(row_result)
 
     return result

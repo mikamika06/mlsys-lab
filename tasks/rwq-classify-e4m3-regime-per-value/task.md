@@ -28,11 +28,11 @@ $$
 Implement:
 
 ```python
-def classify_e4m3_regime(x: np.ndarray) -> np.ndarray:
+def classify_e4m3_regime(x: list[float]) -> list[int]:
     ...
 ```
 
-`x` is a NumPy array of any shape containing `float32`/`float64` values.
+`x` is a list of any shape containing `float32`/`float64` values.
 Return an `int64` array of the **same shape**, where each element is the
 integer label of that value's regime:
 
@@ -49,9 +49,8 @@ above — do not attempt to simulate rounding.
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([0.0, 1e-6, 0.01, 1.0, 448.0, 500.0, np.inf])
+x = [0.0, 1e-6, 0.01, 1.0, 448.0, 500.0, float('inf')]
 classify_e4m3_regime(x)
 # -> array([0, 0, 1, 2, 2, 3, 3])
 #    0.0    -> underflow_to_zero (exact zero)
@@ -69,7 +68,7 @@ The grader loads a fixed fixture array `fp8_x.npy` — a mix of hand-picked
 boundary values straddling every threshold (including `+/-0`, values just
 below/above `MIN_SUBNORMAL`, `MIN_NORMAL`, and `MAX_NORMAL`, plus `+/-inf`)
 and several thousand log-uniformly distributed random magnitudes with
-random signs — and compares your labels element-by-element against a NumPy
+random signs — and compares your labels element-by-element against a Python
 oracle that applies the exact threshold logic above.
 
 `exact_match` is `1.0` only if **every** label matches the oracle exactly

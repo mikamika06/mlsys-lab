@@ -1,7 +1,4 @@
-import numpy as np
+import math
 
-def _quantize_group_int4(W, group_size):
-    raise NotImplementedError('your code here')
-
-def awq_vs_plain_group_int4_mse(W, X, group_size):
+def awq_vs_plain_group_int4_mse(W: list[list[float]], X: list[list[float]], group_size: int) -> tuple[float, float]:
     raise NotImplementedError('your code here')

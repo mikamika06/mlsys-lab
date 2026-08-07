@@ -36,7 +36,7 @@ $$
 Implement `awq_scale_and_quantize`:
 
 ```python
-def awq_scale_and_quantize(W: np.ndarray, X: np.ndarray, s: np.ndarray, group_size: int, bits: int = 4):
+def awq_scale_and_quantize(W: list[list[float]], X: list[list[float]], s: list[float], group_size: int, bits: int=4) -> tuple[list[list[float]], list[list[float]]]:
     ...
 ```
 
@@ -59,11 +59,10 @@ Return `(Y_identity, Y_quant)`:
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[1.0, 100.0], [2.0, 50.0]])   # out=2, in=2
-X = np.array([[1.0, 1.0]])                   # batch=1
-s = np.array([1.0, 0.1])                     # shrink the huge channel
+W = [[1.0, 100.0], [2.0, 50.0]]   # out=2, in=2
+X = [[1.0, 1.0]]                   # batch=1
+s = [1.0, 0.1]                     # shrink the huge channel
 
 Wp = W * s          # [[1, 10], [2, 5]]      -- channel 1 now on a sane scale
 Xp = X / s          # [[1, 10]]
@@ -78,7 +77,7 @@ Y_identity = Xp @ Wp.T   # equals X @ W.T == [[101, 52]]
 The grader builds several seeded `(W, X, s, group_size)` cases (Gaussian
 `W`/`X`, `s` drawn uniformly from `[0.5, 3.0]`) and computes both the
 direct `X @ W.T` and the group-quantized `X' @ W_hat.T` independently in
-NumPy, never calling your function.
+Python, never calling your function.
 
 `identity_max_abs_err` is the worst-case max elementwise absolute
 difference between your `Y_identity` and the oracle's direct `X @ W.T`

@@ -1,0 +1,45 @@
+{
+  "id": "m-run-a-triton-kernel-in-interpret-mode-on-mac-and-ver",
+  "title": "Triton interpret mode execution, profiler breakdown, and autotuning selection",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "triton-kernel-profiling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "triton_profiler/interpret.py",
+    "triton_profiler/parser.py",
+    "triton_profiler/autotune.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Run in interpret mode and verify per-block correctness",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "blocks_matched", "op": "==", "threshold": 1},
+        {"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute percentage time per region from profiler tree",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "region_percentages_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Pick fastest autotuner config and survive safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_selection", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

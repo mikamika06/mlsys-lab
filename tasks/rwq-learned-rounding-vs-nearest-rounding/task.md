@@ -50,7 +50,7 @@ $$
 Implement `rounding_output_mse`:
 
 ```python
-def rounding_output_mse(W: np.ndarray, X: np.ndarray, nbits: int) -> tuple[float, float]:
+def rounding_output_mse(W: list[list[float]], X: list[list[float]], nbits: int) -> tuple[float, float]:
     ...
 ```
 
@@ -69,8 +69,7 @@ Return `(mse_learned, mse_rtn)`:
 ## Example
 
 ```python
-import numpy as np
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 X = rng.normal(size=(30, 6))
 W = rng.normal(size=(4, 6))
 mse_learned, mse_rtn = rounding_output_mse(W, X, nbits=3)
@@ -80,7 +79,7 @@ mse_learned, mse_rtn = rounding_output_mse(W, X, nbits=3)
 ## What the gate checks
 
 * **learned_rel_err** — relative error between your `mse_learned` and a
-  NumPy oracle that brute-forces the optimal rounding direction per row
+  Python oracle that brute-forces the optimal rounding direction per row
   (over several random `(W, X)` trials).
 * **rtn_rel_err** — relative error between your `mse_rtn` and the oracle's
   nearest-rounding MSE.

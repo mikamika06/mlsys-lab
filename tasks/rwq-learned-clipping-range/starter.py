@@ -1,8 +1,6 @@
-import numpy as np
+import math
 
-
-def learned_clip_range(w: np.ndarray, group_size: int, bits: int,
-                        n_steps: int = 25, lr: float = 0.05, eps: float = 1e-3):
+def learned_clip_range(w: list, group_size: int, bits: int, n_steps: int=25, lr: float=0.05, eps: float=0.001):
     """Learn a per-group clip-range scalar alpha via sign-gradient descent.
 
     w: 1-D float64 array, len(w) a multiple of group_size.

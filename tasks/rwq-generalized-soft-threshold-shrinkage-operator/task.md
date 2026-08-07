@@ -24,18 +24,17 @@ This is the *generalized soft‑threshold* operator that we ask you to implement
 Implement `generalized_soft_threshold(x, beta, p)`:
 
 ```python
-def generalized_soft_threshold(x: np.ndarray, beta: float, p: float) -> np.ndarray:
+def generalized_soft_threshold(x: list[float], beta: float, p: float) -> list[float]:
     ...
 ```
 
-The function receives a 1‑D NumPy array `x`, a positive scalar `beta` (the regularisation strength), and a quasi‑norm exponent `p` with $0<p\\le1$.  
-It must return an array of the same shape containing the element‑wise shrinkage described above. The implementation must use only NumPy operations; no explicit Python loops.
+The function receives a 1‑D list `x`, a positive scalar `beta` (the regularisation strength), and a quasi‑norm exponent `p` with $0<p\\le1$.  
+It must return an array of the same shape containing the element‑wise shrinkage described above. The implementation must use only Python operations; no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
-x = np.array([3.0, -2.5, 0.4])
+x = [3.0, -2.5, 0.4]
 beta = 1.0
 p = 0.7
 y = generalized_soft_threshold(x, beta, p)
@@ -44,7 +43,7 @@ y = generalized_soft_threshold(x, beta, p)
 
 ## What the gate checks
 
-The grader evaluates your implementation against a NumPy reference on several random test vectors.  
+The grader evaluates your implementation against a Python reference on several random test vectors.  
 It reports the maximum absolute error
 
 $$\\max_i |\\,y_{\\text{your}}[i]-y_{\\text{ref}}[i]\\,|.$$

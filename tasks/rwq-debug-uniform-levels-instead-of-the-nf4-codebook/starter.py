@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def nf4_quantize_indices(w: np.ndarray, block_size: int = 64) -> np.ndarray:
+def nf4_quantize_indices(w: list[float], block_size: int=64) -> list[int]:
     """Quantize `w` to 4-bit NF4 codebook indices, block-normalized.
 
     w: 1-D float64 array, length a multiple of `block_size`.
@@ -24,11 +21,4 @@ def nf4_quantize_indices(w: np.ndarray, block_size: int = 64) -> np.ndarray:
     absmax over the whole array instead of a separate absmax PER BLOCK
     -- both wrong for a real NF4 dequant path.
     """
-    w = np.asarray(w, dtype=np.float64)
-    levels = np.linspace(-1.0, 1.0, 16)
-    scale = np.max(np.abs(w))
-    scale = 1.0 if scale == 0 else scale
-    normalized = w / scale
-    diffs = np.abs(normalized[:, None] - levels[None, :])
-    idx = np.argmin(diffs, axis=-1)
-    return idx.astype(np.int64)
+    raise NotImplementedError('your code here')

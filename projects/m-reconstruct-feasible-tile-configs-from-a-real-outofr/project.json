@@ -1,0 +1,26 @@
+{
+  "id": "m-reconstruct-feasible-tile-configs-from-a-real-outofr",
+  "title": "Reconstruct feasible Triton tile configs from OutOfResources errors",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw3-triton-real",
+  "track": "Resource-limit failure modes & compiler errors",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tile_recon/reconstruct.py",
+    "tile_recon/classify.py",
+    "tile_recon/predict.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct feasible tile configs", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Classify Triton compile-error strings", "check": "harness/m2.py",
+     "gates": [{"metric": "accuracy", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: regression test on prediction invariant", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_broken_predictor", "op": "==", "threshold": 1.0}]}
+  ]
+}

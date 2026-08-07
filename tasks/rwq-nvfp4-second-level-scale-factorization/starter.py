@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def nvfp4_block_scales(W: np.ndarray, group_size: int, per_tensor_scale: float) -> np.ndarray:
+def nvfp4_block_scales(W: list[float], group_size: int, per_tensor_scale: float) -> list[float]:
     """NVFP4 second-level block-scale factorization.
 
     W: 1-D float64 array, len(W) a multiple of group_size.

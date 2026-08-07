@@ -42,9 +42,7 @@ If a block's amax is exactly $0$, its E4M3 scale is $0$ and its elements are all
 Implement `nvfp4_two_level_quantize`:
 
 ```python
-def nvfp4_two_level_quantize(
-    w: np.ndarray, block_size: int = 16
-) -> tuple[float, np.ndarray, np.ndarray, np.ndarray]:
+def nvfp4_two_level_quantize(w: list[float], block_size: int=16) -> tuple[float, list[float], list[float], list[float]]:
     ...
 ```
 
@@ -70,9 +68,8 @@ $[0, 448]$.
 ## Example
 
 ```python
-import numpy as np
 
-w = np.full(16, 3.0)  # one block, all elements equal
+w = [3.0] * 16  # one block, all elements equal
 gs, bs, codes, deq = nvfp4_two_level_quantize(w, block_size=16)
 # tensor amax = 3.0  -> global_scale = 3.0 / (6*448)
 # block amax = 3.0   -> block_scale_fp32 = 3.0/6 = 0.5
@@ -84,7 +81,7 @@ gs, bs, codes, deq = nvfp4_two_level_quantize(w, block_size=16)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle running the identical two-level scaling pipeline on a
+The gate builds a Python oracle running the identical two-level scaling pipeline on a
 fixed test weight vector (block amax values spread around a common baseline, plus one
 all-zero block). It compares, against the oracle:
 

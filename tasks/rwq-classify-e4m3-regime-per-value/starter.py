@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def classify_e4m3_regime(x: np.ndarray) -> np.ndarray:
+def classify_e4m3_regime(x: list[float]) -> list[int]:
     """
     Classify each element of `x` by which E4M3 representable regime its
     magnitude falls into:
@@ -11,6 +8,6 @@ def classify_e4m3_regime(x: np.ndarray) -> np.ndarray:
       2 = normal             : MIN_NORMAL <= |x| <= MAX_NORMAL
       3 = overflow_clamped  : |x| > MAX_NORMAL (including +/-inf, nan)
 
-    Returns an int64 NumPy array of the same shape as `x`.
+    Returns an int64 list of the same shape as `x`.
     """
     raise NotImplementedError('your code here')

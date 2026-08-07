@@ -48,7 +48,7 @@ reserved for NaN). Casting a real number to E4M3 means snapping it to the
 Implement `fp8_dynamic_matmul`:
 
 ```python
-def fp8_dynamic_matmul(W: np.ndarray, X: np.ndarray) -> np.ndarray:
+def fp8_dynamic_matmul(W: list[list[float]], X: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
@@ -62,16 +62,15 @@ operands to the nearest representable E4M3 value, matmul the quantized
 operands, then dequantize by multiplying back by `scale_w * scale_x[token]`
 (broadcast over columns). Return `Y` with shape $(M, N)$.
 
-Use vectorised NumPy only — build the 256-point E4M3 value grid once and
-snap each element to its nearest grid point (e.g. via `np.searchsorted`),
+Use vectorised Python only — build the 256-point E4M3 value grid once and
+snap each element to its nearest grid point (e.g. via binary search),
 rather than looping in Python.
 
 ## Example
 
 ```python
-import numpy as np
-W = np.array([[1.0, -2.0], [0.5, 4.0]], dtype=np.float32)
-X = np.array([[1.0, 10.0], [-1.0, 0.0]], dtype=np.float32)
+W = [[1.0, -2.0], [0.5, 4.0]]
+X = [[1.0, 10.0], [-1.0, 0.0]]
 
 Y = fp8_dynamic_matmul(W, X)
 print(Y.shape)  # (2, 2)

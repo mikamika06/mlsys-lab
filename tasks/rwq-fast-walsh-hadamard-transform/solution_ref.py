@@ -1,8 +1,7 @@
 import math
-import numpy as np
 
 
-def fwht(x: np.ndarray) -> np.ndarray:
+def fwht(x: list[float]) -> list[float]:
     """
     Normalized fast Walsh-Hadamard transform, O(n log n) butterfly.
 
@@ -10,8 +9,8 @@ def fwht(x: np.ndarray) -> np.ndarray:
     Hadamard matrix built by the recursive block rule
     H_1 = [[1]], H_{2m} = [[H_m, H_m], [H_m, -H_m]].
     """
-    x = np.asarray(x, dtype=np.float64).copy()
-    n = x.shape[0]
+    x = list(x)
+    n = len(x)
     if n & (n - 1) != 0:
         raise ValueError("length must be a power of two")
 

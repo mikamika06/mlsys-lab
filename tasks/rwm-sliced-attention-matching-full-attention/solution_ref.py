@@ -1,11 +1,11 @@
-import numpy as np
 import math
 
-def chunked_attention(Q, K, V, chunk_size):
+def chunked_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], chunk_size: int) -> tuple[list[list[float]], int]:
     """Scaled dot‑product attention with query‑chunking to bound memory."""
-    n_q, d = Q.shape
-    n_k = K.shape[0]
-    d_v = V.shape[1]
+    n_q = len(Q)
+    d = len(Q[0])
+    n_k = len(K)
+    d_v = len(V[0])
     scale = 1.0 / math.sqrt(d)
 
     outputs = []
@@ -20,7 +20,7 @@ def chunked_attention(Q, K, V, chunk_size):
             for j in range(n_k):
                 dot = 0.0
                 for k in range(d):
-                    dot += Q_chunk[i, k] * K[j, k]
+                    dot += Q_chunk[i][k] * K[j][k]
                 row.append(dot * scale)
             scores.append(row)
 
@@ -48,12 +48,11 @@ def chunked_attention(Q, K, V, chunk_size):
             for j in range(d_v):
                 val = 0.0
                 for k in range(n_k):
-                    val += probs[i][k] * V[k, j]
+                    val += probs[i][k] * V[k][j]
                 out_row.append(val)
             out_chunk.append(out_row)
 
-        outputs.append(np.array(out_chunk, dtype=Q.dtype))
+        outputs.extend(out_chunk)
 
-    output = np.vstack(outputs)
     peak_bytes = chunk_size * n_k * 8
-    return output, peak_bytes
+    return outputs, peak_bytes

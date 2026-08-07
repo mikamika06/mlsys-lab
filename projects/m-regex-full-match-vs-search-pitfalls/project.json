@@ -1,0 +1,21 @@
+{
+  "id": "m-regex-full-match-vs-search-pitfalls",
+  "title": "Fix regex matching pitfalls in module filtering",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Module targeting and ignore lists",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["modfilter/matcher.py", "modfilter/rules.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Exact and full-match pattern evaluation", "check": "harness/m1.py",
+     "gates": [{"metric": "matches_correct", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Rule priority resolution and cascade", "check": "harness/m2.py",
+     "gates": [{"metric": "priority_correct", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching substring search bugs", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_substring_bug", "op": "==", "threshold": 1}]}
+  ]
+}

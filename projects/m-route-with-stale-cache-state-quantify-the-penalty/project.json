@@ -1,0 +1,21 @@
+{
+  "id": "m-route-with-stale-cache-state-quantify-the-penalty",
+  "title": "Quantify the penalty of routing with stale cache state",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "cache-aware-routing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["router/penalty.py", "router/routing.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Quantify stale cache state penalty", "check": "harness/m1.py",
+     "gates": [{"metric": "penalties_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Optimal node selection under stale state", "check": "harness/m2.py",
+     "gates": [{"metric": "selection_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching invalid penalty bounds", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_penalty", "op": "==", "threshold": 1}]}
+  ]
+}

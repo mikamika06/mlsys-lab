@@ -38,7 +38,7 @@ $$
 
 Implement `streaming_attention(tokens, q, k, v, S, W)`.
 
-The inputs are NumPy arrays:
+The inputs are list:
 
 - `tokens` is a one-dimensional array containing the token values. Its length is
   $T$.
@@ -62,17 +62,16 @@ where:
 - `output` is the scaled dot-product attention result using only the retained
   keys and values.
 
-Use NumPy operations for the attention computation.
+Use Python operations for the attention computation.
 
 ## Example
 
 ```python
-import numpy as np
 
-tokens = np.arange(8)
-q = np.array([[1.0, 0.0]])
-k = np.eye(8, 2)
-v = np.arange(8).reshape(8, 1).astype(float)
+tokens = list(range(8))
+q = [[1.0, 0.0]]
+k = [[1.0 if i == j else 0.0 for j in range(8)] for i in range(8)]
+v = list(range(8)).reshape(8, 1).astype(float)
 
 idx, pos, out = streaming_attention(tokens, q, k, v, 2, 3)
 
@@ -82,7 +81,7 @@ idx, pos, out = streaming_attention(tokens, q, k, v, 2, 3)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that computes the sink and sliding-window retained
+The gate builds a Python oracle that computes the sink and sliding-window retained
 set, the rolling position ids, and the attention output. The returned retained
 indices and positions must exactly match the oracle. The attention output must
 match the oracle within floating point tolerance.

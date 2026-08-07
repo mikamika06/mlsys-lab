@@ -37,15 +37,7 @@ The 16 NF4 quantization levels (bitsandbytes' `NF4_LEVELS`, listed in ascending 
 Implement `qlora_forward`:
 
 ```python
-def qlora_forward(
-    x: np.ndarray,
-    nf4_codes: np.ndarray,
-    absmax: np.ndarray,
-    blocksize: int,
-    A: np.ndarray,
-    B: np.ndarray,
-    alpha: float,
-) -> np.ndarray:
+def qlora_forward(x: list[list[float]], nf4_codes: list[list[int]], absmax: list[list[float]], blocksize: int, A: list[list[float]], B: list[list[float]], alpha: float) -> list[list[float]]:
     ...
 ```
 
@@ -68,15 +60,15 @@ by the three steps above.
 
 ```python
 # d_out=1, d_in=4, blocksize=2, r=1
-nf4_codes = np.array([[7, 15, 0, 8]])       # levels[7]=0.0, levels[15]=1.0, levels[0]=-1.0, levels[8]=0.0796...
-absmax    = np.array([[2.0, 3.0]])          # block0 -> cols[0:2], block1 -> cols[2:4]
+nf4_codes = [[7, 15, 0, 8]]       # levels[7]=0.0, levels[15]=1.0, levels[0]=-1.0, levels[8]=0.0796...
+absmax    = [[2.0, 3.0]]          # block0 -> cols[0:2], block1 -> cols[2:4]
 # dequant row: [0.0*2, 1.0*2, -1.0*3, 0.0796*3] = [0.0, 2.0, -3.0, 0.239...]
-A = np.array([[1.0, 0.0, 0.0, 0.0]])
-B = np.array([[2.0]])
+A = [[1.0, 0.0, 0.0, 0.0]]
+B = [[2.0]]
 alpha = 2.0   # scaling = alpha/r = 2.0
 # delta row = 2.0 * (B @ A) = [4.0, 0.0, 0.0, 0.0]
 # W_eff row  = [4.0, 2.0, -3.0, 0.239...]
-x = np.array([[1.0, 1.0, 1.0, 1.0]])
+x = [[1.0, 1.0, 1.0, 1.0]]
 y = qlora_forward(x, nf4_codes, absmax, 2, A, B, alpha)
 # y = x @ W_eff.T = sum(W_eff row) ≈ 3.239...
 ```
@@ -84,7 +76,7 @@ y = qlora_forward(x, nf4_codes, absmax, 2, A, B, alpha)
 ## What the gate checks
 
 A single **rel_err** gate builds several random `(x, nf4_codes, absmax,
-blocksize, A, B, alpha)` combinations, computes $y$ with a NumPy oracle that
+blocksize, A, B, alpha)` combinations, computes $y$ with a Python oracle that
 implements the same three-step formula (dequantize with the NF4 table,
 add the scaled LoRA delta, apply the linear layer), and requires your output
 to match the oracle's within a relative L2 error of `1e-6`. Any shape

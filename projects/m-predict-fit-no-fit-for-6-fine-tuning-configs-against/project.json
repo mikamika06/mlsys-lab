@@ -1,0 +1,69 @@
+{
+  "id": "m-predict-fit-no-fit-for-6-fine-tuning-configs-against",
+  "title": "Predict fit and fragmentation for fine-tuning configs",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "cuda-oom-diagnosis",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "finetune/predictor.py",
+    "finetune/fragmentation.py",
+    "finetune/batchfinder.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict fit or no-fit for 6 fine-tuning configurations",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": "==",
+          "threshold": 6.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute fragmentation ratio and severity from memory summary",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ratio_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "severity_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching invalid batch size selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_batch",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

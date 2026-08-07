@@ -39,8 +39,7 @@ starting from $\alpha_0 = 1$ (the naive range).
 Implement `learned_clip_range`:
 
 ```python
-def learned_clip_range(w: np.ndarray, group_size: int, bits: int,
-                        n_steps: int = 25, lr: float = 0.05, eps: float = 1e-3):
+def learned_clip_range(w: list, group_size: int, bits: int, n_steps: int=25, lr: float=0.05, eps: float=0.001):
     ...
 ```
 
@@ -55,7 +54,7 @@ For each contiguous group of `group_size` elements, independently:
 2. Repeat `n_steps` times: estimate $g_\alpha$ with the central
    finite difference above, then
    $\alpha \leftarrow \mathrm{clip}(\alpha - \eta\cdot\mathrm{sign}(g_\alpha),\, 0.2,\, 1.5)$.
-   (`np.sign(0.0) == 0.0`, so a zero-gradient step leaves $\alpha$
+(`sign(0.0) == 0.0`, so a zero-gradient step leaves $\alpha$
    unchanged.)
 3. Record the final $\alpha$ and $\mathrm{MSE}(\alpha)$ for that group.
 
@@ -65,8 +64,7 @@ Return `(alphas, mses)`: two 1-D `float64` arrays of length
 ## Example
 
 ```python
-import numpy as np
-w = np.array([1.0, -1.0, 0.05, 9.0])   # one group, group_size=4
+w = [1.0, -1.0, 0.05, 9.0]   # one group, group_size=4
 alphas, mses = learned_clip_range(w, group_size=4, bits=4, n_steps=25)
 # alphas.shape == (1,), mses.shape == (1,)
 # alpha drifts below 1.0: shrinking the range (at the cost of clipping
@@ -78,9 +76,9 @@ alphas, mses = learned_clip_range(w, group_size=4, bits=4, n_steps=25)
 ## What the gate checks
 
 The grader builds several seeded `(w, group_size, bits)` cases and runs
-the *exact* algorithm above independently in NumPy (same
+the *exact* algorithm above independently in Python (same
 finite-difference sign-gradient loop, same hyperparameters, same
-`np.sign` convention) to get reference `alphas`/`mses`. Because the
+`sign` convention) to get reference `alphas`/`mses`. Because the
 optimizer is deterministic given fixed hyperparameters and a fixed
 starting point, a correct implementation reproduces the oracle's
 trajectory essentially exactly.

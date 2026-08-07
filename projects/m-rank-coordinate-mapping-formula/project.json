@@ -1,0 +1,21 @@
+{
+  "id": "m-rank-coordinate-mapping-formula",
+  "title": "Rank coordinate mapping and device mesh reconstruction",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "3D/4D parallelism composition & device mesh",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mesh/mapping.py", "mesh/subgroup.py", "mesh/reconstruct.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Rank to coordinate mapping formula", "check": "harness/m1.py",
+     "gates": [{"metric": "mapping_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "DeviceMesh sub-group membership", "check": "harness/m2.py",
+     "gates": [{"metric": "subgroup_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_reconstruction", "op": "==", "threshold": 1}]}
+  ]
+}

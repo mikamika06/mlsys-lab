@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def channel_peakiness_before_after(X, W, alpha=0.5):
+def channel_peakiness_before_after(X: list[list[float]], W: list[list[float]], alpha: float=0.5) -> tuple[list[float], list[float]]:
     """SmoothQuant channel-imbalance ("quantization difficulty") before/after migration.
 
     X: (n_tokens, C) activation samples. W: (n_out, C) weight matrix, column
