@@ -1,0 +1,103 @@
+{
+  "id": "p-slo-capacity-plan-from-real-logs",
+  "title": "План потужності з реальних логів",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw2-vllm-serving",
+  "track": "vllm-serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "capacity/planner.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "розпарсити метрики у придатний часовий ряд",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "time_series_parsed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "bench_parsed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "відділити goodput від throughput",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "goodput_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "побудувати криву латентність-навантаження",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "knee_capacity_found",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "порахувати репліки під SLO з запасом",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "replicas_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "вартість на мільйон токенів",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "cost_per_million_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "що зміниться, якщо ввімкнути префіксний кеш — з числом",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

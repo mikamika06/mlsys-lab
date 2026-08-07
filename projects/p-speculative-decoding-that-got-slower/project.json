@@ -1,0 +1,130 @@
+{
+  "id": "p-speculative-decoding-that-got-slower",
+  "title": "Спекулятивне декодування сповільнило сервіс",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "speculative-decoding",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "specdec/tracker.py",
+    "specdec/model.py",
+    "specdec/policy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти acceptance rate на реальному трафіку",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "tracker_api_ok",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "acceptance_accuracy",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "per_domain_tracking",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "модель виграшу від gamma і acceptance",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "speedup_model_accuracy",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "optimal_gamma_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "взаємодія з розміром батча",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "batched_overhead_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "crossover_batch_size_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "поріг, за яким вимикати",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "gate_decision_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "throttling_prevents_loss",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "p95 не гірше базового на жодному режимі",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "p95_latency_bounded",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "throughput_maintained",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "адаптивна політика з доведеним виграшом",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

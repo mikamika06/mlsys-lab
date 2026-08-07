@@ -45,11 +45,11 @@ size instead of $N$.
 Implement `flash_attention_forward`:
 
 ```python
-def flash_attention_forward(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int = 32) -> np.ndarray:
+def flash_attention_forward(Q: list[list[float]], K: list[list[float]], V: list[list[float]], block_size: int=32) -> list[list[float]]:
     ...
 ```
 
-- `Q`, `K`, `V` — 2-D NumPy arrays of shape $(N, d)$.
+- `Q`, `K`, `V` — list of lists of floats of shape $(N, d)$.
 - `block_size` — tile size used for both the query and the key/value
   dimension.
 - Returns a `float64` array of shape $(N, d)$, the attention output.
@@ -63,8 +63,7 @@ block-sized intermediates (at most `block_size` $\times$ `block_size`, or
 ## Example
 
 ```python
-import numpy as np
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 N, d = 64, 8
 Q = rng.standard_normal((N, d))
 K = rng.standard_normal((N, d))
@@ -78,7 +77,7 @@ out = flash_attention_forward(Q, K, V, block_size=16)
 Two gates, both against sequences long enough that an $N \times N$ buffer
 would dwarf a properly tiled one:
 
-- **max_abs_err** — your output vs. a dense float64 NumPy oracle
+- **max_abs_err** — your output vs. a dense float64 Python oracle
   `softmax(Q @ K.T / sqrt(d)) @ V`, element-wise, must be $\le 10^{-4}$.
 - **peak_alloc_ratio** — the grader measures real peak traced memory
   (via `tracemalloc`, after a warm-up call so one-time allocator setup

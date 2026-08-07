@@ -27,27 +27,21 @@ These formulas assume that \(N\) is large enough that the ceiling can be ignored
 Implement `compute_nf4_bits(weights, block_size, outer_block, inner_block)`:
 
 ```python
-def compute_nf4_bits(
-    weights: np.ndarray,
-    block_size: int,
-    outer_block: int,
-    inner_block: int
-) -> Tuple[float, float]:
+def compute_nf4_bits(weights: list[float], block_size: int, outer_block: int, inner_block: int) -> tuple[float, float]:
     ...
 ```
 
-The function receives a NumPy array `weights` (the tensor to be quantized). It must return a tuple `(bits_no_double, bits_with_double)` where
+The function receives a list `weights` (the tensor to be quantized). It must return a tuple `(bits_no_double, bits_with_double)` where
 
 * `bits_no_double` is the NF4 bits per parameter without double‑quant,
 * `bits_with_double` is the NF4 bits per parameter with double‑quant.
 
-Both values should be computed exactly as described above and returned as Python floats (or NumPy scalars of type float64).
+Both values should be computed exactly as described above and returned as Python floats (or Python scalars of type float64).
 
 ## Example
 
 ```python
-import numpy as np
-weights = np.random.randn(1000)          # 1 000 parameters
+weights = [random.gauss(0, 1) for _ in range(1000)] # 1 000 parameters
 bits_no, bits_double = compute_nf4_bits(
     weights,
     block_size=64,
@@ -65,6 +59,6 @@ The second number comes from \(4 + 8/32 + 32/(32·8) = 4.75\).
 
 * The returned tuple must contain two floats.
 * Each value must match the reference calculation within a relative error of at most \(10^{-9}\).
-* The implementation must not use any explicit Python loops; it should rely only on arithmetic operations and NumPy array properties.
+* The implementation must not use any explicit Python loops; it should rely only on arithmetic operations and list properties.
 
 The grader will generate several random weight tensors and compare your results against an oracle that recomputes the formulas. If any value deviates by more than the allowed tolerance, the gate fails.

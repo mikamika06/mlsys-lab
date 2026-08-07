@@ -1,0 +1,93 @@
+{
+  "id": "p-silent-fallback-to-sdpa-math",
+  "title": "Тихий фолбек на повільний бекенд",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "silent-fallback-to-sdpa-math",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "fa_fix/dispatcher.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "показати фактично обраний бекенд на кожному виклику",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "backend_identified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти умову, що дискваліфікує швидкий шлях",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "reason_found",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "полагодити dtype/маску/вирівнювання під вимоги",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "alignment_fixed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти до/після відношенням до себе",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "ratio_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "жодного тихого фолбеку на 20 конфігураціях",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "no_silent_fallback",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "перевірка, що падає при фолбеку замість мовчання",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

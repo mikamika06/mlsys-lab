@@ -1,0 +1,80 @@
+{
+  "id": "p-shrink-the-app-model-under-a-size-cap",
+  "title": "Втиснути модель у ліміт застосунку",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "rw2-edge-export",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "compress/api.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти внесок кожного тензора в розмір",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "fp32_ok", "op": "==", "threshold": 1},
+        {"metric": "pal_ok", "op": "==", "threshold": 1},
+        {"metric": "uint8_ok", "op": "==", "threshold": 1},
+        {"metric": "sparse_ok", "op": "==", "threshold": 1},
+        {"metric": "total_ok", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "палетизація і виміряна втрата",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "type_ok", "op": "==", "threshold": 1},
+        {"metric": "indices_ok", "op": "==", "threshold": 1},
+        {"metric": "palette_ok", "op": "==", "threshold": 1},
+        {"metric": "loss_measured", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "квантизація ваг і виміряна втрата",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "type_ok", "op": "==", "threshold": 1},
+        {"metric": "scale_zp_ok", "op": "==", "threshold": 1},
+        {"metric": "loss_measured", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 4,
+      "title": "розрідження і виміряна втрата",
+      "check": "harness/m4.py",
+      "gates": [
+        {"metric": "type_ok", "op": "==", "threshold": 1},
+        {"metric": "size_reduced", "op": "==", "threshold": 1},
+        {"metric": "loss_measured", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 5,
+      "title": "розмір під лімітом, точність у межах",
+      "check": "harness/m5.py",
+      "gates": [
+        {"metric": "compresses", "op": "==", "threshold": 1},
+        {"metric": "under_limit", "op": "==", "threshold": 1},
+        {"metric": "accuracy_ok", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт Парето: розмір проти точності",
+      "check": "harness/m6.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_dominated", "op": "==", "threshold": 1},
+        {"metric": "catches_missing", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

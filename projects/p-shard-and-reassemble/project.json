@@ -1,0 +1,111 @@
+{
+  "id": "p-shard-and-reassemble",
+  "title": "Розділити модель на частини і зібрати назад",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "shard-and-reassemble",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_shard/model.py",
+    "gguf_shard/sharder.py",
+    "gguf_shard/engine.py",
+    "gguf_shard/stats.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "розділити з коректними метаданими",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "shard_count_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "metadata_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перевірити цілісність кожного шарда",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "verifies_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "rejects_bad",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "зібрати назад і звірити хеші",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "reassembled_matches",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "запустити з шардів без збірки",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "engine_forward_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "облік розміру і bpw сходиться",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "stats_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка при відсутньому шарді визначена",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_missing_shard",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

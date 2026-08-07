@@ -1,0 +1,98 @@
+{
+  "id": "p-size-the-kv-budget-for-an-slo",
+  "title": "Sizing the KV Cache Budget for an SLO",
+  "kind": "project",
+  "tier": "T0+T2",
+  "area": "rw2-kv-cache-serving",
+  "track": "size-kv-budget",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "kvcalc/calc.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "формула KV від конфігурації моделі",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "formula_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "вплив розміру блока і фрагментації",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "fragmentation_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "запас на пікові сесії",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "headroom_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "передбачення проти записаної траси ±10%",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "trace_match_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "точка, де вигідніше квантизувати KV",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "quant_threshold_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "калькулятор, який приймає конфіг і видає число",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

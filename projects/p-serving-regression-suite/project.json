@@ -1,0 +1,97 @@
+{
+  "id": "p-serving-regression-suite",
+  "title": "Регресійний набір для рушія",
+  "kind": "project",
+  "tier": "T0+T2",
+  "area": "rw2-vllm-serving",
+  "track": "rw2-vllm-serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зафіксувати еталонні виходи на фіксованому seed",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_determinism",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перевірка токенізації і спецтокенів",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "catches_tokenization",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірка стоп-послідовностей і обрізки",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "catches_stop_and_truncation",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірка форми відповіді API",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "catches_api_shape",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "набір ловить усі 5 регресій, які ми підкладемо",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "caught_count",
+          "op": "==",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "хибних спрацювань нуль на 3 здорових прогонах",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "false_positives",
+          "op": "==",
+          "threshold": 0
+        },
+        {
+          "metric": "safeguard_caught",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

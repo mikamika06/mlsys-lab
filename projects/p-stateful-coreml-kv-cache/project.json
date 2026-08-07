@@ -1,0 +1,100 @@
+{
+  "id": "p-stateful-coreml-kv-cache",
+  "title": "Модель зі станом і KV-кешем на пристрої",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "stateful-coreml-kv-cache",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "edge_model/state.py",
+    "edge_model/export.py",
+    "edge_model/runtime.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "описати стан у контракті моделі",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "contract_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "конвертувати з підтримкою стану",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "export_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірити ідентичність виходу з кешем і без",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "identical",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти економію на 200 токенах",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "speedup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "пам'ять під контролем при довгому діалозі",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "memory_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка при переповненні контексту визначена",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,15 +1,15 @@
 def compute_nf4_bits(
-    weights,
-    block_size,
-    outer_block,
-    inner_block
-):
+    weights: list[float],
+    block_size: int,
+    outer_block: int,
+    inner_block: int
+) -> tuple[float, float]:
     """
     Compute NF4 bits per parameter with and without double quantization.
 
     Parameters
     ----------
-    weights : np.ndarray
+    weights : list[float]
         The weight tensor to be quantized. Only its size is used.
     block_size : int
         Block size for the single‑level NF4 scheme.
@@ -23,7 +23,7 @@ def compute_nf4_bits(
     tuple[float, float]
         (bits_no_double, bits_with_double)
     """
-    n = weights.size
+    n = len(weights)
 
     # Single‑level NF4: 4 bits per value + 32‑bit scale per block.
     bits_no_double = 4 + 32 / block_size

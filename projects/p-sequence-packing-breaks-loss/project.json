@@ -1,0 +1,155 @@
+{
+  "id": "p-sequence-packing-breaks-loss",
+  "title": "Sequence packing breaks loss",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "sequence-packing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "seqpack/pack.py",
+    "seqpack/attention.py",
+    "seqpack/loss.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "показати, де увага перетікає між прикладами",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "pack_ok",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "leakage_detected",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "zero_leakage_on_block_diag",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "полагодити маску меж",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "mask_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "attention_no_leakage",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "attention_matches_unpacked",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "полагодити облік втрат по токенах",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "loss_ignores_padding",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "loss_normalization_ok",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "naive_vs_fixed_differs",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити еквівалентність із непакованим",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "equivalence_exact",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "per_sequence_loss_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "якість не гірша, швидкість збережена",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "padding_overhead_reduced",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "loss_divergence_zero",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "speedup_achieved",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "тест, що ловить протікання меж",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_boundary_leakage",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_bad_normalization",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

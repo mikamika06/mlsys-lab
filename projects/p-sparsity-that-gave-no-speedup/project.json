@@ -1,0 +1,172 @@
+{
+  "id": "p-sparsity-that-gave-no-speedup",
+  "title": "2:4 Sparsity That Gave No Speedup",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "sparsity-no-speedup",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "sparse_eval/pattern.py",
+    "sparse_eval/dispatch.py",
+    "sparse_eval/benchmark.py",
+    "sparse_eval/roofline.py",
+    "sparse_eval/checkpoint.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify that the pattern is truly 2:4",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "valid_pattern_detected",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "invalid_pattern_rejected",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "compression_shape_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "decompression_exact",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Show which execution path was chosen",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "detects_unsupported_pattern",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "detects_misaligned_shape",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "detects_small_batch",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "selects_sparse_kernel",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Measure on kernels that support the pattern",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "sparse_flops_halved",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "dense_flops_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "memory_bytes_accounted",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Calculate where the break-even limit is",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "intensity_ratio_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "roofline_bottleneck_identified",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "breakeven_m_computed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Speedup obtained or impossibility proven with numbers",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "proves_no_speedup_for_small_batch",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "demonstrates_speedup_for_large_batch",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "proof_metrics_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Checkpoint size is actually smaller",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_uncompressed_save",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_corrupted_metadata",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": "==",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

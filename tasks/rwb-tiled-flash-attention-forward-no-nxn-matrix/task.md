@@ -42,7 +42,7 @@ The total working memory is $O(n \cdot d)$ rather than $O(n^2)$.
 Implement
 
 ```python
-def tiled_flash_attention_forward(Q, K, V, block_size=64):
+def tiled_flash_attention_forward(Q: list[list[float]], K: list[list[float]], V: list[list[float]], block_size: int=64) -> list[list[float]]:
     ...
 ```
 
@@ -50,16 +50,16 @@ def tiled_flash_attention_forward(Q, K, V, block_size=64):
 
 | Name | Type | Shape | Description |
 |------|------|-------|-------------|
-| `Q` | `np.ndarray` float64 | $(n, d_k)$ | Queries |
-| `K` | `np.ndarray` float64 | $(n, d_k)$ | Keys |
-| `V` | `np.ndarray` float64 | $(n, d_v)$ | Values |
+| `Q` | list[float] float64 | $(n, d_k)$ | Queries |
+| `K` | list[float] float64 | $(n, d_k)$ | Keys |
+| `V` | list[float] float64 | $(n, d_v)$ | Values |
 | `block_size` | `int` | — | Tile width $b_r = b_c$ for both query and key/value blocks |
 
 **Returns:**
 
 | Name | Type | Shape | Description |
 |------|------|-------|-------------|
-| `O` | `np.ndarray` float64 | $(n, d_v)$ | Attention output |
+| `O` | list[float] float64 | $(n, d_v)$ | Attention output |
 
 Implement the block-tiled online-softmax flash-attention forward pass
 described above.  You must **not** materialise the full $n \times n$ score
@@ -69,9 +69,8 @@ last block should cover the remaining rows.
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.RandomState(0)
+rng = random.Random(0)
 Q = rng.randn(64, 16)
 K = rng.randn(64, 16)
 V = rng.randn(64, 8)

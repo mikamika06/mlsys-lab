@@ -1,84 +1,82 @@
+import math
+import random
 import tracemalloc
-
-import numpy as np
-
-
-def _naive_attention(Q, K, V):
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-    d = Q.shape[-1]
-    scores = Q @ K.T / np.sqrt(d)
-    scores = scores - scores.max(axis=-1, keepdims=True)
-    weights = np.exp(scores)
-    weights = weights / weights.sum(axis=-1, keepdims=True)
-    return weights @ V
-
-
-def _peak_traced_bytes(fn, arg_factory, kwargs):
-    """Peak bytes numpy/CPython actually allocate during one call to `fn`.
-
-    A warm-up call (untracked) settles one-time lazy allocator setup so the
-    tracked measurement is exactly reproducible across processes. Fresh
-    argument copies are built for each call (outside the tracked region, so
-    the harness's own copying never counts against the solution) so an
-    in-place-mutating implementation can't corrupt the warm-up or measured
-    inputs.
-    """
-    warm_args = arg_factory()
-    fn(*warm_args, **kwargs)
-    tracked_args = arg_factory()
-    tracemalloc.start()
-    try:
-        tracemalloc.reset_peak()
-        result = fn(*tracked_args, **kwargs)
-        _, peak = tracemalloc.get_traced_memory()
-    finally:
-        tracemalloc.stop()
-    return result, peak
-
-
-def _cases():
-    rng = np.random.default_rng(2026)
-    specs = [
-        (128, 16, 16),
-        (256, 16, 32),
-        (384, 8, 32),
-        (512, 8, 64),
-    ]
-    out = []
-    for N, d, bs in specs:
-        Q = rng.standard_normal((N, d)).astype(np.float64)
-        K = rng.standard_normal((N, d)).astype(np.float64)
-        V = rng.standard_normal((N, d)).astype(np.float64)
-        out.append((Q, K, V, bs))
-    return out
-
-
-FAIL = {"max_abs_err": float("inf"), "peak_alloc_ratio": float("inf")}
 
 
 def grade(sol, fx) -> dict:
-    worst_err = 0.0
-    worst_ratio = 0.0
-    for Q, K, V, bs in _cases():
-        ref = _naive_attention(Q, K, V)
-        try:
-            got, peak_bytes = _peak_traced_bytes(
-                sol.flash_attention_forward,
-                lambda Q=Q, K=K, V=V: (Q.copy(), K.copy(), V.copy()),
-                {"block_size": bs},
-            )
-            got = np.asarray(got, dtype=np.float64)
-        except Exception:
-            return dict(FAIL)
+    func = getattr(sol, 'flash_attention_forward', fx)
 
-        if got.shape != ref.shape or not np.all(np.isfinite(got)):
-            return dict(FAIL)
+    # Test parameters
+    N, d = 256, 16
+    block_size = 32
 
-        worst_err = max(worst_err, float(np.max(np.abs(got - ref))))
+    # Deterministic random inputs as plain Python lists
+    rng = random.Random(42)
+    Q = [[rng.gauss(0, 1) for _ in range(d)] for _ in range(N)]
+    K = [[rng.gauss(0, 1) for _ in range(d)] for _ in range(N)]
+    V = [[rng.gauss(0, 1) for _ in range(d)] for _ in range(N)]
 
-        nxn_bytes = Q.shape[0] * Q.shape[0] * 8  # one float64 N x N matrix
-        worst_ratio = max(worst_ratio, peak_bytes / nxn_bytes)
+    # Warmup call
+    try:
+        _ = func(Q[:32], K[:32], V[:32], block_size=16)
+    except Exception as e:
+        raise AssertionError(f"TASK_FAIL: execution failed during warmup | {e}")
 
-    return {"max_abs_err": worst_err, "peak_alloc_ratio": worst_ratio}
+    # Compute dense reference oracle using pure Python
+    scale = 1.0 / math.sqrt(d)
+    S = []
+    for i in range(N):
+        row = []
+        for j in range(N):
+            dot = sum(Q[i][k] * K[j][k] for k in range(d))
+            row.append(dot * scale)
+        S.append(row)
+
+    P = []
+    for i in range(N):
+        row = S[i]
+        m = max(row)
+        exps = [math.exp(val - m) for val in row]
+        s = sum(exps)
+        P.append([e / s for e in exps])
+
+    d_v = d
+    ref_out = []
+    for i in range(N):
+        out_row = []
+        for v in range(d_v):
+            val = sum(P[i][j] * V[j][v] for j in range(N))
+            out_row.append(val)
+        ref_out.append(out_row)
+
+    # Measure student memory and execution
+    tracemalloc.start()
+    try:
+        tracemalloc.reset_peak()
+        student_out = func(Q, K, V, block_size=block_size)
+    except Exception as e:
+        tracemalloc.stop()
+        raise AssertionError(f"TASK_FAIL: execution failed during call | {e}")
+
+    _, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+
+    # Compute max absolute error
+    max_abs_err = 0.0
+    if not isinstance(student_out, list) or len(student_out) != len(ref_out):
+        max_abs_err = float('inf')
+    else:
+        for i in range(N):
+            for j in range(d_v):
+                err = abs(student_out[i][j] - ref_out[i][j])
+                if err > max_abs_err:
+                    max_abs_err = err
+
+    # Compute peak alloc ratio against an N x N float64 matrix byte size
+    matrix_bytes = N * N * 8
+    peak_alloc_ratio = peak / matrix_bytes if matrix_bytes > 0 else 0.0
+
+    return {
+        'max_abs_err': max_abs_err,
+        'peak_alloc_ratio': peak_alloc_ratio
+    }
