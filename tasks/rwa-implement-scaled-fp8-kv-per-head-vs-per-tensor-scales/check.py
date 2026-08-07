@@ -54,7 +54,7 @@ def grade(sol, fx) -> dict:
     Q = rng.normal(0, 1, size=(3, 4, 8))
 
     try:
-        got = sol.scaled_fp8_kv_attention(K, V, Q, True)
+        got = sol.scaled_fp8_kv_attention(K.tolist(), V.tolist(), Q.tolist(), True)
     except Exception:
         return {"max_abs_err": float("inf"), "per_head_advantage": 0.0}
 

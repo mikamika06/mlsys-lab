@@ -1,0 +1,69 @@
+{
+  "id": "m-predict-resident-memory-weights-kv-activations-and-v",
+  "title": "Predict resident memory: weights, KV, activations, and throughput",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "quantization-choice-for-local-runners",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "memrunner/predictor.py",
+    "memrunner/kquants.py",
+    "memrunner/bandwidth.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict total resident VRAM across weights, KV cache, and activations",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.01
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analyze K-quant precision mixing and decode bandwidth throughput",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "kquant_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "toks_rel_err",
+          "op": "<=",
+          "threshold": 0.01
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests that catch uniform quantization fallbacks",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_uniform_fallback",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

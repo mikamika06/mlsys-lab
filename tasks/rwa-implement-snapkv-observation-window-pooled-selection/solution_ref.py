@@ -1,71 +1,69 @@
 import math
-import numpy as np
 
 
-def _softmax_rows(x: np.ndarray) -> np.ndarray:
-    rows, cols = x.shape
-    out = np.zeros((rows, cols), dtype=np.float64)
+def _softmax_rows(x: list[list[float]]) -> list[list[float]]:
+    rows = len(x)
+    cols = len(x[0])
+    out = [[0.0] * cols for _ in range(rows)]
     for i in range(rows):
-        m = x[i, 0]
+        m = x[i][0]
         for j in range(1, cols):
-            if x[i, j] > m:
-                m = x[i, j]
+            if x[i][j] > m:
+                m = x[i][j]
         s = 0.0
         exps = [0.0] * cols
         for j in range(cols):
-            v = math.exp(x[i, j] - m)
+            v = math.exp(x[i][j] - m)
             exps[j] = v
             s += v
         for j in range(cols):
-            out[i, j] = exps[j] / s
+            out[i][j] = exps[j] / s
     return out
 
 
-def _attend(q: np.ndarray, K: np.ndarray, V: np.ndarray, d: int) -> np.ndarray:
-    n_keys = K.shape[0]
-    scores = np.zeros((1, n_keys), dtype=np.float64)
+def _attend(q: list[float], K: list[list[float]], V: list[list[float]], d: int) -> list[float]:
+    n_keys = len(K)
+    scores = [0.0] * n_keys
     sqrt_d = math.sqrt(d)
     for j in range(n_keys):
         s = 0.0
         for k in range(d):
-            s += q[k] * K[j, k]
-        scores[0, j] = s / sqrt_d
-    weights = _softmax_rows(scores)[0]
-    out = np.zeros(d, dtype=np.float64)
+            s += q[k] * K[j][k]
+        scores[j] = s / sqrt_d
+    weights = _softmax_rows([scores])[0]
+    out = [0.0] * d
     for k in range(d):
         s = 0.0
         for j in range(n_keys):
-            s += weights[j] * V[j, k]
+            s += weights[j] * V[j][k]
         out[k] = s
     return out
 
 
-def snapkv_pooled_selection(K: np.ndarray, V: np.ndarray, Q_obs: np.ndarray, Q_new: np.ndarray,
+def snapkv_pooled_selection(K: list[list[list[float]]], V: list[list[list[float]]],
+                             Q_obs: list[list[list[float]]], Q_new: list[list[float]],
                              budget: int, pool_size: int) -> dict:
     """SnapKV KV-cache compression, applied independently per attention
     head (each head may keep a different subset of positions).
     """
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-    Q_obs = np.asarray(Q_obs, dtype=np.float64)
-    Q_new = np.asarray(Q_new, dtype=np.float64)
-
-    H, n, d = K.shape
-    w = Q_obs.shape[1]
+    H = len(K)
+    n = len(K[0])
+    d = len(K[0][0])
+    w = len(Q_obs[0])
     pad = pool_size // 2
 
     kept_idx = []
-    outputs = np.zeros((H, d), dtype=np.float64)
+    outputs = [[0.0] * d for _ in range(H)]
     sqrt_d = math.sqrt(d)
 
     for h in range(H):
-        mat = np.zeros((w, n), dtype=np.float64)
+        mat = [[0.0] * n for _ in range(w)]
         for i in range(w):
             for j in range(n):
                 s = 0.0
                 for k in range(d):
-                    s += Q_obs[h, i, k] * K[h, j, k]
-                mat[i, j] = s / sqrt_d
+                    s += Q_obs[h][i][k] * K[h][j][k]
+                mat[i][j] = s / sqrt_d
 
         attn = _softmax_rows(mat)
 
@@ -73,7 +71,7 @@ def snapkv_pooled_selection(K: np.ndarray, V: np.ndarray, Q_obs: np.ndarray, Q_n
         for j in range(n):
             s = 0.0
             for i in range(w):
-                s += attn[i, j]
+                s += attn[i][j]
             raw_score[j] = s
 
         padded = [0.0] * (n + 2 * pad)
@@ -101,8 +99,10 @@ def snapkv_pooled_selection(K: np.ndarray, V: np.ndarray, Q_obs: np.ndarray, Q_n
             top_extra = sorted(cand, key=lambda i: pooled[i], reverse=True)[:k_extra]
             idx_list = sorted(win + top_extra)
 
-        idx = np.array(idx_list)
-        kept_idx.append(idx)
-        outputs[h] = _attend(Q_new[h], K[h][idx], V[h][idx], d)
+        kept_idx.append(idx_list)
+
+        sub_K = [K[h][idx] for idx in idx_list]
+        sub_V = [V[h][idx] for idx in idx_list]
+        outputs[h] = _attend(Q_new[h], sub_K, sub_V, d)
 
     return {"kept_idx": kept_idx, "output": outputs}

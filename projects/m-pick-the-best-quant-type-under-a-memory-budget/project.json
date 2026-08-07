@@ -1,0 +1,63 @@
+{
+  "id": "m-pick-the-best-quant-type-under-a-memory-budget",
+  "title": "Pick the best quant type under a memory budget",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "iq-codebook-and-ternary-quants",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantplan/backend.py",
+    "quantplan/picker.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Optimal quantization type under memory constraints",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "argmin_index",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Detect IQ quantization CPU fallbacks across backends",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "fallback_matches",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for fallback-aware selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_fallback",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

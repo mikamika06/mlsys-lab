@@ -58,8 +58,8 @@ def grade(sol, fx) -> dict:
         try:
             got = np.asarray(
                 sol.paged_append_and_attend(
-                    kv_pool_k.copy(), kv_pool_v.copy(), list(block_table), block_size,
-                    existing_len, new_k.copy(), new_v.copy(), q.copy(),
+                    kv_pool_k.copy().tolist(), kv_pool_v.copy().tolist(), list(block_table), block_size,
+                    existing_len, new_k.copy().tolist(), new_v.copy().tolist(), q.copy().tolist(),
                 ),
                 dtype=np.float64,
             )

@@ -19,7 +19,7 @@ def grade(sol, fx) -> dict:
         ref_val = float(np.nanmax(x))
 
         try:
-            val, idx = sol.nanmax_argmax(x.copy())
+            val, idx = sol.nanmax_argmax(x.tolist())
             idx = int(idx)
             val = float(val)
         except Exception:

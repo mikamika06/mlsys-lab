@@ -1,0 +1,45 @@
+{
+  "id": "m-prefix-caching-over-swa-layers-which-blocks-are-reus",
+  "title": "Prefix caching and memory costs in hybrid SWA-Mamba models",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "hybrid-and-sliding-window-cache-management",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "prefixcache/reuse.py",
+    "prefixcache/hybrid.py",
+    "prefixcache/cost.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Identify reusable prefix blocks under SWA layers",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "reusable_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Mamba state versus attention KV size and 128k context cost ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "state_match", "op": "==", "threshold": 1},
+        {"metric": "size_ratio", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching faulty reuse filtering",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

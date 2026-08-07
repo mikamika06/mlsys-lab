@@ -1,0 +1,73 @@
+{
+  "id": "m-predicted-vs-actual-quantized-size",
+  "title": "Predicted vs Actual Quantized Size",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "TFLite/LiteRT post-training quantization modes",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "quant/size.py",
+    "quant/modes.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict vs actual flatbuffer byte size",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "models_matched",
+          "op": ">=",
+          "threshold": 4
+        },
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.01
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Op-level int8 vs int16x8 compatibility and dynamic range diffs",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "modes_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "ops_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching dynamic-range vs full-integer mismatch",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_mode",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

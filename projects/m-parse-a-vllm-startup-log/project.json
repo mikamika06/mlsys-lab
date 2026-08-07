@@ -1,0 +1,21 @@
+{
+  "id": "m-parse-a-vllm-startup-log",
+  "title": "Parse vLLM startup logs, check TP sharding, and diagnose garbage output",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Serving quantized models in production (vLLM)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vllmlog/parser.py", "vllmlog/sharding.py", "vllmlog/diagnose.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse a vLLM startup log", "check": "harness/m1.py",
+     "gates": [{"metric": "parsed_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Legal TP sharding checker", "check": "harness/m2.py",
+     "gates": [{"metric": "sharding_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Diagnose garbage output and regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_sharding", "op": "==", "threshold": 1}]}
+  ]
+}

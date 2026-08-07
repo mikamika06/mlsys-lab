@@ -6,8 +6,8 @@ def label_smoothed_fused_ce(logits: list[list[float]], targets: list[int], eps: 
 
     Parameters
     ----------
-    logits  : np.ndarray, shape (N, K) — unnormalized scores
-    targets : np.ndarray, shape (N,)   — integer class indices
+    logits  : list[float], shape (N, K) — unnormalized scores
+    targets : list[float], shape (N,)   — integer class indices
     eps     : float                    — smoothing factor in [0, 1]
 
     Returns

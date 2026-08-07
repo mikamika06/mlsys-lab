@@ -1,0 +1,64 @@
+{
+  "id": "m-parse-a-recorded-instruments-metal-system-trace-expo",
+  "title": "Metal System Trace Analysis and MPSGraph Execution Strategy",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Metal Performance Shaders Graph (MPSGraph) fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mpslab/trace.py",
+    "mpslab/graphs.py",
+    "mpslab/cache.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse Instruments Metal System Trace",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "trace_parsed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compare loop-of-ops vs single MPSGraph command-buffer counts",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "graph_compared",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Measure feed-dict overhead vs cached-buffer reuse",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_cache",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

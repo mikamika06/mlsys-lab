@@ -54,7 +54,7 @@ def grade(sol, fx) -> dict:
         ref = _oracle(K, bits)
         try:
             got = np.asarray(
-                sol.per_channel_vs_per_token_k_mse(K.copy(), bits),
+                sol.per_channel_vs_per_token_k_mse(K.tolist(), bits),
                 dtype=np.float64,
             )
         except Exception:

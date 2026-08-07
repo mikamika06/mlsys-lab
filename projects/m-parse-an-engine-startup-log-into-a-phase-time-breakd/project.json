@@ -1,0 +1,68 @@
+{
+  "id": "m-parse-an-engine-startup-log-into-a-phase-time-breakd",
+  "title": "Engine startup log parser and CUDA Graph bucket optimizer",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "cudagraphs-compile-and-startup-latency",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "engine_diag/startup.py",
+    "engine_diag/cudagraph.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse engine startup logs into phase breakdowns",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "logs_parsed",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute CUDA Graph padding waste and optimize buckets",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "waste_matches",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "optimal_buckets_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches sub-optimal bucketing",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_buckets",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

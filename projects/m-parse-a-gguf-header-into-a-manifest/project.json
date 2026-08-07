@@ -7,62 +7,15 @@
   "track": "gguf-container-format",
   "part": 1,
   "difficulty": 3,
-  "edits": [
-    "gguf_parser/header.py",
-    "gguf_parser/overhead.py",
-    "tests/test_regression.py"
-  ],
+  "edits": ["gguf_parser/parser.py", "tests/test_regression.py"],
   "milestones": [
-    {
-      "n": 1,
-      "title": "Parse GGUF header and decoding all metadata value types",
-      "check": "harness/m1.py",
-      "gates": [
-        {
-          "metric": "headers_matched",
-          "op": ">=",
-          "threshold": 5
-        }
-      ]
-    },
-    {
-      "n": 2,
-      "title": "Calculate container overhead and tensor alignment padding waste",
-      "check": "harness/m2.py",
-      "gates": [
-        {
-          "metric": "overhead_matched",
-          "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "waste_matched",
-          "op": "==",
-          "threshold": 1
-        }
-      ]
-    },
-    {
-      "n": 3,
-      "title": "Safety net: regression test for alignment padding",
-      "check": "harness/m3.py",
-      "gates": [
-        {
-          "metric": "has_tests",
-          "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "passes_on_good",
-          "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "catches_unaligned_waste",
-          "op": "==",
-          "threshold": 1
-        }
-      ]
-    }
+    {"n": 1, "title": "Parse header and metadata KVs", "check": "harness/m1.py",
+     "gates": [{"metric": "manifests_matched", "op": "==", "threshold": 3}]},
+    {"n": 2, "title": "Compute container overhead and padding waste", "check": "harness/m2.py",
+     "gates": [{"metric": "overheads_matched", "op": "==", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: test exact alignment boundaries", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_padding", "op": "==", "threshold": 1}]}
   ]
 }

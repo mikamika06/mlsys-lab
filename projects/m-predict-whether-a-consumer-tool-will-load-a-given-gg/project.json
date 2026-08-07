@@ -1,0 +1,45 @@
+{
+  "id": "m-predict-whether-a-consumer-tool-will-load-a-given-gg",
+  "title": "Predict whether a consumer tool will load a given GGUF",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "ecosystem-interop",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_interop/compat.py",
+    "gguf_interop/modelfile.py",
+    "gguf_interop/size.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict consumer tool loadability",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "cases_matched", "op": "==", "threshold": 6}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Ollama Modelfile generation and exact quant size prediction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "modelfile_match", "op": "==", "threshold": 1},
+        {"metric": "size_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for compatibility verification",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bypassed_compat", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

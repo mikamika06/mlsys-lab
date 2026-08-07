@@ -29,7 +29,7 @@ into every decode step.
 Implement `quantize_dequantize_int4_grouped`:
 
 ```python
-def quantize_dequantize_int4_grouped(x: np.ndarray, group_size: int) -> np.ndarray:
+def quantize_dequantize_int4_grouped(x: list[list[float]], group_size: int) -> list[list[float]]:
     ...
 ```
 
@@ -44,9 +44,8 @@ $\hat{x}$, same shape as `x`.
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[0.0, 5.0, 10.0, 15.0, 100.0, 101.0, 102.0, 103.0]])
+x = [[0.0, 5.0, 10.0, 15.0, 100.0, 101.0, 102.0, 103.0]]
 quantize_dequantize_int4_grouped(x, group_size=4)
 # group 1 = [0,5,10,15]: scale=1.0, exact grid points -> reconstructs exactly
 # group 2 = [100,101,102,103]: scale=3/15=0.2, tight grid -> near-exact
@@ -57,10 +56,10 @@ quantize_dequantize_int4_grouped(x, group_size=4)
 
 ## What the gate checks
 
-The grader builds a `(rows, cols)` tensor from a seeded NumPy generator
+The grader builds a `(rows, cols)` tensor from a seeded Python generator
 (Gaussian values with injected outliers, `cols` a multiple of 32, 64, and
 128) and computes the reference dequantized tensor independently in
-NumPy for each of `group_size in {32, 64, 128}` — same formulas, applied
+Python for each of `group_size in {32, 64, 128}` — same formulas, applied
 per-row-per-group, never calling your function.
 
 Two gates apply. `mse` is the worst-case mean squared error between your

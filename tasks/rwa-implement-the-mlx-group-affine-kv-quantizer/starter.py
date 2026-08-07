@@ -1,4 +1,2 @@
-import numpy as np
-
-def quantize_kv_group_affine(kv, kv_bits, kv_group_size):
+def quantize_kv_group_affine(kv: list[list[list[float]]], kv_bits: int, kv_group_size: int) -> tuple[list, list, list]:
     raise NotImplementedError('your code here')

@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def per_channel_vs_per_token_k_mse(K: np.ndarray, bits: int) -> np.ndarray:
+def per_channel_vs_per_token_k_mse(K: list[list[float]], bits: int) -> list[float]:
     """
     K: (n_tokens, d_channels) fp64 key cache. bits: quantizer bit-width.
 
@@ -12,7 +9,7 @@ def per_channel_vs_per_token_k_mse(K: np.ndarray, bits: int) -> np.ndarray:
       - per-token: one scale/zero-point per ROW, min/max taken across
         all channels.
 
-    Returns np.array([mse_per_channel, mse_per_token]), the reconstruction
+    Returns [mse_per_channel, mse_per_token], the reconstruction
     MSE (mean squared error of dequant(quant(K)) vs K) of each scheme.
     """
     raise NotImplementedError('your code here')

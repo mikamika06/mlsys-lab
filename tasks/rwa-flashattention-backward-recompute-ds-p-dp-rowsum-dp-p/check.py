@@ -47,12 +47,22 @@ def grade(sol, fx) -> dict:
     _, m, l = _forward(q, k, v)
     ref = _oracle(q, k, v, do)
 
+    q_list = q.tolist()
+    k_list = k.tolist()
+    v_list = v.tolist()
+    do_list = do.tolist()
+    m_list = m.tolist()
+    l_list = l.tolist()
+
     try:
-        got = sol.flash_attention_backward(q, k, v, do, m, l)
+        got = sol.flash_attention_backward(q_list, k_list, v_list, do_list, m_list, l_list)
+        got_0 = np.asarray(got[0], dtype=np.float64)
+        got_1 = np.asarray(got[1], dtype=np.float64)
+        got_2 = np.asarray(got[2], dtype=np.float64)
         err = max(
-            float(np.max(np.abs(got[0] - ref[0]))),
-            float(np.max(np.abs(got[1] - ref[1]))),
-            float(np.max(np.abs(got[2] - ref[2]))),
+            float(np.max(np.abs(got_0 - ref[0]))),
+            float(np.max(np.abs(got_1 - ref[1]))),
+            float(np.max(np.abs(got_2 - ref[2]))),
         )
     except Exception:
         err = float("inf")

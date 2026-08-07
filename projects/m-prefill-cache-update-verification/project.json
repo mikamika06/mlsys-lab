@@ -1,0 +1,22 @@
+{
+  "id": "m-prefill-cache-update-verification",
+  "title": "Prefill cache-update verification and memory delta analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Stateful Core ML models and on-device KV cache",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["cacheval/verify.py", "cacheval/latency.py", "cacheval/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Prefill cache-update verification", "check": "harness/m1.py",
+     "gates": [{"metric": "verifications_passed", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Stateful vs stateless latency and peak-memory delta", "check": "harness/m2.py",
+     "gates": [{"metric": "latency_checked", "op": "==", "threshold": 1},
+               {"metric": "memory_delta_checked", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for cache update invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_updates", "op": "==", "threshold": 1}]}
+  ]
+}

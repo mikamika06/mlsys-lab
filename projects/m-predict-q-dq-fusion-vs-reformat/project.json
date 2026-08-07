@@ -1,0 +1,39 @@
+{
+  "id": "m-predict-q-dq-fusion-vs-reformat",
+  "title": "Predicting Q/DQ fusion, per-channel placement, and INT8 vs FP16 engines",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Explicit quantization: Q/DQ placement and INT8/FP8 engines",
+  "difficulty": 3,
+  "edits": [
+    "qfusion/fusion.py",
+    "qfusion/placement.py",
+    "qfusion/engine.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict Q/DQ fusion vs reformat",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "predictions_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Insert per-channel Q/DQ around MatMul",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "placement_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test on Q/DQ and engine invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_qdq", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

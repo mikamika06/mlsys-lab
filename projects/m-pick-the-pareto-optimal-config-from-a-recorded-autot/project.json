@@ -1,0 +1,22 @@
+{
+  "id": "m-pick-the-pareto-optimal-config-from-a-recorded-autot",
+  "title": "Pick the Pareto-optimal config from a recorded autotune sweep",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Block tiling, occupancy, and resource budgets",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["autotune/sweep.py", "autotune/pareto.py", "autotune/select.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse and load recorded sweep logs", "check": "harness/m1.py",
+     "gates": [{"metric": "records_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute Pareto frontier and select best config", "check": "harness/m2.py",
+     "gates": [{"metric": "pareto_match", "op": "==", "threshold": 1},
+               {"metric": "argmin_index", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for filtering invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broad_filters", "op": "==", "threshold": 1}]}
+  ]
+}

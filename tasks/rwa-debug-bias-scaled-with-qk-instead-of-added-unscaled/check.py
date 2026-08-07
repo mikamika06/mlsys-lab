@@ -7,9 +7,6 @@ def _oracle(q, k, v, bias, scale):
     v = np.asarray(v, dtype=np.float64)
     bias = np.asarray(bias, dtype=np.float64)
 
-    # Real production formula (matches torch.nn.functional.scaled_dot_product_attention
-    # with a float attn_mask): logits = (q @ k^T) * scale, THEN add the
-    # additive bias UNSCALED, then softmax.
     logits = (q @ k.T) * scale
     logits = logits + bias
     logits = logits - np.max(logits, axis=-1, keepdims=True)
@@ -33,9 +30,8 @@ def _cases():
         v = rng.standard_normal((n_k, dv))
         bias = rng.standard_normal((n_q, n_k)) * 2.0
         scale = 1.0 / np.sqrt(d)
-        cases.append((q, k, v, bias, scale))
+        cases.append((q.tolist(), k.tolist(), v.tolist(), bias.tolist(), float(scale)))
 
-    # ALiBi-style linear position bias, explicit non-default scale.
     n_q, n_k, d, dv = 4, 7, 5, 3
     q = rng.standard_normal((n_q, d))
     k = rng.standard_normal((n_k, d))
@@ -43,18 +39,15 @@ def _cases():
     positions = np.arange(n_k)[None, :] - np.arange(n_q)[:, None]
     bias = -0.3 * np.abs(positions).astype(np.float64)
     scale = 0.75 / np.sqrt(d)
-    cases.append((q, k, v, bias, scale))
+    cases.append((q.tolist(), k.tolist(), v.tolist(), bias.tolist(), float(scale)))
 
-    # Zero bias edge case: correct and buggy formulas agree here, so it
-    # alone cannot pass a broken implementation but confirms no regression
-    # on the plain no-bias path.
     n_q, n_k, d, dv = 3, 5, 4, 4
     q = rng.standard_normal((n_q, d))
     k = rng.standard_normal((n_k, d))
     v = rng.standard_normal((n_k, dv))
     bias = np.zeros((n_q, n_k), dtype=np.float64)
     scale = 1.0 / np.sqrt(d)
-    cases.append((q, k, v, bias, scale))
+    cases.append((q.tolist(), k.tolist(), v.tolist(), bias.tolist(), float(scale)))
 
     return cases
 

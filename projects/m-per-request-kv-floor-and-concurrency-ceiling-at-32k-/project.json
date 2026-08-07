@@ -1,0 +1,46 @@
+{
+  "id": "m-per-request-kv-floor-and-concurrency-ceiling-at-32k-",
+  "title": "KV floor and concurrency ceiling for long contexts",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "long-context-serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvcapacity/rope.py",
+    "kvcapacity/floor.py",
+    "kvcapacity/feasibility.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Effective context from RoPE scaling and per-request KV floor",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "effective_contexts_matched", "op": "==", "threshold": 1},
+        {"metric": "kv_floors_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Concurrency ceiling and feasibility matrix at 128k context",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "concurrency_matched", "op": "==", "threshold": 1},
+        {"metric": "matrix_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches missing TP scaling in KV calculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_tp_scaling", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

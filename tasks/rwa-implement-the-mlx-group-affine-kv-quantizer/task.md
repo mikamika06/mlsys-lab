@@ -41,7 +41,7 @@ scale and zero-point are stored for every group.
 
 Implement `quantize_kv_group_affine(kv, kv_bits, kv_group_size)`.
 
-The function receives a NumPy array `kv` containing KV cache values and returns a tuple:
+The function receives a list `kv` containing KV cache values and returns a tuple:
 
 ```python
 q, scales, zeros = quantize_kv_group_affine(kv, kv_bits, kv_group_size)
@@ -63,9 +63,8 @@ contain enough information for dequantization.
 ## Example
 
 ```python
-import numpy as np
 
-kv = np.array([[[-1.0, 1.0, 3.0, 5.0]]])
+kv = [[[-1.0, 1.0, 3.0, 5.0]]]
 
 q, scales, zeros = quantize_kv_group_affine(kv, 4, 2)
 
@@ -76,7 +75,7 @@ The two groups are `[-1, 1]` and `[3, 5]`. Each group has its own affine paramet
 
 ## What the gate checks
 
-The grader computes a NumPy reference implementation of the group affine quantizer and
+The grader computes a Python reference implementation of the group affine quantizer and
 compares the student's dequantized output against the oracle.
 
 The `mse` score is the mean squared error between the student's dequantized KV cache and

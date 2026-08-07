@@ -1,0 +1,63 @@
+{
+  "id": "m-parse-gpu-blocks-cpu-blocks-from-engine-logs",
+  "title": "Parse GPU/CPU blocks and analyze TP scaling from engine logs",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-cache-capacity-and-startup-config",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvparse/parser.py",
+    "kvparse/capacity.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse GPU and CPU blocks from engine logs",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "parsed_correctly",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analyze whether TP=2 doubles KV capacity",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "scaling_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for parser and scaling",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_parser",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

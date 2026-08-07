@@ -1,53 +1,46 @@
-import numpy as np
+import random
 
-TRACES = [
-    {
-        "traceEvents": [
-            {"name": "aten::linear", "ts": 10.0, "dur": 120.0, "args": {}},
-            {"name": "PagedAdamW8bit::step", "ts": 150.0, "dur": 300.0, "args": {"page_faults": 10, "bytes_transferred": 1024, "step": 0}},
-            {"name": "PagedAdamW8bit::step", "ts": 500.0, "dur": 2500.0, "args": {"page_faults": 2, "bytes_transferred": 8192, "step": 1}},
-            {"name": "PagedAdamW8bit::step", "ts": 3100.0, "dur": 400.0, "args": {"page_faults": 8, "bytes_transferred": 2048, "step": 2}},
-        ]
-    },
-    {
-        "traceEvents": [
-            {"name": "optimizer_paged_adamw", "cat": "paged_adamw", "ts": 20.0, "dur": 800.0, "args": {"page_faults": 1, "step": 10}},
-            {"name": "optimizer_paged_adamw", "cat": "paged_adamw", "ts": 900.0, "dur": 100.0, "args": {"page_faults": 20, "step": 11}},
-        ]
-    }
-]
+def generate_trace():
+    random.seed(42)
+    events = []
+    ts = 0
+    for i in range(10):
+        events.append({"name": "forward", "ts": ts, "dur": 1000})
+        ts += 1100
+        events.append({"name": "backward", "ts": ts, "dur": 2000})
+        ts += 2100
 
+        events.append({"name": "cudaMemcpyH2D", "ts": ts - 500, "dur": 50, "args": {"bytes": 1024}})
 
-def parse_trace_events(trace_data):
-    raw_events = trace_data.get("traceEvents", trace_data if isinstance(trace_data, list) else [])
-    parsed = []
-    for ev in raw_events:
-        if not isinstance(ev, dict):
-            continue
-        name = str(ev.get("name", ""))
-        cat = str(ev.get("cat", ""))
-        args = ev.get("args", {})
-        if "PagedAdamW8bit" in name or "paged_adamw" in cat or args.get("is_paged", False):
-            parsed.append({
-                "name": name,
-                "ts": float(ev.get("ts", 0.0)),
-                "dur": float(ev.get("dur", 0.0)),
-                "page_faults": int(args.get("page_faults", 0)),
-                "bytes_transferred": int(args.get("bytes_transferred", 0)),
-                "step": int(args.get("step", 0))
-            })
-    return parsed
+        opt_dur = 400
+        if i == 7:
+            opt_dur = 15000
+            events.append({"name": "cudaMemcpyH2D", "ts": ts + 100, "dur": 2000, "args": {"bytes": 8388608}})
+            events.append({"name": "cudaMemcpyD2H", "ts": ts + 2500, "dur": 2000, "args": {"bytes": 8388608}})
+            events.append({"name": "cudaMemcpyH2D", "ts": ts + 5000, "dur": 2000, "args": {"bytes": 8388608}})
 
+        events.append({"name": "optimizer_step", "ts": ts, "dur": opt_dur})
+        ts += opt_dur + 100
+    return events
 
-def find_spillover_spike(events):
-    if not events:
-        return {"argmin_index": -1, "max_ratio": 0.0}
-    durations = np.array([e["dur"] for e in events], dtype=np.float64)
-    faults = np.array([max(1, e["page_faults"]) for e in events], dtype=np.float64)
-    ratios = durations / faults
-    neg_ratios = -ratios
-    target_idx = int(np.argmin(neg_ratios))
-    return {
-        "argmin_index": target_idx,
-        "max_ratio": float(ratios[target_idx])
-    }
+TRACE = generate_trace()
+
+def get_optimizer_durations(events):
+    return [e["dur"] for e in events if e["name"] == "optimizer_step"]
+
+def get_spike_index(durations):
+    if not durations:
+        return -1
+    m = max(durations)
+    for i, d in enumerate(durations):
+        if d == m:
+            return i
+    return -1
+
+def calculate_spillover_bytes(events, step_start, step_end):
+    total = 0
+    for e in events:
+        if e["name"] in ("cudaMemcpyH2D", "cudaMemcpyD2H"):
+            if e["ts"] >= step_start and e["ts"] < step_end:
+                total += e.get("args", {}).get("bytes", 0)
+    return total

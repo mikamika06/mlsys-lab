@@ -45,7 +45,7 @@ $$
 Implement `biased_flash_backward`:
 
 ```python
-def biased_flash_backward(Q, K, V, B, dO, m, l):
+def biased_flash_backward(Q: list[list[float]], K: list[list[float]], V: list[list[float]], B: list[list[float]], dO: list[list[float]], m: list[float], l: list[float]) -> tuple[list[list[float]], list[list[float]], list[list[float]]]:
     ...
 ```
 
@@ -62,9 +62,8 @@ def biased_flash_backward(Q, K, V, B, dO, m, l):
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 Q = rng.standard_normal((3, 4))
 K = rng.standard_normal((3, 4))
 V = rng.standard_normal((3, 4))
@@ -72,9 +71,9 @@ B = rng.standard_normal((3, 3)) * 0.5
 dO = rng.standard_normal((3, 4))
 
 d = Q.shape[1]
-S = Q @ K.T / np.sqrt(d) + B
+S = [[sum(q * k for q, k in zip(q_row, k_row)) / math.sqrt(d) + b for k_row, b in zip(K, b_row)] for q_row, b_row in zip(Q, B)]
 m = S.max(axis=1)
-l = np.exp(S - m[:, None]).sum(axis=1)
+l = [sum(math.exp(s - m_i) for s in s_row) for s_row, m_i in zip(S, m)]
 
 dQ, dK, dV = biased_flash_backward(Q, K, V, B, dO, m, l)
 ```

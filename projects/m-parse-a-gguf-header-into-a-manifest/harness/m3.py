@@ -1,23 +1,17 @@
 import importlib.util
 import os
-import ref
-
+import sys
 
 def _run(path):
     spec = importlib.util.spec_from_file_location("learner_regression", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    fns = [
-        getattr(mod, n)
-        for n in dir(mod)
-        if n.startswith("test_") and callable(getattr(mod, n))
-    ]
+    fns = [getattr(mod, n) for n in dir(mod) if n.startswith("test_") and callable(getattr(mod, n))]
     if not fns:
         return None
     for fn in fns:
         fn()
     return True
-
 
 def _survives(path):
     try:
@@ -25,13 +19,8 @@ def _survives(path):
     except Exception:
         return False
 
-
 def check(workdir):
-    out = {
-        "has_tests": 0.0,
-        "passes_on_good": 0.0,
-        "catches_unaligned_waste": 0.0,
-    }
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_padding": 0.0}
     path = os.path.join(workdir, "tests", "test_regression.py")
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
@@ -41,37 +30,41 @@ def check(workdir):
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = (
-            f"The tests fail on a correct implementation: {type(e).__name__}: {str(e)[:120]}"
-        )
+        out["_note"] = f"the tests fail on a correct parser: {type(e).__name__}: {str(e)[:120]}"
         return out
 
     if first is None:
-        out["_note"] = "No test_* functions found"
+        out["_note"] = "no test_* functions found"
         return out
 
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import gguf_parser.overhead as ov
+    import gguf_parser.parser as p
+    good = p.compute_overhead
 
-    good_func = ov.compute_container_overhead
+    def broken(manifest):
+        header_end = manifest["header_end_offset"]
+        meta_end = manifest["_meta_end"]
+        alignment = manifest.get("metadata", {}).get("general.alignment", 32)
+        # BUG: returns alignment instead of 0 when perfectly aligned
+        padding = alignment - (header_end % alignment)
 
-    def broken_compute_container_overhead(data: bytes) -> dict:
-        res = good_func(data)
-        res["alignment_waste"] = 0
-        res["total_overhead"] = res["data_offset"]
-        return res
+        return {
+            "metadata_bytes": meta_end - 24,
+            "tensor_info_bytes": header_end - meta_end,
+            "padding_waste": padding
+        }
 
-    ov.compute_container_overhead = broken_compute_container_overhead
-    import gguf_parser
-
-    gguf_parser.compute_container_overhead = broken_compute_container_overhead
+    p.compute_overhead = broken
+    if 'gguf_parser.parser' in sys.modules:
+        sys.modules['gguf_parser.parser'].compute_overhead = broken
 
     try:
-        out["catches_unaligned_waste"] = 0.0 if _survives(path) else 1.0
+        out["catches_broken_padding"] = 0.0 if _survives(path) else 1.0
     finally:
-        ov.compute_container_overhead = good_func
-        gguf_parser.compute_container_overhead = good_func
+        p.compute_overhead = good
+        if 'gguf_parser.parser' in sys.modules:
+            sys.modules['gguf_parser.parser'].compute_overhead = good
 
     return out

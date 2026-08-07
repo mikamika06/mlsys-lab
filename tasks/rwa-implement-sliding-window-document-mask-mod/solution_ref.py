@@ -1,58 +1,59 @@
 import math
-import numpy as np
 
 
-def sliding_window_document_attention(Q, K, V, doc_ids, window):
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-    doc_ids = np.asarray(doc_ids)
+def sliding_window_document_attention(
+    Q: list[list[float]],
+    K: list[list[float]],
+    V: list[list[float]],
+    doc_ids: list[int],
+    window: int,
+) -> tuple[list[list[float]], list[list[bool]]]:
+    n = len(Q)
+    d = len(Q[0])
+    d_v = len(V[0])
 
-    n, d = Q.shape
-    _, d_v = V.shape
-
-    mask = np.zeros((n, n), dtype=bool)
-    logits = np.zeros((n, n), dtype=np.float64)
+    mask = [[False] * n for _ in range(n)]
+    logits = [[0.0] * n for _ in range(n)]
     scaled_d = math.sqrt(d)
 
     for i in range(n):
         for j in range(n):
             cond = (j <= i) and ((i - j) < window) and (doc_ids[i] == doc_ids[j])
-            mask[i, j] = cond
+            mask[i][j] = cond
             if cond:
                 dot_val = 0.0
                 for k_dim in range(d):
-                    dot_val += Q[i, k_dim] * K[j, k_dim]
-                logits[i, j] = dot_val / scaled_d
+                    dot_val += Q[i][k_dim] * K[j][k_dim]
+                logits[i][j] = dot_val / scaled_d
             else:
-                logits[i, j] = -float("inf")
+                logits[i][j] = -float("inf")
 
-    probs = np.zeros((n, n), dtype=np.float64)
+    probs = [[0.0] * n for _ in range(n)]
     for i in range(n):
         max_val = -float("inf")
         for j in range(n):
-            if mask[i, j]:
-                if logits[i, j] > max_val:
-                    max_val = logits[i, j]
+            if mask[i][j]:
+                if logits[i][j] > max_val:
+                    max_val = logits[i][j]
 
         row_sum = 0.0
         for j in range(n):
-            if mask[i, j]:
-                val = math.exp(logits[i, j] - max_val)
-                probs[i, j] = val
+            if mask[i][j]:
+                val = math.exp(logits[i][j] - max_val)
+                probs[i][j] = val
                 row_sum += val
 
         if row_sum > 0.0:
             for j in range(n):
-                if mask[i, j]:
-                    probs[i, j] /= row_sum
+                if mask[i][j]:
+                    probs[i][j] /= row_sum
 
-    out = np.zeros((n, d_v), dtype=np.float64)
+    out = [[0.0] * d_v for _ in range(n)]
     for i in range(n):
         for j in range(n):
-            p = probs[i, j]
+            p = probs[i][j]
             if p != 0.0:
                 for k_dim in range(d_v):
-                    out[i, k_dim] += p * V[j, k_dim]
+                    out[i][k_dim] += p * V[j][k_dim]
 
     return out, mask

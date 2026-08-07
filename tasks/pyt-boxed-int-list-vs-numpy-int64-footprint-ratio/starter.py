@@ -1,3 +1,2 @@
-def list_footprint_ratio(values: list) -> float:
-    """(list container + distinct boxed-int objects) / numpy int64 array footprint."""
+def list_footprint_ratio(values: list[int]) -> float:
     raise NotImplementedError('your code here')

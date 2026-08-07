@@ -1,0 +1,45 @@
+{
+  "id": "m-predict-q4-k-m-output-size-from-an-inventory",
+  "title": "Predict Q4_K_M output size from an inventory",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "ftype-recipes-mixed-precision",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_pred/inventory.py",
+    "gguf_pred/recipe.py",
+    "gguf_pred/delta.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict total output size from tensor inventory",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "inventories_matched", "op": "==", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Implement the ftype recipe resolver and Q4_K_S vs Q4_K_M delta",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "recipes_matched", "op": "==", "threshold": 5},
+        {"metric": "delta_explained", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches incorrect block sizes",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_block_size", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

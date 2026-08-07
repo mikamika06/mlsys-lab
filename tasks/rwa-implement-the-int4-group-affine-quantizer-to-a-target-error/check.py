@@ -64,7 +64,7 @@ def grade(sol, fx) -> dict:
     for group_size in (32, 64, 128):
         ref = _grouped_dequant(W, group_size)
         try:
-            got = sol.quantize_dequantize_int4_grouped(W.copy(), group_size)
+            got = sol.quantize_dequantize_int4_grouped(W.tolist(), group_size)
         except Exception:
             return {"mse": float("inf"), "attn_max_abs_err": float("inf")}
 
@@ -84,8 +84,8 @@ def grade(sol, fx) -> dict:
     Q, K, V = _build_attn_tensors()
     ref_attn = _attn(Q, K, V)
     try:
-        K_hat = sol.quantize_dequantize_int4_grouped(K.copy(), 32)
-        V_hat = sol.quantize_dequantize_int4_grouped(V.copy(), 32)
+        K_hat = sol.quantize_dequantize_int4_grouped(K.tolist(), 32)
+        V_hat = sol.quantize_dequantize_int4_grouped(V.tolist(), 32)
     except Exception:
         return {"mse": worst_mse, "attn_max_abs_err": float("inf")}
 

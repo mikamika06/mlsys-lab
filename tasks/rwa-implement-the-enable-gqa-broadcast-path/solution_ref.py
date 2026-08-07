@@ -1,19 +1,22 @@
 import math
-import numpy as np
 
 
-def enable_gqa_broadcast_attention(Q, K, V):
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
+def enable_gqa_broadcast_attention(
+    Q: list[list[list[list[float]]]],
+    K: list[list[list[list[float]]]],
+    V: list[list[list[list[float]]]],
+) -> list[list[list[list[float]]]]:
+    batch_size = len(Q)
+    n_q = len(Q[0])
+    seq_q = len(Q[0][0])
+    d = len(Q[0][0][0])
 
-    batch_size, n_q, seq_q, d = Q.shape
-    n_kv = K.shape[1]
-    seq_k = K.shape[2]
-    d_v = V.shape[-1]
+    n_kv = len(K[0])
+    seq_k = len(K[0][0])
+    d_v = len(V[0][0][0])
     r = n_q // n_kv
 
-    out = np.zeros((batch_size, n_q, seq_q, d_v), dtype=np.float64)
+    out = [[[[0.0 for _ in range(d_v)] for _ in range(seq_q)] for _ in range(n_q)] for _ in range(batch_size)]
     sqrt_d = math.sqrt(d)
 
     for b in range(batch_size):
@@ -24,7 +27,7 @@ def enable_gqa_broadcast_attention(Q, K, V):
                 for j in range(seq_k):
                     dot = 0.0
                     for k_dim in range(d):
-                        dot += Q[b, h, i, k_dim] * K[b, kv_idx, j, k_dim]
+                        dot += Q[b][h][i][k_dim] * K[b][kv_idx][j][k_dim]
                     scores.append(dot / sqrt_d)
 
                 max_score = scores[0]
@@ -44,7 +47,7 @@ def enable_gqa_broadcast_attention(Q, K, V):
                 for v_dim in range(d_v):
                     acc = 0.0
                     for j in range(seq_k):
-                        acc += weights[j] * V[b, kv_idx, j, v_dim]
-                    out[b, h, i, v_dim] = acc
+                        acc += weights[j] * V[b][kv_idx][j][v_dim]
+                    out[b][h][i][v_dim] = acc
 
     return out

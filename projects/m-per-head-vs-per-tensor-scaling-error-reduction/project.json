@@ -1,0 +1,47 @@
+{
+  "id": "m-per-head-vs-per-tensor-scaling-error-reduction",
+  "title": "Per-head vs Per-tensor Scaling in FP8",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "fp8-kv-cache-quantization",
+  "size": "M",
+  "difficulty": 3,
+  "edits": [
+    "fp8kv/quant.py",
+    "fp8kv/error.py",
+    "fp8kv/capacity.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Scaling factors and quantization simulation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "scale_t_match", "op": "==", "threshold": 1},
+        {"metric": "scale_h_match", "op": "==", "threshold": 1},
+        {"metric": "quant_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Error analysis and capacity calculation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "head_match", "op": "==", "threshold": 1},
+        {"metric": "bytes_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch a collapsed per-head scale",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_scale", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

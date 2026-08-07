@@ -1,8 +1,6 @@
-import numpy as np
+import math
 
-
-def snapkv_pooled_selection(K: np.ndarray, V: np.ndarray, Q_obs: np.ndarray, Q_new: np.ndarray,
-                             budget: int, pool_size: int) -> dict:
+def snapkv_pooled_selection(K: list[list[list[float]]], V: list[list[list[float]]], Q_obs: list[list[list[float]]], Q_new: list[list[float]], budget: int, pool_size: int) -> dict:
     """SnapKV KV-cache compression, applied independently per attention
     head (each head may keep a different subset of positions).
 

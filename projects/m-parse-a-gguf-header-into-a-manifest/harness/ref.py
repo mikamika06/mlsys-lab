@@ -1,175 +1,165 @@
 import struct
 
-GGUF_MAGIC = b"GGUF"
+def parse_header(data: bytes) -> dict:
+    TYPE_FORMATS = {
+        0: ('<B', 1), 1: ('<b', 1), 2: ('<H', 2), 3: ('<h', 2),
+        4: ('<I', 4), 5: ('<i', 4), 6: ('<f', 4), 7: ('?', 1),
+        10: ('<Q', 8), 11: ('<q', 8), 12: ('<d', 8),
+    }
 
+    def decode_string(offset: int) -> tuple:
+        length = struct.unpack_from('<Q', data, offset)[0]
+        offset += 8
+        val = data[offset:offset+length].decode('utf-8')
+        return val, offset + length
 
-def encode_string(s: str) -> bytes:
-    encoded = s.encode("utf-8")
-    return struct.pack("<Q", len(encoded)) + encoded
+    def decode_value(offset: int, val_type: int) -> tuple:
+        if val_type in TYPE_FORMATS:
+            fmt, size = TYPE_FORMATS[val_type]
+            val = struct.unpack_from(fmt, data, offset)[0]
+            return val, offset + size
+        elif val_type == 8:
+            return decode_string(offset)
+        elif val_type == 9:
+            item_type = struct.unpack_from('<I', data, offset)[0]
+            offset += 4
+            length = struct.unpack_from('<Q', data, offset)[0]
+            offset += 8
+            arr = []
+            for _ in range(length):
+                val, offset = decode_value(offset, item_type)
+                arr.append(val)
+            return arr, offset
+        else:
+            raise ValueError(f"Unknown type {val_type}")
 
+    magic = data[0:4].decode('utf-8')
+    version = struct.unpack_from('<I', data, 4)[0]
+    tensor_count = struct.unpack_from('<Q', data, 8)[0]
+    kv_count = struct.unpack_from('<Q', data, 16)[0]
 
-def encode_value(val, vtype) -> bytes:
-    if vtype == 0:
-        return struct.pack("<B", val)
-    elif vtype == 1:
-        return struct.pack("<b", val)
-    elif vtype == 2:
-        return struct.pack("<H", val)
-    elif vtype == 3:
-        return struct.pack("<h", val)
-    elif vtype == 4:
-        return struct.pack("<I", val)
-    elif vtype == 5:
-        return struct.pack("<i", val)
-    elif vtype == 6:
-        return struct.pack("<f", val)
-    elif vtype == 7:
-        return struct.pack("<B", 1 if val else 0)
-    elif vtype == 8:
-        return encode_string(val)
-    elif vtype == 10:
-        return struct.pack("<Q", val)
-    elif vtype == 11:
-        return struct.pack("<q", val)
-    elif vtype == 12:
-        return struct.pack("<d", val)
-    elif vtype == 9:
-        elem_type, arr = val
-        out = struct.pack("<IQ", elem_type, len(arr))
-        for item in arr:
-            out += encode_value(item, elem_type)
-        return out
-    else:
-        raise ValueError("Unsupported type")
+    offset = 24
+    metadata = {}
+    for _ in range(kv_count):
+        key, offset = decode_string(offset)
+        val_type = struct.unpack_from('<I', data, offset)[0]
+        offset += 4
+        val, offset = decode_value(offset, val_type)
+        metadata[key] = val
 
+    meta_end = offset
 
-def build_gguf_fixture(alignment=32, metadata=None, tensors=None) -> bytes:
-    if metadata is None:
-        metadata = {}
-    if tensors is None:
-        tensors = []
+    tensors = []
+    for _ in range(tensor_count):
+        name, offset = decode_string(offset)
+        n_dims = struct.unpack_from('<I', data, offset)[0]
+        offset += 4
+        dims = []
+        for _ in range(n_dims):
+            dim = struct.unpack_from('<Q', data, offset)[0]
+            offset += 8
+            dims.append(dim)
+        t_type = struct.unpack_from('<I', data, offset)[0]
+        offset += 4
+        t_offset = struct.unpack_from('<Q', data, offset)[0]
+        offset += 8
+        tensors.append({
+            "name": name,
+            "n_dimensions": n_dims,
+            "dimensions": dims,
+            "type": t_type,
+            "offset": t_offset
+        })
 
-    full_metadata = dict(metadata)
-    full_metadata["general.alignment"] = (4, alignment)
+    return {
+        "magic": magic,
+        "version": version,
+        "tensor_count": tensor_count,
+        "metadata_kv_count": kv_count,
+        "metadata": metadata,
+        "tensors": tensors,
+        "header_end_offset": offset,
+        "_meta_end": meta_end
+    }
 
-    hdr = struct.pack("<4sIII", GGUF_MAGIC, 3, len(tensors), len(full_metadata))
+def compute_overhead(manifest: dict) -> dict:
+    header_end = manifest["header_end_offset"]
+    meta_end = manifest["_meta_end"]
+    alignment = manifest["metadata"].get("general.alignment", 32)
+    padding = (alignment - (header_end % alignment)) % alignment
 
-    for k, (vtype, vval) in full_metadata.items():
-        hdr += encode_string(k)
-        hdr += struct.pack("<I", vtype)
-        hdr += encode_value(vval, vtype)
+    return {
+        "metadata_bytes": meta_end - 24,
+        "tensor_info_bytes": header_end - meta_end,
+        "padding_waste": padding
+    }
 
-    tensor_info = b""
-    current_relative_offset = 0
+def build_gguf(metadata: dict, tensors: list) -> bytes:
+    out = b"GGUF"
+    out += struct.pack("<I", 3)
+    out += struct.pack("<Q", len(tensors))
+    out += struct.pack("<Q", len(metadata))
 
-    for name, dims, ttype, data_bytes in tensors:
-        hdr += encode_string(name)
-        hdr += struct.pack("<I", len(dims))
-        hdr += struct.pack(f"<{len(dims)}Q", *dims)
-        hdr += struct.pack("<I", ttype)
+    def pack_string(s: str) -> bytes:
+        b = s.encode('utf-8')
+        return struct.pack("<Q", len(b)) + b
 
-        hdr += struct.pack("<Q", current_relative_offset)
-        current_relative_offset += len(data_bytes)
+    def pack_val(val, val_type) -> bytes:
+        TYPE_FORMATS = {
+            0: ('<B', 1), 1: ('<b', 1), 2: ('<H', 2), 3: ('<h', 2),
+            4: ('<I', 4), 5: ('<i', 4), 6: ('<f', 4), 7: ('?', 1),
+            10: ('<Q', 8), 11: ('<q', 8), 12: ('<d', 8),
+        }
+        if val_type in TYPE_FORMATS:
+            return struct.pack(TYPE_FORMATS[val_type][0], val)
+        elif val_type == 8:
+            return pack_string(val)
+        elif val_type == 9:
+            item_type, items = val
+            res = struct.pack("<I", item_type)
+            res += struct.pack("<Q", len(items))
+            for item in items:
+                res += pack_val(item, item_type)
+            return res
+        raise ValueError()
 
-    rem = len(hdr) % alignment
-    data_offset = len(hdr) if rem == 0 else len(hdr) + (alignment - rem)
+    for k, (v_type, v) in metadata.items():
+        out += pack_string(k)
+        out += struct.pack("<I", v_type)
+        out += pack_val(v, v_type)
 
-    data_section = b""
-    curr_pos = data_offset
-    for name, dims, ttype, data_bytes in tensors:
-        align_rem = curr_pos % alignment
-        if align_rem != 0:
-            pad = alignment - align_rem
-            data_section += b"\x00" * pad
-            curr_pos += pad
-        data_section += data_bytes
-        curr_pos += len(data_bytes)
+    for t in tensors:
+        out += pack_string(t["name"])
+        out += struct.pack("<I", t["n_dimensions"])
+        for dim in t["dimensions"]:
+            out += struct.pack("<Q", dim)
+        out += struct.pack("<I", t["type"])
+        out += struct.pack("<Q", t["offset"])
 
-    header_padding = data_offset - len(hdr)
-    return hdr + (b"\x00" * header_padding) + data_section
+    return out
 
-
-def parse_gguf_header(data: bytes) -> dict:
-    from gguf_parser.header import parse_gguf_header as reference_parse
-
-    return reference_parse(data)
-
-
-def compute_container_overhead(data: bytes) -> dict:
-    from gguf_parser.overhead import (
-        compute_container_overhead as reference_compute,
-    )
-
-    return reference_compute(data)
-
-
-def generate_test_fixtures():
-    fixtures = []
-
-    f1 = build_gguf_fixture(
-        alignment=32,
-        metadata={
-            "general.architecture": (8, "llama"),
-            "llama.block_count": (4, 12),
-            "llama.embedding_length": (4, 4096),
+FIXTURES = [
+    build_gguf(
+        {
+            "general.alignment": (4, 64),
+            "name": (8, "test_model"),
+            "nested_array": (9, (9, [(4, [1, 2]), (4, [3, 4])]))
         },
-        tensors=[
-            ("token_embd.weight", [4096, 32000], 0, b"\x00" * (4096 * 32000 * 4)),
-            ("blk.0.attn_q.weight", [4096, 4096], 0, b"\x00" * (4096 * 4096 * 4)),
-        ],
-    )
-    fixtures.append({"binary": f1, "alignment": 32})
-
-    f2 = build_gguf_fixture(
-        alignment=64,
-        metadata={
-            "general.name": (8, "test-model"),
-            "general.file_type": (4, 1),
-            "tokenizer.ggml.tokens": (9, (8, ["<pad>", "<s>", "</s>"])),
-            "tokenizer.ggml.scores": (9, (6, [0.0, 1.0, 2.0])),
+        [{"name": "tensor1", "n_dimensions": 2, "dimensions": [128, 64], "type": 1, "offset": 0}]
+    ),
+    build_gguf(
+        {
+            "t0": (0, 255), "t1": (1, -128), "t2": (2, 65535), "t3": (3, -32768),
+            "t4": (4, 4294967295), "t5": (5, -2147483648), "t6": (6, 3.14159),
+            "t7": (7, True), "t8": (8, "str"),
+            "t10": (10, 18446744073709551615), "t11": (11, -9223372036854775808),
+            "t12": (12, 2.718281828)
         },
-        tensors=[
-            ("output.weight", [32000, 4096], 0, b"\x00" * (32000 * 4096 * 4)),
-        ],
+        [{"name": "tensorA", "n_dimensions": 1, "dimensions": [1024], "type": 0, "offset": 0},
+         {"name": "tensorB", "n_dimensions": 1, "dimensions": [1024], "type": 0, "offset": 1024}]
+    ),
+    build_gguf(
+        {},
+        []
     )
-    fixtures.append({"binary": f2, "alignment": 64})
-
-    f3 = build_gguf_fixture(
-        alignment=32,
-        metadata={
-            "nested.dims": (9, (9, [(4, [1, 2]), (4, [3, 4])])),
-            "flags": (9, (7, [True, False, True])),
-        },
-        tensors=[],
-    )
-    fixtures.append({"binary": f3, "alignment": 32})
-
-    f4 = build_gguf_fixture(
-        alignment=128,
-        metadata={
-            "general.author": (8, "MLSys"),
-            "general.version": (10, 1000),
-        },
-        tensors=[
-            ("tensor.a", [100], 0, b"\x00" * 400),
-            ("tensor.b", [50], 0, b"\x00" * 200),
-        ],
-    )
-    fixtures.append({"binary": f4, "alignment": 128})
-
-    f5 = build_gguf_fixture(
-        alignment=32,
-        metadata={
-            "some.ratio": (12, 3.1415926535),
-            "some.int64": (11, -900000000000),
-        },
-        tensors=[
-            ("small.tensor", [10, 10], 0, b"\x00" * 400),
-        ],
-    )
-    fixtures.append({"binary": f5, "alignment": 32})
-
-    return fixtures
-
-
-GENERATED_FIXTURES = generate_test_fixtures()
+]

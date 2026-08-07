@@ -1,0 +1,21 @@
+{
+  "id": "m-per-layer-snr-between-eager-and-exported",
+  "title": "Per-layer SNR and bisection between eager and exported models",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Numerical parity and accuracy validation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["snrchk/model.py", "snrchk/analyzer.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-layer signal-to-noise ratio calculation", "check": "harness/m1.py",
+     "gates": [{"metric": "snr_match", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Bisect to the first diverging layer", "check": "harness/m2.py",
+     "gates": [{"metric": "bisect_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for layer SNR and bisection", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_bisection", "op": "==", "threshold": 1}]}
+  ]
+}

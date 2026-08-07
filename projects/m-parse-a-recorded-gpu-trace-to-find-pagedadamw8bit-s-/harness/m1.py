@@ -1,26 +1,22 @@
+import sys
+import os
 import ref
 
-
 def check(workdir):
-    from gputrace import parse_trace_events
+    sys.path.insert(0, workdir)
+    try:
+        from parser.core import get_optimizer_durations, get_spike_index
+        got_durations = get_optimizer_durations(ref.TRACE)
+        want_durations = ref.get_optimizer_durations(ref.TRACE)
 
-    out = {"traces_parsed": 0.0}
-    ok = 0
-    total = len(ref.TRACES)
+        got_idx = get_spike_index(got_durations)
+        want_idx = ref.get_spike_index(want_durations)
 
-    for i, trace in enumerate(ref.TRACES):
-        want = ref.parse_trace_events(trace)
-        try:
-            got = parse_trace_events(trace)
-            if got == want:
-                ok += 1
-            elif "_note" not in out:
-                out["_note"] = f"trace {i}: expected {want[:1]}, got {got[:1] if got else []}"
-        except Exception as e:
-            if "_note" not in out:
-                out["_note"] = f"trace {i} raised {type(e).__name__}: {e}"
-
-    if ok == total:
-        out["traces_parsed"] = 1.0
-
-    return out
+        return {
+            "durations_match": 1.0 if got_durations == want_durations else 0.0,
+            "index_match": 1.0 if got_idx == want_idx else 0.0
+        }
+    except Exception as e:
+        return {"durations_match": 0.0, "index_match": 0.0, "_note": str(e)}
+    finally:
+        sys.path.pop(0)

@@ -34,7 +34,7 @@ $$
 Implement `enable_gqa_broadcast_attention(Q, K, V)`:
 
 ```python
-def enable_gqa_broadcast_attention(Q, K, V):
+def enable_gqa_broadcast_attention(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], V: list[list[list[list[float]]]]) -> list[list[list[list[float]]]]:
     ...
 ```
 
@@ -46,7 +46,7 @@ Inputs use PyTorch SDPA's native axis order, `(batch, heads, seq, dim)`:
 Broadcast `K` and `V` up to $n_q$ heads following the **blocked** grouping
 above (query head $h$ reads KV head $\lfloor h/r \rfloor$), then run scaled
 dot-product attention per query head with scale $1/\sqrt{d}$. Return a
-`float64` NumPy array of shape $(batch, n_q, seq_q, d)$.
+`float64` list of shape $(batch, n_q, seq_q, d)$.
 
 Do not use a cyclic/`tile`-style assignment (query head $h$ reading KV head
 $h \bmod n_{kv}$) — that groups the *wrong* query heads together whenever
@@ -55,9 +55,8 @@ $r > 1$.
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 Q = rng.standard_normal((1, 6, 4, 8))   # 6 query heads
 K = rng.standard_normal((1, 2, 4, 8))   # 2 KV heads -> r = 3
 V = rng.standard_normal((1, 2, 4, 8))
@@ -70,12 +69,12 @@ out = enable_gqa_broadcast_attention(Q, K, V)
 
 ## What the gate checks
 
-The gate combines two kinds of cases, all built with `np.random.default_rng(0)`:
+The gate combines two kinds of cases, all built with `random.Random(0)`:
 
 1. **Numeric cases** across several `(batch, n_q, n_kv, seq_q, seq_k, d)`
    configurations (including the degenerate $n_{kv}=n_q$ case and several
    $r>1$ groupings), compared against an oracle that repeats each KV head
-   $r$ times with blocked semantics (`np.repeat(..., r, axis=1)`) and runs
+$r$ times with blocked semantics (`[x for x in ...]`) and runs
    dense attention in `float64`.
 2. **A grouping probe**: a case with a single key/value token per KV head
    and one distinct one-hot `V` row per KV head. Since softmax over a

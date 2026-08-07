@@ -1,0 +1,21 @@
+{
+  "id": "m-preemption-simulator-wasted-prefill-tokens-under-rec",
+  "title": "Preemption simulator and recompute break-even analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "preemption-recompute-vs-swap",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["preemption/simulator.py", "preemption/model.py", "preemption/replay.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Preemption simulator wasted prefill tokens", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 2, "title": "Recompute-vs-swap break-even model", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Victim-selection policy replay and regression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_policy", "op": "==", "threshold": 1}]}
+  ]
+}

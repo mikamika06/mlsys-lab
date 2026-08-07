@@ -32,14 +32,7 @@ attention computation*.
 Implement `mla_forward`:
 
 ```python
-def mla_forward(
-    x: np.ndarray,
-    W_Q: np.ndarray,
-    W_down_kv: np.ndarray,
-    W_up_K: np.ndarray,
-    W_up_V: np.ndarray,
-    num_heads: int,
-) -> tuple[np.ndarray, np.ndarray]:
+def mla_forward(x: list[list[float]], W_Q: list[list[float]], W_down_kv: list[list[float]], W_up_K: list[list[float]], W_up_V: list[list[float]], num_heads: int) -> tuple[list[list[float]], list[list[float]]]:
     ...
 ```
 
@@ -66,10 +59,9 @@ Return `(out, c_kv)`:
 ## Example
 
 ```python
-import numpy as np
 
 n, d_model, num_heads, d_head, r = 5, 8, 2, 4, 6
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 x = rng.normal(size=(n, d_model))
 W_Q = rng.normal(size=(d_model, num_heads * d_head))
 W_down_kv = rng.normal(size=(d_model, r))
@@ -84,7 +76,7 @@ out, c_kv = mla_forward(x, W_Q, W_down_kv, W_up_K, W_up_V, num_heads)
 ## What the gate checks
 
 The grader builds several `(x, W_Q, W_down_kv, W_up_K, W_up_V, num_heads)`
-scenarios from a seeded NumPy generator (varying `d_model`, `num_heads`,
+scenarios from a seeded Python generator (varying `d_model`, `num_heads`,
 `d_head`, and `kv_lora_rank`) and computes two references independently
 in float64: `c_kv_ref = x @ W_down_kv`, and `out_ref` via **standard
 multi-head attention** built directly from the same matrices —

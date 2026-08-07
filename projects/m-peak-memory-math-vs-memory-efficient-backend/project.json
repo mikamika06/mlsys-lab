@@ -1,0 +1,22 @@
+{
+  "id": "m-peak-memory-math-vs-memory-efficient-backend",
+  "title": "Peak memory: math vs memory-efficient backend",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "scaled_dot_product_attention: API and backend dispatch",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["attnlab/memory.py", "attnlab/traffic.py", "attnlab/masking.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Peak memory comparison between math and efficient backends", "check": "harness/m1.py",
+     "gates": [{"metric": "memory_ratio_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Attention FLOPs and HBM traffic estimation", "check": "harness/m2.py",
+     "gates": [{"metric": "traffic_matched", "op": "==", "threshold": 1},
+               {"metric": "flash_saves_bandwidth", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches mask dispatch faults", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_mask", "op": "==", "threshold": 1}]}
+  ]
+}

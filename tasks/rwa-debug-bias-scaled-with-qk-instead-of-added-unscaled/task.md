@@ -33,7 +33,7 @@ terms, soft masks — the attention weights come out measurably wrong.
 Fix `sdpa_with_additive_bias`:
 
 ```python
-def sdpa_with_additive_bias(q: np.ndarray, k: np.ndarray, v: np.ndarray, bias: np.ndarray, scale: float) -> np.ndarray:
+def sdpa_with_additive_bias(q: list[list[float]], k: list[list[float]], v: list[list[float]], bias: list[list[float]], scale: float) -> list[list[float]]:
     ...
 ```
 
@@ -51,13 +51,12 @@ by `v`. Return shape $(n_q, d_v)$.
 ## Example
 
 ```python
-import numpy as np
 
-q = np.array([[1.0, 0.0]])
-k = np.array([[1.0, 0.0], [0.0, 1.0]])
-v = np.array([[10.0], [0.0]])
-bias = np.array([[0.0, 5.0]])   # strongly favor the second key
-scale = 1.0 / np.sqrt(2)
+q = [[1.0, 0.0]]
+k = [[1.0, 0.0], [0.0, 1.0]]
+v = [[10.0], [0.0]]
+bias = [[0.0, 5.0]]   # strongly favor the second key
+scale = 1.0 / (2 0.5)
 
 out = sdpa_with_additive_bias(q, k, v, bias, scale)
 # The bias of 5.0 is large relative to the ~0.7-scale logits, so most of
@@ -68,7 +67,7 @@ out = sdpa_with_additive_bias(q, k, v, bias, scale)
 ## What the gate checks
 
 A single gate, **max_abs_err**, compares your output against an fp64
-NumPy oracle that scales $QK^\top$ first and adds the bias afterward,
+Python oracle that scales $QK^\top$ first and adds the bias afterward,
 across several random-shape cases plus an ALiBi-style linear-bias case
 and a zero-bias sanity case. The buggy ordering (`(QK^\top + B) *
 scale`) produces errors well above $10^{-2}$ on the biased cases; the

@@ -37,10 +37,10 @@ Implement `sliding_window_document_attention(Q, K, V, doc_ids, window)`.
 
 Arguments:
 
-- `Q`: a NumPy array of shape $(n,d)$ containing query vectors.
-- `K`: a NumPy array of shape $(n,d)$ containing key vectors.
-- `V`: a NumPy array of shape $(n,m)$ containing value vectors.
-- `doc_ids`: a 1-D integer NumPy array of length $n$ assigning each token to a document.
+- `Q`: a list of shape $(n,d)$ containing query vectors.
+- `K`: a list of shape $(n,d)$ containing key vectors.
+- `V`: a list of shape $(n,m)$ containing value vectors.
+- `doc_ids`: a 1-D integer list of length $n$ assigning each token to a document.
 - `window`: a positive integer sliding-window size.
 
 Return a tuple `(output, mask)`.
@@ -49,17 +49,16 @@ Return a tuple `(output, mask)`.
 $(n,m)`. `mask` must be a boolean array of shape $(n,n)$ where `mask[q,k]` is
 true exactly when key position $k$ is visible to query position $q`.
 
-Use NumPy operations to implement the mask and attention computation.
+Use Python operations to implement the mask and attention computation.
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1., 0.], [0., 1.], [1., 1.]])
+Q = [[1., 0.], [0., 1.], [1., 1.]]
 K = Q.copy()
-V = np.array([[1., 2.], [3., 4.], [5., 6.]])
-doc_ids = np.array([0, 0, 1])
+V = [[1., 2.], [3., 4.], [5., 6.]]
+doc_ids = [0, 0, 1]
 
 out, mask = sliding_window_document_attention(Q, K, V, doc_ids, 2)
 
@@ -71,7 +70,7 @@ out, mask = sliding_window_document_attention(Q, K, V, doc_ids, 2)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that creates the causal sliding-window document mask,
+The gate builds a Python oracle that creates the causal sliding-window document mask,
 applies it to attention logits, and computes the result in `float64`.
 
 `mask_match` must be exactly $1.0$, meaning the returned boolean mask has the same

@@ -1,0 +1,22 @@
+{
+  "id": "m-pick-the-calibration-method",
+  "title": "Pick the calibration method for ORT quantization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT quantization: dynamic, static, QDQ vs QOperator",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["calib/picker.py", "calib/collapse.py", "calib/schema.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Calibration method and quantization schema selector", "check": "harness/m1.py",
+     "gates": [{"metric": "methods_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Per-tensor scale collapse detector", "check": "harness/m2.py",
+     "gates": [{"metric": "collapse_detected", "op": "==", "threshold": 1},
+               {"metric": "scale_ratio_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for selection invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_method_selection", "op": "==", "threshold": 1}]}
+  ]
+}

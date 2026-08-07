@@ -1,0 +1,68 @@
+{
+  "id": "m-parse-quantization-config-into-a-canonical-scheme-su",
+  "title": "Parse quantization config and pack quantized tensors",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "compressed-tensors checkpoint format",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantlib/scheme.py",
+    "quantlib/packer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse quantization_config into a canonical scheme summary",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute on-disk shapes and pack quantized tensors",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "shapes_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "packing_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid packed shapes",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_shapes",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

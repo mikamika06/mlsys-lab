@@ -1,0 +1,21 @@
+{
+  "id": "m-protobuf-wire-decode-an-onnx-graph",
+  "title": "Protobuf wire decode an ONNX graph",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ONNX file format, ModelProto structure & external data",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["onnxdecode/parser.py", "onnxdecode/initializers.py", "onnxdecode/splitter.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Protobuf wire-decode an ONNX graph", "check": "harness/m1.py",
+     "gates": [{"metric": "graphs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Initializer manifest dump", "check": "harness/m2.py",
+     "gates": [{"metric": "manifests_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Weights-vs-graph byte split and regression safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_split", "op": "==", "threshold": 1}]}
+  ]
+}

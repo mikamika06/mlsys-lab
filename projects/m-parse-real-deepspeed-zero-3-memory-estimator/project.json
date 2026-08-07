@@ -1,0 +1,41 @@
+{
+  "id": "m-parse-real-deepspeed-zero-3-memory-estimator",
+  "title": "Parse Real DeepSpeed ZeRO-3 Memory Estimator",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "ZeRO Stage 3 — full parameter sharding + all-gather scheduling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["zero_estimator/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Calculate sharding variance and ZeRO-3 memory bounds",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "sharded_exact", "op": "==", "threshold": 1.0},
+        {"metric": "memory_exact", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute prefetch depth to hide All-Gather latency",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "depths_exact", "op": "==", "threshold": 1.0},
+        {"metric": "gather_rel_err", "op": "<", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch omitted padding logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_missing_padding", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "m-per-stage-peak-activation-count-under-1f1b",
+  "title": "Per-Stage Peak Activation Count and Memory Trace Under 1F1B Schedule",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Pipeline parallelism memory & bubble/throughput analysis",
+  "difficulty": 3,
+  "edits": ["pact/peak.py", "pact/trace.py", "pact/budget.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-Stage Peak Activation Count Under 1F1B", "check": "harness/m1.py",
+     "gates": [{"metric": "peaks_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Per-Stage Memory Trace From a Real Schedule", "check": "harness/m2.py",
+     "gates": [{"metric": "trace_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid peak assumptions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_peaks", "op": "==", "threshold": 1}]}
+  ]
+}

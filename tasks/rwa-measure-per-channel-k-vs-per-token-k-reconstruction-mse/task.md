@@ -37,7 +37,7 @@ buckets — including channels whose own residual spread was tiny.
 Implement `per_channel_vs_per_token_k_mse(K, bits)`:
 
 ```python
-def per_channel_vs_per_token_k_mse(K: np.ndarray, bits: int) -> np.ndarray:
+def per_channel_vs_per_token_k_mse(K: list[list[float]], bits: int) -> list[float]:
     ...
 ```
 
@@ -45,7 +45,7 @@ def per_channel_vs_per_token_k_mse(K: np.ndarray, bits: int) -> np.ndarray:
 - `bits`: quantizer bit-width for the uniform affine min-max quantizer
   above.
 
-Return `np.array([mse_per_channel, mse_per_token])`:
+Return `[mse_per_channel, mse_per_token]`:
 
 - `mse_per_channel`: mean squared reconstruction error of `K` quantized
   **per-channel** (one scale/zero-point per column, min/max over all rows).
@@ -69,7 +69,7 @@ per_channel_vs_per_token_k_mse(K, bits=4)
 The gate builds several `K` matrices from a seeded generator: each has a
 per-channel bias drawn from a wide range plus small Gaussian noise, at
 varying `(n_tokens, d_channels, bits)`. For each case it computes the real
-reference `mse_per_channel` / `mse_per_token` with a NumPy oracle
+reference `mse_per_channel` / `mse_per_token` with a Python oracle
 implementing the exact quantize/dequantize formula above along each axis.
 
 Your two returned numbers must (a) be within relative error `1e-6` of the

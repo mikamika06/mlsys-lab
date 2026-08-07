@@ -1,0 +1,63 @@
+{
+  "id": "m-pick-the-block-size-minimizing-total-wasted-lane-tim",
+  "title": "Pick the block size minimizing total wasted lane-time",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Pointer arithmetic, tl.load/tl.store, and masking",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "lanewaste/optimizer.py",
+    "lanewaste/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Calculate wasted lane time per candidate block size",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "metrics_matched",
+          "op": ">=",
+          "threshold": 10.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Identify optimal block size minimizing total wasted time",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "optimal_index_matched",
+          "op": ">=",
+          "threshold": 10.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catch faulty block-size selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_naive_min_waste",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

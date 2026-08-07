@@ -1,0 +1,40 @@
+{
+  "id": "m-profiler-overhead-of-with-stack",
+  "title": "Profiler overhead, stack traces, and trace budgeting",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "torch.profiler: capture configuration",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "proftune/annotations.py",
+    "proftune/overhead.py",
+    "proftune/budget.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Annotating training steps with record_function",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "annotations_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Quantifying profiler overhead and with_stack latency ratio",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "overhead_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Trace byte budget enforcement and regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_budget_violation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

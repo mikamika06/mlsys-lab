@@ -26,11 +26,7 @@ crosses a `block_size` boundary. Reading the sequence back out
 Implement `paged_append_and_attend`:
 
 ```python
-def paged_append_and_attend(
-    kv_pool_k: np.ndarray, kv_pool_v: np.ndarray,
-    block_table: list[int], block_size: int, existing_len: int,
-    new_k: np.ndarray, new_v: np.ndarray, q: np.ndarray,
-) -> np.ndarray:
+def paged_append_and_attend(kv_pool_k: list[list[float]], kv_pool_v: list[list[float]], block_table: list[int], block_size: int, existing_len: int, new_k: list[list[float]], new_v: list[list[float]], q: list[float]) -> list[float]:
     ...
 ```
 
@@ -56,14 +52,13 @@ dot-product attention output of `q` over the gathered `K`/`V`.
 ## Example
 
 ```python
-import numpy as np
 
 block_size = 4
 block_table = [2, 0]          # logical block 0 -> physical 2, logical block 1 -> physical 0
 existing_len = 3              # 3 tokens already written (all in logical block 0)
-new_k = np.random.default_rng(0).standard_normal((3, 8))   # spans blocks 0 and 1
-new_v = np.random.default_rng(1).standard_normal((3, 8))
-q = np.random.default_rng(2).standard_normal(8)
+new_k = [[... for _ in range(8)] for _ in range(3)] # spans blocks 0 and 1
+new_v = [[... for _ in range(8)] for _ in range(3)]
+q = [0.0 for _ in range(8)]
 
 # pool must already hold the 3 existing tokens at slot(0), slot(1), slot(2)
 out = paged_append_and_attend(kv_pool_k, kv_pool_v, block_table, block_size,
@@ -80,7 +75,7 @@ non-contiguous physical) blocks, with the rest of the pool filled with
 unrelated large-magnitude noise. It compares your output to a reference
 that reconstructs the same sequence directly by concatenating the
 original contiguous `existing_k/v` and `new_k/v` arrays used to build the
-pool, and attends in NumPy — never calling your function, never
+pool, and attends in Python — never calling your function, never
 hardcoding an expected value, and structurally independent of any
 slot-mapping bug.
 

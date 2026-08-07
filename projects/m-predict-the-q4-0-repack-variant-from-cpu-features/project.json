@@ -1,0 +1,22 @@
+{
+  "id": "m-predict-the-q4-0-repack-variant-from-cpu-features",
+  "title": "Predict the Q4_0 repack variant from CPU features",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "build-backends-cpu-repack",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["repack/predict.py", "repack/bench.py", "repack/logs.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Predict the optimal Q4_0 repack variant", "check": "harness/m1.py",
+     "gates": [{"metric": "variants_matched", "op": ">=", "threshold": 6}]},
+    {"n": 2, "title": "Benchmark Q4_0 with and without repacking", "check": "harness/m2.py",
+     "gates": [{"metric": "speedup_valid", "op": "==", "threshold": 1},
+               {"metric": "overhead_bounded", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: interpret build failure logs and catch faults", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_variant", "op": "==", "threshold": 1}]}
+  ]
+}

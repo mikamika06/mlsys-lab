@@ -1,0 +1,44 @@
+{
+  "id": "m-predict-gguf-size-from-a-hf-config-json",
+  "title": "Predict GGUF file size from a Hugging Face config.json",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "size-bpw-accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ggufsize/config.py",
+    "ggufsize/calculator.py",
+    "ggufsize/quant.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Config parsing and tensor counting",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "tensors_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Size prediction across quantization families",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.05}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for MoE and tied weights",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_accounting", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

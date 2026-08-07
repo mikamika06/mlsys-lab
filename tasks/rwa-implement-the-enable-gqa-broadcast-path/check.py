@@ -73,7 +73,7 @@ def grade(sol, fx) -> dict:
     for Q, K, V in cases:
         ref = _oracle(Q, K, V)
         try:
-            got = sol.enable_gqa_broadcast_attention(Q.copy(), K.copy(), V.copy())
+            got = sol.enable_gqa_broadcast_attention(Q.tolist(), K.tolist(), V.tolist())
             got = np.asarray(got, dtype=np.float64)
         except Exception:
             return {"max_abs_err": float("inf")}

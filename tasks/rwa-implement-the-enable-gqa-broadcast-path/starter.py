@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def enable_gqa_broadcast_attention(Q, K, V):
+def enable_gqa_broadcast_attention(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], V: list[list[list[list[float]]]]) -> list[list[list[list[float]]]]:
     """
     Q: (batch, n_q, seq_q, d) queries, PyTorch SDPA axis order.
     K, V: (batch, n_kv, seq_k, d) with n_q a multiple of n_kv.

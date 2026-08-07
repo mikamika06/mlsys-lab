@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
 def sink_attention_stream(Q, K, V, k, w):
     raise NotImplementedError('your code here')

@@ -1,0 +1,21 @@
+{
+  "id": "m-pick-num-speculative-tokens-maximizing-predicted-tok",
+  "title": "Speculative token selection and go/no-go decision framework",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "speculative-decoding-in-production",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["spec/draft.py", "spec/policy.py", "spec/concurrency.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Pick optimal speculative tokens maximizing predicted speedup", "check": "harness/m1.py",
+     "gates": [{"metric": "optimal_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Ngram drafting and acceptance rate on code-edit trace", "check": "harness/m2.py",
+     "gates": [{"metric": "acceptance_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Go/no-go decision and safety net regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_policy", "op": "==", "threshold": 1}]}
+  ]
+}

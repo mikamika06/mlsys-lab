@@ -1,0 +1,9 @@
+# Ticket: Investigating Profiling Inconsistencies and Overhead in ONNX Runtime Inference
+
+We are observing performance discrepancies and tracking difficulties when analyzing execution profiles exported from our ONNX Runtime deployment pipeline. During routine latency profiling of our multimodal models, several unexplained phenomena have emerged that prevent accurate bottleneck identification and execution provider optimization.
+
+First, when attempting to break down execution duration by operator category, the current tooling lacks a structured way to aggregate execution times across recurring op types like MatMul, Conv, and Add. Operators are scattered across subgraphs and execution providers, making it difficult to determine which specific operation types dominate total compute time without manually parsing large profile event logs.
+
+Second, we suspect that cross-device or cross-execution provider communication overhead is introducing hidden latency spikes. Specifically, we need a reliable way to isolate and inspect memory copy operations that occur explicitly at execution provider boundaries (such as transitions between CPU and CUDA or other accelerators), but these events are currently hidden among routine internal tensor allocations and general data movement logs.
+
+Finally, a persistent discrepancy exists between global measurements and granular node-level profiling. When we sum the reported durations of all individual execution nodes across the graph, the aggregate execution time falls significantly short of the total end-to-end session run time recorded externally or via session-level start-stop events. This unaccounted-for gap makes it difficult to gauge the true framework overhead, kernel launch delays, or synchronization costs. We need a robust diagnostic suite implemented in our internal `ortperf` module to aggregate operator times, detect boundary memory copies, and quantify the session-versus-node overhead gap accurately.

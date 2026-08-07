@@ -1,0 +1,35 @@
+{
+  "id": "m-parse-a-timing-cache-header",
+  "title": "Timing Cache Reuse and Tactic Source Ablation",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Tactics, timing cache and builder optimization level",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["trtcache/parser.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse a timing cache header",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "headers_matched", "op": "==", "threshold": 5}]
+    },
+    {
+      "n": 2,
+      "title": "Timing cache reuse legality",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "decisions_matched", "op": "==", "threshold": 5}]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: catch tactic leak",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_tactic_leak", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

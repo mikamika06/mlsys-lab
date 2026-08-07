@@ -1,0 +1,45 @@
+{
+  "id": "m-plugin-path-vs-decomposed-onnx",
+  "title": "Plugin path vs decomposed ONNX analysis and migration",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT plugins & custom ops (IPluginV3 era)",
+  "part": 1,
+  "difficulty": 5,
+  "edits": [
+    "trtplug/analysis.py",
+    "trtplug/migration.py",
+    "trtplug/audit.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analyze plugin path versus decomposed ONNX performance and fidelity",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "analysis_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Map IPluginV2DynamicExt to IPluginV3 methods correctly",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "methods_matched", "op": "==", "threshold": 1},
+        {"metric": "wrapper_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for custom-domain op binding audits",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_binding", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

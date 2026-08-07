@@ -1,0 +1,29 @@
+import numpy as np
+
+
+def pack_quantized_tensor(tensor, num_bits, axis=-1):
+    axis = axis % tensor.ndim
+    elems_per_int32 = 32 // num_bits
+    mask = (1 << num_bits) - 1
+
+    t = np.swapaxes(tensor, axis, -1)
+    orig_shape = t.shape
+    flat_last = orig_shape[-1]
+
+    pad_len = (elems_per_int32 - (flat_last % elems_per_int32)) % elems_per_int32
+    if pad_len > 0:
+        pad_width = [(0, 0)] * (t.ndim - 1) + [(0, pad_len)]
+        t = np.pad(t, pad_width, mode='constant', constant_values=0)
+
+    new_last = t.shape[-1]
+    packed_len = new_last // elems_per_int32
+    reshape_dims = t.shape[:-1] + (packed_len, elems_per_int32)
+    t = t.reshape(reshape_dims)
+
+    packed = np.zeros(t.shape[:-1], dtype=np.int32)
+    for i in range(elems_per_int32):
+        val = (t[..., i].astype(np.int32) & mask) << (i * num_bits)
+        packed = packed | val
+
+    packed = np.swapaxes(packed, axis, -1)
+    return packed

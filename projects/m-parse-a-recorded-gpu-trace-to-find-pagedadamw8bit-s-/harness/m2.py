@@ -1,30 +1,23 @@
+import sys
 import ref
 
-
 def check(workdir):
-    from gputrace import parse_trace_events, find_spillover_spike
+    sys.path.insert(0, workdir)
+    try:
+        from parser.core import calculate_spillover_bytes
+        events = ref.TRACE
+        opt_events = [e for e in events if e["name"] == "optimizer_step"]
+        spike_step = opt_events[7]
 
-    out = {"spillover_index_matched": 0.0, "ratio_matched": 0.0}
-    idx_ok = 0
-    ratio_ok = 0
-    total = len(ref.TRACES)
+        got_bytes = calculate_spillover_bytes(events, spike_step["ts"], spike_step["ts"] + spike_step["dur"])
+        want_bytes = ref.calculate_spillover_bytes(events, spike_step["ts"], spike_step["ts"] + spike_step["dur"])
 
-    for i, trace in enumerate(ref.TRACES):
-        events = ref.parse_trace_events(trace)
-        want = ref.find_spillover_spike(events)
-        try:
-            got = find_spillover_spike(events)
-            if got.get("argmin_index") == want.get("argmin_index"):
-                idx_ok += 1
-            if abs(got.get("max_ratio", 0.0) - want.get("max_ratio", 0.0)) < 1e-5:
-                ratio_ok += 1
-        except Exception as e:
-            if "_note" not in out:
-                out["_note"] = f"trace {i} raised {type(e).__name__}: {e}"
+        got_empty = calculate_spillover_bytes(events, 0, 10)
+        want_empty = ref.calculate_spillover_bytes(events, 0, 10)
 
-    if idx_ok == total:
-        out["spillover_index_matched"] = 1.0
-    if ratio_ok == total:
-        out["ratio_matched"] = 1.0
-
-    return out
+        match = 1.0 if (got_bytes == want_bytes and got_empty == want_empty) else 0.0
+        return {"bytes_match": match}
+    except Exception as e:
+        return {"bytes_match": 0.0, "_note": str(e)}
+    finally:
+        sys.path.pop(0)

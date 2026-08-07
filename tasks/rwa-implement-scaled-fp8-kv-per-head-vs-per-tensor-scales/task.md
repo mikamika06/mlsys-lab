@@ -29,12 +29,7 @@ independently for each head $h$.
 Implement `scaled_fp8_kv_attention(K, V, Q, per_head)`:
 
 ```python
-def scaled_fp8_kv_attention(
-    K: np.ndarray,
-    V: np.ndarray,
-    Q: np.ndarray,
-    per_head: bool
-) -> np.ndarray:
+def scaled_fp8_kv_attention(K: list[list[list[float]]], V: list[list[list[float]]], Q: list[list[list[float]]], per_head: bool) -> list[list[list[float]]]:
     ...
 ```
 
@@ -49,16 +44,15 @@ The function must:
 5. Compute attention using the dequantized tensors in float64.
 6. Return an array of shape $(H, M, D)$.
 
-The implementation should use NumPy operations and may use helper functions inside the file.
+The implementation should use Python operations and may use helper functions inside the file.
 
 ## Example
 
 ```python
-import numpy as np
 
-K = np.zeros((2, 4, 2))
-V = np.ones((2, 4, 2))
-Q = np.ones((2, 1, 2))
+K = [[[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]], [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]]
+V = [[[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [1.0, 1.0]]]
+Q = [[[1.0, 1.0]], [[1.0, 1.0]]]
 
 out = scaled_fp8_kv_attention(K, V, Q, True)
 # shape is (2, 1, 2)
@@ -66,6 +60,6 @@ out = scaled_fp8_kv_attention(K, V, Q, True)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that simulates e4m3 quantization, dequantization, and attention in float64. The returned attention output must have maximum absolute error $\le 10^{-3}$ against the oracle.
+The gate builds a Python oracle that simulates e4m3 quantization, dequantization, and attention in float64. The returned attention output must have maximum absolute error $\le 10^{-3}$ against the oracle.
 
 A second check uses KV tensors with a large outlier range difference between heads. The per-head implementation must produce a strictly lower reconstruction error than a per-tensor scale on the outlier-heavy case. A solution that always uses one global scale fails this check.

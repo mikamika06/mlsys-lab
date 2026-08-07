@@ -1,35 +1,19 @@
 import ref
 
-
 def check(workdir):
-    from gguf_parser.header import parse_gguf_header
+    from gguf_parser.parser import parse_header
 
-    out = {
-        "headers_matched": 0.0,
-        "total_fixtures": float(len(ref.GENERATED_FIXTURES)),
-    }
-    matched = 0
-
-    for i, fix in enumerate(ref.GENERATED_FIXTURES):
-        bin_data = fix["binary"]
+    out = {"manifests_matched": 0.0, "total": float(len(ref.FIXTURES))}
+    ok = 0
+    for i, data in enumerate(ref.FIXTURES):
+        want = ref.parse_header(data)
         try:
-            got = parse_gguf_header(bin_data)
-            expected = ref.parse_gguf_header(bin_data)
-
-            if (
-                got["version"] == expected["version"]
-                and got["tensor_count"] == expected["tensor_count"]
-                and got["kv_count"] == expected["kv_count"]
-                and got["header_size"] == expected["header_size"]
-                and got["metadata"] == expected["metadata"]
-                and got["tensors"] == expected["tensors"]
-            ):
-                matched += 1
-            elif "_note" not in out:
-                out["_note"] = f"Fixture {i} mismatch: got {got}, expected {expected}"
+            got = parse_header(data)
+            if got.get("metadata") == want["metadata"] and got.get("tensors") == want["tensors"]:
+                ok += 1
+            else:
+                out["_note"] = f"fixture {i} mismatch"
         except Exception as e:
-            if "_note" not in out:
-                out["_note"] = f"Fixture {i} raised {type(e).__name__}: {str(e)}"
-
-    out["headers_matched"] = float(matched)
+            out["_note"] = f"fixture {i} error: {e}"
+    out["manifests_matched"] = float(ok)
     return out

@@ -1,6 +1,3 @@
-import numpy as np
-import math
-
 def measure_kept_tokens_and_memory(compression_ratio: float,
                                    seq_len: int,
                                    full_bytes: int) -> tuple[int, float]:
@@ -21,10 +18,10 @@ def measure_kept_tokens_and_memory(compression_ratio: float,
     -------
     kept_tokens : int
         Rounded number of tokens that are retained: round((1 - r) * seq_len).
-    memory_saved : float64
+    memory_saved : float
         Amount of KV memory saved: r * full_bytes.
     """
     val = (1.0 - compression_ratio) * seq_len
     kept = int(round(val))
-    saved = np.float64(compression_ratio * full_bytes)
+    saved = float(compression_ratio * full_bytes)
     return kept, saved

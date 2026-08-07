@@ -1,6 +1,6 @@
 {
   "id": "m-parse-a-recorded-gpu-trace-to-find-pagedadamw8bit-s-",
-  "title": "Parse GPU trace to find PagedAdamW8bit latency spike",
+  "title": "Parsing PagedAdamW8bit Spillover Spikes from GPU Traces",
   "kind": "project",
   "tier": "T0",
   "area": "rw3-finetune-efficiency",
@@ -8,60 +8,35 @@
   "part": 1,
   "difficulty": 3,
   "edits": [
-    "gputrace/parser.py",
-    "gputrace/metrics.py",
+    "parser/core.py",
     "tests/test_regression.py"
   ],
   "milestones": [
     {
       "n": 1,
-      "title": "Extract PagedAdamW8bit trace events from JSON log",
+      "title": "Extract optimizer step durations and identify the maximum spike",
       "check": "harness/m1.py",
       "gates": [
-        {
-          "metric": "traces_parsed",
-          "op": "==",
-          "threshold": 1.0
-        }
+        {"metric": "durations_match", "op": "==", "threshold": 1},
+        {"metric": "index_match", "op": "==", "threshold": 1}
       ]
     },
     {
       "n": 2,
-      "title": "Identify CPU-spillover spike via index search",
+      "title": "Calculate spillover bytes shuttled during the spike",
       "check": "harness/m2.py",
       "gates": [
-        {
-          "metric": "spillover_index_matched",
-          "op": "==",
-          "threshold": 1.0
-        },
-        {
-          "metric": "ratio_matched",
-          "op": "==",
-          "threshold": 1.0
-        }
+        {"metric": "bytes_match", "op": "==", "threshold": 1}
       ]
     },
     {
       "n": 3,
-      "title": "Safety net: test catches ignored latency spikes",
+      "title": "Safety net: test catching missing time bounds",
       "check": "harness/m3.py",
       "gates": [
-        {
-          "metric": "has_tests",
-          "op": "==",
-          "threshold": 1.0
-        },
-        {
-          "metric": "passes_on_good",
-          "op": "==",
-          "threshold": 1.0
-        },
-        {
-          "metric": "catches_ignored_spikes",
-          "op": "==",
-          "threshold": 1.0
-        }
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_bounds", "op": "==", "threshold": 1}
       ]
     }
   ]

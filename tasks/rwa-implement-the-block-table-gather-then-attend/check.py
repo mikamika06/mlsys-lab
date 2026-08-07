@@ -50,7 +50,14 @@ def grade(sol, fx) -> dict:
 
         try:
             got = np.asarray(
-                sol.paged_attention(q.copy(), k_pool.copy(), v_pool.copy(), block_table.copy(), seq_len, block_size),
+                sol.paged_attention(
+                    q.tolist(),
+                    k_pool.tolist(),
+                    v_pool.tolist(),
+                    block_table.tolist(),
+                    seq_len,
+                    block_size,
+                ),
                 dtype=np.float64,
             )
         except Exception:

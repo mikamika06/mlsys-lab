@@ -28,7 +28,7 @@ valid positions and nothing else.
 Implement `paged_attention`:
 
 ```python
-def paged_attention(q, k_pool, v_pool, block_table, seq_len, block_size):
+def paged_attention(q: list[float], k_pool: list[list[list[float]]], v_pool: list[list[list[float]]], block_table: list[int], seq_len: int, block_size: int) -> list[float]:
     ...
 ```
 
@@ -55,14 +55,13 @@ Return the `(d,)` output vector.
 ## Example
 
 ```python
-import numpy as np
 
 block_size = 4
 d = 2
 # seq_len=5 needs 2 logical blocks; block_table is a SHUFFLED mapping.
-block_table = np.array([2, 0])   # logical block 0 -> physical block 2, etc.
-k_pool = np.random.randn(4, block_size, d)   # 4 physical blocks total
-v_pool = np.random.randn(4, block_size, d)
+block_table = [2, 0]   # logical block 0 -> physical block 2, etc.
+k_pool = [[[random.gauss(0, 1) for _ in range(d)] for _ in range(block_size)] for _ in range(4)] # 4 physical blocks total
+v_pool = [[[random.gauss(0, 1) for _ in range(d)] for _ in range(block_size)] for _ in range(4)]
 
 # place the real 5-token K/V sequence into its physical slots...
 # (positions 0-3 -> physical block 2, position 4 -> physical block 0, slot 0)

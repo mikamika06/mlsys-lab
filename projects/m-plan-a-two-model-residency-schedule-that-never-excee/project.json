@@ -1,0 +1,69 @@
+{
+  "id": "m-plan-a-two-model-residency-schedule-that-never-excee",
+  "title": "Two-model residency schedule for Apple Silicon unified memory",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "apple-silicon-unified-memory-limits",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "residency/planner.py",
+    "residency/memory.py",
+    "residency/schedule.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Two-model residency schedule complying with the wired limit",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "schedules_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure the effect of raising iogpu.wired_limit_mb and zero copy",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "limit_effect_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "zero_copy_verified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching out-of-limit schedules",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_violations",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-port-a-2023-autogptq-script-to-gptqmodel",
+  "title": "Port a 2023 AutoGPTQ script to GPTQModel",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Ecosystem map and library selection",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gptq_port/translate.py", "gptq_port/oracle.py", "gptq_port/classify.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Translate 2023 AutoGPTQ config to GPTQModel", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Format-to-runtime compatibility oracle", "check": "harness/m2.py",
+     "gates": [{"metric": "oracle_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid library identification", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_classifier", "op": "==", "threshold": 1}]}
+  ]
+}

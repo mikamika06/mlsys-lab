@@ -777,7 +777,10 @@ def one(tid, turns):
                       % want)
             continue
         got["starter.py"] = starter
+        keep_check = got.pop("check.py", None)
         written = write_files(tid, got)
+        if keep_check is not None:
+            got["check.py"] = keep_check
         # The statement follows the code: its signature block is taken from the
         # starter that was just written, so the two cannot disagree.
         before = files["task.md"] or ""
@@ -822,7 +825,18 @@ def one(tid, turns):
                       "from task.md, starter.py and solution_ref.py, and send "
                       "those files again in the same FILE: format." % left)
             continue
+        # The grader is the thing most easily broken by a rewrite: the model
+        # returns a check.py that imports solution_ref by name, or compares a
+        # list against an array and produces an infinity. The original one
+        # usually still works — a hand-written reference iterates its argument
+        # either way — so it is tried first and the rewritten one only if that
+        # fails.
         ok, line = verify(tid)
+        if not ok and "check.py" in got:
+            with open(os.path.join(ROOT, "tasks", tid, "check.py"), "w",
+                      encoding="utf-8") as f:
+                f.write(got["check.py"].rstrip() + "\n")
+            ok, line = verify(tid)
         if not ok:
             history.append("%s:%s" % (model, line[-90:]))
             revert(tid)

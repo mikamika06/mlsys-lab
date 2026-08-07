@@ -27,27 +27,26 @@ term equals exactly $e^0 = 1$, the sum can't underflow to zero either.
 Implement `logsumexp`:
 
 ```python
-def logsumexp(x: np.ndarray, axis: int = -1) -> np.ndarray:
+def logsumexp(x: list[list[float]], axis: int=-1) -> list[float]:
     ...
 ```
 
-* `x` — a NumPy array of `float64` values, which may range anywhere from
+* `x` — a list of `float64` values, which may range anywhere from
   $-10^4$ to $10^4$.
 * `axis` — the axis to reduce over, with the same semantics as
-  `np.sum(..., axis=axis)` and `keepdims=False`.
+`sum(..., axis=axis)` and `keepdims=False`.
 
 Use the max-shift trick above — do not exponentiate the raw values.
 
 ## Example
 
 ```python
-import numpy as np
-x = np.array([1e4, 1e4 + 1.0, 1e4 - 3.0])
+x = [1e4, 1e4 + 1.0, 1e4 - 3.0]
 print(logsumexp(x))
 # -> 10001.31326...   (== 1e4 + log(1 + e + e^-3)), NOT inf
 ```
 
-A naive `np.log(np.sum(np.exp(x)))` on this input overflows to `inf`.
+A naive `math.log(sum(math.exp(x)))` on this input overflows to `inf`.
 
 ## What the gate checks
 

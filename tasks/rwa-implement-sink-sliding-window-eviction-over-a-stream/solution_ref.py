@@ -1,14 +1,10 @@
 import math
-import numpy as np
 
 
 def sink_attention_stream(Q, K, V, k, w):
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-
-    n, d = Q.shape
-    m = V.shape[1]
+    n = len(Q)
+    d = len(Q[0])
+    m = len(V[0])
     outputs = []
     lengths = []
 
@@ -56,4 +52,4 @@ def sink_attention_stream(Q, K, V, k, w):
                 out_vec[j] += p * v_row[j]
         outputs.append(out_vec)
 
-    return np.asarray(outputs, dtype=np.float64), lengths
+    return outputs, lengths

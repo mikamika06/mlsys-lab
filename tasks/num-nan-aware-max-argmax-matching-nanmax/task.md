@@ -16,7 +16,7 @@ silently breaks the moment a `NaN` shows up: if `x[0]` is `NaN`, then
 appears later, it's simply skipped, but only by accident of the comparison
 being `False`, not because you deliberately checked for it.
 
-NumPy's `np.nanmax` / `np.nanargmax` define the sane, useful behaviour:
+`nanmax_argmax` defines the sane, useful behaviour:
 ignore `NaN` entries entirely and return the max (and its index) among the
 remaining finite/inf values, raising an error only if *every* entry is
 `NaN`.
@@ -26,13 +26,13 @@ remaining finite/inf values, raising an error only if *every* entry is
 Implement `nanmax_argmax`:
 
 ```python
-def nanmax_argmax(x):
+def nanmax_argmax(x: list[float]) -> tuple[float, int]:
     """Return (max_value, argmax_index) of a 1-D sequence, ignoring NaNs,
-    matching np.nanmax/np.nanargmax (first occurrence wins ties). Raises
+matching `nanmax_argmax` (first occurrence wins ties). Raises
     ValueError if every element is NaN."""
 ```
 
-* `x` — a 1-D sequence (NumPy array or list) of floats, possibly containing
+* `x` — a 1-D sequence (list or list) of floats, possibly containing
   `NaN` values, with at least one non-`NaN` entry.
 * Return a tuple `(max_value, argmax_index)`: the maximum among the
   non-`NaN` entries, and the index of its **first** occurrence.
@@ -45,8 +45,7 @@ the bug this task is about.
 ## Example
 
 ```python
-import numpy as np
-x = np.array([np.nan, 3.0, 5.0, 5.0, np.nan, 2.0])
+x = [float('nan'), 3.0, 5.0, 5.0, float('nan'), 2.0]
 nanmax_argmax(x)   # -> (5.0, 2)   first occurrence of the max, NaNs skipped
 ```
 
@@ -55,8 +54,8 @@ nanmax_argmax(x)   # -> (5.0, 2)   first occurrence of the max, NaNs skipped
 The gate runs your function on 40 randomly generated arrays of varying
 length (5–39 elements) with a random scattering of `NaN` entries (always
 leaving at least one finite value), and compares `(max_value, argmax_index)`
-against `(np.nanmax(x), np.nanargmax(x))`. **argmax_agreement** is the
+against `nanmax_argmax(x)`. **argmax_agreement** is the
 fraction of the 40 cases where both the returned index matches exactly and
 the returned value matches to within a tight numerical tolerance. This
-metric must equal `1.0` — every single case must agree with the NumPy
+metric must equal `1.0` — every single case must agree with the Python
 oracle.

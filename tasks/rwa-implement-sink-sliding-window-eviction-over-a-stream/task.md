@@ -24,13 +24,7 @@ The eviction policy does not change the attention computation itself. It only ch
 Implement `sink_attention_stream(Q, K, V, k, w)`:
 
 ```python
-def sink_attention_stream(
-    Q: np.ndarray,
-    K: np.ndarray,
-    V: np.ndarray,
-    k: int,
-    w: int,
-) -> tuple[np.ndarray, list[int]]:
+def sink_attention_stream(Q, K, V, k, w):
     ...
 ```
 
@@ -47,16 +41,15 @@ For every step $t$, insert the current token into the live cache, evict tokens t
 - an array of shape $(n,m)$ containing the attention output for every step.
 - a list containing the live cache length after every step.
 
-Use NumPy operations for the attention calculation. The returned outputs must use `float64` arithmetic.
+Use Python operations for the attention calculation. The returned outputs must use `float64` arithmetic.
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1., 0.], [0., 1.]])
-K = np.array([[1., 0.], [0., 1.]])
-V = np.array([[10., 0.], [0., 20.]])
+Q = [[1., 0.], [0., 1.]]
+K = [[1., 0.], [0., 1.]]
+V = [[10., 0.], [0., 20.]]
 
 out, lengths = sink_attention_stream(Q, K, V, k=1, w=1)
 
@@ -67,7 +60,7 @@ out, lengths = sink_attention_stream(Q, K, V, k=1, w=1)
 
 ## What the gate checks
 
-The gate replays several streams and computes a NumPy reference implementation that forms the kept index set at every step. The returned attention outputs must satisfy
+The gate replays several streams and computes a Python reference implementation that forms the kept index set at every step. The returned attention outputs must satisfy
 
 $$
 \max_i |y_i-\hat{y}_i| \le 10^{-5}.

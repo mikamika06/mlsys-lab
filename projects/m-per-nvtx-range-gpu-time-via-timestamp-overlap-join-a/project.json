@@ -1,0 +1,43 @@
+{
+  "id": "m-per-nvtx-range-gpu-time-via-timestamp-overlap-join-a",
+  "title": "Per-NVTX-range GPU time via timestamp-overlap join",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "nsys-stats-reports-and-sqlite",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "profiler/core.py",
+    "profiler/stats.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Per-NVTX-range GPU time via timestamp-overlap join",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "ranges_matched", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Top-3 kernels by total time and share",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "top_kernels_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: CUPTI aggregation regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_aggregation", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

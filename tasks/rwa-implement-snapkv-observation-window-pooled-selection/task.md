@@ -30,8 +30,7 @@ positions** — this is a real property of SnapKV, not an approximation.
 Implement `snapkv_pooled_selection`:
 
 ```python
-def snapkv_pooled_selection(K: np.ndarray, V: np.ndarray, Q_obs: np.ndarray, Q_new: np.ndarray,
-                             budget: int, pool_size: int) -> dict:
+def snapkv_pooled_selection(K: list[list[list[float]]], V: list[list[list[float]]], Q_obs: list[list[list[float]]], Q_new: list[list[float]], budget: int, pool_size: int) -> dict:
     ...
 ```
 
@@ -55,9 +54,8 @@ Return a dict:
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 H, n, d, w = 2, 30, 8, 4
 K = rng.standard_normal((H, n, d))
 V = rng.standard_normal((H, n, d))
@@ -73,7 +71,7 @@ out = snapkv_pooled_selection(K, V, Q_obs, Q_new, budget=12, pool_size=3)
 
 The grader builds several seeded multi-head scenarios and computes each
 head's kept index set and compressed-cache output with an independent
-NumPy oracle — never calling your function, never hardcoding an expected
+Python oracle — never calling your function, never hardcoding an expected
 value.
 
 - `exact_match` — the fraction of (scenario, head) pairs whose kept index

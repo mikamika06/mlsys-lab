@@ -1,0 +1,22 @@
+{
+  "id": "m-prefill-cost-scaling-fit-attention-s-quadratic-term-",
+  "title": "Prefill Cost Scaling & KV Memory",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "long-context-serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["prefill/scaling.py", "prefill/rope.py", "prefill/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Prefill scaling and RoPE mismatch", "check": "harness/m1.py",
+     "gates": [{"metric": "scaling_rel_err", "op": "<=", "threshold": 0.05},
+               {"metric": "rope_matched", "op": ">=", "threshold": 2}]},
+    {"n": 2, "title": "Cheapest valid serving config", "check": "harness/m2.py",
+     "gates": [{"metric": "mem_matched", "op": "==", "threshold": 2}]},
+    {"n": 3, "title": "Safeguard against KV OOM", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_memory_bug", "op": "==", "threshold": 1}]}
+  ]
+}

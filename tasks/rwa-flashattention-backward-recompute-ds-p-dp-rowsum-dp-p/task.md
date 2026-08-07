@@ -52,7 +52,7 @@ $$
 
 Implement `flash_attention_backward(q, k, v, do, m, l)`.
 
-The function receives NumPy arrays:
+The function receives list:
 - `q` with shape $(n,d)$
 - `k` with shape $(n,d)$
 - `v` with shape $(n,d)$
@@ -62,21 +62,20 @@ The function receives NumPy arrays:
 
 It must return a tuple `(dq, dk, dv)` containing the gradients with respect to $Q$, $K$, and $V$. Recompute $P$ from `q`, `k`, `m`, and `l`; do not use a stored attention matrix.
 
-The outputs must be `float64` NumPy arrays.
+The outputs must be `float64` list.
 
 ## Example
 
 ```python
-import numpy as np
 
-q = np.array([[1.0, 0.0], [0.0, 1.0]])
-k = np.array([[1.0, 0.0], [0.0, 1.0]])
-v = np.array([[2.0, 0.0], [0.0, 3.0]])
-do = np.ones((2, 2))
+q = [[1.0, 0.0], [0.0, 1.0]]
+k = [[1.0, 0.0], [0.0, 1.0]]
+v = [[2.0, 0.0], [0.0, 3.0]]
+do = [[1.0] * 2 for _ in range(2)]
 
 s = q @ k.T
-m = np.max(s, axis=1, keepdims=True)
-l = np.sum(np.exp(s - m), axis=1, keepdims=True)
+m = [[max(row)] for row in s]
+l = [[sum(math.exp(x - m_row[0]) for x in row)] for row, m_row in zip(s, m)]
 
 dq, dk, dv = flash_attention_backward(q, k, v, do, m, l)
 ```

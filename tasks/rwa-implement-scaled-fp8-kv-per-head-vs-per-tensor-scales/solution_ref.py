@@ -1,122 +1,111 @@
 import math
-import numpy as np
 
 
-def _e4m3(x):
-    x = np.asarray(x, dtype=np.float64)
-    out = np.zeros_like(x)
-    shape = x.shape
-    for idx in np.ndindex(shape):
-        val = x[idx]
-        ax = abs(val)
-        if ax > 0:
-            vals = min(ax, 448.0)
-            exp = max(math.floor(math.log2(vals)), -6)
-            base = math.pow(2.0, exp)
-            mant = vals / base - 1.0
-            mant_q = round(mant * 8.0) / 8.0
-            vals_q = min(base * (1.0 + mant_q), 448.0)
-            sign = 1.0 if val > 0 else (-1.0 if val < 0 else 0.0)
-            out[idx] = sign * vals_q
-    return out
+def _e4m3(val):
+    ax = abs(val)
+    if ax == 0.0:
+        return 0.0
+    vals = min(ax, 448.0)
+    exp = max(math.floor(math.log2(vals)), -6)
+    base = math.pow(2.0, exp)
+    mant = vals / base - 1.0
+    mant_q = round(mant * 8.0) / 8.0
+    vals_q = min(base * (1.0 + mant_q), 448.0)
+    sign = 1.0 if val > 0 else (-1.0 if val < 0 else 0.0)
+    return sign * vals_q
 
 
 def _qd(x, per_head):
-    x = np.asarray(x, dtype=np.float64)
-    shape = x.shape
+    H = len(x)
+    N = len(x[0])
+    D = len(x[0][0])
+
     if per_head:
-        scale = np.zeros((shape[0], 1, 1), dtype=np.float64)
-        for i in range(shape[0]):
+        scales = []
+        for i in range(H):
             max_val = 0.0
-            for j in range(shape[1]):
-                for k in range(shape[2]):
-                    val = abs(x[i, j, k])
+            for j in range(N):
+                for k in range(D):
+                    val = abs(x[i][j][k])
                     if val > max_val:
                         max_val = val
             s = max_val / 448.0
             if s < 1e-12:
                 s = 1e-12
-            scale[i, 0, 0] = s
+            scales.append(s)
     else:
         max_val = 0.0
-        for idx in np.ndindex(shape):
-            val = abs(x[idx])
-            if val > max_val:
-                max_val = val
+        for i in range(H):
+            for j in range(N):
+                for k in range(D):
+                    val = abs(x[i][j][k])
+                    if val > max_val:
+                        max_val = val
         scale = max_val / 448.0
         if scale < 1e-12:
             scale = 1e-12
+        scales = [scale] * H
 
-    x_scaled = np.zeros_like(x)
-    for idx in np.ndindex(shape):
-        if per_head:
-            i = idx[0]
-            x_scaled[idx] = x[idx] / scale[i, 0, 0]
-        else:
-            x_scaled[idx] = x[idx] / scale
-
-    quantized = _e4m3(x_scaled)
-
-    out = np.zeros_like(x)
-    for idx in np.ndindex(shape):
-        if per_head:
-            i = idx[0]
-            out[idx] = quantized[idx] * scale[i, 0, 0]
-        else:
-            out[idx] = quantized[idx] * scale
+    out = []
+    for i in range(H):
+        s = scales[i]
+        h_matrix = []
+        for j in range(N):
+            row = []
+            for k in range(D):
+                scaled_val = x[i][j][k] / s
+                q_val = _e4m3(scaled_val)
+                row.append(q_val * s)
+            h_matrix.append(row)
+        out.append(h_matrix)
     return out
 
 
-def scaled_fp8_kv_attention(K, V, Q, per_head):
+def scaled_fp8_kv_attention(K: list[list[list[float]]], V: list[list[list[float]]], Q: list[list[list[float]]], per_head: bool) -> list[list[list[float]]]:
     Kd = _qd(K, per_head)
     Vd = _qd(V, per_head)
-    
-    Q_f = np.asarray(Q, dtype=np.float64)
-    b_sz, q_seq, q_dim = Q_f.shape
-    _, k_seq, k_dim = Kd.shape
-    _, _, v_dim = Vd.shape
-    
-    logits = np.zeros((b_sz, q_seq, k_seq), dtype=np.float64)
-    for b in range(b_sz):
-        for i in range(q_seq):
-            for j in range(k_seq):
+
+    H = len(Q)
+    M = len(Q[0])
+    D = len(Q[0][0])
+    N = len(Kd[0])
+    V_D = len(Vd[0][0])
+
+    scale_factor = math.sqrt(D)
+
+    out = []
+    for h in range(H):
+        q_h = Q[h]
+        kd_h = Kd[h]
+        vd_h = Vd[h]
+
+        logits = []
+        for i in range(M):
+            row = []
+            for j in range(N):
                 acc = 0.0
-                for d in range(q_dim):
-                    acc += Q_f[b, i, d] * Kd[b, j, d]
-                logits[b, i, j] = acc
+                for d in range(D):
+                    acc += q_h[i][d] * kd_h[j][d]
+                row.append(acc / scale_factor)
+            logits.append(row)
 
-    scale_factor = math.sqrt(K.shape[-1])
-    for idx in np.ndindex(logits.shape):
-        logits[idx] = logits[idx] / scale_factor
+        probs = []
+        for i in range(M):
+            row = logits[i]
+            row_max = max(row)
+            exp_row = [math.exp(val - row_max) for val in row]
+            sum_exp = sum(exp_row)
+            probs.append([val / sum_exp for val in exp_row])
 
-    for b in range(b_sz):
-        for i in range(q_seq):
-            row_max = logits[b, i, 0]
-            for j in range(1, k_seq):
-                if logits[b, i, j] > row_max:
-                    row_max = logits[b, i, j]
-            for j in range(k_seq):
-                logits[b, i, j] = logits[b, i, j] - row_max
-
-    probs = np.zeros_like(logits)
-    for idx in np.ndindex(logits.shape):
-        probs[idx] = math.exp(logits[idx])
-
-    for b in range(b_sz):
-        for i in range(q_seq):
-            row_sum = 0.0
-            for j in range(k_seq):
-                row_sum += probs[b, i, j]
-            for j in range(k_seq):
-                probs[b, i, j] = probs[b, i, j] / row_sum
-
-    out = np.zeros((b_sz, q_seq, v_dim), dtype=np.float64)
-    for b in range(b_sz):
-        for i in range(q_seq):
-            for d in range(v_dim):
+        head_out = []
+        for i in range(M):
+            out_row = []
+            for vd_col in range(V_D):
                 acc = 0.0
-                for k in range(k_seq):
-                    acc += probs[b, i, k] * Vd[b, k, d]
-                out[b, i, d] = acc
+                for n in range(N):
+                    acc += probs[i][n] * vd_h[n][vd_col]
+                out_row.append(acc)
+            head_out.append(out_row)
+        out.append(head_out)
 
     return out

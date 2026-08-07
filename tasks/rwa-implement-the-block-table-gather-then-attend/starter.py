@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def paged_attention(q, k_pool, v_pool, block_table, seq_len, block_size):
+def paged_attention(q: list[float], k_pool: list[list[list[float]]], v_pool: list[list[list[float]]], block_table: list[int], seq_len: int, block_size: int) -> list[float]:
     """Single-query attention over a KV cache stored in a paged physical pool.
 
     q            : (d,) query vector for the newly generated token.

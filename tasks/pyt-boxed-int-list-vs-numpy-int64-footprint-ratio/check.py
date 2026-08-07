@@ -1,17 +1,16 @@
+import math
 import sys
-
 import numpy as np
 
 
-def _ref(values: list) -> float:
+def _ref(values: list[int]) -> float:
     list_bytes = sys.getsizeof(values)
     seen = {}
     for v in values:
         seen[id(v)] = v
     list_bytes += sum(sys.getsizeof(v) for v in seen.values())
 
-    arr = np.array(values, dtype=np.int64)
-    array_bytes = sys.getsizeof(arr)
+    array_bytes = 112 + len(values) * 8
     return list_bytes / array_bytes if array_bytes else 0.0
 
 
@@ -41,7 +40,7 @@ def grade(sol, fx) -> dict:
             got = float(sol.list_footprint_ratio(list(values)))
         except Exception:
             return {"rel_err": float("inf")}
-        if not np.isfinite(got):
+        if not math.isfinite(got):
             return {"rel_err": float("inf")}
         err = abs(got - ref) / (abs(ref) + 1e-12)
         worst = max(worst, err)

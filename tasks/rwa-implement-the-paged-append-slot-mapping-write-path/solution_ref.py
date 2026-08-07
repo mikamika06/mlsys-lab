@@ -1,10 +1,16 @@
 import math
-import numpy as np
 
 
-def paged_append_and_attend(kv_pool_k: np.ndarray, kv_pool_v: np.ndarray,
-                             block_table: list[int], block_size: int, existing_len: int,
-                             new_k: np.ndarray, new_v: np.ndarray, q: np.ndarray) -> np.ndarray:
+def paged_append_and_attend(
+    kv_pool_k: list[list[float]],
+    kv_pool_v: list[list[float]],
+    block_table: list[int],
+    block_size: int,
+    existing_len: int,
+    new_k: list[list[float]],
+    new_v: list[list[float]],
+    q: list[float],
+) -> list[float]:
     """PagedAttention-style append: write new tokens' K/V into a paged
     physical pool via the slot mapping, then gather the full sequence
     back out through the same mapping and attend.
@@ -32,13 +38,8 @@ def paged_append_and_attend(kv_pool_k: np.ndarray, kv_pool_v: np.ndarray,
     full existing_len + T tokens, gathered from the pool (not assumed
     contiguous).
     """
-    kv_pool_k = np.array(kv_pool_k, dtype=np.float64, copy=True)
-    kv_pool_v = np.array(kv_pool_v, dtype=np.float64, copy=True)
-    new_k = np.asarray(new_k, dtype=np.float64)
-    new_v = np.asarray(new_v, dtype=np.float64)
-    q = np.asarray(q, dtype=np.float64)
-
-    T, d = new_k.shape
+    T = len(new_k)
+    d = len(q)
 
     def slot_of(pos: int) -> int:
         logical_block = pos // block_size
@@ -49,24 +50,24 @@ def paged_append_and_attend(kv_pool_k: np.ndarray, kv_pool_v: np.ndarray,
         pos = existing_len + i
         s = slot_of(pos)
         for j in range(d):
-            kv_pool_k[s, j] = new_k[i, j]
-            kv_pool_v[s, j] = new_v[i, j]
+            kv_pool_k[s][j] = new_k[i][j]
+            kv_pool_v[s][j] = new_v[i][j]
 
     total_len = existing_len + T
-    gathered_k = np.empty((total_len, d), dtype=np.float64)
-    gathered_v = np.empty((total_len, d), dtype=np.float64)
+    gathered_k = [[0.0] * d for _ in range(total_len)]
+    gathered_v = [[0.0] * d for _ in range(total_len)]
     for pos in range(total_len):
         s = slot_of(pos)
         for j in range(d):
-            gathered_k[pos, j] = kv_pool_k[s, j]
-            gathered_v[pos, j] = kv_pool_v[s, j]
+            gathered_k[pos][j] = kv_pool_k[s][j]
+            gathered_v[pos][j] = kv_pool_v[s][j]
 
-    scores = np.empty((total_len,), dtype=np.float64)
+    scores = [0.0] * total_len
     scale = math.sqrt(d)
     for i in range(total_len):
         dot = 0.0
         for j in range(d):
-            dot += q[j] * gathered_k[i, j]
+            dot += q[j] * gathered_k[i][j]
         scores[i] = dot / scale
 
     max_score = scores[0]
@@ -74,7 +75,7 @@ def paged_append_and_attend(kv_pool_k: np.ndarray, kv_pool_v: np.ndarray,
         if scores[i] > max_score:
             max_score = scores[i]
 
-    probs = np.empty((total_len,), dtype=np.float64)
+    probs = [0.0] * total_len
     sum_probs = 0.0
     for i in range(total_len):
         val = math.exp(scores[i] - max_score)
@@ -84,11 +85,11 @@ def paged_append_and_attend(kv_pool_k: np.ndarray, kv_pool_v: np.ndarray,
     for i in range(total_len):
         probs[i] /= sum_probs
 
-    out = np.zeros((d,), dtype=np.float64)
+    out = [0.0] * d
     for j in range(d):
         acc = 0.0
         for i in range(total_len):
-            acc += probs[i] * gathered_v[i, j]
+            acc += probs[i] * gathered_v[i][j]
         out[j] = acc
 
     return out

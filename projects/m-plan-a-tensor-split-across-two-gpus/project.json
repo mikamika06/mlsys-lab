@@ -1,0 +1,21 @@
+{
+  "id": "m-plan-a-tensor-split-across-two-gpus",
+  "title": "Plan a tensor split across two GPUs",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "runtime-memory-mmap-offload",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tensorsplit/sizes.py", "tensorsplit/split.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute precise layer byte sizes", "check": "harness/m1.py",
+     "gates": [{"metric": "sizes_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Optimal tensor split ratio across two GPUs", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: regression tests for split integrity", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_split", "op": "==", "threshold": 1}]}
+  ]
+}

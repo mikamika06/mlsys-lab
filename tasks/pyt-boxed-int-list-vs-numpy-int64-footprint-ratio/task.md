@@ -11,7 +11,7 @@ cached small int $k$ times, those $k$ pointers cost list-container bytes each,
 but the pointed-to `int` object itself is only allocated **once** — counting
 it $k$ times overstates the list's real heap footprint.
 
-A NumPy `int64` array, by contrast, stores the values inline in one flat
+A Python `int64` array, by contrast, stores the values inline in one flat
 buffer, so its total footprint is just `sys.getsizeof` of the array object
 (buffer + fixed array-object header).
 
@@ -20,7 +20,7 @@ buffer, so its total footprint is just `sys.getsizeof` of the array object
 Implement `list_footprint_ratio`:
 
 ```python
-def list_footprint_ratio(values: list) -> float:
+def list_footprint_ratio(values: list[int]) -> float:
     ...
 ```
 
@@ -31,7 +31,7 @@ def list_footprint_ratio(values: list) -> float:
    sum of `sys.getsizeof(v)` over the *distinct objects* referenced by the
    list — use `id(v)` to deduplicate, so an object referenced multiple times
    (e.g. a shared small int) is only counted once.
-2. **array footprint** = `sys.getsizeof(np.array(values, dtype=np.int64))`.
+2. **list footprint** = `sys.getsizeof(values)`.
 
 Return `list footprint / array footprint` as a `float`. Use only real runtime
 measurements (`sys.getsizeof`, `id`) — do not hardcode CPython's object-header
@@ -47,7 +47,7 @@ values = [x] * 5 # 5 pointers, but ONE underlying int(100) object
 list_footprint_ratio(values)
 # == sys.getsizeof(values) + sys.getsizeof(x)     (x counted once, not 5x)
 #    ---------------------------------------------
-#    sys.getsizeof(np.array(values, dtype=np.int64))
+# sys.getsizeof(values)
 ```
 
 ## What the gate checks

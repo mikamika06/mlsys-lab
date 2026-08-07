@@ -36,7 +36,7 @@ def grade(sol, fx) -> dict:
     for kv, bits, group_size in cases:
         try:
             q, scales, zeros = sol.quantize_kv_group_affine(
-                kv.copy(), bits, group_size
+                kv.tolist(), bits, group_size
             )
             q = np.asarray(q)
             scales = np.asarray(scales)

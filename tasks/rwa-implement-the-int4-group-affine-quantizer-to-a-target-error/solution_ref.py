@@ -1,14 +1,10 @@
-import numpy as np
-
-
 def _qd_1d(x, bits=4):
-    x = np.asarray(x, dtype=np.float64)
     qmax = (1 << bits) - 1
-    
+
     n = len(x)
     if n == 0:
-        return x.copy()
-    
+        return list(x)
+
     xmin = float(x[0])
     xmax = float(x[0])
     for i in range(1, n):
@@ -19,7 +15,7 @@ def _qd_1d(x, bits=4):
             xmax = val
 
     if xmax <= xmin:
-        return x.copy()
+        return list(x)
 
     scale = (xmax - xmin) / qmax
     zero = round(-xmin / scale)
@@ -28,7 +24,7 @@ def _qd_1d(x, bits=4):
     elif zero > qmax:
         zero = qmax
 
-    out = np.empty(n, dtype=np.float64)
+    out = [0.0] * n
     for i in range(n):
         val = float(x[i])
         val_code = round(val / scale + zero)
@@ -43,13 +39,17 @@ def _qd_1d(x, bits=4):
     return out
 
 
-def quantize_dequantize_int4_grouped(x, group_size):
-    x = np.asarray(x, dtype=np.float64)
-    rows, cols = x.shape
-    out = np.empty_like(x)
+def quantize_dequantize_int4_grouped(x: list[list[float]], group_size: int) -> list[list[float]]:
+    rows = len(x)
+    if rows == 0:
+        return []
+    cols = len(x[0])
+    out = [[0.0] * cols for _ in range(rows)]
     for r in range(rows):
         row = x[r]
         for s in range(0, cols, group_size):
             seg = row[s:s + group_size]
-            out[r, s:s + group_size] = _qd_1d(seg, bits=4)
+            seg_q = _qd_1d(seg, bits=4)
+            for i, val in enumerate(seg_q):
+                out[r][s + i] = val
     return out

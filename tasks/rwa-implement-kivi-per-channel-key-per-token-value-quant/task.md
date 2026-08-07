@@ -34,7 +34,7 @@ reconstruction error than per-tensor key quantization.
 Implement `kivi_quant_errors`:
 
 ```python
-def kivi_quant_errors(K: np.ndarray, V: np.ndarray, q: np.ndarray, bits: int) -> np.ndarray:
+def kivi_quant_errors(K: list[list[float]], V: list[list[float]], q: list[float], bits: int) -> list[float]:
     ...
 ```
 
@@ -55,7 +55,7 @@ Using the affine min-max quantizer above:
    fp64 `K, V` and once with the (per-channel `K`, per-token `V`)
    dequantized cache.
 
-Return `np.array([k_mse_per_channel, k_mse_per_tensor, attn_max_abs_err])` where:
+Return `[k_mse_per_channel, k_mse_per_tensor, attn_max_abs_err]` where:
 
 * `k_mse_per_channel` — MSE between the per-channel-dequantized `K` and
   the original `K`.
@@ -67,9 +67,8 @@ Return `np.array([k_mse_per_channel, k_mse_per_tensor, attn_max_abs_err])` where
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 K = rng.standard_normal((16, 8))
 V = rng.standard_normal((16, 8))
 q = rng.standard_normal(8)
@@ -81,7 +80,7 @@ out = kivi_quant_errors(K, V, q, bits=4)
 ## What the gate checks
 
 The gate, **max_abs_err**, compares your 3-element array against an
-fp64 NumPy oracle across several `(n, d, bits)` configurations,
+fp64 Python oracle across several `(n, d, bits)` configurations,
 including low bit-widths down to 2 bits. The oracle always finds
 `k_mse_per_channel < k_mse_per_tensor` for these cases — mixing up the
 per-channel/per-token axis assignment (e.g. quantizing keys per-token or

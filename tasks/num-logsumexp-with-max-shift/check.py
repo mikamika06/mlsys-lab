@@ -24,7 +24,7 @@ def grade(sol, fx) -> dict:
         expected = _scipy_logsumexp(x, axis=axis)
 
         try:
-            got = np.asarray(sol.logsumexp(x, axis=axis), dtype=np.float64)
+            got = np.asarray(sol.logsumexp(x.tolist(), axis=axis), dtype=np.float64)
         except Exception:
             return {"rel_err": float("inf")}
 

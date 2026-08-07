@@ -1,0 +1,45 @@
+{
+  "id": "m-per-block-int8-quantize-matmul-dequantize-kernel-mat",
+  "title": "Per-block INT8 and FP8 kernel behavior",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Low-precision & block-scaled matmul (fp8/int8)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "qmat/matmul.py",
+    "qmat/quant.py",
+    "qmat/scaling.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Per-block int8 quantize-matmul-dequantize kernel matching an fp32 reference",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "matmul_rel_err", "op": "<", "threshold": 0.0001}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive fp8 e4m3 error bounds and reproduce per-tensor overflow",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "e4m3_err_diff", "op": "<", "threshold": 0.0001},
+        {"metric": "scaling_diff", "op": "<", "threshold": 0.0001}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch invariant violation on mixed-magnitude matmul",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_matmul", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

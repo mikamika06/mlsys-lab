@@ -1,15 +1,14 @@
 import math
-import numpy as np
 
 
-def paged_attention(q, k_pool, v_pool, block_table, seq_len, block_size):
+def paged_attention(q: list[float], k_pool: list[list[list[float]]], v_pool: list[list[list[float]]], block_table: list[int], seq_len: int, block_size: int) -> list[float]:
     """Single-query attention over a KV cache stored in a paged physical pool.
 
     q            : (d,) query vector for the newly generated token.
     k_pool,v_pool: (num_physical_blocks, block_size, d) SHARED physical pool.
         May hold other requests' data (or stale garbage) outside the blocks
         this request owns, and past `seq_len` inside its last logical block.
-    block_table  : 1-D int array, length ceil(seq_len / block_size).
+    block_table  : list of ints, length ceil(seq_len / block_size).
         block_table[b] is the physical block backing this request's logical
         block b.
     seq_len      : number of VALID cached tokens for this request.
@@ -21,48 +20,47 @@ def paged_attention(q, k_pool, v_pool, block_table, seq_len, block_size):
     every cached token already precedes the query):
         probs = softmax(K @ q / sqrt(d))
         out   = probs @ V
-    Returns a (d,) vector.
+    Returns a list of length d.
     """
-    q = np.asarray(q, dtype=np.float64)
-    d = q.shape[0]
+    d = len(q)
 
-    K = np.empty((seq_len, d), dtype=np.float64)
-    V = np.empty((seq_len, d), dtype=np.float64)
+    K = []
+    V = []
     for pos in range(seq_len):
         logical_block = pos // block_size
         slot = pos % block_size
         phys = int(block_table[logical_block])
-        K[pos] = k_pool[phys, slot]
-        V[pos] = v_pool[phys, slot]
+        K.append(k_pool[phys][slot])
+        V.append(v_pool[phys][slot])
 
     inv_sqrt_d = 1.0 / math.sqrt(d)
-    scores = np.empty(seq_len, dtype=np.float64)
+    scores = []
     for i in range(seq_len):
         dot = 0.0
         for j in range(d):
-            dot += K[i, j] * q[j]
-        scores[i] = dot * inv_sqrt_d
+            dot += K[i][j] * q[j]
+        scores.append(dot * inv_sqrt_d)
 
     max_score = scores[0]
     for i in range(1, seq_len):
         if scores[i] > max_score:
             max_score = scores[i]
 
-    probs = np.empty(seq_len, dtype=np.float64)
+    probs = []
     sum_exp = 0.0
     for i in range(seq_len):
         val = math.exp(scores[i] - max_score)
-        probs[i] = val
+        probs.append(val)
         sum_exp += val
 
     for i in range(seq_len):
         probs[i] /= sum_exp
 
-    out = np.zeros(d, dtype=np.float64)
+    out = [0.0] * d
     for j in range(d):
         acc = 0.0
         for i in range(seq_len):
-            acc += probs[i] * V[i, j]
+            acc += probs[i] * V[i][j]
         out[j] = acc
 
     return out

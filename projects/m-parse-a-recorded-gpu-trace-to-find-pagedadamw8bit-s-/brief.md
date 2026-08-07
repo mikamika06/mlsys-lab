@@ -1,14 +1,5 @@
-# Incident Report: Latency Spikes in Paged 8-Bit AdamW Fine-Tuning Runs
+We are trying to fit our custom 7B parameter Transformer model onto a single A100 GPU for fine-tuning, and we immediately hit out-of-memory (OOM) errors. To work around the severe memory constraints, we enabled the 8-bit PagedAdamW optimizer. While it successfully prevented the OOM crashes and allowed the training to start, we are now experiencing a completely different problem: our iteration time has massively regressed and overall throughput dropped by over 40%.
 
-## Symptom
-During fine-tuning runs utilizing 8-bit paged AdamW (`PagedAdamW8bit`), intermittent performance degrade is observed where single optimizer steps stall execution. While baseline steps complete within expected time bounds, periodic steps suffer from high CPU-to-GPU page fault overheads when state memory overflows host-device boundaries. Profiling logs captured via standard JSON event traces contain recorded host-side and device-side timelines, but manual inspection across multi-step runs is impractical due to event density.
+We suspect the optimizer is severely faulting state tensors to CPU RAM when it oversubscribes the GPU memory pool, which stalls the compute streams heavily during the backward pass and optimizer step. We used the PyTorch profiler to dump a full execution trace of the GPU streams to verify this hypothesis. Unfortunately, the trace file is several gigabytes of JSON events, which instantly crashes the Chrome Tracing viewer whenever we attempt to open it.
 
-## System Context
-The engine logs recorded execution segments as JSON standard trace event arrays. Each entry stores timing details alongside execution metadata including step counters, event names, categories, and memory transfer page fault metadata under `args`. Paged optimizer thrashing exhibits clear non-linear spikes in relative spillover latency where CPU allocation latency dominates active kernel execution.
-
-## Objective
-Develop a deterministic parser package `gputrace` that ingests JSON execution traces, isolates `PagedAdamW8bit` execution events, computes CPU-spillover latency metrics, and extracts the index corresponding to the most severe latency spike.
-
-1. Implement `parse_trace_events` in `gputrace/parser.py` to filter trace entries and extract paged optimizer execution records.
-2. Implement `find_spillover_spike` in `gputrace/metrics.py` using `np.argmin` over negative efficiency metrics to isolate the exact spillover spike index.
-3. Construct regression tests in `tests/test_regression.py` validating trace extraction accuracy and ensuring sensitivity against fault-handling regressions.
+We need a fast, automated script to parse the trace data and extract the exact impact of this CPU spillover. Your task is to write a parser that scans the timeline for `optimizer_step` events, extracts their execution durations, and finds the single step that suffered the largest latency spike. Finally, to definitively confirm our paging theory, you must calculate exactly how many bytes were shuttled between the host memory and the device over PCIe (`cudaMemcpyH2D` and `cudaMemcpyD2H`) specifically during that stalled step's time window.

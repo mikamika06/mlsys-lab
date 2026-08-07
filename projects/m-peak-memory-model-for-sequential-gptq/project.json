@@ -1,0 +1,35 @@
+{
+  "id": "m-peak-memory-model-for-sequential-gptq",
+  "title": "Peak-memory model for sequential GPTQ",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Failure modes and OOM during quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gptqmem/model.py", "gptqmem/triage.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Memory timeline for a layer",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "timeline_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Triage OOMs and assign fixes",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "triage_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch under-reported hessian",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_hessian_math", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

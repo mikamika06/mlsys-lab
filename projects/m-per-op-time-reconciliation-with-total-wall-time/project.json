@@ -1,0 +1,63 @@
+{
+  "id": "m-per-op-time-reconciliation-with-total-wall-time",
+  "title": "Per-op time reconciliation with total wall time",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "benchmark_app CLI & report analysis",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "reconcile/profiler.py",
+    "reconcile/device.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconcile per-op times with total wall-clock time",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "reports_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Validate target device string and raise standard error",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "device_checks_passed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching unreconciled profile metrics",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unreconciled_overhead",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

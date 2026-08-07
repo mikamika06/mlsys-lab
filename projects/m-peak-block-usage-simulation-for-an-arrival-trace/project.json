@@ -1,0 +1,73 @@
+{
+  "id": "m-peak-block-usage-simulation-for-an-arrival-trace",
+  "title": "Peak block usage simulation for an arrival trace",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "paged-kv-blocks-and-block-tables",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvtrace/simulator.py",
+    "kvtrace/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Discrete trace simulator for peak block usage",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "traces_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Contiguous vs paged fragmentation and waste ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "paged_waste_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "contiguous_waste_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "waste_ratio_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for block allocation invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_uncapped_allocations",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

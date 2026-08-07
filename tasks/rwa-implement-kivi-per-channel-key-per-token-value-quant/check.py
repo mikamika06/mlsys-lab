@@ -68,7 +68,7 @@ def grade(sol, fx) -> dict:
         ref = _oracle(K, V, q, bits)
         try:
             got = np.asarray(
-                sol.kivi_quant_errors(K.copy(), V.copy(), q.copy(), bits),
+                sol.kivi_quant_errors(K.tolist(), V.tolist(), q.tolist(), bits),
                 dtype=np.float64,
             )
         except Exception:

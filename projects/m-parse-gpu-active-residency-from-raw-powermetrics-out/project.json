@@ -1,0 +1,78 @@
+{
+  "id": "m-parse-gpu-active-residency-from-raw-powermetrics-out",
+  "title": "Parse GPU active residency and ANE utilization from powermetrics",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "GPU/system profiling (powermetrics, asitop, Instruments)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "profile_parser/parser.py",
+    "profile_parser/telemetry.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse GPU active residency percentage from raw powermetrics",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "samples_parsed_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "residency_rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Correlate residency with tokens/sec and calculate ANE utilization",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "correlation_rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        },
+        {
+          "metric": "ane_power_rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        },
+        {
+          "metric": "ane_util_rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests that catch incorrect residency calculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_idle_states",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

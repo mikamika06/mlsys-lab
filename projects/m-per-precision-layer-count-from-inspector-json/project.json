@@ -1,0 +1,21 @@
+{
+  "id": "m-per-precision-layer-count-from-inspector-json",
+  "title": "Per-precision layer count and profiling analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Engine introspection & layer profiling (inspector, dumpProfile, nsys)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["engineprof/inspector.py", "engineprof/profile.py", "engineprof/reformat.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-precision layer count from inspector JSON", "check": "harness/m1.py",
+     "gates": [{"metric": "counts_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Aggregate --dumpProfile output", "check": "harness/m2.py",
+     "gates": [{"metric": "profiles_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: precision-boundary reformat test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_missing_reformats", "op": "==", "threshold": 1}]}
+  ]
+}

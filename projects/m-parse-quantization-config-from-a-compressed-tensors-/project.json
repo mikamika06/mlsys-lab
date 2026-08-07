@@ -1,0 +1,22 @@
+{
+  "id": "m-parse-quantization-config-from-a-compressed-tensors-",
+  "title": "Parse and dequantize LLM weight formats",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "serving-quantization-formats",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["qformat/parse.py", "qformat/dequant.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse the config", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": "==", "threshold": 3}]},
+    {"n": 2, "title": "Dequantize W4A16 and NVFP4", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err_w4", "op": "<", "threshold": 0.001},
+               {"metric": "max_abs_err_nv", "op": "<", "threshold": 0.001}]},
+    {"n": 3, "title": "Safety net: test the scales", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_scale", "op": "==", "threshold": 1}]}
+  ]
+}

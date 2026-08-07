@@ -31,12 +31,12 @@ cross-request information leak, not just a numerical detail.
 Implement `ragged_batched_prefill_attention(Q, K, V, cu_seqlens)`:
 
 ```python
-def ragged_batched_prefill_attention(Q, K, V, cu_seqlens):
+def ragged_batched_prefill_attention(Q: list[list[list[float]]], K: list[list[list[float]]], V: list[list[list[float]]], cu_seqlens: list[int]) -> list[list[list[float]]]:
     ...
 ```
 
 Inputs:
-- `Q`, `K`, `V`: NumPy arrays of shape $(n_{tok}, H, d)$ — all segments'
+- `Q`, `K`, `V`: list of shape $(n_{tok}, H, d)$ — all segments'
   tokens packed contiguously along axis 0, with $H$ attention heads and
   head dimension $d$ (this mirrors FlashAttention-varlen's
   `(total_tokens, num_heads, head_dim)` layout).
@@ -53,20 +53,19 @@ For every segment, independently:
 3. Write the segment's output back into the corresponding rows of the
    result.
 
-Return a `float64` NumPy array of shape $(n_{tok}, H, d)$. Tokens from
+Return a `float64` list of shape $(n_{tok}, H, d)$. Tokens from
 different segments must never attend to each other, regardless of how close
 together they sit in the packed tensor.
 
 ## Example
 
 ```python
-import numpy as np
 
 # two 1-token "sequences" packed together: cu_seqlens = [0, 1, 2]
-Q = np.array([[[1.0, 0.0]], [[0.0, 1.0]]])   # shape (2, 1, 2): n_tok=2, H=1, d=2
-K = np.array([[[1.0, 0.0]], [[0.0, 1.0]]])
-V = np.array([[[10.0, 0.0]], [[0.0, 20.0]]])
-cu_seqlens = np.array([0, 1, 2])
+Q = [[[1.0, 0.0]], [[0.0, 1.0]]]   # shape (2, 1, 2): n_tok=2, H=1, d=2
+K = [[[1.0, 0.0]], [[0.0, 1.0]]]
+V = [[[10.0, 0.0]], [[0.0, 20.0]]]
+cu_seqlens = [0, 1, 2]
 
 out = ragged_batched_prefill_attention(Q, K, V, cu_seqlens)
 # token 1 (segment 1's only token) may ONLY see key 1 (its own segment),
@@ -76,7 +75,7 @@ out = ragged_batched_prefill_attention(Q, K, V, cu_seqlens)
 
 ## What the gate checks
 
-The gate builds several random packed batches with `np.random.default_rng(0)`
+The gate builds several random packed batches with `random.Random(0)`
 (2-5 segments per batch, random lengths, random head counts and head
 dimensions) and an oracle that **loops per segment**, slicing `Q`/`K`/`V` by
 `cu_seqlens` and running ordinary causal attention in `float64` on each

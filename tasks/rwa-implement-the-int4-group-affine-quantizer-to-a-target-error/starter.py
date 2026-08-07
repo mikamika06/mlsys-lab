@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def quantize_dequantize_int4_grouped(x, group_size):
+def quantize_dequantize_int4_grouped(x: list[list[float]], group_size: int) -> list[list[float]]:
     """4-bit (16-level) group-affine quantize-then-dequantize.
 
     x: (rows, cols) float64 array.

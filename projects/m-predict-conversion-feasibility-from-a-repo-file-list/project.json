@@ -1,0 +1,79 @@
+{
+  "id": "m-predict-conversion-feasibility-from-a-repo-file-list",
+  "title": "Predict conversion feasibility and memory for GGUF",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "convert-hf-to-gguf-pipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ggufconv/feasibility.py",
+    "ggufconv/tokenizer.py",
+    "ggufconv/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict conversion feasibility from repo file list",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "feasibility_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Tokenizer chkhsh and lazy memory peak",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "chkhsh_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "lazy_mem_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "eager_mem_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "lazy_saves_memory",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching missing shard bypass",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_missing_shard_bypass",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

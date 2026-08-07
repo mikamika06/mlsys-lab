@@ -1,9 +1,6 @@
-import numpy as np
+import math
 
-
-def paged_append_and_attend(kv_pool_k: np.ndarray, kv_pool_v: np.ndarray,
-                             block_table: list[int], block_size: int, existing_len: int,
-                             new_k: np.ndarray, new_v: np.ndarray, q: np.ndarray) -> np.ndarray:
+def paged_append_and_attend(kv_pool_k: list[list[float]], kv_pool_v: list[list[float]], block_table: list[int], block_size: int, existing_len: int, new_k: list[list[float]], new_v: list[list[float]], q: list[float]) -> list[float]:
     """PagedAttention-style append: write new tokens' K/V into a paged
     physical pool via the slot mapping, then gather the full sequence
     back out through the same mapping and attend.

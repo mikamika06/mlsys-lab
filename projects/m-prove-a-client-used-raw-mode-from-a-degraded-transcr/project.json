@@ -1,0 +1,21 @@
+{
+  "id": "m-prove-a-client-used-raw-mode-from-a-degraded-transcr",
+  "title": "Prove raw mode, continue conversation state, and map OpenAI chat requests",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "generate-vs-chat-and-raw-mode",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["runner/raw.py", "runner/chat.py", "runner/mapping.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Prove raw mode from degraded transcript", "check": "harness/m1.py",
+     "gates": [{"metric": "raw_proven_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Continue conversation via context array and verify state", "check": "harness/m2.py",
+     "gates": [{"metric": "context_state_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: map OpenAI chat request onto native body and test regression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_mapping", "op": "==", "threshold": 1}]}
+  ]
+}

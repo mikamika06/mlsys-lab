@@ -50,7 +50,15 @@ def grade(sol, fx) -> dict:
     )
 
     try:
-        got = sol.biased_flash_backward(Q, K, V, B, dO, m, l)
+        got = sol.biased_flash_backward(
+            Q.tolist(),
+            K.tolist(),
+            V.tolist(),
+            B.tolist(),
+            dO.tolist(),
+            m.tolist(),
+            l.tolist(),
+        )
         err = max(
             float(np.max(np.abs(np.asarray(got[0], dtype=np.float64) - ref[0]))),
             float(np.max(np.abs(np.asarray(got[1], dtype=np.float64) - ref[1]))),

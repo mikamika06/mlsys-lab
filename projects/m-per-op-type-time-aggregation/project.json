@@ -1,0 +1,34 @@
+{
+  "id": "m-per-op-type-time-aggregation",
+  "title": "ORT profiling & attributing time to operators",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT profiling & attributing time to operators",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ortperf/agg.py", "ortperf/memcpy.py", "ortperf/overhead.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Per-op_type time aggregation",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "agg_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Locate EP-boundary memcpys and overhead gap",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "memcpy_matched", "op": "==", "threshold": 1},
+                {"metric": "overhead_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for profiling invariants",
+      "check": "harness/m3.py",
+      "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+                {"metric": "passes_on_good", "op": "==", "threshold": 1},
+                {"metric": "catches_broken_agg", "op": "==", "threshold": 1}]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "m-prefix-hash-router-over-a-multi-turn-trace",
+  "title": "Prefix-hash router over a multi-turn trace",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "cache-aware-routing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "router/prefix.py",
+    "router/bakeoff.py",
+    "router/tuning.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Prefix-hash router implementation over a multi-turn trace",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Three-policy bake-off: RR vs Prefix-Hash vs KV-Aware",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for locality-vs-load invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    }
+  ]
+}

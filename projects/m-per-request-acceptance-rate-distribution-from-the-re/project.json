@@ -1,0 +1,63 @@
+{
+  "id": "m-per-request-acceptance-rate-distribution-from-the-re",
+  "title": "Per-request acceptance rate distribution from EAGLE log",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "EAGLE architecture (v1/v2/v3)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "eagle_diag/metrics.py",
+    "eagle_diag/config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Per-request acceptance rate and workload distribution",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "acceptance_rate",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose vLLM speculative_config startup outcomes",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "configs_diagnosed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches non-monotonic acceptance invariant bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_acceptance",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}
