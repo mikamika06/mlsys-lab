@@ -84,6 +84,11 @@ ALL_FILES = ("task.md", "starter.py", "solution_ref.py", "check.py")
 # most of the time, so requesting it up front doubled the reply for nothing and
 # was the commonest way a reply came back missing the file that matters.
 MODEL_FILES = ("solution_ref.py",)
+# Asked for only when the untouched grader turns out not to work. It has to be
+# accepted when it arrives, which is not the same as requesting it up front —
+# filtering it out here meant the repair turn asked for a file and then threw
+# it away, so that path never finished.
+ACCEPTED_FILES = ("solution_ref.py", "check.py")
 
 _print_lock = threading.Lock()
 _log_lock = threading.Lock()
@@ -732,7 +737,7 @@ def one(tid, turns):
             continue
         got = bu.parse_files(reply)
         got = {os.path.basename(k): v for k, v in got.items()
-               if os.path.basename(k) in MODEL_FILES}
+               if os.path.basename(k) in ACCEPTED_FILES}
         broken = syntax_error(got)
         if broken:
             # Writing a file that cannot be parsed spends a verification run to
@@ -760,6 +765,21 @@ def one(tid, turns):
                 prompt = ("Send the files now: solution_ref.py and check.py, each "
                           "as `FILE: <name>` followed by a fenced block. "
                           "No commentary.")
+            continue
+
+        if "solution_ref.py" not in got and "check.py" in got:
+            # The repair turn that was asked for the grader alone.
+            with open(os.path.join(ROOT, "tasks", tid, "check.py"), "w",
+                      encoding="utf-8") as f:
+                f.write(got["check.py"].rstrip() + "\n")
+            ok, line = verify(tid)
+            if ok:
+                ok2, why2 = examples_ok(tid)
+                if ok2:
+                    return {"id": tid, "ok": True, "model": model, "turn": turn + 1,
+                            "files": ["check.py"], "history": history}
+            history.append("%s:grader still fails: %s" % (model, line[-70:]))
+            revert(tid)
             continue
 
         if "solution_ref.py" not in got:
