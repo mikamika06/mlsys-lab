@@ -1,4 +1,4 @@
-def constrained_free_argmax_divergence(logits, trace, allowed) -> int:
+def constrained_free_argmax_divergence(logits: list[list[float]], trace: list[int], allowed: dict[int, list[int]]) -> int:
     """
     logits: (T, vocab_size) array of per-step logits.
     trace: length-T list of FSM state ids active at each step.

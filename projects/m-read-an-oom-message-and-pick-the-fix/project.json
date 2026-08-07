@@ -1,0 +1,21 @@
+{
+  "id": "m-read-an-oom-message-and-pick-the-fix",
+  "title": "Diagnose OOM messages, tune fragmentation, and track allocator memory",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "The caching allocator, fragmentation and OOM triage",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["triage/parser.py", "triage/allocator.py", "triage/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse OOM messages and select the remediation fix", "check": "harness/m1.py",
+     "gates": [{"metric": "oom_parsed", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Tune max_split_size_mb on allocation traces", "check": "harness/m2.py",
+     "gates": [{"metric": "optimal_split_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Monitor memory_allocated vs memory_reserved and guard invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}]}
+  ]
+}

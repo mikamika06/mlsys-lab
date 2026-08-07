@@ -15,24 +15,23 @@ This task asks you to implement the per‑block hashing routine that follows thi
 Implement `compute_block_hashes`:
 
 ```python
-def compute_block_hashes(tokens: np.ndarray, block_size: int, salt: np.uint64) -> np.ndarray:
+def compute_block_hashes(tokens, block_size, salt):
     ...
 ```
 
-- `tokens`: a 1‑D NumPy array of unsigned integers (any integer dtype).  
+- `tokens`: a 1‑D list of unsigned integers (any integer dtype).  
 - `block_size`: positive integer; the last block may be shorter.  
-- `salt`: initial hash value (`np.uint64`).  
+- `salt`: initial hash value (`int`).
 
-The function must return a 1‑D `np.ndarray` of type `np.uint64`, where element $i$ is $h_i$ computed from the previous hash and the tokens in block $i$.  
-All arithmetic should wrap modulo $2^{64}$ (NumPy’s unsigned integer types do this automatically).
+The function must return a 1‑D list of type `int`, where element $i$ is $h_i$ computed from the previous hash and the tokens in block $i$.
+All arithmetic should wrap modulo $2^{64}$ (Python’s unsigned integer types do this automatically).
 
 ## Example
 
 ```python
-import numpy as np
-tokens = np.array([1, 2, 3, 4, 5], dtype=np.uint32)
+tokens = [1, 2, 3, 4, 5]
 block_size = 2
-salt = np.uint64(0x123456789ABCDEF0)
+salt = 0x123456789ABCDEF0
 
 hashes = compute_block_hashes(tokens, block_size, salt)
 print(hashes)
@@ -44,5 +43,5 @@ print(hashes)
 ## What the gate checks
 
 The solution is graded by a deterministic oracle that recomputes the hash sequence using the same FNV‑1a folding rule.  
-The metric `exact_match` compares your output array to the reference with element‑wise equality (`np.array_equal`).  
+The metric `exact_match` compares your output list to the reference with element‑wise equality.
 A perfect match yields a score of 1.0; any discrepancy gives 0.0.

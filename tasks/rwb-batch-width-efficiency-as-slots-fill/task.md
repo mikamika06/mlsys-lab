@@ -27,25 +27,24 @@ draining down.
 Implement `batch_width_utilization`:
 
 ```python
-def batch_width_utilization(occupancy: np.ndarray, N: int) -> dict:
+def batch_width_utilization(occupancy: list[int], N: int) -> dict:
     ...
 ```
 
-- `occupancy` — 1-D integer NumPy array of length $T$; `occupancy[t]` is the
+- `occupancy` — 1-D integer list of length $T$; `occupancy[t]` is the
   number of busy slots $b_t$ at step $t$, with $0 \le b_t \le N$.
 - `N` — the configured batch width (a positive integer).
 
 Return a `dict` with:
 
-- `"per_step"` — a `float64` NumPy array of shape $(T,)$: $u_t = b_t / N$.
+- `"per_step"` — a `float64` list of shape $(T,)$: $u_t = b_t / N$.
 - `"mean"` — a Python `float`: $\bar u$, the mean of `"per_step"`.
 
 ## Example
 
 ```python
-import numpy as np
 
-occupancy = np.array([2, 4, 4, 3])
+occupancy = [2, 4, 4, 3]
 N = 4
 
 result = batch_width_utilization(occupancy, N)
@@ -57,7 +56,7 @@ print(result["mean"])      # 0.8125
 
 The grader builds several random occupancy traces (with varying $T$ and $N$,
 occupancy always between $0$ and $N$) and computes the reference
-$u_t = b_t/N$ and $\bar u$ directly with NumPy. Your `"per_step"` array and
+$u_t = b_t/N$ and $\bar u$ directly with Python. Your `"per_step"` array and
 `"mean"` value are concatenated into one vector and compared against the
 reference with relative L2 error:
 

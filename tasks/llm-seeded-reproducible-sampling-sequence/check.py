@@ -1,3 +1,4 @@
+import random
 import numpy as np
 
 
@@ -11,12 +12,12 @@ def _softmax(z):
 def _reference(logits, temperature, seed):
     """Oracle: temperature softmax + per-step inverse-CDF draw from one rng.
 
-    Consumes a single np.random.default_rng(seed), drawing one uniform per step
-    in order. Computes the reference id sequence with NumPy — never hard-coded.
+    Consumes a single random.Random(seed), drawing one uniform per step
+    in order. Computes the reference id sequence.
     """
     logits = np.asarray(logits, dtype=np.float64)
     T, V = logits.shape
-    rng = np.random.default_rng(seed)
+    rng = random.Random(seed)
     ids = np.empty(T, dtype=np.int64)
     for t in range(T):
         p = _softmax(logits[t] / temperature)
@@ -40,17 +41,18 @@ def grade(sol, fx) -> dict:
             temperature = float(rng.uniform(0.3, 1.8))
             seed = int(rng.integers(0, 1_000_000))
 
-            got = sol.sample_sequence(logits, temperature, seed)
-            ref = _reference(logits, temperature, seed)
+            logits_list = logits.tolist()
+            got = sol.sample_sequence(logits_list, temperature, seed)
+            ref = _reference(logits_list, temperature, seed)
 
-            if not isinstance(got, np.ndarray):
+            if not isinstance(got, list):
                 ok = 0.0
                 break
-            got = np.asarray(got)
-            if got.shape != ref.shape or got.dtype != np.int64:
+            got_arr = np.asarray(got, dtype=np.int64)
+            if got_arr.shape != ref.shape or got_arr.dtype != np.int64:
                 ok = 0.0
                 break
-            if not np.array_equal(got, ref):
+            if not np.array_equal(got_arr, ref):
                 ok = 0.0
                 break
     except Exception:

@@ -1,0 +1,35 @@
+{
+  "id": "m-reproduce-megatron-s-ptd-p-throughput-formula",
+  "title": "Megatron PTD-P throughput formula and memory balancing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Pipeline parallelism memory & bubble/throughput analysis",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["pipelp/throughput.py", "pipelp/imbalance.py", "pipelp/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reproduce Megatron's PTD-P Throughput Formula",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "throughput_matched", "op": ">=", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Locate the Memory-Imbalanced Stage in a Real Log",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "stage_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: 1F1B vs Interleaved Memory Test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

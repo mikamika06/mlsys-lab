@@ -1,0 +1,44 @@
+{
+  "id": "m-rank-r-svd-correction-of-quantization-error",
+  "title": "Rank-r SVD correction of quantization error and EoRA budgeting",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Accuracy recovery: rotations, AutoRound, and EoRA",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantcorr/svd.py",
+    "quantcorr/strategies.py",
+    "quantcorr/budget.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Rank-r SVD correction of weight quantization error",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "mse_improved", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Strategy comparison across RTN, GPTQ, Rotation+GPTQ, and Learned Rounding",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "strategies_matched", "op": ">=", "threshold": 4.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for EoRA rank allocation under parameter budget",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_invalid_budget", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

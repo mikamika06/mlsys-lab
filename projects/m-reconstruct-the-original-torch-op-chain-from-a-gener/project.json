@@ -1,0 +1,21 @@
+{
+  "id": "m-reconstruct-the-original-torch-op-chain-from-a-gener",
+  "title": "Reconstruct torch op chain from a Triton kernel",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "torch.compile / TorchInductor-generated Triton kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tritonop/parser.py", "tritonop/chain.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse kernel operations", "check": "harness/m1.py",
+     "gates": [{"metric": "parsed_match", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Reconstruct op chain", "check": "harness/m2.py",
+     "gates": [{"metric": "chain_match", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_chain", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "m-restore-the-fused-path",
+  "title": "Restore the fused FlashAttention path",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "silent-fallback-and-perf-debugging",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flashfix/audit.py", "flashfix/kernel.py", "flashfix/restore.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Warning-string triage and classification", "check": "harness/m1.py",
+     "gates": [{"metric": "warnings_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Contiguity audit across model layers", "check": "harness/m2.py",
+     "gates": [{"metric": "contiguity_match", "op": "==", "threshold": 1},
+               {"metric": "audit_precision", "op": ">=", "threshold": 0.95}]},
+    {"n": 3, "title": "Safety net: test catching silent fallback", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_silent_fallback", "op": "==", "threshold": 1}]}
+  ]
+}

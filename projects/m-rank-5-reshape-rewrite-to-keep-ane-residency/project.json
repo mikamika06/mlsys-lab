@@ -1,0 +1,40 @@
+{
+  "id": "m-rank-5-reshape-rewrite-to-keep-ane-residency",
+  "title": "Rank-5 reshape rewrite and ANE residency analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Compute units and Apple Neural Engine placement",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "anerewrite/rewrite.py",
+    "anerewrite/score.py",
+    "anerewrite/predict.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Rank-5 reshape rewrite for ANE residency",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "rewrites_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Compute-plan JSON residency score",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "scores_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for ANE residency invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

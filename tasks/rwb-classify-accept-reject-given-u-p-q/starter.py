@@ -1,4 +1,2 @@
-import numpy as np
-
-def classify_accept(u: float, p: np.ndarray, q: np.ndarray) -> np.ndarray:
+def classify_accept(u: float, p: list[float], q: list[float]) -> list[bool]:
     raise NotImplementedError('your code here')

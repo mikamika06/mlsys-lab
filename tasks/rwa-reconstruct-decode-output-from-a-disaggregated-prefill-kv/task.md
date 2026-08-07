@@ -15,10 +15,10 @@ The prefill stage produces $K$ and $V$. A production system must preserve these 
 Implement the two functions:
 
 ```python
-def serialize_kv(K: np.ndarray, V: np.ndarray) -> bytes:
+def serialize_kv(K: list[list[float]], V: list[list[float]]) -> bytes:
     ...
 
-def decode_from_kv(Q: np.ndarray, payload: bytes) -> np.ndarray:
+def decode_from_kv(Q: list[float], payload: bytes) -> list[float]:
     ...
 ```
 
@@ -26,16 +26,15 @@ def decode_from_kv(Q: np.ndarray, payload: bytes) -> np.ndarray:
 
 `decode_from_kv` receives decode queries `Q` with shape $(m,d)$ and the serialized payload. It must reconstruct the KV cache and return the attention output with shape $(m,h)$.
 
-Use NumPy operations for the attention computation. The reconstructed output must match a fused fp64 attention computation. The serialization format is internal to your implementation, but it must round-trip exactly.
+Use Python operations for the attention computation. The reconstructed output must match a fused fp64 attention computation. The serialization format is internal to your implementation, but it must round-trip exactly.
 
 ## Example
 
 ```python
-import numpy as np
 
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0], [4.0]])
-Q = np.array([[1.0, 0.0]])
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0], [4.0]]
+Q = [[1.0, 0.0]]
 
 payload = serialize_kv(K, V)
 out = decode_from_kv(Q, payload)
@@ -45,7 +44,7 @@ out = decode_from_kv(Q, payload)
 
 ## What the gate checks
 
-The gate computes a NumPy fp64 oracle for the fused prefill-plus-decode attention path:
+The gate computes a Python fp64 oracle for the fused prefill-plus-decode attention path:
 
 $$
 Y = \mathrm{softmax}\left(\frac{QK^\top}{\sqrt{d}}\right)V .

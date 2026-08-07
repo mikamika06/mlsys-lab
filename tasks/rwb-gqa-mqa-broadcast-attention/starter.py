@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def gqa_broadcast_attention(q, k, v):
+def gqa_broadcast_attention(q: list[list[list[float]]], k: list[list[list[float]]], v: list[list[list[float]]]) -> list[list[list[float]]]:
     """GQA/MQA attention: broadcast each KV head across its query-head group.
 
     q: (H_q, n, d) float64 per-head queries.

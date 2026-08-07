@@ -1,0 +1,26 @@
+{
+  "id": "m-reproduce-an-ollama-oom-error-at-increasing-context-",
+  "title": "Edge Inference OOM, Modelfile verification, and Server parity",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Ollama / LM Studio on Apple Silicon (llama.cpp under the hood)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "edgeml/oom.py",
+    "edgeml/modelfile.py",
+    "edgeml/server_compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Predict and reproduce OOM at increasing context lengths", "check": "harness/m1.py",
+     "gates": [{"metric": "oom_points_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Modelfile parsing and tag verification", "check": "harness/m2.py",
+     "gates": [{"metric": "modelfile_verified", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test comparing local servers", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_server", "op": "==", "threshold": 1}]}
+  ]
+}

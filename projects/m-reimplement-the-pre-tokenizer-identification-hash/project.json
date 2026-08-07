@@ -1,0 +1,21 @@
+{
+  "id": "m-reimplement-the-pre-tokenizer-identification-hash",
+  "title": "Pre-tokenizer identification hash and prompt discrepancy analyzer",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "tokenizer-conversion",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["pretokenize/hash.py", "pretokenize/disagreement.py", "pretokenize/prompt.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reimplement the pre-tokenizer identification hash", "check": "harness/m1.py",
+     "gates": [{"metric": "hashes_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Measure GGUF vs HF tokenization disagreement", "check": "harness/m2.py",
+     "gates": [{"metric": "disagreement_measured", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches double-BOS injection", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_double_bos", "op": "==", "threshold": 1}]}
+  ]
+}

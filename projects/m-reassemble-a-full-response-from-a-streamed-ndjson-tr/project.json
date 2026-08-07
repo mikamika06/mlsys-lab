@@ -1,0 +1,40 @@
+{
+  "id": "m-reassemble-a-full-response-from-a-streamed-ndjson-tr",
+  "title": "Reassemble streamed NDJSON, quantify endpoint deltas, and format fill-in-the-middle requests",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "generate-vs-chat-and-raw-mode",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "rawstream/reassemble.py",
+    "rawstream/delta.py",
+    "rawstream/fim.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reassemble a full response from streamed NDJSON",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "streams_matched", "op": ">=", "threshold": 5}]
+    },
+    {
+      "n": 2,
+      "title": "Quantify token and payload delta between generate and chat",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "delta_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: validation of fill-in-the-middle and regression tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_fim", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

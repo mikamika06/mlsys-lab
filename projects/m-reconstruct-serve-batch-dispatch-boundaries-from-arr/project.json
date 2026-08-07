@@ -1,0 +1,21 @@
+{
+  "id": "m-reconstruct-serve-batch-dispatch-boundaries-from-arr",
+  "title": "Reconstruct Serve batch boundaries and measure concurrency effects",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Ray Serve @serve.batch Decorator",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["servebatch/boundaries.py", "servebatch/effects.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct dispatch boundaries from arrival times", "check": "harness/m1.py",
+     "gates": [{"metric": "boundaries_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Measure the effect of max_concurrent_batches", "check": "harness/m2.py",
+     "gates": [{"metric": "effects_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for batching logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_boundary", "op": "==", "threshold": 1}]}
+  ]
+}

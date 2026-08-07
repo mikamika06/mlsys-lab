@@ -1,0 +1,22 @@
+{
+  "id": "m-real-dtensor-sequence-parallel-region",
+  "title": "Real DTensor Sequence-Parallel Region",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Sequence parallelism in TP regions (Megatron SP)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["sp/region.py", "sp/memory.py", "sp/fix.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Real DTensor Sequence-Parallel Region", "check": "harness/m1.py",
+     "gates": [{"metric": "regions_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "TP-only vs TP+SP Activation Memory, Measured", "check": "harness/m2.py",
+     "gates": [{"metric": "memory_measured", "op": "==", "threshold": 1},
+               {"metric": "ratio_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches mis-ordered SP regions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_misordered", "op": "==", "threshold": 1}]}
+  ]
+}

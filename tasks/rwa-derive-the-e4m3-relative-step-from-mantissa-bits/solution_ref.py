@@ -1,12 +1,11 @@
 import math
-import numpy as np
 
 
-def relative_rounding_step(values: np.ndarray, mantissa_bits: int):
+def relative_rounding_step(values: list[float], mantissa_bits: int) -> tuple[float, float]:
     """
     Derive the analytic max relative rounding error for a `mantissa_bits`
     -mantissa floating-point format, and measure it empirically on a
-    mid-range probe tensor.
+    mid-range probe list.
 
     Returns (analytic_bound, empirical_max_rel_err).
     """

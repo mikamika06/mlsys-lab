@@ -36,7 +36,7 @@ launch-overhead optimization, not a compute optimization.
 Implement `graph_launch_step_time(L, N, C)`:
 
 ```python
-def graph_launch_step_time(L: float, N: int, C: float) -> np.ndarray:
+def graph_launch_step_time(L: float, N: int, C: float) -> list[float]:
     ...
 ```
 
@@ -44,7 +44,7 @@ def graph_launch_step_time(L: float, N: int, C: float) -> np.ndarray:
 - `N`: number of kernels issued per step.
 - `C`: total device compute time per step.
 
-Return `np.array([eager_time, graph_time, fraction_removed])` using the
+Return `[eager_time, graph_time, fraction_removed]` using the
 three formulas above.
 
 ## Example
@@ -64,7 +64,7 @@ single-kernel step (no possible savings), a launch-overhead-dominated step
 with thousands of tiny kernels, and a compute-dominated step, plus several
 randomly generated triples from a seeded generator. For each one it
 recomputes the reference `[eager_time, graph_time, fraction_removed]`
-directly from the formulas with NumPy and compares it to your output with
+directly from the formulas with Python and compares it to your output with
 relative L2 error, requiring `rel_err < 1e-9`. A solution that computes
 `fraction_removed` as `(N * L) / T_eager` — treating *all* launch
 overhead as eliminated and forgetting the graph still pays `L` once per

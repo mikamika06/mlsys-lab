@@ -1,0 +1,21 @@
+{
+  "id": "m-reconstruct-feasible-tensor-length-from-grid-shape-a",
+  "title": "Reconstruct feasible tensor length from grid shape",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "SPMD grid model & kernel launch",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["tensorgrid/reconstruct.py", "tensorgrid/validate.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct tensor length bounds from grid shape", "check": "harness/m1.py",
+     "gates": [{"metric": "reconstruct_matched", "op": ">=", "threshold": 4}]},
+    {"n": 2, "title": "Validate feasibility and compute optimal grid", "check": "harness/m2.py",
+     "gates": [{"metric": "validation_matched", "op": ">=", "threshold": 12}]},
+    {"n": 3, "title": "Safety net: regression test for boundary reconstruction", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

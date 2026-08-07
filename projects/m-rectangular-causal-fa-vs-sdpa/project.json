@@ -1,0 +1,63 @@
+{
+  "id": "m-rectangular-causal-fa-vs-sdpa",
+  "title": "Rectangular causal FlashAttention vs SDPA mask alignment",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "causal-masking-and-bottom-right-alignment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "rectatt/probe.py",
+    "rectatt/attention.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Mask-alignment probe for rectangular causal attention",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-6
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Fix prefix-cache attention bug across FA and SDPA",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-5
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression suite catching alignment bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_alignment_bug",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

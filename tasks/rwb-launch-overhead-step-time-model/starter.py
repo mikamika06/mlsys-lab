@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def graph_launch_step_time(L: float, N: int, C: float) -> np.ndarray:
+def graph_launch_step_time(L: float, N: int, C: float) -> list[float]:
     """
     L: per-kernel launch overhead (time units).
     N: number of kernels issued per step.
@@ -13,7 +10,7 @@ def graph_launch_step_time(L: float, N: int, C: float) -> np.ndarray:
     captured CUDA graph replaces all N per-kernel launches with ONE graph
     launch, paying L only once for the whole step.
 
-    Returns np.array([eager_time, graph_time, fraction_removed]):
+    Returns [eager_time, graph_time, fraction_removed]:
       eager_time = N * L + C
       graph_time = L + C
       fraction_removed = (eager_time - graph_time) / eager_time

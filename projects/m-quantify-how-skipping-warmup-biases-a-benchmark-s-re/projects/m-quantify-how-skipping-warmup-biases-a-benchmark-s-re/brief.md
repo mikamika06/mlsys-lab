@@ -1,0 +1,6 @@
+# Ticket: Benchmark execution pipeline reports skewed throughput metrics and volatile latency profiles across edge backends
+
+## Symptom
+When executing our comparative performance benchmarking workflow across Apple Silicon MLX, PyTorch-MPS, and llama.cpp-Metal backends, the recorded tokens-per-second and inference latency figures exhibit massive, erratic fluctuations. Specifically, initial execution cycles—encompassing kernel compilation, dynamic memory pool allocation, and low-level command queue setup—impose severe overhead penalties that artificially inflate latency measurements when warmup iterations are omitted or improperly configured.
+
+Furthermore, engineers observe puzzling performance regressions where MLX frequently appears substantially slower than llama.cpp-Metal on short sequence length runs under default settings, but these anomalies vanish entirely when uniform sequence-length, prompt-length, and data type controls are strictly enforced alongside steady-state sampling windows. Without a standardized, prompt-and-sequence-matched benchmarking harness that isolates steady-state performance from cold-start jitters and quantifies warmup bias, our automated regression detection pipelines constantly raise false alarms. We require a robust benchmarking analysis module to accurately model, quantify, and test these performance characteristics.

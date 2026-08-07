@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def sdpa(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.ndarray:
+def sdpa(Q: list[list[float]], K: list[list[float]], V: list[list[float]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

@@ -1,0 +1,45 @@
+{
+  "id": "m-reproduce-and-explain-an-mlx-vlm-error-on-a-text-onl",
+  "title": "Reproduce and explain an mlx-vlm error on a text-only model",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "mlx-vlm vision-language model inference",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mlx_vlm_edge/error_reproducer.py",
+    "mlx_vlm_edge/token_counter.py",
+    "mlx_vlm_edge/server_check.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reproduce and explain text-only model error",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "error_reproduced", "op": "==", "threshold": 1},
+        {"metric": "explanation_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Derive expected image-token count from patch size and resolution",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "token_counts_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: headless chat server smoke test and regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_counter", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

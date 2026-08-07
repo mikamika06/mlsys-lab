@@ -23,10 +23,10 @@ def grade(sol, fx) -> dict:
     B = rng.normal(size=(19, 19)).astype(np.float64) * 0.2
 
     try:
-        got = sol.mem_efficient_attention(Q, K, V, B, 5)
+        got = sol.mem_efficient_attention(Q.tolist(), K.tolist(), V.tolist(), B.tolist(), 5)
         err = float(np.max(np.abs(np.asarray(got) - _oracle(Q, K, V, B))))
     except Exception:
-        return {"max_abs_err": float("inf"), "no_n2_materialization": 0.0}
+        return {"max_abs_err": 1e9, "no_n2_materialization": 0.0}
 
     memory_ok = 1.0
     n = 1536
@@ -35,9 +35,14 @@ def grade(sol, fx) -> dict:
     Vm = rng.normal(size=(n, 8)).astype(np.float64)
     Bm = rng.normal(size=(n, n)).astype(np.float64) * 0.01
 
+    Qm_list = Qm.tolist()
+    Km_list = Km.tolist()
+    Vm_list = Vm.tolist()
+    Bm_list = Bm.tolist()
+
     tracemalloc.start()
     try:
-        sol.mem_efficient_attention(Qm, Km, Vm, Bm, 64)
+        sol.mem_efficient_attention(Qm_list, Km_list, Vm_list, Bm_list, 64)
         _, peak = tracemalloc.get_traced_memory()
     except Exception:
         memory_ok = 0.0

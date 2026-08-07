@@ -1,0 +1,21 @@
+{
+  "id": "m-reorder-the-calibration-loop-to-cut-peak-memory",
+  "title": "Reorder the calibration loop to cut peak memory",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "Failure modes and OOM during quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantcal/loop.py", "quantcal/memory.py", "quantcal/limits.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reorder the calibration loop for minimal peak memory", "check": "harness/m1.py",
+     "gates": [{"metric": "peak_memory_cut", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Largest workable num_calibration_samples", "check": "harness/m2.py",
+     "gates": [{"metric": "argmin_index", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches memory regression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_memory_regression", "op": "==", "threshold": 1}]}
+  ]
+}

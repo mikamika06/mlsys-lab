@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def _e4m3_grid():
     vals = set()
     for exp in range(16):
@@ -8,12 +5,12 @@ def _e4m3_grid():
             if exp == 15 and mant == 7:
                 continue
             if exp == 0:
-                val = (2 ** -6) * (mant / 8.0)
+                val = (2.0 ** -6) * (mant / 8.0)
             else:
-                val = (2 ** (exp - 7)) * (1.0 + mant / 8.0)
+                val = (2.0 ** (exp - 7)) * (1.0 + mant / 8.0)
             vals.add(val)
             vals.add(-val)
-    return np.array(sorted(vals), dtype=np.float64)
+    return sorted(list(vals))
 
 
 def _e5m2_grid():
@@ -21,12 +18,12 @@ def _e5m2_grid():
     for exp in range(31):
         for mant in range(4):
             if exp == 0:
-                val = (2 ** -14) * (mant / 4.0)
+                val = (2.0 ** -14) * (mant / 4.0)
             else:
-                val = (2 ** (exp - 15)) * (1.0 + mant / 4.0)
+                val = (2.0 ** (exp - 15)) * (1.0 + mant / 4.0)
             vals.add(val)
             vals.add(-val)
-    return np.array(sorted(vals), dtype=np.float64)
+    return sorted(list(vals))
 
 
 _FP8_MAX = {"e4m3": 448.0, "e5m2": 57344.0}
@@ -42,7 +39,7 @@ def _round_trip_err(v, fmt):
         vc = fmax
     else:
         vc = v
-    
+
     best_idx = 0
     min_abs_diff = abs(grid[0] - vc)
     for i in range(1, len(grid)):
@@ -50,11 +47,11 @@ def _round_trip_err(v, fmt):
         if diff < min_abs_diff:
             min_abs_diff = diff
             best_idx = i
-            
+
     return abs(grid[best_idx] - v)
 
 
-def classify_better_format(values: np.ndarray) -> np.ndarray:
+def classify_better_format(values: list[float]) -> list[int]:
     """
     For each scalar in `values`, round-trip it (quantize to the nearest
     representable value, clamped/saturated at the format's finite max
@@ -64,18 +61,11 @@ def classify_better_format(values: np.ndarray) -> np.ndarray:
         0 -> E4M3 wins (or exact tie)
         1 -> E5M2 wins
 
-    Returns an int array of the same shape as `values`.
+    Returns a list of ints of the same length as `values`.
     """
-    values = np.asarray(values, dtype=np.float64)
-    flat = values.ravel()
-    out = np.empty(flat.shape, dtype=np.int64)
-    for i, v in enumerate(flat):
+    out = []
+    for v in values:
         e4 = _round_trip_err(v, "e4m3")
         e5 = _round_trip_err(v, "e5m2")
-        out[i] = 0 if e4 <= e5 else 1
-    
-    res = np.empty(values.shape, dtype=np.int64)
-    flat_res = res.ravel()
-    for i in range(len(out)):
-        flat_res[i] = out[i]
-    return res
+        out.append(0 if e4 <= e5 else 1)
+    return out

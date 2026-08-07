@@ -1,0 +1,7 @@
+# Incident Report: KV Cache Memory Exhaustion and Generation Degradation During Long-Context LLM Inference
+
+During extended multi-turn dialogue and long-context document summarization tasks, the inference service experiences severe memory pressure characterized by an uncontrolled linear growth in KV cache allocation proportional to the input sequence length. When the sequence length exceeds the nominal pretraining context window threshold, downstream generation quality abruptly collapses, producing repetitive loops, gibberish output, or complete divergence from the prompt context.
+
+Initial investigations indicate that standard sliding window attention implementations discard early tokens entirely to bound memory usage. However, dropping initial tokens leads to an immediate spike in token perplexity and catastrophic semantic degradation. Conversely, retaining the entire KV cache across thousands of steps causes out-of-memory (OOM) faults on hardware accelerators due to memory capacity saturation.
+
+Engineering teams require a robust evaluation and implementation harness to reproduce StreamingLLM mechanics—specifically combining initial attention sinks with a rolling local window—to bound perplexity stably without incurring unbounded memory growth. Furthermore, the system must support automated sweeps to identify minimal stabilizing sink counts and compare performance against heavy-hitter based eviction strategies on synthetic retrieval benchmarks.

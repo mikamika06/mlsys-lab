@@ -1,23 +1,21 @@
-import numpy as np
-
-
-def modified_rejection_sample(p, q, draft_token_ids, u_stream):
-    p = np.asarray(p, dtype=np.float64)
-    q = np.asarray(q, dtype=np.float64)
-    draft_token_ids = np.asarray(draft_token_ids, dtype=np.int64)
-    u_stream = np.asarray(u_stream, dtype=np.float64)
-
-    T, V = p.shape
+def modified_rejection_sample(
+    p: list[list[float]],
+    q: list[list[float]],
+    draft_token_ids: list[int],
+    u_stream: list[float],
+) -> list[int]:
+    T = len(p)
+    V = len(p[0]) if T > 0 else 0
     ptr = 0
-    out = np.empty(T, dtype=np.int64)
+    out = [0] * T
 
     for t in range(T):
         u_accept = u_stream[ptr]
         ptr += 1
 
-        tok = int(draft_token_ids[t])
-        denom = q[t, tok]
-        ratio = min(1.0, p[t, tok] / denom) if denom > 0 else 0.0
+        tok = draft_token_ids[t]
+        denom = q[t][tok]
+        ratio = min(1.0, p[t][tok] / denom) if denom > 0 else 0.0
 
         if u_accept <= ratio:
             out[t] = tok
@@ -25,7 +23,7 @@ def modified_rejection_sample(p, q, draft_token_ids, u_stream):
             r_sum = 0.0
             r_vals = []
             for i in range(V):
-                diff = p[t, i] - q[t, i]
+                diff = p[t][i] - q[t][i]
                 val = diff if diff > 0.0 else 0.0
                 r_sum += val
                 r_vals.append(val)

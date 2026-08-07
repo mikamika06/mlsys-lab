@@ -28,7 +28,7 @@ tokens. **Goodput** is the count of requests that meet both SLOs.
 Implement `goodput_colocated_vs_disaggregated`:
 
 ```python
-def goodput_colocated_vs_disaggregated(arrival, prompt_len, output_len, ttft_slo, itl_slo):
+def goodput_colocated_vs_disaggregated(arrival: list[float], prompt_len: list[float], output_len: list[float], ttft_slo: list[float], itl_slo: list[float]) -> tuple[int, int]:
     ...
 ```
 
@@ -76,6 +76,6 @@ numbers capture exactly this trade-off.
 
 A single gate, **exact_match**, compares your returned `(goodput_colocated,
 goodput_disaggregated)` tuple against an independently computed reference
-on a fixed, deterministic 30-request trace (`np.random.default_rng(0)`:
+on a fixed, deterministic 30-request trace (`random.Random(0)`:
 Poisson-ish arrivals, varied prompt/output lengths, and a mix of tight and
 loose SLOs). Both counts must match exactly.

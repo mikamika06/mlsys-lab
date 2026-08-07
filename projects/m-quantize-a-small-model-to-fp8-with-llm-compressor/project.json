@@ -1,0 +1,21 @@
+{
+  "id": "m-quantize-a-small-model-to-fp8-with-llm-compressor",
+  "title": "Quantize a small model to FP8 with llm-compressor",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "FP8 quantization (E4M3 weights and activations)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["fp8quant/recipe.py", "fp8quant/compress.py", "fp8quant/pipeline.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Define the FP8 quantization recipe", "check": "harness/m1.py",
+     "gates": [{"metric": "recipe_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Verify model compression size ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "size_ratio", "op": "<=", "threshold": 0.55}]},
+    {"n": 3, "title": "Safety net: regression test catches broken recipe", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_recipe", "op": "==", "threshold": 1}]}
+  ]
+}

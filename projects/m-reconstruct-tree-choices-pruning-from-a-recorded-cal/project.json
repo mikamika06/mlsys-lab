@@ -1,0 +1,69 @@
+{
+  "id": "m-reconstruct-tree-choices-pruning-from-a-recorded-cal",
+  "title": "Reconstruct tree choices pruning and compare Medusa vs EAGLE under equal budget",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Medusa architecture",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "treeprune/calib.py",
+    "treeprune/heads.py",
+    "treeprune/evaluate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct tree choices pruning from calibration data",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "choices_matched",
+          "op": ">=",
+          "threshold": 3.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Medusa multi-head versus EAGLE feature-conditioned head under equal budget",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "budget_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "valid_comparison",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching invariant violations in pruning",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_pruning",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

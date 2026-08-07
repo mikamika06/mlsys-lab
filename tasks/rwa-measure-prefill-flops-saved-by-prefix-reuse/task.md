@@ -28,7 +28,7 @@ $$
 Implement `prefill_flops_saved_fraction`:
 
 ```python
-def prefill_flops_saved_fraction(lengths: np.ndarray, reused_prefix: np.ndarray) -> float:
+def prefill_flops_saved_fraction(lengths: list[float], reused_prefix: list[float]) -> float:
     ...
 ```
 
@@ -49,10 +49,9 @@ $$
 ## Example
 
 ```python
-import numpy as np
 
-lengths = np.array([100, 100])
-reused_prefix = np.array([0, 100])   # first request: no reuse; second: fully cached
+lengths = [100, 100]
+reused_prefix = [0, 100]   # first request: no reuse; second: fully cached
 
 saved = prefill_flops_saved_fraction(lengths, reused_prefix)
 # request 1 saves nothing, request 2 saves everything, so saved is

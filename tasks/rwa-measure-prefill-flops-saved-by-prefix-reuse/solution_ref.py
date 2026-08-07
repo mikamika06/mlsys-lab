@@ -1,17 +1,13 @@
-import numpy as np
-
-
-def _cost(L: np.ndarray) -> np.ndarray:
-    L = np.asarray(L, dtype=np.float64)
+def _cost(L: list[float]) -> list[float]:
     n = len(L)
-    out = np.zeros(n, dtype=np.float64)
+    out = [0.0] * n
     for i in range(n):
         out[i] = L[i] * (L[i] + 1.0) / 2.0
     return out
 
 
 def prefill_flops_saved_fraction(
-    lengths: np.ndarray, reused_prefix: np.ndarray
+    lengths: list[float], reused_prefix: list[float]
 ) -> float:
     """
     lengths: (n,) full context length L_i of each request in the batch.
@@ -32,14 +28,11 @@ def prefill_flops_saved_fraction(
     Return the fraction of total batch prefill FLOPs saved by reuse:
     1 - sum(reuse_cost) / sum(full_cost).
     """
-    lengths = np.asarray(lengths, dtype=np.float64)
-    reused_prefix = np.asarray(reused_prefix, dtype=np.float64)
-
     full_cost = _cost(lengths)
     prefix_cost = _cost(reused_prefix)
 
     n = len(lengths)
-    reuse_cost = np.zeros(n, dtype=np.float64)
+    reuse_cost = [0.0] * n
     for i in range(n):
         reuse_cost[i] = full_cost[i] - prefix_cost[i]
 

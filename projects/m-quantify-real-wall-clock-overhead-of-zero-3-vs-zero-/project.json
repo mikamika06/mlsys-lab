@@ -1,0 +1,21 @@
+{
+  "id": "m-quantify-real-wall-clock-overhead-of-zero-3-vs-zero-2",
+  "title": "Quantify real wall-clock overhead of ZeRO-3 vs ZeRO-2",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "deepspeed-zero-distributed",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["zeroperf/parser.py", "zeroperf/metrics.py", "zeroperf/stats.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse step logs and compute latencies", "check": "harness/m1.py",
+     "gates": [{"metric": "logs_parsed", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Compute wall-clock overhead and relative error", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: regression tests for log analysis", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}]}
+  ]
+}

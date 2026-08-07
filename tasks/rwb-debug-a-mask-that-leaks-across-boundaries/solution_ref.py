@@ -1,11 +1,11 @@
-import numpy as np
+import math
 
 
-def packed_attention_with_reset_mask(Q: np.ndarray, K: np.ndarray, V: np.ndarray, segment_ids: np.ndarray) -> np.ndarray:
+def packed_attention_with_reset_mask(Q: list[list[float]], K: list[list[float]], V: list[list[float]], segment_ids: list[int]) -> list[list[float]]:
     """Causal self-attention over multiple documents PACKED into one
     training sequence, with the mask RESET at every segment boundary.
 
-    Q, K, V: (n, d). segment_ids: (n,) int array; segment_ids[i] is the
+    Q, K, V: (n, d). segment_ids: (n,) int list; segment_ids[i] is the
     segment/document index token i belongs to (e.g. [0,0,0,1,1,2,2,2,2] for
     three packed documents of length 3, 2, 4).
 
@@ -13,17 +13,48 @@ def packed_attention_with_reset_mask(Q: np.ndarray, K: np.ndarray, V: np.ndarray
     segment_ids[i] (same document -- the mask resets, exactly like resetting
     position ids at each packed-document boundary). Returns (n, d).
     """
-    n, d = Q.shape
-    scores = (Q.astype(np.float64) @ K.astype(np.float64).T) / np.sqrt(d)
+    n = len(Q)
+    d = len(Q[0])
+    scale = 1.0 / math.sqrt(d)
 
-    row = np.arange(n)[:, None]
-    col = np.arange(n)[None, :]
-    same_seg = segment_ids[:, None] == segment_ids[None, :]
-    causal = col <= row
-    allowed = same_seg & causal
+    scores = []
+    for i in range(n):
+        row_scores = []
+        for j in range(n):
+            if j <= i and segment_ids[j] == segment_ids[i]:
+                dot = 0.0
+                for k in range(d):
+                    dot += Q[i][k] * K[j][k]
+                row_scores.append(dot * scale)
+            else:
+                row_scores.append(-float("inf"))
+        scores.append(row_scores)
 
-    scores = np.where(allowed, scores, -np.inf)
-    scores = scores - np.max(scores, axis=1, keepdims=True)
-    probs = np.exp(scores)
-    probs = probs / np.sum(probs, axis=1, keepdims=True)
-    return probs @ V.astype(np.float64)
+    output = []
+    for i in range(n):
+        max_val = -float("inf")
+        for j in range(n):
+            if scores[i][j] > max_val:
+                max_val = scores[i][j]
+
+        exps = []
+        sum_exp = 0.0
+        for j in range(n):
+            if scores[i][j] == -float("inf"):
+                exps.append(0.0)
+            else:
+                val = math.exp(scores[i][j] - max_val)
+                exps.append(val)
+                sum_exp += val
+
+        probs = [val / sum_exp for val in exps]
+
+        row_out = []
+        for k in range(d):
+            val = 0.0
+            for j in range(n):
+                val += probs[j] * V[j][k]
+            row_out.append(val)
+        output.append(row_out)
+
+    return output

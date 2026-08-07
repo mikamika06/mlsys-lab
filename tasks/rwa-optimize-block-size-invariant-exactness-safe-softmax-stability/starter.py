@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def tiled_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int) -> np.ndarray:
+def tiled_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], block_size: int) -> list[list[float]]:
     """Tiled (flash-style) attention forward.
 
     Sweep K/V in blocks of at most `block_size` rows (the last block may be
@@ -15,25 +14,5 @@ def tiled_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int
     block_size == 1 and block_size >= N.
 
     Q, K, V: (N, d) arrays. Returns (N, d) float64 array.
-    """
-    raise NotImplementedError('your code here')
-
-
-def softmax_stability_probe(scores: np.ndarray):
-    """Compare a numerically stable softmax against a naive one.
-
-    scores: 2-D array of raw (possibly very large-magnitude) attention
-        scores.
-
-    Compute:
-      - stable_out: row-wise softmax using max-subtraction before
-        exponentiating (must stay finite and correctly normalized
-        regardless of how large `scores` gets).
-      - unstable_overflowed: True if the naive softmax -- exp(scores)
-        normalized by its row sum, WITHOUT subtracting the row max first
-        -- produces any non-finite (inf/nan) value on this input; False
-        otherwise.
-
-    Returns (stable_out, unstable_overflowed).
     """
     raise NotImplementedError('your code here')

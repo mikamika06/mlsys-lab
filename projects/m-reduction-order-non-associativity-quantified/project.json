@@ -1,0 +1,40 @@
+{
+  "id": "m-reduction-order-non-associativity-quantified",
+  "title": "Quantifying and mitigating distributed numerical instability",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Numerical failure modes at scale (loss spikes, non-determinism, precision bugs)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "redscale/nonassoc.py",
+    "redscale/outliers.py",
+    "redscale/overflow.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantifying reduction-order non-associativity",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "mse_match", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Outlier detection for loss spikes and rank anomalies",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "spike_match", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Global overflow skip via collective synchronization",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_overflow", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

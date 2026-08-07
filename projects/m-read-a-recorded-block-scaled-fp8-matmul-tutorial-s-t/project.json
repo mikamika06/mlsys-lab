@@ -1,0 +1,20 @@
+{
+  "id": "m-read-a-recorded-block-scaled-fp8-matmul-tutorial-s-t",
+  "title": "Read a recorded block-scaled fp8 matmul tutorial",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Low-precision & block-scaled matmul (fp8/int8)",
+  "difficulty": 2,
+  "edits": ["fp8read/parser.py", "fp8read/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse recorded tutorial logs", "check": "harness/m1.py",
+     "gates": [{"metric": "records_parsed", "op": ">=", "threshold": 4}]},
+    {"n": 2, "title": "Compute throughput ratios vs fp16 cuBLAS", "check": "harness/m2.py",
+     "gates": [{"metric": "ratio_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for analysis invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def attention_sink_mass(logits: np.ndarray, k: int) -> float:
+def attention_sink_mass(logits: list[list[float]], k: int) -> float:
     raise NotImplementedError('your code here')

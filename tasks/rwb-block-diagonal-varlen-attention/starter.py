@@ -1,8 +1,6 @@
-import numpy as np
+import math
 
-
-def varlen_block_diagonal_attention(q: np.ndarray, k: np.ndarray, v: np.ndarray,
-                                     cu_seqlens: np.ndarray) -> np.ndarray:
+def varlen_block_diagonal_attention(q: list[list[float]], k: list[list[float]], v: list[list[float]], cu_seqlens: list[int]) -> list[list[float]]:
     """Packed varlen self-attention: several sequences packed row-wise
     into (N, d) tensors, boundaries given by `cu_seqlens` (the standard
     FlashAttention-varlen / xformers convention). Each token attends only

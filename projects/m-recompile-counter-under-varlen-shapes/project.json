@@ -1,0 +1,43 @@
+{
+  "id": "m-recompile-counter-under-varlen-shapes",
+  "title": "Recompile Counter and Varlen Bucketing for CUDA Graph Decode",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "torch-compile-and-graph-integration",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "recompile/counter.py",
+    "recompile/bucketing.py",
+    "recompile/capture.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Tracking recompilations under dynamic varlen shapes",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "recompile_count_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Shape bucketing policy and CUDA graph decode step capture",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "bucketing_match", "op": "==", "threshold": 1},
+        {"metric": "capture_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for bucketing and graph execution",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_bucketing", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

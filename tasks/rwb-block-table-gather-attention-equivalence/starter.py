@@ -1,5 +1,4 @@
-import numpy as np
-
+import math
 
 def paged_gqa_attention(k_phys, v_phys, block_table, q, n_kv_heads):
     """Gather logical KV from a paged block table and run GQA attention.

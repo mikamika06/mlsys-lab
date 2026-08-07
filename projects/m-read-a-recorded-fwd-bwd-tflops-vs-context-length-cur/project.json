@@ -1,0 +1,21 @@
+{
+  "id": "m-read-a-recorded-fwd-bwd-tflops-vs-context-length-cur",
+  "title": "TFLOPS curve analysis and online softmax rescaling verification",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Fused attention (FlashAttention-style online softmax)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["attencurve/analyzer.py", "attencurve/rescale.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Find crossover point from recorded TFLOPS curve", "check": "harness/m1.py",
+     "gates": [{"metric": "crossover_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Simulate wrong online softmax rescaling with old max", "check": "harness/m2.py",
+     "gates": [{"metric": "rescale_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for online softmax rescaling invariant", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_rescale", "op": "==", "threshold": 1}]}
+  ]
+}

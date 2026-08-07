@@ -1,0 +1,68 @@
+{
+  "id": "m-read-and-override-the-gpu-wired-memory-ceiling-via-s",
+  "title": "Read and override the GPU wired-memory ceiling via sysctl",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Unified memory architecture fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "sysctl_mem/ceiling.py",
+    "sysctl_mem/diagnose.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Predict default ceiling and generate sysctl override commands",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "prediction_accuracy",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "override_validity",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose IOGPUMemory panics from server logs",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "log_diagnoses_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for unsafe memory limits",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_unsafe_overrides",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

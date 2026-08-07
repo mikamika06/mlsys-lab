@@ -1,0 +1,45 @@
+{
+  "id": "m-reproduce-fp16-vs-bf16-vs-fp32-numeric-properties",
+  "title": "Numeric properties and autocast behavior of FP16, BF16, and FP32",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "mixed-precision-autocast",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "numprec/properties.py",
+    "numprec/autocast_rules.py",
+    "numprec/overflow.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reproduce FP16 vs BF16 vs FP32 numeric properties",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "properties_matched", "op": ">=", "threshold": 3.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Predict autocast casting decisions and theoretical overflow tail probability",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "autocast_matched", "op": "==", "threshold": 1.0},
+        {"metric": "overflow_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests that catch numerical precision corruptions",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_precision_corruption", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

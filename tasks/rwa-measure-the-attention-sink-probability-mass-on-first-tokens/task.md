@@ -30,11 +30,11 @@ computed from the attention matrix to keep the measurement definition explicit.
 Implement `attention_sink_mass(logits, k)`:
 
 ```python
-def attention_sink_mass(logits: np.ndarray, k: int) -> float:
+def attention_sink_mass(logits: list[list[float]], k: int) -> float:
     ...
 ```
 
-The function receives a square 2-D NumPy array of attention logits with shape
+The function receives a square list of lists of floats of attention logits with shape
 $(n,n)$ and an integer $k$. It must:
 
 1. Compute the row-wise softmax attention matrix in numerically stable form.
@@ -46,13 +46,12 @@ Do not use external machine learning libraries.
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([
+logits = [
     [4.0, 1.0, 0.0],
     [3.0, 2.0, 0.0],
     [2.0, 1.0, 0.0],
-])
+]
 
 mass = attention_sink_mass(logits, 1)
 # mass is the fraction of attention probability assigned to token 0
@@ -61,7 +60,7 @@ mass = attention_sink_mass(logits, 1)
 ## What the gate checks
 
 The gate builds several attention logit matrices and computes the reference sink
-mass by constructing the stable NumPy softmax attention matrix. The returned value
+mass by constructing the stable Python softmax attention matrix. The returned value
 is compared with the oracle result using relative error:
 
 $$

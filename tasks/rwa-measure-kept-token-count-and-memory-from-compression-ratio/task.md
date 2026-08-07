@@ -16,9 +16,7 @@ The task is to implement a function that returns these two values.
 Implement `measure_kept_tokens_and_memory`:
 
 ```python
-def measure_kept_tokens_and_memory(compression_ratio: float,
-                                   seq_len: int,
-                                   full_bytes: int) -> tuple[int, float]:
+def measure_kept_tokens_and_memory(compression_ratio: float, seq_len: int, full_bytes: int) -> tuple[int, float]:
     ...
 ```
 
@@ -31,12 +29,11 @@ The function must return a tuple `(kept_tokens, memory_saved)` where:
 * `kept_tokens` is an **integer** equal to $\operatorname{round}((1-r)\,n)$.
 * `memory_saved` is a **float64** equal to $r\,B$.
 
-Use NumPy for the arithmetic; do not hard‑code any values.
+Use Python for the arithmetic; do not hard‑code any values.
 
 ## Example
 
 ```python
-import numpy as np
 kept, saved = measure_kept_tokens_and_memory(0.25, 100, 8000)
 print(kept)   # 75
 print(saved)  # 2000.0
@@ -46,11 +43,10 @@ Here $k=\operatorname{round}(0.75\times100)=75$ and $s=0.25\times8000=2000$.
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy:
+The grader computes a reference implementation using Python:
 
 ```python
-import numpy as np
-ref_kept = int(np.round((1 - r) * n))
+ref_kept = int(round((1 - r) * n))
 ref_saved = (r * B)
 ```
 

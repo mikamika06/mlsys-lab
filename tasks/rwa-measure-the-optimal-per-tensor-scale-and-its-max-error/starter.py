@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def optimal_scale_and_error(x: np.ndarray, fmt: str) -> tuple[float, float]:
+def optimal_scale_and_error(x: list[float], fmt: str) -> tuple[float, float]:
     """
     Compute the standard per-tensor calibration scale for FP8 format `fmt`
     ("e4m3" or "e5m2"): scale = amax(|x|) / FORMAT_MAX[fmt]. Quantize

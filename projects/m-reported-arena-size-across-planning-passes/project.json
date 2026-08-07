@@ -1,0 +1,22 @@
+{
+  "id": "m-reported-arena-size-across-planning-passes",
+  "title": "Reported arena size across planning passes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": ".pte format, memory planning and program-data separation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["arena/passes.py", "arena/separation.py", "arena/detect.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Track reported arena size across planning passes", "check": "harness/m1.py",
+     "gates": [{"metric": "passes_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Program-data separation savings for two methods", "check": "harness/m2.py",
+     "gates": [{"metric": "savings_match", "op": "==", "threshold": 1},
+               {"metric": "methods_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: detect unplanned or dynamic tensors", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unplanned", "op": "==", "threshold": 1}]}
+  ]
+}

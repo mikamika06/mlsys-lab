@@ -1,0 +1,22 @@
+{
+  "id": "m-rebuild-nesting-depth-over-time-from-b-e-record-func",
+  "title": "Rebuild nesting depth over time from B/E record function ranges",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "chrome-trace-and-kineto-json",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["profparse/parser.py", "profparse/timeline.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Classify ph field semantics and recover durations", "check": "harness/m1.py",
+     "gates": [{"metric": "events_parsed", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Rebuild nesting depth over time and map track names", "check": "harness/m2.py",
+     "gates": [{"metric": "depth_matched", "op": "==", "threshold": 1},
+               {"metric": "tracks_mapped", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching orphan or inverted B/E pairs", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_nesting", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "m-quantify-the-unified-memory-sequential-execution-cos",
+  "title": "Quantify unified memory sequential execution cost",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "MLX / Apple Silicon speculative decoding",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "seqcost/model.py",
+    "seqcost/memory.py",
+    "seqcost/cost.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Model parameter and KV cache memory footprint",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Sequential vs parallel execution cost ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for cost anomalies",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_cost",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

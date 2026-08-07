@@ -1,0 +1,45 @@
+{
+  "id": "m-rank-eps-by-p99-on-this-machine",
+  "title": "Rank execution providers by p99 and evaluate backend selection trade-offs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Choosing the backend: ORT CPU/CUDA/TRT EP vs standalone TensorRT vs TRT-LLM",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ep_selector/ranking.py",
+    "ep_selector/fragmentation.py",
+    "ep_selector/policy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Rank Execution Providers by p99 latency",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "ranking_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantify partial TRT fragmentation and shape churn cost",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "fragmentation_matched", "op": "==", "threshold": 1},
+        {"metric": "churn_policy_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches invalid backend selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_policy", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

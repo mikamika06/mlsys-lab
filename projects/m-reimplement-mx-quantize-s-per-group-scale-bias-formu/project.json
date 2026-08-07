@@ -1,0 +1,62 @@
+{
+  "id": "m-reimplement-mx-quantize-s-per-group-scale-bias-formu",
+  "title": "Reimplement MX quantization per-group scale and bias",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "MLX quantization mechanics (mx.quantize / QuantizedLinear)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mxquant/quant.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reimplement per-group scale and bias formula",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "formulas_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantize linear and measure size reduction",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "size_reduction_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Group size divisibility validation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_divisibility",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

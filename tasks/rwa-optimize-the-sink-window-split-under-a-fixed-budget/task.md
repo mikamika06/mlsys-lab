@@ -31,7 +31,7 @@ $$
 
 Implement `optimize_sink_window_split(Q, K, V, B)`.
 
-The function receives three NumPy arrays of shape $(n,d)$ and an integer cache budget $B$ where $1 < B < n$. It must return the integer sink size $k$ that gives the lowest squared Frobenius error against full attention when the retained cache size is fixed to $B$.
+The function receives three list of shape $(n,d)$ and an integer cache budget $B$ where $1 < B < n$. It must return the integer sink size $k$ that gives the lowest squared Frobenius error against full attention when the retained cache size is fixed to $B$.
 
 The implementation must:
 
@@ -45,11 +45,10 @@ No approximation or heuristic search is allowed.
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1., 0.], [0., 1.], [1., 1.], [0., -1.]])
+Q = [[1., 0.], [0., 1.], [1., 1.], [0., -1.]]
 K = Q.copy()
-V = np.arange(8, dtype=np.float64).reshape(4, 2)
+V = list(range(8)).reshape(4, 2)
 
 k = optimize_sink_window_split(Q, K, V, 3)
 # k is the best number of sink tokens among:
@@ -59,4 +58,4 @@ k = optimize_sink_window_split(Q, K, V, 3)
 
 ## What the gate checks
 
-The gate computes a NumPy reference implementation that performs the full attention calculation, sweeps all valid sink sizes, and selects the true minimum-error split. The returned `k` must exactly match this oracle-selected argmin index on multiple attention inputs.
+The gate computes a Python reference implementation that performs the full attention calculation, sweeps all valid sink sizes, and selects the true minimum-error split. The returned `k` must exactly match this oracle-selected argmin index on multiple attention inputs.

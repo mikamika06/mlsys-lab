@@ -23,7 +23,7 @@ the source data.
 Fix `packed_attention_with_reset_mask`:
 
 ```python
-def packed_attention_with_reset_mask(Q: np.ndarray, K: np.ndarray, V: np.ndarray, segment_ids: np.ndarray) -> np.ndarray:
+def packed_attention_with_reset_mask(Q: list[list[float]], K: list[list[float]], V: list[list[float]], segment_ids: list[int]) -> list[list[float]]:
     ...
 ```
 
@@ -45,13 +45,12 @@ resets at every document boundary.
 ## Example
 
 ```python
-import numpy as np
 
 # two 1-token "documents" packed together
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[10.0, 0.0], [0.0, 20.0]])
-segment_ids = np.array([0, 1])
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[10.0, 0.0], [0.0, 20.0]]
+segment_ids = [0, 1]
 
 out = packed_attention_with_reset_mask(Q, K, V, segment_ids)
 # token 1 (document 1) may ONLY see column 1 (its own document), even

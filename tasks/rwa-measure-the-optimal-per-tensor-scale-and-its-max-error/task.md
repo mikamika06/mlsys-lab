@@ -23,11 +23,11 @@ on ordinary ("well-scaled") data it reconstructs more accurately than E5M2
 Implement `optimal_scale_and_error`:
 
 ```python
-def optimal_scale_and_error(x: np.ndarray, fmt: str) -> tuple[float, float]:
+def optimal_scale_and_error(x: list[float], fmt: str) -> tuple[float, float]:
     ...
 ```
 
-* `x` — a `float64` NumPy array of any shape.
+* `x` — a `float64` list of any shape.
 * `fmt` — `"e4m3"` or `"e5m2"`.
 
 Compute `scale = max(|x|) / FORMAT_MAX[fmt]` (if `max(|x|) == 0`, return
@@ -50,9 +50,8 @@ with bias $7$ for E4M3 and $15$ for E5M2.
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1.0, -3.5, 8.0])
+x = [1.0, -3.5, 8.0]
 scale, err = optimal_scale_and_error(x, "e4m3")
 # amax = 8.0 -> scale = 8.0 / 448 ≈ 0.01786
 # x/scale ≈ [56, -196, 448] -- 448 is EXACTLY E4M3's max, so it round-trips

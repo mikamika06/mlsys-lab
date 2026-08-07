@@ -1,8 +1,6 @@
-import numpy as np
-
 def batch_size_histogram(arrivals, batch_timeout, max_batch_size):
     """Return the histogram of formed batch sizes (length max_batch_size+1)."""
-    histogram = np.zeros(max_batch_size + 1, dtype=np.int64)
+    histogram = [0] * (max_batch_size + 1)
     batch_start = None
     batch_size = 0
     for t in arrivals:

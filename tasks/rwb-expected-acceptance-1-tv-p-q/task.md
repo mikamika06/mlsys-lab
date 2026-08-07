@@ -35,12 +35,12 @@ rarely.
 Implement `expected_acceptance(p, q)`:
 
 ```python
-def expected_acceptance(p: np.ndarray, q: np.ndarray) -> float:
+def expected_acceptance(p: list[float], q: list[float]) -> float:
     ...
 ```
 
-- `p`: 1-D NumPy array, the target distribution (probabilities, sums to 1).
-- `q`: 1-D NumPy array, the draft distribution, same shape as `p` (sums to 1).
+- `p`: list of floats, the target distribution (probabilities, sums to 1).
+- `q`: list of floats, the draft distribution, same shape as `p` (sums to 1).
 
 Return the expected single-token acceptance probability, computed via
 **either** equivalent form above — $\sum_x \min(p_x,q_x)$ or
@@ -49,10 +49,9 @@ $1-\tfrac12\sum_x|p_x-q_x|$ — as a Python `float`.
 ## Example
 
 ```python
-import numpy as np
 
-p = np.array([0.7, 0.3])
-q = np.array([0.5, 0.5])
+p = [0.7, 0.3]
+q = [0.5, 0.5]
 
 expected_acceptance(p, q)
 # 0.8   (== sum(min([0.7,0.3],[0.5,0.5])) == 1 - 0.5*sum(|[0.2,-0.2]|))

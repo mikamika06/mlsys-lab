@@ -1,0 +1,40 @@
+{
+  "id": "m-record-a-real-replica-count-over-time-trace-under-au",
+  "title": "Ray Serve autoscaling trace recording, comparison, and thrashing diagnosis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Ray Serve Autoscaling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "servetrace/recorder.py",
+    "servetrace/compare.py",
+    "servetrace/diagnose.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Record a Real Replica-Count-Over-Time Trace Under Autoscaling",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "trace_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Compare Theoretical Replica Count to Ray's Real Trace",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "comparison_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Diagnose Autoscaler Thrashing From a Recorded Log",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_thrashing_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

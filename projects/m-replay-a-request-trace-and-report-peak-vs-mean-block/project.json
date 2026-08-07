@@ -1,0 +1,21 @@
+{
+  "id": "m-replay-a-request-trace-and-report-peak-vs-mean-block",
+  "title": "Replay a request trace and report peak vs mean block occupancy",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "paged-attention-block-management",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["trace/replay.py", "trace/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Replay trace and compute active block timeline", "check": "harness/m1.py",
+     "gates": [{"metric": "timeline_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Report peak vs mean block occupancy", "check": "harness/m2.py",
+     "gates": [{"metric": "metrics_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid timeline invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_invariants", "op": "==", "threshold": 1}]}
+  ]
+}

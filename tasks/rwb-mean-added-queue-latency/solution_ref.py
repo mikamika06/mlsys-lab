@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def mean_added_queue_latency(arrivals, preferred_batch_size: int, max_queue_delay: int) -> float:
+def mean_added_queue_latency(arrivals: list[int], preferred_batch_size: int, max_queue_delay: int) -> float:
     """
     Simulate the dynamic batcher (size trigger: queue reaches
     preferred_batch_size; delay trigger: oldest queued item has waited

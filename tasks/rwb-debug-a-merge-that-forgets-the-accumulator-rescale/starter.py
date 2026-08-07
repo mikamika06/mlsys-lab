@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def merge_split_kv(partials):
+def merge_split_kv(partials: list[tuple[float, float, list[float]]]) -> list[float]:
     """
     partials: list of (m_i, l_i, o_i) triples, one per KV shard, where
     (for that shard's logits over its own keys) m_i is the local max
@@ -13,12 +12,4 @@ def merge_split_kv(partials):
     computes (let alone rescales by) the global max m = max_i(m_i) across
     shards. Fix it.
     """
-    l = 0.0
-    numerator = None
-    for m_i, l_i, o_i in partials:
-        scale = np.exp(m_i)
-        l += scale * l_i
-        term = scale * np.asarray(o_i, dtype=np.float64)
-        numerator = term if numerator is None else numerator + term
-
-    return numerator / l
+    raise NotImplementedError('your code here')

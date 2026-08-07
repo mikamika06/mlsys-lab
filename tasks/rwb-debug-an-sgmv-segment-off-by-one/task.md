@@ -22,13 +22,13 @@ matrix multiplications.
 Implement `sgmv(X, adapters, segments)`:
 
 ```python
-def sgmv(X: np.ndarray, adapters: list[np.ndarray], segments: list[tuple[int, int, int]]) -> np.ndarray:
+def sgmv(X: list[list[float]], adapters: list[list[list[float]]], segments: list[tuple[int, int, int]]) -> list[list[float]]:
     ...
 ```
 
 Arguments:
 
-- `X` is a 2-D `float64` NumPy array with shape $(n, d)$.
+- `X` is a 2-D `float64` list with shape $(n, d)$.
 - `adapters` is a list where `adapters[k]` has shape $(d, m)$.
 - `segments` contains tuples `(start, end, adapter_id)`. Rows in the half-open
   interval $[start, end)$ must use `adapters[adapter_id]`.
@@ -39,12 +39,11 @@ products. Do not assume segments have equal length.
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[1., 2.], [3., 4.], [5., 6.]])
+X = [[1., 2.], [3., 4.], [5., 6.]]
 adapters = [
-    np.array([[1., 0.], [0., 1.]]),
-    np.array([[2., 0.], [0., 2.]])
+    [[1., 0.], [0., 1.]],
+    [[2., 0.], [0., 2.]]
 ]
 segments = [(0, 2, 0), (2, 3, 1)]
 
@@ -56,7 +55,7 @@ Y = sgmv(X, adapters, segments)
 
 ## What the gate checks
 
-The grader builds a NumPy reference implementation that applies each segment's
+The grader builds a Python reference implementation that applies each segment's
 adapter to exactly the rows in its half-open interval. The returned matrix is
 compared with the reference using maximum absolute error:
 

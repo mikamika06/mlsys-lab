@@ -1,0 +1,64 @@
+{
+  "id": "m-recompute-ane-routing-percentages-from-a-recorded-co",
+  "title": "Recompute ANE routing percentages and profile Core ML costs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Core ML compute-unit routing & ANE profiling (MLComputePlan)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "aneplan/routing.py",
+    "aneplan/compiler.py",
+    "aneplan/latency.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Recompute ANE routing percentages",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "routing_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verify compiled mlmodelc bundle structure",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "structure_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: latency estimation regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_latency",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

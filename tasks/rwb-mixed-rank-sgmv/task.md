@@ -17,11 +17,7 @@ A production implementation avoids padding every adapter to the largest rank. In
 Implement `mixed_rank_sgmv`:
 
 ```python
-def mixed_rank_sgmv(
-    x: np.ndarray,
-    adapter_ids: np.ndarray,
-    adapters: list[tuple[np.ndarray, np.ndarray]],
-) -> np.ndarray:
+def mixed_rank_sgmv(x, adapter_ids, adapters):
     ...
 ```
 
@@ -46,14 +42,13 @@ The implementation should correctly handle adapters with different ranks. It is 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1.0, 2.0], [3.0, 4.0]])
-adapter_ids = np.array([0, 1])
+x = [[1.0, 2.0], [3.0, 4.0]]
+adapter_ids = [0, 1]
 
 adapters = [
-    (np.array([[1.0, 0.0]]), np.array([[1.0], [0.0]])),
-    (np.array([[0.0, 1.0], [1.0, 0.0]]), np.eye(2)),
+    ([[1.0, 0.0]], [[1.0], [0.0]]),
+    ([[0.0, 1.0], [1.0, 0.0]], [[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]),
 ]
 
 y = mixed_rank_sgmv(x, adapter_ids, adapters)
@@ -63,7 +58,7 @@ The first row uses a rank-$1$ adapter and the second row uses a rank-$2$ adapter
 
 ## What the gate checks
 
-The gate builds several batches containing adapters with different ranks. It computes the reference result by applying the selected adapter to each row using a NumPy float64 oracle.
+The gate builds several batches containing adapters with different ranks. It computes the reference result by applying the selected adapter to each row using a Python float64 oracle.
 
 The returned matrix is compared with the oracle using the maximum absolute error:
 

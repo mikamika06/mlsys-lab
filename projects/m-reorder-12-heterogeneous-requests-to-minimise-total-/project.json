@@ -1,0 +1,40 @@
+{
+  "id": "m-reorder-12-heterogeneous-requests-to-minimise-total-reloads",
+  "title": "Reorder heterogeneous requests and handle runner restart triggers",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "option-precedence-and-reload-triggers",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "heterogeneous/scheduler.py",
+    "heterogeneous/restarts.py",
+    "heterogeneous/isolation.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Minimizing runner reloads across 12 heterogeneous requests",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "schedule_optimal", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Predicting runner restart triggers for configuration changes",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "predictions_matched", "op": ">=", "threshold": 8}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for request isolation and num_ctx bleed",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_leaked_context", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

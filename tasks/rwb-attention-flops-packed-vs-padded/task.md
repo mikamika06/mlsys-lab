@@ -34,7 +34,7 @@ kernels instead of naive padded batching.
 Implement `attention_flops`:
 
 ```python
-def attention_flops(lens: np.ndarray, head_dim: int, num_heads: int) -> tuple[int, int]:
+def attention_flops(lens: list[int], head_dim: int, num_heads: int) -> tuple[int, int]:
     ...
 ```
 
@@ -44,7 +44,7 @@ def attention_flops(lens: np.ndarray, head_dim: int, num_heads: int) -> tuple[in
 
 Using $C = 4 \cdot \text{head\_dim} \cdot \text{num\_heads}$, return
 `(packed_flops, padded_flops)` as **plain Python `int`s** (these numbers get
-large — use exact Python integer arithmetic, not `float`, and not a numpy
+large — use exact Python integer arithmetic, not `float`, and not a list
 integer dtype that could silently overflow):
 
 ```
@@ -55,9 +55,8 @@ padded_flops = C * len(lens) * max(lens) ** 2
 ## Example
 
 ```python
-import numpy as np
 
-lens = np.array([4, 4, 4, 16])   # 3 short sequences + 1 long one
+lens = [4, 4, 4, 16]   # 3 short sequences + 1 long one
 packed, padded = attention_flops(lens, head_dim=64, num_heads=8)
 # C = 4*64*8 = 2048
 # packed = 2048 * (16 + 16 + 16 + 256) = 2048 * 304

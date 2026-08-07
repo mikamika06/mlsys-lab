@@ -1,0 +1,21 @@
+{
+  "id": "m-reproduce-striped-attention-s-reported-throughput-ra",
+  "title": "Reproduce Striped Attention throughput ratio",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "ring-attention-load-balancing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["striped/policy.py", "striped/simulator.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Striped block assignment policy", "check": "harness/m1.py",
+     "gates": [{"metric": "policies_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute-proxy throughput ratio simulation", "check": "harness/m2.py",
+     "gates": [{"metric": "ratios_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for striped allocation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_policy", "op": "==", "threshold": 1}]}
+  ]
+}

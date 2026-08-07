@@ -1,0 +1,22 @@
+{
+  "id": "m-recover-softmax-denominator-from-lse",
+  "title": "Recover softmax denominator from LSE and fix wrapper bugs",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "flash-attn-python-api-surface",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flashwrap/recover.py", "flashwrap/wrapper.py", "flashwrap/timing.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Recover softmax denominator from LSE", "check": "harness/m1.py",
+     "gates": [{"metric": "denominator_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Fix wrapper bugs and argument parsing", "check": "harness/m2.py",
+     "gates": [{"metric": "wrapper_correct", "op": "==", "threshold": 1},
+               {"metric": "layout_handled", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for packed vs unpacked backward timing", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_timing", "op": "==", "threshold": 1}]}
+  ]
+}

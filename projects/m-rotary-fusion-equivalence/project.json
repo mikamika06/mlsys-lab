@@ -1,0 +1,40 @@
+{
+  "id": "m-rotary-fusion-equivalence",
+  "title": "Rotary fusion equivalence and split-KV decode performance",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "kv-cache-decode-api",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "rotary/fusion.py",
+    "rotary/sweep.py",
+    "rotary/bench.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Rotary fusion numerical equivalence",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]
+    },
+    {
+      "n": 2,
+      "title": "Optimal num_splits sweep",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "split_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Decode latency curve and regression safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_fusion", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

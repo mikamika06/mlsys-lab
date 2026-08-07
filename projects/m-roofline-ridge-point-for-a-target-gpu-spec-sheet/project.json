@@ -1,0 +1,44 @@
+{
+  "id": "m-roofline-ridge-point-for-a-target-gpu-spec-sheet",
+  "title": "Roofline ridge point and decode classification",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Autoregressive bottleneck & the roofline model",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "roofline/spec.py",
+    "roofline/classify.py",
+    "roofline/measure.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute roofline ridge point from GPU spec sheet",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "ridge_points_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify decode configurations as memory or compute bound",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "classifications_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid intensity thresholds",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_threshold", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

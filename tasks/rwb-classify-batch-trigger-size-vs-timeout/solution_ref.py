@@ -1,13 +1,10 @@
-import numpy as np
-
-def classify_batches(timestamps: np.ndarray,
+def classify_batches(timestamps: list[float],
                      batch_size: int,
-                     timeout: float) -> np.ndarray:
+                     timeout: float) -> list[int]:
     """
     Correct implementation of the batch‑trigger classification.
-    Returns a 1‑D array of labels (0=size, 1=timeout).
+    Returns a list of labels (0=size, 1=timeout).
     """
-    timestamps = np.asarray(timestamps, dtype=float)
     n = len(timestamps)
     labels = []
     i = 0
@@ -28,4 +25,4 @@ def classify_batches(timestamps: np.ndarray,
             else:
                 labels.append(1)
         i = j
-    return np.array(labels, dtype=int)
+    return labels

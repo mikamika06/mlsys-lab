@@ -20,7 +20,7 @@ The simulation proceeds by scanning arrivals in order:
    and reset $t_{\text{start}}$ to $\text{None}$.  
 4. After all arrivals, if the queue is non‑empty, dispatch the final batch.
 
-The histogram $H$ is a vector of length $\text{max\_batch\_size}+1$ (dtype `np.int64`) where  
+The histogram $H$ is a vector of length $\text{max\_batch\_size}+1$ (dtype int) where  
 $H[s]$ counts dispatched batches of exactly $s$ requests.
 
 ## Task
@@ -28,26 +28,23 @@ $H[s]$ counts dispatched batches of exactly $s$ requests.
 Implement:
 
 ```python
-def batch_size_histogram(
-    arrivals: np.ndarray, batch_timeout: float, max_batch_size: int
-) -> np.ndarray:
+def batch_size_histogram(arrivals, batch_timeout, max_batch_size):
     """Return the histogram of formed batch sizes (length max_batch_size+1)."""
 ```
 
-* `arrivals`: 1‑D `np.ndarray` of shape $(N,)$ with strictly increasing float timestamps.  
+* `arrivals`: 1‑D list[float] of shape $(N,)$ with strictly increasing float timestamps.  
 * `batch_timeout`: positive float, time window in seconds.  
 * `max_batch_size`: positive integer, maximum requests per batch.  
-* **Returns:** 1‑D `np.ndarray` of shape $(\text{max\_batch\_size}+1,)$, integer counts.
+* **Returns:** 1‑D list[float] of shape $(\text{max\_batch\_size}+1,)$, integer counts.
 
 The algorithm must scan arrivals exactly once and manage state explicitly.
 
 ## Example
 
 ```python
-import numpy as np
-arrivals = np.array([0.0, 0.5, 1.2, 1.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0])
+arrivals = [0.0, 0.5, 1.2, 1.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0]
 hist = batch_size_histogram(arrivals, batch_timeout=1.0, max_batch_size=4)
-print(hist)  # [0 0 2 2 0]
+print(hist)  # [0, 0, 2, 2, 0]
 ```
 
 Batches formed:

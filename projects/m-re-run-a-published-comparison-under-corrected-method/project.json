@@ -1,0 +1,21 @@
+{
+  "id": "m-re-run-a-published-comparison-under-corrected-method",
+  "title": "Re-run a published comparison under corrected methodology",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "benchmarking-methodology-for-runners",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["runner_audit/audit.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect mismatched context lengths", "check": "harness/m1.py",
+     "gates": [{"metric": "context_mismatch_detected", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compute repeats for 5% confidence band", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: regression test against flawed runner comparisons", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_mismatched_context", "op": "==", "threshold": 1}]}
+  ]
+}

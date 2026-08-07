@@ -1,0 +1,21 @@
+{
+  "id": "m-reconstruct-deepseek-v3-s-1-8x-tps-multiplier-from-i",
+  "title": "Reconstruct DeepSeek-V3 1.8x TPS multiplier and head accuracy",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Native multi-token prediction (MTP)",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["mtpcalc/multiplier.py", "mtpcalc/comparison.py", "mtpcalc/heads.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct DeepSeek-V3 TPS multiplier from acceptance rate", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 2, "title": "Structured comparison table: MTP vs Medusa vs EAGLE", "check": "harness/m2.py",
+     "gates": [{"metric": "table_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Toy sequential-MTP head vs parallel head accuracy and regression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_accuracy", "op": "==", "threshold": 1}]}
+  ]
+}

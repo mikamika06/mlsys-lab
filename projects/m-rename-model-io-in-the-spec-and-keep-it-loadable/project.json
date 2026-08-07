@@ -1,0 +1,21 @@
+{
+  "id": "m-rename-model-io-in-the-spec-and-keep-it-loadable",
+  "title": "Rename model IO, detect duplicate weights, and diff mlpackage vs mlmodelc",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": ".mlpackage container anatomy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mlspec/io.py", "mlspec/blobs.py", "mlspec/diff.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Rename model IO in the spec and keep it loadable", "check": "harness/m1.py",
+     "gates": [{"metric": "io_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Detect duplicate weight blobs in a pipeline package", "check": "harness/m2.py",
+     "gates": [{"metric": "duplicates_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test package transformations and invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_io", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -26,7 +26,7 @@ $$
 Implement `padding_waste_fraction`:
 
 ```python
-def padding_waste_fraction(lens: np.ndarray, batch_ids: np.ndarray) -> float:
+def padding_waste_fraction(lens: list[int], batch_ids: list[int]) -> float:
     ...
 ```
 
@@ -42,10 +42,9 @@ batches present in `batch_ids`.
 ## Example
 
 ```python
-import numpy as np
 
-lens = np.array([10, 8, 4, 20, 20])
-batch_ids = np.array([0, 0, 0, 1, 1])
+lens = [10, 8, 4, 20, 20]
+batch_ids = [0, 0, 0, 1, 1]
 
 frac = padding_waste_fraction(lens, batch_ids)
 # batch 0: max=10, n=3 -> slots=30, used=10+8+4=22 -> wasted=8

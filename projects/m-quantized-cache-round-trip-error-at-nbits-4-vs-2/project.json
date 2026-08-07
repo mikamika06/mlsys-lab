@@ -1,0 +1,22 @@
+{
+  "id": "m-quantized-cache-round-trip-error-at-nbits-4-vs-2",
+  "title": "Quantized cache round-trip error, shape math, and cross-process serialization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "hf-transformers-cache-api",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["qcache/error.py", "qcache/shape.py", "qcache/persist.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Quantized cache round-trip error at nbits=4 vs 2", "check": "harness/m1.py",
+     "gates": [{"metric": "error_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "StaticCache shape math and disk serialization round-trip", "check": "harness/m2.py",
+     "gates": [{"metric": "shape_match", "op": "==", "threshold": 1},
+               {"metric": "persist_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for cache safety invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_error", "op": "==", "threshold": 1}]}
+  ]
+}

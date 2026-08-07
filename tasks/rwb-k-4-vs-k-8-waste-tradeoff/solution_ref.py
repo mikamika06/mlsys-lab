@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def _dp_min_waste(sizes, counts, k) -> int:
+def _dp_min_waste(sizes: list[int], counts: list[int], k: int) -> int:
     M = len(sizes)
     k_eff = min(k, M)
     cum_c = [0] * (M + 1)
@@ -30,7 +27,7 @@ def _dp_min_waste(sizes, counts, k) -> int:
     return int(dp[k_eff][M - 1])
 
 
-def compare_k4_k8_waste(sizes: np.ndarray, counts: np.ndarray):
+def compare_k4_k8_waste(sizes: list[int], counts: list[int]) -> tuple[int, int, int]:
     """
     Compute the minimum achievable padding waste with K=4 buckets and with
     K=8 buckets over the same observed size histogram (via the optimal
@@ -39,8 +36,8 @@ def compare_k4_k8_waste(sizes: np.ndarray, counts: np.ndarray):
 
     Returns (waste_k4, waste_k8, reduction) with reduction = waste_k4 - waste_k8.
     """
-    sizes = [int(s) for s in np.asarray(sizes).tolist()]
-    counts = [int(c) for c in np.asarray(counts).tolist()]
+    sizes = [int(s) for s in sizes]
+    counts = [int(c) for c in counts]
     pairs = sorted(zip(sizes, counts))
     sorted_sizes = [p[0] for p in pairs]
     sorted_counts = [p[1] for p in pairs]

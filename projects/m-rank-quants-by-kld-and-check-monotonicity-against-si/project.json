@@ -1,0 +1,22 @@
+{
+  "id": "m-rank-quants-by-kld-and-check-monotonicity-against-si",
+  "title": "Rank quants by KLD, monotonicity, and PPL sample size",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "quality-measurement-ppl-kld",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quval/metrics.py", "quval/stats.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Rank quants by KLD and check monotonicity", "check": "harness/m1.py",
+     "gates": [{"metric": "rankings_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Derive sample size and find ordering disagreements", "check": "harness/m2.py",
+     "gates": [{"metric": "sample_size_matched", "op": "==", "threshold": 1},
+               {"metric": "disagreements_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for metric invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_monotonicity", "op": "==", "threshold": 1}]}
+  ]
+}

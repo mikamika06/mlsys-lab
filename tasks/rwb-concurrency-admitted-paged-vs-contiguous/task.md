@@ -61,7 +61,6 @@ Return a tuple `(max_concurrent_paged, max_concurrent_contig)`:
 ## Example
 
 ```python
-import numpy as np
 
 seqlens = [10, 20, 15, 90]
 result = paged_vs_contiguous_concurrency(seqlens, n_blocks=6, block_size=8, max_len=64)

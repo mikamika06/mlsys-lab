@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def expected_acceptance(p: np.ndarray, q: np.ndarray) -> float:
+def expected_acceptance(p: list[float], q: list[float]) -> float:
     """Expected single-token speculative-decoding acceptance probability.
 
     p: target distribution, 1-D probability vector (sums to 1).

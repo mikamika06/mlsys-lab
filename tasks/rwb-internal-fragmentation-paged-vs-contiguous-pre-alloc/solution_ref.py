@@ -1,13 +1,11 @@
-import numpy as np
 import math
 
-def internal_fragmentation(seqlens, block_size, max_len):
+def internal_fragmentation(seqlens: list[int], block_size: int, max_len: int) -> tuple[int, int]:
     """Return (paged_waste, contig_waste) as a tuple of two numbers.
 
     Paged waste:  sum_i ( ceil(l_i / B) * B - l_i )
     Contig waste: sum_i ( L - l_i )
     """
-    seqlens = np.asarray(seqlens, dtype=np.int64)
     paged_waste = 0
     contig_waste = 0
     for l_i in seqlens:

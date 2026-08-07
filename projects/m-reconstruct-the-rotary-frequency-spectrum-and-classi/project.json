@@ -1,0 +1,21 @@
+{
+  "id": "m-reconstruct-the-rotary-frequency-spectrum-and-classi",
+  "title": "Rotary frequency spectrum and position-id overflow",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "rope-fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ropespectrum/spectrum.py", "ropespectrum/overflow.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct rotary frequency spectrum", "check": "harness/m1.py",
+     "gates": [{"metric": "spectrum_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Classify rotary dimensions", "check": "harness/m2.py",
+     "gates": [{"metric": "classification_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: regression test for position overflow", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_overflow_bug", "op": "==", "threshold": 1}]}
+  ]
+}

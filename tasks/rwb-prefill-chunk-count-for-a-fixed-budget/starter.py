@@ -1,9 +1,6 @@
-import numpy as np
-
-
-def chunk_counts(prompt_lens: np.ndarray, chunk_budget: int) -> dict:
+def chunk_counts(prompt_lens: list[int], chunk_budget: int) -> dict:
     """Number of chunked-prefill chunks and the last chunk's size, per prompt.
 
-    Returns {"num_chunks": np.ndarray, "last_chunk": np.ndarray}.
+    Returns {"num_chunks": list[float], "last_chunk": list[float]}.
     """
     raise NotImplementedError('your code here')

@@ -1,0 +1,74 @@
+{
+  "id": "m-pytorch-to-ir-conversion-parity",
+  "title": "PyTorch-to-IR Conversion Parity and Dynamic Shape Validation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "OpenVINO IR conversion & model representation",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "irconv/parity.py",
+    "irconv/precision.py",
+    "irconv/dynamic_shape.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "PyTorch-to-IR Parity and Error Metrics",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "parity_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "rel_err_valid",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Precision Size Ratios for FP32 and FP16 IR",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "size_ratio_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "bytes_calculated",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety Net: Catch Unbounded Dynamic Shape Conversions",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_missing_hints",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

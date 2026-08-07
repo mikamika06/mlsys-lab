@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def attention_flops(lens: np.ndarray, head_dim: int, num_heads: int) -> tuple[int, int]:
+def attention_flops(lens: list[int], head_dim: int, num_heads: int) -> tuple[int, int]:
     """
     lens      : 1-D int array, per-sequence token counts in a prefill batch.
     head_dim  : dimension per attention head.

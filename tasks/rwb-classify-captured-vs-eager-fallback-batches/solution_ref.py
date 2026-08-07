@@ -1,19 +1,20 @@
-import numpy as np
-
-def classify_batches(max_bucket: int, batch_sizes) -> np.ndarray:
+def classify_batches(max_bucket: int, batch_sizes: list[int]) -> list[bool]:
     """
-    Return a boolean array indicating whether each batch size is captured.
-    
+    Return a boolean list indicating whether each batch size is captured.
+
     Parameters
     ----------
     max_bucket : int
         Maximum size that can be captured.
-    batch_sizes : Iterable[int]
+    batch_sizes : list[int]
         Sizes of incoming batches.
-    
+
     Returns
     -------
-    np.ndarray[bool]
+    list[bool]
         True where the batch size <= max_bucket, False otherwise.
     """
-    return np.asarray(batch_sizes) <= max_bucket
+    res = []
+    for size in batch_sizes:
+        res.append(size <= max_bucket)
+    return res

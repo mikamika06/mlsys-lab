@@ -1,0 +1,44 @@
+{
+  "id": "m-reconstruct-eviction-order-from-a-series-of-api-ps-s",
+  "title": "Reconstruct eviction order and manage model lifecycle",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "model-lifecycle-and-keepalive",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "evict/parser.py",
+    "evict/unload.py",
+    "evict/mmap_load.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct eviction order from snapshots",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "order_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Force immediate unload and verify via ps",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "unload_proven", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for eviction and mmap",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_eviction", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

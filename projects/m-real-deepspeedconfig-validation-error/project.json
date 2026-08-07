@@ -1,0 +1,21 @@
+{
+  "id": "m-real-deepspeedconfig-validation-error",
+  "title": "DeepSpeed configuration validation and bucket optimization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "DeepSpeed engine mechanics (overlap, loss scaling, batch-size consistency)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["dsdiag/config.py", "dsdiag/timeline.py", "dsdiag/bucket.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "DeepSpeed config validation and normalization", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_validated", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Diagnosing serialized comm/compute timeline", "check": "harness/m2.py",
+     "gates": [{"metric": "overlap_ratio_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Optimal bucket sizes under a memory ceiling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_buckets", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "m-resolve-a-llama-quantize-command-line-into-a-per-ten",
+  "title": "Resolve llama-quantize command line into a per-tensor plan",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "llama-quantize-cli",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "lquant/plan.py",
+    "lquant/quant.py",
+    "lquant/overrides.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Resolve command line into a per-tensor plan",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "plans_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Quantize model and verify predicted size",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "size_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching overridden tensor type bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_overrides", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

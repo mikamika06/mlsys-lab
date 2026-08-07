@@ -16,21 +16,20 @@ If any allowed pair crosses a boundary, we say that the mask **leaks**.
 Implement `detect_leakage(mask, cu_seqlens)`:
 
 ```python
-def detect_leakage(mask: np.ndarray, cu_seqlens: np.ndarray) -> bool:
+def detect_leakage(mask: list[list[float]], cu_seqlens: list[int]) -> bool:
     ...
 ```
 
-It receives a 2‑D NumPy array of shape $(N,N)$ containing only 0/1 and the cumulative sequence lengths. Return `True` if the mask leaks (i.e., contains at least one allowed pair that crosses a segment boundary), otherwise return `False`. The implementation must be fully vectorized; no explicit Python loops over tokens.
+It receives a 2‑D list of shape $(N,N)$ containing only 0/1 and the cumulative sequence lengths. Return `True` if the mask leaks (i.e., contains at least one allowed pair that crosses a segment boundary), otherwise return `False`. The implementation must be fully vectorized; no explicit Python loops over tokens.
 
 ## Example
 
 ```python
-import numpy as np
-mask = np.array([[1,0,0,0],
+mask = [[1,0,0,0],
                  [0,1,0,0],
                  [0,0,1,1],
-                 [0,0,1,1]])
-cu_seqlens = np.array([0,2,4])   # two segments: 0–1 and 2–3
+                 [0,0,1,1]]
+cu_seqlens = [0,2,4]   # two segments: 0–1 and 2–3
 print(detect_leakage(mask, cu_seqlens))  # False
 
 mask[1,2] = 1   # allow query 1 to attend token 2 (cross‑segment)
@@ -39,4 +38,4 @@ print(detect_leakage(mask, cu_seqlens))  # True
 
 ## What the gate checks
 
-The grader computes a NumPy oracle that implements the definition above and compares it with your function. The metric `exact_match` must equal $1.0$ for all test cases; any mismatch yields $0.0$. No other performance metrics are required.
+The grader computes a Python oracle that implements the definition above and compares it with your function. The metric `exact_match` must equal $1.0$ for all test cases; any mismatch yields $0.0$. No other performance metrics are required.

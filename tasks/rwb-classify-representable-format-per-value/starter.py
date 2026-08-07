@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def classify_better_format(values: np.ndarray) -> np.ndarray:
+def classify_better_format(values: list[float]) -> list[int]:
     """
     For each scalar in `values`, round-trip it through both E4M3 and E5M2
     (nearest representable value, clamped at the format's finite max

@@ -1,0 +1,21 @@
+{
+  "id": "m-refcount-safe-eviction-find-the-bug",
+  "title": "Refcount-safe eviction and tree memory overhead in radix prefix caching",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "radix-tree-prefix-caching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["radixkv/eviction.py", "radixkv/overhead.py", "radixkv/fork.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Refcount-safe node eviction", "check": "harness/m1.py",
+     "gates": [{"metric": "eviction_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Tree memory overhead vs stored sequences", "check": "harness/m2.py",
+     "gates": [{"metric": "overhead_rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: regression test for eviction safety", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_eviction", "op": "==", "threshold": 1}]}
+  ]
+}

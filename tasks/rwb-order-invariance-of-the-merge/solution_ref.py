@@ -1,13 +1,8 @@
-import numpy as np
+def merge_partials(partials: list[list[float]]) -> tuple[list[float], list[float]]:
+    if not partials:
+        return [], []
 
-
-def merge_partials(partials):
-    arrays = [np.asarray(x, dtype=np.float64) for x in partials]
-    if not arrays:
-        empty = np.array([], dtype=np.float64)
-        return empty, empty
-
-    indexed = sorted(enumerate(arrays), key=lambda item: item[0])
+    indexed = sorted(enumerate(partials), key=lambda item: item[0])
     ordered = [x for _, x in indexed]
 
     num_rows = len(ordered)
@@ -20,6 +15,4 @@ def merge_partials(partials):
             col_sum += float(ordered[i][j])
         merged_list.append(col_sum)
 
-    merged = np.array(merged_list, dtype=np.float64)
-
-    return merged.copy(), merged.copy()
+    return list(merged_list), list(merged_list)

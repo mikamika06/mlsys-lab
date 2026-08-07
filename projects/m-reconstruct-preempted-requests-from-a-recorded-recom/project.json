@@ -1,0 +1,21 @@
+{
+  "id": "m-reconstruct-preempted-requests-from-a-recorded-recom",
+  "title": "Reconstruct preempted requests and avoid prefill starvation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "vLLM Scheduler Queues",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["recomp/log_parser.py", "recomp/starvation.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct preempted requests from logs", "check": "harness/m1.py",
+     "gates": [{"metric": "requests_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Derive max_num_batched_tokens to avoid starvation", "check": "harness/m2.py",
+     "gates": [{"metric": "token_limit_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for starvation logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_starvation", "op": "==", "threshold": 1}]}
+  ]
+}

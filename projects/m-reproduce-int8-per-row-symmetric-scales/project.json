@@ -1,0 +1,69 @@
+{
+  "id": "m-reproduce-int8-per-row-symmetric-scales",
+  "title": "Reproducing int8 per-row symmetric scales and 4-bit storage math",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Applied quantization with torchao quantize_",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/scales.py",
+    "quant/metrics.py",
+    "quant/storage.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reproduce int8 per-row symmetric scales",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Size ratio and quality delta after quantization",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ratio_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "delta_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Int4 group-quantized storage math and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_storage",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

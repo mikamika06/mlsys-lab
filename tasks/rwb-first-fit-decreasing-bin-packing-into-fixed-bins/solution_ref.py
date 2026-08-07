@@ -5,7 +5,7 @@ def pack_into_fixed_bins(lengths, bin_size):
 
     Parameters
     ----------
-    lengths : list or numpy.ndarray of positive ints
+    lengths : list of positive ints
         Sequence lengths to pack.
     bin_size : int
         Capacity of each bin.

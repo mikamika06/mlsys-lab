@@ -1,0 +1,21 @@
+{
+  "id": "m-quantize-a-real-tensor-with-bitsandbytes-at-blocksiz",
+  "title": "Quantize a real tensor with bitsandbytes at different blocksizes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "bitsandbytes-internals",
+  "size": "M",
+  "difficulty": 3,
+  "edits": ["bnb_quant/core.py", "bnb_quant/outliers.py", "bnb_quant/dequant.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Blockwise quantization across multiple block sizes", "check": "harness/m1.py",
+     "gates": [{"metric": "blocksizes_matched", "op": "==", "threshold": 3}]},
+    {"n": 2, "title": "Outlier identification and fallback routing", "check": "harness/m2.py",
+     "gates": [{"metric": "outliers_identified", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Dequantization fidelity and regression safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_routing", "op": "==", "threshold": 1}]}
+  ]
+}

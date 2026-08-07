@@ -14,25 +14,23 @@ and the slice `packed[start_s:end_s]` contains all rows belonging to that sequen
 Implement `unpack_sequences(packed, cu_seqlens)`:
 
 ```python
-def unpack_sequences(packed: np.ndarray,
-                     cu_seqlens: np.ndarray) -> List[np.ndarray]:
+def unpack_sequences(packed, cu_seqlens):
     ...
 ```
 
-`packed` has shape `(N, D)` where `N = \sum_i L_i` and each row is a token embedding. `cu_seqlens` is a 1‑D integer array of length `S+1`. The function must return a list of `S` NumPy arrays, each with shape `(L_i, D)`, corresponding to the original sequences.
+`packed` has shape `(N, D)` where `N = \sum_i L_i` and each row is a token embedding. `cu_seqlens` is a 1‑D integer array of length `S+1`. The function must return a list of `S` list, each with shape `(L_i, D)`, corresponding to the original sequences.
 
-The implementation should use only NumPy slicing; no explicit Python loops over tokens. It may use a loop over the number of sequences (which is typically small), but it must not iterate over individual rows.
+The implementation should use only Python slicing; no explicit Python loops over tokens. It may use a loop over the number of sequences (which is typically small), but it must not iterate over individual rows.
 
 ## Example
 
 ```python
-import numpy as np
 
-packed = np.array([[0, 1],
+packed = [[0, 1],
                    [2, 3],
                    [4, 5],
-                   [6, 7]])
-cu_seqlens = np.array([0, 2, 4])   # two sequences: first length 2, second length 2
+                   [6, 7]]
+cu_seqlens = [0, 2, 4]   # two sequences: first length 2, second length 2
 
 seqs = unpack_sequences(packed, cu_seqlens)
 # seqs[0] == array([[0,1],[2,3]])
@@ -41,4 +39,4 @@ seqs = unpack_sequences(packed, cu_seqlens)
 
 ## What the gate checks
 
-The grader computes a reference list of slices using `cu_seqlens` and compares it element‑wise with the student's output via `np.array_equal`. The metric `exact_match` must be `== 1.0`.
+The grader computes a reference list of slices using `cu_seqlens` and compares it element‑wise with the student's output via `==`. The metric `exact_match` must be `== 1.0`.

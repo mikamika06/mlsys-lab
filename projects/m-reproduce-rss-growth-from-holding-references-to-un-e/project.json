@@ -1,0 +1,41 @@
+{
+  "id": "m-reproduce-rss-growth-from-holding-references-to-un-e",
+  "title": "MLX Graph Retention and Compilation Profile",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "MLX lazy evaluation & compute graph",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mlxgraph/graph.py", "mlxgraph/bench.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reproduce RSS growth from holding references to un-evaled graphs",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.05},
+        {"metric": "rss_growth_ratio", "op": ">=", "threshold": 2.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compare mx.compile vs torch.compile and measure recompilation cost",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "compilation_measured", "op": "==", "threshold": 1},
+        {"metric": "recompile_penalty_ratio", "op": ">=", "threshold": 1.5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching retained un-evaluated graph nodes",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_retained_graphs", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

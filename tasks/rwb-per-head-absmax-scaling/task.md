@@ -26,7 +26,7 @@ values are all zero regardless).
 Implement `per_head_absmax_e4m3`:
 
 ```python
-def per_head_absmax_e4m3(k: np.ndarray) -> np.ndarray:
+def per_head_absmax_e4m3(k: list[list[list[float]]]) -> list[list[list[float]]]:
     ...
 ```
 
@@ -41,9 +41,8 @@ Return the dequantized `(heads, seq, head_dim)` array.
 ## Example
 
 ```python
-import numpy as np
 
-k = np.zeros((2, 3, 4))
+k = [[[0.0] * 4 for _ in range(3)] for _ in range(2)]
 k[0] = 100.0    # head 0: uniform magnitude 100
 k[1, 0, 0] = 0.01  # head 1: one tiny value, rest zero
 
@@ -60,10 +59,10 @@ out = per_head_absmax_e4m3(k)
 ## What the gate checks
 
 The grader builds several `(heads, seq, head_dim)` tensors from a seeded
-NumPy generator — heads with wildly different magnitude scales (some
+Python generator — heads with wildly different magnitude scales (some
 near-zero, some large), a head that is exactly all zeros, and a mix of
 positive/negative values — and computes the reference dequantized tensor
-independently in NumPy: it builds the *real* E4M3 grid from the
+independently in Python: it builds the *real* E4M3 grid from the
 sign/exponent/mantissa bit-layout formulas (decoding every representable
 code, the same oracle a hardware cast would produce), then reproduces the
 per-head absmax-scale-and-round procedure above, never calling your

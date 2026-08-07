@@ -1,0 +1,46 @@
+{
+  "id": "m-prove-tenant-isolation-identical-prompts-under-diffe",
+  "title": "Tenant isolation and TTFT side-channel auditing in vLLM",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "security-multitenancy-and-api-hardening",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "vllm_sec/isolation.py",
+    "vllm_sec/sidechannel.py",
+    "vllm_sec/auditor.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Salt-based tenant block hashing and isolation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "isolation_matched", "op": "==", "threshold": 1},
+        {"metric": "zero_shared_blocks", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "TTFT side-channel quantification and deployment audit",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "sidechannel_matched", "op": "==", "threshold": 1},
+        {"metric": "audit_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for cross-tenant leakage",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_leaky_hashing", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "m-reproduce-ml-ane-transformers-distilbert-reference-l",
+  "title": "DistilBERT reference layout and ANE optimization patterns",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "ANE-friendly transformer layout patterns (ml-ane-transformers)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "transformer/ane_distilbert.py",
+    "transformer/split_softmax.py",
+    "transformer/l2_chunk.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reproduce DistilBERT reference latency ordering",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "latency_ratio_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Implement split-softmax attention matching standard softmax",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "softmax_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Derive L2-residency-friendly chunk size",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_chunk",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

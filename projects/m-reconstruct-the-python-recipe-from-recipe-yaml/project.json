@@ -1,0 +1,45 @@
+{
+  "id": "m-reconstruct-the-python-recipe-from-recipe-yaml",
+  "title": "Recipe reconstruction, ordering invariants, and module counting",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "llm-compressor recipes and the oneshot entrypoint",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "reciperec/reconstruct.py",
+    "reciperec/ordering.py",
+    "reciperec/modules.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct Python recipe code from recipe dictionary",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "recipes_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Enforce modifier ordering invariants and count touched modules",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ordering_matched", "op": "==", "threshold": 1},
+        {"metric": "counts_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching invariant violations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_invariants", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

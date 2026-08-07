@@ -27,7 +27,7 @@ just being satisfied for free.
 Implement `constrained_free_argmax_divergence(logits, trace, allowed)`:
 
 ```python
-def constrained_free_argmax_divergence(logits, trace, allowed) -> int:
+def constrained_free_argmax_divergence(logits: list[list[float]], trace: list[int], allowed: dict[int, list[int]]) -> int:
     ...
 ```
 
@@ -45,11 +45,11 @@ decode). Return the **count** of steps where the two differ.
 ## Example
 
 ```python
-logits = np.array([
+logits = [
     [5.0, 1.0, 2.0, 0.0],   # free argmax = 0
     [1.0, 5.0, 2.0, 0.0],   # free argmax = 1
     [1.0, 2.0, 5.0, 0.0],   # free argmax = 2
-])
+]
 trace = [0, 1, 1]
 allowed = {0: [0, 1], 1: [0, 2]}
 
@@ -70,7 +70,7 @@ and without the top-1 token allowed) plus several randomly generated
 `(logits, trace, allowed)` triples from a seeded generator with varying
 vocab size, number of FSM states, and allowed-set sizes.
 
-For each case the reference recomputes both argmax sequences with NumPy
+For each case the reference recomputes both argmax sequences with Python
 exactly as described above — masking disallowed tokens to $-\infty$ before
 taking `argmax`, so ties resolve to the lowest token id on both the free
 and the constrained side — and counts the disagreements. Your return value

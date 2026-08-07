@@ -1,0 +1,44 @@
+{
+  "id": "m-real-torch-utils-checkpoint-gradient-exactness",
+  "title": "Real torch.utils.checkpoint gradient exactness and Pareto curves",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Activation checkpointing / recomputation strategies",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "ckptutils/exactness.py",
+    "ckptutils/pareto.py",
+    "ckptutils/breakdown.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Gradient exactness verification under activation checkpointing",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "exactness_score", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Memory-vs-Recompute-Time Pareto curve generation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "pareto_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Full vs Selective Recomputation real op breakdown and safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_exactness", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

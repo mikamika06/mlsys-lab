@@ -1,0 +1,43 @@
+{
+  "id": "m-rebuild-the-tag-layer-graph-and-find-tags-sharing-a-weight-blob",
+  "title": "Tag layer graph and shared weight blobs in local runners",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "blob-store-manifests-and-disk",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "blobgraph/manifest.py",
+    "blobgraph/graph.py",
+    "blobgraph/cp.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse a manifest and report layer details",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "manifests_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Rebuild tag-layer graph and verify zero-cost copy",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "graph_matched", "op": "==", "threshold": 1},
+        {"metric": "cp_cost_zero", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for tag graph invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_graph", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

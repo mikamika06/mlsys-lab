@@ -24,7 +24,7 @@ no dangling zero-sized chunk.)
 Implement `chunk_counts`:
 
 ```python
-def chunk_counts(prompt_lens: np.ndarray, chunk_budget: int) -> dict:
+def chunk_counts(prompt_lens: list[int], chunk_budget: int) -> dict:
     ...
 ```
 
@@ -40,16 +40,15 @@ Return a `dict` with:
 ## Example
 
 ```python
-import numpy as np
 
-chunk_counts(np.array([1, 512, 513, 1024]), chunk_budget=512)
+chunk_counts([1, 512, 513, 1024], chunk_budget=512)
 # {"num_chunks": [1, 1, 2, 2], "last_chunk": [1, 512, 1, 512]}
 ```
 
 ## What the gate checks
 
 The grader computes $\lceil n_i/C \rceil$ and the corresponding last-chunk
-size directly with NumPy for several prompt-length fixtures and several
+size directly with Python for several prompt-length fixtures and several
 values of $C$, and requires **both** returned arrays to match the
 reference exactly, element-for-element (`exact_match == 1.0`). An
 off-by-one in the ceiling division, or computing the last chunk as

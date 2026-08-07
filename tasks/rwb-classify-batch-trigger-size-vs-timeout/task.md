@@ -9,22 +9,19 @@ The task is to label each closed batch with 0 for *size* and 1 for *timeout*.
 Implement `classify_batches`:
 
 ```python
-def classify_batches(timestamps: np.ndarray,
-                     batch_size: int,
-                     timeout: float) -> np.ndarray:
+def classify_batches(timestamps: list[float], batch_size: int, timeout: float) -> list[int]:
     ...
 ```
 
-- `timestamps` is a one‑dimensional NumPy array of strictly increasing floats.  
-- The function returns a 1‑D NumPy array of integers (0 or 1), one per closed batch, in the order they were formed.
+- `timestamps` is a list of floats of strictly increasing floats.  
+- The function returns a 1‑D list of integers (0 or 1), one per closed batch, in the order they were formed.
 
-The implementation must be pure Python/NumPy and run in $O(m)$ time.
+The implementation must be pure Python/Python and run in $O(m)$ time.
 
 ## Example
 
 ```python
-import numpy as np
-ts = np.array([0.0, 0.5, 1.2, 3.0, 3.4, 6.0])
+ts = [0.0, 0.5, 1.2, 3.0, 3.4, 6.0]
 labels = classify_batches(ts, batch_size=3, timeout=2.0)
 print(labels)   # [0, 1]
 ```

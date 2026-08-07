@@ -25,7 +25,7 @@ accurately depends entirely on that value's magnitude:
 Implement `classify_better_format`:
 
 ```python
-def classify_better_format(values: np.ndarray) -> np.ndarray:
+def classify_better_format(values: list[float]) -> list[int]:
     ...
 ```
 
@@ -49,9 +49,8 @@ $\text{sign}\cdot 2^{(\text{exp}-\text{bias})}\cdot(1+\text{mantissa}/2^m)$.
 ## Example
 
 ```python
-import numpy as np
 
-values = np.array([1.5, 500.0, 1e-6])
+values = [1.5, 500.0, 1e-6]
 labels = classify_better_format(values)
 # 1.5   is well inside both ranges -> E4M3's extra mantissa bit wins -> 0
 # 500.0 exceeds E4M3's 448 max (saturates) but not E5M2's -> 1

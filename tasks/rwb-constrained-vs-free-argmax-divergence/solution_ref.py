@@ -1,8 +1,9 @@
-import numpy as np
-
-
-def constrained_free_argmax_divergence(logits, trace, allowed) -> int:
-    """logits: (T, vocab_size) array of per-step logits.
+def constrained_free_argmax_divergence(
+    logits: list[list[float]],
+    trace: list[int],
+    allowed: dict[int, list[int]],
+) -> int:
+    """logits: (T, vocab_size) list of lists of per-step logits.
     trace: length-T list of FSM state ids active at each step.
     allowed: dict mapping FSM state id -> list of token ids allowed in
         that state.
@@ -16,8 +17,7 @@ def constrained_free_argmax_divergence(logits, trace, allowed) -> int:
 
     Return the number of steps where free_argmax != constrained_argmax.
     """
-    logits = np.asarray(logits, dtype=np.float64)
-    vocab_size = logits.shape[1]
+    vocab_size = len(logits[0])
 
     count = 0
     for t, state in enumerate(trace):

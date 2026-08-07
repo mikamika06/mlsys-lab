@@ -1,0 +1,21 @@
+{
+  "id": "m-reimplement-the-gradscaler-update-loop",
+  "title": "Reimplement the GradScaler update loop",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "GradScaler and loss-scaling dynamics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["scaler/core.py", "scaler/trajectory.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Largest safe loss scale from gradient distributions", "check": "harness/m1.py",
+     "gates": [{"metric": "scales_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Scale trajectory in pure python", "check": "harness/m2.py",
+     "gates": [{"metric": "trajectory_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for gradient scaling invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_growth", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -31,16 +31,16 @@ strategy for a production serving system.
 Implement `internal_fragmentation`:
 
 ```python
-def internal_fragmentation(seqlens, block_size, max_len):
+def internal_fragmentation(seqlens: list[int], block_size: int, max_len: int) -> tuple[int, int]:
     """Return (paged_waste, contig_waste) as a tuple of two numbers.
 
-    seqlens  – 1-D NumPy integer array of sequence lengths
+    seqlens  – 1-D Python integer array of sequence lengths
     block_size – B, the size of one page/block
     max_len    – L, the maximum sequence length
     """
 ```
 
-The function receives a 1-D NumPy array `seqlens` of $n$ positive integer
+The function receives a list of floats `seqlens` of $n$ positive integer
 lengths, an integer block size $B$, and an integer maximum length $L$. It must
 return a 2-tuple `(paged_waste, contig_waste)` where each element is a scalar
 equal to the total internal fragmentation under the respective strategy.
@@ -51,8 +51,7 @@ must be numerically exact (no floating-point rounding error).
 ## Example
 
 ```python
-import numpy as np
-seqlens = np.array([3, 7, 13])
+seqlens = [3, 7, 13]
 paged_waste, contig_waste = internal_fragmentation(seqlens, block_size=5, max_len=16)
 # paged_waste = (5-3) + (10-7) + (15-13) = 2+3+2 = 7
 # contig_waste = (16-3) + (16-7) + (16-13) = 13+9+3 = 25
@@ -62,7 +61,7 @@ assert contig_waste == 25
 
 ## What the gate checks
 
-Two independent gates. A NumPy oracle recomputes both waste totals from first
+Two independent gates. A Python oracle recomputes both waste totals from first
 principles. For each scalar the relative error is
 
 $$\text{rel\_err} = \frac{|v_{\text{got}} - v_{\text{ref}}|}{|v_{\text{ref}}| + \epsilon}$$

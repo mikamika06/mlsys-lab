@@ -2,7 +2,7 @@ import numpy as np
 
 def _ref(arrivals, batch_timeout, max_batch_size):
     """Reference implementation: scan arrivals once, dispatch on size or timeout."""
-    histogram = np.zeros(max_batch_size + 1, dtype=np.int64)
+    histogram = [0] * (max_batch_size + 1)
     batch_start = None
     batch_size = 0
     for t in arrivals:
@@ -25,31 +25,31 @@ def _generate_test_case():
     intervals = rng.exponential(scale=0.5, size=500)
     arrivals = np.cumsum(intervals)
     arrivals = arrivals[arrivals <= 300][:300]
-    return arrivals
+    return arrivals.tolist()
 
 def grade(sol, fx) -> dict:
     """Grade the batch_size_histogram implementation."""
     arrivals = _generate_test_case()
     batch_timeout = 1.5
     max_batch_size = 8
-    
+
     try:
         hist = sol.batch_size_histogram(arrivals, batch_timeout, max_batch_size)
     except Exception:
         return {'exact_match': 0.0}
-    
+
     ref = _ref(arrivals, batch_timeout, max_batch_size)
-    
-    # Validate output shape and dtype
-    if not isinstance(hist, np.ndarray):
+
+    # Validate output type and length
+    if not isinstance(hist, list):
         return {'exact_match': 0.0}
-    if hist.shape != ref.shape:
+    if len(hist) != len(ref):
         return {'exact_match': 0.0}
-    if hist.dtype != np.int64:
+    if not all(isinstance(x, int) for x in hist):
         return {'exact_match': 0.0}
-    
+
     # Check exact match
-    if not np.array_equal(hist, ref):
+    if hist != ref:
         return {'exact_match': 0.0}
-    
+
     return {'exact_match': 1.0}

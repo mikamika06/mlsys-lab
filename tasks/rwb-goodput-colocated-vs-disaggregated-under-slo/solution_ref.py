@@ -1,22 +1,14 @@
-import numpy as np
-
 PREFILL_THROUGHPUT = 8000.0
 DECODE_RATE = 40.0
 INTERFERENCE_FACTOR = 3.0
 TRANSFER_LATENCY = 0.04
 
 
-def goodput_colocated_vs_disaggregated(arrival, prompt_len, output_len, ttft_slo, itl_slo):
+def goodput_colocated_vs_disaggregated(arrival: list[float], prompt_len: list[float], output_len: list[float], ttft_slo: list[float], itl_slo: list[float]) -> tuple[int, int]:
     """
     Compute goodput for colocated vs disaggregated architectures.
     """
-    arrival = np.asarray(arrival, dtype=np.float64)
-    prompt_len = np.asarray(prompt_len, dtype=np.float64)
-    output_len = np.asarray(output_len, dtype=np.float64)
-    ttft_slo = np.asarray(ttft_slo, dtype=np.float64)
-    itl_slo = np.asarray(itl_slo, dtype=np.float64)
-
-    n = prompt_len.shape[0]
+    n = len(prompt_len)
 
     prefill_dur = [0.0] * n
     ttft_time = [0.0] * n

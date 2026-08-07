@@ -1,17 +1,34 @@
 import math
-import numpy as np
 
 
-def _e4m3_roundtrip(x: np.ndarray, scale: float) -> np.ndarray:
+def _flatten(x):
+    """Recursively flatten a nested list of arbitrary depth."""
+    if isinstance(x, (list, tuple)):
+        flat = []
+        for item in x:
+            flat.extend(_flatten(item))
+        return flat
+    else:
+        return [float(x)]
+
+
+def _reconstruct_shape(flat_vals, original):
+    """Reconstruct the nested structure of original using flat_vals."""
+    if not isinstance(original, (list, tuple)):
+        return flat_vals.pop(0)
+    res = []
+    for item in original:
+        res.append(_reconstruct_shape(flat_vals, item))
+    return res
+
+
+def _e4m3_roundtrip(x, scale: float):
     """Per-tensor absmax-scaled E4M3 (4 exponent bits, 3 mantissa bits,
     max representable magnitude 448) quantize-then-dequantize."""
-    x_arr = np.asarray(x, dtype=np.float64)
-    out = np.empty(x_arr.shape, dtype=np.float64)
-    flat_x = x_arr.reshape(-1)
-    flat_out = out.reshape(-1)
+    flat_x = _flatten(x)
+    flat_out = []
 
-    for i in range(flat_x.size):
-        val_x = float(flat_x[i])
+    for val_x in flat_x:
         y = val_x / scale
         if y > 448.0:
             y = 448.0
@@ -45,60 +62,57 @@ def _e4m3_roundtrip(x: np.ndarray, scale: float) -> np.ndarray:
         if ay == 0.0:
             val = 0.0
 
-        flat_out[i] = sign * val * scale
+        flat_out.append(sign * val * scale)
 
-    return out
+    return _reconstruct_shape(flat_out, x)
 
 
-def kv_fp8_reconstruction_mse(K: np.ndarray, V: np.ndarray) -> dict:
+def kv_fp8_reconstruction_mse(K: list[list[float]], V: list[list[float]]) -> dict:
     """Quantize K and V to E4M3 with an independent PER-TENSOR absmax
     scale for each (scale = max(|X|) / 448), dequantize, and report each
     tensor's reconstruction MSE.
 
-    K, V : arbitrary-shape float arrays.
+    K, V : arbitrary-shape float arrays (nested lists).
 
     Returns {"mse_k": float, "mse_v": float}.
     """
-    K_arr = np.asarray(K, dtype=np.float64)
-    V_arr = np.asarray(V, dtype=np.float64)
-
-    flat_k = K_arr.reshape(-1)
+    flat_k = _flatten(K)
     max_k = 0.0
-    for i in range(flat_k.size):
-        val = abs(float(flat_k[i]))
-        if val > max_k:
-            max_k = val
+    for val in flat_k:
+        v_abs = abs(float(val))
+        if v_abs > max_k:
+            max_k = v_abs
 
     sk = max_k / 448.0
     if sk < 1e-12:
         sk = 1e-12
 
-    flat_v = V_arr.reshape(-1)
+    flat_v = _flatten(V)
     max_v = 0.0
-    for i in range(flat_v.size):
-        val = abs(float(flat_v[i]))
-        if val > max_v:
-            max_v = val
+    for val in flat_v:
+        v_abs = abs(float(val))
+        if v_abs > max_v:
+            max_v = v_abs
 
     sv = max_v / 448.0
     if sv < 1e-12:
         sv = 1e-12
 
-    K_hat = _e4m3_roundtrip(K_arr, sk)
-    V_hat = _e4m3_roundtrip(V_arr, sv)
+    K_hat = _e4m3_roundtrip(K, sk)
+    V_hat = _e4m3_roundtrip(V, sv)
 
-    flat_k_hat = K_hat.reshape(-1)
+    flat_k_hat = _flatten(K_hat)
     sum_sq_k = 0.0
-    for i in range(flat_k.size):
+    for i in range(len(flat_k)):
         diff = float(flat_k_hat[i]) - float(flat_k[i])
         sum_sq_k += diff * diff
-    mse_k = float(sum_sq_k / flat_k.size)
+    mse_k = float(sum_sq_k / len(flat_k))
 
-    flat_v_hat = V_hat.reshape(-1)
+    flat_v_hat = _flatten(V_hat)
     sum_sq_v = 0.0
-    for i in range(flat_v.size):
+    for i in range(len(flat_v)):
         diff = float(flat_v_hat[i]) - float(flat_v[i])
         sum_sq_v += diff * diff
-    mse_v = float(sum_sq_v / flat_v.size)
+    mse_v = float(sum_sq_v / len(flat_v))
 
     return {"mse_k": mse_k, "mse_v": mse_v}

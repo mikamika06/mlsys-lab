@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def kv_fp8_reconstruction_mse(K: np.ndarray, V: np.ndarray) -> dict:
+def kv_fp8_reconstruction_mse(K: list[list[float]], V: list[list[float]]) -> dict:
     """Quantize K and V to E4M3 with an independent PER-TENSOR absmax
     scale for each (scale = max(|X|) / 448), dequantize, and report each
     tensor's reconstruction MSE.

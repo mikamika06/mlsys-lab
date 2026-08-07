@@ -16,6 +16,7 @@ def _rel_err(a, b):
         return abs(a - b)
 
 def grade(sol, fx) -> dict:
+    np.random.seed(42)
     cases = [
         (np.random.randn(2, 3, 4, 8), np.random.randn(2, 3, 5, 8), None),
         (np.random.randn(1, 1, 6, 16), np.random.randn(1, 1, 7, 16), 0.25),
@@ -23,12 +24,14 @@ def grade(sol, fx) -> dict:
     ]
     max_scale_err = 0.0
     max_logit_err = 0.0
-    for Q, K, scale in cases:
+    for Q_np, K_np, scale in cases:
+        Q_list = Q_np.tolist()
+        K_list = K_np.tolist()
         try:
-            got_scale, got_top = sol.measure_sdpa_scale_and_top_logit(Q, K, scale=scale)
+            got_scale, got_top = sol.measure_sdpa_scale_and_top_logit(Q_list, K_list, scale=scale)
         except Exception:
             return {"scale_rel_err": float("inf"), "logit_rel_err": float("inf")}
-        ref_scale, ref_top = _ref(Q, K, scale)
+        ref_scale, ref_top = _ref(Q_np, K_np, scale)
         scale_err = _rel_err(got_scale, ref_scale)
         logit_err = _rel_err(got_top, ref_top)
         if scale_err > max_scale_err:

@@ -1,0 +1,21 @@
+{
+  "id": "m-quantify-merge-then-quantize-vs-quantize-then-adapt-",
+  "title": "Quantize-then-adapt versus merge-then-quantize divergence and sizing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "lora-gguf-adapters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["loratool/divergence.py", "loratool/sizing.py", "loratool/scaling.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Quantization-adaptation divergence measurement", "check": "harness/m1.py",
+     "gates": [{"metric": "divergence_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Adapter byte size calculation for ranks and modules", "check": "harness/m2.py",
+     "gates": [{"metric": "size_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching invariant breakage", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_scaling", "op": "==", "threshold": 1}]}
+  ]
+}

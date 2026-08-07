@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def per_head_absmax_e4m3(k):
+def per_head_absmax_e4m3(k: list[list[list[float]]]) -> list[list[list[float]]]:
     """Per-head absmax-scaled fp8 E4M3 quantize-then-dequantize.
 
     k: (heads, seq, head_dim) float64 array.

@@ -33,7 +33,6 @@ $$
 Implement `classify_slots(events, num_steps, num_slots)`:
 
 ```python
-import numpy as np
 
 def classify_slots(events, num_steps, num_slots):
     """
@@ -45,13 +44,13 @@ def classify_slots(events, num_steps, num_slots):
         num_slots: number of slots (0 .. num_slots-1).
 
     Returns:
-        np.ndarray of shape (num_steps, num_slots), dtype bool.
+        list[float] of shape (num_steps, num_slots), dtype bool.
         True = busy, False = free.
     """
     ...
 ```
 
-The function must return a NumPy boolean array of shape
+The function must return a Python boolean array of shape
 $(T, K)$.  Slots start free; events are applied in the order given; multiple
 events at the same step are all processed before recording that step's row.
 

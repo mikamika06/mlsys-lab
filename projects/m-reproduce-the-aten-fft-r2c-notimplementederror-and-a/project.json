@@ -1,0 +1,40 @@
+{
+  "id": "m-reproduce-the-aten-fft-r2c-notimplementederror-and-a",
+  "title": "Reproducing aten::_fft_r2c NotImplementedError and fallback detection",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "PyTorch MPS operator coverage & silent fallback",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "edge_mlx/fft.py",
+    "edge_mlx/ops.py",
+    "edge_mlx/profiler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reproduce and fix aten::_fft_r2c NotImplementedError",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "fft_fixed", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Manual MPS-native operator replacement",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "native_replaced", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Detect silent fallbacks and ensure test regression safety",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fallback", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

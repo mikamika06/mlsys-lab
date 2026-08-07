@@ -1,0 +1,21 @@
+{
+  "id": "m-recompute-gb-s-from-a-recorded-do-bench-output",
+  "title": "Roofline bandwidth and block size knee analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Benchmarking methodology (do_bench, roofline)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["roofbench/calc.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Recompute GB/s from do_bench output", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err_gbps", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Roofline lower-bound time calculation", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err_time", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Find roofline knee across BLOCK_SIZE", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_knee", "op": "==", "threshold": 1}]}
+  ]
+}

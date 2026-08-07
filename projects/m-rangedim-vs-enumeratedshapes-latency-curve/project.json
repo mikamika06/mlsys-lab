@@ -1,0 +1,23 @@
+{
+  "id": "m-rangedim-vs-enumeratedshapes-latency-curve",
+  "title": "RangeDim vs EnumeratedShapes latency curve",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Flexible input shapes (RangeDim vs EnumeratedShapes)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["shapes/evaluator.py", "shapes/enumerator.py", "shapes/curve.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identical numerics and RangeDim vs EnumeratedShapes evaluation", "check": "harness/m1.py",
+     "gates": [{"metric": "numerics_matched", "op": "==", "threshold": 1},
+               {"metric": "evaluations_correct", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Minimal enumerated shape set from a length histogram", "check": "harness/m2.py",
+     "gates": [{"metric": "histogram_coverage", "op": ">=", "threshold": 0.95},
+               {"metric": "set_size_optimal", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: latency ratio invariant and regression catches", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_ratio", "op": "==", "threshold": 1}]}
+  ]
+}

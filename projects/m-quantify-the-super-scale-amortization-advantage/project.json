@@ -1,0 +1,67 @@
+{
+  "id": "m-quantify-the-super-scale-amortization-advantage",
+  "title": "Quantify the super-scale amortization advantage",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "k-quant-superblocks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kquant/amortization.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Calculate metadata overhead and byte footprint for super-blocks",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "footprint_rel_err",
+          "op": "<=",
+          "threshold": 1e-05
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Amortized super-scale quantization error vs uniform baseline",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "error_rel_err",
+          "op": "<=",
+          "threshold": 1e-05
+        },
+        {
+          "metric": "advantage_ratio_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching non-amortized super-scales",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unamortized_scales",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

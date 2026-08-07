@@ -1,0 +1,21 @@
+{
+  "id": "m-real-niah-harness-retrieval-accuracy-heatmap-by-dept",
+  "title": "Real NIAH harness and retrieval accuracy heatmap",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "long-context-evaluation-failure-modes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["niaheval/generator.py", "niaheval/harness.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "RULER-style multi-hop task generator", "check": "harness/m1.py",
+     "gates": [{"metric": "generators_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Retrieval accuracy heatmap by depth and length", "check": "harness/m2.py",
+     "gates": [{"metric": "recall_at_k", "op": ">=", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: regression tests for heatmaps and scoring", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_scoring", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,5 +1,4 @@
-import numpy as np
-
+import math
 
 def flash_forward_reconstruct(Q, K, V, m, l):
     """

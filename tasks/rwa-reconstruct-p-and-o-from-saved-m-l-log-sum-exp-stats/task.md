@@ -36,7 +36,7 @@ def flash_forward_reconstruct(Q, K, V, m, l):
     ...
 ```
 
-Inputs are NumPy arrays:
+Inputs are list:
 - `Q` has shape $(n, d)$.
 - `K` has shape $(k, d)$.
 - `V` has shape $(k, d_v)$.
@@ -58,15 +58,14 @@ sum from $S$ and discard the given statistics; the whole point is that
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
-V = np.array([[1.0], [2.0], [3.0]])
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]]
+V = [[1.0], [2.0], [3.0]]
 
-S = Q @ K.T / np.sqrt(2)
+S = [[sum(a * b for a, b in zip(row_q, row_k)) / math.sqrt(2) for row_k in K] for row_q in Q]
 m = S.max(axis=1)
-l = np.exp(S - m[:, None]).sum(axis=1)
+l = [sum(math.exp(s - mi) for s in row) for row, mi in zip(S, m)]
 
 P, O = flash_forward_reconstruct(Q, K, V, m, l)
 # P.sum(axis=1) is (approximately) [1.0, 1.0]
@@ -75,7 +74,7 @@ P, O = flash_forward_reconstruct(Q, K, V, m, l)
 ## What the gate checks
 
 The gate builds several random `(Q, K, V)` cases with
-`np.random.default_rng(0)`. For each case it computes two kinds of
+`random.Random(0)`. For each case it computes two kinds of
 `(m, l)` pairs to pass in:
 
 1. The **true** row max and its matching normalizer (what a real forward

@@ -1,0 +1,64 @@
+{
+  "id": "m-root-cause-a-python-m-bitsandbytes-diagnostic-dump",
+  "title": "Root-cause a python -m bitsandbytes diagnostic dump",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Install, backends, and version pinning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bnbdiag/parser.py",
+    "bnbdiag/classifier.py",
+    "bnbdiag/resolver.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse diagnostic dump",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "dumps_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Traceback triage classifier",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "classification_accuracy",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Shared-object name resolver and regression safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_resolver",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

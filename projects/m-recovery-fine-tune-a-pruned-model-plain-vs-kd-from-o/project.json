@@ -1,0 +1,63 @@
+{
+  "id": "m-recovery-fine-tune-a-pruned-model-plain-vs-kd-from-o",
+  "title": "Recovery fine-tuning of pruned models: plain vs KD",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Pruning + distillation recovery fine-tuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "recovery/trainer.py",
+    "recovery/eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Plain and knowledge distillation loss functions",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "loss_matched",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Steps to 90% recovery comparison",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "steps_matched",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for KD loss scaling invariant",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_kd",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

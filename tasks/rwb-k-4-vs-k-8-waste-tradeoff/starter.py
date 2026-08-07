@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def compare_k4_k8_waste(sizes: np.ndarray, counts: np.ndarray):
+def compare_k4_k8_waste(sizes: list[int], counts: list[int]) -> tuple[int, int, int]:
     """Compare optimal padding waste at K=4 vs K=8 buckets.
 
     sizes: 1-D array of distinct observed request sizes.

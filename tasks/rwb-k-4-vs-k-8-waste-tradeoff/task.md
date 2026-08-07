@@ -35,7 +35,7 @@ workload, or has it already plateaued?
 Implement `compare_k4_k8_waste(sizes, counts)`:
 
 ```python
-def compare_k4_k8_waste(sizes: np.ndarray, counts: np.ndarray) -> tuple[int, int, int]:
+def compare_k4_k8_waste(sizes: list[int], counts: list[int]) -> tuple[int, int, int]:
     ...
 ```
 
@@ -57,10 +57,9 @@ each bucket budget, and `reduction = waste_k4 - waste_k8` (always `>= 0`).
 ## Example
 
 ```python
-import numpy as np
 
-sizes = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 500])
-counts = np.array([10, 10, 10, 10, 10, 10, 10, 10, 10, 1])
+sizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 500]
+counts = [10, 10, 10, 10, 10, 10, 10, 10, 10, 1]
 
 compare_k4_k8_waste(sizes, counts)
 # waste_k4: 4 buckets must cover 10 distinct sizes -> real waste from

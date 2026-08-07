@@ -1,0 +1,21 @@
+{
+  "id": "m-reimplement-vllm-s-max-model-len-vs-kv-capacity-asse",
+  "title": "Reimplement vLLM max model len vs KV capacity assertion",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-cache-capacity-and-startup-config",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vllmlimits/capacity.py", "vllmlimits/triage.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reimplement vLLM capacity assertion logic", "check": "harness/m1.py",
+     "gates": [{"metric": "assertions_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compute largest safe max_model_len", "check": "harness/m2.py",
+     "gates": [{"metric": "max_lens_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for startup triage", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_triage", "op": "==", "threshold": 1}]}
+  ]
+}

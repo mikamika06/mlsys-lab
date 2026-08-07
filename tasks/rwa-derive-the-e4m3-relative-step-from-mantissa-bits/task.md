@@ -29,11 +29,11 @@ the true value by up to roughly $6.25\%$, just from mantissa quantization
 Implement `relative_rounding_step(values, mantissa_bits)`:
 
 ```python
-def relative_rounding_step(values: np.ndarray, mantissa_bits: int) -> tuple[float, float]:
+def relative_rounding_step(values: list[float], mantissa_bits: int) -> tuple[float, float]:
     ...
 ```
 
-- `values`: a 1-D NumPy array of probe values, guaranteed to sit in the
+- `values`: a list of floats of probe values, guaranteed to sit in the
   format's normal (non-subnormal, non-overflowing) representable range.
 - `mantissa_bits`: the number of mantissa bits $m$ of the format being
   modeled (E4M3 uses $m=3$).
@@ -45,7 +45,7 @@ Return `(analytic_bound, empirical_max_rel_err)`:
 2. `empirical_max_rel_err` — actually round every value in `values` to
    `mantissa_bits` mantissa bits and measure the max relative error:
    - Extract each value's normalized fractional mantissa: write
-     $v = \pm(1+f)\cdot 2^{e}$ with $f\in[0,1)$ (e.g. via `np.frexp`,
+$v = \pm(1+f)\cdot 2^{e}$ with $f\in[0,1)$ (e.g. via `math.frexp`,
      which gives a mantissa in $[0.5,1)$ — rescale it into $[1,2)$ form).
    - Round $f$ to the nearest multiple of $q = 2^{-\text{mantissa\_bits}}$.
    - Reconstruct the rounded value $\hat v = \pm(1+f_{\text{rounded}})\cdot 2^{e}$.
@@ -58,12 +58,11 @@ mantissa arithmetic directly, so the same code works for any
 ## Example
 
 ```python
-import numpy as np
 
 # A value placed exactly halfway between two adjacent 3-bit-mantissa grid
 # points, right at the low end of its binade -- the worst case.
 q = 2.0 ** -3
-values = np.array([1.0 + q / 2.0])   # 1.0625
+values = [1.0 + q / 2.0]   # 1.0625
 
 analytic, empirical = relative_rounding_step(values, mantissa_bits=3)
 print(analytic)    # 0.0625

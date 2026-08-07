@@ -1,0 +1,64 @@
+{
+  "id": "m-reproduce-a-real-cpu-memory-leak-from-appending-raw-loss-tensors",
+  "title": "Diagnosing CPU memory leaks, activation retention, and cache growth",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "cuda-oom-diagnosis",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "leakdiag/loss.py",
+    "leakdiag/eval.py",
+    "leakdiag/cache.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "CPU memory leak from raw loss tensor retention",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "leak_detected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Activation memory retention from missing no_grad",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "retention_detected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "KV-cache accumulation and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_leaky_cache",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-reimplement-the-llm-int8-decomposed-matmul",
+  "title": "LLM.int8() Decomposed Matrix Multiplication",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "bitsandbytes LLM.int8() mixed-precision decomposition",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["int8_matmul/dequant.py", "int8_matmul/outliers.py", "int8_matmul/matmul.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Outlier-fraction curve versus threshold", "check": "harness/m1.py",
+     "gates": [{"metric": "curve_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Derive vector-wise int8 scales", "check": "harness/m2.py",
+     "gates": [{"metric": "scales_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches corrupted scaling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_scaling", "op": "==", "threshold": 1}]}
+  ]
+}

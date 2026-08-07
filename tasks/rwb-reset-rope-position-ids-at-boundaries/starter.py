@@ -1,10 +1,4 @@
-import numpy as np
+import math
 
-def _rope(x, positions):
-    raise NotImplementedError('your code here')
-
-def _attention(q, k, v):
-    raise NotImplementedError('your code here')
-
-def packed_rope_attention(q, k, v, cu_seqlens):
+def packed_rope_attention(q: list[list[float]], k: list[list[float]], v: list[list[float]], cu_seqlens: list[int]) -> list[list[float]]:
     raise NotImplementedError('your code here')

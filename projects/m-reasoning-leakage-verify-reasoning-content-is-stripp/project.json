@@ -1,0 +1,21 @@
+{
+  "id": "m-reasoning-leakage-verify-reasoning-content-is-stripp",
+  "title": "Strip reasoning content for untrusted callers",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "security-multitenancy-and-api-hardening",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vllm_hardening/sanitizer.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Sanitize chat completion responses", "check": "harness/m1.py",
+     "gates": [{"metric": "sanitized_count", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Handle streaming delta chunks securely", "check": "harness/m2.py",
+     "gates": [{"metric": "streaming_safe", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test regression against reasoning leakage", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_leaky_reasoning", "op": "==", "threshold": 1}]}
+  ]
+}

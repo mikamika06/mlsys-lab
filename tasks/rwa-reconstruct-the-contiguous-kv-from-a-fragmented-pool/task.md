@@ -21,8 +21,7 @@ must not leak into the reconstruction.
 Implement `reconstruct_contiguous_kv`:
 
 ```python
-def reconstruct_contiguous_kv(kv_pool: np.ndarray, block_table: list[int],
-                                block_size: int, seq_len: int) -> np.ndarray:
+def reconstruct_contiguous_kv(kv_pool: list[list[float]], block_table: list[int], block_size: int, seq_len: int) -> list[list[float]]:
     ...
 ```
 
@@ -37,7 +36,6 @@ def reconstruct_contiguous_kv(kv_pool: np.ndarray, block_table: list[int],
 ## Example
 
 ```python
-import numpy as np
 
 block_size = 4
 block_table = [3, 0, 5]   # logical 0,1,2 -> physical 3,0,5 (out of order, non-contiguous)

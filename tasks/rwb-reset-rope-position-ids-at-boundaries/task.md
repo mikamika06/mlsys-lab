@@ -36,7 +36,7 @@ $$
 
 Implement `packed_rope_attention(q, k, v, cu_seqlens)`.
 
-The inputs are packed NumPy arrays:
+The inputs are packed list:
 
 - `q`, `k`, and `v` have shape $(n, d)$ and dtype $float64$.
 - `cu_seqlens` is a one-dimensional integer array of length $m+1$ containing cumulative sequence boundaries.
@@ -59,12 +59,11 @@ for dimension pair index $j$.
 ## Example
 
 ```python
-import numpy as np
 
-q = np.ones((3, 4), dtype=np.float64)
-k = np.ones((3, 4), dtype=np.float64)
-v = np.arange(12, dtype=np.float64).reshape(3, 4)
-cu_seqlens = np.array([0, 2, 3])
+q = [[1.0] * 4 for _ in range(3)]
+k = [[1.0] * 4 for _ in range(3)]
+v = list(range(12)).reshape(3, 4)
+cu_seqlens = [0, 2, 3]
 
 out = packed_rope_attention(q, k, v, cu_seqlens)
 # The first two rows attend together and the last row attends by itself.
@@ -72,7 +71,7 @@ out = packed_rope_attention(q, k, v, cu_seqlens)
 
 ## What the gate checks
 
-The grader computes a NumPy oracle by unpacking every sequence, assigning positions from $0$ to $l_i-1$, applying RoPE, and running attention independently for each non-empty segment.
+The grader computes a Python oracle by unpacking every sequence, assigning positions from $0$ to $l_i-1$, applying RoPE, and running attention independently for each non-empty segment.
 
 The returned tensor is compared to the oracle using
 

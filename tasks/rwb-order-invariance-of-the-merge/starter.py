@@ -1,4 +1,2 @@
-import numpy as np
-
-def merge_partials(partials):
+def merge_partials(partials: list[list[float]]) -> tuple[list[float], list[float]]:
     raise NotImplementedError('your code here')

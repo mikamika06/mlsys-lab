@@ -1,0 +1,21 @@
+{
+  "id": "m-roofline-predicted-vs-measured-speedup-ceiling-for-g",
+  "title": "Roofline-predicted vs measured speedup ceiling for gamma=4",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Autoregressive bottleneck & the roofline model",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["roofline/calc.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Roofline arithmetic intensity and theoretical limits", "check": "harness/m1.py",
+     "gates": [{"metric": "intensity_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Predicted vs measured speedup ceiling relative error", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: regression test for roofline ceiling bounds", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_bound", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def padding_waste_fraction(lens: np.ndarray, batch_ids: np.ndarray) -> float:
+def padding_waste_fraction(lens: list[int], batch_ids: list[int]) -> float:
     """
     lens      : 1-D int array, total (prompt + generation) token length of
                 each request.

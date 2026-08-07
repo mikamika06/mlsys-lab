@@ -1,0 +1,22 @@
+{
+  "id": "m-recompute-key-averages-from-a-chrome-trace",
+  "title": "Recompute key averages and trace regressions from Chrome traces",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Reading traces: key_averages and the Chrome trace JSON",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tracex/parse.py", "tracex/metrics.py", "tracex/diff.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Recompute key_averages from trace events", "check": "harness/m1.py",
+     "gates": [{"metric": "keys_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "GPU busy fraction and idle gaps", "check": "harness/m2.py",
+     "gates": [{"metric": "busy_fraction_match", "op": "==", "threshold": 1},
+               {"metric": "idle_gaps_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching self-time regressions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_diff", "op": "==", "threshold": 1}]}
+  ]
+}

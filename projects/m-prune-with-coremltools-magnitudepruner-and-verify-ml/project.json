@@ -1,0 +1,40 @@
+{
+  "id": "m-prune-with-coremltools-magnitudepruner-and-verify-ml",
+  "title": "Core ML magnitude pruning and palettization sizing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Apple Core ML on-device pruning & palettization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "coreprune/prune.py",
+    "coreprune/palettize.py",
+    "coreprune/size.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Magnitude pruning and model size verification",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "pruned_ratio_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Chaining pruning and palettization",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "combined_reduction_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Expected package size derivation and safeguard test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_derivation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

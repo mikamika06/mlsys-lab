@@ -33,7 +33,7 @@ before all current members completed); otherwise it is **static**.
 Implement `classify_scheduling`:
 
 ```python
-def classify_scheduling(active: np.ndarray) -> str:
+def classify_scheduling(active: list[list[int]]) -> str:
     ...
 ```
 
@@ -46,21 +46,20 @@ Return the string `"static"` or `"continuous"`.
 ## Example
 
 ```python
-import numpy as np
 
 # ids {0,1,2} run together, then swap wholesale to {3,4,5} -> static
-static_trace = np.array([
+static_trace = [
     [1, 1, 1, 0, 0, 0],
     [1, 1, 1, 0, 0, 0],
     [0, 0, 0, 1, 1, 1],
-])
+]
 classify_scheduling(static_trace)  # -> "static"
 
 # id 2 finishes and id 3 is admitted while 0,1 are still running -> continuous
-continuous_trace = np.array([
+continuous_trace = [
     [1, 1, 1, 0],
     [1, 1, 0, 1],
-])
+]
 classify_scheduling(continuous_trace)  # -> "continuous"
 ```
 

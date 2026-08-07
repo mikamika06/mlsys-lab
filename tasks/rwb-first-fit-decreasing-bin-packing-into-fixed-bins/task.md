@@ -15,7 +15,7 @@ Implement the function
 def pack_into_fixed_bins(lengths, bin_size):
 ```
 
-- `lengths` : a **list** or **1-D NumPy array** of positive integers (the sequence lengths).
+- `lengths` : a **list** or **list of floats** of positive integers (the sequence lengths).
 - `bin_size` : a positive integer (the maximum total length allowed per bin).
 
 Return a tuple `(num_bins, assignments)` where

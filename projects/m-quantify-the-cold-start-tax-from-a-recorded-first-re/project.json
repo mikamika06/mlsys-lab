@@ -1,0 +1,22 @@
+{
+  "id": "m-quantify-the-cold-start-tax-from-a-recorded-first-re",
+  "title": "Quantifying cold-start tax and scale-to-zero exposure",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Warmup & Cold Start",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["coldstart/trace.py", "coldstart/tax.py", "coldstart/scale.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse and sort trace records", "check": "harness/m1.py",
+     "gates": [{"metric": "sorting_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compute cold-start tax and exposure fraction", "check": "harness/m2.py",
+     "gates": [{"metric": "tax_rel_err", "op": "<=", "threshold": 1e-4},
+               {"metric": "exposure_rel_err", "op": "<=", "threshold": 1e-4}]},
+    {"n": 3, "title": "Safety net: regression tests for cold-start metrics", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_logic", "op": "==", "threshold": 1}]}
+  ]
+}

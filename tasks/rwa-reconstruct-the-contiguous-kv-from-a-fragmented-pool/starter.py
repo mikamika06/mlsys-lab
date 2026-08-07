@@ -1,8 +1,4 @@
-import numpy as np
-
-
-def reconstruct_contiguous_kv(kv_pool: np.ndarray, block_table: list[int],
-                                block_size: int, seq_len: int) -> np.ndarray:
+def reconstruct_contiguous_kv(kv_pool: list[list[float]], block_table: list[int], block_size: int, seq_len: int) -> list[list[float]]:
     """Rebuild the logical, contiguous (seq_len, d) KV tensor for one
     sequence out of a shared PAGED physical pool.
 

@@ -1,4 +1,2 @@
-import numpy as np
-
-def detect_leakage(mask: np.ndarray, cu_seqlens: np.ndarray) -> bool:
+def detect_leakage(mask: list[list[float]], cu_seqlens: list[int]) -> bool:
     raise NotImplementedError('your code here')

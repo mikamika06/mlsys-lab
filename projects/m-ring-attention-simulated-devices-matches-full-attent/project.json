@@ -1,0 +1,21 @@
+{
+  "id": "m-ring-attention-simulated-devices-matches-full-attent",
+  "title": "Ring attention with simulated devices and online softmax",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "ring-attention-core",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ringattn/softmax.py", "ringattn/devices.py", "ringattn/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Online-softmax running update matches naive softmax", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Ring attention simulated devices matches full attention", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Derive ring attention per-device memory crossover point and test regression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_crossover", "op": "==", "threshold": 1}]}
+  ]
+}

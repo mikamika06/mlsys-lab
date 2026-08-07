@@ -1,0 +1,7 @@
+# Ticket: Distributed Training Performance Degradation and Configuration Failures
+
+During large-scale distributed training deployments using DeepSpeed, engineering teams are encountering recurring blockers that disrupt model bring-up. First, launching training jobs frequently halts immediately due to cryptic JSON configuration validation errors. These errors typically involve inconsistent batch size parameters, contradictory gradient accumulation settings, or misconfigured ZeRO optimization stages that fail deep schema checks.
+
+When developers bypass validation or manually force configurations to start, the job initiates but suffers from severe performance bottlenecks. Profiling traces reveal that communication and computation phases are executing in a strictly serialized manner rather than overlapping, resulting in abysmal GPU utilization and heavy pipeline bubbles. Additionally, manual tuning of the communication all-reduce bucket sizes either triggers Out-Of-Memory (OOM) exceptions due to oversized temporary buffer allocations or creates massive communication overhead from excessive micro-messages when buckets are too small.
+
+We require a robust diagnostic and configuration management library within `dsdiag` to programmatically validate DeepSpeed configurations, analyze execution timelines for communication-computation serialization, and compute mathematically optimal communication bucket sizes under strict GPU memory ceilings.

@@ -39,7 +39,7 @@ correct and safe:
 Implement two functions.
 
 ```python
-def tiled_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int) -> np.ndarray:
+def tiled_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], block_size: int) -> list[list[float]]:
     ...
 ```
 
@@ -52,7 +52,7 @@ def tiled_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int
   `1`, some value that doesn't evenly divide `N`, or `N` itself.
 
 ```python
-def softmax_stability_probe(scores: np.ndarray):
+def softmax_stability_probe(scores: list[float]):
     ...
 ```
 
@@ -69,22 +69,21 @@ def softmax_stability_probe(scores: np.ndarray):
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+import random; rng = random.Random(0)
 Q = rng.standard_normal((64, 8))
 K = rng.standard_normal((64, 8))
 V = rng.standard_normal((64, 8))
 
 out1 = tiled_attention(Q, K, V, block_size=1)
 out64 = tiled_attention(Q, K, V, block_size=64)
-np.allclose(out1, out64, atol=1e-4)   # True -- block size doesn't matter
+all(abs(a - b) < 1e-4 for row1, row64 in zip(out1, out64) for a, b in zip(row1, row64)) # True -- block size doesn't matter
 
-scores = np.array([[1.0, 2.0, 3.0]])
+scores = [[1.0, 2.0, 3.0]]
 stable_out, overflowed = softmax_stability_probe(scores)
 print(overflowed)  # False -- ordinary scale, both paths would be fine
 
-scores_big = np.array([[1000.0, 1.0, 2.0]])
+scores_big = [[1000.0, 1.0, 2.0]]
 stable_out, overflowed = softmax_stability_probe(scores_big)
 print(stable_out)   # [[1., 0., 0.]] -- still exactly correct
 print(overflowed)   # True -- exp(1000) overflows float64 unshifted

@@ -1,0 +1,62 @@
+{
+  "id": "m-reconstruct-an-elastic-ep-reconfiguration-event-s-re",
+  "title": "Reconstruct an elastic-EP reconfiguration event's resulting expert layout",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "eplb-elastic-ep",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "eplb/reconstruct.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Apply a single reconfiguration event to the layout",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "events_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reconstruct final layout from a trajectory of events",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "trajectories_matched",
+          "op": "==",
+          "threshold": 2
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch a migration that duplicates replicas",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_leaky_move",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

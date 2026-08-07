@@ -36,7 +36,7 @@ magnitude — exactly the range real (unscaled) attention logits reach.
 Fix `merge_split_kv(partials)`:
 
 ```python
-def merge_split_kv(partials) -> np.ndarray:
+def merge_split_kv(partials: list[tuple[float, float, list[float]]]) -> list[float]:
     ...
 ```
 

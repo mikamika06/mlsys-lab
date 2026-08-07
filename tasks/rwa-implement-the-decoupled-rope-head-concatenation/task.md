@@ -31,32 +31,26 @@ $$
 Implement `decoupled_rope_score(q_lat, k_lat, q_rope, k_rope)`:
 
 ```python
-def decoupled_rope_score(
-    q_lat: np.ndarray,   # shape (B, H, N, D_l)
-    k_lat: np.ndarray,   # shape (B, H, N, D_l)
-    q_rope: np.ndarray,  # shape (B, H, N, D_r)
-    k_rope: np.ndarray,  # shape (B, H, N, D_r)
-) -> np.ndarray:         # shape (B, H, N, N)
+def decoupled_rope_score(q_lat, k_lat, q_rope, k_rope):         # shape (B, H, N, N)
 ```
 
 Steps:
 
 1. Concatenate `q_lat` and `q_rope` along the last axis → `Q` of shape `(B, H, N, D)`.
 2. Concatenate `k_lat` and `k_rope` likewise → `K`.
-3. Compute the scaled dot-product scores $S = Q\,K^\top / \sqrt{D}$ (using `np.matmul`, which broadcasts over the leading batch and head dims).
+3. Compute the scaled dot-product scores $S = Q\,K^\top / \sqrt{D}$ (using matrix multiplication, which broadcasts over the leading batch and head dims).
 4. Apply softmax over the last (key) axis.
 
-Use vectorised NumPy only — no Python `for` loops. The output dtype must be `float64`.
+Use vectorised Python only — no Python `for` loops. The output dtype must be `float64`.
 
 ## Example
 
 ```python
-import numpy as np
 B, H, N, D_l, D_r = 2, 3, 5, 64, 32
-q_lat  = np.random.randn(B, H, N, D_l)
-k_lat  = np.random.randn(B, H, N, D_l)
-q_rope = np.random.randn(B, H, N, D_r)
-k_rope = np.random.randn(B, H, N, D_r)
+q_lat = [[[[0.0 for _ in range(D_l)] for _ in range(N)] for _ in range(H)] for _ in range(B)]
+k_lat = [[[[0.0 for _ in range(D_l)] for _ in range(N)] for _ in range(H)] for _ in range(B)]
+q_rope = [[[[0.0 for _ in range(D_r)] for _ in range(N)] for _ in range(H)] for _ in range(B)]
+k_rope = [[[[0.0 for _ in range(D_r)] for _ in range(N)] for _ in range(H)] for _ in range(B)]
 
 out = decoupled_rope_score(q_lat, k_lat, q_rope, k_rope)
 # out.shape -> (2, 3, 5, 5)
@@ -64,4 +58,4 @@ out = decoupled_rope_score(q_lat, k_lat, q_rope, k_rope)
 
 ## What the gate checks
 
-One gate: **max_abs_err** $\le 10^{-4}$. The grader computes a NumPy reference oracle implementing the identical algorithm in `float64` and compares element-wise. Any correct vectorised implementation will produce a max absolute error well below $10^{-12}$; the $10^{-4}$ threshold leaves ample margin. A non-vectorised solution that loops in Python is also accepted as long as the result is numerically correct.
+One gate: **max_abs_err** $\le 10^{-4}$. The grader computes a Python reference oracle implementing the identical algorithm in `float64` and compares element-wise. Any correct vectorised implementation will produce a max absolute error well below $10^{-12}$; the $10^{-4}$ threshold leaves ample margin. A non-vectorised solution that loops in Python is also accepted as long as the result is numerically correct.

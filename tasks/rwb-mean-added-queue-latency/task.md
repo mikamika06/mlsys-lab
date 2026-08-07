@@ -30,7 +30,7 @@ costing overall, given the observed arrival pattern.
 Implement `mean_added_queue_latency(arrivals, preferred_batch_size, max_queue_delay)`:
 
 ```python
-def mean_added_queue_latency(arrivals, preferred_batch_size: int, max_queue_delay: int) -> float:
+def mean_added_queue_latency(arrivals: list[int], preferred_batch_size: int, max_queue_delay: int) -> float:
     ...
 ```
 

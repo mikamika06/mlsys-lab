@@ -36,13 +36,7 @@ The tiled algorithm extends this idea by combining partial maxima and partial su
 Implement `mem_efficient_attention(Q, K, V, attn_bias, block_size=64)`:
 
 ```python
-def mem_efficient_attention(
-    Q: np.ndarray,
-    K: np.ndarray,
-    V: np.ndarray,
-    attn_bias: np.ndarray,
-    block_size: int = 64,
-) -> np.ndarray:
+def mem_efficient_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], attn_bias: list[list[float]], block_size: int=64) -> list[list[float]]:
     ...
 ```
 
@@ -66,12 +60,11 @@ in float64 arithmetic. The implementation must not create an intermediate $n \ti
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1.0, 0.0], [0.0, 1.0]])
-K = np.array([[1.0, 0.0], [0.0, 1.0]])
-V = np.array([[2.0, 0.0], [0.0, 3.0]])
-B = np.zeros((2, 2))
+Q = [[1.0, 0.0], [0.0, 1.0]]
+K = [[1.0, 0.0], [0.0, 1.0]]
+V = [[2.0, 0.0], [0.0, 3.0]]
+B = [[0.0] * 2 for _ in range(2)]
 
 O = mem_efficient_attention(Q, K, V, B, block_size=1)
 ```
@@ -80,7 +73,7 @@ The result matches the dense attention calculation while avoiding a full attenti
 
 ## What the gate checks
 
-The numeric gate computes a NumPy float64 oracle from dense attention with the additive bias included and requires the implementation output to satisfy
+The numeric gate computes a Python float64 oracle from dense attention with the additive bias included and requires the implementation output to satisfy
 
 $$
 \max_i |O_i-\hat{O}_i| < 10^{-5}.

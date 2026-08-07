@@ -1,0 +1,6 @@
+# Ticket: Training speed regression analysis stalls when comparing ZeRO-2 and ZeRO-3 logs
+
+## Symptom
+Our large-scale distributed training pipeline runs on DeepSpeed, alternating between ZeRO stage 2 and ZeRO stage 3 configurations depending on model size and cluster topology. Recently, performance engineering reports indicate unpredictable wall-clock time overhead when scaling up to ZeRO-3. However, raw training logs contain heterogeneous formats, variable warm-up steps, and unaligned step timestamps across different node ranks, making manual inspection via TensorBoard or stdout grep entirely unreliable.
+
+Engineers attempting to extract concrete performance degradation metrics are currently bogged down by parsing raw text outputs, leading to conflicting conclusions about whether communication overhead or gradient partitioning dominates the slowdown. We lack a robust, programmatic pipeline to ingest raw step-time logs from both ZeRO-2 and ZeRO-3 runs, filter initialization artifacts, compute stable per-step latencies, and quantify the precise relative error and wall-clock overhead under deterministic conditions. Without an automated verification module, regression detection remains blocked, preventing us from enforcing performance budgets prior to cluster deployment.

@@ -1,12 +1,9 @@
-import numpy as np
-
-
-def reconstruct_contiguous_kv(kv_pool: np.ndarray, block_table: list[int],
-                                block_size: int, seq_len: int) -> np.ndarray:
+def reconstruct_contiguous_kv(kv_pool: list[list[float]], block_table: list[int],
+                                block_size: int, seq_len: int) -> list[list[float]]:
     """Rebuild the logical, contiguous (seq_len, d) KV tensor for one
     sequence out of a shared PAGED physical pool.
 
-    kv_pool     : (num_physical_blocks * block_size, d). This sequence's
+    kv_pool     : list of lists of shape (num_physical_blocks * block_size, d). This sequence's
                   data lives scattered across the physical blocks named
                   by `block_table`; every other row belongs to other
                   sequences (or is unused) and must be ignored.
@@ -17,16 +14,13 @@ def reconstruct_contiguous_kv(kv_pool: np.ndarray, block_table: list[int],
     block_size  : tokens per physical block.
     seq_len     : number of logical positions to reconstruct.
 
-    Returns a (seq_len, d) array where row `pos` equals
+    Returns a list of lists of shape (seq_len, d) where row `pos` equals
     kv_pool[block_table[pos // block_size] * block_size + pos % block_size].
     """
-    kv_pool = np.asarray(kv_pool)
-    d = kv_pool.shape[1]
-
-    positions = np.arange(seq_len)
-    logical_block = positions // block_size
-    offset = positions % block_size
-    block_table_arr = np.asarray(block_table, dtype=np.int64)
-    slots = block_table_arr[logical_block] * block_size + offset
-
-    return kv_pool[slots].reshape(seq_len, d)
+    result = []
+    for pos in range(seq_len):
+        logical_block = pos // block_size
+        offset = pos % block_size
+        slot = block_table[logical_block] * block_size + offset
+        result.append(list(kv_pool[slot]))
+    return result

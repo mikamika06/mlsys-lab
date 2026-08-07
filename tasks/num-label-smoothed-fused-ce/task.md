@@ -35,12 +35,11 @@ $$L \;=\; \frac{1}{N}\sum_{n=1}^{N}\;\ell\!\bigl(\tilde{q}^{(n)},\, p^{(n)}\bigr
 Implement `label_smoothed_fused_ce`:
 
 ```python
-import numpy as np
 
-def label_smoothed_fused_ce(logits, targets, eps=0.1):
+def label_smoothed_fused_ce(logits: list[list[float]], targets: list[int], eps: float=0.1) -> float:
     """
-    logits  : np.ndarray, shape (N, K), dtype float64 — unnormalized scores
-    targets : np.ndarray, shape (N,),    dtype int    — true class indices
+    logits  : list[float], shape (N, K), dtype float64 — unnormalized scores
+    targets : list[float], shape (N,),    dtype int    — true class indices
     eps     : float — label-smoothing factor in [0, 1]
 
     Returns: float — mean label-smoothed cross-entropy over the batch
@@ -49,16 +48,15 @@ def label_smoothed_fused_ce(logits, targets, eps=0.1):
 
 Use the fused log-sum-exp trick so that the computation is numerically stable
 for arbitrary logit magnitudes.  Return a plain Python `float`.  You may use
-only `numpy` (no `scipy`, `torch`, or `jax`).
+only `plain Python` (no `scipy`, `torch`, or `jax`).
 
 ## Example
 
 ```python
-import numpy as np
 
-logits  = np.array([[2.0, 1.0, 0.1],
-                     [0.5, 2.5, 0.3]])
-targets = np.array([0, 1])
+logits  = [[2.0, 1.0, 0.1],
+                     [0.5, 2.5, 0.3]]
+targets = [0, 1]
 loss = label_smoothed_fused_ce(logits, targets, eps=0.1)
 # K = 3, eps = 0.1  →  smoothed targets for sample 0: [0.9, 0.05, 0.05]
 # loss is a float ≈ 0.58
@@ -66,7 +64,7 @@ loss = label_smoothed_fused_ce(logits, targets, eps=0.1)
 
 ## What the gate checks
 
-The gate runs a self-contained NumPy reference that applies the exact same fused
+The gate runs a self-contained Python reference that applies the exact same fused
 algorithm and reports **relative error**:
 
 $$\mathrm{rel\_err} = \frac{\bigl|\hat{L} - L^{*}\bigr|}

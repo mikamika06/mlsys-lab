@@ -1,0 +1,21 @@
+{
+  "id": "m-round-half-to-even-vs-round-half-away-divergence-cou",
+  "title": "Quantization rounding divergence and cost analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-edge-export",
+  "track": "Quantization parameters and the dequantization contract",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantexport/divergence.py", "quantexport/costs.py", "quantexport/detector.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Round-half divergence count", "check": "harness/m1.py",
+     "gates": [{"metric": "divergence_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Requantization node cost share", "check": "harness/m2.py",
+     "gates": [{"metric": "cost_share_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Wrong quantized dimension detector and safety net", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_dimension", "op": "==", "threshold": 1}]}
+  ]
+}

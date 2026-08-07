@@ -1,9 +1,6 @@
-import numpy as np
+import math
 
-
-def reconstruct_global_weights(
-    chunk_scores: np.ndarray, chunk_lse: np.ndarray, chunk_partial_out: np.ndarray
-) -> np.ndarray:
+def reconstruct_global_weights(chunk_scores: list[list[float]], chunk_lse: list[float], chunk_partial_out: list[list[float]]) -> list[float]:
     """Reconstruct the global softmax attention weight of every KV token
     from per-chunk statistics (as a chunked/ring-attention worker would
     have on hand for one query row).

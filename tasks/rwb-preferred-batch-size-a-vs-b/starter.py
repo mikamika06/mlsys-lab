@@ -1,14 +1,4 @@
-import numpy as np
-
-
-def compare_preferred_batch_sizes(
-    arrivals: np.ndarray,
-    cap: int,
-    max_queue_delay: float,
-    batch_time: float,
-    preferred_a: int,
-    preferred_b: int,
-):
+def compare_preferred_batch_sizes(arrivals: list[float], cap: int, max_queue_delay: float, batch_time: float, preferred_a: int, preferred_b: int) -> list[float]:
     """
     arrivals: 1-D sorted array of request arrival timestamps.
     cap: max_batch_size, shared by both configurations.

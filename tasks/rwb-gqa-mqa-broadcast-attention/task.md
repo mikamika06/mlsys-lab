@@ -22,7 +22,7 @@ $$
 Implement `gqa_broadcast_attention`:
 
 ```python
-def gqa_broadcast_attention(q: np.ndarray, k: np.ndarray, v: np.ndarray) -> np.ndarray:
+def gqa_broadcast_attention(q: list[list[list[float]]], k: list[list[list[float]]], v: list[list[list[float]]]) -> list[list[list[float]]]:
     ...
 ```
 
@@ -39,10 +39,9 @@ that query head against the broadcast key/value head.
 ## Example
 
 ```python
-import numpy as np
 
 H_q, H_kv, n, d = 4, 2, 5, 8
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 q = rng.normal(size=(H_q, n, d))
 k = rng.normal(size=(H_kv, n, d))
 v = rng.normal(size=(H_kv, n, d))
@@ -55,11 +54,11 @@ out = gqa_broadcast_attention(q, k, v)
 
 ## What the gate checks
 
-The grader builds several `(q, k, v)` scenarios from a seeded NumPy
+The grader builds several `(q, k, v)` scenarios from a seeded Python
 generator — plain MHA (`H_kv == H_q`), GQA with a few different group
 sizes, and MQA (`H_kv = 1`) — and computes the reference output
 independently in float64: explicitly repeat each KV head
-`n_rep = H_q // H_kv` times (`numpy.repeat` along the head axis, so KV
+`n_rep = H_q // H_kv` times (repeating along the head axis, so KV
 head $i$ maps to query heads $[i \cdot n_{\text{rep}}, (i+1)\cdot n_{\text{rep}})$),
 then run ordinary per-head scaled dot-product attention — never calling
 your function.

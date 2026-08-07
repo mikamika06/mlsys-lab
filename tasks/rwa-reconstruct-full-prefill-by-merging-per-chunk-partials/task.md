@@ -54,22 +54,21 @@ def merge_chunk_partials(ms, ls, os):
 
 The inputs are:
 
-- `ms`: a 1-D NumPy array of chunk maxima with shape `(chunks,)`.
-- `ls`: a 1-D NumPy array of chunk exponential sums with shape `(chunks,)`.
-- `os`: a 2-D NumPy array of chunk weighted accumulations with shape `(chunks, d)`.
+- `ms`: a list of floats of chunk maxima with shape `(chunks,)`.
+- `ls`: a list of floats of chunk exponential sums with shape `(chunks,)`.
+- `os`: a list of lists of floats of chunk weighted accumulations with shape `(chunks, d)`.
 
-Return a 1-D NumPy array of length `d` containing the reconstructed full attention output.
+Return a list of floats of length `d` containing the reconstructed full attention output.
 
-Use NumPy operations and keep the computation numerically stable. The result should use `float64` arithmetic.
+Use Python operations and keep the computation numerically stable. The result should use `float64` arithmetic.
 
 ## Example
 
 ```python
-import numpy as np
 
-ms = np.array([2.0, 1.0])
-ls = np.array([3.0, 4.0])
-os = np.array([[6.0, 3.0], [4.0, 8.0]])
+ms = [2.0, 1.0]
+ls = [3.0, 4.0]
+os = [[6.0, 3.0], [4.0, 8.0]]
 
 out = merge_chunk_partials(ms, ls, os)
 ```
@@ -78,7 +77,7 @@ The function first finds the global maximum, rescales each chunk contribution, m
 
 ## What the gate checks
 
-The gate creates attention logits and values in NumPy, splits them into chunks, and computes chunk statistics. It independently computes the full attention output from the original logits in float64.
+The gate creates attention logits and values in Python, splits them into chunks, and computes chunk statistics. It independently computes the full attention output from the original logits in float64.
 
 The returned output must satisfy
 
@@ -86,4 +85,4 @@ $$
 \max_i |O_i - \hat{O}_i| < 10^{-5},
 $$
 
-where $O$ is the NumPy oracle result and $\hat{O}$ is the submitted implementation result.
+where $O$ is the Python oracle result and $\hat{O}$ is the submitted implementation result.

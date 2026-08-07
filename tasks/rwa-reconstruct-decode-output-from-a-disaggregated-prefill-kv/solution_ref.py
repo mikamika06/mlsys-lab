@@ -1,25 +1,22 @@
 import io
+import json
 import math
-import numpy as np
 
 
-def serialize_kv(K: np.ndarray, V: np.ndarray) -> bytes:
-    buffer = io.BytesIO()
-    np.savez(buffer, K=np.asarray(K, dtype=np.float64), V=np.asarray(V, dtype=np.float64))
-    return buffer.getvalue()
+def serialize_kv(K: list[list[float]], V: list[list[float]]) -> bytes:
+    data = {"K": K, "V": V}
+    return json.dumps(data).encode("utf-8")
 
 
-def decode_from_kv(Q: np.ndarray, payload: bytes) -> np.ndarray:
-    buffer = io.BytesIO(payload)
-    data = np.load(buffer)
-    K = np.asarray(data["K"], dtype=np.float64)
-    V = np.asarray(data["V"], dtype=np.float64)
-    Q = np.asarray(Q, dtype=np.float64)
+def decode_from_kv(Q: list[list[float]], payload: bytes) -> list[list[float]]:
+    data = json.loads(payload.decode("utf-8"))
+    K = data["K"]
+    V = data["V"]
 
-    M = Q.shape[0]
-    D = Q.shape[1]
-    N = K.shape[0]
-    P = V.shape[1]
+    M = len(Q)
+    D = len(Q[0])
+    N = len(K)
+    P = len(V[0])
     sqrt_D = math.sqrt(D)
 
     logits = []
@@ -28,7 +25,7 @@ def decode_from_kv(Q: np.ndarray, payload: bytes) -> np.ndarray:
         for j in range(N):
             dot_prod = 0.0
             for k in range(D):
-                dot_prod += Q[i, k] * K[j, k]
+                dot_prod += Q[i][k] * K[j][k]
             row.append(dot_prod / sqrt_D)
         logits.append(row)
 
@@ -69,8 +66,8 @@ def decode_from_kv(Q: np.ndarray, payload: bytes) -> np.ndarray:
         for p in range(P):
             val = 0.0
             for j in range(N):
-                val += weights_norm[i][j] * V[j, p]
+                val += weights_norm[i][j] * V[j][p]
             res_row.append(val)
         result.append(res_row)
 
-    return np.array(result, dtype=np.float64)
+    return result

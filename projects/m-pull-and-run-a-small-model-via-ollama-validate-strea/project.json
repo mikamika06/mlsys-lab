@@ -1,0 +1,46 @@
+{
+  "id": "m-pull-and-run-a-small-model-via-ollama-validate-strea",
+  "title": "Ollama edge model streaming, blob inspection, and raw llama.cpp speed comparison",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Ollama / LM Studio on Apple Silicon (llama.cpp under the hood)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ollamautil/stream.py",
+    "ollamautil/blobs.py",
+    "ollamautil/bench.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Stream responses and validate JSON schema",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "stream_valid", "op": "==", "threshold": 1},
+        {"metric": "schema_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Locate GGUF blob and compute hash verification",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "blob_found", "op": "==", "threshold": 1},
+        {"metric": "hash_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for stream schema parsing",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_parser", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -27,13 +27,12 @@ attention.
 Implement `measure_block_sparsity`:
 
 ```python
-import numpy as np
 
-def measure_block_sparsity(block_mask: np.ndarray) -> tuple[int, float]:
+def measure_block_sparsity(block_mask: list[list[bool]]) -> tuple[int, float]:
     ...
 ```
 
-**Input.** `block_mask` — a 2-D boolean NumPy array of shape
+**Input.** `block_mask` — a 2-D boolean list of shape
 $(B_q, B_{kv})$. A `True` entry means the corresponding block is computed.
 
 **Output.** A tuple `(skipped_block_count, dense_flop_fraction)` where
@@ -44,15 +43,14 @@ $(B_q, B_{kv})$. A `True` entry means the corresponding block is computed.
 
 Handle the edge case $B_q \cdot B_{kv} = 0$ by returning `(0, 1.0)`.
 
-Use vectorised NumPy operations. Do not write a Python double loop.
+Use vectorised Python operations. Do not write a Python double loop.
 
 ## Example
 
 ```python
-import numpy as np
 
-mask = np.array([[True,  False, True ],
-                 [False, False, True ]])
+mask = [[True,  False, True ],
+                 [False, False, True ]]
 skipped, frac = measure_block_sparsity(mask)
 # skipped == 3,  frac == 0.5
 ```
@@ -68,5 +66,5 @@ mask):
 | `exact_match` | $= 1$ | Student's `skipped_block_count` equals the oracle integer on every case. |
 | `flop_fraction_accuracy` | $\le 1$ | Student's `dense_flop_fraction` has relative error $\le 10^{-9}$ versus the oracle on every case. |
 
-The oracle is computed by NumPy inside the grader itself — no values are
+The oracle is computed by Python inside the grader itself — no values are
 hardcoded.

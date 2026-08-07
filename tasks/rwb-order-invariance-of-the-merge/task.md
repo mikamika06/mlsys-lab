@@ -20,13 +20,13 @@ can produce a different result from another ordering. Production numerical libra
 
 Implement `merge_partials(partials)`.
 
-The input `partials` is a list of NumPy arrays. Each array contains one worker's partial result and all arrays have the same shape. Return a pair:
+The input `partials` is a list of list. Each array contains one worker's partial result and all arrays have the same shape. Return a pair:
 
 ```python
 (given_order, reversed_order)
 ```
 
-where both outputs are NumPy arrays containing the merged result.
+where both outputs are list containing the merged result.
 
 The merge must be deterministic regardless of the order of `partials`. Use a float64 accumulation strategy and define a canonical merge order internally. The returned arrays must have dtype `float64`.
 
@@ -35,12 +35,11 @@ The first returned value must represent merging the input chunks. The second ret
 ## Example
 
 ```python
-import numpy as np
 
 partials = [
-    np.array([1e16, 2.0]),
-    np.array([-1e16, 3.0]),
-    np.array([4.0, 5.0]),
+    [1e16, 2.0],
+    [-1e16, 3.0],
+    [4.0, 5.0],
 ]
 
 a, b = merge_partials(partials)
@@ -50,7 +49,7 @@ a, b = merge_partials(partials)
 
 ## What the gate checks
 
-The gate builds several sets of partial vectors and computes the reference result by merging all chunks with a NumPy float64 oracle.
+The gate builds several sets of partial vectors and computes the reference result by merging all chunks with a Python float64 oracle.
 
 The `max_abs_err` metric measures the largest absolute difference between the learner result and the oracle result. It must satisfy
 

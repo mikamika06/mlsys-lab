@@ -42,16 +42,16 @@ def _nearest(clipped, grid):
 
 
 def _oracle_scale_and_error(x, fmt):
-    x = np.asarray(x, dtype=np.float64)
+    x_arr = np.asarray(x, dtype=np.float64)
     fmax = _FP8_MAX[fmt]
-    amax = float(np.max(np.abs(x)))
+    amax = float(np.max(np.abs(x_arr)))
     if amax == 0.0:
         return 0.0, 0.0
     scale = amax / fmax
-    scaled = np.clip(x / scale, -fmax, fmax)
+    scaled = np.clip(x_arr / scale, -fmax, fmax)
     q = _nearest(scaled, _GRIDS[fmt])
     dequant = q * scale
-    err = float(np.max(np.abs(dequant - x)))
+    err = float(np.max(np.abs(dequant - x_arr)))
     return scale, err
 
 
@@ -65,19 +65,19 @@ def grade(sol, fx) -> dict:
     worst_scale_err = 0.0
     worst_error_err = 0.0
 
-    # a handful of general test tensors (mix of scales / shapes / formats)
     cases = []
     for _ in range(6):
         shape = tuple(int(v) for v in rng.integers(4, 20, size=2))
         scale_factor = float(rng.uniform(0.1, 500.0))
-        x = rng.standard_normal(shape) * scale_factor
+        x_arr = rng.standard_normal(shape) * scale_factor
+        x_list = x_arr.tolist()
         fmt = "e4m3" if rng.random() < 0.5 else "e5m2"
-        cases.append((x, fmt))
+        cases.append((x_arr, x_list, fmt))
 
-    for x, fmt in cases:
-        ref_scale, ref_err = _oracle_scale_and_error(x, fmt)
+    for x_arr, x_list, fmt in cases:
+        ref_scale, ref_err = _oracle_scale_and_error(x_arr, fmt)
         try:
-            got_scale, got_err = sol.optimal_scale_and_error(x.copy(), fmt)
+            got_scale, got_err = sol.optimal_scale_and_error(list(x_list), fmt)
             got_scale = float(got_scale)
             got_err = float(got_err)
         except Exception:
@@ -86,15 +86,14 @@ def grade(sol, fx) -> dict:
         worst_scale_err = max(worst_scale_err, rel_err(np.array([ref_scale]), np.array([got_scale])))
         worst_error_err = max(worst_error_err, rel_err(np.array([ref_err]), np.array([got_err])))
 
-    # ordering check: on WELL-SCALED data (no extreme outliers), the extra
-    # mantissa bit of E4M3 must give it a strictly smaller error than E5M2.
     order_ok = 1.0
     for _ in range(4):
         shape = tuple(int(v) for v in rng.integers(8, 24, size=2))
-        x = _make_well_scaled(rng, shape)
+        x_arr = _make_well_scaled(rng, shape)
+        x_list = x_arr.tolist()
         try:
-            _, e4_err = sol.optimal_scale_and_error(x.copy(), "e4m3")
-            _, e5_err = sol.optimal_scale_and_error(x.copy(), "e5m2")
+            _, e4_err = sol.optimal_scale_and_error(list(x_list), "e4m3")
+            _, e5_err = sol.optimal_scale_and_error(list(x_list), "e5m2")
         except Exception:
             order_ok = 0.0
             break

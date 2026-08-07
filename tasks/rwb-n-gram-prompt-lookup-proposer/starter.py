@@ -1,12 +1,4 @@
-import numpy as np
-
-
-def propose_tokens(
-    context: np.ndarray,
-    prompt_lookup_min: int,
-    prompt_lookup_max: int,
-    num_speculative_tokens: int,
-) -> np.ndarray:
+def propose_tokens(context: list[int], prompt_lookup_min: int, prompt_lookup_max: int, num_speculative_tokens: int) -> list[int]:
     """Longest-suffix-match (n-gram / prompt-lookup) speculative proposer.
 
     Search n-gram length L from prompt_lookup_max down to

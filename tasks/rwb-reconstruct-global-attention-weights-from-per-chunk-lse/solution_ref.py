@@ -1,10 +1,9 @@
 import math
-import numpy as np
 
 
 def reconstruct_global_weights(
-    chunk_scores: np.ndarray, chunk_lse: np.ndarray, chunk_partial_out: np.ndarray
-) -> np.ndarray:
+    chunk_scores: list[list[float]], chunk_lse: list[float], chunk_partial_out: list[list[float]]
+) -> list[float]:
     """
     Reconstruct the global softmax attention weight for every KV token,
     given per-chunk statistics as a chunked/ring-attention worker would
@@ -22,12 +21,12 @@ def reconstruct_global_weights(
         global_lse = logsumexp(chunk_lse)
         w_j = exp(score_j - global_lse)
 
-    Returns the flattened (C * chunk_size,) weight vector, in chunk order.
+    Returns the flattened (C * chunk_size,) weight list, in chunk order.
     """
-    chunk_scores = np.asarray(chunk_scores, dtype=np.float64)
-    chunk_lse = np.asarray(chunk_lse, dtype=np.float64)
+    C = len(chunk_lse)
+    if C == 0:
+        return []
 
-    C = chunk_lse.shape[0]
     global_max = chunk_lse[0]
     for i in range(1, C):
         if chunk_lse[i] > global_max:
@@ -38,10 +37,9 @@ def reconstruct_global_weights(
         sum_exp += math.exp(chunk_lse[i] - global_max)
     global_lse = global_max + math.log(sum_exp)
 
-    C_scores, chunk_size = chunk_scores.shape
-    weights = np.empty((C_scores, chunk_size), dtype=np.float64)
-    for i in range(C_scores):
-        for j in range(chunk_size):
-            weights[i, j] = math.exp(chunk_scores[i, j] - global_lse)
+    weights = []
+    for chunk in chunk_scores:
+        for score in chunk:
+            weights.append(math.exp(score - global_lse))
 
-    return weights.reshape(-1)
+    return weights

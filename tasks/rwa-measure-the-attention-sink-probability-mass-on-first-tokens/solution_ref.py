@@ -1,18 +1,16 @@
 import math
-import numpy as np
 
 
-def attention_sink_mass(logits: np.ndarray, k: int) -> float:
-    x = np.asarray(logits, dtype=np.float64)
-    rows = x.shape[0]
-    cols = x.shape[1]
+def attention_sink_mass(logits: list[list[float]], k: int) -> float:
+    rows = len(logits)
+    cols = len(logits[0])
 
     max_vals = []
     for i in range(rows):
-        m = x[i, 0]
+        m = logits[i][0]
         for j in range(1, cols):
-            if x[i, j] > m:
-                m = x[i, j]
+            if logits[i][j] > m:
+                m = logits[i][j]
         max_vals.append(m)
 
     attn_rows = []
@@ -21,10 +19,10 @@ def attention_sink_mass(logits: np.ndarray, k: int) -> float:
         exp_row = []
         row_sum = 0.0
         for j in range(cols):
-            val = math.exp(x[i, j] - row_max)
+            val = math.exp(logits[i][j] - row_max)
             exp_row.append(val)
             row_sum += val
-        
+
         norm_row = [val / row_sum for val in exp_row]
         attn_rows.append(norm_row)
 

@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def relative_rounding_step(values: np.ndarray, mantissa_bits: int):
+def relative_rounding_step(values: list[float], mantissa_bits: int) -> tuple[float, float]:
     """Derive and empirically verify the max relative rounding error of a
     `mantissa_bits`-mantissa floating-point format.
 

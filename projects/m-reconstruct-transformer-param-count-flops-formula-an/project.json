@@ -1,0 +1,26 @@
+{
+  "id": "m-reconstruct-transformer-param-count-flops-formula-an",
+  "title": "Transformer parameter count, FLOPs formulas, and student design",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Teacher-student architecture design",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "studentdesign/formulas.py",
+    "studentdesign/init_loss.py",
+    "studentdesign/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct transformer param counts, FLOPs, and compression", "check": "harness/m1.py",
+     "gates": [{"metric": "formulas_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Measure day-0 loss for 3 student initialization strategies", "check": "harness/m2.py",
+     "gates": [{"metric": "strategies_matched", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for depth vs width structural invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_invariants", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,7 @@
+Ticket #8412: Accuracy collapse under aggressive low-bit quantization in transformer feed-forward blocks
+
+We have been scaling down our production models using RTN (Round-To-Nearest) and standard GPTQ, but upon pushing weights down to low-bit representations, downstream perplexity degrades sharply on complex reasoning tasks. While standard calibration minimizes local squared error layer-by-layer, the accumulated residual noise severely impacts hidden state trajectories.
+
+Investigation reveals that standard quantization leaves a systematic residual error structured across weight matrix rows and columns. We need to implement a robust low-level module that incorporates rank-r Singular Value Decomposition (SVD) correction of the quantization error. Furthermore, we must compare these approaches against RTN, standard GPTQ, rotation-assisted GPTQ, and learned rounding (AutoRound) styles, ensuring we can systematically choose the optimal EoRA (Error-compensated low-rank Adaptation / Error-constrained Rank Allocation) rank under a strict parameter budget.
+
+Your task is to implement the core modules for rank-r SVD quantization correction, compare the quantization strategies, and implement a parameter-budget-constrained rank allocation mechanism. As a final safeguard, you must write a regression test that fails if the rank allocator violates parameter bounds or rank feasibility constraints.

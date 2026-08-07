@@ -1,0 +1,22 @@
+{
+  "id": "m-route-with-stale-cache-state-quantify-the-penalty",
+  "title": "Route with stale cache state: quantify the penalty",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "cache-aware-routing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["routing/penalty.py", "routing/cost.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute token prefix overlap and staleness metrics", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Quantify routing cost penalty and allocate optimal worker", "check": "harness/m2.py",
+     "gates": [{"metric": "cost_match", "op": "==", "threshold": 1},
+               {"metric": "optimal_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching incorrect penalty functions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_penalty", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "m-recompute-ttft-tpot-itl-e2el-percentiles-from-a-raw-",
+  "title": "Recompute vLLM metrics percentiles and workload arrivals",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "benchmark-harness-and-methodology",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "vllmbench/metrics.py",
+    "vllmbench/arrival.py",
+    "vllmbench/loop.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Recompute exact percentiles from raw JSON traces",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "percentiles_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Poisson arrival generator matching request rate semantics",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "arrival_rate_matched", "op": ">=", "threshold": 0.95}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: open-loop vs closed-loop saturation tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_saturation", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

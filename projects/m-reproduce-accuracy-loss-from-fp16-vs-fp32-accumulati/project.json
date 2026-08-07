@@ -1,0 +1,21 @@
+{
+  "id": "m-reproduce-accuracy-loss-from-fp16-vs-fp32-accumulati",
+  "title": "Reproduce accuracy loss from fp16 vs fp32 accumulation and compare L2 hit-rate",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Matrix multiplication with tl.dot",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["matmul_acc/kernel.py", "matmul_acc/scheduling.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reproduce accuracy loss and control relative error with FP32 accumulation", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.001}]},
+    {"n": 2, "title": "Compare L2 hit-rate between row-major and grouped pid ordering", "check": "harness/m2.py",
+     "gates": [{"metric": "grouped_improvement", "op": ">=", "threshold": 1.2}]},
+    {"n": 3, "title": "Safety net: regression test catches disabled accumulation or bad scheduling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_impl", "op": "==", "threshold": 1}]}
+  ]
+}

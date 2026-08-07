@@ -20,29 +20,23 @@ Both values are useful for debugging and for monitoring numerical stability.
 Implement `measure_sdpa_scale_and_top_logit`:
 
 ```python
-def measure_sdpa_scale_and_top_logit(
-    Q: np.ndarray,
-    K: np.ndarray,
-    *,
-    scale: float | None = None
-) -> tuple[float, float]:
+def measure_sdpa_scale_and_top_logit(Q: list[list[list[list[float]]]], K: list[list[list[list[float]]]], *, scale: float | None=None) -> tuple[float, float]:
     ...
 ```
 
-The function receives two 4‑D NumPy arrays `Q` and `K`. If `scale` is `None`, the default $1/\sqrt{d_k}$ must be used; otherwise the supplied value should be applied. The function returns a tuple `(used_scale, top_logit)` where:
+The function receives two 4‑D list `Q` and `K`. If `scale` is `None`, the default $1/\sqrt{d_k}$ must be used; otherwise the supplied value should be applied. The function returns a tuple `(used_scale, top_logit)` where:
 
 - `used_scale` is the floating‑point scale that was actually applied.
 - `top_logit` is the maximum pre‑softmax logit over all batch, head, query and key positions.
 
-The implementation must use only NumPy operations; no explicit Python loops are allowed. The result should be computed in double precision (`float64`).
+The implementation must use only Python operations; no explicit Python loops are allowed. The result should be computed in double precision (`float64`).
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.random.randn(2, 4, 5, 16).astype(np.float64)
-K = np.random.randn(2, 4, 7, 16).astype(np.float64)
+Q = [[[[float(0.0) for _ in range(16)] for _ in range(5)] for _ in range(4)] for _ in range(2)]
+K = [[[[float(0.0) for _ in range(16)] for _ in range(7)] for _ in range(4)] for _ in range(2)]
 
 scale, top_logit = measure_sdpa_scale_and_top_logit(Q, K)
 print(scale)      # ≈ 0.25 (since 1/√16 = 0.25)
@@ -53,7 +47,7 @@ print(top_logit)  # a scalar value depending on the random data
 
 Two metrics are evaluated:
 
-- `scale_rel_err`: The relative error between the returned scale and the reference value computed by NumPy, must satisfy  
+- `scale_rel_err`: The relative error between the returned scale and the reference value computed by Python, must satisfy  
   $$\frac{|\,\text{returned} - \text{reference}\,|}{|\text{reference}|}\le 10^{-6}.$$
 
 - `logit_rel_err`: The relative error of the top logit, with the same tolerance.

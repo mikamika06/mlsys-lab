@@ -1,0 +1,22 @@
+{
+  "id": "m-register-torch-op-for-a-missing-operator",
+  "title": "Register missing torch operator and audit conv-BN fusion deltas",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "MIL: Core ML's intermediate language and graph passes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["milpass/register.py", "milpass/fusion.py", "milpass/audit.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Register missing torch operator", "check": "harness/m1.py",
+     "gates": [{"metric": "reg_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Conv-BN fusion op count delta", "check": "harness/m2.py",
+     "gates": [{"metric": "delta_matched", "op": "==", "threshold": 1},
+               {"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Identify which pass changed the numbers", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

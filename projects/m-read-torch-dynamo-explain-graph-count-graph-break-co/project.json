@@ -1,0 +1,44 @@
+{
+  "id": "m-read-torch-dynamo-explain-graph-count-graph-break-co",
+  "title": "TorchDynamo graph break analysis and remediation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TorchDynamo bytecode tracing & graph breaks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "dynamotrace/analyzer.py",
+    "dynamotrace/rewrite.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analyze graph counts and break counts",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "explain_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Locate graph break sources and measure latency penalty",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "latency_ratio_valid", "op": "==", "threshold": 1},
+        {"metric": "rewrite_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test checking graph break constraints",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_rewrite", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

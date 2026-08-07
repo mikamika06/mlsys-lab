@@ -1,0 +1,21 @@
+{
+  "id": "m-reproduce-a-missed-last-microbatch-sync-bug",
+  "title": "Missed last-microbatch sync bug and reduce cost model",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP mixed precision, gradient accumulation & no_sync semantics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["syncbug/sim.py", "syncbug/bench.py", "syncbug/breakeven.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reproduce the missed last-microbatch gradient sync", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 2, "title": "fp32 vs bf16 reduce wall-time ratio model", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: test for last-microbatch sync correctness", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_sync", "op": "==", "threshold": 1}]}
+  ]
+}

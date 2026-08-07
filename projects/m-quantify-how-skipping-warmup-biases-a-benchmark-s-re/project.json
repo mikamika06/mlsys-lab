@@ -1,0 +1,22 @@
+{
+  "id": "m-quantify-how-skipping-warmup-biases-a-benchmark-s-re",
+  "title": "Quantify how skipping warmup biases a benchmark",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Comparative benchmarking: MLX vs PyTorch-MPS vs llama.cpp",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["bench/measure.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure the warmup bias", "check": "harness/m1.py",
+     "gates": [{"metric": "steady_err", "op": "<=", "threshold": 0.001},
+               {"metric": "bias_err", "op": "<=", "threshold": 0.001}]},
+    {"n": 2, "title": "Sequence-length matched comparison", "check": "harness/m2.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 4}]},
+    {"n": 3, "title": "Safeguard: tests must catch broken warmup logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_warmup", "op": "==", "threshold": 1}]}
+  ]
+}

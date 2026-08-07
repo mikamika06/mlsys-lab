@@ -1,8 +1,4 @@
-import io
-import numpy as np
+import math
 
-def serialize_kv(K: np.ndarray, V: np.ndarray) -> bytes:
-    raise NotImplementedError('your code here')
-
-def decode_from_kv(Q: np.ndarray, payload: bytes) -> np.ndarray:
+def serialize_kv(K: list[list[float]], V: list[list[float]]) -> bytes:
     raise NotImplementedError('your code here')

@@ -29,7 +29,7 @@ If no $L \in [L_{\min}, L_{\max}]$ has any match, the proposal is empty.
 Implement `propose_tokens`:
 
 ```python
-def propose_tokens(context: np.ndarray, prompt_lookup_min: int, prompt_lookup_max: int, num_speculative_tokens: int) -> np.ndarray:
+def propose_tokens(context: list[int], prompt_lookup_min: int, prompt_lookup_max: int, num_speculative_tokens: int) -> list[int]:
     ...
 ```
 
@@ -44,8 +44,7 @@ $k$), per the longest-match, most-recent-occurrence rule above.
 ## Example
 
 ```python
-import numpy as np
-context = np.array([5, 1, 2, 3, 9, 9, 1, 2, 3])
+context = [5, 1, 2, 3, 9, 9, 1, 2, 3]
 propose_tokens(context, prompt_lookup_min=2, prompt_lookup_max=4, num_speculative_tokens=2)
 # suffix [1,2,3] (L=3) matches context[1:4]; that occurrence is followed by
 # [9, 9] -> proposal = [9, 9]

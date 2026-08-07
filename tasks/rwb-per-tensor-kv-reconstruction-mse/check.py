@@ -48,7 +48,7 @@ def grade(sol, fx) -> dict:
     for K, V in cases:
         ref_k, ref_v = _oracle(K, V)
         try:
-            got = sol.kv_fp8_reconstruction_mse(K.copy(), V.copy())
+            got = sol.kv_fp8_reconstruction_mse(K.tolist(), V.tolist())
             got_k = float(got["mse_k"])
             got_v = float(got["mse_v"])
         except Exception:

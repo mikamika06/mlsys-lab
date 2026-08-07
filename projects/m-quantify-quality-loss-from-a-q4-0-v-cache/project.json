@@ -1,0 +1,44 @@
+{
+  "id": "m-quantify-quality-loss-from-a-q4-0-v-cache",
+  "title": "Quantify quality loss from a q4_0 V cache",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "kv-cache-and-quantized-cache",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "vcache/slot_memory.py",
+    "vcache/quant_eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parallel slots KV cache size modeling",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "slots_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantification of q4_0 V cache quality loss",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "q4_err_matched", "op": ">=", "threshold": 4},
+        {"metric": "rel_err", "op": "<=", "threshold": 0.05}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches unquantized fallback",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unquantized_fallback", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

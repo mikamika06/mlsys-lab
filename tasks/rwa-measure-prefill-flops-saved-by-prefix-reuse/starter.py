@@ -1,9 +1,4 @@
-import numpy as np
-
-
-def prefill_flops_saved_fraction(
-    lengths: np.ndarray, reused_prefix: np.ndarray
-) -> float:
+def prefill_flops_saved_fraction(lengths: list[float], reused_prefix: list[float]) -> float:
     """
     lengths: (n,) full context length L_i of each request in the batch.
     reused_prefix: (n,) number of leading tokens of request i whose KV is

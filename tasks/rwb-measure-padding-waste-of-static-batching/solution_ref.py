@@ -1,11 +1,8 @@
-import numpy as np
-
-
-def padding_waste_fraction(lens: np.ndarray, batch_ids: np.ndarray) -> float:
+def padding_waste_fraction(lens: list[int], batch_ids: list[int]) -> float:
     """
-    lens      : 1-D int array, total (prompt + generation) token length of
+    lens      : list of ints, total (prompt + generation) token length of
                 each request.
-    batch_ids : 1-D int array, same length as `lens`; batch_ids[i] is the
+    batch_ids : list of ints, same length as `lens`; batch_ids[i] is the
                 STATIC batch request i was assigned to (static batching pads
                 every request in a batch out to that batch's longest member).
 
@@ -16,12 +13,11 @@ def padding_waste_fraction(lens: np.ndarray, batch_ids: np.ndarray) -> float:
 
         wasted_fraction = sum_b [max(L_b)*|L_b| - sum(L_b)] / sum_b [max(L_b)*|L_b|]
     """
-    lens = np.asarray(lens, dtype=np.float64)
-    batch_ids = np.asarray(batch_ids)
+    float_lens = [float(x) for x in lens]
 
     unique_batches = []
     i = 0
-    while i < batch_ids.shape[0]:
+    while i < len(batch_ids):
         val = batch_ids[i]
         found = False
         j = 0
@@ -36,16 +32,16 @@ def padding_waste_fraction(lens: np.ndarray, batch_ids: np.ndarray) -> float:
 
     total_slots = 0.0
     total_wasted = 0.0
-    
+
     b_idx = 0
     while b_idx < len(unique_batches):
         b = unique_batches[b_idx]
-        
+
         batch_lens_list = []
         k = 0
-        while k < batch_ids.shape[0]:
+        while k < len(batch_ids):
             if batch_ids[k] == b:
-                batch_lens_list.append(lens[k])
+                batch_lens_list.append(float_lens[k])
             k += 1
 
         max_len = 0.0
@@ -58,7 +54,7 @@ def padding_waste_fraction(lens: np.ndarray, batch_ids: np.ndarray) -> float:
                 m += 1
 
         batch_size = float(len(batch_lens_list))
-        
+
         sum_lens = 0.0
         m = 0
         while m < len(batch_lens_list):

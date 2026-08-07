@@ -1,0 +1,40 @@
+{
+  "id": "m-reconstruct-loftq-s-svd-residual-adapter-initializat",
+  "title": "Reconstruct LoftQ SVD-residual adapter initialization and DoRA mechanics",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "advanced-adapters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "loftq/residual.py",
+    "loftq/dora.py",
+    "loftq/params.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "LoftQ SVD-residual adapter initialization",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "residual_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "DoRA real forward computation verification",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "forward_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Trainable parameter delta and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_wrong_delta", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

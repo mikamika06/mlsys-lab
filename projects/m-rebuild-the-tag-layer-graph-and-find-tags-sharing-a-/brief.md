@@ -1,0 +1,6 @@
+# Ticket: Local Blob Store Tag Graph and Duplicate Weight Reporting Discrepancies
+
+## Symptom
+The local runner blob store diagnostic tool is currently reporting incorrect disk usage and failing to accurately trace dependencies when multiple model tags share identical weight blobs. Specifically, operators running storage audits have noticed that executing an `ollama cp` operation causes the storage calculator to incorrectly allocate duplicate disk space for the copied tag, doubling the reported footprint of identical model weights. Furthermore, when parsing complex OCI-compliant model manifests, the extraction layer fails to consistently report standardized media types, content digests, and individual layer sizes, leading to silent failures in upstream layer deduplication pipelines.
+
+Engineers attempting to query which tags share specific weight layers across local repositories receive incomplete or empty cross-reference maps. This causes automated cleanup scripts to mistakenly flag shared base model weights as orphan blobs, risking accidental deletion of active model layers in local caches. We need a robust manifest parser, a precise tag-to-layer graph builder that correctly identifies shared weight blobs, and a verification module confirming that `ollama cp` operations consume zero additional weights bytes on disk.

@@ -13,18 +13,17 @@ The ratio $\frac{p_i}{q_i}$ is interpreted as an importance weight; it is capped
 Implement `classify_accept(u, p, q)`:
 
 ```python
-def classify_accept(u: float, p: np.ndarray, q: np.ndarray) -> np.ndarray:
+def classify_accept(u: float, p: list[float], q: list[float]) -> list[bool]:
     ...
 ```
 
-The function receives a scalar threshold `u`, and two 1‑D NumPy arrays of equal length. It must return a boolean array of shape `(len(p),)` where each element is `True` if the corresponding token should be accepted according to the rule above, otherwise `False`. The implementation must use only vectorised NumPy operations; no explicit Python loops are allowed.
+The function receives a scalar threshold `u`, and two 1‑D list of equal length. It must return a boolean array of shape `(len(p),)` where each element is `True` if the corresponding token should be accepted according to the rule above, otherwise `False`. The implementation must use only vectorised Python operations; no explicit Python loops are allowed.
 
 ## Example
 
 ```python
-import numpy as np
-p = np.array([0.5, 1.2])
-q = np.array([1.0, 0.8])
+p = [0.5, 1.2]
+q = [1.0, 0.8]
 u = 0.6
 accept = classify_accept(u, p, q)
 print(accept)          # [False  True]
@@ -32,4 +31,4 @@ print(accept)          # [False  True]
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares your output element‑wise with `np.array_equal`. The test suite includes deterministic edge cases (zero denominators, ratios larger than one, thresholds outside $[0,1]$) as well as random samples. Your solution must match the reference exactly for all tests; otherwise the gate fails.
+The grader computes a reference implementation using Python and compares your output element‑wise with `==`. The test suite includes deterministic edge cases (zero denominators, ratios larger than one, thresholds outside $[0,1]$) as well as random samples. Your solution must match the reference exactly for all tests; otherwise the gate fails.

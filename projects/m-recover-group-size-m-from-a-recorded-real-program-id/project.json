@@ -1,0 +1,21 @@
+{
+  "id": "m-recover-group-size-m-from-a-recorded-real-program-id",
+  "title": "Recover GROUP_SIZE_M from a recorded real program-id trace",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "L2-cache-aware program-ID scheduling (grouped ordering)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["grouptrace/parser.py", "grouptrace/recover.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse trace and extract grid dimensions", "check": "harness/m1.py",
+     "gates": [{"metric": "dimensions_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Recover GROUP_SIZE_M from trace", "check": "harness/m2.py",
+     "gates": [{"metric": "group_size_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for edge cases", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_recovery", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -33,14 +33,17 @@ def grade(sol, fx) -> dict:
     ]
 
     worst = 0.0
-    for Q, K, V in cases:
+    for Q_arr, K_arr, V_arr in cases:
         try:
-            payload = sol.serialize_kv(K.astype(np.float32), V.astype(np.float32))
-            got = sol.decode_from_kv(Q.astype(np.float32), payload)
+            Q_list = Q_arr.tolist()
+            K_list = K_arr.tolist()
+            V_list = V_arr.tolist()
+            payload = sol.serialize_kv(K_list, V_list)
+            got = sol.decode_from_kv(Q_list, payload)
         except Exception:
             return {"max_abs_err": float("inf")}
 
-        ref = _oracle_attention(Q, K, V)
+        ref = _oracle_attention(Q_arr, K_arr, V_arr)
         err = float(np.max(np.abs(np.asarray(got, dtype=np.float64) - ref)))
         worst = max(worst, err)
 

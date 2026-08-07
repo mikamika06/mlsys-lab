@@ -18,18 +18,18 @@ $$
 $$
 where $\mathbf{1}_{\cdot}$ is the indicator function.  This quantity lies in $[0,1]$ and measures how often the system is busy.
 
-The task below asks you to compute both $\mathcal{T}_{\text{agg}}$ and $\mathcal{T}_{\text{ss}}$ from a NumPy array trace without using explicit Python loops.
+The task below asks you to compute both $\mathcal{T}_{\text{agg}}$ and $\mathcal{T}_{\text{ss}}$ from a list trace without using explicit Python loops.
 
 ## Task
 
 Implement the function `throughput(trace)`:
 
 ```python
-def throughput(trace: np.ndarray) -> np.ndarray:
+def throughput(trace: list[list[int]]) -> list[float]:
     ...
 ```
 
-* `trace` is a 2‑D integer NumPy array of shape `(S, N)` with entries in `{0,1}`.  
+* `trace` is a 2‑D integer list of shape `(S, N)` with entries in `{0,1}`.  
 * The function must return a one‑dimensional float64 array `[agg, single]` where
   * `agg`   = $\mathcal{T}_{\text{agg}}$,
   * `single`= $\mathcal{T}_{\text{ss}}$.
@@ -39,10 +39,9 @@ The implementation should be fully vectorized; no Python `for` loops are allowed
 ## Example
 
 ```python
-import numpy as np
-trace = np.array([[1,0,0],
+trace = [[1,0,0],
                   [1,1,0],
-                  [0,0,0]])
+                  [0,0,0]]
 # tokens per step: [1, 2, 0]
 # aggregate throughput: (1+2+0)/3 = 1.0
 # single‑stream rate:   (1 + 1 + 0)/3 = 0.666...
@@ -52,7 +51,7 @@ print(out)          # array([1.        , 0.66666667])
 
 ## What the gate checks
 
-The grader computes a NumPy reference implementation and compares your output with it using the global relative L2 error
+The grader computes a Python reference implementation and compares your output with it using the global relative L2 error
 $$
 \mathrm{rel\_err}=\frac{\lVert \hat y - y\rVert}{\lVert y\rVert}\,.
 $$

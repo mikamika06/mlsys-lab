@@ -1,0 +1,7 @@
+Ticket: Production Latency Anomalies under Ray Serve Dynamic Batching
+
+We have observed intermittent tail-latency spikes and unpredictable throughput drops in our production Ray Serve deployments that utilize the `@serve.batch` decorator. Our current monitoring dashboards capture fine-grained client request arrival timestamps, but we lack internal visibility into how individual requests are actually grouped into execution batches by the Ray Serve runtime handle.
+
+When traffic surges or dips, the interplay between `max_batch_size` and `batch_wait_timeout_s` leads to subtle chunking anomalies where requests that arrived closely together end up split across adjacent execution windows or delayed past expected SLA thresholds. Furthermore, our capacity-planning team is struggling to tune `max_concurrent_batches`. Increasing concurrency sometimes degrades downstream GPU cache locality and inflates queue wait times, but we lack a deterministic way to model or measure these completion time tradeoffs offline using historical arrival traces.
+
+We need a dedicated analysis toolkit embedded in our batching infrastructure to reconstruct exact dispatch boundaries purely from historical arrival timestamps and configuration parameters, and to quantify the precise impact of varying concurrency limits on overall completion times. Without this, we cannot reliably optimize our serving pipelines or guarantee predictable latency profiles under high load.

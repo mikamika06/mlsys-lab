@@ -1,0 +1,22 @@
+{
+  "id": "m-rewrite-multi-head-attention-to-the-ane-friendly-b-c",
+  "title": "Rewrite multi-head attention to the ANE-friendly (B,C,1,S) layout",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "ANE-friendly transformer layout patterns (ml-ane-transformers)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["aneattn/layout.py", "aneattn/convert.py", "aneattn/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Rewrite multi-head attention to the ANE-friendly layout", "check": "harness/m1.py",
+     "gates": [{"metric": "layouts_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Measure CPU and NE latency delta and op counts", "check": "harness/m2.py",
+     "gates": [{"metric": "latency_improved", "op": "==", "threshold": 1},
+               {"metric": "ops_reduced", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches layout regression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_layout", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,14 +1,38 @@
-import numpy as np
+import math
 
 
 def scaled_dot_product_attention(q, k, v):
-    q = np.asarray(q, dtype=np.float64)
-    k = np.asarray(k, dtype=np.float64)
-    v = np.asarray(v, dtype=np.float64)
+    n = len(q)
+    d = len(q[0])
+    m = len(k)
+    dv = len(v[0])
 
-    d = q.shape[1]
-    logits = (q @ k.T) / np.sqrt(d)
-    logits = logits - np.max(logits, axis=1, keepdims=True)
-    weights = np.exp(logits)
-    weights = weights / np.sum(weights, axis=1, keepdims=True)
-    return weights @ v
+    scale = math.sqrt(d)
+    logits = []
+    for i in range(n):
+        row = []
+        for j in range(m):
+            dot = 0.0
+            for l in range(d):
+                dot += q[i][l] * k[j][l]
+            row.append(dot / scale)
+        logits.append(row)
+
+    weights = []
+    for i in range(n):
+        max_val = max(logits[i])
+        exps = [math.exp(val - max_val) for val in logits[i]]
+        sum_exps = sum(exps)
+        weights.append([e / sum_exps for e in exps])
+
+    output = []
+    for i in range(n):
+        row = []
+        for j in range(dv):
+            val = 0.0
+            for l in range(m):
+                val += weights[i][l] * v[l][j]
+            row.append(val)
+        output.append(row)
+
+    return output

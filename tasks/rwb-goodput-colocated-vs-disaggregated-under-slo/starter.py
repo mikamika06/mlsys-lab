@@ -1,12 +1,4 @@
-import numpy as np
-
-PREFILL_THROUGHPUT = 8000.0
-DECODE_RATE = 40.0
-INTERFERENCE_FACTOR = 3.0
-TRANSFER_LATENCY = 0.04
-
-
-def goodput_colocated_vs_disaggregated(arrival, prompt_len, output_len, ttft_slo, itl_slo):
+def goodput_colocated_vs_disaggregated(arrival: list[float], prompt_len: list[float], output_len: list[float], ttft_slo: list[float], itl_slo: list[float]) -> tuple[int, int]:
     """
     Return (goodput_colocated, goodput_disaggregated): the count of requests
     that meet BOTH their TTFT and ITL SLO under each serving architecture.

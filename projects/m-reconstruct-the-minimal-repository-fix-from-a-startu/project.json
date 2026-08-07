@@ -1,0 +1,21 @@
+{
+  "id": "m-reconstruct-the-minimal-repository-fix-from-a-startu",
+  "title": "Reconstruct Triton repository fix and detect platform mismatch",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Triton Model Repository & Versioning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tritonfix/reconstruct.py", "tritonfix/detect.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct minimal repository fix from startup log", "check": "harness/m1.py",
+     "gates": [{"metric": "exact_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Detect backend and platform mismatch from files", "check": "harness/m2.py",
+     "gates": [{"metric": "mismatches_detected", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: regression test catching repository errors", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_repo", "op": "==", "threshold": 1}]}
+  ]
+}

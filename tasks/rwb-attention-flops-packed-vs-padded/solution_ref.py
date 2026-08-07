@@ -1,9 +1,6 @@
-import numpy as np
-
-
-def attention_flops(lens: np.ndarray, head_dim: int, num_heads: int) -> tuple[int, int]:
+def attention_flops(lens: list[int], head_dim: int, num_heads: int) -> tuple[int, int]:
     """
-    lens      : 1-D int array, per-sequence token counts in a prefill batch.
+    lens      : list of integers, per-sequence token counts in a prefill batch.
     head_dim  : dimension per attention head.
     num_heads : number of attention heads.
 
@@ -25,13 +22,12 @@ def attention_flops(lens: np.ndarray, head_dim: int, num_heads: int) -> tuple[in
 
     Returns (packed_flops, padded_flops) as plain Python ints.
     """
-    lens_list = [int(v) for v in np.asarray(lens).tolist()]
     c = 4 * int(head_dim) * int(num_heads)
 
-    packed_flops = c * sum(n * n for n in lens_list)
+    packed_flops = c * sum(n * n for n in lens)
 
-    batch = len(lens_list)
-    max_len = max(lens_list)
+    batch = len(lens)
+    max_len = max(lens)
     padded_flops = c * batch * max_len * max_len
 
     return packed_flops, padded_flops

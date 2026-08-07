@@ -35,11 +35,11 @@ position.
 Implement `modified_rejection_sample(p, q, draft_token_ids, u_stream)`:
 
 ```python
-def modified_rejection_sample(p, q, draft_token_ids, u_stream):
+def modified_rejection_sample(p: list[list[float]], q: list[list[float]], draft_token_ids: list[int], u_stream: list[float]) -> list[int]:
     ...
 ```
 
-- `p`, `q`: NumPy arrays of shape $(T, V)$ — target and draft
+- `p`, `q`: list of shape $(T, V)$ — target and draft
   distributions for each of $T$ positions, each row summing to $1$.
 - `draft_token_ids`: integer array of shape $(T,)$, the drafted token id
   at each position.
@@ -58,10 +58,10 @@ For every position $t = 0, \dots, T-1$, in order:
 3. Otherwise, pop the next value from `u_stream` as `u_resample`, build
    $r_t$ from `p[t]` and `q[t]` as above, and emit the residual sample:
    the smallest index whose cumulative sum of $r_t$ is `>= u_resample`
-   (`np.searchsorted(np.cumsum(r_t), u_resample, side="left")`, clipped
+(`bisect.bisect_left([sum(r_t[:i+1]) for i in range(len(r_t))], u_resample)`, clipped
    to a valid index).
 
-Return an integer NumPy array of shape $(T,)$: the emitted token id at
+Return an integer list of shape $(T,)$: the emitted token id at
 each position.
 
 ## Example

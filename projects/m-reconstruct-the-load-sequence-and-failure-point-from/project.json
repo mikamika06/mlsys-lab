@@ -1,0 +1,21 @@
+{
+  "id": "m-reconstruct-the-load-sequence-and-failure-point-from",
+  "title": "Reconstruct load sequence, missing assets, and CPU fallback from logs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "troubleshooting-taxonomy",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["runner/parser.py", "runner/diagnostics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct load sequence and failure point", "check": "harness/m1.py",
+     "gates": [{"metric": "sequence_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Distinguish missing model from missing manifest", "check": "harness/m2.py",
+     "gates": [{"metric": "classification_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Detect silent CPU fallback", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_silent_fallback", "op": "==", "threshold": 1}]}
+  ]
+}

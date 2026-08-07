@@ -1,5 +1,5 @@
-import numpy as np
+import math
 
 def decoupled_rope_score(q_lat, k_lat, q_rope, k_rope):
     """Concatenate latent and rope-head, then scaled dot-product + softmax."""
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')

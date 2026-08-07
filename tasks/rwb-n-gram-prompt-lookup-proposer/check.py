@@ -1,8 +1,4 @@
-import numpy as np
-
-
 def _oracle_propose(context, lo, hi, k):
-    context = np.asarray(context)
     n = len(context)
     for L in range(hi, lo - 1, -1):
         if L <= 0 or L > n:
@@ -11,12 +7,12 @@ def _oracle_propose(context, lo, hi, k):
         best_i = -1
         max_i = n - 2 * L
         for i in range(0, max_i + 1):
-            if np.array_equal(context[i:i + L], suffix):
+            if context[i:i + L] == suffix:
                 best_i = i  # keep scanning forward -> ends on the rightmost match
         if best_i >= 0:
             start = best_i + L
             return context[start:start + k]
-    return np.array([], dtype=context.dtype)
+    return []
 
 
 def _cases(sequence):
@@ -30,17 +26,17 @@ def _cases(sequence):
 
 
 def grade(sol, fx) -> dict:
-    sequence = np.asarray(fx["sequence"], dtype=np.int64)
+    sequence = list(map(int, fx["sequence"]))
 
     ok = 1.0
     for context, lo, hi, k in _cases(sequence):
         expected = _oracle_propose(context, lo, hi, k)
         try:
-            got = np.asarray(sol.propose_tokens(context.copy(), lo, hi, k), dtype=np.int64)
+            got = sol.propose_tokens(list(context), lo, hi, k)
         except Exception:
             ok = 0.0
             break
-        if got.shape != expected.shape or not np.array_equal(got, expected):
+        if got != expected:
             ok = 0.0
             break
 

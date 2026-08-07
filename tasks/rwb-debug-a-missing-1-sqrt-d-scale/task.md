@@ -32,13 +32,11 @@ outputs.
 Implement `scaled_dot_product_attention(q, k, v)`:
 
 ```python
-def scaled_dot_product_attention(q: np.ndarray,
-                                 k: np.ndarray,
-                                 v: np.ndarray) -> np.ndarray:
+def scaled_dot_product_attention(q, k, v):
     ...
 ```
 
-The inputs are two-dimensional NumPy arrays:
+The inputs are list of lists of floats:
 
 - `q` has shape $(n, d)$.
 - `k` has shape $(m, d)$.
@@ -51,11 +49,10 @@ The implementation must apply the scale factor $1/\sqrt{d}$ before softmax. Use 
 ## Example
 
 ```python
-import numpy as np
 
-q = np.array([[1.0, 0.0]])
-k = np.array([[1.0, 0.0], [0.0, 1.0]])
-v = np.array([[2.0, 0.0], [0.0, 3.0]])
+q = [[1.0, 0.0]]
+k = [[1.0, 0.0], [0.0, 1.0]]
+v = [[2.0, 0.0], [0.0, 3.0]]
 
 out = scaled_dot_product_attention(q, k, v)
 ```
@@ -65,7 +62,7 @@ combination because softmax is applied to scaled logits.
 
 ## What the gate checks
 
-The gate computes a NumPy float64 oracle implementation of scaled dot-product
+The gate computes a Python float64 oracle implementation of scaled dot-product
 attention and compares the candidate output using maximum absolute error:
 
 $$
