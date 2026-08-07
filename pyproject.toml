@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mlsys-lab"
-version = "0.3.0"
-description = "Auto-graded exercises in low-level ML systems: mostly Python, with real C++ via clang++ and real CUDA-C on a software GPU"
+version = "0.4.0"
+description = "Auto-graded exercises in low-level ML systems: 2,053 short tasks and 1,251 multi-file projects, mostly Python, with real C++ via clang++ and real CUDA-C on a software GPU"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }

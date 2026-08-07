@@ -1,7 +1,0 @@
-# INT8 Engine Loses Accuracy
-
-We recently quantized our core production model from FP16 to INT8 to accelerate inference on our target edge accelerator, expecting a minor, acceptable degradation in evaluation accuracy. However, post-quantization validation results indicate a severe drop: top-1 accuracy has degraded by 4%, whereas our maximum acceptable production threshold is 1% loss compared to the FP16 baseline.
-
-Our current inference latency has dropped significantly, confirming that the INT8 kernel execution path is functioning efficiently, but the global quantization approach is overly naive and degrades critical layers. We suspect that uniformly applying quantization without protecting sensitive activations or weights is causing catastrophic error propagation through specific attention and projection submodules. Furthermore, the default calibration dataset being utilized does not adequately represent our real-world inference distribution, leading to suboptimal scale and zero-point parameters.
-
-Your objective is to systematically diagnose and remediate this accuracy loss while preserving at least 70% of the achieved hardware acceleration speedup. You need to build a modular post-training quantization analysis pipeline that performs layer-wise sensitivity profiling, correctly inserts Quantize (Q) and Dequantize (DQ) nodes in appropriate graph locations, integrates a representative calibration dataset, and establishes a robust automated regression test suite to ensure future iterations maintain stability.

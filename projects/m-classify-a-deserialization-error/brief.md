@@ -1,8 +1,0 @@
-Production GPU worker nodes are failing unexpectedly during model deployment when deserializing compiled TensorRT `.plan` binary artifacts across heterogeneous cluster pools. Worker instances equipped with different GPU architectures (e.g., Ampere SM 80 vs. Hopper SM 90) or running slight minor runtime updates log generic runtime initialization crashes during engine deserialization. In other instances, model loading succeeds but inferencing suffers severe, unmonitored throughput degradation due to hidden fallback paths.
-
-Deployment pipelines currently transfer multi-gigabyte engine binaries across the network before discovering that a target host cannot load the engine or will incur an execution penalty. The serving platform requires a lightweight header inspection tool and compatibility classification module to analyze serialized `.plan` binary headers before engine deserialization is attempted.
-
-Your task is to implement `trtplan`:
-1. Implement `parse_plan_header` in `trtplan/parser.py` to parse binary `.plan` header structures, validating magic signatures, checksums, TensorRT version tuples, CUDA target compute capabilities (SM arch), platform IDs, and hardware compatibility flags.
-2. Implement `classify_engine` in `trtplan/classifier.py` to evaluate parsed plan metadata against host runtime environments, identifying exact failure modes (`CORRUPTED_HEADER`, `PLATFORM_MISMATCH`, `VERSION_MISMATCH`, `INCOMPATIBLE_HARDWARE`) or computing execution performance penalty factors when running in hardware-compatible mode.
-3. Write a regression test suite in `tests/test_regression.py` that verifies hardware compatibility penalty calculations under architecture mismatches.
