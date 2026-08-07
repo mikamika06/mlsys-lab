@@ -1,0 +1,142 @@
+{
+  "id": "p-quantize-under-an-accuracy-floor",
+  "title": "Квантизувати під поріг точності",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "rw2-quant-libs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/eval.py",
+    "quant/calib.py",
+    "quant/recipes.py",
+    "quant/sensitivity.py",
+    "quant/pipeline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зібрати власний eval, якому можна вірити",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "eval_accuracy_matches_ref",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "eval_runs_cleanly",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "калібрувальний набір і його вплив",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "scale_error_below_threshold",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "calib_size_sensitivity_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "порівняти рецепти на однакових умовах",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "int8_compression_matches",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "int4_compression_matches",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "recipe_eval_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "знайти чутливі шари і змішати точність",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "sensitivity_ranks_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "mixed_precision_config_valid",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "поріг витримано, розмір досягнуто",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "size_reduction_ratio",
+          "op": ">=",
+          "threshold": 2.0
+        },
+        {
+          "metric": "accuracy_loss_within_floor",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт відтворюється на іншій моделі",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_sensitivity",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_mixed_prec",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

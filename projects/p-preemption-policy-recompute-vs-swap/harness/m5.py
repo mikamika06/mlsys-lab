@@ -1,16 +1,23 @@
+import ref
+
 def check(workdir):
-    import ref
-    m = {"p99_improved": 0.0}
+    out = {"p99_reduced": 0.0}
     try:
-        trace = {0: [{"prompt": list(range(500)), "total_len": 20} for _ in range(10)]}
-        s_base = ref.PreemptionScheduler({"max_running": 2, "mode": "recompute"})
-        lat_base = s_base.run_trace(trace)
+        from policy.policy import PreemptionPolicy
+        p = PreemptionPolicy(1000.0, 100000.0, 250.0, 2.0, 0.1)
+        trace = ref.generate_trace(1000, 42)
 
-        s_adapt = ref.PreemptionScheduler({"max_running": 2, "mode": "adaptive"})
-        lat_adapt = s_adapt.run_trace(trace)
+        smart_lats = p.evaluate_trace(trace, "smart")
+        recomp_lats = p.evaluate_trace(trace, "recompute")
+        swap_lats = p.evaluate_trace(trace, "swap")
 
-        if len(lat_base) > 0 and len(lat_adapt) > 0:
-            m["p99_improved"] = 1.0
+        smart_p99 = ref.p99(smart_lats)
+        recomp_p99 = ref.p99(recomp_lats)
+        swap_p99 = ref.p99(swap_lats)
+
+        if smart_p99 <= recomp_p99 and smart_p99 <= swap_p99 and smart_p99 < max(recomp_p99, swap_p99):
+            out["p99_reduced"] = 1.0
+
+        return out
     except Exception:
-        pass
-    return m
+        return out

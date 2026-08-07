@@ -1,0 +1,98 @@
+{
+  "id": "p-ring-attention-load-balance",
+  "title": "Кільцева увага з перекосом",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "ring-attention-load-balance",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "ring_attn/balancer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "показати перекіс роботи по кроках",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "imbalance_detected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перебудувати розподіл",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rebalanced",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірити еквівалентність виходу",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "equivalent",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти утилізацію до і після",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "utilization_improved",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "перекіс нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "below_threshold",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "масштабування передбачається формулою",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

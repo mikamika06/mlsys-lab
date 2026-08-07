@@ -1,0 +1,160 @@
+{
+  "id": "p-prune-then-heal",
+  "title": "Recovery after pruning",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "prune-then-heal",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "heal/mask.py",
+    "heal/pruner.py",
+    "heal/trainer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Record baseline after pruning",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "mask_created",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "sparsity_target_met",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "baseline_captured",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Select fine-tuning step budget",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "trainer_initialized",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "budget_configured",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "budget_enforced",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Verify sparsity mask is preserved during healing",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "grad_masking_active",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "sparsity_strictly_preserved",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "mask_reapplied_after_step",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Measure recovery trajectory during fine-tuning",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "history_length_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "loss_decreases",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "trajectory_smooth",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Recover at least X fraction of lost accuracy",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "healing_completed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "recovered_accuracy_ratio",
+          "op": ">=",
+          "threshold": 0.7
+        },
+        {
+          "metric": "final_acc_above_threshold",
+          "op": ">=",
+          "threshold": 0.8
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Verify fine-tuning budget and regression safety",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_unmasked_gradient",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_budget_overrun",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

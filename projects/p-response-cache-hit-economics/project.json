@@ -1,0 +1,125 @@
+{
+  "id": "p-response-cache-hit-economics",
+  "title": "Чи вигідний кеш відповідей",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "response-cache-economics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "cache/analyzer.py",
+    "cache/economics.py",
+    "cache/eviction.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти повторюваність запитів на трасі",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "hit_rate_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "uniques_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "модель економії від hit rate",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "savings_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "net_benefit_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "вартість пам'яті під кеш",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "memory_bytes_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "effective_cost_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "політика витіснення",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "eviction_hit_rate_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "eviction_evicts_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "рішення обґрунтоване числом",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "optimal_capacity_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "roi_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поріг, за яким вимикати",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

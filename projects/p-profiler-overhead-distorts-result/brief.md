@@ -1,0 +1,6 @@
+# Ticket: Profiler Distortion in Low-Level Kernel Execution Analysis
+
+## Symptom Description
+During the performance analysis of our low-level machine learning execution pipeline, we observed a severe discrepancy in timing metrics depending on whether profiling instrumentation was active. Specifically, running a standard kernel execution step takes approximately 120 milliseconds in a clean, uninstrumented run. However, enabling the default profiling mode inflates the measured step time to 180 milliseconds—a massive 50% overhead.
+
+This level of distortion renders the resulting execution profiles highly questionable. Optimization decisions made based on these skewed profiles risk targeting artifacts introduced by the profiler itself rather than the actual bottlenecks in the native code. We require a robust measurement strategy and a structured approach to profiling modes that quantifies overhead accurately, compares sampling versus instrumentation techniques, selects the appropriate mode based on the analytical question being asked, ensures that core performance conclusions remain invariant across modes, maintains discrepancy against a clean run below a strict acceptable threshold, and provides clear operational guidelines for when to apply each profiling mode in production and research environments.

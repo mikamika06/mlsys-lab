@@ -1,16 +1,17 @@
-import ref
-
-
 def check(workdir):
-    m = {"isolated_hash_ok": 0.0}
-    try:
-        c = ref.create_cache(isolate=True)
-        tokens = [1, 2, 3, 4]
-        c.insert(tokens, tenant_id="tenant_a")
-        hits_a = c.lookup(tokens, tenant_id="tenant_a")
-        hits_b = c.lookup(tokens, tenant_id="tenant_b")
-        if hits_a == len(tokens) and hits_b == 0:
-            m["isolated_hash_ok"] = 1.0
-    except Exception:
-        pass
+    from cache import PrefixCache
+    import ref
+
+    m = {"leak_fixed": 0.0, "self_match": 0.0}
+    alloc = ref.BlockAllocator()
+    c = PrefixCache(4, alloc, isolation=True)
+
+    c.insert([1, 2, 3, 4], "A")
+
+    if len(c.match([1, 2, 3, 4], "B")) == 0:
+        m["leak_fixed"] = 1.0
+
+    if len(c.match([1, 2, 3, 4], "A")) == 1:
+        m["self_match"] = 1.0
+
     return m

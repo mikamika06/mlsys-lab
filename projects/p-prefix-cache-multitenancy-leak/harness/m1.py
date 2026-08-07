@@ -1,15 +1,13 @@
-import ref
-
-
 def check(workdir):
-    m = {"leak_detected": 0.0}
-    try:
-        c = ref.create_cache(isolate=False)
-        tokens = [1, 2, 3, 4]
-        c.insert(tokens, tenant_id="tenant_a")
-        hits = c.lookup(tokens, tenant_id="tenant_b")
-        if hits == len(tokens):
-            m["leak_detected"] = 1.0
-    except Exception:
-        pass
+    from cache import PrefixCache
+    import ref
+
+    m = {"leak_present": 0.0}
+    alloc = ref.BlockAllocator()
+    c = PrefixCache(4, alloc, isolation=False)
+
+    c.insert([1, 2, 3, 4], "A")
+    if len(c.match([1, 2, 3, 4], "B")) == 1:
+        m["leak_present"] = 1.0
+
     return m

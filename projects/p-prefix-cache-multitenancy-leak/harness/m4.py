@@ -1,16 +1,22 @@
-import ref
-
-
 def check(workdir):
-    m = {"recovery_ok": 0.0}
-    try:
-        c = ref.create_cache(isolate=True)
-        sys_pfx = [1, 2]
-        tokens = [1, 2, 3, 4, 5]
-        c.insert(tokens, tenant_id="a", system_prefixes=[sys_pfx])
-        hits = c.lookup(tokens, tenant_id="b", system_prefixes=[sys_pfx])
-        if hits >= 2:
-            m["recovery_ok"] = 1.0
-    except Exception:
-        pass
+    from cache import PrefixCache
+    import ref
+
+    m = {"system_shared": 0.0, "user_isolated": 0.0}
+    alloc = ref.BlockAllocator()
+    c = PrefixCache(4, alloc, isolation=True, shared_system=True)
+
+    sys_tokens = [1, 2, 3, 4]
+    c.insert(sys_tokens, "A", is_system=True)
+
+    if len(c.match(sys_tokens, "B")) == 1:
+        m["system_shared"] = 1.0
+
+    usr_tokens = [5, 6, 7, 8]
+    c.insert(sys_tokens + usr_tokens, "A", is_system=False)
+
+    matched_b = c.match(sys_tokens + usr_tokens, "B")
+    if len(matched_b) == 1:
+        m["user_isolated"] = 1.0
+
     return m

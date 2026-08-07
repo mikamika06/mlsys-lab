@@ -1,10 +1,17 @@
+import ref
+
 def check(workdir):
-    import ref
-    m = {"swap_cost_ok": 0.0}
+    out = {"swap_match": 0.0}
     try:
-        val = ref.swap_cost(1000, 65536, 32.0)
-        if isinstance(val, (int, float)) and val > 0:
-            m["swap_cost_ok"] = 1.0
+        from policy.policy import PreemptionPolicy
+        p_learner = PreemptionPolicy(1000.0, 100000.0, 250.0, 2.0, 0.1)
+        p_ref = ref.RefPolicy(1000.0, 100000.0, 250.0, 2.0, 0.1)
+
+        for s in [10, 100, 1000, 4000]:
+            if abs(p_learner.swap_time(s) - p_ref.swap_time(s)) > 1e-5:
+                return out
+
+        out["swap_match"] = 1.0
+        return out
     except Exception:
-        pass
-    return m
+        return out

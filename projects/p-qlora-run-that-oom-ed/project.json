@@ -1,0 +1,119 @@
+{
+  "id": "p-qlora-run-that-oom-ed",
+  "title": "QLoRA-прогін, який впав по пам'яті",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "qlora-oom",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "qlora_fix/memory.py",
+    "qlora_fix/optimizer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "облік пам'яті: ваги, активації, стани оптимізатора",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "accounting_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти, що росте з кроками",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "leak_detected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "увімкнути checkpointing і виміряти обмін час/пам'ять",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "checkpoint_active",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "memory_reduction_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перенести стани оптимізатора у 8 біт",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "bits8_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "прогін доходить до кінця, ефективний батч той самий",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "run_completed",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "effective_batch_preserved",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "пік пам'яті нижче порога, збіжність не гірша",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_memory_regression",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_batch_drop",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

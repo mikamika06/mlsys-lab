@@ -1,21 +1,18 @@
 import sys
-
 sys.path.insert(0, ".")
-from prefix_cache import PrefixCache
+from cache import PrefixCache
+import ref
 
+def test_isolation_and_hit_rate():
+    alloc = ref.BlockAllocator()
+    c = PrefixCache(4, alloc, isolation=True, shared_system=True)
 
-def test_isolation_prevents_leak():
-    c = PrefixCache(isolate=True)
-    tokens = [1, 2, 3, 4]
-    c.insert(tokens, tenant_id="a")
-    hits = c.lookup(tokens, tenant_id="b")
-    assert hits == 0, f"Expected 0 hits across tenants, got {hits}"
+    sys_toks = list(range(100, 140))
 
+    c.insert(sys_toks, "A", is_system=True)
 
-def test_system_prefix_sharing():
-    c = PrefixCache(isolate=True)
-    sys_pfx = [1, 2]
-    tokens = [1, 2, 3, 4]
-    c.insert(tokens, tenant_id="a", system_prefixes=[sys_pfx])
-    hits = c.lookup(tokens, tenant_id="b", system_prefixes=[sys_pfx])
-    assert hits >= 2, f"Expected system prefix hits, got {hits}"
+    assert len(c.match(sys_toks, "B")) == 10
+
+    c.insert(sys_toks + [1, 2, 3, 4], "A", is_system=False)
+
+    assert len(c.match(sys_toks + [1, 2, 3, 4], "B")) == 10

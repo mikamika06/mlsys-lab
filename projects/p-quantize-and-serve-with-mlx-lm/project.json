@@ -1,0 +1,113 @@
+{
+  "id": "p-quantize-and-serve-with-mlx-lm",
+  "title": "Квантизувати і віддати як сервіс",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "quantize-and-serve-with-mlx-lm",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "mlx_serve/quantize.py",
+    "mlx_serve/quality.py",
+    "mlx_serve/server.py",
+    "mlx_serve/load.py",
+    "mlx_serve/memory.py",
+    "mlx_serve/deploy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "конвертація і квантизація",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "quantize_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "виміряна втрата якості проти оригіналу",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "perplexity_diff_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "сервер із коректним чат-шаблоном",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "chat_template_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "навантаження 3 користувачі, p95 під порогом",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "load_p95_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "пам'ять стабільна 2 години",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "memory_stable_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "інструкція розгортання, що відтворюється",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_memory_leak",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_template",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

@@ -1,18 +1,21 @@
-import ref
-
-
 def check(workdir):
-    m = {"hit_rate_measured": 0.0}
-    try:
-        c_global = ref.create_cache(isolate=False)
-        c_iso = ref.create_cache(isolate=True)
-        tokens = [1, 2, 3, 4, 5]
-        c_global.insert(tokens, tenant_id="a")
-        c_iso.insert(tokens, tenant_id="a")
-        hr_global = c_global.lookup(tokens, tenant_id="b") / len(tokens)
-        hr_iso = c_iso.lookup(tokens, tenant_id="b") / len(tokens)
-        if hr_global == 1.0 and hr_iso == 0.0:
-            m["hit_rate_measured"] = 1.0
-    except Exception:
-        pass
+    from cache import PrefixCache
+    import ref
+
+    m = {"hr_drops": 0.0}
+
+    alloc1 = ref.BlockAllocator()
+    c1 = PrefixCache(4, alloc1, isolation=False)
+
+    alloc2 = ref.BlockAllocator()
+    c2 = PrefixCache(4, alloc2, isolation=True)
+
+    trace = ref.get_trace()
+
+    h1, t1 = ref.run_trace(c1, trace)
+    h2, t2 = ref.run_trace(c2, trace)
+
+    if t1 > 0 and t2 > 0 and (h2 / t2) < (h1 / t1):
+        m["hr_drops"] = 1.0
+
     return m

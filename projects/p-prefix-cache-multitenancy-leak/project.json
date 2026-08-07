@@ -4,11 +4,11 @@
   "kind": "project",
   "tier": "T0",
   "area": "rw2-kv-cache-serving",
-  "track": "prefix-cache-multitenancy",
+  "track": "rw2-kv-cache-serving",
   "part": 1,
   "difficulty": 4,
   "edits": [
-    "prefix_cache/cache.py",
+    "cache.py",
     "tests/test_regression.py"
   ],
   "milestones": [
@@ -18,7 +18,7 @@
       "check": "harness/m1.py",
       "gates": [
         {
-          "metric": "leak_detected",
+          "metric": "leak_present",
           "op": "==",
           "threshold": 1.0
         }
@@ -30,7 +30,12 @@
       "check": "harness/m2.py",
       "gates": [
         {
-          "metric": "isolated_hash_ok",
+          "metric": "leak_fixed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "self_match",
           "op": "==",
           "threshold": 1.0
         }
@@ -42,7 +47,7 @@
       "check": "harness/m3.py",
       "gates": [
         {
-          "metric": "hit_rate_measured",
+          "metric": "hr_drops",
           "op": "==",
           "threshold": 1.0
         }
@@ -54,7 +59,12 @@
       "check": "harness/m4.py",
       "gates": [
         {
-          "metric": "recovery_ok",
+          "metric": "system_shared",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "user_isolated",
           "op": "==",
           "threshold": 1.0
         }
@@ -88,8 +98,13 @@
           "threshold": 1.0
         },
         {
-          "metric": "faults_caught",
-          "op": ">=",
+          "metric": "catches_leak",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_hr_drop",
+          "op": "==",
           "threshold": 1.0
         }
       ]

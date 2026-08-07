@@ -1,49 +1,74 @@
-import numpy as np
+import math
 
 
-def flash_attention_forward(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int = 32) -> np.ndarray:
+def flash_attention_forward(
+    Q: list[list[float]],
+    K: list[list[float]],
+    V: list[list[float]],
+    block_size: int = 32,
+) -> list[list[float]]:
     """FlashAttention-2-style forward pass: tiled online softmax.
 
     Sweeps Q in row blocks and K/V in column blocks, maintaining a running
     max and running normalizer per query row so the result exactly matches
     dense softmax attention without ever materializing an (N, N) matrix.
     """
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-    n, d_k = Q.shape
-    d_v = V.shape[1]
-    scale = 1.0 / np.sqrt(d_k)
+    n = len(Q)
+    if n == 0:
+        return []
+    d_k = len(Q[0])
+    d_v = len(V[0])
+    scale = 1.0 / math.sqrt(d_k)
 
-    O = np.zeros((n, d_v), dtype=np.float64)
+    O = [[0.0] * d_v for _ in range(n)]
     n_blocks = (n + block_size - 1) // block_size
 
     for i in range(n_blocks):
-        q_lo, q_hi = i * block_size, min(i * block_size + block_size, n)
+        q_lo = i * block_size
+        q_hi = min(q_lo + block_size, n)
         br = q_hi - q_lo
-        Q_block = Q[q_lo:q_hi]
 
-        m = np.full((br,), -np.inf)
-        l = np.zeros((br,), dtype=np.float64)
-        O_block = np.zeros((br, d_v), dtype=np.float64)
+        m = [float("-inf")] * br
+        l = [0.0] * br
+        O_block = [[0.0] * d_v for _ in range(br)]
 
         for j in range(n_blocks):
-            kv_lo, kv_hi = j * block_size, min(j * block_size + block_size, n)
-            K_block = K[kv_lo:kv_hi]
-            V_block = V[kv_lo:kv_hi]
+            kv_lo = j * block_size
+            kv_hi = min(kv_lo + block_size, n)
+            bc = kv_hi - kv_lo
 
-            S = Q_block @ K_block.T * scale
-            row_max = S.max(axis=1)
-            m_new = np.maximum(m, row_max)
+            S = []
+            for r in range(br):
+                q_row = Q[q_lo + r]
+                s_row = []
+                for c in range(bc):
+                    k_row = K[kv_lo + c]
+                    dot = sum(q_row[d_idx] * k_row[d_idx] for d_idx in range(d_k))
+                    s_row.append(dot * scale)
+                S.append(s_row)
 
-            P = np.exp(S - m_new[:, None])
-            l_cur = P.sum(axis=1)
-            rescale = np.exp(m - m_new)
+            row_max = [max(S[r]) for r in range(br)]
+            m_new = [max(m[r], row_max[r]) for r in range(br)]
 
-            O_block = O_block * rescale[:, None] + P @ V_block
-            l = l * rescale + l_cur
-            m = m_new
+            P = []
+            l_cur = []
+            rescale = []
+            for r in range(br):
+                p_row = [math.exp(S[r][c] - m_new[r]) for c in range(bc)]
+                P.append(p_row)
+                l_cur.append(sum(p_row))
+                rescale.append(math.exp(m[r] - m_new[r]))
 
-        O[q_lo:q_hi] = O_block / l[:, None]
+            for r in range(br):
+                r_scale = rescale[r]
+                for v in range(d_v):
+                    pv_sum = sum(P[r][c] * V[kv_lo + c][v] for c in range(bc))
+                    O_block[r][v] = O_block[r][v] * r_scale + pv_sum
+                l[r] = l[r] * r_scale + l_cur[r]
+                m[r] = m_new[r]
+
+        for r in range(br):
+            for v in range(d_v):
+                O[q_lo + r][v] = O_block[r][v] / l[r]
 
     return O

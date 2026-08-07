@@ -4,13 +4,11 @@
   "kind": "project",
   "tier": "T0",
   "area": "rw2-vllm-serving",
-  "track": "preemption-policy-recompute-vs-swap",
+  "track": "preemption-policy",
   "part": 1,
-  "difficulty": 5,
+  "difficulty": 4,
   "edits": [
-    "preempt/model.py",
-    "preempt/policy.py",
-    "preempt/scheduler.py",
+    "policy/policy.py",
     "tests/test_regression.py"
   ],
   "milestones": [
@@ -20,7 +18,7 @@
       "check": "harness/m1.py",
       "gates": [
         {
-          "metric": "recompute_cost_ok",
+          "metric": "recompute_match",
           "op": "==",
           "threshold": 1
         }
@@ -32,7 +30,7 @@
       "check": "harness/m2.py",
       "gates": [
         {
-          "metric": "swap_cost_ok",
+          "metric": "swap_match",
           "op": "==",
           "threshold": 1
         }
@@ -44,7 +42,7 @@
       "check": "harness/m3.py",
       "gates": [
         {
-          "metric": "breakeven_ok",
+          "metric": "breakeven_match",
           "op": "==",
           "threshold": 1
         }
@@ -56,7 +54,7 @@
       "check": "harness/m4.py",
       "gates": [
         {
-          "metric": "policy_selection_ok",
+          "metric": "decisions_match",
           "op": "==",
           "threshold": 1
         }
@@ -68,7 +66,7 @@
       "check": "harness/m5.py",
       "gates": [
         {
-          "metric": "p99_improved",
+          "metric": "p99_reduced",
           "op": "==",
           "threshold": 1
         }
@@ -80,28 +78,8 @@
       "check": "harness/m6.py",
       "gates": [
         {
-          "metric": "has_tests",
-          "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "passes_on_good",
-          "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "catches_bad_policy",
-          "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "catches_broken_cost",
-          "op": "==",
-          "threshold": 1
-        },
-        {
           "metric": "faults_caught",
-          "op": ">=",
+          "op": "==",
           "threshold": 2
         }
       ]

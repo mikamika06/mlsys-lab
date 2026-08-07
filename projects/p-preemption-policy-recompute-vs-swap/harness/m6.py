@@ -20,41 +20,45 @@ def _survives(path):
 
 def check(workdir):
     path = os.path.join(workdir, "tests", "test_regression.py")
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_bad_policy": 0.0, "catches_broken_cost": 0.0, "faults_caught": 0.0}
+    out = {
+        "has_tests": 0.0, "passes_on_good": 0.0,
+        "catches_bad_recompute": 0.0, "catches_bad_swap": 0.0,
+        "faults_caught": 0.0
+    }
+
     if not os.path.isfile(path):
-        out["_note"] = "tests/test_regression.py is missing"
         return out
 
-    import preempt.model as model
-    import preempt.policy as policy
+    try:
+        import policy.policy as pol
+    except ImportError:
+        return out
 
     try:
         first = _run(path)
-    except Exception as e:
+    except Exception:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail: {e}"
         return out
 
     if first is None:
-        out["_note"] = "no test functions found"
         return out
 
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    good_decide = policy.PreemptionPolicy.decide
-    policy.PreemptionPolicy.decide = lambda self, req, cs: "swap"
-    try:
-        out["catches_bad_policy"] = 0.0 if _survives(path) else 1.0
-    finally:
-        policy.PreemptionPolicy.decide = good_decide
+    good_decide = pol.PreemptionPolicy.decide
 
-    good_recompute = model.recompute_cost
-    model.recompute_cost = lambda cl, hs, nl, tf: -1.0
+    pol.PreemptionPolicy.decide = lambda self, s: "recompute"
     try:
-        out["catches_broken_cost"] = 0.0 if _survives(path) else 1.0
+        out["catches_bad_recompute"] = 0.0 if _survives(path) else 1.0
     finally:
-        model.recompute_cost = good_recompute
+        pol.PreemptionPolicy.decide = good_decide
 
-    out["faults_caught"] = out["catches_bad_policy"] + out["catches_broken_cost"]
+    pol.PreemptionPolicy.decide = lambda self, s: "swap"
+    try:
+        out["catches_bad_swap"] = 0.0 if _survives(path) else 1.0
+    finally:
+        pol.PreemptionPolicy.decide = good_decide
+
+    out["faults_caught"] = out["catches_bad_recompute"] + out["catches_bad_swap"]
     return out

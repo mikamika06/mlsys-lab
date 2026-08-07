@@ -1,7 +1,0 @@
-# Model on CPU under Latency Budget
-
-Our production service currently processes incoming machine learning requests using a standard PyTorch inference pipeline running entirely on general-purpose CPUs without discrete hardware accelerators. During peak traffic hours, the latency for processing a single standard request climbs as high as 340 milliseconds. This severely violates our strict product service level objective, which requires every inference request to complete within a maximum latency budget of 80 milliseconds.
-
-Because of this excessive execution time, our upstream API gateway frequently triggers request timeouts, leading to a degraded user experience across our client applications and failing key downstream integration contracts. We need to overhaul our CPU inference stack by integrating an optimized runtime engine, reducing operational overheads, applying low-precision quantization, and tuning execution threading parameters to meet our strict performance targets.
-
-Your task is to implement an optimized inference pipeline using OpenVINO concepts. You need to convert the original model representation into an efficient runtime format, profile individual operation latencies, apply INT8 weight quantization using a representative calibration dataset while monitoring accuracy degradation, configure thread pools and latency hints appropriately, ensure the execution latency stays strictly under the 80 milliseconds threshold, and finally establish a robust regression testing suite to protect against future performance or functional regressions.

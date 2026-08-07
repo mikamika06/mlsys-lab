@@ -1,16 +1,21 @@
-import ref
-
-
 def check(workdir):
+    from cache import PrefixCache
+    import ref
+
     m = {"zero_intersections": 0.0}
-    try:
-        c = ref.create_cache(isolate=True)
-        tokens_a = [10, 20, 30, 40]
-        tokens_b = [10, 20, 99, 88]
-        c.insert(tokens_a, tenant_id="tenant_a")
-        hits = c.lookup(tokens_b, tenant_id="tenant_b")
-        if hits == 0:
-            m["zero_intersections"] = 1.0
-    except Exception:
-        pass
+    alloc = ref.BlockAllocator()
+    c = PrefixCache(4, alloc, isolation=True, shared_system=True)
+
+    sys_toks = [1, 2, 3, 4, 5, 6, 7, 8]
+    c.insert(sys_toks, "A", is_system=True)
+
+    a_usr = [10, 11, 12, 13]
+    c.insert(sys_toks + a_usr, "A", is_system=False)
+
+    b_usr = [10, 11, 12, 13]
+    b_matched = c.match(sys_toks + b_usr, "B")
+
+    if len(b_matched) == 2:
+        m["zero_intersections"] = 1.0
+
     return m

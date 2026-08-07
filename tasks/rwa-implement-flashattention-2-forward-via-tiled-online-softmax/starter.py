@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def flash_attention_forward(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int = 32) -> np.ndarray:
+def flash_attention_forward(Q: list[list[float]], K: list[list[float]], V: list[list[float]], block_size: int=32) -> list[list[float]]:
     """FlashAttention-2-style forward pass: tiled online softmax.
 
     Must sweep Q, K, V in blocks of at most `block_size` rows using a

@@ -1,0 +1,160 @@
+{
+  "id": "p-roofline-report-for-a-real-model",
+  "title": "Roofline report for a real model",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw3-profiling",
+  "track": "roofline-report-for-a-real-model",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "roofline/intensity.py",
+    "roofline/model.py",
+    "roofline/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Collect arithmetic intensity per kernel",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "intensity_math_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "aggregation_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "totals_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Construct roofline model and place kernels",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ceiling_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "classification_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "bounds_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Calculate achievable peak for each kernel",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "min_time_accurate",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "efficiency_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "headroom_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Estimate speedup from optimal optimization",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "fusion_speedup_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "ideal_speedup_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "amdahl_bound_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Prediction matches recorded accelerated profile",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "validation_logic_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "error_margin_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "matches_flag_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Prioritized report grounded in numbers",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "report_sorted_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "report_metrics_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

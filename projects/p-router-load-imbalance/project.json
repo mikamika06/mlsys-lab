@@ -1,0 +1,114 @@
+{
+  "id": "p-router-load-imbalance",
+  "title": "Маршрутизатор перекошує навантаження",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "moe-router-balance",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moe/router.py",
+    "moe/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти розподіл по експертах",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "distribution_measured",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "entropy_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати вплив на час кроку",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "step_time_model_ok",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "imbalance_penalty_captured",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "додати балансуючу втрату і виміряти",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "aux_loss_computed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "loss_decreases_imbalance",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити, що якість не впала",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "quality_preserved",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "перекіс нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "imbalance_ratio_low",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "баланс тримається на іншому домені",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "id": "p-profiler-overhead-distorts-result",
+  "title": "Профайлер спотворює те, що міряє",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw3-profiling",
+  "track": "profiler-overhead-distorts-result",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "profiler_study/modes.py",
+    "profiler_study/analyzer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти накладні по режимах",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "overhead_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "порівняти семплінг і інструментацію",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "comparison_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "обрати режим під питання, яке ставимо",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "mode_selected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити, що висновок не змінюється від режиму",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "invariant_holds",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "розбіжність із чистим прогоном нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "discrepancy_low",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "методичка, коли який режим",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_fault",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

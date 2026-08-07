@@ -1,11 +1,18 @@
+import ref
+
 def check(workdir):
-    import ref
-    m = {"policy_selection_ok": 0.0}
+    out = {"decisions_match": 0.0}
     try:
-        p = ref.PreemptionPolicy({"hidden_size": 4096, "num_layers": 32, "tflops": 300.0, "bytes_per_token": 65536, "pcie_bandwidth_gbps": 32.0})
-        res = p.decide({"context_len": 100}, {})
-        if res in ["recompute", "swap"]:
-            m["policy_selection_ok"] = 1.0
+        from policy.policy import PreemptionPolicy
+        p_learner = PreemptionPolicy(1000.0, 100000.0, 250.0, 2.0, 0.1)
+        p_ref = ref.RefPolicy(1000.0, 100000.0, 250.0, 2.0, 0.1)
+        trace = ref.generate_trace(100, 42)
+
+        for s in trace:
+            if p_learner.decide(s) != p_ref.decide(s):
+                return out
+
+        out["decisions_match"] = 1.0
+        return out
     except Exception:
-        pass
-    return m
+        return out
