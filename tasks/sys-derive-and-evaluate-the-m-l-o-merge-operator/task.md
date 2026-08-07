@@ -49,7 +49,7 @@ The final attention output is obtained from $o/l$.
 Implement `merge_mlo(state1, state2)`:
 
 ```python
-def merge_mlo(state1, state2):
+def merge_mlo(state1: tuple[float, float, list[float]], state2: tuple[float, float, list[float]]) -> tuple[float, float, list[float]]:
     ...
 ```
 
@@ -57,19 +57,18 @@ Each input state is a tuple `(m, l, o)`:
 
 - `m` is a scalar maximum logit.
 - `l` is a scalar normalization accumulator.
-- `o` is a 1-D NumPy array containing the weighted value accumulator.
+- `o` is a list of floats containing the weighted value accumulator.
 
 Return the merged state `(m, l, o)` using the closed-form merge equations. Do not reconstruct the original logits.
 
-The returned `o` must be a NumPy array with the same shape as the input accumulators.
+The returned `o` must be a list with the same shape as the input accumulators.
 
 ## Example
 
 ```python
-import numpy as np
 
-a = (2.0, 1.5, np.array([1.0, 3.0]))
-b = (4.0, 2.0, np.array([5.0, 1.0]))
+a = (2.0, 1.5, [1.0, 3.0])
+b = (4.0, 2.0, [5.0, 1.0])
 
 m, l, o = merge_mlo(a, b)
 out = o / l
@@ -79,7 +78,7 @@ The value `out` represents the normalized result of combining the two partial so
 
 ## What the gate checks
 
-The gate builds partial states from halves of real logits and values using NumPy softmax calculations. It computes the oracle result by evaluating the full-row softmax times values directly, then compares it with the merged state output.
+The gate builds partial states from halves of real logits and values using Python softmax calculations. It computes the oracle result by evaluating the full-row softmax times values directly, then compares it with the merged state output.
 
 The metric is
 
@@ -87,4 +86,4 @@ $$
 \max_i |y_i-\hat{y}_i|,
 $$
 
-where $y$ is the NumPy oracle output and $\hat{y}$ is the output from the merged $(m,l,o)$ state. The maximum absolute error must be at most $10^{-6}$.
+where $y$ is the Python oracle output and $\hat{y}$ is the output from the merged $(m,l,o)$ state. The maximum absolute error must be at most $10^{-6}$.

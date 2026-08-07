@@ -32,9 +32,8 @@ Composing the two gives $\text{all-gather}\!\bigl(\text{reduce-scatter}(x_0,
 Implement two functions:
 
 ```python
-import numpy as np
 
-def reduce_scatter(data: list[np.ndarray], op: str = "sum") -> list[np.ndarray]:
+def reduce_scatter(data, op='sum'):
     """
     Perform a reduce-scatter over n processes.
 
@@ -51,7 +50,7 @@ def reduce_scatter(data: list[np.ndarray], op: str = "sum") -> list[np.ndarray]:
     """
     ...
 
-def all_gather(data: list[np.ndarray]) -> list[np.ndarray]:
+def all_gather(data: list[list[float]]) -> list[list[float]]:
     """
     Perform an all-gather over n processes.
 
@@ -63,22 +62,21 @@ def all_gather(data: list[np.ndarray]) -> list[np.ndarray]:
     Returns
     -------
     result : list of n arrays, each of shape (n * k,).
-             result[i] = np.concatenate([data[0], ..., data[n-1]]) for every i.
+result[i] = data[0] + ... + data[n-1] for every i.
     """
     ...
 ```
 
-Use only NumPy.  The composition must be correct: for any input,
+Use only Python.  The composition must be correct: for any input,
 `all_gather(reduce_scatter(data, op))` must equal the direct element-wise
 reduction across all processes.
 
 ## Example
 
 ```python
-import numpy as np
 
-x0 = np.array([1, 2, 3, 4])   # n = 2, k = 2
-x1 = np.array([5, 6, 7, 8])
+x0 = [1, 2, 3, 4]   # n = 2, k = 2
+x1 = [5, 6, 7, 8]
 
 scattered = reduce_scatter([x0, x1], op="sum")
 # chunk 0: [1+5, 2+6] = [6, 8]     → process 0
@@ -91,7 +89,7 @@ gathered = all_gather(scattered)
 
 ## What the gate checks
 
-The gate computes a NumPy reference for the full all-reduce and then composes
+The gate computes a Python reference for the full all-reduce and then composes
 the learner's `reduce_scatter` and `all_gather` on the same inputs.  It reports
 the maximum absolute error across all test configurations:
 

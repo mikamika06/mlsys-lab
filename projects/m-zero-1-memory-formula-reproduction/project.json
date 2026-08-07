@@ -1,0 +1,44 @@
+{
+  "id": "m-zero-1-memory-formula-reproduction",
+  "title": "ZeRO Stage 1 Memory Formula and Log Parsing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "ZeRO Stage 1 — optimizer state partitioning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "zero1/formula.py",
+    "zero1/toy_zero.py",
+    "zero1/parser.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "ZeRO-1 Memory Formula Reproduction",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "formulas_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Toy ZeRO-1 via Real torch.distributed",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "shard_states_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Parse a Real DeepSpeed ZeRO-1 Startup Log",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_parser", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

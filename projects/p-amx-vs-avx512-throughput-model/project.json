@@ -1,0 +1,103 @@
+{
+  "id": "p-amx-vs-avx512-throughput-model",
+  "title": "Модель пропускної для двох ISA",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "amx-vs-avx512-throughput-model",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "amx_model/model.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "модель пропускної для кожного набору",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "amx_ok",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "avx512_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "залежність від типу даних і форми",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "shape_dep_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "зіставити передбачення з виміром",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "correlation_ok",
+          "op": ">=",
+          "threshold": 0.85
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "знайти точку перемикання",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "crossover_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "передбачення ±15%",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "accuracy_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "правило вибору для нових форм",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

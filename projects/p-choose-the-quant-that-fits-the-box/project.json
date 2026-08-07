@@ -1,0 +1,104 @@
+{
+  "id": "p-choose-the-quant-that-fits-the-box",
+  "title": "Підібрати квантизацію під конкретну машину",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "choose-the-quant-that-fits-the-box",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "quant/analyzer.py",
+    "quant/selector.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "порахувати bpw і розмір файлу для кожного рецепта",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "bpw_calculated",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "file_size_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "виміряти реальний пік пам'яті, не теоретичний",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "peak_memory_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти якість: ppl/KLD проти fp16-базлайну",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "quality_metrics_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти швидкість на кожній конфігурації",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "speed_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "таблиця рекомендацій із порогами",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "table_generated",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "скрипт, що на новій машині сам обирає рецепт",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

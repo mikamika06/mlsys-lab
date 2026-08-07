@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def expected_tokens_per_step(accept_probs) -> float:
+def expected_tokens_per_step(accept_probs: list[float]) -> float:
     """Expected number of tokens emitted in one speculative decoding step.
 
     accept_probs[i] is the probability that draft position i is accepted,

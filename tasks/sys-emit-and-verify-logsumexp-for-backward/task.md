@@ -23,12 +23,12 @@ same idea used by numerically stable attention implementations.
 Implement `emit_lse(S)`:
 
 ```python
-def emit_lse(S: np.ndarray) -> np.ndarray:
+def emit_lse(S: list[list[float]]) -> list[float]:
     ...
 ```
 
-The function receives a 2-D NumPy array of attention scores with shape
-$(n, m)$ and returns a 1-D `float64` NumPy array containing the LSE value for
+The function receives a list of lists of floats of attention scores with shape
+$(n, m)$ and returns a 1-D `float64` list containing the LSE value for
 each row.
 
 The implementation must compute the row-wise logsumexp values accurately. Do not
@@ -38,10 +38,9 @@ return the softmax matrix. The output length must equal the number of rows in
 ## Example
 
 ```python
-import numpy as np
 
-S = np.array([[1.0, 2.0, 3.0],
-              [0.0, 0.0, 0.0]])
+S = [[1.0, 2.0, 3.0],
+              [0.0, 0.0, 0.0]]
 
 lse = emit_lse(S)
 
@@ -52,12 +51,12 @@ lse = emit_lse(S)
 
 ## What the gate checks
 
-The gate computes a NumPy oracle for row logsumexp and uses the returned LSE
+The gate computes a Python oracle for row logsumexp and uses the returned LSE
 values to reconstruct softmax probabilities with
 
 $$
 \hat{P}_{ij}=e^{S_{ij}-\mathrm{LSE}_i}.
 $$
 
-The reconstructed probabilities are compared with a dense NumPy softmax oracle.
+The reconstructed probabilities are compared with a dense Python softmax oracle.
 The reported metric is `max_abs_err`, and it must be less than $10^{-6}$.

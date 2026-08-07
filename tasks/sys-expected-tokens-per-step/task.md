@@ -40,7 +40,7 @@ $$
 
 Implement `expected_tokens_per_step(accept_probs)`.
 
-`accept_probs` is a 1D sequence (list or NumPy array) of $K$ floats in
+`accept_probs` is a 1D sequence (list or list) of $K$ floats in
 $[0, 1]$, where `accept_probs[i]` is the acceptance probability of draft
 position $i$ conditional on all earlier positions being accepted. $K$ may be
 `0` (an empty draft — the target still emits exactly one token that step).

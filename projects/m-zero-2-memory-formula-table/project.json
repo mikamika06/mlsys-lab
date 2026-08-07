@@ -1,0 +1,21 @@
+{
+  "id": "m-zero-2-memory-formula-table",
+  "title": "ZeRO Stage 2 memory formulas and communication partitioning",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "ZeRO Stage 2 — gradient partitioning + communication volume",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["zerotwo/memory.py", "zerotwo/comm.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "ZeRO-2 memory breakdown table formulas", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Toy ZeRO-2 reduce-scatter and bucket-count formula", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Safety net: regression tests for ZeRO-2 invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

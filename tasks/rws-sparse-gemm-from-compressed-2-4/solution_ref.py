@@ -1,25 +1,30 @@
-import numpy as np
-
-
-def compressed_matmul(values: np.ndarray, idx: np.ndarray, X: np.ndarray) -> np.ndarray:
+def compressed_matmul(values: list[list[float]], idx: list[list[int]], X: list[list[float]]) -> list[list[float]]:
     """
     Reconstruct the dense weight matrix from NVIDIA-style compressed 2:4
     storage (2 nonzero values per group of 4 columns, plus a 2-bit index
     per value giving its position 0..3 within the group), then compute
     the dense matmul W @ X.
     """
-    values = np.asarray(values, dtype=np.float64)
-    idx = np.asarray(idx, dtype=np.int64)
-    X = np.asarray(X, dtype=np.float64)
-
-    d_out, half = values.shape
+    d_out = len(values)
+    half = len(values[0])
     d_in = half * 2
+    n = len(X[0])
 
-    row_idx = np.broadcast_to(np.arange(d_out)[:, None], (d_out, half))
-    group_base = (np.arange(half) // 2) * 4
-    cols = group_base[None, :] + idx
+    # Reconstruct dense weight matrix W
+    W = [[0.0 for _ in range(d_in)] for _ in range(d_out)]
+    for r in range(d_out):
+        for k in range(half):
+            g = k // 2
+            col = 4 * g + idx[r][k]
+            W[r][col] = values[r][k]
 
-    W = np.zeros((d_out, d_in), dtype=np.float64)
-    W[row_idx, cols] = values
+    # Compute Y = W @ X
+    Y = [[0.0 for _ in range(n)] for _ in range(d_out)]
+    for r in range(d_out):
+        for c in range(n):
+            total = 0.0
+            for j in range(d_in):
+                total += W[r][j] * X[j][c]
+            Y[r][c] = total
 
-    return W @ X
+    return Y

@@ -1,0 +1,69 @@
+{
+  "id": "m-vllm-backend-priority-predictor",
+  "title": "vLLM attention backend priority and rejection predictor",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "vllm-attention-backend-selection",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "vllm_pred/parser.py",
+    "vllm_pred/predictor.py",
+    "vllm_pred/rejection.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse vLLM startup logs",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "logs_parsed",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Backend priority prediction and rejection analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "priority_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "rejection_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for backend selection",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_priority",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,2 @@
-import numpy as np
-
-def find_batch_size_knee(latencies, throughputs, slo_latency):
+def find_batch_size_knee(latencies: list[float], throughputs: list[float], slo_latency: float) -> int:
     raise NotImplementedError('your code here')

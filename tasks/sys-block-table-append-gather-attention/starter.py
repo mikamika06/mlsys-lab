@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def paged_append(k_pool, v_pool, block_table, free_blocks, new_k, new_v, block_size):
+def paged_append(k_pool: list[list[list[float]]], v_pool: list[list[list[float]]], block_table: list[int], free_blocks: list[int], new_k: list[list[float]], new_v: list[list[float]], block_size: int) -> int:
     """Append new tokens to a single sequence's PagedAttention KV cache,
     growing the block table by allocating fresh physical blocks on demand.
 
@@ -31,22 +30,5 @@ def paged_append(k_pool, v_pool, block_table, free_blocks, new_k, new_v, block_s
     -------
     seq_len : int
         The new total number of resident tokens, `n_before + L`.
-    """
-    raise NotImplementedError('your code here')
-
-
-def gather_and_attend(k_pool, v_pool, block_table, block_size, seq_len, q):
-    """Gather the logical KV sequence from the paged pool via the block
-    table, then run single-query scaled dot-product attention.
-
-    k_pool, v_pool : (num_phys_blocks, block_size, D)
-    block_table    : list[int], length >= ceil(seq_len / block_size)
-    seq_len        : int, number of valid logical tokens
-    q              : (D,) float64 array
-
-    Returns
-    -------
-    out : (D,) float64 array
-        softmax(q @ K^T / sqrt(D)) @ V over the gathered K, V.
     """
     raise NotImplementedError('your code here')

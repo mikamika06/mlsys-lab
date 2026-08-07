@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def emit_lse(S: np.ndarray) -> np.ndarray:
+def emit_lse(S: list[list[float]]) -> list[float]:
     raise NotImplementedError('your code here')

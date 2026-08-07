@@ -32,10 +32,7 @@ key arrives, without ever forming the full biased matrix first.
 Implement `alibi_online_softmax(scores, slopes)`:
 
 ```python
-def alibi_online_softmax(
-    scores: np.ndarray,   # (n, n) raw attention logits
-    slopes: np.ndarray,   # (n,)   per-query slopes
-) -> np.ndarray:
+def alibi_online_softmax(scores: list[list[float]], slopes: list[float]) -> list[list[float]]:
     """Return (n, n) softmax probabilities using the online algorithm.
 
     For each query row i, the effective score at key position j is
@@ -47,30 +44,29 @@ def alibi_online_softmax(
     ...
 ```
 
-Use NumPy for array operations but implement the online loop yourself in Python.
+Use Python for array operations but implement the online loop yourself in Python.
 The function must return a `float64` array of shape $(n, n)$ whose rows are valid
 probability distributions.
 
 ## Example
 
 ```python
-import numpy as np
-scores = np.array([[1.0, 2.0, 3.0],
+scores = [[1.0, 2.0, 3.0],
                    [4.0, 5.0, 6.0],
-                   [7.0, 8.0, 9.0]])
-slopes = np.array([0.25, 0.125, 0.0625])
+                   [7.0, 8.0, 9.0]]
+slopes = [0.25, 0.125, 0.0625]
 
 probs = alibi_online_softmax(scores, slopes)
 # Row 0: effective scores = [1+0.25*0, 2+0.25*(-1), 3+0.25*(-2)]
 #                        = [1.0, 1.75, 2.5]
 # probs[0] ≈ [0.1572, 0.3255, 0.5173]
 assert probs.shape == (3, 3)
-assert np.allclose(probs.sum(axis=1), 1.0)
+assert all(abs(sum(row) - 1.0) < 1e-5 for row in probs)
 ```
 
 ## What the gate checks
 
-The gate computes a **NumPy reference** for each test case: it adds the ALiBi
+The gate computes a **Python reference** for each test case: it adds the ALiBi
 bias to the full score matrix and applies numerically-stable row-wise softmax.
 It then compares the student's output against this reference using
 $\text{max\_abs\_err} = \max_{i,j} |\hat{p}_{ij} - p_{ij}|$.

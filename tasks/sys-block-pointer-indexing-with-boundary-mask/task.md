@@ -20,23 +20,22 @@ Implement `block_pointer_gather(A, row_start, col_start, block_m, block_n)`.
 
 The function takes:
 
-- `A`: a 2-D NumPy array.
+- `A`: a list of lists of floats.
 - `row_start`: the first row of the requested block.
 - `col_start`: the first column of the requested block.
 - `block_m`: the number of rows in the output tile.
 - `block_n`: the number of columns in the output tile.
 
-Return a NumPy array of shape $(block_m, block_n)$ containing the gathered tile. Elements outside the bounds of `A` must be filled with `0`. The output dtype should match `A.dtype`.
+Return a list of shape $(block_m, block_n)$ containing the gathered tile. Elements outside the bounds of `A` must be filled with `0`. The output dtype should match `A.dtype`.
 
 Do not clamp out-of-range indices to the nearest valid row or column. Boundary elements must use the mask rule.
 
 ## Example
 
 ```python
-import numpy as np
 
-A = np.array([[1, 2, 3],
-              [4, 5, 6]], dtype=np.float32)
+A = [[1, 2, 3],
+              [4, 5, 6]]
 
 tile = block_pointer_gather(A, 1, 2, 3, 3)
 
@@ -47,7 +46,7 @@ tile = block_pointer_gather(A, 1, 2, 3, 3)
 
 ## What the gate checks
 
-The gate computes the expected masked tile directly from NumPy indexing and compares it with the submitted implementation.
+The gate computes the expected masked tile directly from Python indexing and compares it with the submitted implementation.
 
 The maximum absolute error
 

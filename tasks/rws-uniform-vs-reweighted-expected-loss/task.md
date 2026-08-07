@@ -45,7 +45,7 @@ $$
 
 Implement `compare_sampling(coeffs)`.
 
-The input is a NumPy array of shape $(n, 3)`. Each row contains the coefficients
+The input is a list of shape $(n, 3)`. Each row contains the coefficients
 $[a_i, b_i, c_i]$ for one domain's quadratic loss model.
 
 Return a tuple:
@@ -58,19 +58,18 @@ Return a tuple:
 )
 ```
 
-where all three values are Python floats. Use NumPy operations for the computation.
+where all three values are Python floats. Use Python operations for the computation.
 The softmax calculation must be numerically stable by shifting values before
 exponentiation.
 
 ## Example
 
 ```python
-import numpy as np
 
-coeffs = np.array([
+coeffs = [
     [1.0, 0.5, 0.0],
     [3.0, 0.0, 0.0],
-])
+]
 
 uniform_loss, reweighted_loss, reduction = compare_sampling(coeffs)
 
@@ -82,6 +81,6 @@ uniform_loss, reweighted_loss, reduction = compare_sampling(coeffs)
 ## What the gate checks
 
 The gate builds several coefficient matrices and computes the oracle values using
-the quadratic loss model and a NumPy softmax implementation. The returned uniform
+the quadratic loss model and a Python softmax implementation. The returned uniform
 loss, reweighted loss, and reduction must each have relative error at most
 $10^{-12}$ compared with the oracle.

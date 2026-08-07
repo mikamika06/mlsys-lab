@@ -45,25 +45,24 @@ Implement `mlp_tensor_parallel(x, w1_shards, b1_shards, w2_shards, b2)`.
 
 Arguments:
 
-- `x`: NumPy array, shape $(m, d)$.
-- `w1_shards`: list of $N$ NumPy arrays, rank $i$'s array has shape $(d, h_i)$.
-- `b1_shards`: list of $N$ NumPy arrays, rank $i$'s array has shape $(h_i,)$.
-- `w2_shards`: list of $N$ NumPy arrays, rank $i$'s array has shape $(h_i, d_\text{out})$.
-- `b2`: NumPy array, shape $(d_\text{out},)$ — the replicated output bias, added once.
+- `x`: list, shape $(m, d)$.
+- `w1_shards`: list of $N$ list, rank $i$'s array has shape $(d, h_i)$.
+- `b1_shards`: list of $N$ list, rank $i$'s array has shape $(h_i,)$.
+- `w2_shards`: list of $N$ list, rank $i$'s array has shape $(h_i, d_\text{out})$.
+- `b2`: list, shape $(d_\text{out},)$ — the replicated output bias, added once.
 
 The hidden shard sizes $h_i$ may differ between ranks; $\sum_i h_i = h$. Return the
-combined MLP output as a `float64` NumPy array of shape $(m, d_\text{out})$.
+combined MLP output as a `float64` list of shape $(m, d_\text{out})$.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1.0, -1.0]])
-w1_shards = [np.array([[1.0], [0.5]]), np.array([[0.5], [-1.0]])]
-b1_shards = [np.array([0.0]), np.array([0.0])]
-w2_shards = [np.array([[2.0, 0.0]]), np.array([[0.0, 2.0]])]
-b2 = np.array([0.1, -0.1])
+x = [[1.0, -1.0]]
+w1_shards = [[[1.0], [0.5]], [[0.5], [-1.0]]]
+b1_shards = [[0.0], [0.0]]
+w2_shards = [[[2.0, 0.0]], [[0.0, 2.0]]]
+b2 = [0.1, -0.1]
 
 y = mlp_tensor_parallel(x, w1_shards, b1_shards, w2_shards, b2)
 ```
@@ -72,7 +71,7 @@ y = mlp_tensor_parallel(x, w1_shards, b1_shards, w2_shards, b2)
 
 The gate reconstructs the unsharded weights ($W_1$ by concatenating `w1_shards` along
 columns, $W_2$ by concatenating `w2_shards` along rows) and evaluates the same
-tanh-approximate GELU MLP directly with NumPy to obtain a reference output. Your
+tanh-approximate GELU MLP directly with Python to obtain a reference output. Your
 function's output is compared elementwise against this oracle over several random
 shard configurations (varying $m$, $d$, per-rank $h_i$, and $d_\text{out}$) using
 

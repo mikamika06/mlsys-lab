@@ -1,12 +1,11 @@
 import math
-import numpy as np
 
 
-def paged_append(k_pool, v_pool, block_table, free_blocks, new_k, new_v, block_size):
+def paged_append(k_pool: list[list[list[float]]], v_pool: list[list[list[float]]], block_table: list[int], free_blocks: list[int], new_k: list[list[float]], new_v: list[list[float]], block_size: int) -> int:
     """Append new tokens to a single sequence's PagedAttention KV cache,
     growing the block table by allocating fresh physical blocks on demand.
 
-    k_pool, v_pool : (num_phys_blocks, block_size, D) float64 arrays -- the
+    k_pool, v_pool : lists of dimensions (num_phys_blocks, block_size, D) of floats -- the
         shared physical KV pool. Mutated in place.
     block_table : list[int]
         Physical block id backing each already-allocated logical block of
@@ -17,7 +16,7 @@ def paged_append(k_pool, v_pool, block_table, free_blocks, new_k, new_v, block_s
         smallest available id is always allocated next
         (`free_blocks.pop(0)`), for a deterministic, reproducible
         allocation order. Mutated in place.
-    new_k, new_v : (L, D) float64 arrays
+    new_k, new_v : lists of dimensions (L, D) of floats
         The L new tokens' key/value vectors to append.
     block_size : int
 
@@ -33,10 +32,8 @@ def paged_append(k_pool, v_pool, block_table, free_blocks, new_k, new_v, block_s
     seq_len : int
         The new total number of resident tokens, `n_before + L`.
     """
-    new_k = np.asarray(new_k, dtype=np.float64)
-    new_v = np.asarray(new_v, dtype=np.float64)
     n_before = len(block_table) * block_size
-    L = new_k.shape[0]
+    L = len(new_k)
 
     for i in range(L):
         pos = n_before + i
@@ -45,49 +42,42 @@ def paged_append(k_pool, v_pool, block_table, free_blocks, new_k, new_v, block_s
         if logical_block >= len(block_table):
             block_table.append(free_blocks.pop(0))
         phys = block_table[logical_block]
-        k_pool[phys, slot] = new_k[i]
-        v_pool[phys, slot] = new_v[i]
+        k_pool[phys][slot] = list(new_k[i])
+        v_pool[phys][slot] = list(new_v[i])
 
     return n_before + L
 
 
-def gather_and_attend(k_pool, v_pool, block_table, block_size, seq_len, q):
+def gather_and_attend(k_pool: list[list[list[float]]], v_pool: list[list[list[float]]], block_table: list[int], block_size: int, seq_len: int, q: list[float]) -> list[float]:
     """Gather the logical KV sequence from the paged pool via the block
     table, then run single-query scaled dot-product attention.
 
-    k_pool, v_pool : (num_phys_blocks, block_size, D)
+    k_pool, v_pool : lists of dimensions (num_phys_blocks, block_size, D)
     block_table    : list[int], length >= ceil(seq_len / block_size)
     seq_len        : int, number of valid logical tokens
-    q              : (D,) float64 array
+    q              : list[float]
 
     Returns
     -------
-    out : (D,) float64 array
+    out : list[float] of length D
         softmax(q @ K^T / sqrt(D)) @ V over the gathered K, V.
     """
-    k_pool = np.asarray(k_pool, dtype=np.float64)
-    v_pool = np.asarray(v_pool, dtype=np.float64)
-    q = np.asarray(q, dtype=np.float64)
-
-    D = q.shape[0]
+    D = len(q)
     k_logical_list = []
     v_logical_list = []
     for i in range(seq_len):
         logical_block = i // block_size
         slot = i % block_size
         phys = block_table[logical_block]
-        k_logical_list.append(k_pool[phys, slot])
-        v_logical_list.append(v_pool[phys, slot])
-
-    k_logical = np.asarray(k_logical_list, dtype=np.float64)
-    v_logical = np.asarray(v_logical_list, dtype=np.float64)
+        k_logical_list.append(k_pool[phys][slot])
+        v_logical_list.append(v_pool[phys][slot])
 
     scores_list = []
     scale = math.sqrt(D)
     for i in range(seq_len):
         dot = 0.0
         for j in range(D):
-            dot += k_logical[i, j] * q[j]
+            dot += k_logical_list[i][j] * q[j]
         scores_list.append(dot / scale)
 
     max_score = scores_list[0]
@@ -104,11 +94,11 @@ def gather_and_attend(k_pool, v_pool, block_table, block_size, seq_len, q):
 
     w_normalized = [val / sum_w for val in w_list]
 
-    out = np.zeros(D, dtype=np.float64)
+    out = [0.0] * D
     for j in range(D):
         acc = 0.0
         for i in range(seq_len):
-            acc += w_normalized[i] * v_logical[i, j]
+            acc += w_normalized[i] * v_logical_list[i][j]
         out[j] = acc
 
     return out

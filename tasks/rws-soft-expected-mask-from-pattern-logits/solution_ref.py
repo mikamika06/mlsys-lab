@@ -1,48 +1,40 @@
 import math
-import numpy as np
 
-def soft_expected_mask(logits: np.ndarray, patterns: np.ndarray) -> np.ndarray:
-    logits = np.asarray(logits, dtype=np.float64)
-    patterns = np.asarray(patterns, dtype=np.float64)
-    
-    shape_logits = logits.shape
-    shape_patterns = patterns.shape
-    
-    batch_dims = shape_logits[:-1]
-    d_in = shape_logits[-1]
-    d_out = shape_patterns[-1]
-    
-    total_batches = 1
-    for dim in batch_dims:
-        total_batches *= dim
-        
-    logits_flat = logits.reshape(total_batches, d_in)
-    
-    out_flat = np.zeros((total_batches, d_out), dtype=np.float64)
-    
-    for i in range(total_batches):
-        row = logits_flat[i]
-        
+def soft_expected_mask(logits: list[list[float]], patterns: list[list[float]]) -> list[list[float]]:
+    out = []
+    B = len(logits)
+    if B == 0:
+        return out
+
+    P = len(logits[0])
+    D = len(patterns[0]) if len(patterns) > 0 else 0
+
+    for i in range(B):
+        row = logits[i]
+
         max_val = row[0]
-        for j in range(1, d_in):
+        for j in range(1, P):
             if row[j] > max_val:
                 max_val = row[j]
-                
-        exp_row = np.empty(d_in, dtype=np.float64)
+
+        exp_row = []
         sum_exp = 0.0
-        for j in range(d_in):
+        for j in range(P):
             val = math.exp(row[j] - max_val)
-            exp_row[j] = val
+            exp_row.append(val)
             sum_exp += val
-            
-        probs = np.empty(d_in, dtype=np.float64)
-        for j in range(d_in):
-            probs[j] = exp_row[j] / sum_exp
-            
-        for k in range(d_out):
+
+        probs = []
+        for j in range(P):
+            probs.append(exp_row[j] / sum_exp)
+
+        out_row = []
+        for k in range(D):
             acc = 0.0
-            for j in range(d_in):
-                acc += probs[j] * patterns[j, k]
-            out_flat[i, k] = acc
-            
-    return out_flat.reshape((*batch_dims, d_out))
+            for j in range(P):
+                acc += probs[j] * patterns[j][k]
+            out_row.append(acc)
+
+        out.append(out_row)
+
+    return out

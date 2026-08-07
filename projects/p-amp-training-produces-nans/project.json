@@ -1,0 +1,105 @@
+{
+  "id": "p-amp-training-produces-nans",
+  "title": "Mixed precision produces NaNs",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "amp-nans",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "amp_fix/detector.py",
+    "amp_fix/scaler_utils.py",
+    "amp_fix/trainer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "локалізувати перший NaN у графі",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "located_correctly",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "перевірити, які операції автокаст перевів у fp16",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "autocast_checked",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "розібрати поведінку GradScaler на кроці пропуску",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "scaler_behavior_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "винести чутливі ділянки з автокасту",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "sensitive_isolated",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "1000 кроків без NaN, пам'ять не гірша",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "stable_run",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "детектор NaN, що вказує на модуль, а не на крок",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_detector",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

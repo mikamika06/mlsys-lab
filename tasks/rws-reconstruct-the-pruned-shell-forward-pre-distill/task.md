@@ -36,36 +36,29 @@ This operation is used before distillation, where the smaller model learns from 
 
 Implement `pruned_shell_forward(W, b, x, keep_rows, keep_cols)`.
 
-The arguments are NumPy arrays:
+The arguments are list:
 
 ```python
-def pruned_shell_forward(
-    W: np.ndarray,
-    b: np.ndarray,
-    x: np.ndarray,
-    keep_rows: np.ndarray,
-    keep_cols: np.ndarray,
-) -> np.ndarray:
+def pruned_shell_forward(W, b, x, keep_rows, keep_cols):
     ...
 ```
 
 `W` has shape $(m, n)$, `b` has shape $(m,)$, and `x` has shape $(n,)$.
 
-`keep_rows` and `keep_cols` contain integer indices of the dimensions retained by pruning. Return the forward output of the pruned shell as a `float64` NumPy array.
+`keep_rows` and `keep_cols` contain integer indices of the dimensions retained by pruning. Return the forward output of the pruned shell as a `float64` list.
 
 The implementation should perform the slicing and matrix multiplication directly. Do not compute the full teacher output and then select values.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float64)
-b = np.array([0.5, -1.0])
-x = np.array([10, 20, 30], dtype=np.float64)
+W = [[1, 2, 3], [4, 5, 6]]
+b = [0.5, -1.0]
+x = [10, 20, 30]
 
-rows = np.array([1])
-cols = np.array([0, 2])
+rows = [1]
+cols = [0, 2]
 
 y = pruned_shell_forward(W, b, x, rows, cols)
 # array([132.])

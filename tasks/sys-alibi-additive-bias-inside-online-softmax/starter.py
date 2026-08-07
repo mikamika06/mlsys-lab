@@ -1,5 +1,5 @@
-import numpy as np
+import math
 
-def alibi_online_softmax(scores, slopes):
+def alibi_online_softmax(scores: list[list[float]], slopes: list[float]) -> list[list[float]]:
     """Online softmax with ALiBi bias integrated into the streaming loop."""
-    raise NotImplementedError("implement the online ALiBi softmax here")
+    raise NotImplementedError('your code here')

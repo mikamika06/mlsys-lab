@@ -38,16 +38,10 @@ $$
 
 Implement `block_sparse_attention(Q, K, V, block_mask, block_size)`.
 
-The inputs are NumPy arrays:
+The inputs are list:
 
 ```python
-def block_sparse_attention(
-    Q: np.ndarray,
-    K: np.ndarray,
-    V: np.ndarray,
-    block_mask: np.ndarray,
-    block_size: int,
-) -> tuple[np.ndarray, float]:
+def block_sparse_attention(Q, K, V, block_mask, block_size):
     ...
 ```
 
@@ -65,17 +59,16 @@ The gate inputs are structurally zero: every query-key score contribution from a
 disabled block pair is zero, so the sparse computation must match dense
 computation.
 
-Do not use external libraries other than NumPy.
+Do not use external libraries other than Python.
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[1., 0.], [0., 1.], [1., 1.], [2., 1.]])
-K = np.zeros_like(Q)
-V = np.array([[1., 0.], [0., 1.], [1., 1.], [2., 2.]])
-mask = np.array([[True, False], [False, True]])
+Q = [[1., 0.], [0., 1.], [1., 1.], [2., 1.]]
+K = [[0 for _ in row] for row in Q]
+V = [[1., 0.], [0., 1.], [1., 1.], [2., 2.]]
+mask = [[True, False], [False, True]]
 
 Y, ratio = block_sparse_attention(Q, K, V, mask, 2)
 ```
@@ -85,7 +78,7 @@ match the dense reference for the same structurally zero input.
 
 ## What the gate checks
 
-The grader builds several structured inputs and computes a dense NumPy oracle
+The grader builds several structured inputs and computes a dense Python oracle
 inside the checker. The reported output must satisfy
 $\max_i |Y_i-\hat{Y}_i| < 10^{-6}$.
 

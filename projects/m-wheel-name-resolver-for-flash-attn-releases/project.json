@@ -1,0 +1,21 @@
+{
+  "id": "m-wheel-name-resolver-for-flash-attn-releases",
+  "title": "Wheel-name resolver for flash-attn releases",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "install-and-build-matrix",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flashres/resolver.py", "flashres/compat.py", "flashres/triage.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse a wheel filename into a compatibility record", "check": "harness/m1.py",
+     "gates": [{"metric": "wheels_parsed", "op": ">=", "threshold": 12}]},
+    {"n": 2, "title": "Evaluate compatibility against target runtime environments", "check": "harness/m2.py",
+     "gates": [{"metric": "compatibility_matched", "op": ">=", "threshold": 12}]},
+    {"n": 3, "title": "Safety net: triage real installation tracebacks and catch regression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_parser", "op": "==", "threshold": 1}]}
+  ]
+}

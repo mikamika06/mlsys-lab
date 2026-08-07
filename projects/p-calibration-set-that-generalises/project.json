@@ -1,0 +1,108 @@
+{
+  "id": "p-calibration-set-that-generalises",
+  "title": "Калібрувальний набір, що узагальнює",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "p-calibration-set-that-generalises",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/calibration.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти чутливість до складу набору",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "sensitivity_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "порівняти домени калібрування",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "domains_compared",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "знайти мінімальний достатній розмір",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "min_size_found",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити на трьох доменах застосування",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "three_domains_checked",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "падіння точності в межах на всіх трьох",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "bounded_drop",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "методичка складання набору",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_scaling",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_small_sample",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": "==",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "id": "p-convert-quantize-ship-a-gguf",
+  "title": "Провести модель від HF до GGUF і довести якість",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "convert-quantize-ship-a-gguf",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gguf_pipeline/converter.py",
+    "gguf_pipeline/quantizer.py",
+    "gguf_pipeline/evaluator.py",
+    "gguf_pipeline/reporter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "конвертація з коректною токенізацією",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "gguf_header_valid",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "tensor_count_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "vocab_integrity",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "базовий рецепт і вимір розміру",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "q4_0_size_ratio",
+          "op": "<=",
+          "threshold": 0.35
+        },
+        {
+          "metric": "q8_0_size_ratio",
+          "op": "<=",
+          "threshold": 0.65
+        },
+        {
+          "metric": "quant_reconstruction_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "imatrix і рецепт із матрицею важливості",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "imatrix_calculated",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "weighted_error_lower",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "якість: ppl і KLD проти fp16",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "fp16_kld_zero",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "q8_kld_lower_than_q4",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "ppl_ordered",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "швидкість на трьох рецептах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "benchmarks_complete",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "speedup_measured",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "реліз із таблицею розмір/якість/швидкість",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

@@ -21,7 +21,7 @@ def chunked_prefill_decode(prompt, chunk_sizes, decode_tokens):
 
 Arguments:
 
-- `prompt` is a 1-D NumPy array of integer token ids.
+- `prompt` is a list of floats of integer token ids.
 - `chunk_sizes` is a list of positive integers describing how many prompt tokens to process in each prefill chunk.
 - `decode_tokens` is a list of integer token ids. After each prefill chunk except the last, one decode step is performed using the next available value from this list.
 
@@ -38,9 +38,8 @@ The implementation must preserve the cache ordering. Decode steps must use all c
 ## Example
 
 ```python
-import numpy as np
 
-prompt = np.array([2, 5, 3, 7])
+prompt = [2, 5, 3, 7]
 result = chunked_prefill_decode(prompt, [2, 2], [9])
 
 # The first chunk processes [2, 5].
@@ -53,4 +52,4 @@ result = chunked_prefill_decode(prompt, [2, 2], [9])
 
 The gate compares the implementation against a reference execution that computes the same toy model operations directly. The final key cache, value cache, and emitted token sequence must match exactly.
 
-The reference computes token keys and values from the integer token ids using NumPy operations and performs decode steps from the accumulated cache state. Implementations that discard previous chunks, rebuild the cache incorrectly, or decode from only the current chunk will fail.
+The reference computes token keys and values from the integer token ids using Python operations and performs decode steps from the accumulated cache state. Implementations that discard previous chunks, rebuild the cache incorrectly, or decode from only the current chunk will fail.

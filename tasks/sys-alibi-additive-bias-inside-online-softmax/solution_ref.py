@@ -1,10 +1,9 @@
 import math
-import numpy as np
 
-def alibi_online_softmax(scores, slopes):
+def alibi_online_softmax(scores: list[list[float]], slopes: list[float]) -> list[list[float]]:
     """Online softmax with ALiBi bias integrated into the streaming loop."""
-    n = scores.shape[0]
-    probs = np.empty((n, n), dtype=np.float64)
+    n = len(scores)
+    probs = [[0.0] * n for _ in range(n)]
 
     for i in range(n):
         m = slopes[i]
@@ -12,7 +11,7 @@ def alibi_online_softmax(scores, slopes):
         running_sum = 0.0
 
         for j in range(n):
-            v_j = float(scores[i, j]) + float(m) * (i - j)
+            v_j = float(scores[i][j]) + float(m) * (i - j)
             if v_j > running_max:
                 running_sum = running_sum * math.exp(running_max - v_j) + 1.0
                 running_max = v_j
@@ -20,7 +19,7 @@ def alibi_online_softmax(scores, slopes):
                 running_sum += math.exp(v_j - running_max)
 
         for j in range(n):
-            v_j = float(scores[i, j]) + float(m) * (i - j)
-            probs[i, j] = math.exp(v_j - running_max) / running_sum
+            v_j = float(scores[i][j]) + float(m) * (i - j)
+            probs[i][j] = math.exp(v_j - running_max) / running_sum
 
     return probs

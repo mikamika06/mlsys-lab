@@ -31,11 +31,11 @@ for each token $i$. Tokens assigned beyond expert capacity are dropped.
 Implement `expert_choice_routing(logits, capacity_factor)`:
 
 ```python
-def expert_choice_routing(logits: np.ndarray, capacity_factor: float):
+def expert_choice_routing(logits: list[list[float]], capacity_factor: float):
     ...
 ```
 
-The input `logits` is a 2-D NumPy array of shape $(T, E)$. Return a tuple:
+The input `logits` is a list of lists of floats of shape $(T, E)$. Return a tuple:
 
 ```python
 (expert_tokens, expert_dropped, token_choice_dropped)
@@ -52,19 +52,18 @@ where:
   highest-scoring expert, then keeps only the first $C$ tokens per expert using
   the same score ordering rule.
 
-Use NumPy operations for score processing. The returned lists and integers must
+Use Python operations for score processing. The returned lists and integers must
 match the reference behavior exactly.
 
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([
+logits = [
     [3.0, 1.0],
     [2.0, 4.0],
     [0.5, 2.5],
-])
+]
 
 expert_tokens, expert_dropped, token_choice_dropped = expert_choice_routing(
     logits, 1.0
@@ -78,7 +77,7 @@ expert_tokens, expert_dropped, token_choice_dropped = expert_choice_routing(
 
 ## What the gate checks
 
-The gate builds a NumPy reference implementation of both routing strategies and
+The gate builds a Python reference implementation of both routing strategies and
 compares the complete returned tuple. The comparison checks the selected token
 lists, expert-choice dropped-token count, and token-choice dropped-token count.
 

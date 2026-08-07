@@ -1,21 +1,19 @@
-import numpy as np
+from __future__ import annotations
 
-def acceptance_rate(target, draft):
-    target = np.asarray(target, dtype=np.float64)
-    draft = np.asarray(draft, dtype=np.float64)
-    
-    n_rows, n_cols = target.shape
-    result = np.zeros(n_rows, dtype=np.float64)
-    
+def acceptance_rate(target: list[list[float]], draft: list[list[float]]) -> list[float]:
+    n_rows = len(target)
+    result = []
+
     for i in range(n_rows):
         row_sum = 0.0
+        n_cols = len(target[i])
         for j in range(n_cols):
-            t_val = target[i, j]
-            d_val = draft[i, j]
+            t_val = target[i][j]
+            d_val = draft[i][j]
             if t_val < d_val:
                 row_sum += t_val
             else:
                 row_sum += d_val
-        result[i] = row_sum
-        
+        result.append(row_sum)
+
     return result

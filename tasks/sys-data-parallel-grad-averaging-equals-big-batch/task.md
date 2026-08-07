@@ -36,19 +36,18 @@ Because all shards have the same number of samples, $\bar g$ equals the full‑b
 
 Implement `data_parallel_grad_avg(X, y, num_shards)` that:
 
-* accepts a 2‑D NumPy array `X` of shape $(n,d)$ and a 1‑D array `y` of length $n$,
+* accepts a 2‑D list `X` of shape $(n,d)$ and a 1‑D array `y` of length $n$,
 * splits the data into `num_shards` equal shards (assume $n$ is divisible by `num_shards$),
 * computes each shard’s gradient as described above, and
 * returns the average of those gradients.
 
-The function must use only vectorised NumPy operations; no explicit Python loops over samples. The returned gradient should be a 1‑D float64 array of length $d$.
+The function must use only vectorised Python operations; no explicit Python loops over samples. The returned gradient should be a 1‑D float64 array of length $d$.
 
 ## Example
 
 ```python
-import numpy as np
-X = np.array([[1, 2], [3, 4], [5, 6], [7, 8]], dtype=np.float64)
-y = np.array([0.5, 1.5, 2.5, 3.5], dtype=np.float64)
+X = [[1, 2], [3, 4], [5, 6], [7, 8]]
+y = [0.5, 1.5, 2.5, 3.5]
 
 grad = data_parallel_grad_avg(X, y, num_shards=2)
 print(grad)   # → array([...])
@@ -56,7 +55,7 @@ print(grad)   # → array([...])
 
 ## What the gate checks
 
-The grader computes a reference gradient using NumPy and compares it to the user’s output with the scorer `max_abs_err`. The solution must satisfy
+The grader computes a reference gradient using Python and compares it to the user’s output with the scorer `max_abs_err`. The solution must satisfy
 
 $$
 \mathrm{max\_abs\_err} \le 10^{-6}.

@@ -1,54 +1,56 @@
 import numpy as np
 
 
-def _oracle_rank(weights, grads):
+def grade(sol, fx) -> dict:
+    weights = np.array([
+        [[3.0, 0.0]],
+        [[1.0, 1.0]],
+        [[0.5, 0.5]],
+    ])
+    grads = np.array([
+        [[0.1, 0.1]],
+        [[5.0, 5.0]],
+        [[0.1, 0.1]],
+    ])
+
+    # Convert to plain lists for the learner's function
+    w_list = weights.tolist()
+    g_list = grads.tolist()
+
+    try:
+        mag_rank, taylor_rank = sol.rank_heads_by_importance(w_list, g_list)
+    except Exception as e:
+        return {"exact_match": 0, "rankings_differ": 0, "error": str(e)}
+
+    # Oracle computation using the gate's reference (using numpy as before)
     h = weights.shape[0]
     flat_w = weights.reshape(h, -1)
     flat_g = grads.reshape(h, -1)
+    d = flat_w.shape[1]
 
-    mag_scores = np.sqrt(np.sum(flat_w * flat_w, axis=1))
-    taylor_scores = np.sum(np.abs(flat_g * flat_w), axis=1)
+    mag_scores = np.empty(h, dtype=np.float64)
+    taylor_scores = np.empty(h, dtype=np.float64)
 
-    mag_order = sorted(range(h), key=lambda i: (-float(mag_scores[i]), i))
-    taylor_order = sorted(range(h), key=lambda i: (-float(taylor_scores[i]), i))
-    return mag_order, taylor_order
+    for i in range(h):
+        sum_sq = 0.0
+        sum_taylor = 0.0
+        for j in range(d):
+            w_val = flat_w[i, j]
+            g_val = flat_g[i, j]
+            sum_sq += w_val * w_val
+            sum_taylor += abs(g_val * w_val)
+        mag_scores[i] = np.sqrt(sum_sq)
+        taylor_scores[i] = sum_taylor
 
+    oracle_mag = sorted(range(h), key=lambda i: (-float(mag_scores[i]), i))
+    oracle_taylor = sorted(range(h), key=lambda i: (-float(taylor_scores[i]), i))
 
-def grade(sol, fx) -> dict:
-    rng = np.random.default_rng(12345)
-    cases = []
-
-    while len(cases) < 3:
-        weights = rng.normal(size=(6, 2, 3))
-        grads = rng.normal(size=(6, 2, 3))
-        mag, tay = _oracle_rank(weights, grads)
-        if mag != tay:
-            cases.append((weights, grads))
-
-    exact = 1.0
-    differ = 1.0
-
-    for weights, grads in cases:
-        ref_mag, ref_taylor = _oracle_rank(weights, grads)
-        if ref_mag == ref_taylor:
-            differ = 0.0
-        try:
-            got_mag, got_taylor = sol.rank_heads_by_importance(
-                weights.copy(), grads.copy()
-            )
-            got_mag = list(got_mag)
-            got_taylor = list(got_taylor)
-        except Exception:
-            exact = 0.0
-            break
-
-        if got_mag != ref_mag or got_taylor != ref_taylor:
-            exact = 0.0
-
-        if got_mag == got_taylor:
-            differ = 0.0
+    exact_match = int(
+        list(mag_rank) == list(oracle_mag) and list(taylor_rank) == list(oracle_taylor)
+    )
+    rankings_differ = int(list(mag_rank) != list(taylor_rank))
 
     return {
-        "exact_match": exact,
-        "rankings_differ": differ,
+        "exact_match": exact_match,
+        "rankings_differ": rankings_differ,
     }

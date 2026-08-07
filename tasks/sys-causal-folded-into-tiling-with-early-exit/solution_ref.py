@@ -1,18 +1,15 @@
 import math
-import numpy as np
 
 
-def tiled_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
-                            tile_q: int, tile_kv: int, on_tile=None) -> np.ndarray:
+def tiled_causal_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]],
+                            tile_q: int, tile_kv: int, on_tile=None) -> list[list[float]]:
     """Tiled causal attention that skips fully-future KV tiles entirely.
 
     See task.md for the exact skip rule and masking. Calls
     on_tile(qi, kj) exactly once per visited (non-skipped) tile pair.
     """
-    Q = np.asarray(Q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
-    S, d = Q.shape
+    S = len(Q)
+    d = len(Q[0]) if S > 0 else 0
     n_q_tiles = S // tile_q
     n_kv_tiles = S // tile_kv
 
@@ -36,7 +33,7 @@ def tiled_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
                     else:
                         dot = 0.0
                         for dim in range(d):
-                            dot += Q[i, dim] * K[j, dim]
+                            dot += Q[i][dim] * K[j][dim]
                         scores[i][j] = dot / sqrt_d
 
     m = []
@@ -78,7 +75,7 @@ def tiled_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
         for col in range(d):
             val = 0.0
             for k in range(S):
-                val += probs[i][k] * V[k, col]
+                val += probs[i][k] * V[k][col]
             result[i][col] = val
 
-    return np.array(result, dtype=np.float64)
+    return result

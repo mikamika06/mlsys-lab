@@ -1,8 +1,4 @@
-import numpy as np
-
-
-def moe_dispatch_combine(X: np.ndarray, expert_idx: np.ndarray,
-                          gate_weight: np.ndarray, W: np.ndarray) -> np.ndarray:
+def moe_dispatch_combine(X: list[list[float]], expert_idx: list[int], gate_weight: list[float], W: list[list[list[float]]]) -> list[list[float]]:
     """
     Route each token to its assigned expert (expert_idx), apply that
     expert's linear transform W[e], and combine results back into the

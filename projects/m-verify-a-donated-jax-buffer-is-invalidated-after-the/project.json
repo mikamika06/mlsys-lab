@@ -1,0 +1,73 @@
+{
+  "id": "m-verify-a-donated-jax-buffer-is-invalidated-after-the",
+  "title": "JAX buffer donation and compilation break-even analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Production concerns: compile-time/runtime tradeoffs, portability, memory donation",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "jaxserv/donation.py",
+    "jaxserv/bench.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify buffer invalidation after donation",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "donation_detected",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "deleted_buffers_identified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Peak memory savings and serving break-even",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "savings_calculated",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "breakeven_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catches missing donation check",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_ignored_invalidation",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

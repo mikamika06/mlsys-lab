@@ -26,7 +26,7 @@ shared partial block holding the remaining $P \bmod S$ tokens.
 Implement `cow_kv_branches(prompt_kv, branch_kvs, block_size)`:
 
 ```python
-def cow_kv_branches(prompt_kv: np.ndarray, branch_kvs: list[np.ndarray], block_size: int) -> tuple[list[np.ndarray], int]:
+def cow_kv_branches(prompt_kv, branch_kvs, block_size):
     ...
 ```
 
@@ -58,8 +58,8 @@ Return `(branch_sequences, total_blocks_allocated)`:
 ```python
 # P = 5, block_size = 4: one full block [0,1,2,3] + one shared partial
 # block [4] (1/4 slots used, refcount = 2 since both branches share it).
-prompt_kv   = np.random.randn(5, 3)
-branch_kvs  = [np.random.randn(2, 3), np.random.randn(2, 3)]
+prompt_kv = [[random.gauss(0, 1) for _ in range(3)] for _ in range(5)]
+branch_kvs = [[[random.gauss(0, 1) for _ in range(3)] for _ in range(2)], [[random.gauss(0, 1) for _ in range(3)] for _ in range(2)]]
 seqs, n_blocks = cow_kv_branches(prompt_kv, branch_kvs, block_size=4)
 
 # branch 0 appends first: the partial block has refcount 2, so branch 0
@@ -72,14 +72,14 @@ seqs, n_blocks = cow_kv_branches(prompt_kv, branch_kvs, block_size=4)
 # total_blocks_allocated == 1 (full block) + 1 (original partial) + 1 (COW copy) == 3
 assert n_blocks == 3
 assert seqs[0].shape == (7, 3) and seqs[1].shape == (7, 3)
-assert np.allclose(seqs[0], np.concatenate([prompt_kv, branch_kvs[0]]))
-assert np.allclose(seqs[1], np.concatenate([prompt_kv, branch_kvs[1]]))
+assert all(abs(a - b) < 1e-5 for row1, row2 in zip(seqs[0], [prompt_kv[i] for i in range(len(prompt_kv))] + [branch_kvs[0][i] for i in range(len(branch_kvs[0]))]) for a, b in zip(row1, row2))
+assert all(abs(a - b) < 1e-5 for row1, row2 in zip(seqs[1], [prompt_kv[i] for i in range(len(prompt_kv))] + [branch_kvs[1][i] for i in range(len(branch_kvs[1]))]) for a, b in zip(row1, row2))
 ```
 
 ## What the gate checks
 
 The grader runs the example above plus 8 deterministically generated
-random cases (`np.random.default_rng` seeded; varying prompt length,
+random cases (`random.Random` seeded; varying prompt length,
 block size, branch count and per-branch append length, including
 branches that append zero tokens) against an independent oracle that
 simulates the same block manager and (a) reconstructs each branch's

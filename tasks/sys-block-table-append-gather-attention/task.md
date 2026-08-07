@@ -24,7 +24,7 @@ $$
 Implement two functions.
 
 ```python
-def paged_append(k_pool, v_pool, block_table, free_blocks, new_k, new_v, block_size) -> int:
+def paged_append(k_pool: list[list[list[float]]], v_pool: list[list[list[float]]], block_table: list[int], free_blocks: list[int], new_k: list[list[float]], new_v: list[list[float]], block_size: int) -> int:
     ...
 
 def gather_and_attend(k_pool, v_pool, block_table, block_size, seq_len, q):
@@ -67,20 +67,19 @@ Gather the logical `K`, `V` of length `seq_len` by indexing the pool with
 ## Example
 
 ```python
-import numpy as np
 
 block_size, D, num_phys = 2, 4, 5
-k_pool = np.zeros((num_phys, block_size, D))
-v_pool = np.zeros((num_phys, block_size, D))
+k_pool = [[[0.0 for _ in range(D)] for _ in range(block_size)] for _ in range(num_phys)]
+v_pool = [[[0.0 for _ in range(D)] for _ in range(block_size)] for _ in range(num_phys)]
 block_table = []
 free_blocks = [0, 1, 2, 3, 4]
 
-new_k = np.random.randn(3, D)
-new_v = np.random.randn(3, D)
+new_k = [[0.0 for _ in range(D)] for _ in range(3)]
+new_v = [[0.0 for _ in range(D)] for _ in range(3)]
 seq_len = paged_append(k_pool, v_pool, block_table, free_blocks, new_k, new_v, block_size)
 # block_table now has 2 entries (ceil(3/2) blocks used), free_blocks lost 2 ids
 
-q = np.random.randn(D)
+q = [0.0 for _ in range(D)]
 out = gather_and_attend(k_pool, v_pool, block_table, block_size, seq_len, q)
 # out.shape == (D,)
 ```
@@ -92,4 +91,4 @@ out = gather_and_attend(k_pool, v_pool, block_table, block_size, seq_len, q)
   region of `k_pool`/`v_pool` must match a reference implementation exactly
   (allocation order, block-table growth, returned `seq_len`).
 * **max_abs_err** — the output of `gather_and_attend` on the resulting cache
-  must match a NumPy attention oracle to within `1e-6` max absolute error.
+  must match a Python attention oracle to within `1e-6` max absolute error.

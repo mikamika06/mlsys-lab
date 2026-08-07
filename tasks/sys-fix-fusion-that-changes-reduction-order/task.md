@@ -40,7 +40,7 @@ each individual addition is an exact no-op.
 Implement `fused_dot_reduce`:
 
 ```python
-def fused_dot_reduce(x: np.ndarray, w: np.ndarray) -> float:
+def fused_dot_reduce(x: list[float], w: list[float]) -> float:
     ...
 ```
 
@@ -59,12 +59,11 @@ instead of $O(N)$.
 ## Example
 
 ```python
-import numpy as np
 
-huge = np.float32(2e8)                  # one huge-magnitude term
-smalls = np.full(10_000, 1.0, dtype=np.float32)   # many far smaller terms
-x = np.concatenate([[huge], smalls])
-w = np.ones_like(x)
+huge = float(2e8)                  # one huge-magnitude term
+smalls = [1.0] * 10_000   # many far smaller terms
+x = [huge] + smalls
+w = [1.0] * len(x)
 
 y = fused_dot_reduce(x, w)
 print(y)              # close to 2e8 + 10_000 = 200_010_000
@@ -80,7 +79,7 @@ The grader builds several adversarial cases: one large-magnitude term
 followed by many terms individually smaller than half that term's
 `float32` ULP, plus a couple of plain random cases for general sanity. For
 each case it computes the true value as the exact `float64` sum of the
-given `float32` inputs (`np.sum` on the values cast to `float64`) — a real
+given `float32` inputs (`sum` on the values cast to `float64`) — a real
 oracle, never your algorithm.
 
 Your output is compared against that oracle with the scorer `rel_err`

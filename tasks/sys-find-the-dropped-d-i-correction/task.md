@@ -49,9 +49,7 @@ Fix `flash_attention_backward` so it restores the missing $D_i$ correction
 term:
 
 ```python
-def flash_attention_backward(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
-                              O: np.ndarray, L: np.ndarray, dO: np.ndarray,
-                              scale: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def flash_attention_backward(Q: list[list[float]], K: list[list[float]], V: list[list[float]], O: list[list[float]], L: list[float], dO: list[list[float]], scale: float):
     ...
 ```
 
@@ -77,7 +75,7 @@ correct `dS` diverge, and so do the resulting `dQ`, `dK`.
 ## What the gate checks
 
 A single gate, **max_abs_err**, builds several small seeded random
-`(Q, K, V, dO)` instances, runs the real (numpy-only) forward pass to get
+`(Q, K, V, dO)` instances, runs the real forward pass to get
 `O` and `L`, and computes the ground-truth `dQ, dK, dV` via **central finite
 differences** on the scalar loss $\ell(Q,K,V) = \sum (O(Q,K,V) \odot dO)$ —
 an independent numerical oracle that never calls your backward code. Your

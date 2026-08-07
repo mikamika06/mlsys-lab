@@ -38,7 +38,7 @@ $p(y) = \min(p,q)(y) + \max(p-q,0)(y)$ between the two branches.
 Implement the residual (rejection) distribution:
 
 ```python
-def residual_distribution(p: np.ndarray, q: np.ndarray) -> np.ndarray:
+def residual_distribution(p: list[float], q: list[float]) -> list[float]:
     ...
 ```
 
@@ -55,9 +55,8 @@ draft token — **not** $p$ itself.
 ## Example
 
 ```python
-import numpy as np
-p = np.array([0.1, 0.6, 0.3])
-q = np.array([0.5, 0.4, 0.1])
+p = [0.1, 0.6, 0.3]
+q = [0.5, 0.4, 0.1]
 
 residual_distribution(p, q)
 # max(p-q,0) = [0, 0.2, 0.2], sum = 0.4
@@ -78,4 +77,4 @@ enough to fail this by roughly an order of magnitude; the correct
 $\max(p-q,0)$-renormalized residual keeps the whole scheme unbiased, so with
 200,000 samples the empirical KL is driven down by sampling noise alone,
 comfortably under the threshold. All randomness inside the gate is
-seeded (`np.random.default_rng(0)`), so the result is deterministic.
+seeded (`random.Random(0)`), so the result is deterministic.

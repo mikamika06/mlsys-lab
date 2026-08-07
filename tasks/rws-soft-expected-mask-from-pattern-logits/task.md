@@ -23,36 +23,33 @@ This operation appears in attention‑like modules and in probabilistic mixture 
 Implement the function `soft_expected_mask`:
 
 ```python
-def soft_expected_mask(logits: np.ndarray, patterns: np.ndarray) -> np.ndarray:
+def soft_expected_mask(logits: list[list[float]], patterns: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
-* `logits` – a 2‑D NumPy array of shape `(B, P)` containing arbitrary real numbers.
-* `patterns` – a 2‑D NumPy array of shape `(P, D)` containing the pattern masks.
+* `logits` – a 2‑D list of shape `(B, P)` containing arbitrary real numbers.
+* `patterns` – a 2‑D list of shape `(P, D)` containing the pattern masks.
 
-The function must return a NumPy array of shape `(B, D)` with dtype `float64`.  
-Use only vectorised NumPy operations; no explicit Python loops are allowed.
+The function must return a list of shape `(B, D)` with dtype `float64`.  
+Use only vectorised Python operations; no explicit Python loops are allowed.
 
 ## Example
 
 ```python
-import numpy as np
 
-logits   = np.array([[0.0, 1.0], [2.0, -1.0]])
-patterns = np.array([[1.0, 0.0],
-                     [0.0, 1.0]])
+logits   = [[0.0, 1.0], [2.0, -1.0]]
+patterns = [[1.0, 0.0],
+                     [0.0, 1.0]]
 
 mask = soft_expected_mask(logits, patterns)
-print(mask)
-# [[0.73105858 0.26894142]
-#  [0.88079708 0.11920292]]
+print(mask)  # [[0.2689414213699951, 0.7310585786300049], [0.9525741268224334, 0.04742587317756679]]
 ```
 
 The first row is the softmax of `[0,1]` times the identity pattern matrix; the second row uses the softmax of `[2,-1]`.
 
 ## What the gate checks
 
-The grader computes a NumPy reference `E_ref = softmax(logits) @ patterns`.  
+The grader computes a Python reference `E_ref = softmax(logits) @ patterns`.  
 Your implementation must produce an array whose global relative L2 error satisfies
 
 $$

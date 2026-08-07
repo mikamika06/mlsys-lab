@@ -1,0 +1,22 @@
+{
+  "id": "m-same-family-vs-cross-family-acceptance-rate-measured",
+  "title": "Same-family vs cross-family acceptance rate, measured locally",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Draft/target model pairing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["specbench/measure.py", "specbench/metrics.py", "specbench/policy.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure local token acceptance rates", "check": "harness/m1.py",
+     "gates": [{"metric": "rates_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compare family gap and compute efficiency ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "gap_match", "op": "==", "threshold": 1},
+               {"metric": "efficiency_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid acceptance thresholds", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_threshold", "op": "==", "threshold": 1}]}
+  ]
+}

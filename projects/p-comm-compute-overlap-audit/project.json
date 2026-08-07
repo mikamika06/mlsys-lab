@@ -1,0 +1,103 @@
+{
+  "id": "p-comm-compute-overlap-audit",
+  "title": "Комунікація не перекривається з обчисленням",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw3-distributed",
+  "track": "comm-compute-overlap",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "overlap/audit.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зібрати профіль і виділити комунікацію",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "events_extracted",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "comm_identified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "порахувати теоретичний обсяг трафіку на крок",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "traffic_matches_theory",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "знайти бар'єри, що ламають перекриття",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "barriers_found",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перебудувати порядок і розмір бакетів",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "buckets_optimized",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "частка неперекритої комунікації нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "overlap_ratio_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "прогноз масштабування на 16 карт",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

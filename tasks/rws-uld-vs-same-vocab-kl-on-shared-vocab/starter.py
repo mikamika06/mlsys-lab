@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def uld_and_kl_along_sweep(p_teacher: np.ndarray, p_students: np.ndarray):
+def uld_and_kl_along_sweep(p_teacher: list[float], p_students: list[list[float]]):
     """Compute ULD and same-vocab KL between a teacher distribution and a
     sweep of student distributions sharing the same vocabulary/index order.
 

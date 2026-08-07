@@ -32,11 +32,11 @@ where $n_t = n / \text{tile\_size}$.
 Implement `skippable_kv_tile_fraction`:
 
 ```python
-def skippable_kv_tile_fraction(mask: np.ndarray, tile_size: int) -> float:
+def skippable_kv_tile_fraction(mask: list[list[bool]], tile_size: int) -> float:
     ...
 ```
 
-- `mask`: `(n, n)` boolean NumPy array. `True` means "this query attends
+- `mask`: `(n, n)` boolean list. `True` means "this query attends
   to this key" (kept); `False` means masked out. `n` is guaranteed to be
   divisible by `tile_size`.
 - `tile_size`: side length of the square (query-tile, KV-tile) blocks.
@@ -49,15 +49,14 @@ plain Python `float` in `[0.0, 1.0]`.
 ## Example
 
 ```python
-import numpy as np
 
 n, tile_size = 4, 2
-mask = np.array([
+mask = [
     [True,  False, False, False],
     [True,  True,  False, False],
     [True,  True,  True,  False],
     [True,  True,  True,  True],
-])  # causal mask
+]  # causal mask
 
 frac = skippable_kv_tile_fraction(mask, tile_size)
 # blocks: (0,0)=[[T,F],[T,T]] has a True -> kept
@@ -69,7 +68,7 @@ frac = skippable_kv_tile_fraction(mask, tile_size)
 
 ## What the gate checks
 
-The grader builds several masks with a real NumPy oracle — causal,
+The grader builds several masks with a real Python oracle — causal,
 sliding-window, a random block-sparse pattern (generated at tile
 granularity so its true fraction is known exactly), a random
 element-wise-sparse mask (so the block reduction must be genuine, not a

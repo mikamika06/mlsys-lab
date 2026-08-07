@@ -25,8 +25,7 @@ handles both "fully in the past" tiles (mask has no effect) and
 Implement `tiled_causal_attention`:
 
 ```python
-def tiled_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
-                            tile_q: int, tile_kv: int, on_tile=None) -> np.ndarray:
+def tiled_causal_attention(Q: list[list[float]], K: list[list[float]], V: list[list[float]], tile_q: int, tile_kv: int, on_tile=None) -> list[list[float]]:
     ...
 ```
 
@@ -51,9 +50,8 @@ full buffer, then `out = softmax(scores) @ V`.
 ## Example
 
 ```python
-import numpy as np
 seq, d = 8, 4
-Q = K = V = np.random.default_rng(0).standard_normal((seq, d))
+import random; random.seed(0); Q = K = V = [[random.gauss(0, 1) for _ in range(d)] for _ in range(seq)]
 visited = []
 out = tiled_causal_attention(Q, K, V, tile_q=4, tile_kv=4, on_tile=lambda qi, kj: visited.append((qi, kj)))
 # visited == [(0, 0), (1, 0), (1, 1)] -- query tile 0 only ever needs KV

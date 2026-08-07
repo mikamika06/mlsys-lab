@@ -1,0 +1,104 @@
+{
+  "id": "p-admission-control-under-overload",
+  "title": "Допуск під перевантаженням",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "admission-control",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "admit/queue.py",
+    "admit/policy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "модель черги під перевантаженням",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "queue_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "політика допуску за оцінкою часу",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "admission_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "пріоритети класів запитів",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "priority_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити на сплеску",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "burst_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "p95 прийнятих під SLO",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "p95_slo_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "частка відмов мінімальна за умови SLO",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_fault",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

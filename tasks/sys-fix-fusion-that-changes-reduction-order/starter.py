@@ -1,7 +1,6 @@
-import numpy as np
+import struct
 
-
-def fused_dot_reduce(x: np.ndarray, w: np.ndarray) -> float:
+def fused_dot_reduce(x: list[float], w: list[float]) -> float:
     """Emulate a fused multiply-reduce kernel: y = sum(x * w), accumulated
     at the kernel's native float32 width.
 
@@ -22,11 +21,4 @@ def fused_dot_reduce(x: np.ndarray, w: np.ndarray) -> float:
     float
         sum_i x[i] * w[i], computed with float32 arithmetic.
     """
-    x = np.asarray(x, dtype=np.float32)
-    w = np.asarray(w, dtype=np.float32)
-    p = (x * w).astype(np.float32)
-
-    acc = np.float32(0.0)
-    for v in p:
-        acc = np.float32(acc + v)
-    return float(acc)
+    raise NotImplementedError('your code here')

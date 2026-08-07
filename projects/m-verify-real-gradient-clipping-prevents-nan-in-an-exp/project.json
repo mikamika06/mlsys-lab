@@ -1,0 +1,21 @@
+{
+  "id": "m-verify-real-gradient-clipping-prevents-nan-in-an-exp",
+  "title": "Gradient clipping and NF4 quantization error verification",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "numerical-failure-modes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gradclip/clipping.py", "gradclip/quant.py", "gradclip/loop.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Gradient clipping prevents NaN in exploding loops", "check": "harness/m1.py",
+     "gates": [{"metric": "nan_prevented", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Measure accumulated error from NF4 cycles", "check": "harness/m2.py",
+     "gates": [{"metric": "error_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches unclipped or broken logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_fault", "op": "==", "threshold": 1}]}
+  ]
+}

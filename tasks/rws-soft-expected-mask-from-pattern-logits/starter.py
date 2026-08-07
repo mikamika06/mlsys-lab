@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def soft_expected_mask(logits: np.ndarray, patterns: np.ndarray) -> np.ndarray:
+def soft_expected_mask(logits: list[list[float]], patterns: list[list[float]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

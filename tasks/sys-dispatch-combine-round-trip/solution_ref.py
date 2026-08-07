@@ -1,23 +1,17 @@
-import numpy as np
-
-
-def moe_dispatch_combine(X: np.ndarray, expert_idx: np.ndarray,
-                          gate_weight: np.ndarray, W: np.ndarray) -> np.ndarray:
+def moe_dispatch_combine(X: list[list[float]], expert_idx: list[int],
+                          gate_weight: list[float], W: list[list[list[float]]]) -> list[list[float]]:
     """
     Dispatch tokens to their assigned expert, apply that expert's linear
     transform, and combine results back into the original token order,
     scaled by the per-token gate weight.
     """
-    X = np.asarray(X, dtype=np.float64)
-    expert_idx = np.asarray(expert_idx)
-    gate_weight = np.asarray(gate_weight, dtype=np.float64)
-    W = np.asarray(W, dtype=np.float64)
-    n, d = X.shape
+    n = len(X)
+    d = len(X[0])
 
     order = []
     for i in range(n):
         order.append(i)
-    
+
     for i in range(1, n):
         key = order[i]
         key_val = expert_idx[key]
@@ -48,7 +42,7 @@ def moe_dispatch_combine(X: np.ndarray, expert_idx: np.ndarray,
         end = start
         while end < n and sorted_idx[end] == e:
             end += 1
-        
+
         for i in range(start, end):
             for j in range(d):
                 acc = 0.0
@@ -74,9 +68,4 @@ def moe_dispatch_combine(X: np.ndarray, expert_idx: np.ndarray,
         for j in range(d):
             Y_list[i][j] *= g
 
-    Y = np.empty((n, d), dtype=np.float64)
-    for i in range(n):
-        for j in range(d):
-            Y[i, j] = Y_list[i][j]
-
-    return Y
+    return Y_list

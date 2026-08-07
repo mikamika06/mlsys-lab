@@ -25,30 +25,29 @@ For each row and each group of four columns, exactly two positions with the larg
 Implement `wanda_2_4_mask(W, X)`:
 
 ```python
-def wanda_2_4_mask(W: np.ndarray, X: np.ndarray) -> np.ndarray:
+def wanda_2_4_mask(W, X):
     ...
 ```
 
 The function receives:
 
-- `W`: a 2-D NumPy array with shape $(m, n)$.
-- `X`: a 2-D NumPy array with shape $(k, n)$.
+- `W`: a list of lists of floats with shape $(m, n)$.
+- `X`: a list of lists of floats with shape $(k, n)$.
 - $n$ is divisible by $4$.
 
-Return an integer NumPy array of shape $(m, n)$ containing only zeros and ones.
+Return an integer list of shape $(m, n)$ containing only zeros and ones.
 
 Compute the Wanda scores, then for every output row and every consecutive block of four input columns keep the two highest-scoring entries. If scores are tied, the lower column index inside the group must be preferred.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[1.0, -4.0, 2.0, 3.0]])
-X = np.array([
+W = [[1.0, -4.0, 2.0, 3.0]]
+X = [
     [1.0, 2.0, 1.0, 1.0],
     [1.0, 1.0, 1.0, 1.0],
-])
+]
 
 M = wanda_2_4_mask(W, X)
 # array([[0, 1, 1, 0]])
@@ -58,6 +57,6 @@ The scores are proportional to $[1, 4, 2, 3]$, so the two largest values in the 
 
 ## What the gate checks
 
-The gate computes a NumPy oracle from the Wanda score definition and compares the returned mask exactly. It also verifies the structural constraint that every consecutive group of four inputs in every output row contains exactly two surviving entries.
+The gate computes a Python oracle from the Wanda score definition and compares the returned mask exactly. It also verifies the structural constraint that every consecutive group of four inputs in every output row contains exactly two surviving entries.
 
 A solution passes only if it produces the same 2:4 mask as the oracle and satisfies the required sparsity pattern.

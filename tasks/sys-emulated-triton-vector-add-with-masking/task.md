@@ -26,15 +26,12 @@ rely on.
 Implement `emulated_triton_add`:
 
 ```python
-import numpy as np
 
-def emulated_triton_add(a: np.ndarray,
-                        b: np.ndarray,
-                        block_size: int) -> np.ndarray:
+def emulated_triton_add(a: list[float], b: list[float], block_size: int) -> list[float]:
     ...
 ```
 
-**Inputs.** `a` and `b` are 1-D NumPy arrays of the same length $N$ (may
+**Inputs.** `a` and `b` are list of floats of the same length $N$ (may
 be zero-length). `block_size` is a positive integer $B$.
 
 **Behavior.** Emulate a Triton kernel launch: compute the grid size as
@@ -44,16 +41,15 @@ the loaded tiles of `a` and `b` (filling out-of-range lanes with 0),
 add the masked tiles, and write the valid portion of the result into the
 output array.
 
-**Output.** Return a 1-D NumPy array of length $N$ containing
+**Output.** Return a list of floats of length $N$ containing
 $c_i = a_i + b_i$ for every valid index. The dtype must match
 `a.dtype`.
 
 ## Example
 
 ```python
-import numpy as np
-a = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
-b = np.array([5.0, 4.0, 3.0, 2.0, 1.0])
+a = [1.0, 2.0, 3.0, 4.0, 5.0]
+b = [5.0, 4.0, 3.0, 2.0, 1.0]
 c = emulated_triton_add(a, b, block_size=2)
 # Grid: ceil(5/2) = 3 blocks
 # Block 0 (pid=0): indices 0,1 — mask [1,1] → [1+5, 2+4] = [6, 6]
@@ -65,7 +61,7 @@ c = emulated_triton_add(a, b, block_size=2)
 ## What the gate checks
 
 The gate metric is `max_abs_err`. It compares your output against the
-NumPy oracle $c = a + b$ across ten test cases:
+Python oracle $c = a + b$ across ten test cases:
 
 - $N$ exactly divisible by $B$ (no partial block).
 - $N$ not divisible by $B$ (partial final block, the masking case).

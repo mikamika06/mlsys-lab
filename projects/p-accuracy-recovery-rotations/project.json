@@ -1,0 +1,111 @@
+{
+  "id": "p-accuracy-recovery-rotations",
+  "title": "Відновити точність після квантизації",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "accuracy-recovery-rotations",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "quant_rec/analysis.py",
+    "quant_rec/rotations.py",
+    "quant_rec/rounding.py",
+    "quant_rec/lowrank.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти, де саме втрата",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "layer_error_identified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "застосувати обертання і виміряти",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rotation_applied",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "outliers_reduced",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "підібрати рецепт округлення",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "rounding_optimized",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "низькоранговий коректор і його ціна",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "low_rank_applied",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "cost_accounted",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "поріг точності досягнуто",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "accuracy_threshold_met",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "розмір не зріс більш ніж на X",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

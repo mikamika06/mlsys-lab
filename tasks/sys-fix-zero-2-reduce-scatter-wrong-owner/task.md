@@ -51,6 +51,6 @@ reduce_scatter_owner(grads, 2)
 
 ## What the gate checks
 
-The gate builds several gradient sets and computes the expected ownership using a NumPy reduce-scatter oracle. The submitted function must exactly match the oracle output for every case.
+The gate builds several gradient sets and computes the expected ownership using a Python reduce-scatter oracle. The submitted function must exactly match the oracle output for every case.
 
 The `exact_match` score is $1.0$ only when every returned shard has the correct owner and every value matches.

@@ -1,0 +1,7 @@
+# Ticket: AMX vs AVX-512 Throughput Unpredictability During CPU Inference
+
+During high-throughput CPU inference workloads utilizing modern x86 hardware, systems engineers frequently observe severe performance regressions, unpredictable latency spikes, or suboptimal execution speeds when executing dense matrix multiplication routines across various production layers. Specifically, it remains entirely unclear to operators and automated compilation pipelines whether delegating a given tensor operation to Advanced Matrix Extensions (AMX) tiles or sticking with traditional Advanced Vector Extensions (AVX-512) vector registers will yield higher operational throughput.
+
+Currently, engineering teams are forced to rely on exhaustive empirical benchmarking and trial-and-error across hundreds of distinct matrix dimensions, aspect ratios, and precision formats (such as INT8 and BF16) for every target hardware revision and runtime batch size. This manual, ad-hoc profiling approach introduces significant deployment friction, prolongs integration cycles, and frequently results in suboptimal instruction set choices when dynamic batching alters tensor shapes at runtime.
+
+We urgently need a reliable, deterministic analytical throughput model that computes expected execution performance for both AMX and AVX-512 instruction sets given arbitrary tensor shapes and data types. This model must account for hardware constraints, padding overheads, and execution limits to enable automated, optimal instruction selection without runtime profiling overhead.

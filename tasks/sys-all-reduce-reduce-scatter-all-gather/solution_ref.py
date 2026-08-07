@@ -1,11 +1,9 @@
-import numpy as np
-
 def reduce_scatter(data, op="sum"):
     n = len(data)
     k = len(data[0]) // n
     result = []
     for j in range(n):
-        res_chunk = np.empty(k, dtype=data[0].dtype)
+        res_chunk = [0.0] * k
         for c in range(k):
             if op == "sum":
                 acc = 0.0
@@ -23,5 +21,7 @@ def reduce_scatter(data, op="sum"):
     return result
 
 def all_gather(data):
-    combined = np.concatenate(data)
-    return [combined.copy() for _ in range(len(data))]
+    combined = []
+    for chunk in data:
+        combined.extend(chunk)
+    return [list(combined) for _ in range(len(data))]

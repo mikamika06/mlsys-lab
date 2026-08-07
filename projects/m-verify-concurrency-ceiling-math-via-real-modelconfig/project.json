@@ -1,0 +1,21 @@
+{
+  "id": "m-verify-concurrency-ceiling-math-via-real-modelconfig",
+  "title": "Verify Concurrency Ceiling Math via Real ModelConfig Parsing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Triton Backends & Instance Groups",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["triton_verify/parser.py", "triton_verify/scaling.py", "triton_verify/classifier.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Verify concurrency ceiling from model config", "check": "harness/m1.py",
+     "gates": [{"metric": "ceilings_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute throughput scaling efficiency", "check": "harness/m2.py",
+     "gates": [{"metric": "efficiency_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: dynamic shape load error classification test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_faulty_classifier", "op": "==", "threshold": 1}]}
+  ]
+}

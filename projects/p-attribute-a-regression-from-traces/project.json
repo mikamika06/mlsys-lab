@@ -1,0 +1,98 @@
+{
+  "id": "p-attribute-a-regression-from-traces",
+  "title": "Attribute a regression from two traces",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw3-profiling",
+  "track": "profiling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "profiler/comparator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "звести обидві траси до порівнюваних таблиць",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "table_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти найбільшу дельту self-time",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "delta_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "відрізнити launch-bound від compute-bound",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "classification_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "знайти приховану синхронізацію",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "sync_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "причина названа і підтверджена третьою трасою",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "confirmation_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "автоматичний порівнювач трас для CI",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

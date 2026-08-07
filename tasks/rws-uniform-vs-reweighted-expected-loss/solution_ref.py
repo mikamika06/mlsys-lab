@@ -1,21 +1,19 @@
 import math
-import numpy as np
 
 
-def compare_sampling(coeffs):
-    coeffs = np.asarray(coeffs, dtype=np.float64)
-    n = coeffs.shape[0]
-    
-    losses = np.empty(n, dtype=np.float64)
+def compare_sampling(coeffs: list[list[float]]) -> tuple[float, float, float]:
+    n = len(coeffs)
+
+    losses = [0.0] * n
     for i in range(n):
-        losses[i] = coeffs[i, 0] + coeffs[i, 1] + coeffs[i, 2]
+        losses[i] = coeffs[i][0] + coeffs[i][1] + coeffs[i][2]
 
     loss_sum = 0.0
     for i in range(n):
         loss_sum += losses[i]
     uniform_loss = float(loss_sum / n)
 
-    z = np.empty(n, dtype=np.float64)
+    z = [0.0] * n
     for i in range(n):
         z[i] = -losses[i]
 
@@ -24,7 +22,7 @@ def compare_sampling(coeffs):
         if z[i] > max_z:
             max_z = z[i]
 
-    weights = np.empty(n, dtype=np.float64)
+    weights = [0.0] * n
     for i in range(n):
         weights[i] = math.exp(z[i] - max_z)
 

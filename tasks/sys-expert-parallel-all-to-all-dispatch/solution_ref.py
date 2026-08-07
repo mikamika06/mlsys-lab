@@ -1,48 +1,42 @@
-import numpy as np
-
-
-def moe_all_to_all_dispatch(X: np.ndarray, router_logits: np.ndarray,
-                             expert_weight: np.ndarray, num_devices: int):
+def moe_all_to_all_dispatch(X: list[list[float]], router_logits: list[list[float]],
+                             expert_weight: list[list[list[float]]], num_devices: int):
     """Simulate expert-parallel MoE dispatch: route -> all-to-all -> expert
     compute -> all-to-all back.
 
     See task.md for the exact routing/placement rule.
     """
-    X = np.asarray(X, dtype=np.float64)
-    router_logits = np.asarray(router_logits, dtype=np.float64)
-    expert_weight = np.asarray(expert_weight, dtype=np.float64)
-
-    N, d = X.shape
-    E = router_logits.shape[1]
+    N = len(X)
+    d = len(X[0])
+    E = len(router_logits[0])
     experts_per_device = E // num_devices
 
-    expert_id = np.empty(N, dtype=np.int64)
+    expert_id = [0] * N
     for i in range(N):
         best_e = 0
-        best_val = router_logits[i, 0]
+        best_val = router_logits[i][0]
         for e in range(1, E):
-            val = router_logits[i, e]
+            val = router_logits[i][e]
             if val > best_val:
                 best_val = val
                 best_e = e
         expert_id[i] = best_e
 
-    device_id = np.empty(N, dtype=np.int64)
+    device_id = [0] * N
     for i in range(N):
         device_id[i] = expert_id[i] // experts_per_device
 
-    device_counts = np.zeros(num_devices, dtype=np.int64)
+    device_counts = [0] * num_devices
     for i in range(N):
         device_counts[device_id[i]] += 1
 
-    output = np.zeros((N, d), dtype=np.float64)
+    output = [[0.0] * d for _ in range(N)]
 
     for dev in range(num_devices):
         idx = []
         for i in range(N):
             if device_id[i] == dev:
                 idx.append(i)
-        
+
         if len(idx) == 0:
             continue
 
@@ -52,11 +46,11 @@ def moe_all_to_all_dispatch(X: np.ndarray, router_logits: np.ndarray,
             dev_tokens_list.append(X[i])
             dev_experts_list.append(expert_id[i])
 
-        dev_tokens = np.array(dev_tokens_list, dtype=np.float64)
-        dev_experts = np.array(dev_experts_list, dtype=np.int64)
+        dev_tokens = dev_tokens_list
+        dev_experts = dev_experts_list
 
-        dev_out = np.empty((len(idx), d), dtype=np.float64)
-        
+        dev_out = [[0.0] * d for _ in range(len(idx))]
+
         unique_experts = []
         for e in dev_experts:
             found = False
@@ -75,12 +69,12 @@ def moe_all_to_all_dispatch(X: np.ndarray, router_logits: np.ndarray,
             w = expert_weight[e]
             for j in range(len(dev_tokens)):
                 if m[j]:
-                    row_res = np.zeros(d, dtype=np.float64)
+                    row_res = [0.0] * d
                     tok = dev_tokens[j]
                     for r in range(d):
                         acc = 0.0
                         for c in range(d):
-                            acc += tok[c] * w[c, r]
+                            acc += tok[c] * w[c][r]
                         row_res[r] = acc
                     dev_out[j] = row_res
 

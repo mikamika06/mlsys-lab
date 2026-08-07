@@ -1,9 +1,6 @@
-import numpy as np
-
-
 def _kv(token):
     t = float(token)
-    return np.array([t, t * 0.5 + 1.0], dtype=np.float64), np.array([t * 2.0 - 1.0], dtype=np.float64)
+    return [t, t * 0.5 + 1.0], [t * 2.0 - 1.0]
 
 
 def _decode(k_cache, v_cache, token):
@@ -37,7 +34,7 @@ def chunked_prefill_decode(prompt, chunk_sizes, decode_tokens):
             decode_pos += 1
 
     return (
-        np.stack(k_cache, axis=0),
-        np.stack(v_cache, axis=0),
-        np.array(emitted, dtype=np.int64),
+        k_cache,
+        v_cache,
+        emitted,
     )

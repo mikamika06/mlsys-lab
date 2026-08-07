@@ -33,8 +33,7 @@ $$
 Implement `moe_all_to_all_dispatch`:
 
 ```python
-def moe_all_to_all_dispatch(X: np.ndarray, router_logits: np.ndarray,
-                             expert_weight: np.ndarray, num_devices: int):
+def moe_all_to_all_dispatch(X: list[list[float]], router_logits: list[list[float]], expert_weight: list[list[list[float]]], num_devices: int):
     ...
 ```
 
@@ -67,11 +66,11 @@ Return a tuple `(output, device_counts)`:
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
-router_logits = np.array([[5.0, 0.0], [0.0, 5.0], [0.0, 5.0]])  # -> experts [0, 1, 1]
-expert_weight = np.stack([np.eye(2), 2 * np.eye(2)])            # E=2
+X = [[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]]
+router_logits = [[5.0, 0.0], [0.0, 5.0], [0.0, 5.0]]  # -> experts [0, 1, 1]
+`[[1.0 if i == j else 0.0 for j in range(2)] for i in range(2)]` (which is A, a 2x2 matrix)
+#
 num_devices = 2  # 1 expert per device
 
 out, counts = moe_all_to_all_dispatch(X, router_logits, expert_weight, num_devices)

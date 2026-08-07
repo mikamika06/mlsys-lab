@@ -1,0 +1,21 @@
+{
+  "id": "m-working-set-model-cache-size-needed-for-90-hit-rate",
+  "title": "Working-set model and cache warmup curve for prefix caching",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-cache-eviction-and-hit-rate",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["workset/model.py", "workset/warmup.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Working-set size for 90% hit rate", "check": "harness/m1.py",
+     "gates": [{"metric": "sizes_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Cache warmup curve: hits vs request index", "check": "harness/m2.py",
+     "gates": [{"metric": "curves_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: regression test for model invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_model", "op": "==", "threshold": 1}]}
+  ]
+}

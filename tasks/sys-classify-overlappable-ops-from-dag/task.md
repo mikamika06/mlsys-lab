@@ -55,7 +55,7 @@ overlappable_ops(types, edges)
 ## What the gate checks
 
 The grader runs the fixed example above plus several deterministically
-generated random DAGs (`np.random.default_rng` seeded, `N` between 6 and
+generated random DAGs (`random.Random` seeded, `N` between 6 and
 16 nodes, edges only from a lower index to a higher index so the graph is
 always acyclic, roughly a third of nodes marked `"comm"`) through an
 independent oracle that computes forward reachability from every node via

@@ -32,17 +32,15 @@ $$\log\text{softmax}(Z^S)_{i,j} \;=\; Z^S_{i,j}
 Implement `seq_level_kd_hard(teacher_logits, student_logits)`:
 
 ```python
-import numpy as np
 
-def seq_level_kd_hard(teacher_logits: np.ndarray,
-                      student_logits: np.ndarray) -> float:
+def seq_level_kd_hard(teacher_logits: list[list[float]], student_logits: list[list[float]]) -> float:
     """
     Return the sequence-level KD hard-target cross-entropy loss.
 
     Parameters
     ----------
-    teacher_logits : np.ndarray, shape (n, V), dtype float64
-    student_logits : np.ndarray, shape (n, V), dtype float64
+    teacher_logits : list[float], shape (n, V), dtype float64
+    student_logits : list[float], shape (n, V), dtype float64
 
     Returns
     -------
@@ -50,17 +48,16 @@ def seq_level_kd_hard(teacher_logits: np.ndarray,
     """
 ```
 
-Use vectorized NumPy operations only — no Python `for` loops over positions.
+Use vectorized Python operations only — no Python `for` loops over positions.
 The result must be a plain Python `float`.
 
 ## Example
 
 ```python
-import numpy as np
-teacher = np.array([[ 2.0,  1.0,  0.1],
-                     [-1.0,  3.0,  0.5]])
-student = np.array([[ 1.0,  2.0,  0.0],
-                     [ 0.0,  1.0,  3.0]])
+teacher = [[ 2.0,  1.0,  0.1],
+                     [-1.0,  3.0,  0.5]]
+student = [[ 1.0,  2.0,  0.0],
+                     [ 0.0,  1.0,  3.0]]
 
 loss = seq_level_kd_hard(teacher, student)
 # teacher argmax tokens: [1, 1]
@@ -72,7 +69,7 @@ loss = seq_level_kd_hard(teacher, student)
 
 ## What the gate checks
 
-The gate computes a reference answer using an independent NumPy implementation
+The gate computes a reference answer using an independent Python implementation
 (manual log-sum-exp, not reusing `scipy.special.logsumexp`) and reports the
 relative $L_2$ error:
 

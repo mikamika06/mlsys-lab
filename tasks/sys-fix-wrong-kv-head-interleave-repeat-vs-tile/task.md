@@ -29,11 +29,11 @@ $[0,1,0,1,0,1,0,1]$, which silently mixes groups.
 Implement `expand_kv_heads(kv, num_query_heads)`:
 
 ```python
-def expand_kv_heads(kv: np.ndarray, num_query_heads: int) -> np.ndarray:
+def expand_kv_heads(kv: list[list[list[list[float]]]], num_query_heads: int) -> list[list[list[list[float]]]]:
     ...
 ```
 
-The input `kv` is a NumPy array with shape $(B, H_{kv}, T, d)$.
+The input `kv` is a list with shape $(B, H_{kv}, T, d)$.
 Return a new array with shape $(B, H_q, T, d)$ by repeating every KV head the
 required number of times. Assume that `num_query_heads` is divisible by
 `kv.shape[1]`.
@@ -43,9 +43,8 @@ The output must preserve the input values and dtype.
 ## Example
 
 ```python
-import numpy as np
 
-kv = np.array([[[[1]], [[2]]]])
+kv = [[[[1]], [[2]]]]
 out = expand_kv_heads(kv, 6)
 
 # Head values are [1, 1, 1, 2, 2, 2]
@@ -54,8 +53,8 @@ out = expand_kv_heads(kv, 6)
 
 ## What the gate checks
 
-The gate compares the submitted implementation against a NumPy oracle that uses
-the required head mapping with `np.repeat`. The relative error
+The gate compares the submitted implementation against a Python oracle that uses
+the required head mapping with list repetition. The relative error
 
 $$
 \mathrm{rel\_err} =
@@ -63,5 +62,5 @@ $$
 {\lVert y_{\mathrm{reference}}\rVert_2 + 10^{-12}}
 $$
 
-must be less than $10^{-5}$. Implementations using `np.tile` fail because they
+must be less than $10^{-5}$. Implementations using list tiling fail because they
 produce a different head-to-group assignment.

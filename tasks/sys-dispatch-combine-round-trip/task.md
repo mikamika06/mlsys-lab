@@ -33,8 +33,7 @@ exactly.
 Implement:
 
 ```python
-def moe_dispatch_combine(X: np.ndarray, expert_idx: np.ndarray,
-                          gate_weight: np.ndarray, W: np.ndarray) -> np.ndarray:
+def moe_dispatch_combine(X: list[list[float]], expert_idx: list[int], gate_weight: list[float], W: list[list[list[float]]]) -> list[list[float]]:
     ...
 ```
 
@@ -55,14 +54,13 @@ resulting array of shape $(n, d)$.
 ## Example
 
 ```python
-import numpy as np
-X = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
-expert_idx = np.array([0, 1, 0])
-gate_weight = np.array([1.0, 1.0, 0.5])
-W = np.array([
+X = [[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]]
+expert_idx = [0, 1, 0]
+gate_weight = [1.0, 1.0, 0.5]
+W = [
     [[2.0, 0.0], [0.0, 2.0]],   # expert 0: scale by 2
     [[1.0, 0.0], [0.0, -1.0]],  # expert 1: flip sign of 2nd coord
-])
+]
 
 moe_dispatch_combine(X, expert_idx, gate_weight, W)
 # token 0 -> expert 0: [1,0] @ W[0] = [2, 0],  * gate 1.0 -> [2, 0]
@@ -75,7 +73,7 @@ moe_dispatch_combine(X, expert_idx, gate_weight, W)
 
 A single gate, **max_abs_err**, generates several random `(X, expert_idx,
 gate_weight, W)` instances (varying $n$, $d$, $E$), computes the dense
-reference $y_i = g_i (x_i W_{e(i)})$ directly for every token with NumPy,
+reference $y_i = g_i (x_i W_{e(i)})$ directly for every token with Python,
 and compares it element-wise to your function's output. The maximum
 absolute error across all trials must be $\le 10^{-5}$; any exception or
 wrong output shape counts as a failing (`1e9`) error.

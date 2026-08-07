@@ -1,11 +1,7 @@
-import numpy as np
-
-def wasserstein_1_loss_on_sorted_logits(teacher_logits: np.ndarray,
-                                        student_logits: np.ndarray) -> float:
-    t = teacher_logits.ravel()
-    s = student_logits.ravel()
-    t_list = list(t)
-    s_list = list(s)
+def wasserstein_1_loss_on_sorted_logits(teacher_logits: list[float],
+                                        student_logits: list[float]) -> float:
+    t_list = list(teacher_logits)
+    s_list = list(student_logits)
     if len(t_list) < len(s_list):
         t_list.extend([0.0] * (len(s_list) - len(t_list)))
     elif len(s_list) < len(t_list):

@@ -36,9 +36,7 @@ with equality in both **exactly** when $p_s = p_t$.
 Implement `uld_and_kl_along_sweep`:
 
 ```python
-def uld_and_kl_along_sweep(
-    p_teacher: np.ndarray, p_students: np.ndarray
-) -> tuple[np.ndarray, np.ndarray]:
+def uld_and_kl_along_sweep(p_teacher: list[float], p_students: list[list[float]]):
     ...
 ```
 
@@ -55,13 +53,12 @@ For every row `p_students[i]`, compute `uld[i] = ULD(p_teacher, p_students[i])` 
 ## Example
 
 ```python
-import numpy as np
 
-p_t = np.array([0.5, 0.3, 0.2])
-p_students = np.array([
+p_t = [0.5, 0.3, 0.2]
+p_students = [
     [0.5, 0.3, 0.2],   # exact match -> both losses are 0
     [0.2, 0.3, 0.5],   # same multiset, different order -> ULD is 0, KL is NOT
-])
+]
 uld, kl = uld_and_kl_along_sweep(p_t, p_students)
 # uld ~= [0.0, 0.0]      (sorted distributions are identical in both rows)
 # kl  ~= [0.0, >0.0]     (KL is index-aligned, so the reordering IS a difference)
@@ -69,7 +66,7 @@ uld, kl = uld_and_kl_along_sweep(p_t, p_students)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle computing both losses directly, on a fixed teacher
+The gate builds a Python oracle computing both losses directly, on a fixed teacher
 distribution and a fixed perturbation sweep (row 0 is the exact `p_teacher` match; the
 other rows are genuine perturbations along a fixed, mean-zero direction). It checks:
 

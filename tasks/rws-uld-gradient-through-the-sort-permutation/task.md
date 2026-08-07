@@ -15,27 +15,26 @@ where $s$ are student logits and $t$ are teacher logits.
 Implement the function
 
 ```python
-def uld_gradient(student_logits: np.ndarray, teacher_logits: np.ndarray) -> np.ndarray:
+def uld_gradient(student_logits: list[float], teacher_logits: list[float]) -> list[float]:
 ```
 
 that returns the gradient $\frac{\partial \mathcal{L}_{\text{ULD}}}{\partial s}$.
 
-- Both inputs are 1-D `numpy.ndarray` of equal length.
-- Return a 1-D `numpy.ndarray` of the same shape (float64).
+- Both inputs are 1-D `list` of equal length.
+- Return a 1-D `list` of the same length (float).
 
 ## Example
 
 ```python
-import numpy as np
-s = np.array([1.0, 3.0, 2.0])
-t = np.array([0.0, 4.0, 1.0])
+s = [1.0, 3.0, 2.0]
+t = [0.0, 4.0, 1.0]
 grad = uld_gradient(s, t)
 # Expected:
 #   sort(s) = [1, 2, 3],  sort(t) = [0, 1, 4]
 #   diff = [1, 1, -1]
-#   rank = np.argsort(s).argsort()  = [0, 2, 1]
+# rank = [sorted(s).index(x) for x in s] = [0, 2, 1]
 #   grad = 2 * diff[rank] = [2, -2, 2]
-print(grad)   # [ 2. -2.  2.]
+print(grad)  # [2.0, -2.0, 2.0]
 ```
 
 ## What the gate checks

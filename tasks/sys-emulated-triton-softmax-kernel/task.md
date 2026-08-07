@@ -20,19 +20,19 @@ $$
 $$
 
 An emulated Triton kernel in Python should preserve this block-oriented
-behavior while using NumPy operations instead of GPU instructions.
+behavior while using Python operations instead of GPU instructions.
 
 ## Task
 
 Implement `softmax_kernel(X)`:
 
 ```python
-def softmax_kernel(X: np.ndarray) -> np.ndarray:
+def softmax_kernel(X: list[list[float]]) -> list[list[float]]:
     ...
 ```
 
-The input is a 2-D NumPy array of shape $(n, d)$. Treat each row as an
-independent program instance. Return a `float64` NumPy array of the same shape
+The input is a list of lists of floats of shape $(n, d)$. Treat each row as an
+independent program instance. Return a `float64` list of the same shape
 where each row is the stable softmax of the corresponding input row.
 
 The implementation should avoid computing large exponentials before numerical
@@ -41,9 +41,8 @@ stabilization.
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[1.0, 2.0, 3.0], [0.0, 0.0, 0.0]])
+X = [[1.0, 2.0, 3.0], [0.0, 0.0, 0.0]]
 Y = softmax_kernel(X)
 
 # Approximately:
@@ -53,7 +52,7 @@ Y = softmax_kernel(X)
 
 ## What the gate checks
 
-The gate computes a NumPy reference implementation using the stable softmax
+The gate computes a Python reference implementation using the stable softmax
 equation
 
 $$

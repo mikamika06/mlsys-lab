@@ -24,19 +24,18 @@ with the convention that if no $i$ satisfies $l_i \le L_{\text{SLO}}$, then $k=-
 Implement `find_batch_size_knee`:
 
 ```python
-def find_batch_size_knee(latencies: np.ndarray, throughputs: np.ndarray, slo_latency: float) -> int:
+def find_batch_size_knee(latencies: list[float], throughputs: list[float], slo_latency: float) -> int:
     ...
 ```
 
-The function receives two one‑dimensional NumPy arrays of equal length and a scalar SLO latency.  
+The function receives two list of floats of equal length and a scalar SLO latency.  
 It must return the integer index of the knee batch size as defined above.
 
 ## Example
 
 ```python
-import numpy as np
-lat = np.array([10, 12, 15, 20])
-thr = np.array([100, 120, 110, 90])
+lat = [10, 12, 15, 20]
+thr = [100, 120, 110, 90]
 slo = 18.0
 knee = find_batch_size_knee(lat, thr, slo)
 print(knee)   # → 1

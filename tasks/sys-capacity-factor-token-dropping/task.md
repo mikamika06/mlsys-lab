@@ -30,14 +30,12 @@ for its assigned expert.
 Implement `token_drop_mask`:
 
 ```python
-def token_drop_mask(assignments: np.ndarray,
-                    num_experts: int,
-                    capacity_factor: float) -> np.ndarray:
+def token_drop_mask(assignments, num_experts, capacity_factor):
 ```
 
 **Parameters:**
 
-- `assignments` — a 1-D integer NumPy array of shape $(N,)$.
+- `assignments` — a 1-D integer list of shape $(N,)$.
   `assignments[i]` is the 0-indexed expert that token $i$ is routed to.
   Every value satisfies $0 \le \text{assignments}[i] < E$.
 - `num_experts` — the number of experts $E \ge 1$.
@@ -45,7 +43,7 @@ def token_drop_mask(assignments: np.ndarray,
 
 **Returns:**
 
-A 1-D boolean NumPy array of shape $(N,)$ where `True` means the token is
+A 1-D boolean list of shape $(N,)$ where `True` means the token is
 **kept** and `False` means it is **dropped**.
 
 **Dropping rule:** Compute $c = \lceil C \cdot N / E \rceil$. For each
@@ -55,9 +53,8 @@ ascending order. Keep the first $\min(|S_j|,\; c)$ and drop the remainder.
 ## Example
 
 ```python
-import numpy as np
 
-assignments = np.array([0, 1, 0, 1, 0])   # N = 5 tokens, E = 2 experts
+assignments = [0, 1, 0, 1, 0]   # N = 5 tokens, E = 2 experts
 mask = token_drop_mask(assignments, num_experts=2, capacity_factor=0.8)
 # c = ceil(0.8 * 5 / 2) = ceil(2.0) = 2
 # Expert 0: indices [0, 2, 4] → keep 2 → tokens 0, 2 kept; 4 dropped

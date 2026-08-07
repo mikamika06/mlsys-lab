@@ -1,0 +1,5 @@
+We are deploying our new quantized models to edge devices with strict memory limits, but we are seeing massive perplexity drops. Right now, our exporter either keeps everything at an 8-bit uniform precision (which doesn't fit the RAM budget for some devices) or drops the whole model to a 4-bit uniform precision (which completely destroys the outputs).
+
+We recently tried a quick heuristic patch that iteratively reduces the precision of the "safest" layer until the model fits in memory. Strangely, on some configurations, this greedy approach picks a combination that is noticeably worse than a hand-tuned mixed-precision profile we found by trial and error. To make matters worse, the exporter sometimes accidentally quantizes the embedding matrices and the final language model head, which breaks output generation entirely.
+
+We need a reliable allocator that correctly keeps specified sensitive modules untouched, computes a baseline uniform bit-width, and rigorously finds the best possible mixed-precision allocation for the remaining budget, alongside a reproducible test case proving exactly why our iterative greedy heuristic was getting trapped.

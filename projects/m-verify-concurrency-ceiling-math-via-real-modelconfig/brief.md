@@ -1,0 +1,7 @@
+An incident occurred in the Triton model-serving tier during peak traffic. Operators noticed that when deploying models with complex instance group configurations and dynamic shape constraints, the service either failed to allocate execution instances correctly or drastically underperformed compared to predicted throughput scaling efficiency models.
+
+Specifically, the concurrency ceiling calculation currently relies on naive static assumptions about model configuration limits, ignoring real Triton `ModelConfig` parsing constraints such as max batch size limits, instance group counts, dynamic shape bounds, and concurrency scheduling bottlenecks. When multiple instance groups are defined with different GPU counts or priorities, the system fails to verify whether the configured concurrency limits respect the underlying hardware memory ceilings and queuing thresholds.
+
+Furthermore, when dynamic-shape load errors occur under heavy concurrent requests, Triton returns complex error strings that are currently misclassified or lumped into generic failure buckets, preventing the auto-scaling and health-check loops from taking appropriate corrective actions such as shedding load or adjusting queue timeouts.
+
+You need to implement a robust verification and classification module in low-level ML systems that parses real Triton model configurations, computes true concurrency ceilings, evaluates throughput scaling efficiency across instance group counts, and precisely classifies dynamic-shape load errors from raw Triton error strings.

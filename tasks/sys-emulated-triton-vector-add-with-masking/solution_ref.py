@@ -1,12 +1,10 @@
-import numpy as np
-
-def emulated_triton_add(a: np.ndarray,
-                        b: np.ndarray,
-                        block_size: int) -> np.ndarray:
+def emulated_triton_add(a: list[float],
+                        b: list[float],
+                        block_size: int) -> list[float]:
     """Emulate a Triton vector-add kernel with block processing and boundary masking."""
-    N = a.shape[0]
+    N = len(a)
     n_blocks = (N + block_size - 1) // block_size
-    output = np.empty(N, dtype=a.dtype)
+    output = [0.0] * N
 
     for pid in range(n_blocks):
         offset = pid * block_size

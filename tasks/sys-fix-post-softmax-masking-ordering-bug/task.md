@@ -9,7 +9,7 @@ When computing attention scores we often need to mask out certain positions (e.g
 Implement `masked_softmax(logits, mask)`:
 
 ```python
-def masked_softmax(logits: np.ndarray, mask: np.ndarray) -> np.ndarray:
+def masked_softmax(logits: list[list[float]], mask: list[list[bool]]) -> list[list[float]]:
     ...
 ```
 
@@ -21,16 +21,13 @@ The function should return an array of shape $(B, L)$ with probabilities that su
 ## Example
 
 ```python
-import numpy as np
-logits = np.array([[1.0, 2.0, -1.0],
-                   [0.5, 0.0, 3.0]])
-mask   = np.array([[False, True, False],
-                   [True,  False, False]])
+logits = [[1.0, 2.0, -1.0],
+                   [0.5, 0.0, 3.0]]
+mask   = [[False, True, False],
+                   [True,  False, False]]
 
 probs = masked_softmax(logits, mask)
-print(probs)
-# [[0.73105858 0.         0.26894142]
-#  [0.          0.11920292 0.88079708]]
+print(probs)  # [[0.8807970779778823, 0.0, 0.11920292202211755], [0.0, 0.04742587317756679, 0.9525741268224334]]
 ```
 
 ## What the gate checks

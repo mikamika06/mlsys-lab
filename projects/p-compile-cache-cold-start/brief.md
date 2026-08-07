@@ -1,0 +1,7 @@
+# Cold Start Compilation Latency
+
+After deploying our high-performance machine learning inference service to production, monitoring systems immediately highlight a critical performance anomaly. The very first incoming request after any deployment or service restart experiences an unacceptable latency spike, often reaching up to ninety seconds before returning a response. Subsequent requests execute instantly, but this initial delay violates our strict SLA guarantees and causes timeouts for upstream clients.
+
+Investigation into the serving logs reveals that this massive latency is not caused by network congestion, model loading from disk, or queue saturation, but rather by on-demand JIT compilation and kernel generation happening inside the runtime engine during request execution. When the worker process boots up, the execution graph contains uncompiled symbolic shapes and dynamic operators. Because the compilation happens lazily on the critical path of the first user request, the client connection blocks while the compiler optimizes and lowers the computational graph.
+
+Your task is to eliminate this cold start bottleneck by implementing a robust compilation caching and pre-compilation framework. You need to trace what gets compiled, enable and persist a compilation cache, support cache portability across different host environments, execute a startup warmup routine, ensure the first request bypasses compilation entirely, and implement correct cache invalidation semantics to prevent stale or corrupted artifacts from causing runtime errors.

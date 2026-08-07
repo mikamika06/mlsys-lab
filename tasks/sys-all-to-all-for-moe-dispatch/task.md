@@ -24,7 +24,7 @@ S_{p-1,j}
 \in \mathbb{R}^{(pt) \times h}.
 $$
 
-This task simulates the communication pattern using NumPy arrays. It does not
+This task simulates the communication pattern using list. It does not
 perform real distributed communication.
 
 ## Task
@@ -32,7 +32,7 @@ perform real distributed communication.
 Implement `moe_all_to_all(send, world_size)`:
 
 ```python
-def moe_all_to_all(send: np.ndarray, world_size: int) -> np.ndarray:
+def moe_all_to_all(send: list[list[list[list[float]]]], world_size: int) -> list[list[list[float]]]:
     ...
 ```
 
@@ -55,14 +55,11 @@ precision.
 ## Example
 
 ```python
-import numpy as np
 
-send = np.array(
-    [
+send = [
         [[[1.0], [2.0]], [[3.0], [4.0]]],
         [[[5.0], [6.0]], [[7.0], [8.0]]],
     ]
-)
 
 out = moe_all_to_all(send, 2)
 
@@ -75,7 +72,7 @@ out = moe_all_to_all(send, 2)
 
 ## What the gate checks
 
-The gate creates several NumPy send buffers and computes the expected receive
+The gate creates several Python send buffers and computes the expected receive
 buffers using the all-to-all definition. It compares the candidate result with
 that reference using
 

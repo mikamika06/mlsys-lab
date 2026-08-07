@@ -1,8 +1,4 @@
-import numpy as np
-
-
-def moe_all_to_all_dispatch(X: np.ndarray, router_logits: np.ndarray,
-                             expert_weight: np.ndarray, num_devices: int):
+def moe_all_to_all_dispatch(X: list[list[float]], router_logits: list[list[float]], expert_weight: list[list[list[float]]], num_devices: int):
     """Simulate expert-parallel MoE dispatch: route -> all-to-all -> expert
     compute -> all-to-all back.
 

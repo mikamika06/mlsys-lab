@@ -1,0 +1,47 @@
+{
+  "id": "m-trigger-mlx-s-float64-on-gpu-exception-apply-the-mx-",
+  "title": "Float64 GPU Stream Fallback, Precision Drift, and Dtype Promotion",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Numeric dtype behavior & failure modes across Metal",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mlxops/device.py",
+    "mlxops/reduction.py",
+    "mlxops/promotion.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Catch Float64 GPU exception and route to CPU stream context",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "gpu_exception_caught", "op": "==", "threshold": 1},
+        {"metric": "cpu_workaround_correct", "op": "==", "threshold": 1},
+        {"metric": "stream_state_restored", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure FP16 vs FP32 accumulation error growth",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "error_metrics_match", "op": "==", "threshold": 1},
+        {"metric": "fp16_error_exceeds_fp32", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Compute dtype promotion table and regression test safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_promotion", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

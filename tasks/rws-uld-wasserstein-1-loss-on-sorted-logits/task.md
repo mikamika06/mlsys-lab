@@ -13,20 +13,18 @@ When the inputs are logits rather than probabilities, sorting them still yields 
 Implement `wasserstein_1_loss_on_sorted_logits`:
 
 ```python
-def wasserstein_1_loss_on_sorted_logits(teacher_logits: np.ndarray,
-                                        student_logits: np.ndarray) -> float:
+def wasserstein_1_loss_on_sorted_logits(teacher_logits: list[float], student_logits: list[float]) -> float:
     ...
 ```
 
-The function receives two 1‑D NumPy arrays that may have different lengths.  
-It should pad the shorter array with zeros, sort both arrays in **ascending** order, compute the element‑wise absolute difference and return the sum as a Python `float`. The result must be computed using only NumPy operations; no explicit Python loops are allowed.
+The function receives two 1‑D list that may have different lengths.  
+It should pad the shorter array with zeros, sort both arrays in **ascending** order, compute the element‑wise absolute difference and return the sum as a Python `float`. The result must be computed using only Python operations; no explicit Python loops are allowed.
 
 ## Example
 
 ```python
-import numpy as np
-t = np.array([0.2, 0.5, 0.3])
-s = np.array([0.1, 0.6])
+t = [0.2, 0.5, 0.3]
+s = [0.1, 0.6]
 loss = wasserstein_1_loss_on_sorted_logits(t, s)
 print(loss)   # 0.30000000000000004
 ```

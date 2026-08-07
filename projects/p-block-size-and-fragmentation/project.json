@@ -1,0 +1,98 @@
+{
+  "id": "p-block-size-and-fragmentation",
+  "title": "Обрати розмір блока KV",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "p-block-size-and-fragmentation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "blk/analysis.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "модель внутрішньої фрагментації",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "internal_frag_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "модель накладних таблиць блоків",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "table_overhead_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "оптимум за розподілом довжин із траси",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "optimum_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірка на записаній трасі",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "trace_check_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "втрати пам'яті нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "threshold_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "рекомендація як функція розподілу довжин",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

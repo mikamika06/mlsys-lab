@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def mlp_tensor_parallel(x, w1_shards, b1_shards, w2_shards, b2):
+def mlp_tensor_parallel(x: list[list[float]], w1_shards: list[list[list[float]]], b1_shards: list[list[float]], w2_shards: list[list[list[float]]], b2: list[float]) -> list[list[float]]:
     """Column-parallel then row-parallel tensor-parallel MLP forward pass.
 
     x: (m, d) input.

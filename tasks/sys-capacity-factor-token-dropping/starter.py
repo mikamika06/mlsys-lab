@@ -1,5 +1,5 @@
-import numpy as np
+import math
 
 def token_drop_mask(assignments, num_experts, capacity_factor):
     """Return a boolean mask indicating which tokens are kept (True) or dropped (False)."""
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')
