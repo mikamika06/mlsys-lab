@@ -40,16 +40,14 @@ grid) that minimizes $\mathrm{MSE}(r)$.
 Implement `awq_clip_search`:
 
 ```python
-def awq_clip_search(
-    W: np.ndarray, group_size: int, clip_ratios: np.ndarray, bits: int = 4
-) -> tuple[np.ndarray, np.ndarray]:
+def awq_clip_search(W: list[list[float]], group_size: int, clip_ratios: list[float], bits: int=4) -> tuple[list[list[int]], list[list[float]]]:
     ...
 ```
 
 - `W`: `float64` array of shape `(rows, cols)`, `cols` an exact multiple of
   `group_size`.
 - `group_size`: number of columns per quantization group.
-- `clip_ratios`: 1-D array of candidate ratios, e.g. `np.linspace(1.0, 0.5, 11)`.
+- `clip_ratios`: list of candidate ratios, e.g. `[1.0 - i * 0.05 for i in range(11)]`.
 - `bits`: bit width for the symmetric quantization grid (default 4,
   $q_{\max} = 2^{\text{bits}-1}-1 = 7$).
 
@@ -64,11 +62,10 @@ the earliest/smallest index), compute $\mathrm{MSE}(r)$ as above, and return
 ## Example
 
 ```python
-import numpy as np
 
 # One group with 31 small values and one big outlier.
-w = np.concatenate([np.full(31, 0.02), [0.3]])
-clip_ratios = np.linspace(1.0, 0.5, 11)
+w = [0.02] * 31 + [0.3]
+clip_ratios = [1.0 - i * 0.05 for i in range(11)]
 best_idx, best_mse = awq_clip_search(w.reshape(1, -1), group_size=32, clip_ratios=clip_ratios)
 # ratio 1.0 sets scale from the outlier -> crushes all 31 small values
 # a smaller ratio clips the outlier but quantizes the other 31 far more precisely
@@ -77,7 +74,7 @@ best_idx, best_mse = awq_clip_search(w.reshape(1, -1), group_size=32, clip_ratio
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that runs the identical grid sweep on a fixed test weight
+The gate builds a Python oracle that runs the identical grid sweep on a fixed test weight
 matrix (roughly half the groups contain a single outlier element several times larger
 than the rest of the group, so clipping should win in some groups but not others). It
 checks:

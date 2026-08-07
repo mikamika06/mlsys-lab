@@ -31,7 +31,7 @@ normalized as $H \leftarrow H/\sqrt d$ so that $HH^T = I$.
 Implement `outlier_ratio_before_after_rotation`:
 
 ```python
-def outlier_ratio_before_after_rotation(X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def outlier_ratio_before_after_rotation(X: list[list[float]]) -> tuple[list[float], list[float]]:
     ...
 ```
 
@@ -50,9 +50,8 @@ $n$: `ratio_before[i]` is $r$ of `X`'s row $i$, `ratio_after[i]` is $r$ of
 ## Example
 
 ```python
-import numpy as np
 # one token, 4 channels, one big outlier coordinate
-x = np.array([[0.1, -0.2, 8.0, 0.15]])
+x = [[0.1, -0.2, 8.0, 0.15]]
 before, after = outlier_ratio_before_after_rotation(x)
 # before[0] is large (one channel dominates); after[0] is smaller —
 # the rotation spread that outlier's energy over all 4 output channels.
@@ -64,7 +63,7 @@ before, after = outlier_ratio_before_after_rotation(x)
   512 tokens x 64 channels with a handful of systematic outlier channels,
   the pattern real LLM hidden states show) plus a couple of synthetic
   batches at other power-of-two widths, computes `(ratio_before, ratio_after)`
-  independently with a NumPy oracle, and checks the global relative L2 error
+  independently with a Python oracle, and checks the global relative L2 error
   between your concatenated `(ratio_before, ratio_after)` and the oracle's is
   at most $10^{-6}$.
 * **peak_drops** — using *your own* returned arrays, the grader checks that

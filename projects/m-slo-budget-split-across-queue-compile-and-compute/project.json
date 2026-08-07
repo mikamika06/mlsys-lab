@@ -1,0 +1,21 @@
+{
+  "id": "m-slo-budget-split-across-queue-compile-and-compute",
+  "title": "SLO budget split across queue, compile and compute",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Inference serving concerns: warmup, batching, tail latency",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["slobudget/budget.py", "slobudget/optimize.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute latency breakdown components", "check": "harness/m1.py",
+     "gates": [{"metric": "components_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Optimal batch size within relative error", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: regression test for budget invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_budget_violation", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "m-run-lmcache-cpu-offload-with-vllm-and-measure-ttft-g",
+  "title": "LMCache CPU Offload with vLLM and TTFT Optimization",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-offloading-to-cpu-and-disk",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "offload/runner.py",
+    "offload/diagnose.py",
+    "offload/chunk.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Run LMCache CPU offload and measure TTFT gain",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "latency_ratios_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose offload slowdown from transfer logs",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "diagnoses_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Optimal chunk-size sizing and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_chunk", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

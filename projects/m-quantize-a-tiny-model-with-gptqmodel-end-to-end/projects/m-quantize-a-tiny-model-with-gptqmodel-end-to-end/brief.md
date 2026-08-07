@@ -1,0 +1,7 @@
+# Ticket: Quantized Model Artifact Bloat and Precision Degradation in Edge Deployment
+
+During our recent push to deploy our tiny baseline transformer model onto resource-constrained edge accelerators, our CI/CD pipeline flagged severe deployment anomalies. Specifically, the exported quantized weights artifact generated via our quantization script refuses to shrink below the unquantized FP32 footprint, occupying the exact same memory bandwidth and storage allocation on target hardware.
+
+Furthermore, when synthetic calibration prompts are fed through the quantization pipeline, the resulting quantized linear layers experience catastrophic output divergence, producing extreme numerical overflows and NaN values during inference passes. Engineers attempting to inspect the intermediate Hessian inverse matrices and quantization scales observe uninitialized weight blocks, misaligned quantization bit-widths (failing to enforce 4-bit packing), and missing zero-point compensation vectors.
+
+This symptom completely stalls our edge optimization milestone, as the runtime engine rejects the malformed weight tensors due to unsupported block layouts and incorrect compression ratios. We urgently need a robust, end-to-end quantization pipeline that correctly builds calibration datasets, computes second-order error compensation via inverse Hessians, packs weights efficiently into low-precision formats while satisfying target size ratios, and preserves downstream prediction fidelity without numerical collapse.

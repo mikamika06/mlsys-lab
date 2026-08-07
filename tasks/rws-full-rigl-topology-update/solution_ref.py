@@ -1,11 +1,10 @@
 import math
-import numpy as np
 
 
 def rigl_topology_update(w, grad, mask, update_fraction):
-    out = np.asarray(mask, dtype=np.int64).copy()
+    out = list(mask)
     live = 0
-    for i in range(out.shape[0]):
+    for i in range(len(out)):
         if out[i]:
             live += 1
     k = int(math.floor(update_fraction * live))
@@ -14,7 +13,7 @@ def rigl_topology_update(w, grad, mask, update_fraction):
         return out
 
     active = []
-    for i in range(out.shape[0]):
+    for i in range(len(out)):
         if out[i] == 1:
             active.append(i)
 
@@ -23,7 +22,7 @@ def rigl_topology_update(w, grad, mask, update_fraction):
         out[i] = 0
 
     candidates = []
-    for i in range(out.shape[0]):
+    for i in range(len(out)):
         if out[i] == 0:
             candidates.append(i)
 

@@ -1,17 +1,19 @@
 import torch
 
 
-def verify_adapters_only_changed(init_weights, final_weights):
-    base_changed = False
+def verify_only_adapters_changed(initial_state, final_state, model):
+    base_unchanged = True
     adapters_changed = False
-    for name in init_weights:
-        init_p = init_weights[name]
-        fin_p = final_weights[name]
-        diff = torch.max(torch.abs(init_p - fin_p)).item()
-        if "lora_" in name:
-            if diff > 1e-6:
-                adapters_changed = True
-        else:
-            if diff > 1e-6:
-                base_changed = True
-    return base_changed, adapters_changed
+
+    for name, param in model.named_parameters():
+        if name in initial_state:
+            init_p = initial_state[name]
+            final_p = param.data
+            if "lora_" in name:
+                if not torch.equal(init_p, final_p):
+                    adapters_changed = True
+            else:
+                if not torch.equal(init_p, final_p):
+                    base_unchanged = False
+
+    return base_unchanged and adapters_changed

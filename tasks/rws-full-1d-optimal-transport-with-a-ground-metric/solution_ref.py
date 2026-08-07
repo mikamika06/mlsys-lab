@@ -1,21 +1,14 @@
-import numpy as np
-
-
-def ot_cost_1d(positions: np.ndarray, p: np.ndarray, q: np.ndarray) -> float:
+def ot_cost_1d(positions: list[float], p: list[float], q: list[float]) -> float:
     """1-D optimal transport cost with ground cost |x - y|, via the
     closed-form cumulative-CDF-difference formula (exact for convex
     1-D ground costs -- no LP needed).
     """
-    positions = np.asarray(positions, dtype=np.float64)
-    p = np.asarray(p, dtype=np.float64)
-    q = np.asarray(q, dtype=np.float64)
-
-    n = positions.shape[0]
+    n = len(positions)
     order = sorted(range(n), key=lambda i: positions[i])
 
-    x = np.empty(n, dtype=np.float64)
-    p_sorted = np.empty(n, dtype=np.float64)
-    q_sorted = np.empty(n, dtype=np.float64)
+    x = [0.0] * n
+    p_sorted = [0.0] * n
+    q_sorted = [0.0] * n
 
     for i in range(n):
         idx = order[i]
@@ -23,8 +16,8 @@ def ot_cost_1d(positions: np.ndarray, p: np.ndarray, q: np.ndarray) -> float:
         p_sorted[i] = p[idx]
         q_sorted[i] = q[idx]
 
-    P = np.empty(n, dtype=np.float64)
-    Q = np.empty(n, dtype=np.float64)
+    P = [0.0] * n
+    Q = [0.0] * n
     curr_p = 0.0
     curr_q = 0.0
     for i in range(n):

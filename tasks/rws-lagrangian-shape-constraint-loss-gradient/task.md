@@ -36,27 +36,22 @@ and the chain rule gives the gradient of the complete Lagrangian with respect to
 Implement `shape_constraint_loss(logits, target_sparsity, lam)`:
 
 ```python
-def shape_constraint_loss(
-    logits: np.ndarray,
-    target_sparsity: float,
-    lam: float
-) -> tuple[float, np.ndarray]:
+def shape_constraint_loss(logits: list[float], target_sparsity: float, lam: float) -> tuple[float, list[float]]:
     ...
 ```
 
-The function receives a one-dimensional NumPy array of mask logits, a target sparsity value, and the Lagrange multiplier $\lambda$. Return a tuple containing:
+The function receives a list of floats of mask logits, a target sparsity value, and the Lagrange multiplier $\lambda$. Return a tuple containing:
 
 1. The scalar loss $L(z)$ as a Python float.
-2. A NumPy array containing $\frac{\partial L}{\partial z}$ with the same shape as `logits` and dtype `float64`.
+2. A list containing $\frac{\partial L}{\partial z}$ with the same shape as `logits` and dtype `float64`.
 
 Use the differentiable formulation above. Do not threshold logits into binary masks.
 
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([-2.0, 0.0, 2.0])
+logits = [-2.0, 0.0, 2.0]
 loss, grad = shape_constraint_loss(logits, 0.5, 3.0)
 
 # loss is a scalar

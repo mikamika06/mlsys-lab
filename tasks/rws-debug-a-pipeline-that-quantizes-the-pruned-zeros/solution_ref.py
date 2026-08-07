@@ -1,10 +1,7 @@
-import numpy as np
-
-
-def compound_prune_quantize_2_4(W, nbits=4):
+def compound_prune_quantize_2_4(W: list[list[float]], nbits: int = 4) -> list[list[float]]:
     """Compound 2:4 structured pruning + per-group int quantization.
 
-    `W` is a 2-D float array whose last dimension is a multiple of 4. Every
+    `W` is a 2-D list of floats whose last dimension is a multiple of 4. Every
     consecutive block of 4 elements along the last axis is treated as one
     N:M block *and* one quantization group:
 
@@ -24,34 +21,47 @@ def compound_prune_quantize_2_4(W, nbits=4):
 
     Parameters
     ----------
-    W : np.ndarray, shape (..., 4k)
+    W : list[list[float]]
     nbits : int
 
     Returns
     -------
-    W_hat : np.ndarray, float64, same shape as W
+    W_hat : list[list[float]]
     """
-    W = np.asarray(W, dtype=np.float64)
-    shape = W.shape
-    blocks = W.reshape(*shape[:-1], -1, 4)
-    abs_blocks = np.abs(blocks)
-
-    # Indices of the two largest-magnitude elements per block.
-    order = np.argsort(abs_blocks, axis=-1)
-    keep_mask = np.zeros_like(blocks, dtype=bool)
-    np.put_along_axis(keep_mask, order[..., 2:], True, axis=-1)
-
-    pruned = np.where(keep_mask, blocks, 0.0)
-    survivor_abs = np.where(keep_mask, abs_blocks, 0.0)
-
-    # Scale from the survivors ONLY: sum of survivor magnitudes divided by
-    # the number of actual survivors in that block (normally 2).
-    count = keep_mask.sum(axis=-1, keepdims=True).astype(np.float64)
-    sum_abs = survivor_abs.sum(axis=-1, keepdims=True)
-    scale = np.where(count > 0, sum_abs / np.maximum(count, 1.0), 1.0)
-
     qmax = 2 ** (nbits - 1) - 1
-    code = np.clip(np.round(pruned / scale), -qmax, qmax)
-    dequant = np.where(keep_mask, code * scale, 0.0)
+    out_rows = []
 
-    return dequant.reshape(shape)
+    for row in W:
+        new_row = []
+        for i in range(0, len(row), 4):
+            block = row[i:i+4]
+            indexed_abs = [(abs(val), idx, val) for idx, val in enumerate(block)]
+            # Sort by absolute value ascending, then index ascending for stability
+            indexed_abs.sort(key=lambda x: (x[0], x[1]))
+
+            # The 2 largest are the last two in the sorted list
+            survivor_indices = {item[1] for item in indexed_abs[2:]}
+
+            survivor_abs_sum = 0.0
+            survivor_count = 0
+            for idx, val in enumerate(block):
+                if idx in survivor_indices:
+                    survivor_abs_sum += abs(val)
+                    survivor_count += 1
+
+            if survivor_count > 0:
+                scale = survivor_abs_sum / survivor_count
+            else:
+                scale = 1.0
+
+            new_block = []
+            for idx, val in enumerate(block):
+                if idx in survivor_indices:
+                    code = max(-qmax, min(qmax, round(val / scale)))
+                    new_block.append(code * scale)
+                else:
+                    new_block.append(0.0)
+            new_row.extend(new_block)
+        out_rows.append(new_row)
+
+    return out_rows

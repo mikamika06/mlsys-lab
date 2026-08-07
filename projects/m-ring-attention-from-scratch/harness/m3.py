@@ -1,7 +1,6 @@
 import importlib.util
 import os
 
-
 def _run(path):
     spec = importlib.util.spec_from_file_location("learner_regression", path)
     mod = importlib.util.module_from_spec(spec)
@@ -14,16 +13,14 @@ def _run(path):
         fn()
     return True
 
-
 def _survives(path):
     try:
         return _run(path) is True
     except Exception:
         return False
 
-
 def check(workdir):
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_crossover": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_ring": 0.0}
     path = os.path.join(workdir, "tests", "test_regression.py")
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
@@ -32,7 +29,7 @@ def check(workdir):
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {e}"
+        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {str(e)[:120]}"
         return out
     if first is None:
         out["_note"] = "no test_* functions found"
@@ -40,15 +37,18 @@ def check(workdir):
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import ringattn.crossover as co
-    good = co.compute_crossover
+    import ringattn.ring as r
+    good_fn = r.ring_attention
 
-    def broken(seqs, hidden, ws, bw, lat):
-        return ["ring" for _ in seqs]
+    def broken_ring(q, k, v, world_size):
+        return q * 0.0
 
-    co.compute_crossover = broken
+    r.ring_attention = broken_ring
+    import ringattn
+    ringattn.ring_attention = broken_ring
     try:
-        out["catches_broken_crossover"] = 0.0 if _survives(path) else 1.0
+        out["catches_broken_ring"] = 0.0 if _survives(path) else 1.0
     finally:
-        co.compute_crossover = good
+        r.ring_attention = good_fn
+        ringattn.ring_attention = good_fn
     return out

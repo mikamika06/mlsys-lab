@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 
 def rank_groups_by_importance(groups):
@@ -8,12 +7,13 @@ def rank_groups_by_importance(groups):
     for group in groups:
         squared_sum = 0.0
         for tensor in group["tensors"]:
-            arr = np.asarray(tensor, dtype=np.float64)
-            flat = arr.ravel()
-            n = flat.shape[0]
-            for i in range(n):
-                val = float(flat[i])
-                squared_sum += val * val
+            for item in tensor:
+                if isinstance(item, list):
+                    for val in item:
+                        squared_sum += float(val) * float(val)
+                else:
+                    val = float(item)
+                    squared_sum += val * val
 
         score = float(math.sqrt(squared_sum))
         scored.append((score, group["id"]))

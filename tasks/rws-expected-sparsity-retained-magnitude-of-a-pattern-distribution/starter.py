@@ -1,7 +1,6 @@
-import numpy as np
+import itertools
 
-
-def expected_pattern_stats(p: np.ndarray, w: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def expected_pattern_stats(p: list[list[float]], w: list[list[float]]) -> tuple[list[float], list[float]]:
     """Per-group expected density and expected retained sum |w| under a
     probability distribution over the 6 canonical 2-of-4 keep patterns.
 

@@ -27,30 +27,23 @@ The factor $T^{2}$ compensates for the temperature scaling of the KL term, ensur
 Implement the function `kd_loss`:
 
 ```python
-def kd_loss(
-    teacher_logits: np.ndarray,
-    student_logits: np.ndarray,
-    labels: np.ndarray,
-    alpha: float = 0.5,
-    temperature: float = 1.0
-) -> float:
+def kd_loss(teacher_logits: list[list[float]], student_logits: list[list[float]], labels: list[int], alpha: float=0.5, temperature: float=1.0) -> float:
     ...
 ```
 
-* `teacher_logits`, `student_logits` are 2‑D NumPy arrays of shape `(N, C)` containing raw logits.  
+* `teacher_logits`, `student_logits` are 2‑D list of shape `(N, C)` containing raw logits.  
 * `labels` is a 1‑D array of length `N` with integer class indices in `[0, C-1]`.  
-* Return the scalar loss as a Python float (or NumPy scalar) with dtype `float64`.
+* Return the scalar loss as a Python float (or Python scalar) with dtype `float64`.
 
-The implementation must use only vectorised NumPy operations; no explicit Python loops are allowed. Numerical stability should be handled by subtracting the per‑row maximum before exponentiation.
+The implementation must use only vectorised Python operations; no explicit Python loops are allowed. Numerical stability should be handled by subtracting the per‑row maximum before exponentiation.
 
 ## Example
 
 ```python
-import numpy as np
 
-teacher_logits = np.array([[2.0, 1.0], [0.5, -0.5]])
-student_logits = np.array([[1.5, 0.5], [0.3, -0.7]])
-labels = np.array([0, 1])
+teacher_logits = [[2.0, 1.0], [0.5, -0.5]]
+student_logits = [[1.5, 0.5], [0.3, -0.7]]
+labels = [0, 1]
 
 loss = kd_loss(teacher_logits, student_logits, labels,
                alpha=0.8, temperature=2.0)
@@ -59,7 +52,7 @@ print(loss)   # e.g., 0.123456789
 
 ## What the gate checks
 
-The grader computes a reference loss using NumPy and compares it to your output with the relative error metric
+The grader computes a reference loss using Python and compares it to your output with the relative error metric
 
 $$\mathrm{rel\_err} = \frac{\lVert L_{\text{cand}}-L_{\text{ref}}\rVert}
                            {\lVert L_{\text{ref}}\rVert + 10^{-12}}.$$

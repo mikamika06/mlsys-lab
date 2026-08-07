@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def outlier_ratio_before_after_rotation(X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def outlier_ratio_before_after_rotation(X: list[list[float]]) -> tuple[list[float], list[float]]:
     """Per-token peak/rms ratio (over channels) before and after rotating
     the batch with a normalized Sylvester-Hadamard matrix, X_rot = X @ H^T.
 

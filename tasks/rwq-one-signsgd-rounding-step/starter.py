@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def signsgd_round_step(W, scale, V, grad, lr, qmin, qmax):
     """
     Take one SignSGD step on the continuous rounding variable V:

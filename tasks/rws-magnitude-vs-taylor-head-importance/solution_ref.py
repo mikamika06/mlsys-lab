@@ -1,26 +1,33 @@
 import math
-import numpy as np
 
 
-def rank_heads_by_importance(weights: np.ndarray, grads: np.ndarray):
-    h = weights.shape[0]
-    flat_w = weights.reshape(h, -1)
-    flat_g = grads.reshape(h, -1)
+def _flatten(tensor):
+    flat = []
+    if isinstance(tensor, list):
+        for sub in tensor:
+            flat.extend(_flatten(sub))
+    else:
+        flat.append(float(tensor))
+    return flat
 
-    d = flat_w.shape[1]
-    mag_scores = np.empty(h, dtype=np.float64)
-    taylor_scores = np.empty(h, dtype=np.float64)
+
+def rank_heads_by_importance(weights: list[list[float]], grads: list[list[float]]):
+    h = len(weights)
+    mag_scores = []
+    taylor_scores = []
 
     for i in range(h):
+        flat_w = _flatten(weights[i])
+        flat_g = _flatten(grads[i])
+
         sum_sq = 0.0
         sum_taylor = 0.0
-        for j in range(d):
-            w_val = flat_w[i, j]
-            g_val = flat_g[i, j]
+        for w_val, g_val in zip(flat_w, flat_g):
             sum_sq += w_val * w_val
             sum_taylor += abs(g_val * w_val)
-        mag_scores[i] = math.sqrt(sum_sq)
-        taylor_scores[i] = sum_taylor
+
+        mag_scores.append(math.sqrt(sum_sq))
+        taylor_scores.append(sum_taylor)
 
     magnitude_ranking = sorted(
         range(h),

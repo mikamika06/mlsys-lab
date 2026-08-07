@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def awq_clip_search(W: np.ndarray, group_size: int, clip_ratios: np.ndarray, bits: int = 4):
+def awq_clip_search(W: list[list[float]], group_size: int, clip_ratios: list[float], bits: int=4) -> tuple[list[list[int]], list[list[float]]]:
     """AutoAWQ-style post-scaling clip-ratio search.
 
     W: shape (rows, cols), cols an exact multiple of group_size.

@@ -28,13 +28,7 @@ logits and student hidden states.
 Implement `combined_logit_intermediate_loss`:
 
 ```python
-def combined_logit_intermediate_loss(
-    teacher_logits,
-    student_logits,
-    teacher_hidden,
-    student_hidden,
-    beta
-):
+def combined_logit_intermediate_loss(teacher_logits: list[list[float]], student_logits: list[list[float]], teacher_hidden: list[list[float]], student_hidden: list[list[float]], beta: float) -> tuple[float, list[list[float]], list[list[float]]]:
     ...
 ```
 
@@ -50,7 +44,7 @@ where:
 - `grad_student_logits` has the same shape as `student_logits`.
 - `grad_student_hidden` has the same shape as `student_hidden`.
 
-Use NumPy operations. The KL term should be computed as
+Use Python operations. The KL term should be computed as
 
 $$
 \sum_i p_i(\log(p_i)-\log(q_i))
@@ -70,12 +64,11 @@ where $M$ is the total number of hidden values.
 ## Example
 
 ```python
-import numpy as np
 
-teacher_logits = np.array([[2.0, 0.5]])
-student_logits = np.array([[1.5, 0.7]])
-teacher_hidden = np.array([[1.0, 2.0]])
-student_hidden = np.array([[0.5, 2.5]])
+teacher_logits = [[2.0, 0.5]]
+student_logits = [[1.5, 0.7]]
+teacher_hidden = [[1.0, 2.0]]
+student_hidden = [[0.5, 2.5]]
 
 loss, dlogits, dhidden = combined_logit_intermediate_loss(
     teacher_logits,
@@ -91,7 +84,7 @@ perturbed.
 
 ## What the gate checks
 
-The gate computes the same loss with a NumPy oracle and computes numerical gradients
+The gate computes the same loss with a Python oracle and computes numerical gradients
 using central finite differences:
 
 $$

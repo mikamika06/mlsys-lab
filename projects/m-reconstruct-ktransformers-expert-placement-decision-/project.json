@@ -1,0 +1,69 @@
+{
+  "id": "m-reconstruct-ktransformers-expert-placement-decision-",
+  "title": "Reconstruct ktransformers expert-placement decisions and offload efficiency",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "expert-offloading-cpu-gpu",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ktrans/placement.py",
+    "ktrans/cache.py",
+    "ktrans/offload.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct expert placement from log schedules",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "placements_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "LRU expert cache hit rate and offload latency evaluation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cache_sim_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "latency_eval_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching budget violation placement",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_placements",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

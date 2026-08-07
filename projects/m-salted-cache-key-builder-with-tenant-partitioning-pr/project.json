@@ -1,0 +1,68 @@
+{
+  "id": "m-salted-cache-key-builder-with-tenant-partitioning-pr",
+  "title": "Salted cache key builder with tenant partitioning",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-cache-isolation-and-multitenancy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "cachekey/builder.py",
+    "cachekey/oracle.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Salted tenant-partitioned cache keys",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "keys_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Timing oracle and block sharing rules",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "oracles_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "sharing_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching cross-tenant cache sharing",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unpartitioned_keys",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

@@ -14,19 +14,18 @@ The task is to implement this simple decision rule.
 Implement `classify_removable_layers(bis, threshold)`:
 
 ```python
-def classify_removable_layers(bis: np.ndarray, threshold: float) -> Set[int]:
+def classify_removable_layers(bis: list[float], threshold: float) -> Set[int]:
     ...
 ```
 
-It receives a one‑dimensional NumPy array of BI scores and a floating point threshold. It must return the set of indices (Python `int`) that satisfy $b_i < \tau$.
+It receives a list of floats of BI scores and a floating point threshold. It must return the set of indices (Python `int`) that satisfy $b_i < \tau$.
 
 The function should be pure; no side effects or global state.
 
 ## Example
 
 ```python
-import numpy as np
-bis = np.array([0.12, 0.85, 0.47, 0.63])
+bis = [0.12, 0.85, 0.47, 0.63]
 threshold = 0.6
 removable = classify_removable_layers(bis, threshold)
 # removable == {0, 2}
@@ -34,4 +33,4 @@ removable = classify_removable_layers(bis, threshold)
 
 ## What the gate checks
 
-The grader computes a reference set using NumPy’s vectorised comparison and compares it with the learner’s output via exact set equality. The metric is `exact_match`; the solution must return exactly the same indices as the oracle.
+The grader computes a reference set using Python’s vectorised comparison and compares it with the learner’s output via exact set equality. The metric is `exact_match`; the solution must return exactly the same indices as the oracle.

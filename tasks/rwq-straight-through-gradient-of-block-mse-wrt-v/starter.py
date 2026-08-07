@@ -1,8 +1,4 @@
-import numpy as np
-
-
-def ste_block_mse_grad_wrt_v(X: np.ndarray, W: np.ndarray, V: np.ndarray,
-                              scale: np.ndarray, bits: int) -> np.ndarray:
+def ste_block_mse_grad_wrt_v(X: list[list[float]], W: list[list[float]], V: list[list[float]], scale: list[float], bits: int) -> list[list[float]]:
     """Straight-through-estimator gradient of the block MSE loss wrt V.
 
     X: (B, I) float64 activations.

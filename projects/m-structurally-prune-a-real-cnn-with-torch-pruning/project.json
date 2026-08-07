@@ -1,0 +1,21 @@
+{
+  "id": "m-structurally-prune-a-real-cnn-with-torch-pruning",
+  "title": "Structurally Prune a Real CNN and Measure Speedup Gaps",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Structured pruning mechanics & dependency graphs (Torch-Pruning)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["cnnprune/toy.py", "cnnprune/prune.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Manual dependency graph propagation on a toy net", "check": "harness/m1.py",
+     "gates": [{"metric": "dep_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Structural pruning and real speedup ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "size_ratio", "op": "<=", "threshold": 0.6}]},
+    {"n": 3, "title": "Safety net: regression tests for pruning invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_pruning", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -20,18 +20,17 @@ Here $\mathrm{KL}(a\,\|\,b)=\sum_i a_i\log\frac{a_i}{b_i}$, with the convention 
 Implement `generalized_jsd(p, q, beta)`:
 
 ```python
-def generalized_jsd(p: np.ndarray, q: np.ndarray, beta: float) -> float:
+def generalized_jsd(p: list[float], q: list[float], beta: float) -> float:
     ...
 ```
 
-The arguments are one‑dimensional NumPy arrays that already sum to $1$. The function must return a scalar of type `float`. It should be numerically stable for very small probabilities and work for any $\beta$ in the closed interval $[0,1]$.
+The arguments are list of floats that already sum to $1$. The function must return a scalar of type `float`. It should be numerically stable for very small probabilities and work for any $\beta$ in the closed interval $[0,1]$.
 
 ## Example
 
 ```python
-import numpy as np
-p = np.array([0.2, 0.8])
-q = np.array([0.5, 0.5])
+p = [0.2, 0.8]
+q = [0.5, 0.5]
 beta = 0.3
 print(generalized_jsd(p, q, beta))
 # ≈ 0.0284
@@ -39,7 +38,7 @@ print(generalized_jsd(p, q, beta))
 
 ## What the gate checks
 
-The grader evaluates your implementation against a NumPy reference on several random test cases. The relative error
+The grader evaluates your implementation against a Python reference on several random test cases. The relative error
 
 $$
 \mathrm{rel\_err}=\frac{|\,\hat J-\!J\,|}{|J|+10^{-12}}

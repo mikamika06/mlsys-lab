@@ -1,19 +1,13 @@
-import numpy as np
-
-
-def compare_2_4_masks(weights, logits):
-    weights = np.asarray(weights, dtype=np.float64)
-    logits = np.asarray(logits, dtype=np.float64)
-
-    num_rows = weights.shape[0]
-    num_cols = weights.shape[1]
+def compare_2_4_masks(weights: list[list[float]], logits: list[list[float]]) -> dict:
+    num_rows = len(weights)
+    num_cols = len(weights[0])
 
     soft_mask = [[0.0] * num_cols for _ in range(num_rows)]
     mag_mask = [[0.0] * num_cols for _ in range(num_rows)]
 
     for i in range(num_rows):
-        soft_indices = sorted(range(num_cols), key=lambda j: (-logits[i, j], j))[:2]
-        mag_indices = sorted(range(num_cols), key=lambda j: (-abs(weights[i, j]), j))[:2]
+        soft_indices = sorted(range(num_cols), key=lambda j: (-logits[i][j], j))[:2]
+        mag_indices = sorted(range(num_cols), key=lambda j: (-abs(weights[i][j]), j))[:2]
 
         for j in soft_indices:
             soft_mask[i][j] = 1.0
@@ -35,7 +29,7 @@ def compare_2_4_masks(weights, logits):
         m_err = 0.0
 
         for j in range(num_cols):
-            w = weights[i, j]
+            w = weights[i][j]
             abs_w = abs(w)
             s_m = soft_mask[i][j]
             m_m = mag_mask[i][j]
@@ -65,9 +59,9 @@ def compare_2_4_masks(weights, logits):
         better = "tie"
 
     return {
-        "soft_retained": np.asarray(soft_retained_list, dtype=np.float64),
-        "magnitude_retained": np.asarray(magnitude_retained_list, dtype=np.float64),
-        "soft_error": np.asarray(soft_error_list, dtype=np.float64),
-        "magnitude_error": np.asarray(magnitude_error_list, dtype=np.float64),
+        "soft_retained": soft_retained_list,
+        "magnitude_retained": magnitude_retained_list,
+        "soft_error": soft_error_list,
+        "magnitude_error": magnitude_error_list,
         "better": better,
     }

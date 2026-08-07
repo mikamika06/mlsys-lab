@@ -1,4 +1,2 @@
-import numpy as np
-
-def excess_loss_signal(current_losses: np.ndarray, reference_losses: np.ndarray) -> np.ndarray:
+def excess_loss_signal(current_losses: list[float], reference_losses: list[float]) -> list[float]:
     raise NotImplementedError('your code here')

@@ -30,7 +30,7 @@ convention its exponent is taken to be $0$.
 Implement `mxfp4_block_exponent`:
 
 ```python
-def mxfp4_block_exponent(x: np.ndarray, block_size: int = 32) -> np.ndarray:
+def mxfp4_block_exponent(x: list[float], block_size: int=32) -> list[int]:
     ...
 ```
 
@@ -44,9 +44,8 @@ absolute value. If a block's max absolute value is exactly $0$, its exponent is 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.concatenate([np.full(32, 6.0), np.full(32, 12.0), np.zeros(32)])
+x = [6.0] * 32 + [12.0] * 32 + [0.0] * 32
 mxfp4_block_exponent(x, 32)
 # array([0, 1, 0])
 # block 0: amax=6  -> log2(6/6)=log2(1)=0    -> floor -> 0
@@ -56,7 +55,7 @@ mxfp4_block_exponent(x, 32)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that computes, per block, `amax = max(abs(block))` and
+The gate builds a Python oracle that computes, per block, `amax = max(abs(block))` and
 `floor(log2(amax / 6))` (with the `amax == 0` special case), on a fixed test array that
 includes an all-zero block, blocks with `amax` at clean power-of-two-of-6 boundaries, and
 log-uniform random-magnitude blocks. `exact_match` — the fraction of blocks where your

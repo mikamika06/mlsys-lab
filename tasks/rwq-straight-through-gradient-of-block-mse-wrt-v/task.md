@@ -43,8 +43,7 @@ This is exactly the gradient array a SignSGD-style optimizer consumes
 Implement `ste_block_mse_grad_wrt_v`:
 
 ```python
-def ste_block_mse_grad_wrt_v(X: np.ndarray, W: np.ndarray, V: np.ndarray,
-                              scale: np.ndarray, bits: int) -> np.ndarray:
+def ste_block_mse_grad_wrt_v(X: list[list[float]], W: list[list[float]], V: list[list[float]], scale: list[float], bits: int) -> list[list[float]]:
     ...
 ```
 
@@ -64,11 +63,10 @@ def ste_block_mse_grad_wrt_v(X: np.ndarray, W: np.ndarray, V: np.ndarray,
 ## Example
 
 ```python
-import numpy as np
-X = np.random.default_rng(0).standard_normal((8, 6))
-W = np.random.default_rng(1).standard_normal((4, 6))
+X = (rng := **import**('random').Random(0), [[rng.gauss(0, 1) for _ in range(6)] for _ in range(8)])[1]
+W = (rng := **import**('random').Random(1), [[rng.gauss(0, 1) for _ in range(6)] for _ in range(4)])[1]
 V = W.copy()          # start exactly at the target weight
-scale = np.full(4, 0.3)
+scale = [0.3] * 4
 grad = ste_block_mse_grad_wrt_v(X, W, V, scale, bits=4)
 # V == W here, but W != Wq(V) in general (rounding still perturbs it),
 # so grad is generally nonzero even at V == W.
@@ -77,7 +75,7 @@ grad = ste_block_mse_grad_wrt_v(X, W, V, scale, bits=4)
 ## What the gate checks
 
 The grader builds several seeded `(X, W, V, scale, bits)` cases and
-computes the reference gradient independently in NumPy with the exact
+computes the reference gradient independently in Python with the exact
 closed-form STE formula above (same mask definition, same `2/(B*O)`
 normalization).
 

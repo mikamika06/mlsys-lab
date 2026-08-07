@@ -1,0 +1,40 @@
+{
+  "id": "m-reorder-requests-to-maximize-cache-reuse-under-a-cac",
+  "title": "Reorder requests to maximize prefix cache reuse and analyze APC ratios",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-cache-eviction-and-hit-rate",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "cacheopt/reorder.py",
+    "cacheopt/analysis.py",
+    "cacheopt/apc.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reorder requests to maximize cache reuse under a budget",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "reorder_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Identify the evicting request causing hit rate collapse",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "eviction_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for APC TTFT ratio on shared prompts",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_apc", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

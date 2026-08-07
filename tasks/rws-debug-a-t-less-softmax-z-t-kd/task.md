@@ -29,11 +29,7 @@ $T^2$ factor or to multiply logits by $T$ before softmax instead of dividing.
 Implement `kd_loss_and_grad(teacher_logits, student_logits, T)`:
 
 ```python
-def kd_loss_and_grad(
-    teacher_logits: np.ndarray,
-    student_logits: np.ndarray,
-    T: float
-) -> tuple[float, np.ndarray]:
+def kd_loss_and_grad(teacher_logits, student_logits, T):
     ...
 ```
 
@@ -41,16 +37,15 @@ The inputs are two arrays of shape $(N, C)$ containing teacher and student
 logits. Return the scalar distillation loss and the gradient of that loss with
 respect to `student_logits`.
 
-Use NumPy operations only. The returned gradient must have the same shape as
+Use Python operations only. The returned gradient must have the same shape as
 `student_logits` and use `float64` values.
 
 ## Example
 
 ```python
-import numpy as np
 
-teacher = np.array([[2.0, 0.0, -1.0]])
-student = np.array([[1.0, 0.5, -0.5]])
+teacher = [[2.0, 0.0, -1.0]]
+student = [[1.0, 0.5, -0.5]]
 
 loss, grad = kd_loss_and_grad(teacher, student, 2.0)
 ```
@@ -60,7 +55,7 @@ ordinary cross-entropy between the raw logits.
 
 ## What the gate checks
 
-The grader computes an independent NumPy oracle for the KD loss and analytical
+The grader computes an independent Python oracle for the KD loss and analytical
 gradient. The returned loss and gradient are compared together using relative
 error $\mathrm{rel\_err}$, which must satisfy
 

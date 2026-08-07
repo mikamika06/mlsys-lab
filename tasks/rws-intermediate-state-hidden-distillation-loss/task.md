@@ -22,30 +22,25 @@ Production implementations compute this with array operations rather than explic
 Implement `hidden_distillation_loss(teacher, student, projection)`:
 
 ```python
-def hidden_distillation_loss(
-    teacher: np.ndarray,
-    student: np.ndarray,
-    projection: np.ndarray
-) -> float:
+def hidden_distillation_loss(teacher, student, projection):
     ...
 ```
 
 The inputs are:
 
-- `teacher`: a 2-D NumPy array with shape $(n, d_t)$.
-- `student`: a 2-D NumPy array with shape $(n, d_s)$.
-- `projection`: a 2-D NumPy array with shape $(d_s, d_t)$.
+- `teacher`: a list of lists of floats with shape $(n, d_t)$.
+- `student`: a list of lists of floats with shape $(n, d_s)$.
+- `projection`: a list of lists of floats with shape $(d_s, d_t)$.
 
 Return the scalar mean squared hidden-state distillation loss between `teacher` and `student @ projection`. Compute the result in `float64`.
 
 ## Example
 
 ```python
-import numpy as np
 
-teacher = np.array([[1.0, 2.0], [0.0, 1.0]])
-student = np.array([[1.0], [0.5]])
-projection = np.array([[1.0, 2.0]])
+teacher = [[1.0, 2.0], [0.0, 1.0]]
+student = [[1.0], [0.5]]
+projection = [[1.0, 2.0]]
 
 loss = hidden_distillation_loss(teacher, student, projection)
 # 0.0
@@ -53,7 +48,7 @@ loss = hidden_distillation_loss(teacher, student, projection)
 
 ## What the gate checks
 
-The gate generates several hidden-state cases and compares the returned value against a NumPy oracle that computes the projected student states and mean squared error directly.
+The gate generates several hidden-state cases and compares the returned value against a Python oracle that computes the projected student states and mean squared error directly.
 
 The relative error
 

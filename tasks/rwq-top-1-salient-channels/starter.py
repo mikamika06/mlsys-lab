@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def top_salient_channels(X: np.ndarray, frac: float = 0.01) -> np.ndarray:
+def top_salient_channels(X: list[list[float]], frac: float=0.01) -> list[int]:
     """AWQ-style salient-channel selection: the top `frac` fraction of
     channels (columns) by mean absolute calibration activation.
 

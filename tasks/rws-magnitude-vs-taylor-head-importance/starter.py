@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def rank_heads_by_importance(weights: np.ndarray, grads: np.ndarray):
+def rank_heads_by_importance(weights: list[list[float]], grads: list[list[float]]):
     raise NotImplementedError('your code here')

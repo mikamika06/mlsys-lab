@@ -1,0 +1,42 @@
+{
+  "id": "m-optimum-cli-export-logits-parity",
+  "title": "Optimum Intel export logits parity, performance comparison, and unsupported architecture handling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "Optimum Intel integration & HF round-trip",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "optimum_export/export_utils.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Logits parity verification between HF source and exported OpenVINO model",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "parity_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Export metrics comparison: optimum-cli versus manual ov.convert_model time and size",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "metrics_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching missing unsupported architecture exception",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_exception", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

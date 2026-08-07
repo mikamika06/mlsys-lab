@@ -1,9 +1,6 @@
-import numpy as np
+import math
 
-FP4_MAX = 6.0
-
-
-def mxfp4_block_exponent(x: np.ndarray, block_size: int = 32) -> np.ndarray:
+def mxfp4_block_exponent(x: list[float], block_size: int=32) -> list[int]:
     """Compute the MX (microscaling) E8M0 power-of-two block exponent.
 
     x: 1-D float array, length an exact multiple of block_size.

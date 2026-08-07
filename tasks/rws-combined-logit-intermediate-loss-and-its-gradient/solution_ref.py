@@ -1,67 +1,59 @@
 import math
-import numpy as np
 
 
 def _softmax(x):
-    x = np.asarray(x, dtype=np.float64)
-    shape = x.shape
-    out = np.zeros(shape, dtype=np.float64)
-    if len(shape) == 0:
-        out[...] = 1.0
-        return out
-    prefix_shape = shape[:-1]
-    last_dim = shape[-1]
-    for idx in np.ndindex(prefix_shape) if prefix_shape else [()]:
-        row = x[idx + (slice(None),)]
+    out = []
+    for row in x:
         max_val = row[0]
         for val in row:
             if val > max_val:
                 max_val = val
-        exp_row = np.zeros(last_dim, dtype=np.float64)
         sum_exp = 0.0
-        for i in range(last_dim):
-            val = math.exp(row[i] - max_val)
-            exp_row[i] = val
-            sum_exp += val
-        for i in range(last_dim):
-            out[idx + (i,)] = exp_row[i] / sum_exp
+        exp_row = []
+        for val in row:
+            v = math.exp(val - max_val)
+            exp_row.append(v)
+            sum_exp += v
+        out.append([v / sum_exp for v in exp_row])
     return out
 
 
 def combined_logit_intermediate_loss(
-    teacher_logits,
-    student_logits,
-    teacher_hidden,
-    student_hidden,
-    beta,
-):
-    tl = np.asarray(teacher_logits, dtype=np.float64)
-    sl = np.asarray(student_logits, dtype=np.float64)
-    th = np.asarray(teacher_hidden, dtype=np.float64)
-    sh = np.asarray(student_hidden, dtype=np.float64)
-
-    p = _softmax(tl)
-    q = _softmax(sl)
+    teacher_logits: list[list[float]],
+    student_logits: list[list[float]],
+    teacher_hidden: list[list[float]],
+    student_hidden: list[list[float]],
+    beta: float,
+) -> tuple[float, list[list[float]], list[list[float]]]:
+    p = _softmax(teacher_logits)
+    q = _softmax(student_logits)
 
     loss_kl = 0.0
-    for idx in np.ndindex(p.shape):
-        pi = p[idx]
-        qi = q[idx]
-        loss_kl += pi * (math.log(pi) - math.log(qi))
+    for r_p, r_q in zip(p, q):
+        for pi, qi in zip(r_p, r_q):
+            loss_kl += pi * (math.log(pi) - math.log(qi))
 
+    total_elements = sum(len(row) for row in student_hidden)
     sum_sq_diff = 0.0
-    for idx in np.ndindex(sh.shape):
-        diff = sh[idx] - th[idx]
-        sum_sq_diff += diff * diff
-    loss_hidden = beta * (sum_sq_diff / sh.size)
+    for r_sh, r_th in zip(student_hidden, teacher_hidden):
+        for sh_val, th_val in zip(r_sh, r_th):
+            diff = sh_val - th_val
+            sum_sq_diff += diff * diff
+    loss_hidden = beta * (sum_sq_diff / total_elements)
 
-    grad_logits = np.zeros(q.shape, dtype=np.float64)
-    for idx in np.ndindex(q.shape):
-        grad_logits[idx] = q[idx] - p[idx]
+    grad_logits = []
+    for r_p, r_q in zip(p, q):
+        grad_row = []
+        for pi, qi in zip(r_p, r_q):
+            grad_row.append(qi - pi)
+        grad_logits.append(grad_row)
 
-    grad_hidden = np.zeros(sh.shape, dtype=np.float64)
-    scale = 2.0 * beta / sh.size
-    for idx in np.ndindex(sh.shape):
-        grad_hidden[idx] = scale * (sh[idx] - th[idx])
+    scale = 2.0 * beta / total_elements
+    grad_hidden = []
+    for r_sh, r_th in zip(student_hidden, teacher_hidden):
+        grad_row = []
+        for sh_val, th_val in zip(r_sh, r_th):
+            grad_row.append(scale * (sh_val - th_val))
+        grad_hidden.append(grad_row)
 
     return float(loss_kl + loss_hidden), grad_logits, grad_hidden

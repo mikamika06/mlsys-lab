@@ -1,0 +1,38 @@
+{
+  "id": "m-parse-a-modelfile-into-a-normalized-dict-triple-quot",
+  "title": "Parse, normalize, and round-trip Ollama Modelfiles",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "modelfile-anatomy",
+  "difficulty": 2,
+  "edits": [
+    "modelfile/parser.py",
+    "modelfile/emitter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse Modelfiles into a normalized dict",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "parsed_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Round-trip emission and re-parsing",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "roundtrip_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for parser invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_parser", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

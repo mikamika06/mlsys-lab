@@ -41,13 +41,8 @@ $$
 Implement `jsd_grad_wrt_student_logits(teacher_logits, student_logits, beta)`:
 
 ```python
-import numpy as np
 
-def jsd_grad_wrt_student_logits(
-    teacher_logits: np.ndarray,
-    student_logits: np.ndarray,
-    beta: float,
-) -> np.ndarray:
+def jsd_grad_wrt_student_logits(teacher_logits: list[float], student_logits: list[float], beta: float) -> list[float]:
     ...
 ```
 
@@ -63,9 +58,8 @@ $\operatorname{JSD}_\beta(\operatorname{softmax}(z_t),
 ## Example
 
 ```python
-import numpy as np
-teacher_logits = np.array([2.0, 0.0, -1.0])
-student_logits = np.array([0.5, 0.5, 0.0])
+teacher_logits = [2.0, 0.0, -1.0]
+student_logits = [0.5, 0.5, 0.0]
 grad = jsd_grad_wrt_student_logits(teacher_logits, student_logits, beta=0.5)
 # grad has shape (3,) and sums to (very close to) 0 -- softmax-Jacobian
 # outputs are always in the tangent space of the simplex.

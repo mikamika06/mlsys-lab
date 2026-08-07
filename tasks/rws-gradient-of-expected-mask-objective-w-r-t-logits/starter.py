@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
 def expected_mask_grad(logits, values, target):
     raise NotImplementedError('your code here')

@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
 def rigl_topology_update(w, grad, mask, update_fraction):
     raise NotImplementedError('your code here')

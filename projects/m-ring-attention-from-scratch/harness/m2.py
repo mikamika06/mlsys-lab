@@ -1,23 +1,21 @@
 import numpy as np
 import ref
 
-
 def check(workdir):
-    from ringattn.ulysses import ulysses_attention
+    from ringattn.ulysses import ulysses_reshuffle
+    q, k, v, world_size = ref.generate_inputs()
+    b, s, h, d = q.shape
+    s_p = s // world_size
+    h_p = h // world_size
 
-    q, k, v = ref.generate_ulysses_inputs()
-    world_size = 4
     rank = 0
-    num_heads = 8
+    x_local = q[:, rank * s_p : (rank + 1) * s_p, :, :]
 
-    want = ref.ref_ulysses(q, k, v, rank, world_size, num_heads)
-    try:
-        got = ulysses_attention(q, k, v, rank, world_size, num_heads)
-    except Exception as e:
-        return {"ulysses_max_abs_err": float('inf'), "_note": f"raised {type(e).__name__}: {e}"}
+    want = ref.reference_ulysses_reshuffle(x_local, world_size, rank, forward=True)
+    got = ulysses_reshuffle(x_local, world_size, rank, forward=True)
 
-    if got is None or np.shape(got) != np.shape(want):
-        return {"ulysses_max_abs_err": float('inf'), "_note": f"shape mismatch got {np.shape(got) if got is not None else None}, want {np.shape(want)}"}
+    if got is None or got.shape != want.shape:
+        return {"max_abs_err": float("inf"), "_note": f"shape mismatch: got {getattr(got, 'shape', None)}, want {want.shape}"}
 
-    err = float(np.max(np.abs(got - want)))
-    return {"ulysses_max_abs_err": err}
+    err = float(np.max(np.abs(want - got)))
+    return {"max_abs_err": err}

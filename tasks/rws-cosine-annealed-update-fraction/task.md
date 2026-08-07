@@ -29,4 +29,4 @@ updated_connections = cosine_annealed_update_fraction(f0, T, t, nnz)
 
 ## What the gate checks
 
-The gate checks the `exact_match` metric, which compares the learner's output with the reference output. The reference output is calculated using a NumPy implementation of the cosine-annealed update fraction schedule. The gate passes if the learner's output matches the reference output.
+The gate checks the `exact_match` metric, which compares the learner's output with the reference output. The reference output is calculated using a Python implementation of the cosine-annealed update fraction schedule. The gate passes if the learner's output matches the reference output.

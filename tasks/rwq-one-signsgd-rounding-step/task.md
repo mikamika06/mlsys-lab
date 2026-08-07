@@ -55,11 +55,10 @@ step (clamped to $[-0.5, 0.5]$), and the re-quantized integer codes using
 ## Example
 
 ```python
-import numpy as np
-W = np.array([1.05, -0.42])
+W = [1.05, -0.42]
 scale = 0.5
-V = np.array([0.0, 0.0])
-grad = np.array([1.3, -0.4])   # positive -> push V down; negative -> push V up
+V = [0.0, 0.0]
+grad = [1.3, -0.4]   # positive -> push V down; negative -> push V up
 lr = 0.1
 V_new, W_q = signsgd_round_step(W, scale, V, grad, lr, qmin=-8, qmax=7)
 # V_new = [0.0 - 0.1*sign(1.3), 0.0 - 0.1*sign(-0.4)] = [-0.1, 0.1]
@@ -68,7 +67,7 @@ V_new, W_q = signsgd_round_step(W, scale, V, grad, lr, qmin=-8, qmax=7)
 
 ## What the gate checks
 
-* **max_abs_err** — your `V_new` must match a NumPy oracle applying the
+* **max_abs_err** — your `V_new` must match a Python oracle applying the
   exact SignSGD-and-clamp formula above, to within $10^{-8}$ absolute
   error, over several random `(W, scale, V, grad, lr)` cases (including
   some exactly-zero gradient entries, to check `sign(0) == 0`).

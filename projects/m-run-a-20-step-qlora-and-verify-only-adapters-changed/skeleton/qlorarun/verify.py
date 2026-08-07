@@ -1,2 +1,2 @@
-def verify_adapters_only_changed(init_weights, final_weights):
+def verify_only_adapters_changed(initial_state, final_state, model):
     raise NotImplementedError

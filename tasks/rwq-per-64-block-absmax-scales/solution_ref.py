@@ -1,16 +1,17 @@
-import numpy as np
+def nf4_block_absmax_scales(W: list[list[float]]) -> list[float]:
+    w = []
+    for row in W:
+        for val in row:
+            w.append(val)
 
-
-def nf4_block_absmax_scales(W: np.ndarray) -> np.ndarray:
-    w = np.asarray(W, dtype=np.float64).reshape(-1)
-    blocks = w.reshape(-1, 64)
-    num_blocks = blocks.shape[0]
-    scales = np.empty(num_blocks, dtype=np.float64)
+    num_blocks = len(w) // 64
+    scales = []
     for i in range(num_blocks):
-        max_val = abs(blocks[i, 0])
+        block_start = i * 64
+        max_val = abs(w[block_start])
         for j in range(1, 64):
-            val = abs(blocks[i, j])
+            val = abs(w[block_start + j])
             if val > max_val:
                 max_val = val
-        scales[i] = max_val
+        scales.append(max_val)
     return scales

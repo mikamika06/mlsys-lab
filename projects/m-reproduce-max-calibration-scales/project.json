@@ -1,0 +1,21 @@
+{
+  "id": "m-reproduce-max-calibration-scales",
+  "title": "Reproduce calibration scales and NVFP4 round-trip",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT Model Optimizer (modelopt) PTQ for ONNX and TRT",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["calib/scales.py", "calib/entropy.py", "calib/nvfp4.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reproduce max-calibration scales", "check": "harness/m1.py",
+     "gates": [{"metric": "scales_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Reproduce entropy calibration", "check": "harness/m2.py",
+     "gates": [{"metric": "entropy_matched", "op": ">=", "threshold": 5}]},
+    {"n": 3, "title": "NVFP4 block-scale round trip and safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_roundtrip", "op": "==", "threshold": 1}]}
+  ]
+}

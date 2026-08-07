@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def ot_cost_1d(positions: np.ndarray, p: np.ndarray, q: np.ndarray) -> float:
+def ot_cost_1d(positions: list[float], p: list[float], q: list[float]) -> float:
     """1-D optimal transport cost with ground cost |x - y|.
 
     positions: 1-D float64 array of n distinct support point locations

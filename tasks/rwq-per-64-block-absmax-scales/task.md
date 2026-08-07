@@ -23,13 +23,12 @@ quantization scheme.
 Implement `nf4_block_absmax_scales(W)`:
 
 ```python
-import numpy as np
 
-def nf4_block_absmax_scales(W: np.ndarray) -> np.ndarray:
+def nf4_block_absmax_scales(W: list[list[float]]) -> list[float]:
     ...
 ```
 
-`W` is a 2-D `float64` NumPy array (an `(out_features, in_features)` Linear
+`W` is a 2-D `float64` list (an `(out_features, in_features)` Linear
 layer weight matrix) whose total element count is a multiple of `64`.
 
 1. Flatten `W` in row-major (C) order into a length-`n` 1-D stream.
@@ -37,13 +36,12 @@ layer weight matrix) whose total element count is a multiple of `64`.
 3. Return a 1-D `float64` array of length `n // 64` holding each block's
    maximum absolute value.
 
-Use vectorized NumPy — no explicit Python loops.
+Use vectorized Python — no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
-W = np.arange(128, dtype=np.float64).reshape(2, 64) - 32  # 128 elements -> 2 blocks
+W = list(range(128)).reshape(2, 64) - 32  # 128 elements -> 2 blocks
 scales = nf4_block_absmax_scales(W)
 # Block 0 is row 0 (values -32..31): max |.| = 32.0
 # Block 1 is row 1 (values 32..95):  max |.| = 95.0
@@ -65,7 +63,7 @@ The grader loads a committed fixture `nf4_w.npy` — a `(96, 256)` matrix
 shaped like a real trained Linear layer's weights, with per-output-row
 magnitude variation, so the per-block absmax genuinely differs block to
 block. The oracle performs the identical flatten -> `reshape(-1, 64)` ->
-`np.max(np.abs(.), axis=1)` computation independently in NumPy.
+`[max(abs(x) for x in row) for row in .]` computation independently in Python.
 
 The gate metric is `rel_err`, the global relative L2 error between your
 scale vector and the oracle's:

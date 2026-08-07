@@ -26,23 +26,22 @@ Any value $|x_i| > 6$ is clamped to the outermost level $6$.
 Implement `snap_to_e2m1(x)`:
 
 ```python
-import numpy as np
 
-def snap_to_e2m1(x: np.ndarray) -> np.ndarray:
+def snap_to_e2m1(x):
     """Snap each element of *x* to the nearest signed E2M1 FP4 value."""
     ...
 ```
 
-Input: a 1-D `float64` NumPy array whose elements lie in approximately
+Input: a 1-D `float64` list whose elements lie in approximately
 $[-6.5,\, 6.5]$.
 
-Output: a NumPy array of the same shape containing the nearest element of
+Output: a list of the same shape containing the nearest element of
 $\mathcal{G}_{\text{signed}}$ for every input value.
 
 ## Example
 
 ```python
-x = np.array([0.3, 0.7, 1.2, 2.7, -5.5])
+x = [0.3, 0.7, 1.2, 2.7, -5.5]
 snap_to_e2m1(x)
 # array([ 0.5,  0.5,  1. ,  3. , -6. ])
 ```
@@ -59,7 +58,7 @@ Explanation of each snap:
 
 ## What the gate checks
 
-The gate metric is `max_abs_err`.  The grader constructs an independent NumPy
+The gate metric is `max_abs_err`.  The grader constructs an independent Python
 oracle that builds the same magnitude grid $\mathcal{G}$, computes
 $\arg\min_{g \in \mathcal{G}} \bigl||x_i| - g\bigr|$ via broadcasting, and
 reapplies the sign.  It then evaluates several inline test vectors spanning

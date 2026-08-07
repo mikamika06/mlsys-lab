@@ -34,32 +34,27 @@ downstream loss rather than treating each probability independently.
 Implement `expected_mask_grad(logits, values, target)`:
 
 ```python
-def expected_mask_grad(
-    logits: np.ndarray,
-    values: np.ndarray,
-    target: np.ndarray
-) -> np.ndarray:
+def expected_mask_grad(logits, values, target):
     ...
 ```
 
 The arguments have shape:
 
-- `logits`: a 2-D NumPy array with shape $(n, k)$.
-- `values`: a 1-D NumPy array with shape $(k,)$ containing mask feature values.
-- `target`: a 1-D NumPy array with shape $(n,)$ containing desired soft mask values.
+- `logits`: a list of lists of floats with shape $(n, k)$.
+- `values`: a list of floats with shape $(k,)$ containing mask feature values.
+- `target`: a list of floats with shape $(n,)$ containing desired soft mask values.
 
 Return an array with shape $(n, k)$ containing $\frac{\partial L}{\partial z}$ for each row.
 
-Use NumPy operations. The returned dtype must be `float64`.
+Use Python operations. The returned dtype must be `float64`.
 
 ## Example
 
 ```python
-import numpy as np
 
-logits = np.array([[2.0, 0.0, -1.0]])
-values = np.array([1.0, 0.0, 0.5])
-target = np.array([0.7])
+logits = [[2.0, 0.0, -1.0]]
+values = [1.0, 0.0, 0.5]
+target = [0.7]
 
 grad = expected_mask_grad(logits, values, target)
 ```

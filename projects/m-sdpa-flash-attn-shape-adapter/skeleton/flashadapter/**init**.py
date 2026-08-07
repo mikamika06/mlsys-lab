@@ -1,0 +1,1 @@
+"""FlashAttention shape adapter package."""

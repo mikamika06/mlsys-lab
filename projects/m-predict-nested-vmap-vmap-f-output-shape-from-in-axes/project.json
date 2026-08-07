@@ -1,0 +1,25 @@
+{
+  "id": "m-predict-nested-vmap-vmap-f-output-shape-from-in-axes",
+  "title": "Predict nested vmap output shapes and compare shard_map vs pmap",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "JAX vmap / pmap / shard_map batching & SPMD",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "jax_shape_lab/predict.py",
+    "jax_shape_lab/shard_compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "Predict nested vmap(vmap(f)) output shape", "check": "harness/m1.py",
+     "gates": [{"metric": "shapes_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Compare shard_map vs pmap reductions", "check": "harness/m2.py",
+     "gates": [{"metric": "parity_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for shape invariance", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_shape", "op": "==", "threshold": 1}]}
+  ]
+}

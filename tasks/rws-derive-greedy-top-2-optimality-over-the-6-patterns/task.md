@@ -29,25 +29,24 @@ Production pruning libraries use this greedy rule instead of enumerating all six
 Implement `greedy_24_prune(W)`:
 
 ```python
-def greedy_24_prune(W: np.ndarray) -> np.ndarray:
+def greedy_24_prune(W: list[list[float]]) -> list[float]:
     ...
 ```
 
-`W` is a NumPy array with shape `(n, 4)`. Each row is one independent 2:4 pruning group.
+`W` is a list with shape `(n, 4)`. Each row is one independent 2:4 pruning group.
 
-Return a NumPy array of shape `(n,)` containing the minimum dropped magnitude for each group. The returned values must be `float64`.
+Return a list of shape `(n,)` containing the minimum dropped magnitude for each group. The returned values must be `float64`.
 
 For every row, compute the sum of the two smallest absolute values. Do not modify `W`.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([
+W = [
     [1.0, -4.0, 2.0, 8.0],
     [-3.0, 0.5, 0.25, 2.0],
-])
+]
 
 out = greedy_24_prune(W)
 # array([3. , 0.75])

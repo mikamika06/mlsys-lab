@@ -1,28 +1,22 @@
-import numpy as np
-
-
-def _total_params(coefs: np.ndarray, consts: np.ndarray, d: int) -> int:
+def _total_params(coefs: list[list[int]], consts: list[list[int]], d: int) -> int:
     total = 0
-    num_rows = coefs.shape[0]
+    num_rows = len(coefs)
     for i in range(num_rows):
-        dim0 = int(coefs[i, 0]) * d + int(consts[i, 0])
-        dim1 = int(coefs[i, 1]) * d + int(consts[i, 1])
+        dim0 = int(coefs[i][0]) * d + int(consts[i][0])
+        dim1 = int(coefs[i][1]) * d + int(consts[i][1])
         total += dim0 * dim1
     return int(total)
 
 
-def pick_width_for_budget(coefs: np.ndarray, consts: np.ndarray, widths: np.ndarray, budget: int) -> tuple[int, int]:
+def pick_width_for_budget(coefs: list[list[int]], consts: list[list[int]], widths: list[int], budget: int) -> tuple[int, int]:
     """Sweep every candidate width, compute the exact coupled parameter
     count P(d) = sum_t shape_t(d)[0] * shape_t(d)[1], and return the
     largest width whose P(d) fits `budget` (falling back to the width with
     the smallest P(d) if none fits), together with its exact param count.
     """
-    coefs = np.asarray(coefs, dtype=np.int64)
-    consts = np.asarray(consts, dtype=np.int64)
-    widths = np.asarray(widths, dtype=np.int64)
     budget = int(budget)
 
-    num_widths = widths.shape[0]
+    num_widths = len(widths)
     counts_list = []
     for i in range(num_widths):
         d = int(widths[i])

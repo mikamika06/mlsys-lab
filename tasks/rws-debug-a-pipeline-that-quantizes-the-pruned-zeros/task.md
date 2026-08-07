@@ -41,8 +41,8 @@ consecutive block of 4 elements along the last axis:
 
 1. **2:4 prune**: zero the 2 smallest-magnitude elements of the block,
    keep the 2 largest (the survivors). If magnitudes tie, break ties by
-   keeping the elements NumPy's stable `argsort` would rank as largest
-   (i.e. use `np.argsort` on the block's absolute values and keep the last
+   keeping the elements Python's stable `argsort` would rank as largest
+(i.e. use `sorted` or list methods on the block's absolute values and keep the last
    two indices).
 2. **Correct scale**: `scale = mean(|survivors|)`, computed from the
    surviving elements only — **not** from all 4 slots in the block. If a
@@ -59,9 +59,8 @@ treating the pruned zeros as if they contributed to the group's statistic.
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[0.1, -0.2, 3.0, -4.0]])
+W = [[0.1, -0.2, 3.0, -4.0]]
 W_hat = compound_prune_quantize_2_4(W, nbits=4)
 # The two smallest-magnitude entries (0.1, -0.2) are pruned to 0.
 # scale = mean(|3.0|, |-4.0|) = 3.5 -- computed from the 2 survivors only.
@@ -70,7 +69,7 @@ W_hat = compound_prune_quantize_2_4(W, nbits=4)
 ## What the gate checks
 
 The gate rebuilds the correct pipeline (prune, then scale from survivors
-only, then quantize) with an independent NumPy oracle across several
+only, then quantize) with an independent Python oracle across several
 weight matrices and bit widths.
 
 - `max_abs_err`: the maximum absolute error between your reconstructed

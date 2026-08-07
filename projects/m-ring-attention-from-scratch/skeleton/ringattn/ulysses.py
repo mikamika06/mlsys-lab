@@ -1,5 +1,3 @@
-import numpy as np
-
-
-def ulysses_attention(q, k, v, rank, world_size, num_heads):
+def ulysses_reshuffle(x, world_size, rank, forward=True):
+    """Perform DeepSpeed-Ulysses all-to-all reshuffle."""
     raise NotImplementedError

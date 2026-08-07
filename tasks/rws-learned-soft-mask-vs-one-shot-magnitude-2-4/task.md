@@ -40,8 +40,8 @@ mask using the same weight groups.
 Implement `compare_2_4_masks(weights, logits)`.
 
 Arguments:
-- `weights`: a NumPy array of shape $(n,4)$ containing weight groups.
-- `logits`: a NumPy array of shape $(n,4)$ containing converged learned-mask
+- `weights`: a list of shape $(n,4)$ containing weight groups.
+- `logits`: a list of shape $(n,4)$ containing converged learned-mask
   logits.
 
 Return a dictionary with exactly these keys:
@@ -58,10 +58,9 @@ Use stable descending ordering for ties in top-2 selection.
 ## Example
 
 ```python
-import numpy as np
 
-weights = np.array([[3.0, -1.0, 2.0, 0.5]])
-logits = np.array([[0.1, 5.0, 4.0, 3.0]])
+weights = [[3.0, -1.0, 2.0, 0.5]]
+logits = [[0.1, 5.0, 4.0, 3.0]]
 
 result = compare_2_4_masks(weights, logits)
 
@@ -71,7 +70,7 @@ result = compare_2_4_masks(weights, logits)
 
 ## What the gate checks
 
-The grader recomputes both masks from a NumPy oracle and compares every numeric
+The grader recomputes both masks from a Python oracle and compares every numeric
 output. The `mse` value is the mean squared difference between the returned
 numeric arrays and the oracle arrays. The `better_match` value checks that the
 returned winner agrees with the oracle comparison of total errors.

@@ -1,5 +1,3 @@
-import numpy as np
-
-
-def compute_crossover(sequence_lengths, hidden_size, world_size, bandwidth, latency):
+def compute_crossover(seq_len, hidden_size, world_size):
+    """Compute communication volume for ring and ulysses."""
     raise NotImplementedError

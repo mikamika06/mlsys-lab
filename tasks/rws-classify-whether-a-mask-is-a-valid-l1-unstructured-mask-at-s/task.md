@@ -29,7 +29,7 @@ but the wrong *indices* is invalid.
 Implement:
 
 ```python
-def is_valid_l1_mask(w: np.ndarray, mask: np.ndarray, amount: float) -> bool:
+def is_valid_l1_mask(w: list[float], mask: list[bool], amount: float) -> bool:
     ...
 ```
 
@@ -43,18 +43,17 @@ above for `(w, amount)`.
 ## Example
 
 ```python
-import numpy as np
-w = np.array([0.1, -0.9, 0.05, 0.4])
+w = [0.1, -0.9, 0.05, 0.4]
 # amount=0.5 -> k = round(0.5*4) = 2 smallest |w| pruned: indices 0, 2
-mask_true  = np.array([False, True, False, True])
-mask_wrong = np.array([True, True, False, False])  # right count, wrong indices
+mask_true  = [False, True, False, True]
+mask_wrong = [True, True, False, False]  # right count, wrong indices
 is_valid_l1_mask(w, mask_true, 0.5)   # True
 is_valid_l1_mask(w, mask_wrong, 0.5)  # False
 ```
 
 ## What the gate checks
 
-* **exact_match** — your `True`/`False` verdict must match a NumPy
+* **exact_match** — your `True`/`False` verdict must match a Python
   oracle that builds the true mask via the exact rule above (including
   the `round()`-based count and ascending-`|w|` tie order) and compares
   it to the candidate, over many random `(w, mask, amount)` cases —

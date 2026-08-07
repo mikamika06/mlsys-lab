@@ -41,7 +41,7 @@ patterns that retain more total magnitude.
 Implement `expected_pattern_stats`:
 
 ```python
-def expected_pattern_stats(p: np.ndarray, w: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def expected_pattern_stats(p: list[list[float]], w: list[list[float]]) -> tuple[list[float], list[float]]:
     ...
 ```
 
@@ -73,7 +73,7 @@ $1.0+3.0=4.0$. `expected_density = 0.5`,
 50 groups with `p` drawn from varied Dirichlet distributions and `w` drawn
 from scaled Gaussian magnitudes) plus a couple of independently generated
 synthetic batches (including a hand-checkable single-group case), computes
-`(expected_density, expected_retained)` independently with a NumPy oracle,
+`(expected_density, expected_retained)` independently with a Python oracle,
 and checks the global relative L2 error between your concatenated
 `(expected_density, expected_retained)` output and the oracle's is at most
 $10^{-6}$. Because `expected_density` alone is always $0.5$, a solution

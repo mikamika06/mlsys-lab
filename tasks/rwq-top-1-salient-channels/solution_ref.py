@@ -1,23 +1,21 @@
 import math
-import numpy as np
 
 
-def top_salient_channels(X: np.ndarray, frac: float = 0.01) -> np.ndarray:
+def top_salient_channels(X: list[list[float]], frac: float = 0.01) -> list[int]:
     """AWQ-style salient-channel selection: the top `frac` fraction of
     channels (columns) by mean absolute calibration activation.
 
-    Returns a 1-D int array of channel indices, length ceil(frac * C)
+    Returns a list of integer channel indices, length ceil(frac * C)
     (minimum 1), the channels with the largest mean(|X|).
     """
-    X = np.asarray(X, dtype=np.float64)
-    N = X.shape[0]
-    C = X.shape[1]
+    N = len(X)
+    C = len(X[0]) if N > 0 else 0
 
     scores = []
     for c in range(C):
         total = 0.0
         for r in range(N):
-            val = X[r, c]
+            val = X[r][c]
             if val < 0.0:
                 total -= val
             else:
@@ -46,4 +44,4 @@ def top_salient_channels(X: np.ndarray, frac: float = 0.01) -> np.ndarray:
     for i in range(k):
         order.append(indexed_scores[i][1])
 
-    return np.array(order, dtype=np.int64)
+    return order

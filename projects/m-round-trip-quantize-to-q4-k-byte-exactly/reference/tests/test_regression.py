@@ -1,26 +1,21 @@
-import sys
-sys.path.insert(0, ".")
-from q4k.quantize import quantize_q4_k, dequantize_q4_k
-from q4k.analysis import dominant_subblock
-from q4k.compare import compare_q4_k_q4_0
 import numpy as np
+from q4k.quant import quantize_q4_k_superblock, dequantize_q4_k_superblock
+from q4k.analysis import find_worst_subblocks
 
 
-def test_round_trip_bytes():
-    arr = np.linspace(-1.0, 1.0, 256, dtype=np.float32)
-    b = quantize_q4_k(arr)
-    b2 = quantize_q4_k(arr)
+def test_q4k_byte_exact_roundtrip():
+    np.random.seed(42)
+    w = np.random.uniform(-1.0, 1.0, 256).astype(np.float32)
+    b = quantize_q4_k_superblock(w)
+    dec = dequantize_q4_k_superblock(b)
+    b2 = quantize_q4_k_superblock(dec)
     assert b == b2
 
 
-def test_dominant_subblock_bounds():
-    arr = np.random.default_rng(42).standard_normal(256).astype(np.float32)
-    sub = dominant_subblock(arr)
-    assert 0 <= sub < 8
-
-
-def test_compare_keys():
-    arr = np.zeros(256, dtype=np.float32)
-    res = compare_q4_k_q4_0(arr)
-    assert "mse_q4_k" in res
-    assert "mse_q4_0" in res
+def test_subblock_ranking_length():
+    np.random.seed(123)
+    w = np.random.uniform(-0.5, 0.5, 256).astype(np.float32)
+    b = quantize_q4_k_superblock(w)
+    ranking = find_worst_subblocks(w, b)
+    assert len(ranking) == 16
+    assert len(set(ranking)) == 16

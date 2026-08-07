@@ -42,16 +42,11 @@ mask entries. The total number of live weights remains unchanged.
 Implement `rigl_topology_update(w, grad, mask, update_fraction)`.
 
 ```python
-def rigl_topology_update(
-    w: np.ndarray,
-    grad: np.ndarray,
-    mask: np.ndarray,
-    update_fraction: float,
-) -> np.ndarray:
+def rigl_topology_update(w, grad, mask, update_fraction):
     ...
 ```
 
-The inputs are one-dimensional NumPy arrays of equal length.
+The inputs are list of floats of equal length.
 
 Return a new integer mask array with the same shape. The algorithm is:
 
@@ -67,11 +62,10 @@ number of active entries.
 ## Example
 
 ```python
-import numpy as np
 
-w = np.array([0.1, 5.0, 0.2, 0.0])
-g = np.array([1.0, 0.0, 3.0, 2.0])
-m = np.array([1, 1, 0, 0])
+w = [0.1, 5.0, 0.2, 0.0]
+g = [1.0, 0.0, 3.0, 2.0]
+m = [1, 1, 0, 0]
 
 new_mask = rigl_topology_update(w, g, m, 0.5)
 # Drops index 0 and grows index 2:
@@ -80,7 +74,7 @@ new_mask = rigl_topology_update(w, g, m, 0.5)
 
 ## What the gate checks
 
-The gate computes a NumPy oracle implementation of the RigL update on several
+The gate computes a Python oracle implementation of the RigL update on several
 inputs and compares the returned mask exactly. The check also verifies that the
 number of live entries is conserved after the update. Incorrect tie handling,
 wrong drop/grow ordering, or changing the sparsity level fail the gate.

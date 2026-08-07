@@ -1,0 +1,21 @@
+{
+  "id": "m-single-layer-gptq-on-a-64x64-weight",
+  "title": "Single-layer GPTQ on a 64x64 weight",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "GPTQ algorithm mechanics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gptq_single/gptq.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Hessian inverse and initialization", "check": "harness/m1.py",
+     "gates": [{"metric": "hessian_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Sequential GPTQ weight quantization and error compensation", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Safety net: regression tests for GPTQ vs RTN MSE", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_gptq", "op": "==", "threshold": 1}]}
+  ]
+}

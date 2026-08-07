@@ -12,19 +12,18 @@ Knowing how many live parameters a mask contains and its sparsity is useful for 
 Implement `count_live_params_and_sparsity(mask)`:
 
 ```python
-def count_live_params_and_sparsity(mask: np.ndarray) -> tuple[int, float]:
+def count_live_params_and_sparsity(mask: list[list[int]]) -> tuple[int, float]:
     ...
 ```
 
-The function receives a 2‑D NumPy array of integers or booleans. It must return a tuple `(live_count, sparsity)` where `live_count` is the number of non‑zero entries (an `int`) and `sparsity` is a `float` in `[0,1]` representing the fraction of zero elements.
+The function receives a 2‑D list of integers or booleans. It must return a tuple `(live_count, sparsity)` where `live_count` is the number of non‑zero entries (an `int`) and `sparsity` is a `float` in `[0,1]` representing the fraction of zero elements.
 
-The implementation should use only NumPy operations; no explicit Python loops are required but allowed if you wish. The result must be computed with double precision (`float64`).
+The implementation should use only Python operations; no explicit Python loops are required but allowed if you wish. The result must be computed with double precision (`float64`).
 
 ## Example
 
 ```python
-import numpy as np
-mask = np.array([[0, 1], [1, 0]])
+mask = [[0, 1], [1, 0]]
 live, sparsity = count_live_params_and_sparsity(mask)
 print(live)      # 2
 print(sparsity)  # 0.5
@@ -32,4 +31,4 @@ print(sparsity)  # 0.5
 
 ## What the gate checks
 
-The grader generates several random masks and compares your output to a NumPy reference. The metric `exact_match` must equal `1.0`. A mismatch in either the count or sparsity causes the gate to fail.
+The grader generates several random masks and compares your output to a Python reference. The metric `exact_match` must equal `1.0`. A mismatch in either the count or sparsity causes the gate to fail.

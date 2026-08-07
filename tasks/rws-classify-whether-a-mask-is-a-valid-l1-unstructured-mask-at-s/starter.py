@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def is_valid_l1_mask(w: np.ndarray, mask: np.ndarray, amount: float) -> bool:
+def is_valid_l1_mask(w: list[float], mask: list[bool], amount: float) -> bool:
     """
     Return True iff `mask` is exactly the L1-unstructured pruning mask
     for `w` at sparsity `amount`: the k = round(amount * w.size)

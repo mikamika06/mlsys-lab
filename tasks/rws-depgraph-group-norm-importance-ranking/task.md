@@ -19,7 +19,7 @@ The input is a list of groups. Each group is a dictionary with:
 ```python
 {
     "id": int,
-    "tensors": [numpy arrays]
+    "tensors": [list]
 }
 ```
 
@@ -36,16 +36,15 @@ Sort groups by decreasing importance. If two groups have the same importance, so
 ## Example
 
 ```python
-import numpy as np
 
 groups = [
     {
         "id": 10,
-        "tensors": [np.array([1.0, 1.0]), np.array([2.0])]
+        "tensors": [[1.0, 1.0], [2.0]]
     },
     {
         "id": 20,
-        "tensors": [np.array([3.0])]
+        "tensors": [[3.0]]
     }
 ]
 
@@ -67,7 +66,7 @@ $$
 
 ## What the gate checks
 
-The gate computes the reference ranking using a NumPy implementation of the group L2 norm algorithm. The returned ordering is compared using Spearman rank correlation $\rho$.
+The gate computes the reference ranking using a Python implementation of the group L2 norm algorithm. The returned ordering is compared using Spearman rank correlation $\rho$.
 
 A passing implementation must satisfy
 

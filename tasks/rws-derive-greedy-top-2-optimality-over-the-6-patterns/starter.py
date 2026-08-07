@@ -1,4 +1,2 @@
-import numpy as np
-
-def greedy_24_prune(W: np.ndarray) -> np.ndarray:
+def greedy_24_prune(W: list[list[float]]) -> list[float]:
     raise NotImplementedError('your code here')

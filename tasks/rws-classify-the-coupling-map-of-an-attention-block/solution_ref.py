@@ -10,9 +10,9 @@ def classify_coupling_map(
 
     Parameters
     ----------
-    q_shape, k_shape, v_shape : tuple[int]
+    q_shape, k_shape, v_shape : tuple[int, ...]
         Shapes of the query/key/value tensors.  The last dimension is H * d_k.
-    o_proj_shape : tuple[int]
+    o_proj_shape : tuple[int, ...]
         Shape of the output projection matrix W_o.  The first dimension is H * d_v.
     head_index : int
         Zero‑based index of the head to classify.

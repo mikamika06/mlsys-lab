@@ -1,0 +1,22 @@
+{
+  "id": "m-quantize-a-tiny-model-with-gptqmodel-end-to-end",
+  "title": "Quantize a tiny model with GPTQModel end-to-end",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "GPTQModel API and quantization knobs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gptqquant/config.py", "gptqquant/quantize.py", "gptqquant/export.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Quantization configuration and knob settings", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Weight quantization and compression size ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "size_ratio_match", "op": "==", "threshold": 1},
+               {"metric": "quantized_correctly", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for quantization invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_group_size", "op": "==", "threshold": 1}]}
+  ]
+}

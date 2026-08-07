@@ -23,34 +23,29 @@ weights with the largest values of $S_i$. The result is a binary mask $M$ where 
 Implement `wanda_mask(W, col_norms, keep_ratio)`:
 
 ```python
-def wanda_mask(
-    W: np.ndarray,
-    col_norms: np.ndarray,
-    keep_ratio: float
-) -> np.ndarray:
+def wanda_mask(W, col_norms, keep_ratio):
     ...
 ```
 
 The inputs are:
 
-- `W`: a 2-D NumPy array of shape $(m,n)$ containing weights.
-- `col_norms`: a 1-D NumPy array of length $n$ containing input column norms.
+- `W`: a list of lists of floats of shape $(m,n)$ containing weights.
+- `col_norms`: a list of floats of length $n$ containing input column norms.
 - `keep_ratio`: a value in $(0,1]` specifying the fraction of weights to keep in every output row.
 
-Return a boolean NumPy array of shape $(m,n)$. For each row, exactly $k$ positions should be `True`, where $k=\max(1,\operatorname{round}(n\,\texttt{keep\_ratio}))$.
+Return a boolean list of shape $(m,n)$. For each row, exactly $k$ positions should be `True`, where $k=\max(1,\operatorname{round}(n\,\texttt{keep\_ratio}))$.
 
-Use the Wanda score formula and perform the selection independently for every row. Ties may be resolved by NumPy's deterministic ordering.
+Use the Wanda score formula and perform the selection independently for every row. Ties may be resolved by Python's deterministic ordering.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([
+W = [
     [1.0, -4.0, 2.0, 0.5],
     [3.0,  1.0, 1.5, 2.0],
-])
-col_norms = np.array([1.0, 0.5, 2.0, 1.0])
+]
+col_norms = [1.0, 0.5, 2.0, 1.0]
 
 mask = wanda_mask(W, col_norms, 0.5)
 
@@ -65,6 +60,6 @@ mask = wanda_mask(W, col_norms, 0.5)
 
 ## What the gate checks
 
-The gate computes a NumPy oracle for the Wanda scores and the row-wise top-$k$ selection. The returned mask must match the oracle exactly.
+The gate computes a Python oracle for the Wanda scores and the row-wise top-$k$ selection. The returned mask must match the oracle exactly.
 
 Solutions that select the largest values from the whole matrix at once, or that rank using row means instead of the L2-derived Wanda scores, produce incorrect per-row sparsity patterns and fail the gate.

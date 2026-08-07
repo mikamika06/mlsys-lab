@@ -18,13 +18,7 @@ The coupling map is the set of these index ranges for a given head.  It tells wh
 Implement `classify_coupling_map`:
 
 ```python
-def classify_coupling_map(
-    q_shape: tuple[int, ...],
-    k_shape: tuple[int, ...],
-    v_shape: tuple[int, ...],
-    o_proj_shape: tuple[int, ...],
-    head_index: int,
-) -> dict[str, tuple[int, int]]:
+def classify_coupling_map(q_shape, k_shape, v_shape, o_proj_shape, head_index):
     ...
 ```
 
@@ -37,7 +31,6 @@ The function must not perform any array operations; it only needs to compute int
 ## Example
 
 ```python
-import numpy as np
 
 # 4 heads, each of size 16 in Q/K/V and 16 in O_proj rows
 q_shape = (2, 10, 64)          # batch=2, seq_len=10, H*d_k=64

@@ -1,0 +1,21 @@
+{
+  "id": "m-round-trip-a-compressed-tensors-checkpoint",
+  "title": "Round-trip a compressed-tensors checkpoint",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "compressed-tensors checkpoint format",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["compress/checkpoint.py", "compress/transform.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse and load compressed tensors state dict", "check": "harness/m1.py",
+     "gates": [{"metric": "parsed_correctly", "op": "==", "threshold": 1.0}]},
+    {"n": 2, "title": "Round-trip conversion within max absolute error limit", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 3, "title": "Safety net: regression test catches broken round-trip", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_broken_round_trip", "op": "==", "threshold": 1.0}]}
+  ]
+}

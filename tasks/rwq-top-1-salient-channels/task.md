@@ -21,7 +21,7 @@ channels with the largest $s_j$.
 Implement `top_salient_channels`:
 
 ```python
-def top_salient_channels(X: np.ndarray, frac: float = 0.01) -> np.ndarray:
+def top_salient_channels(X: list[list[float]], frac: float=0.01) -> list[int]:
     ...
 ```
 
@@ -36,12 +36,11 @@ largest $s_j$ (any order — it is graded as a **set**, not a sequence).
 ## Example
 
 ```python
-import numpy as np
-X = np.array([
+X = [
     [1.0, 0.1, -0.2],
     [-1.0, 0.2, 0.1],
     [0.9, -0.1, 0.0],
-])
+]
 idx = top_salient_channels(X, frac=0.34)   # ceil(0.34*3) = 2
 # column-wise mean(|X|): [0.9667, 0.1333, 0.1]
 # -> the 2 most salient channels are {0, 1}

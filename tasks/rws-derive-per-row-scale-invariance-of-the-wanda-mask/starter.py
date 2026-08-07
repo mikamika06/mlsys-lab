@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def wanda_mask(W: np.ndarray, col_norms: np.ndarray, keep_ratio: float) -> np.ndarray:
+def wanda_mask(W: list[list[float]], col_norms: list[float], keep_ratio: float) -> list[list[bool]]:
     """Wanda pruning mask: per output-row, keep the top `keep_ratio` fraction
     of weights ranked by |W_ij| * col_norms[j].
 

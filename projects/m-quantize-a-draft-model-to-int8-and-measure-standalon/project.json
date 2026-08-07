@@ -1,0 +1,46 @@
+{
+  "id": "m-quantize-a-draft-model-to-int8-and-measure-standalon",
+  "title": "Quantized draft model for speculative decoding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Quantized draft models",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "draft/quantize.py",
+    "draft/simulate.py",
+    "draft/decide.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantize draft model to int8 and measure standalone latency reduction",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "latency_ratio", "op": "<", "threshold": 0.8},
+        {"metric": "reconstruction_error_ok", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure acceptance-rate change from swapping in an int8 draft",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rate_match", "op": "==", "threshold": 1},
+        {"metric": "delta_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches flawed end-to-end win derivation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_flawed_derivation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

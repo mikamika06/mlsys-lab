@@ -1,0 +1,24 @@
+{
+  "id": "m-serialized-exportedprogram-graph-parser",
+  "title": "Serialized ExportedProgram graph parser",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-edge-export",
+  "track": "Graph capture: torch.export vs torch.jit.trace",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gparser/parser.py", "gparser/inspector.py", "gparser/optimizer.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse nodes and operators", "check": "harness/m1.py",
+     "gates": [{"metric": "nodes_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Inspect shapes and dtypes", "check": "harness/m2.py",
+     "gates": [{"metric": "shapes_match", "op": "==", "threshold": 1},
+               {"metric": "dtypes_match", "op": "==", "threshold": 1},
+               {"metric": "io_match", "op": "==", "threshold": 1},
+               {"metric": "opt_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid graph parsing", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_parser", "op": "==", "threshold": 1}]}
+  ]
+}

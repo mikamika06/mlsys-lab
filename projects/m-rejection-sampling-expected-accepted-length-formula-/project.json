@@ -1,0 +1,46 @@
+{
+  "id": "m-rejection-sampling-expected-accepted-length-formula",
+  "title": "Rejection sampling and speculative decoding performance at long context",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "speculative-decoding-long-context",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "specdec/analysis.py",
+    "specdec/trace.py",
+    "specdec/profile.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Expected accepted length formula vs Monte Carlo",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "formula_matched", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute acceptance-rate drop at long context from trace",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "drop_match", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for speculative speedup analysis",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_speedup", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

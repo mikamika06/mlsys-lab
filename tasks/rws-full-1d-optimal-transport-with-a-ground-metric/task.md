@@ -26,7 +26,7 @@ the 1-Wasserstein distance — no LP solver needed.
 Implement `ot_cost_1d`:
 
 ```python
-def ot_cost_1d(positions: np.ndarray, p: np.ndarray, q: np.ndarray) -> float:
+def ot_cost_1d(positions: list[float], p: list[float], q: list[float]) -> float:
     ...
 ```
 
@@ -41,10 +41,9 @@ def ot_cost_1d(positions: np.ndarray, p: np.ndarray, q: np.ndarray) -> float:
 ## Example
 
 ```python
-import numpy as np
-positions = np.array([3.0, 1.0, 2.0])   # unsorted
-p = np.array([0.0, 1.0, 0.0])           # all mass at position 1
-q = np.array([0.0, 0.0, 1.0])           # all mass at position 3
+positions = [3.0, 1.0, 2.0]   # unsorted
+p = [0.0, 1.0, 0.0]           # all mass at position 1
+q = [0.0, 0.0, 1.0]           # all mass at position 3
 cost = ot_cost_1d(positions, p, q)
 # sorted positions: [1, 2, 3]; moving all mass from 1 to 3 costs |1-3| = 2.0
 ```

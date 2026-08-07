@@ -1,2 +1,2 @@
-def test_regression():
+def test_placeholder():
     raise NotImplementedError

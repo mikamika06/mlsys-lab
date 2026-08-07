@@ -2,30 +2,25 @@ import sys
 import numpy as np
 
 sys.path.insert(0, ".")
-from ringattn.core import ring_attention
-from ringattn.ulysses import ulysses_attention
+from ringattn.ring import ring_attention
+from ringattn.ulysses import ulysses_reshuffle
 from ringattn.crossover import compute_crossover
 
+def test_ring_attention_output_shape():
+    q = np.ones((1, 16, 2, 8), dtype=np.float32)
+    k = np.ones((1, 16, 2, 8), dtype=np.float32)
+    v = np.ones((1, 16, 2, 8), dtype=np.float32)
+    out = ring_attention(q, k, v, 2)
+    assert out.shape == q.shape
 
-def test_ring_attention_basic():
-    np.random.seed(42)
-    q = np.random.randn(16, 32)
-    k = np.random.randn(16, 32)
-    v = np.random.randn(16, 32)
-    out = ring_attention(q, k, v, 0, 2)
-    assert out.shape == (16, 32)
+def test_ulysses_reshuffle_shape():
+    x = np.ones((1, 8, 4, 8), dtype=np.float32)
+    out = ulysses_reshuffle(x, 2, 0, forward=True)
+    assert out.shape == (1, 8, 2, 8)
 
-
-def test_ulysses_attention_basic():
-    np.random.seed(42)
-    q = np.random.randn(1, 16, 32)
-    k = np.random.randn(1, 16, 32)
-    v = np.random.randn(1, 16, 32)
-    out = ulysses_attention(q, k, v, 0, 2, 4)
-    assert out.shape == (1, 16, 16)
-
-
-def test_compute_crossover_monotonicity():
-    seqs = [1024, 2048, 4096, 8192]
-    res = compute_crossover(seqs, 4096, 8, 100.0, 1.0)
-    assert len(res) == len(seqs)
+def test_crossover_monotonicity():
+    r1, u1 = compute_crossover(1024, 4096, 8)
+    r2, u2 = compute_crossover(8192, 4096, 8)
+    assert r2 > r1
+    assert u2 > u1
+    assert u1 < r1

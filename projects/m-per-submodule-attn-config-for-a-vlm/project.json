@@ -1,0 +1,22 @@
+{
+  "id": "m-per-submodule-attn-config-for-a-vlm",
+  "title": "Per-submodule attention config for a VLM",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "huggingface-transformers-integration",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vlmattn/config.py", "vlmattn/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse per-submodule attention configurations", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Compute heterogeneous memory footprints", "check": "harness/m2.py",
+     "gates": [{"metric": "bytes_match", "op": "==", "threshold": 1},
+               {"metric": "submodule_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches misrouted submodules", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_misrouted", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -21,9 +21,9 @@ def map_mask_to_arch(layer_gates, head_gates, dim_gates, target):
 
 Inputs:
 
-- `layer_gates`: a one-dimensional NumPy array of length $L$ containing layer scores.
-- `head_gates`: a two-dimensional NumPy array of shape $(L, H)$ containing attention head scores.
-- `dim_gates`: a one-dimensional NumPy array of length $d_{ff}$ containing feed-forward dimension scores.
+- `layer_gates`: a list of floats of length $L$ containing layer scores.
+- `head_gates`: a list of lists of floats of shape $(L, H)$ containing attention head scores.
+- `dim_gates`: a list of floats of length $d_{ff}$ containing feed-forward dimension scores.
 - `target`: a tuple `(target_L, target_H, target_d_ff)` describing the required architecture size.
 
 Return a dictionary:
@@ -49,15 +49,14 @@ When scores tie, choose the smaller index first. Returned indices must be sorted
 ## Example
 
 ```python
-import numpy as np
 
-layer_gates = np.array([0.2, 0.9, 0.5])
-head_gates = np.array([
+layer_gates = [0.2, 0.9, 0.5]
+head_gates = [
     [0.1, 0.8],
     [0.7, 0.3],
     [0.9, 0.4],
-])
-dim_gates = np.array([0.5, 0.1, 0.8])
+]
+dim_gates = [0.5, 0.1, 0.8]
 target = (2, 1, 2)
 
 result = map_mask_to_arch(
@@ -76,4 +75,4 @@ result = map_mask_to_arch(
 
 ## What the gate checks
 
-The gate computes an independent NumPy oracle that performs the same top-score selection with deterministic tie handling. The returned layer indices, per-layer head indices, and dimension indices must exactly match the oracle output.
+The gate computes an independent Python oracle that performs the same top-score selection with deterministic tie handling. The returned layer indices, per-layer head indices, and dimension indices must exactly match the oracle output.

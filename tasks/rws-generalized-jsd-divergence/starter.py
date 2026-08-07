@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
-def generalized_jsd(p: np.ndarray, q: np.ndarray, beta: float) -> float:
+def generalized_jsd(p: list[float], q: list[float], beta: float) -> float:
     raise NotImplementedError('your code here')

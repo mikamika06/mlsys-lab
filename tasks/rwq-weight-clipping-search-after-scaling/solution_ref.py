@@ -1,39 +1,40 @@
-import numpy as np
-
-
-def awq_clip_search(W: np.ndarray, group_size: int, clip_ratios: np.ndarray, bits: int = 4):
-    W = np.asarray(W, dtype=np.float64)
-    clip_ratios = np.asarray(clip_ratios, dtype=np.float64)
-
-    rows, cols = W.shape
+def awq_clip_search(W: list[list[float]], group_size: int, clip_ratios: list[float], bits: int = 4) -> tuple[list[list[int]], list[list[float]]]:
+    rows = len(W)
+    cols = len(W[0])
     ng = cols // group_size
-    Wg = W.reshape(rows, ng, group_size)
     qmax = 2 ** (bits - 1) - 1
-    n_ratios = clip_ratios.shape[0]
+    n_ratios = len(clip_ratios)
 
-    amax = np.empty((rows, ng), dtype=np.float64)
+    amax = []
     for i in range(rows):
+        row_amax = []
         for g in range(ng):
             m = 0.0
             for k in range(group_size):
-                val = abs(Wg[i, g, k])
+                val = abs(W[i][g * group_size + k])
                 if val > m:
                     m = val
-            amax[i, g] = m
+            row_amax.append(m)
+        amax.append(row_amax)
 
-    mse_grid = np.empty((rows, ng, n_ratios), dtype=np.float64)
+    mse_grid = []
+    for i in range(rows):
+        row_mse_grid = []
+        for g in range(ng):
+            row_mse_grid.append([0.0] * n_ratios)
+        mse_grid.append(row_mse_grid)
 
     for ri in range(n_ratios):
         r = clip_ratios[ri]
         for i in range(rows):
             for g in range(ng):
-                clipped_amax = amax[i, g] * r
+                clipped_amax = amax[i][g] * r
                 clipped_amax_safe = 1.0 if clipped_amax == 0.0 else clipped_amax
                 scale = clipped_amax_safe / qmax
 
                 group_sum = 0.0
                 for k in range(group_size):
-                    val = Wg[i, g, k]
+                    val = W[i][g * group_size + k]
                     if val < -clipped_amax:
                         Wc_val = -clipped_amax
                     elif val > clipped_amax:
@@ -53,21 +54,25 @@ def awq_clip_search(W: np.ndarray, group_size: int, clip_ratios: np.ndarray, bit
                     deq_val = q_val * scale
                     group_sum += (val - deq_val) ** 2
 
-                mse_grid[i, g, ri] = group_sum / group_size
+                mse_grid[i][g][ri] = group_sum / group_size
 
-    best_idx = np.empty((rows, ng), dtype=np.int64)
-    best_mse = np.empty((rows, ng), dtype=np.float64)
+    best_idx = []
+    best_mse = []
 
     for i in range(rows):
+        row_idx = []
+        row_mse = []
         for g in range(ng):
             min_val = float('inf')
             best_ri = 0
             for ri in range(n_ratios):
-                val = mse_grid[i, g, ri]
+                val = mse_grid[i][g][ri]
                 if val < min_val:
                     min_val = val
                     best_ri = ri
-            best_idx[i, g] = best_ri
-            best_mse[i, g] = min_val
+            row_idx.append(best_ri)
+            row_mse.append(min_val)
+        best_idx.append(row_idx)
+        best_mse.append(row_mse)
 
     return best_idx, best_mse

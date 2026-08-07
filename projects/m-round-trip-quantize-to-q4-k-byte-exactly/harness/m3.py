@@ -23,7 +23,7 @@ def _survives(path):
 
 
 def check(workdir):
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_scales": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_packing": 0.0}
     path = os.path.join(workdir, "tests", "test_regression.py")
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
@@ -32,27 +32,23 @@ def check(workdir):
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {str(e)[:120]}"
+        out["_note"] = f"tests fail on good implementation: {type(e).__name__}: {str(e)[:120]}"
         return out
     if first is None:
         out["_note"] = "no test_* functions found"
         return out
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
+    import q4k.quant as q
+    orig_quant = q.quantize_q4_k_superblock
 
-    import q4k.quantize as q
-    good_q = q.quantize_q4_k
+    def broken_quant(weights):
+        b = orig_quant(weights)
+        return b[:4] + b'\xff' * 48 + b[52:]
 
-    def broken_q(tensor):
-        res = bytearray(good_q(tensor))
-        if len(res) > 2:
-            res[0] = 0xFF
-            res[1] = 0xFF
-        return bytes(res)
-
-    q.quantize_q4_k = broken_q
+    q.quantize_q4_k_superblock = broken_quant
     try:
-        out["catches_broken_scales"] = 0.0 if _survives(path) else 1.0
+        out["catches_broken_packing"] = 0.0 if _survives(path) else 1.0
     finally:
-        q.quantize_q4_k = good_q
+        q.quantize_q4_k_superblock = orig_quant
     return out

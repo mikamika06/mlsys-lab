@@ -1,0 +1,21 @@
+{
+  "id": "m-sdpa-backend-eligibility-predicate",
+  "title": "SDPA backend eligibility and dispatch prediction",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "pytorch-sdpa-dispatch",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["sdpa_pred/eligibility.py", "sdpa_pred/predictor.py", "sdpa_pred/trace.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "SDPA backend eligibility predicate", "check": "harness/m1.py",
+     "gates": [{"metric": "eligibility_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Predict the chosen backend", "check": "harness/m2.py",
+     "gates": [{"metric": "predictions_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Detect backend from profiler trace and regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_predicate", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,9 +1,8 @@
 import numpy as np
-from q4k.quantize import quantize_q4_k, dequantize_q4_k
-from q4k.analysis import dominant_subblock
-from q4k.compare import compare_q4_k_q4_0
+from reference.q4k.quant import quantize_q4_k_superblock, dequantize_q4_k_superblock, round_trip_q4_k
+from reference.q4k.analysis import find_worst_subblocks, compare_q4k_q40_mse
 
 
-def get_test_tensor():
-    rng = np.random.default_rng(12345)
-    return rng.standard_normal(512).astype(np.float32)
+def generate_superblock():
+    np.random.seed(2026)
+    return np.random.uniform(-2.0, 2.0, 256).astype(np.float32)

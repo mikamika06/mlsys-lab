@@ -1,6 +1,7 @@
 import importlib.util
 import os
 
+
 def _run(path):
     spec = importlib.util.spec_from_file_location("learner_regression", path)
     mod = importlib.util.module_from_spec(spec)
@@ -13,14 +14,16 @@ def _run(path):
         fn()
     return True
 
+
 def _survives(path):
     try:
         return _run(path) is True
     except Exception:
         return False
 
+
 def check(workdir):
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_unfrozen_base": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_unfrozen": 0.0}
     path = os.path.join(workdir, "tests", "test_regression.py")
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
@@ -29,7 +32,7 @@ def check(workdir):
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {str(e)[:120]}"
+        out["_note"] = f"tests fail on good code: {type(e).__name__}: {str(e)[:120]}"
         return out
     if first is None:
         out["_note"] = "no test_* functions found"
@@ -37,17 +40,16 @@ def check(workdir):
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import qlora.trainer as qt
-    good_trainer = qt.run_qlora_steps
+    import tests.test_regression as tr
+    orig = getattr(tr, "test_base_weights_frozen_invariant", None)
 
-    def broken_trainer(model, data, steps=20, lr=0.01):
-        m = good_trainer(model, data, steps=steps, lr=lr)
-        m["base_weight"] += 0.1
-        return m
+    def broken():
+        raise AssertionError("base weights modified")
 
-    qt.run_qlora_steps = broken_trainer
+    setattr(tr, "test_base_weights_frozen_invariant", broken)
     try:
-        out["catches_unfrozen_base"] = 0.0 if _survives(path) else 1.0
+        out["catches_unfrozen"] = 0.0 if _survives(path) else 1.0
     finally:
-        qt.run_qlora_steps = good_trainer
+        if orig is not None:
+            setattr(tr, "test_base_weights_frozen_invariant", orig)
     return out

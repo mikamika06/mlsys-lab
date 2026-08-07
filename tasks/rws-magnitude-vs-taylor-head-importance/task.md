@@ -31,11 +31,11 @@ from backpropagation.
 Implement `rank_heads_by_importance(weights, grads)`:
 
 ```python
-def rank_heads_by_importance(weights: np.ndarray, grads: np.ndarray):
+def rank_heads_by_importance(weights: list[list[float]], grads: list[list[float]]):
     ...
 ```
 
-The inputs are two NumPy arrays with identical shape $(h, \dots)$, where the
+The inputs are two list with identical shape $(h, \dots)$, where the
 first dimension indexes attention heads. Compute both scores for every head and
 return:
 
@@ -52,19 +52,18 @@ head indices.
 ## Example
 
 ```python
-import numpy as np
 
-weights = np.array([
+weights = [
     [[3.0, 0.0]],
     [[1.0, 1.0]],
     [[0.5, 0.5]],
-])
+]
 
-grads = np.array([
+grads = [
     [[0.1, 0.1]],
     [[5.0, 5.0]],
     [[0.1, 0.1]],
-])
+]
 
 mag_rank, taylor_rank = rank_heads_by_importance(weights, grads)
 
@@ -74,7 +73,7 @@ mag_rank, taylor_rank = rank_heads_by_importance(weights, grads)
 
 ## What the gate checks
 
-The gate computes the reference scores itself using NumPy. It checks that both
+The gate computes the reference scores itself using Python. It checks that both
 returned rankings exactly match the oracle rankings for several weight and
 gradient tensors.
 

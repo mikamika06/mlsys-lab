@@ -23,16 +23,11 @@ growth selection correctly.
 The function signature is:
 
 ```python
-def rigl_grow(
-    mask: np.ndarray,
-    weights: np.ndarray,
-    grads: np.ndarray,
-    grow_count: int,
-) -> np.ndarray:
+def rigl_grow(mask: list[int], weights: list[float], grads: list[float], grow_count: int) -> list[int]:
     ...
 ```
 
-Inputs are one-dimensional NumPy arrays of equal length. `mask` contains only
+Inputs are list of floats of equal length. `mask` contains only
 zeros and ones. `weights` are the current weights and `grads` are the current
 gradients.
 
@@ -47,11 +42,10 @@ weight magnitude for growth selection.
 ## Example
 
 ```python
-import numpy as np
 
-mask = np.array([1, 0, 0, 1, 0])
-weights = np.array([0.8, 9.0, -2.0, 0.1, 5.0])
-grads = np.array([0.1, 0.3, 0.9, 0.2, 0.4])
+mask = [1, 0, 0, 1, 0]
+weights = [0.8, 9.0, -2.0, 0.1, 5.0]
+grads = [0.1, 0.3, 0.9, 0.2, 0.4]
 
 new_mask = rigl_grow(mask, weights, grads, 2)
 # new_mask is [1, 0, 1, 1, 1]
@@ -62,7 +56,7 @@ are the largest among currently zero-mask positions.
 
 ## What the gate checks
 
-The gate computes an independent NumPy oracle. It verifies that the returned
+The gate computes an independent Python oracle. It verifies that the returned
 mask exactly matches the oracle mask and that the number of live positions is
 conserved according to the requested growth count. Implementations that select
 from already-live positions or rank by $|w|$ fail the gate.

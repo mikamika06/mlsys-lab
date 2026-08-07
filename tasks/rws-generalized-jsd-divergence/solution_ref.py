@@ -1,9 +1,6 @@
-import numpy as np
 import math
 
-def generalized_jsd(p: np.ndarray, q: np.ndarray, beta: float) -> float:
-    p = np.asarray(p, dtype=np.float64)
-    q = np.asarray(q, dtype=np.float64)
+def generalized_jsd(p: list[float], q: list[float], beta: float) -> float:
     beta = float(beta)
     eps = 1e-12
     kl_p_m = 0.0

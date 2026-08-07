@@ -14,23 +14,22 @@ The task is to find the smallest integer $k$ such that $R_k \ge T$.  This $k$ te
 Implement the function
 
 ```python
-def classify_k_for_variance_target(eigenvalues: np.ndarray, target: float) -> int:
+def classify_k_for_variance_target(eigenvalues: list[float], target: float) -> int:
     ...
 ```
 
-* `eigenvalues` is a one‑dimensional NumPy array of shape `(n,)` containing eigenvalues sorted in non‑increasing order.
+* `eigenvalues` is a list of floats of shape `(n,)` containing eigenvalues sorted in non‑increasing order.
 * `target` is a float in the interval $(0,1]$ representing the desired cumulative variance proportion.
 * The function must return an integer $k$ with $1 \le k \le n$ that satisfies
   $$\frac{\sum_{i=1}^{k}\lambda_i}{\sum_{j=1}^{n}\lambda_j} \ge target$$
   and is minimal among all such integers.
 
-The implementation should be straightforward, using only NumPy operations; no explicit Python loops are required but they are allowed if the solution still passes the gate.
+The implementation should be straightforward, using only Python operations; no explicit Python loops are required but they are allowed if the solution still passes the gate.
 
 ## Example
 
 ```python
-import numpy as np
-eigs = np.array([4.0, 2.0, 1.0, 0.5])
+eigs = [4.0, 2.0, 1.0, 0.5]
 target = 0.8
 k = classify_k_for_variance_target(eigs, target)
 print(k)          # → 3
@@ -43,4 +42,4 @@ The smallest $k$ with ratio $\ge 0.8$ is $3$.
 
 ## What the gate checks
 
-A single metric `argmin_index` compares the returned index to a NumPy‑based oracle that computes the minimal $k$ exactly as described above.  The solution passes if and only if the two indices match for all test cases.  No other performance or style constraints are enforced.
+A single metric `argmin_index` compares the returned index to a Python‑based oracle that computes the minimal $k$ exactly as described above.  The solution passes if and only if the two indices match for all test cases.  No other performance or style constraints are enforced.

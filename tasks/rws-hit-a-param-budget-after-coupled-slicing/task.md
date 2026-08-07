@@ -42,7 +42,7 @@ smallest $P(d)$.)
 Implement `pick_width_for_budget`:
 
 ```python
-def pick_width_for_budget(coefs: np.ndarray, consts: np.ndarray, widths: np.ndarray, budget: int) -> tuple[int, int]:
+def pick_width_for_budget(coefs: list[list[int]], consts: list[list[int]], widths: list[int], budget: int) -> tuple[int, int]:
     ...
 ```
 

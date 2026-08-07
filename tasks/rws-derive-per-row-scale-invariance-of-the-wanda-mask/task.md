@@ -32,7 +32,7 @@ per-row scale $c$) must therefore be identical, row by row, to the mask of $W$ i
 Implement `wanda_mask`:
 
 ```python
-def wanda_mask(W: np.ndarray, col_norms: np.ndarray, keep_ratio: float) -> np.ndarray:
+def wanda_mask(W: list[list[float]], col_norms: list[float], keep_ratio: float) -> list[list[bool]]:
     ...
 ```
 
@@ -50,10 +50,9 @@ columns of each row and `False` elsewhere.
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[1.0, -4.0, 2.0, 0.5]])
-col_norms = np.array([1.0, 0.5, 2.0, 1.0])
+W = [[1.0, -4.0, 2.0, 0.5]]
+col_norms = [1.0, 0.5, 2.0, 1.0]
 wanda_mask(W, col_norms, keep_ratio=0.5)
 # scores = |W| * col_norms = [1.0, 2.0, 4.0, 0.5] -> keep top 2 -> columns 1, 2
 # array([[False,  True,  True, False]])
@@ -61,7 +60,7 @@ wanda_mask(W, col_norms, keep_ratio=0.5)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle computing the Wanda mask directly from a fixed test
+The gate builds a Python oracle computing the Wanda mask directly from a fixed test
 weight matrix and fixed column norms, at several `keep_ratio` values. For each ratio, it
 scales every row of `W` by an independent positive random constant (drawn across several
 orders of magnitude, plus the identity scale) and calls **your** `wanda_mask` on the

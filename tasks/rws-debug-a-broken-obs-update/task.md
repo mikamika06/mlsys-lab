@@ -21,21 +21,20 @@ The divisor $[H^{-1}]_{qq}$ is required because the Hessian curvature determines
 Implement `obs_update(W, Hinv, q)`:
 
 ```python
-def obs_update(W: np.ndarray, Hinv: np.ndarray, q: int) -> np.ndarray:
+def obs_update(W: list[list[float]], Hinv: list[list[float]], q: int) -> list[list[float]]:
     ...
 ```
 
-The function receives a 2-D weight matrix `W`, a square inverse Hessian matrix `Hinv`, and the column index `q` to remove. Return a new NumPy array containing the OBS-corrected weights.
+The function receives a 2-D weight matrix `W`, a square inverse Hessian matrix `Hinv`, and the column index `q` to remove. Return a new list containing the OBS-corrected weights.
 
-The input arrays must not be modified in-place. Use NumPy operations to compute the corrected matrix.
+The input arrays must not be modified in-place. Use Python operations to compute the corrected matrix.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[2.0, 4.0], [1.0, 3.0]])
-Hinv = np.array([[2.0, 0.5], [0.5, 1.0]])
+W = [[2.0, 4.0], [1.0, 3.0]]
+Hinv = [[2.0, 0.5], [0.5, 1.0]]
 
 out = obs_update(W, Hinv, 1)
 
@@ -46,7 +45,7 @@ out = obs_update(W, Hinv, 1)
 
 ## What the gate checks
 
-The gate computes a NumPy oracle implementation of the OBS update and compares the submitted function against it. The reconstruction relative error
+The gate computes a Python oracle implementation of the OBS update and compares the submitted function against it. The reconstruction relative error
 
 $$
 \mathrm{rel\_err} =

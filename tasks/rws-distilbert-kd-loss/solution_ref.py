@@ -1,20 +1,20 @@
 import math
-import numpy as np
 
 def kd_loss(
-    teacher_logits: np.ndarray,
-    student_logits: np.ndarray,
-    labels: np.ndarray,
+    teacher_logits: list[list[float]],
+    student_logits: list[list[float]],
+    labels: list[int],
     alpha: float = 0.5,
     temperature: float = 1.0
 ) -> float:
     eps = 1e-12
-    N, C = teacher_logits.shape
+    N = len(teacher_logits)
+    C = len(teacher_logits[0])
     kl_sum = 0.0
     ce_sum = 0.0
 
     for i in range(N):
-        t_row = teacher_logits[i] / temperature
+        t_row = [val / temperature for val in teacher_logits[i]]
         t_m = t_row[0]
         for j in range(1, C):
             if t_row[j] > t_m:
@@ -24,7 +24,7 @@ def kd_loss(
         pt_sum = sum(pt_row)
         pt_row = [val / pt_sum for val in pt_row]
 
-        s_row = student_logits[i] / temperature
+        s_row = [val / temperature for val in student_logits[i]]
         s_m = s_row[0]
         for j in range(1, C):
             if s_row[j] > s_m:

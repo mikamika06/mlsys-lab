@@ -23,8 +23,8 @@ Implement `pruned_attention_forward(x, q_proj, k_proj, v_proj, o_proj, heads, ke
 
 Inputs:
 
-- `x`: NumPy array with shape $(n, d)$.
-- `q_proj`, `k_proj`, `v_proj`, `o_proj`: NumPy arrays of attention projection weights.
+- `x`: list with shape $(n, d)$.
+- `q_proj`, `k_proj`, `v_proj`, `o_proj`: list of attention projection weights.
 - `heads`: the original number of attention heads.
 - `keep_heads`: a list of head indices that remain after pruning.
 
@@ -42,18 +42,17 @@ $$Z = AV.$$
 5. Apply the output projection using only the matching input columns of
    `o_proj`.
 
-Return the final NumPy array.
+Return the final list.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.zeros((2, 4))
-q = np.eye(4)
-k = np.eye(4)
-v = np.eye(4)
-o = np.eye(4)
+x = [[0.0] * 4 for _ in range(2)]
+q = [[1.0 if i == j else 0.0 for j in range(4)] for i in range(4)]
+k = [[1.0 if i == j else 0.0 for j in range(4)] for i in range(4)]
+v = [[1.0 if i == j else 0.0 for j in range(4)] for i in range(4)]
+o = [[1.0 if i == j else 0.0 for j in range(4)] for i in range(4)]
 
 y = pruned_attention_forward(x, q, k, v, o, 2, [0])
 # y has shape (2, 2) because one of two heads remains
@@ -62,7 +61,7 @@ y = pruned_attention_forward(x, q, k, v, o, 2, [0])
 ## What the gate checks
 
 The gate builds random attention projections and computes an oracle result using
-a NumPy implementation of correctly coupled head pruning. The returned value is
+a Python implementation of correctly coupled head pruning. The returned value is
 compared with the oracle using maximum absolute error.
 
 The gate passes when

@@ -1,0 +1,63 @@
+{
+  "id": "m-sdpa-flash-attn-shape-adapter",
+  "title": "SDPA to FlashAttention shape adapter and reference semantics",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "flash-attn-python-api-surface",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "adapter/shape.py",
+    "adapter/ref_attn.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "SDPA to FlashAttention tensor layout adapter",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "shapes_matched",
+          "op": "==",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Pure-numpy reference attention and LSE definition",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-5
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching scale bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_scaling",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

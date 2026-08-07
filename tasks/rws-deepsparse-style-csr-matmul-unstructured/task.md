@@ -27,12 +27,7 @@ where $\odot$ is elementwise multiplication.
 Implement `csr_matmul(data, indices, indptr, X)`:
 
 ```python
-def csr_matmul(
-    data: np.ndarray,
-    indices: np.ndarray,
-    indptr: np.ndarray,
-    X: np.ndarray,
-) -> np.ndarray:
+def csr_matmul(data, indices, indptr, X):
     ...
 ```
 
@@ -50,17 +45,16 @@ Use the CSR representation directly. Do not reconstruct the full dense matrix.
 ## Example
 
 ```python
-import numpy as np
 
-data = np.array([2.0, 3.0, 4.0])
-indices = np.array([0, 2, 1])
-indptr = np.array([0, 2, 3])
+data = [2.0, 3.0, 4.0]
+indices = [0, 2, 1]
+indptr = [0, 2, 3]
 
-X = np.array([
+X = [
     [1.0, 2.0],
     [3.0, 4.0],
     [5.0, 6.0],
-])
+]
 
 Y = csr_matmul(data, indices, indptr, X)
 
@@ -75,9 +69,9 @@ Y = csr_matmul(data, indices, indptr, X)
 
 ## What the gate checks
 
-The grader builds CSR matrices with unstructured nonzero locations and computes the oracle result by expanding the CSR matrix into a NumPy dense matrix and multiplying it with `X`.
+The grader builds CSR matrices with unstructured nonzero locations and computes the oracle result by expanding the CSR matrix into a Python dense matrix and multiplying it with `X`.
 
-The returned matrix is compared with the NumPy oracle using
+The returned matrix is compared with the Python oracle using
 
 $$\max_{i,j}|Y_{ij}^{candidate}-Y_{ij}^{oracle}|.$$
 

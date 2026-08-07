@@ -1,0 +1,46 @@
+{
+  "id": "m-reproduce-a-real-mlx-lazy-evaluation-measurement-pit",
+  "title": "Reproduce MLX Lazy Evaluation Measurement Pitfall and Verify LoRA Base Weights",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "mac-native-mlx-lora",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "mlxlora/eval_pitfall.py",
+    "mlxlora/sizes.py",
+    "mlxlora/verify.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reproduce lazy evaluation measurement pitfall",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "pitfall_reproduced", "op": "==", "threshold": 1},
+        {"metric": "lazy_eval_correct", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure adapter size vs quantized base size",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "sizes_matched", "op": "==", "threshold": 1},
+        {"metric": "ratio_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching base weight mutation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_mutation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}
