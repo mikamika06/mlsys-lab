@@ -20,11 +20,11 @@ This causes the top quantization level to be unreachable and inflates the recons
 Implement `affine_quant_dequant(x, bits)`:
 
 ```python
-def affine_quant_dequant(x: np.ndarray, bits: int) -> np.ndarray:
+def affine_quant_dequant(x: list[float], bits: int) -> list[float]:
     ...
 ```
 
-- `x`: a 1-D float64 NumPy array.
+- `x`: a 1-D float64 list.
 - `bits`: number of quantization bits (e.g., 8).
 - Returns a float64 array of the same shape: the dequantized reconstruction using the **correct** denominator $2^b - 1$.
 
@@ -34,8 +34,7 @@ $$s = \frac{\max(x) - \min(x)}{2^b - 1}, \quad q = \text{clip}\!\left(\text{roun
 ## Example
 
 ```python
-import numpy as np
-x = np.array([0.0, 1.0, 2.0, 3.0], dtype=np.float64)
+x = [0.0, 1.0, 2.0, 3.0]
 x_hat = affine_quant_dequant(x, bits=2)
 # With 2 bits: levels 0,1,2,3 -> scale = 3/3 = 1.0
 # x_hat: [0., 1., 2., 3.]  (perfect reconstruction)

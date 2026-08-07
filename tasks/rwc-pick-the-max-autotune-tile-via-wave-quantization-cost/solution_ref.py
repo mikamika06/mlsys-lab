@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates):
+def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates: list[tuple[int, int]]) -> tuple[int, list[float]]:
     """Pick the (BM, BN) tile that minimizes the wave-quantization cost.
 
     cost(BM, BN) = waves + waste / tile_area
@@ -15,13 +12,12 @@ def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates):
 
     Returns
     -------
-    (best_idx, costs) : tuple[int, np.ndarray]
+    (best_idx, costs) : tuple[int, list[float]]
         `costs` has shape (len(candidates),); `best_idx` is the index of the
-        smallest cost (ties resolved by taking the first occurrence, like
-        `np.argmin`).
+        smallest cost (ties resolved by taking the first occurrence).
     """
     n = len(candidates)
-    costs = np.empty(n, dtype=np.float64)
+    costs = [0.0] * n
     for i, (BM, BN) in enumerate(candidates):
         ctas_m = -(-M // BM)
         ctas_n = -(-N // BN)
@@ -29,7 +25,7 @@ def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates):
         waves = -(-CTAs // num_SMs)
         tile_area = (ctas_m * BM) * (ctas_n * BN)
         waste = tile_area - M * N
-        costs[i] = waves + waste / tile_area
+        costs[i] = float(waves + waste / tile_area)
 
     best_idx = 0
     min_cost = costs[0]

@@ -1,0 +1,63 @@
+{
+  "id": "m-why-did-this-layer-stay-fp16",
+  "title": "Edge model quantization: FP16 retention, budget search, and W8A8 calibration",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Core ML weight quantization (coremltools.optimize.coreml)",
+  "difficulty": 4,
+  "edits": [
+    "quantopt/analysis.py",
+    "quantopt/search.py",
+    "quantopt/calibration.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analyze why layers remain FP16",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "reasons_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-layer config search under a size budget",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "budget_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "W8A8 calibration regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_calibration",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

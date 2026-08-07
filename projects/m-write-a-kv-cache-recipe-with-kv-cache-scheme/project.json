@@ -1,0 +1,21 @@
+{
+  "id": "m-write-a-kv-cache-recipe-with-kv-cache-scheme",
+  "title": "KV Cache Recipe and FP8 Quantized Serving Quality Comparison",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-quant-libs",
+  "track": "KV cache and attention quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["kvquant/recipe.py", "kvquant/serving.py", "kvquant/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Write a KV-cache recipe with kv_cache_scheme", "check": "harness/m1.py",
+     "gates": [{"metric": "recipes_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Configure serving simulation with fp8 dtype", "check": "harness/m2.py",
+     "gates": [{"metric": "serving_configured", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches invalid quality comparison", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_comparison", "op": "==", "threshold": 1}]}
+  ]
+}

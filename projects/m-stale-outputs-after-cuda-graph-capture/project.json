@@ -1,0 +1,69 @@
+{
+  "id": "m-stale-outputs-after-cuda-graph-capture",
+  "title": "Stale outputs after CUDA graph capture",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT runtime performance knobs: threads, arena, IOBinding, CUDA graph",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ortgraph/legality.py",
+    "ortgraph/capture.py",
+    "ortgraph/arena.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "CUDA graph legality classifier",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "legality_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Stale output detection and arena growth analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "stale_detected",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "arena_profile_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test validation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_stale_leak",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

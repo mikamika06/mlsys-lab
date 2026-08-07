@@ -54,13 +54,7 @@ A config is **feasible** if its total bytes $\le B$.
 Implement `choose_kv_budget`:
 
 ```python
-def choose_kv_budget(
-    K: np.ndarray,
-    V: np.ndarray,
-    candidates: list[tuple[int, int, int]],
-    byte_budget: int,
-    group_size: int,
-) -> int:
+def choose_kv_budget(K: list[list[float]], V: list[list[float]], candidates: list[tuple[int, int, int]], byte_budget: int, group_size: int) -> int:
     ...
 ```
 
@@ -79,9 +73,8 @@ feasible subset in candidate order.
 ## Example
 
 ```python
-import numpy as np
-K = np.random.default_rng(0).normal(size=(16, 4))
-V = np.random.default_rng(1).normal(size=(16, 4))
+rng = random.Random(0); K = [[rng.gauss(0, 1) for _ in range(4)] for _ in range(16)]
+rng = random.Random(1); V = [[rng.gauss(0, 1) for _ in range(4)] for _ in range(16)]
 candidates = [(2, 2, 0), (4, 4, 0), (2, 4, 4), (4, 2, 8)]
 idx = choose_kv_budget(K, V, candidates, byte_budget=400, group_size=4)
 # idx is the position in `candidates` of the cheapest-MSE config that fits in 400 bytes
@@ -90,7 +83,7 @@ idx = choose_kv_budget(K, V, candidates, byte_budget=400, group_size=4)
 ## What the gate checks
 
 Gate **argmin_index** re-implements the exact cost/MSE formulas above as a
-NumPy oracle, enumerates the same `candidates` list on several random
+Python oracle, enumerates the same `candidates` list on several random
 `(K, V, byte_budget)` instances, and compares the index your function returns
 against the oracle's `argmin` over the feasible subset. Any mismatch fails the
 gate — there is no numeric tolerance on the index itself.

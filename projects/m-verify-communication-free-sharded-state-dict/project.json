@@ -1,0 +1,44 @@
+{
+  "id": "m-verify-communication-free-sharded-state-dict",
+  "title": "Verify Communication-Free Sharded State Dict & Wrap Order",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP2 per-parameter sharding & DTensor",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fsdp_verify/state_dict.py",
+    "fsdp_verify/wrap_order.py",
+    "fsdp_verify/reconstruct.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify zero-communication sharded state dict placement",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "state_dicts_verified", "op": ">=", "threshold": 5.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure bottom-up wrap order violations and extra overhead",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "wrap_violations_measured", "op": ">=", "threshold": 5.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Reconstruct fully_shard sequence and guard against invalid wraps",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_top_down_wrapping", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

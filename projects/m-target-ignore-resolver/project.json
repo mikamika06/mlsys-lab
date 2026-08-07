@@ -1,0 +1,64 @@
+{
+  "id": "m-target-ignore-resolver",
+  "title": "Target and ignore list resolver for MoE quantization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Module targeting and ignore lists",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantres/resolver.py",
+    "quantres/moe.py",
+    "quantres/router.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Target and ignore pattern resolver",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "resolvers_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "MoE architecture ignore list construction",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "moe_ignores_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: finding wrongly-quantized routers",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_wrong_router",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

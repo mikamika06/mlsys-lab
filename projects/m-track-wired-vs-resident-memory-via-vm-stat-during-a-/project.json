@@ -1,0 +1,44 @@
+{
+  "id": "m-track-wired-vs-resident-memory-via-vm-stat-during-a-generation-run",
+  "title": "Track wired vs resident memory and zero-copy roundtrips",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Unified memory architecture fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "memtrack/stats.py",
+    "memtrack/zerocopy.py",
+    "memtrack/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Track wired vs resident memory via vm_stat",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "stats_matched", "op": ">=", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Prove a zero-copy numpy to mx.array roundtrip",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "zerocopy_verified", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Compare copy cost and safeguard regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_comparison", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

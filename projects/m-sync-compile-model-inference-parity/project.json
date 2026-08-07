@@ -1,0 +1,45 @@
+{
+  "id": "m-sync-compile-model-inference-parity",
+  "title": "OpenVINO sync compile model and infer request parity",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "OpenVINO Core runtime API (compile_model / infer_request)",
+  "difficulty": 3,
+  "edits": [
+    "ovruntime/core.py",
+    "ovruntime/infer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Synchronous compile_model and infer_request parity",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5},
+        {"metric": "parity_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Sync vs async infer_request execution and latency ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "sync_parity", "op": "==", "threshold": 1},
+        {"metric": "async_parity", "op": "==", "threshold": 1},
+        {"metric": "latency_ratio", "op": "<=", "threshold": 0.85}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch wrong-shape infer requests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_shape_mismatch", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

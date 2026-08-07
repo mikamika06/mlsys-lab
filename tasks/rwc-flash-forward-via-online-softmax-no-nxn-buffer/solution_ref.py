@@ -1,19 +1,16 @@
 import math
-import numpy as np
 
 
-def flash_attention_forward(Q, K, V, block_size=32):
+def flash_attention_forward(Q: list[list[float]], K: list[list[float]], V: list[list[float]], block_size: int = 32) -> list[list[float]]:
     """Flash attention forward pass using online softmax, no NxN buffer."""
-    Q = np.asarray(Q, dtype=np.float32)
-    K = np.asarray(K, dtype=np.float32)
-    V = np.asarray(V, dtype=np.float32)
-    N, d = Q.shape
+    N = len(Q)
+    d = len(Q[0]) if N > 0 else 0
     scale = 1.0 / math.sqrt(d)
-    out = np.zeros((N, d), dtype=np.float32)
+    out = [[0.0] * d for _ in range(N)]
 
     for i in range(N):
         q = Q[i]
-        acc = np.zeros(d, dtype=np.float64)
+        acc = [0.0] * d
         m = float('-inf')
         l = 0.0
 
@@ -27,7 +24,7 @@ def flash_attention_forward(Q, K, V, block_size=32):
             for b in range(B):
                 dot_val = 0.0
                 for k in range(d):
-                    dot_val += float(K_block[b, k]) * float(q[k])
+                    dot_val += float(K_block[b][k]) * float(q[k])
                 scores[b] = dot_val * scale
 
             max_score = float('-inf')
@@ -49,7 +46,7 @@ def flash_attention_forward(Q, K, V, block_size=32):
             for j in range(d):
                 s_acc = 0.0
                 for b in range(B):
-                    s_acc += weights[b] * float(V_block[b, j])
+                    s_acc += weights[b] * float(V_block[b][j])
                 acc[j] += s_acc
 
             for b in range(B):
@@ -58,6 +55,6 @@ def flash_attention_forward(Q, K, V, block_size=32):
             m = m_new
 
         for j in range(d):
-            out[i, j] = float(acc[j] / l)
+            out[i][j] = float(acc[j] / l)
 
     return out

@@ -1,0 +1,46 @@
+{
+  "id": "m-transpose-overhead-from-layout-mismatch",
+  "title": "Transpose overhead from layout mismatch",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "IO contract: preprocessing, layout and dtypes at the boundary",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "edgeio/layout.py",
+    "edgeio/pipeline.py",
+    "edgeio/checker.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Quantify layout mismatch and transpose cost",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "layout_conversions_correct", "op": "==", "threshold": 1},
+        {"metric": "rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "In-graph vs application-side preprocessing dual-path",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "dual_path_correct", "op": "==", "threshold": 1},
+        {"metric": "overhead_quantified", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Round-trip preprocessing equivalence checker and safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_layout_mismatch", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

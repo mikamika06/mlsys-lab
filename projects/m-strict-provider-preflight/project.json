@@ -1,0 +1,46 @@
+{
+  "id": "m-strict-provider-preflight",
+  "title": "Strict Provider Preflight & Log Inspector",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT sessions, execution providers & the onnxruntime-gpu install matrix",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "ortpreflight/oracle.py",
+    "ortpreflight/preflight.py",
+    "ortpreflight/logs.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "CUDA/cuDNN compatibility oracle and strict preflight",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "compat_checks_matched", "op": ">=", "threshold": 5},
+        {"metric": "preflight_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verbose log parsing and EP distribution analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "node_counts_matched", "op": ">=", "threshold": 4},
+        {"metric": "distribution_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for silent CPU fallback",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_silent_fallback", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-zero-hit-diagnosis-identify-which-of-six-deployments",
+  "title": "Zero-hit diagnosis and tenant cache isolation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "automatic-prefix-caching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vllm_diag/diagnosis.py", "vllm_diag/isolation.py", "vllm_diag/eviction.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify zero-hit deployment", "check": "harness/m1.py",
+     "gates": [{"metric": "deployment_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Cache salt isolation proof", "check": "harness/m2.py",
+     "gates": [{"metric": "isolation_verified", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "LRU eviction simulation and safety net", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_eviction", "op": "==", "threshold": 1}]}
+  ]
+}

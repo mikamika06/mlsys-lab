@@ -46,7 +46,7 @@ it directly optimizes the metric it is judged on.
 Implement:
 
 ```python
-def compare_q4_variants(x: np.ndarray, w: np.ndarray) -> tuple:
+def compare_q4_variants(x: list[float], w: list[float]) -> tuple:
     ...
 ```
 
@@ -70,11 +70,10 @@ candidate $d_k$) are also resolved by taking the smallest `k` (smallest
 ## Example
 
 ```python
-import numpy as np
 
-rng = np.random.default_rng(0)
+rng = random.Random(0)
 x = rng.normal(size=32)
-w = np.ones(32)
+w = [1.0] * 32
 w[5] = 50.0   # element 5 matters far more than the rest
 
 errors, best_idx = compare_q4_variants(x, w)
@@ -84,10 +83,10 @@ print(best_idx)    # 2  -- Imatrix-Q4_K wins because it optimizes for w
 
 ## What the gate checks
 
-The grader builds several `(x, w)` blocks from a seeded NumPy generator
+The grader builds several `(x, w)` blocks from a seeded Python generator
 (uniform weights, sharply skewed weights, an all-equal-magnitude block,
 a wide-range calibration-like block) and computes the reference
-`(errors, best_idx)` independently in NumPy using the exact formulas
+`(errors, best_idx)` independently in Python using the exact formulas
 above — it never calls your function or hardcodes an expected value.
 
 `rel_err` is the relative L2 error between your `errors` array and the

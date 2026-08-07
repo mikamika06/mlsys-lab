@@ -1,0 +1,41 @@
+{
+  "id": "m-symmetric-asymmetric-quantize-dequantize-round-trip-",
+  "title": "Quantization Numerics",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "int8/int4 quantization numerics (scale, zero-point, requantization)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quant/numerics.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Symmetric vs Asymmetric Quantization",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "asym_error_bounded", "op": "==", "threshold": 1},
+        {"metric": "asym_better_for_skewed", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-Channel Weights and Fused Scales",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "per_channel_better", "op": "==", "threshold": 1},
+        {"metric": "fused_scale_correct", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Zero-Point Invariant Regression Test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_zp", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

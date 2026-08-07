@@ -1,0 +1,21 @@
+{
+  "id": "m-un-bake-a-batch-1-concat",
+  "title": "Un-bake a batch=1 Concat in ONNX Export",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "PyTorch -> ONNX export (dynamo vs torchscript exporter)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["export_fixer/unbake.py", "export_fixer/symbolic.py", "export_fixer/histogram.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Un-bake batch=1 Concat nodes", "check": "harness/m1.py",
+     "gates": [{"metric": "unbaked_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Assert symbolic axes after export", "check": "harness/m2.py",
+     "gates": [{"metric": "symbolic_asserted", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: dynamo vs torchscript op histogram diff", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_histogram", "op": "==", "threshold": 1}]}
+  ]
+}

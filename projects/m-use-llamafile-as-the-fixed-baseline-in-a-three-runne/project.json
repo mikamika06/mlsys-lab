@@ -1,0 +1,69 @@
+{
+  "id": "m-use-llamafile-as-the-fixed-baseline-in-a-three-runner",
+  "title": "Use llamafile as the fixed baseline in a three-runner comparison",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "llamafile-and-single-file-distribution",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "runners/baseline.py",
+    "runners/compare.py",
+    "runners/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Establish the fixed baseline runner",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "baseline_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compare three runners using relative error and throughput ratios",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "comparison_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "rel_err_bound",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for runner divergence",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_divergence",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

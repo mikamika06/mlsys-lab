@@ -1,0 +1,46 @@
+{
+  "id": "m-sqnr-and-cosine-similarity",
+  "title": "Numerical validation with SQNR and Cosine Similarity",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Numerical validation methodology across runtimes",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "numval/metrics.py",
+    "numval/gate.py",
+    "numval/amplification.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Signal-to-Quantization-Noise Ratio and Cosine Similarity",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "sqnr_matches", "op": "==", "threshold": 1.0},
+        {"metric": "cos_sim_matches", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Composite Accept/Reject Gate and Per-Layer Amplification",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "gate_eval_matches", "op": "==", "threshold": 1.0},
+        {"metric": "amplification_matches", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catching permissive gate validation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_permissive_gate", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+"""Footprint analysis package."""

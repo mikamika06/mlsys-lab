@@ -47,8 +47,8 @@ def two_chunk_split_kv_merge(q, k, v):
     ...
 ```
 
-- `q`: NumPy array of shape $(d,)$ — a single decode query.
-- `k`, `v`: NumPy arrays of shape $(N, d)$ and $(N, d_v)$ — the full KV
+- `q`: list of shape $(d,)$ — a single decode query.
+- `k`, `v`: list of shape $(N, d)$ and $(N, d_v)$ — the full KV
   cache for this query.
 
 1. Split `k`/`v` into exactly two contiguous chunks at the midpoint:
@@ -59,7 +59,7 @@ def two_chunk_split_kv_merge(q, k, v):
 3. Merge the two chunks' results with the log-sum-exp correction formula
    above.
 
-Return the merged output as a `float64` NumPy array of shape $(d_v,)$.
+Return the merged output as a `float64` list of shape $(d_v,)$.
 
 ## Example
 

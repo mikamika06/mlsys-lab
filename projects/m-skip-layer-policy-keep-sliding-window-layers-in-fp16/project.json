@@ -1,0 +1,25 @@
+{
+  "id": "m-skip-layer-policy-keep-sliding-window-layers-in-fp16",
+  "title": "Skip-layer policy: keep sliding-window layers in fp16",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "fp8-kv-cache-quantization",
+  "size": "M",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["policy/quant.py", "policy/eval.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Assign KV cache dtypes and compute bytes", "check": "harness/m1.py",
+     "gates": [{"metric": "policy_match", "op": "==", "threshold": 1},
+               {"metric": "bytes_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Measure relative error (proxy for perplexity)", "check": "harness/m2.py",
+     "gates": [{"metric": "sim_match", "op": "==", "threshold": 1},
+               {"metric": "err_match", "op": "==", "threshold": 1},
+               {"metric": "err_lower_than_fp8", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Test suite catching unsafe downcast", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_policy", "op": "==", "threshold": 1}]}
+  ]
+}

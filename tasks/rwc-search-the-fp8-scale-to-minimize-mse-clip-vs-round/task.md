@@ -32,7 +32,7 @@ A production quantizer can search a small grid of scales around $s_0$ and select
 
 Implement `search_fp8_scale(x)`.
 
-The function receives a one-dimensional NumPy array of floating point values and must return:
+The function receives a list of floats of floating point values and must return:
 
 ```python
 best_index, scales, mses
@@ -40,7 +40,7 @@ best_index, scales, mses
 
 where:
 
-- `scales` is a NumPy array of candidate scales.
+- `scales` is a list of candidate scales.
 - `mses[i]` is the reconstruction MSE when quantizing with `scales[i]`.
 - `best_index` is the integer index of the minimum value in `mses`.
 
@@ -57,9 +57,8 @@ The implementation should return the complete MSE curve, not only the best scale
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1.0, 20.0, 100.0], dtype=np.float64)
+x = [1.0, 20.0, 100.0]
 
 index, scales, mses = search_fp8_scale(x)
 
@@ -70,7 +69,7 @@ index, scales, mses = search_fp8_scale(x)
 
 ## What the gate checks
 
-The gate computes an independent NumPy oracle for E4M3 quantization and the same scale grid.
+The gate computes an independent Python oracle for E4M3 quantization and the same scale grid.
 
 `argmin_index` checks that the returned index matches the oracle's minimum-MSE scale.
 

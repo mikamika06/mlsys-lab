@@ -1,0 +1,44 @@
+{
+  "id": "m-verify-per-row-adapter-application-in-a-real-batched",
+  "title": "Verify per-row adapter routing and compute LoRA memory cost",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Multi-LoRA Adapter Serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "loraserving/routing.py",
+    "loraserving/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Per-row adapter application verification",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "batches_verified", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Memory cost of concurrent adapters vs replicas",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "memory_matches", "op": "==", "threshold": 1},
+        {"metric": "crossover_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for row index leakage",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_leaky_routing", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

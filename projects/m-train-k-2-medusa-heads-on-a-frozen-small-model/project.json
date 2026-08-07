@@ -1,0 +1,40 @@
+{
+  "id": "m-train-k-2-medusa-heads-on-a-frozen-small-model",
+  "title": "Train K=2 Medusa heads and benchmark speculative decoding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Medusa architecture",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "medusa/train.py",
+    "medusa/sampling.py",
+    "medusa/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Train K=2 Medusa heads on frozen base representations",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.15}]
+    },
+    {
+      "n": 2,
+      "title": "Compare typical vs strict rejection sampling accepted lengths",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "sampling_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for head depth accuracy invariant",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

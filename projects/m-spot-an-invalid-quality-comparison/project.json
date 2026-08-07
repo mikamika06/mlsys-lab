@@ -1,0 +1,63 @@
+{
+  "id": "m-spot-an-invalid-quality-comparison",
+  "title": "Spot an invalid quality comparison",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "quality-measurement-ppl-kld",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "eval/compare.py",
+    "eval/hellaswag.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Validate comparable evaluation setups",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "comparisons_checked",
+          "op": ">=",
+          "threshold": 4
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute HellaSwag scoring with error bars",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "evaluations_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for invalid quality bounds",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_claims",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

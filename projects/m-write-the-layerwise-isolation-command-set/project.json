@@ -1,0 +1,45 @@
+{
+  "id": "m-write-the-layerwise-isolation-command-set",
+  "title": "Layerwise isolation and divergence analysis with Polygraphy",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Polygraphy: run, inspect, surgeon, debug reduce workflows",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "polyiso/isolation.py",
+    "polyiso/stats.py",
+    "polyiso/divergence.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Layerwise isolation command set generation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "commands_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "First divergent layer identification and error statistics",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "divergence_matched", "op": "==", "threshold": 1.0},
+        {"metric": "stats_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid tolerance thresholds",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_invalid_tolerance", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

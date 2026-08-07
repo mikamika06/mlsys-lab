@@ -1,0 +1,74 @@
+{
+  "id": "m-switch-transformer-auxiliary-loss-gradient-direction",
+  "title": "Switch Transformer aux loss gradients vs aux-loss-free bias tracking",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "load-balancing-losses",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moe_balance/aux_loss.py",
+    "moe_balance/bias_sim.py",
+    "moe_balance/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Switch auxiliary loss and gradient direction",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "loss_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "grad_direction_rel_err",
+          "op": "<=",
+          "threshold": 1e-5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Simulate DeepSeek-V3 dynamic bias update convergence",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bias_sim_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "aux_vs_bias_convergence_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching non-negative feedback updates",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_positive_feedback_bug",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

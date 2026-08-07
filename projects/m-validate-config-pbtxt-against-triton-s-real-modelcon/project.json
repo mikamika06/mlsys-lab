@@ -1,0 +1,45 @@
+{
+  "id": "m-validate-config-pbtxt-against-triton-s-real-modelcon",
+  "title": "Validate config.pbtxt against Triton's model config and versioning rules",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Triton Model Repository & Versioning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tritonval/validator.py",
+    "tritonval/layout.py",
+    "tritonval/versioning.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Validate config.pbtxt against model config schema",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify broken repository layouts and compute resident versions",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "layouts_matched", "op": "==", "threshold": 1},
+        {"metric": "versions_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for validation and version policies",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_config", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

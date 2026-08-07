@@ -1,28 +1,28 @@
 import math
-import numpy as np
 
 
-def fold_bn_into_linear(W, b, gamma, beta, running_mean, running_var, eps):
-    W = np.asarray(W, dtype=np.float64)
-    b = np.asarray(b, dtype=np.float64)
-    gamma = np.asarray(gamma, dtype=np.float64)
-    beta = np.asarray(beta, dtype=np.float64)
-    running_mean = np.asarray(running_mean, dtype=np.float64)
-    running_var = np.asarray(running_var, dtype=np.float64)
+def fold_bn_into_linear(
+    W: list[list[float]],
+    b: list[float],
+    gamma: list[float],
+    beta: list[float],
+    running_mean: list[float],
+    running_var: list[float],
+    eps: float,
+) -> tuple[list[list[float]], list[float]]:
+    out_f = len(W)
+    in_f = len(W[0]) if out_f > 0 else 0
 
-    out_f = W.shape[0]
-    in_f = W.shape[1]
-
-    scale = np.zeros(out_f, dtype=np.float64)
+    scale = [0.0] * out_f
     for i in range(out_f):
         scale[i] = gamma[i] / math.sqrt(running_var[i] + eps)
 
-    W_folded = np.zeros((out_f, in_f), dtype=np.float64)
+    W_folded = [[0.0] * in_f for _ in range(out_f)]
     for i in range(out_f):
         for j in range(in_f):
-            W_folded[i, j] = W[i, j] * scale[i]
+            W_folded[i][j] = W[i][j] * scale[i]
 
-    b_folded = np.zeros(out_f, dtype=np.float64)
+    b_folded = [0.0] * out_f
     for i in range(out_f):
         b_folded[i] = scale[i] * (b[i] - running_mean[i]) + beta[i]
 

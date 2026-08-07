@@ -1,0 +1,1 @@
+"""SmoothQuant migration scale package."""

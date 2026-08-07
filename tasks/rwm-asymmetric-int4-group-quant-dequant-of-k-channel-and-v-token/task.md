@@ -29,7 +29,7 @@ $$
 Implement `quantize_dequantize_kv`:
 
 ```python
-def quantize_dequantize_kv(K: np.ndarray, V: np.ndarray, group_size: int, bits: int = 4):
+def quantize_dequantize_kv(K: list[list[float]], V: list[list[float]], group_size: int, bits: int=4) -> tuple[list[list[float]], list[list[float]]]:
     ...
 ```
 
@@ -51,13 +51,12 @@ Return `(K_hat, V_hat)`, same shapes as `K`, `V`.
 ## Example
 
 ```python
-import numpy as np
 
-K = np.array([[0.0, 100.0],
+K = [[0.0, 100.0],
               [5.0, 101.0],
               [10.0, 102.0],
-              [15.0, 103.0]])
-V = np.array([[0.0, 5.0, 100.0, 101.0]])
+              [15.0, 103.0]]
+V = [[0.0, 5.0, 100.0, 101.0]]
 
 K_hat, V_hat = quantize_dequantize_kv(K, V, group_size=4)
 # K: each COLUMN is one group of 4 tokens -> col0 uses scale=15/15=1.0
@@ -72,7 +71,7 @@ K_hat, V_hat = quantize_dequantize_kv(K, V, group_size=4)
 
 The grader builds three seeded `(seq_len, channels)` pairs of `K`/`V`
 tensors (Gaussian with injected outliers) with different `group_size`
-values, and computes the oracle reconstruction independently in NumPy:
+values, and computes the oracle reconstruction independently in Python:
 `K` grouped along axis 0 (per-channel), `V` grouped along axis 1
 (per-token), using the exact scale/zero/code/dequant formulas above —
 never calling your function.

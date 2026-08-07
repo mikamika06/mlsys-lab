@@ -1,0 +1,74 @@
+{
+  "id": "m-write-y-relu-x-w-b-in-tvmscript-build-for-llvm-verif",
+  "title": "Build and verify TVMScript linear-ReLU and torch.export Relax importer",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TVM Relax IR & TVMScript / frontend import",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tvm_pipeline/ops.py",
+    "tvm_pipeline/importer.py",
+    "tvm_pipeline/inspect.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "TVMScript relu(x@w+b) LLVM execution verification",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 0.0001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Import PyTorch MLP and analyze call_tir vs raw relax ops",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "imported_matches",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "call_tir_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "raw_ops_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching improper call_tir counting or math mismatch",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_math",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

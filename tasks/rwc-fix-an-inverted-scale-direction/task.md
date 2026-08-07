@@ -37,15 +37,15 @@ range.
 Implement `migrate_scale(X, W, s)`:
 
 ```python
-def migrate_scale(X: np.ndarray, W: np.ndarray, s: np.ndarray):
+def migrate_scale(X: list[list[float]], W: list[list[float]], s: list[float]) -> tuple[list[list[float]], list[list[float]]]:
     ...
 ```
 
 The inputs are:
 
-- `X`: a float NumPy array with shape $(m, d)$ containing activations.
-- `W`: a float NumPy array with shape $(d, n)$ containing weights.
-- `s`: a positive float NumPy array with shape $(d,)$ containing per-channel scales.
+- `X`: a float list with shape $(m, d)$ containing activations.
+- `W`: a float list with shape $(d, n)$ containing weights.
+- `s`: a positive float list with shape $(d,)$ containing per-channel scales.
 
 Return `(X_new, W_new)` where:
 
@@ -65,11 +65,10 @@ absolute activation value compared with the incorrectly inverted direction.
 ## Example
 
 ```python
-import numpy as np
 
-X = np.array([[10.0, 1.0], [8.0, 2.0]])
-W = np.array([[0.5, 0.2], [1.0, 3.0]])
-s = np.array([0.1, 2.0])
+X = [[10.0, 1.0], [8.0, 2.0]]
+W = [[0.5, 0.2], [1.0, 3.0]]
+s = [0.1, 2.0]
 
 X_new, W_new = migrate_scale(X, W, s)
 
@@ -79,7 +78,7 @@ X_new, W_new = migrate_scale(X, W, s)
 
 ## What the gate checks
 
-The gate computes the expected migration using a NumPy oracle and compares the
+The gate computes the expected migration using a Python oracle and compares the
 returned tensors with it using the maximum absolute error
 
 $$

@@ -1,0 +1,44 @@
+{
+  "id": "m-verify-torch-mps-profiler-xctrace-produces-a-real-in",
+  "title": "Verify torch.mps.profiler and xctrace trace correlation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "apple-silicon-profiling-path",
+  "difficulty": 3,
+  "edits": [
+    "msprofiler/trace.py",
+    "msprofiler/metrics.py",
+    "msprofiler/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract and verify signpost intervals from xctrace simulation output",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "signposts_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute CPU-MPS time misattribution and native MLX vs Torch timing ratios",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "misattribution_match", "op": "==", "threshold": 1},
+        {"metric": "ratio_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catching modified signpost parsing logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_parser", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

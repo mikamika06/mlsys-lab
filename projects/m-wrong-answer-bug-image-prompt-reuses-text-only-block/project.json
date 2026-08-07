@@ -1,0 +1,21 @@
+{
+  "id": "m-wrong-answer-bug-image-prompt-reuses-text-only-block",
+  "title": "Fix multimodal prefix cache collision and tenant quota simulation",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-cache-isolation-and-multitenancy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["cache/hash.py", "cache/quota.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Distinct block hashing for multimodal prompts", "check": "harness/m1.py",
+     "gates": [{"metric": "hashes_distinct", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Collision search under truncated hash space", "check": "harness/m2.py",
+     "gates": [{"metric": "collisions_resolved", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: tenant quota isolation test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_quota_leak", "op": "==", "threshold": 1}]}
+  ]
+}

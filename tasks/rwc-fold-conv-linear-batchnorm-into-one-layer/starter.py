@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def fold_bn_into_linear(W, b, gamma, beta, running_mean, running_var, eps):
+def fold_bn_into_linear(W: list[list[float]], b: list[float], gamma: list[float], beta: list[float], running_mean: list[float], running_var: list[float], eps: float) -> tuple[list[list[float]], list[float]]:
     """Fold a frozen BatchNorm into the preceding Linear layer.
 
     W: (out_features, in_features) float64. b: (out_features,) float64.

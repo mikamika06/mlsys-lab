@@ -1,0 +1,46 @@
+{
+  "id": "m-vector-add-kernel-with-correct-1d-grid-under-interpr",
+  "title": "Vector add kernel with correct 1D grid under interpret mode",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "SPMD grid model & kernel launch",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "vadd/grid.py",
+    "vadd/kernel.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Grid dimensions and waste calculation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "grid_counts_matched", "op": "==", "threshold": 1},
+        {"metric": "waste_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Correct vector add execution and underlaunch reproduction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "correct_outputs_matched", "op": "==", "threshold": 1},
+        {"metric": "underlaunch_reproduced", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for grid launch faults",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_underlaunched_grid", "op": "==", "threshold": 1},
+        {"metric": "catches_unmasked_boundary", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

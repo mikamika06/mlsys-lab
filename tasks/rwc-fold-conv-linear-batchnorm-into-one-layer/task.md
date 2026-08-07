@@ -27,12 +27,7 @@ not approximately.
 Implement `fold_bn_into_linear`:
 
 ```python
-def fold_bn_into_linear(
-    W: np.ndarray, b: np.ndarray,
-    gamma: np.ndarray, beta: np.ndarray,
-    running_mean: np.ndarray, running_var: np.ndarray,
-    eps: float,
-) -> tuple[np.ndarray, np.ndarray]:
+def fold_bn_into_linear(W: list[list[float]], b: list[float], gamma: list[float], beta: list[float], running_mean: list[float], running_var: list[float], eps: float) -> tuple[list[list[float]], list[float]]:
     ...
 ```
 
@@ -48,14 +43,13 @@ weight and bias, per the formulas above.
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[1.0, 2.0], [3.0, 4.0]])
-b = np.array([0.5, -0.5])
-gamma = np.array([2.0, 0.5])
-beta = np.array([0.0, 1.0])
-running_mean = np.array([1.0, 0.0])
-running_var = np.array([3.0, 8.0])
+W = [[1.0, 2.0], [3.0, 4.0]]
+b = [0.5, -0.5]
+gamma = [2.0, 0.5]
+beta = [0.0, 1.0]
+running_mean = [1.0, 0.0]
+running_var = [3.0, 8.0]
 
 W_folded, b_folded = fold_bn_into_linear(W, b, gamma, beta, running_mean, running_var, eps=1e-5)
 # scale s = gamma / sqrt(running_var + eps)
@@ -66,9 +60,9 @@ W_folded, b_folded = fold_bn_into_linear(W, b, gamma, beta, running_mean, runnin
 ## What the gate checks
 
 The grader builds several `(W, b, gamma, beta, running_mean, running_var,
-eps)` scenarios from a seeded NumPy generator (varying shapes, some
+eps)` scenarios from a seeded Python generator (varying shapes, some
 `gamma` values near zero, and both positive and negative `beta`/`b`) and
-computes the reference `W_folded`, `b_folded` independently in NumPy from
+computes the reference `W_folded`, `b_folded` independently in Python from
 the formulas above, never calling your function. It also feeds several
 random input vectors `x` through both `BN(Wx + b)` (using the *unfolded*
 parameters and BatchNorm's own formula) and `W_folded @ x + b_folded`

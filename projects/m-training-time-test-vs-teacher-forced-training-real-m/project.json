@@ -1,0 +1,40 @@
+{
+  "id": "m-training-time-test-vs-teacher-forced-training-real-m",
+  "title": "Training-time-test vs teacher-forced training: real multi-step acceptance",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Draft model training & distillation",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "spectrain/teacher.py",
+    "spectrain/acceptance.py",
+    "spectrain/objective.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Teacher-forced likelihoods and draft autoregressive rollout probabilities",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "teacher_vs_rollout_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Multi-step speculative acceptance rate calculation",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "acceptance_rate_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching incorrect acceptance or rollout logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_acceptance", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

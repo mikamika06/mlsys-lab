@@ -1,0 +1,74 @@
+{
+  "id": "m-symptom-to-metric-mapping-for-10-incidents-queue-gro",
+  "title": "Symptom-to-metric mapping for 10 incidents",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "observability-metrics-and-tracing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "vllm_obs/mapping.py",
+    "vllm_obs/promql.py",
+    "vllm_obs/alerting.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Incident symptom mapping and metric parsing",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "incidents_mapped",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "symptoms_parsed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "PromQL query strings and alert evaluator",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "promql_queries_valid",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "alerts_evaluated_correctly",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for alert thresholds",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_suppressed_preemptions",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

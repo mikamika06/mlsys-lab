@@ -1,0 +1,21 @@
+{
+  "id": "m-tune-max-num-tokens-under-a-ttft-slo",
+  "title": "Tune max_num_tokens under a TTFT SLO",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "TensorRT-LLM: PyTorch backend, trtllm-bench and trtllm-serve",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["trtopt/config.py", "trtopt/simulate.py", "trtopt/tune.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Simulate TTFT and throughput under batching regimes", "check": "harness/m1.py",
+     "gates": [{"metric": "sim_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Tune max_num_tokens to satisfy TTFT SLO", "check": "harness/m2.py",
+     "gates": [{"metric": "opt_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for SLO compliance", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_tuning", "op": "==", "threshold": 1}]}
+  ]
+}

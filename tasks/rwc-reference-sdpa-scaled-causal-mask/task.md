@@ -25,36 +25,29 @@ A = \operatorname{softmax}(\tilde S + M),
 $$
 and the output of the layer is $O = A V$.
 
-The implementation must be fully vectorised using NumPy and produce a `float64` array of shape $(B,N,d_v)$.
+The implementation must be fully vectorised using Python and produce a `float64` array of shape $(B,N,d_v)$.
 
 ## Task
 
 Implement the function
 
 ```python
-def scaled_dot_product_attention(
-    Q: np.ndarray,
-    K: np.ndarray,
-    V: np.ndarray,
-    *,
-    causal: bool = False
-) -> np.ndarray:
+def scaled_dot_product_attention(Q: list[list[list[float]]], K: list[list[list[float]]], V: list[list[list[float]]], *, causal: bool=False) -> list[list[list[float]]]:
     ...
 ```
 
-* `Q`, `K` and `V` are 3‑D NumPy arrays of shape `(B, N, d_k)` or `(B, N, d_v)` respectively.
+* `Q`, `K` and `V` are 3‑D list of shape `(B, N, d_k)` or `(B, N, d_v)` respectively.
 * The function must compute the scaled dot‑product attention described above.
 * If `causal=True`, a causal mask must be applied; otherwise no masking is performed.
-* Return type must be `np.ndarray` with dtype `float64`.
+* Return type must be list[float] with dtype `float64`.
 
 ## Example
 
 ```python
-import numpy as np
 
-Q = np.array([[[1, 0], [0, 1]]], dtype=np.float64)          # shape (1,2,2)
+Q = [[[1, 0], [0, 1]]]          # shape (1,2,2)
 K = Q.copy()
-V = np.array([[[1, 2], [3, 4]]], dtype=np.float64)
+V = [[[1, 2], [3, 4]]]
 
 # Non‑causal attention
 O_nc = scaled_dot_product_attention(Q, K, V, causal=False)
@@ -69,6 +62,6 @@ The exact numerical values are omitted; the grader will compute them automatical
 
 ## What the gate checks
 
-* The grader computes a NumPy reference implementation for each test case.
+* The grader computes a Python reference implementation for each test case.
 * It compares your output to that reference using the `max_abs_err` scorer from `arena.scorers`.
 * Your solution passes if the maximum absolute error across all test cases is at most $10^{-6}$.

@@ -1,0 +1,46 @@
+{
+  "id": "m-size-and-cpu-latency-after-quantize",
+  "title": "Size and CPU latency after quantization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "torchao quantize_ and tensor subclasses",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "quant/bench.py",
+    "quant/diagnose.py",
+    "quant/recover.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Benchmark memory size ratio and CPU latency speedup",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "size_ratio", "op": "==", "threshold": 1.0},
+        {"metric": "speedup_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose no-op quantizations and recover INT4 state dicts",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "noop_detected", "op": "==", "threshold": 1.0},
+        {"metric": "recovered_exact_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for broken dequantization recovery",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_dequant", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

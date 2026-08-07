@@ -14,25 +14,24 @@ When implemented in‑place it would modify `x`; when functional it must produce
 Implement three pure functions that perform the same computations as their in‑place counterparts but **do not mutate any input arguments**:
 
 ```python
-def functional_add(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+def functional_add(a: list[list[float]], b: list[list[float]]) -> list[list[float]]:
     """Return a new array equal to a + b."""
 
-def functional_relu(x: np.ndarray) -> np.ndarray:
+def functional_relu(x: list[float]) -> list[float]:
     """Return a new array with ReLU applied elementwise."""
 
-def functional_copy(a: np.ndarray) -> np.ndarray:
+def functional_copy(a: list[float]) -> list[float]:
     """Return a copy of the input array."""
 ```
 
-All functions must work for arbitrary NumPy arrays of any shape and dtype.  
+All functions must work for arbitrary list of any shape and dtype.  
 The returned arrays should be independent copies; modifying them later must not affect the original inputs.
 
 ## Example
 
 ```python
-import numpy as np
-a = np.array([[1, -2], [3, 0]])
-b = np.array([[4, 5], [-6, 7]])
+a = [[1, -2], [3, 0]]
+b = [[4, 5], [-6, 7]]
 
 c_add = functional_add(a, b)
 # [[5, 3],
@@ -52,7 +51,7 @@ After calling the functions, `a` and `b` remain unchanged.
 
 Two metrics are evaluated:
 
-* **max_abs_err_output** – the maximum absolute difference between each function’s output and the NumPy reference (`a + b`, `np.maximum(0,x)`, `a.copy()`). It must be ≤ $10^{-12}$.
+* **max_abs_err_output** – the maximum absolute difference between each function’s output and the Python reference (`[[x + y for x, y in zip(ra, rb)] for ra, rb in zip(a, b)]`, `[[max(0, val) for val in row] for row in x]`, `[row.copy() for row in a]`). It must be ≤ $10^{-12}$.
 * **max_abs_err_input** – the maximum absolute difference between any input array before and after the call. Since inputs should not change, this value must be 0.
 
 The grader runs each function on randomly generated tensors and compares the results numerically while also verifying that all original inputs are byte‑exactly unchanged. A correct implementation passes both gates; a broken one (e.g., mutating an input) fails at least one gate.

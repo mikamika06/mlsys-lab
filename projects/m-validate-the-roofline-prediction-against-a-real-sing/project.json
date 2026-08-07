@@ -1,0 +1,21 @@
+{
+  "id": "m-validate-the-roofline-prediction-against-a-real-sing",
+  "title": "Validate roofline prediction against real single-GPU decode sweep",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "prefill-decode-roofline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["roofline/model.py", "roofline/sweep.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Analytical decode roofline model computation", "check": "harness/m1.py",
+     "gates": [{"metric": "predictions_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Empirical sweep validation and relative error check", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err_ok", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test against invalid sweeps", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_sweep", "op": "==", "threshold": 1}]}
+  ]
+}

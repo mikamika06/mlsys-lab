@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def quantize_dequantize_kv(K: np.ndarray, V: np.ndarray, group_size: int, bits: int = 4):
+def quantize_dequantize_kv(K: list[list[float]], V: list[list[float]], group_size: int, bits: int=4) -> tuple[list[list[float]], list[list[float]]]:
     """Asymmetric int4 (default) group quant-dequant, KIVI-style.
 
     K: (seq_len, channels) float64 -- quantized PER-CHANNEL, i.e. each

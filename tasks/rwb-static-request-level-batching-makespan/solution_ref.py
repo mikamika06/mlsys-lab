@@ -1,9 +1,6 @@
-import numpy as np
-
-
-def static_batching_makespan(output_lens: np.ndarray, batch_size: int):
+def static_batching_makespan(output_lens: list[int], batch_size: int):
     """
-    output_lens : 1-D int array, the number of decode iterations each
+    output_lens : list of int, the number of decode iterations each
         queued request needs, in ARRIVAL (queue) order.
     batch_size  : S, the max number of requests processed together in one
         static batch.
@@ -22,7 +19,6 @@ def static_batching_makespan(output_lens: np.ndarray, batch_size: int):
       batch_iter_counts -- list of ints, one per batch in order: that
                             batch's iteration count (== its max output_len).
     """
-    output_lens = np.asarray(output_lens, dtype=np.int64)
     counts = []
     n = len(output_lens)
     for i in range(0, n, batch_size):

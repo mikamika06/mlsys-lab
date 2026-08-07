@@ -1,0 +1,45 @@
+{
+  "id": "m-theoretical-minimum-step-time-overlap-efficiency-sco",
+  "title": "Theoretical Minimum Step Time & Overlap-Efficiency Score",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Distributed training performance profiling & comm/compute overlap analysis",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "overlap/reconstruct.py",
+    "overlap/metrics.py",
+    "overlap/saturation.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Reconstruct Comm vs Compute Labels From Raw Trace Events",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "reconstruction_rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Theoretical Minimum Step Time & Overlap-Efficiency Score",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "theoretical_min_rel_err", "op": "<=", "threshold": 1e-4},
+        {"metric": "overlap_score_rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Empirical Bucket-Size Overlap Saturation Point & Regression Tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fake_saturation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

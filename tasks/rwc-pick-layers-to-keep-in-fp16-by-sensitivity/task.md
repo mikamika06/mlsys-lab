@@ -11,11 +11,11 @@ Given an array $\mathbf{e} = (e_0, e_1,\dots,e_{n-1})$, we wish to select the to
 Implement `select_fp16_layers`:
 
 ```python
-def select_fp16_layers(errors: np.ndarray, k: int) -> list[int]:
+def select_fp16_layers(errors: list[float], k: int) -> list[int]:
     ...
 ```
 
-* `errors`: a one‑dimensional NumPy array of shape $(n,)$ containing the per‑layer errors.  
+* `errors`: a list of floats of shape $(n,)$ containing the per‑layer errors.  
 * `k`: the number of layers to keep in FP16 ($0 \le k \le n$).  
 
 The function must return a **list** of layer indices sorted by decreasing error (ties broken by increasing index).  The returned list should contain exactly $k$ integers.
@@ -23,8 +23,7 @@ The function must return a **list** of layer indices sorted by decreasing error 
 ## Example
 
 ```python
-import numpy as np
-errors = np.array([0.02, 0.15, 0.07, 0.15, 0.01])
+errors = [0.02, 0.15, 0.07, 0.15, 0.01]
 k = 3
 indices = select_fp16_layers(errors, k)
 print(indices)   # [1, 3, 2]
@@ -34,4 +33,4 @@ The two layers with error $0.15$ are chosen first (index $1$ before $3$ because 
 
 ## What the gate checks
 
-A single gate named `exact_match` verifies that the list returned by your implementation matches exactly the reference list computed by a NumPy oracle.  No other metrics are evaluated.
+A single gate named `exact_match` verifies that the list returned by your implementation matches exactly the reference list computed by a Python oracle.  No other metrics are evaluated.

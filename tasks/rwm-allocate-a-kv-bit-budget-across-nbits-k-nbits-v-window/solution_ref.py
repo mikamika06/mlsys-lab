@@ -1,18 +1,18 @@
 import math
-import numpy as np
 
 
 def _row_group_quant_err(X, nbits, group_size):
-    n, d = X.shape
+    n = len(X)
     if n == 0:
         return 0.0, 0
+    d = len(X[0])
     g = d // group_size
     levels = (1 << nbits) - 1
     err_sq = 0.0
     total_size = n * g * group_size
     for i in range(n):
         for j in range(g):
-            group = X[i, j * group_size : (j + 1) * group_size]
+            group = X[i][j * group_size : (j + 1) * group_size]
             mn = group[0]
             mx = group[0]
             for val in group:
@@ -50,29 +50,30 @@ def _bytes_for_quant(n_rows, dim, nbits, group_size):
 
 
 def _config_cost(K, V, nbits_K, nbits_V, R, group_size):
-    T, d = K.shape
+    T = len(K)
+    d = len(K[0]) if T > 0 else 0
     R = min(R, T)
     old = T - R
     Kold, Kwin = K[:old], K[old:]
     Vold, Vwin = V[:old], V[old:]
     errK, cntK = _row_group_quant_err(Kold, nbits_K, group_size)
     errV, cntV = _row_group_quant_err(Vold, nbits_V, group_size)
-    win_cnt = Kwin.size + Vwin.size
+    win_cnt = (len(Kwin) * d) + (len(Vwin) * d)
     total_cnt = cntK + cntV + win_cnt
     mse = (errK + errV) / total_cnt if total_cnt > 0 else 0.0
     nbytes = (
         _bytes_for_quant(old, d, nbits_K, group_size)
         + _bytes_for_quant(old, d, nbits_V, group_size)
-        + Kwin.size * 4
-        + Vwin.size * 4
+        + len(Kwin) * d * 4
+        + len(Vwin) * d * 4
     )
     return mse, nbytes
 
 
 def choose_kv_budget(
-    K: np.ndarray,
-    V: np.ndarray,
-    candidates: list,
+    K: list[list[float]],
+    V: list[list[float]],
+    candidates: list[tuple[int, int, int]],
     byte_budget: int,
     group_size: int,
 ) -> int:
@@ -85,8 +86,6 @@ def choose_kv_budget(
     index, i.e. standard argmin order).
     """
     best_idx, best_mse = -1, float("inf")
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
     for i, (nk, nv, R) in enumerate(candidates):
         mse, nbytes = _config_cost(K, V, nk, nv, R, group_size)
         if nbytes > byte_budget:

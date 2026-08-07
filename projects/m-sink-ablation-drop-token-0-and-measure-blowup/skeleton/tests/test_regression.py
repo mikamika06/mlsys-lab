@@ -1,2 +1,2 @@
-def test_regression_placeholder():
+def test_drop_token_0_no_inplace_mutation():
     raise NotImplementedError

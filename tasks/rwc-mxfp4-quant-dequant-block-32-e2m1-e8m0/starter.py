@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def mxfp4_quant_dequant(weights):
+def mxfp4_quant_dequant(weights: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
     """
     weights: (B, 32) array -- B independent blocks of 32 values.
 

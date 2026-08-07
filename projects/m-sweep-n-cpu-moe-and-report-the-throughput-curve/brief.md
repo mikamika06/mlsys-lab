@@ -1,0 +1,5 @@
+The dev forum is filling up with complaints about our MoE offload performance on low-VRAM machines. Users notice that if they drop `-ngl` (number of GPU layers) by just 2 or 3 layers to fit the model inside their memory, their throughput crashes from ~30 tokens/sec to ~5 tokens/sec because full layers hit the CPU.
+
+However, power users discovered they can maintain a high `-ngl` and instead use `--n-cpu-moe` (offloading just a few experts per layer to CPU) and maintain ~20 tokens/sec. This happens because only a fraction of the parameters are activated per token, so routing to CPU experts happens probabilistically.
+
+The infrastructure team wants to automatically pick the optimal `--n-cpu-moe` and `-ngl` split for our cluster workloads, but the current math script used to calculate VRAM footprint and routing latency is broken. We need a formal simulation script to compute the activated-parameter fraction, calculate precise VRAM costs, estimate latency assuming uniformly distributed expert routing, and sweep through configurations to report the optimal throughput curve. We need to lock this down before we roll out the auto-scheduler.

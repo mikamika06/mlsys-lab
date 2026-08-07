@@ -2,23 +2,16 @@ import sys
 import numpy as np
 
 sys.path.insert(0, ".")
-from kvcache.ablation import measure_sink_ablation_blowup
-from kvcache.mask import reconstruct_kept_mask
+from sink_ablate.ablation import drop_token_0
 
+def test_drop_token_0_no_inplace_mutation():
+    original = np.random.rand(2, 4, 10, 10)
+    original = np.tril(original)
+    row_sums = original.sum(axis=-1, keepdims=True)
+    row_sums[row_sums == 0] = 1.0
+    original /= row_sums
 
-def test_sink_ablation_error_positive():
-    rng = np.random.default_rng(42)
-    k = rng.standard_normal((1, 2, 16, 32))
-    v = rng.standard_normal((1, 2, 16, 32))
-    q = rng.standard_normal((1, 2, 1, 32))
-    err, ratio = measure_sink_ablation_blowup(k, v, q)
-    assert err >= 0.0
-    assert ratio >= 0.0
+    copy_orig = original.copy()
+    _ = drop_token_0(original)
 
-
-def test_mask_reconstruction_shape_and_type():
-    dump = {"indices": [0, 2, 5]}
-    mask = reconstruct_kept_mask(dump, 8)
-    assert mask.shape == (8,)
-    assert mask.dtype == bool
-    assert mask[0] and not mask[1] and mask[2]
+    assert np.array_equal(original, copy_orig), "drop_token_0 modified the input array in-place"

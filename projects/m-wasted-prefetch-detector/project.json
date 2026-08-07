@@ -1,0 +1,21 @@
+{
+  "id": "m-wasted-prefetch-detector",
+  "title": "Wasted prefetch detector and L2 cache TTFT savings",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "hierarchical-cache-and-admission-policy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["prefetch/histogram.py", "prefetch/detector.py", "prefetch/ttft.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reuse-distance histogram from production trace", "check": "harness/m1.py",
+     "gates": [{"metric": "hist_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Wasted-prefetch detector", "check": "harness/m2.py",
+     "gates": [{"metric": "wasted_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "TTFT saving model and safeguard test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_detector", "op": "==", "threshold": 1}]}
+  ]
+}

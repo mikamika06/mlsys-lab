@@ -1,0 +1,40 @@
+{
+  "id": "m-timing-cache-build-time-payoff",
+  "title": "Timing cache payoff and optimization knee analysis",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Tactics, timing cache and builder optimization level",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "timingcache/cache.py",
+    "timingcache/optimization.py",
+    "timingcache/tactics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Timing cache build-time payoff calculation",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "payoff_matched", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Optimization-level knee identification",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "knee_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: flaky-tactic regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_flaky_tactic", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

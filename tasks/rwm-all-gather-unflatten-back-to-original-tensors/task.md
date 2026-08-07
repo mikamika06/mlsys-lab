@@ -21,16 +21,16 @@ The gathered result can be larger than the original flattened vector because of 
 Implement `unflatten_all_gathered`:
 
 ```python
-def unflatten_all_gathered(shards: list[np.ndarray], shapes: list[tuple[int, ...]]) -> list[np.ndarray]:
+def unflatten_all_gathered(shards: list[list[float]], shapes: list[tuple[int, ...]]) -> list[list[float]]:
     ...
 ```
 
 The function receives:
 
-- `shards`: the $N$ NumPy arrays produced by an all-gather operation. They have the same flattened dtype and represent consecutive pieces of the padded flattened parameter vector.
+- `shards`: the $N$ list produced by an all-gather operation. They have the same flattened dtype and represent consecutive pieces of the padded flattened parameter vector.
 - `shapes`: the original parameter shapes in order.
 
-Return a list of NumPy arrays with the requested shapes. The reconstruction algorithm is:
+Return a list of list with the requested shapes. The reconstruction algorithm is:
 
 1. Concatenate all gathered shards.
 2. Compute the number of elements required by `shapes`.
@@ -38,16 +38,15 @@ Return a list of NumPy arrays with the requested shapes. The reconstruction algo
 4. Split the remaining flat vector according to the number of elements in each shape.
 5. Reshape each segment into its original tensor shape.
 
-The returned arrays must contain the original values and use NumPy reshaping rules.
+The returned arrays must contain the original values and use Python reshaping rules.
 
 ## Example
 
 ```python
-import numpy as np
 
 shards = [
-    np.array([1., 2., 3.]),
-    np.array([4., 5., 0.]),
+    [1., 2., 3.],
+    [4., 5., 0.],
 ]
 
 shapes = [(2,), (3,)]
@@ -62,7 +61,7 @@ The final zero is padding and is removed before splitting the parameters.
 
 ## What the gate checks
 
-The gate builds original tensors with NumPy, flattens and shards them with padding, then uses the gathered shards as the input to the candidate implementation.
+The gate builds original tensors with Python, flattens and shards them with padding, then uses the gathered shards as the input to the candidate implementation.
 
 The reference reconstruction is computed by an oracle that concatenates the shards, strips the padded suffix, and splits and reshapes using the original shapes.
 

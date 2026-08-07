@@ -1,0 +1,22 @@
+{
+  "id": "m-ttft-itl-percentiles-from-a-timestamp-log",
+  "title": "TTFT, ITL percentiles, KV memory bounds, and batch scaling",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-quant-libs",
+  "track": "Throughput, latency, and memory measurement",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tlog/metrics.py", "tlog/memory.py", "tlog/throughput.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "TTFT and ITL percentiles from timestamp logs", "check": "harness/m1.py",
+     "gates": [{"metric": "percentiles_match", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "KV bytes, max concurrent sequences, and throughput ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "memory_match", "op": "==", "threshold": 1},
+               {"metric": "throughput_ratio_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for metrics and memory calculations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_percentiles", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "m-timing-harness-with-warmup-sync-and-median-iqr",
+  "title": "Benchmarking Harness and Methodology",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Benchmarking methodology for PyTorch",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "benchmark.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Timing harness with warmup and sync",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "runs_warmup", "op": "==", "threshold": 1},
+        {"metric": "syncs_cuda", "op": "==", "threshold": 1},
+        {"metric": "correct_stats", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute required repetitions",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "matches_reference", "op": "==", "threshold": 1},
+        {"metric": "handles_zero_variance", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against broken warmup",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_no_warmup", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

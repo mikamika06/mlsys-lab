@@ -1,0 +1,72 @@
+{
+  "id": "m-verify-byte-fallback-round-trip-over-rare-unicode",
+  "title": "Verify byte-fallback round-trip over rare unicode",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "tokenizer-conversion",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "bytefallback/convert.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Encode and decode with byte-fallback support",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "encode_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "decode_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verify round-trip fidelity over rare Unicode samples",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "unicode_samples_matched",
+          "op": ">=",
+          "threshold": 5.0
+        },
+        {
+          "metric": "round_trip_passed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for byte aggregation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_naive_decoder",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

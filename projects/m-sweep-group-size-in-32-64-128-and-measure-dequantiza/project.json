@@ -1,0 +1,74 @@
+{
+  "id": "m-sweep-group-size-in-32-64-128-and-measure-dequantiza",
+  "title": "Sweep group size in {32, 64, 128} and measure dequantization MSE",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "MLX quantization mechanics (mx.quantize / QuantizedLinear)",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "mlx_quant/sweep.py",
+    "mlx_quant/unpack.py",
+    "mlx_quant/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Group size sweep and dequantization MSE",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "mse_sweep_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "monotonic_trend_valid",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Hand-dequantize packed 4-bit weights vs unpacked and 8-bit comparison",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "hand_dequant_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "bit_comparison_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests that catch bad scale or bias mapping",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_bad_scales",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

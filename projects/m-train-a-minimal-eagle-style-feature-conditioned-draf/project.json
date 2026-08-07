@@ -1,0 +1,64 @@
+{
+  "id": "m-train-a-minimal-eagle-style-feature-conditioned-draf",
+  "title": "Minimal EAGLE feature-conditioned draft head",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "EAGLE architecture (v1/v2/v3)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "eagledraft/model.py",
+    "eagledraft/eval.py",
+    "eagledraft/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Feature-conditioned EAGLE draft head forward pass",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compare token-only vs feature-conditioned accuracy",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "feature_advantage",
+          "op": ">=",
+          "threshold": 0.1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Parse vLLM EAGLE-3 metrics log & write regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_parser",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

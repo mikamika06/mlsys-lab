@@ -1,0 +1,21 @@
+{
+  "id": "m-write-a-minimal-custom-torch-compile-backend-and-run",
+  "title": "Minimal custom torch.compile backend and evaluation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Custom backends & compiler registration",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["backends/minimal.py", "backends/counter.py", "backends/attention.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Minimal custom torch.compile backend", "check": "harness/m1.py",
+     "gates": [{"metric": "backend_runs", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "FX-node op frequency across models", "check": "harness/m2.py",
+     "gates": [{"metric": "frequencies_matched", "op": ">=", "threshold": 5}]},
+    {"n": 3, "title": "Safety net: numerical comparison safeguard", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_numerics", "op": "==", "threshold": 1}]}
+  ]
+}

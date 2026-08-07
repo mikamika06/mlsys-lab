@@ -1,0 +1,45 @@
+{
+  "id": "m-which-turn-broke-the-cache-analyze-an-agent-conversa",
+  "title": "Which turn broke the cache?",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "local-server-prompt-cache-reuse",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "cacheplan/analyze.py",
+    "cacheplan/layout.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analyze log to find the cache breaker",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "simulate_rel_err", "op": "<", "threshold": 0.01},
+        {"metric": "broke_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Redesign prompt layout",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "prompt_match", "op": "==", "threshold": 1.0},
+        {"metric": "total_rel_err", "op": "<", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against bad layouts",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_layout", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

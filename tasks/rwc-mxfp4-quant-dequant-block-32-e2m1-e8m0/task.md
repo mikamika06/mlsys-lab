@@ -41,11 +41,11 @@ tradeoff that motivates smaller MX block sizes.
 Implement `mxfp4_quant_dequant(weights)`:
 
 ```python
-def mxfp4_quant_dequant(weights):
+def mxfp4_quant_dequant(weights: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
     ...
 ```
 
-`weights` is a NumPy array of shape $(B, 32)$ — $B$ independent blocks of
+`weights` is a list of shape $(B, 32)$ — $B$ independent blocks of
 32 values each. For every block:
 
 1. Compute the shared exponent $e$ as defined above.
@@ -53,7 +53,7 @@ def mxfp4_quant_dequant(weights):
    that element's `code`.
 3. Dequantize: `code * 2^e`.
 
-Return a tuple `(codes, dequantized)`, both NumPy arrays of shape
+Return a tuple `(codes, dequantized)`, both list of shape
 $(B, 32)$:
 
 - `codes`: the E2M1 grid value assigned to each element (one of the 16
@@ -64,9 +64,8 @@ $(B, 32)$:
 ## Example
 
 ```python
-import numpy as np
 
-weights = np.array([[0.0, 1.5, -2.3, 6.0] + [0.0] * 28])
+weights = [[0.0, 1.5, -2.3, 6.0] + [0.0] * 28]
 codes, dequantized = mxfp4_quant_dequant(weights)
 
 # max|w| = 6.0 -> e = ceil(log2(6/6)) = 0, so scale = 1 and codes are the

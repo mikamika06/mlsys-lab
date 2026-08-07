@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def compare_q4_variants(x: np.ndarray, w: np.ndarray) -> tuple:
+def compare_q4_variants(x: list[float], w: list[float]) -> tuple:
     """
     x: (32,) float64 real weight block.
     w: (32,) float64 positive importance weights.

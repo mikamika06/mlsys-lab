@@ -1,0 +1,68 @@
+{
+  "id": "m-validate-tool-calls-arguments-against-the-declared-t",
+  "title": "Validate tool call arguments against declared tool schema",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "structured-output-and-tool-calling",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "tool_val/validator.py",
+    "tool_val/schema.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Validate tool calls against declared JSON schemas",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "validations_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Expose JSON format schema non-conformance and round-trip constrained schemas",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "format_json_failures_detected",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "roundtrip_matches",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test suite catches missing field and type mismatch validation skips",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_skipped_validations",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

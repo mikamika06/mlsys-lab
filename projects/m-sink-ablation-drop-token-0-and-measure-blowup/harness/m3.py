@@ -1,7 +1,6 @@
 import importlib.util
 import os
 
-
 def _run(path):
     spec = importlib.util.spec_from_file_location("learner_regression", path)
     mod = importlib.util.module_from_spec(spec)
@@ -14,51 +13,47 @@ def _run(path):
         fn()
     return True
 
-
 def _survives(path):
     try:
         return _run(path) is True
     except Exception:
         return False
 
-
 def check(workdir):
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_bad_mask": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_inplace": 0.0}
     path = os.path.join(workdir, "tests", "test_regression.py")
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
         return out
+
     try:
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {str(e)[:120]}"
+        out["_note"] = f"the tests fail on a correct ablation: {type(e).__name__}: {str(e)[:120]}"
         return out
+
     if first is None:
         out["_note"] = "no test_* functions found"
         return out
+
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import kvcache.mask as m_mod
-    good_func = m_mod.reconstruct_kept_mask
+    import sink_ablate.ablation as ab
+    good_fn = ab.drop_token_0
 
-    def broken_mask(compressed_dump, original_length):
-        res = good_func(compressed_dump, original_length)
-        if isinstance(res, type(res)) and res.size > 0:
-            res[0] = not res[0]
-        return res
+    def bad_drop(probs):
+        probs[..., 1:, 0] = 0.0
+        sums = probs.sum(axis=-1, keepdims=True)
+        sums[sums == 0] = 1.0
+        probs /= sums
+        return probs
 
-    m_mod.reconstruct_kept_mask = broken_mask
-    import kvcache
-    if hasattr(kvcache, "mask"):
-        kvcache.mask.reconstruct_kept_mask = broken_mask
-
+    ab.drop_token_0 = bad_drop
     try:
-        out["catches_bad_mask"] = 0.0 if _survives(path) else 1.0
+        out["catches_inplace"] = 0.0 if _survives(path) else 1.0
     finally:
-        m_mod.reconstruct_kept_mask = good_func
-        if hasattr(kvcache, "mask"):
-            kvcache.mask.reconstruct_kept_mask = good_func
+        ab.drop_token_0 = good_fn
 
     return out

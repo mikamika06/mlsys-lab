@@ -1,0 +1,21 @@
+{
+  "id": "m-to-edge-vs-to-edge-transform-and-lower-partitioning",
+  "title": "Edge export, partitioning, and PTE headers",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "ExecuTorch export and lowering pipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["edge/export.py", "edge/partition.py", "edge/pte.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Edge conversion and lowering partitioning", "check": "harness/m1.py",
+     "gates": [{"metric": "partition_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Partitioner config tuning for delegation ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "ratio_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid PTE headers", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_header", "op": "==", "threshold": 1}]}
+  ]
+}

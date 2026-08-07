@@ -36,8 +36,8 @@ can overflow.
 Implement both `naive_merge` and `lse_merge`:
 
 ```python
-def naive_merge(chunk_scores: list[np.ndarray], chunk_values: list[np.ndarray]) -> np.ndarray: ...
-def lse_merge(chunk_scores: list[np.ndarray], chunk_values: list[np.ndarray]) -> np.ndarray: ...
+def naive_merge(chunk_scores: list[list[float]], chunk_values: list[list[list[float]]]) -> list[float]: ...
+def lse_merge(chunk_scores: list[list[float]], chunk_values: list[list[float]]) -> list[float]: ...
 ```
 
 * `chunk_scores` — list of $C$ 1-D arrays; `chunk_scores[i]` has length
@@ -57,10 +57,9 @@ return a `(d,)` vector.
 ## Example
 
 ```python
-import numpy as np
 
-chunk_scores = [np.array([800.0, 810.0]), np.array([805.0])]
-chunk_values = [np.array([[1.0, 0.0], [0.0, 1.0]]), np.array([[2.0, 2.0]])]
+chunk_scores = [[800.0, 810.0], [805.0]]
+chunk_values = [[[1.0, 0.0], [0.0, 1.0]], [[2.0, 2.0]]]
 
 naive_merge(chunk_scores, chunk_values)  # -> [nan, nan]  (exp(800) already overflows)
 lse_merge(chunk_scores, chunk_values)    # -> a finite, correctly-weighted (2,) vector

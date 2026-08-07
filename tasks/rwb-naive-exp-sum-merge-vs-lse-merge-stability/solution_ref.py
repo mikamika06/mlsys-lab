@@ -1,11 +1,13 @@
-import numpy as np
+import math
 
 
-def naive_merge(chunk_scores, chunk_values):
+def naive_merge(
+    chunk_scores: list[list[float]], chunk_values: list[list[list[float]]]
+) -> list[float]:
     """
-    chunk_scores: list of C 1-D arrays; chunk_scores[i] holds the RAW
+    chunk_scores: list of C 1-D lists; chunk_scores[i] holds the RAW
         (unstabilized) attention scores for chunk i, length n_i.
-    chunk_values: list of C 2-D arrays; chunk_values[i] has shape (n_i, d) --
+    chunk_values: list of C 2-D lists; chunk_values[i] has shape (n_i, d) --
         the value vectors for that chunk's positions.
 
     Compute the softmax-weighted average of ALL values, treating every
@@ -15,21 +17,30 @@ def naive_merge(chunk_scores, chunk_values):
 
     WITHOUT any max-subtraction. This is the numerically NAIVE route: for
     large-magnitude scores, exp() overflows to +inf, and the ratio degrades
-    to inf/inf = NaN. Returns a (d,) vector.
+    to inf/inf = NaN. Returns a list of floats of length d.
     """
-    num = None
+    d = len(chunk_values[0][0])
+    num = [0.0] * d
     den = 0.0
     for L, V in zip(chunk_scores, chunk_values):
-        L = np.asarray(L, dtype=np.float64)
-        V = np.asarray(V, dtype=np.float64)
-        e = np.exp(L)
-        contrib = (e[:, None] * V).sum(axis=0)
-        num = contrib if num is None else num + contrib
-        den += float(np.sum(e))
-    return num / den
+        for score, v in zip(L, V):
+            try:
+                e = math.exp(score)
+            except OverflowError:
+                e = float("inf")
+            den += e
+            for k in range(d):
+                num[k] += e * v[k]
+
+    if math.isinf(den):
+        return [float("nan")] * d
+
+    return [x / den for x in num]
 
 
-def lse_merge(chunk_scores, chunk_values):
+def lse_merge(
+    chunk_scores: list[list[float]], chunk_values: list[list[list[float]]]
+) -> list[float]:
     """
     Same target quantity as `naive_merge`, computed via the numerically
     STABLE log-sum-exp merge used by FlashAttention / ring-attention to
@@ -46,24 +57,32 @@ def lse_merge(chunk_scores, chunk_values):
       3. output = total_output / total_sumexp
 
     Mathematically identical to naive_merge's target, but stable for any
-    input magnitude. Returns a (d,) vector.
+    input magnitude. Returns a list of floats of length d.
     """
-    ms, ss, os_ = [], [], []
+    d = len(chunk_values[0][0])
+    ms = []
+    ss = []
+    os_ = []
     for L, V in zip(chunk_scores, chunk_values):
-        L = np.asarray(L, dtype=np.float64)
-        V = np.asarray(V, dtype=np.float64)
-        m = float(np.max(L))
-        e = np.exp(L - m)
+        m = max(L)
+        s_i = 0.0
+        o_i = [0.0] * d
+        for score, v in zip(L, V):
+            e = math.exp(score - m)
+            s_i += e
+            for k in range(d):
+                o_i[k] += e * v[k]
         ms.append(m)
-        ss.append(float(np.sum(e)))
-        os_.append((e[:, None] * V).sum(axis=0))
+        ss.append(s_i)
+        os_.append(o_i)
 
-    ms = np.array(ms, dtype=np.float64)
-    ss = np.array(ss, dtype=np.float64)
-    os_ = np.array(os_, dtype=np.float64)
+    gmax = max(ms)
+    total_sumexp = 0.0
+    total_output = [0.0] * d
+    for i in range(len(ms)):
+        alpha_i = math.exp(ms[i] - gmax)
+        total_sumexp += alpha_i * ss[i]
+        for k in range(d):
+            total_output[k] += alpha_i * os_[i][k]
 
-    gmax = float(np.max(ms))
-    alpha = np.exp(ms - gmax)
-    total_sumexp = float(np.sum(alpha * ss))
-    total_output = (alpha[:, None] * os_).sum(axis=0)
-    return total_output / total_sumexp
+    return [x / total_sumexp for x in total_output]

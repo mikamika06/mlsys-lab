@@ -25,7 +25,7 @@ zero regardless of scale).
 Implement `per_channel_fp8_quant`:
 
 ```python
-def per_channel_fp8_quant(W: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def per_channel_fp8_quant(W: list[list[float]]) -> tuple[list[float], list[list[float]]]:
     ...
 ```
 
@@ -41,9 +41,8 @@ Return `(scales, W_dequant)`:
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[100.0, -100.0, 50.0], [0.01, -0.02, 0.0]])
+W = [[100.0, -100.0, 50.0], [0.01, -0.02, 0.0]]
 scales, W_dequant = per_channel_fp8_quant(W)
 # row 0's scale = 100/448 (small, since its own magnitudes are all large)
 # row 1's scale = 0.02/448 (tiny, sized for its own much smaller values)
@@ -54,9 +53,9 @@ scales, W_dequant = per_channel_fp8_quant(W)
 ## What the gate checks
 
 The grader builds several `(rows, cols)` weight matrices from a seeded
-NumPy generator — rows with wildly different magnitude ranges, a row
+Python generator — rows with wildly different magnitude ranges, a row
 that is exactly all zeros, and a mix of positive/negative values — and
-computes the reference `(scales, W_dequant)` independently in NumPy: it
+computes the reference `(scales, W_dequant)` independently in Python: it
 builds the *real* E4M3 grid from the sign/exponent/mantissa bit-layout
 formulas (decoding every representable code — the same oracle a hardware
 cast would produce), then reproduces the per-row absmax-scale-and-round

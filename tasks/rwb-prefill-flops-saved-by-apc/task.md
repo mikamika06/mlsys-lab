@@ -16,7 +16,7 @@ The goal of this task is to implement a function that computes \(S\).
 Implement `flops_saved_by_apc`:
 
 ```python
-def flops_saved_by_apc(*args, **kwargs):
+def flops_saved_by_apc(reused_counts: list[int], per_token_flop: float) -> float:
     ...
 ```
 

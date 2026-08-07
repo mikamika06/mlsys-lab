@@ -1,0 +1,5 @@
+Our ExecuTorch export pipeline is currently hitting a wall when converting complex models down to target devices using standard lowering techniques. Engineers working on the export layers are reporting that standard `to_edge` calls fail to properly delegate operator subgraphs to specialized backend delegates, resulting in unpartitioned graphs remaining entirely on the host CPU runtime.
+
+Specifically, when exporting larger topologies, we observe that fallback paths take over because the default partitioning strategy lacks precise control over delegation ratios, missing custom target capabilities. Furthermore, when generating pure-python serialized `.pte` artifacts, downstream loading tools are failing header sanity checks, crashing before runtime execution can even begin.
+
+We need a robust, low-level partitioning workflow that explicitly controls `to_edge` vs `to_edge_transform_and_lower`, tunes partitioner configurations to guarantee target operator delegation ratios, and correctly structures pure-python `.pte` magic bytes and headers for valid execution.

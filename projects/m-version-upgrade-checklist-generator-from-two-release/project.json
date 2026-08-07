@@ -1,0 +1,69 @@
+{
+  "id": "m-version-upgrade-checklist-generator-from-two-release",
+  "title": "Version-upgrade checklist generator from two release-note snapshots",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "determinism-correctness-and-regression-testing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "upgradeprep/parser.py",
+    "upgradeprep/diff.py",
+    "upgradeprep/checklist.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Extract structured release signatures from notes",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "snapshots_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Generate upgrade diffs and prioritized checklists",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "diffs_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "checklists_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test that catches omitted breaking changes",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_omitted_breaking",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

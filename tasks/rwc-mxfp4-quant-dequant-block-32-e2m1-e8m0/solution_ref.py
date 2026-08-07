@@ -1,50 +1,50 @@
 import math
-import numpy as np
 
-_MAG = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0])
+_MAG = [0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0]
 
 
-def _snap_e2m1(y):
-    shape = y.shape
-    flat_y = y.ravel()
-    out_codes = np.empty(shape, dtype=np.float64)
-    flat_out = out_codes.ravel()
+def _snap_e2m1(y: list[list[float]]) -> list[list[float]]:
+    rows = len(y)
+    cols = len(y[0]) if rows > 0 else 0
+    out_codes = []
 
-    for i in range(flat_y.size.item() if hasattr(flat_y.size, 'item') else len(flat_y)):
-        val = flat_y[i]
-        abs_val = abs(val)
-        
-        best_idx = 0
-        min_diff = abs(abs_val - _MAG[0])
-        for j in range(1, len(_MAG)):
-            diff = abs(abs_val - _MAG[j])
-            if diff < min_diff:
-                min_diff = diff
-                best_idx = j
-                
-        if val < 0:
-            sign_val = -1.0
-        elif val > 0:
-            sign_val = 1.0
-        else:
-            sign_val = 0.0
-            
-        flat_out[i] = sign_val * _MAG[best_idx]
+    for i in range(rows):
+        row_codes = []
+        for j in range(cols):
+            val = y[i][j]
+            abs_val = abs(val)
+
+            best_idx = 0
+            min_diff = abs(abs_val - _MAG[0])
+            for k in range(1, len(_MAG)):
+                diff = abs(abs_val - _MAG[k])
+                if diff < min_diff:
+                    min_diff = diff
+                    best_idx = k
+
+            if val < 0:
+                sign_val = -1.0
+            elif val > 0:
+                sign_val = 1.0
+            else:
+                sign_val = 0.0
+
+            row_codes.append(sign_val * _MAG[best_idx])
+        out_codes.append(row_codes)
 
     return out_codes
 
 
-def mxfp4_quant_dequant(weights):
-    x = np.asarray(weights, dtype=np.float64)
-    shape = x.shape
-    rows = shape[0]
-    cols = shape[1]
+def mxfp4_quant_dequant(weights: list[list[float]]) -> tuple[list[list[float]], list[list[float]]]:
+    x = weights
+    rows = len(x)
+    cols = len(x[0]) if rows > 0 else 0
 
     amax_list = []
     for i in range(rows):
         m = 0.0
         for j in range(cols):
-            val = abs(x[i, j])
+            val = abs(x[i][j])
             if val > m:
                 m = val
         amax_list.append(m)
@@ -72,18 +72,22 @@ def mxfp4_quant_dequant(weights):
     for e in e_list:
         scale_list.append(2.0 ** float(e))
 
-    y = np.empty(shape, dtype=np.float64)
+    y = []
     for i in range(rows):
         sc = scale_list[i]
+        row_y = []
         for j in range(cols):
-            y[i, j] = x[i, j] / sc
+            row_y.append(x[i][j] / sc)
+        y.append(row_y)
 
     codes = _snap_e2m1(y)
 
-    dequant = np.empty(shape, dtype=np.float64)
+    dequant = []
     for i in range(rows):
         sc = scale_list[i]
+        row_dequant = []
         for j in range(cols):
-            dequant[i, j] = codes[i, j] * sc
+            row_dequant.append(codes[i][j] * sc)
+        dequant.append(row_dequant)
 
     return codes, dequant

@@ -1,24 +1,36 @@
 import numpy as np
-from reference.kvcache.ablation import measure_sink_ablation_blowup
-from reference.kvcache.mask import reconstruct_kept_mask
 
+np.random.seed(42)
 
-def generate_scenarios():
-    rng = np.random.default_rng(123)
-    scenarios = []
-    for _ in range(3):
-        k = rng.standard_normal((1, 2, 16, 32))
-        v = rng.standard_normal((1, 2, 16, 32))
-        q = rng.standard_normal((1, 2, 1, 32))
-        err, ratio = measure_sink_ablation_blowup(k, v, q)
-        scenarios.append({"k": k, "v": v, "q": q, "expected_err": err, "expected_ratio": ratio})
-    return scenarios
+NL = 2
+NH = 4
+SL = 16
 
+DUMP = [
+    {"layer": 0, "head": 0, "kept_positions": [0, 1, 2, 15]},
+    {"layer": 0, "head": 1, "kept_positions": [0, 14, 15]},
+    {"layer": 1, "head": 0, "kept_positions": [0, 5, 10]},
+    {"layer": 1, "head": 1, "kept_positions": [0]},
+]
 
-def generate_mask_scenarios():
-    scenarios = [
-        {"dump": {"indices": [0, 1, 4, 7]}, "length": 10},
-        {"dump": {"timestamps": np.array([1.5, 0.2, 2.1, 0.1, 1.9]), "threshold": 1.0}, "length": 5},
-        {"dump": {}, "length": 6}
-    ]
-    return scenarios
+_raw = np.random.rand(2, NH, SL, SL)
+_tril = np.tril(_raw)
+_sums = _tril.sum(axis=-1, keepdims=True)
+_sums[_sums == 0] = 1.0
+PROBS = _tril / _sums
+
+def reconstruct_mask(num_layers, num_heads, seq_len, dump):
+    mask = np.zeros((num_layers, num_heads, seq_len), dtype=bool)
+    for entry in dump:
+        mask[entry["layer"], entry["head"], entry["kept_positions"]] = True
+    return mask
+
+def drop_token_0(attention_probs):
+    ablated = attention_probs.copy()
+    ablated[..., 1:, 0] = 0.0
+    sums = ablated.sum(axis=-1, keepdims=True)
+    sums[sums == 0] = 1.0
+    return ablated / sums
+
+def measure_blowup(original_probs, ablated_probs):
+    return float(np.max(np.abs(original_probs - ablated_probs)))

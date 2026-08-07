@@ -39,34 +39,22 @@ Production training systems sometimes offload optimizer work to another device. 
 Implement `offloaded_adamw_step`:
 
 ```python
-def offloaded_adamw_step(
-    param: np.ndarray,
-    grad: np.ndarray,
-    m: np.ndarray,
-    v: np.ndarray,
-    step: int,
-    lr: float,
-    beta1: float,
-    beta2: float,
-    eps: float,
-    weight_decay: float,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def offloaded_adamw_step(param, grad, m, v, step, lr, beta1, beta2, eps, weight_decay):
     ...
 ```
 
-The function receives NumPy arrays representing one parameter tensor and optimizer state before an AdamW update. Simulate the offloaded workflow by computing the update using CPU-resident NumPy arrays. Return the updated parameter, first moment, and second moment arrays.
+The function receives list representing one parameter tensor and optimizer state before an AdamW update. Simulate the offloaded workflow by computing the update using CPU-resident list. Return the updated parameter, first moment, and second moment arrays.
 
 The returned values must numerically match the standard AdamW update. Do not modify the input arrays in place.
 
 ## Example
 
 ```python
-import numpy as np
 
-param = np.array([1.0, -2.0])
-grad = np.array([0.1, -0.2])
-m = np.zeros(2)
-v = np.zeros(2)
+param = [1.0, -2.0]
+grad = [0.1, -0.2]
+m = [0.0] * 2
+v = [0.0] * 2
 
 new_param, new_m, new_v = offloaded_adamw_step(
     param, grad, m, v, 1, 1e-2, 0.9, 0.999, 1e-8, 0.01
@@ -77,7 +65,7 @@ The result is the same update that would be produced by applying one AdamW step 
 
 ## What the gate checks
 
-The gate computes its own NumPy AdamW oracle for several parameter and gradient tensors. It compares the submitted implementation output with the oracle using the maximum absolute error:
+The gate computes its own Python AdamW oracle for several parameter and gradient tensors. It compares the submitted implementation output with the oracle using the maximum absolute error:
 
 $$
 \max_i |x_i-y_i|.

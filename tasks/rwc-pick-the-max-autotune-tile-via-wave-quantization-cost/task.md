@@ -52,7 +52,7 @@ are out of scope here).
 Implement `select_autotune_tile`:
 
 ```python
-def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates) -> tuple[int, np.ndarray]:
+def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates: list[tuple[int, int]]) -> tuple[int, list[float]]:
     ...
 ```
 
@@ -63,16 +63,15 @@ def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates) -> tu
 For every candidate compute `cost(BM, BN)` exactly as defined above, then
 return `(best_idx, costs)` where:
 
-* `costs` is a 1-D `float64` NumPy array of length `len(candidates)`, `costs[i]`
+* `costs` is a 1-D `float64` list of length `len(candidates)`, `costs[i]`
   holding the cost of `candidates[i]`;
 * `best_idx` is the `int` index of the candidate with the smallest cost
-  (use `np.argmin`, which resolves exact ties by taking the first index —
+(use `min` with `key`, which resolves exact ties by taking the first index —
   the same convention the oracle uses).
 
 ## Example
 
 ```python
-import numpy as np
 M, N, K, num_SMs = 130, 130, 64, 4
 candidates = [(64, 64), (128, 128)]
 
@@ -91,6 +90,6 @@ print(best_idx, costs)
 
 * **argmin_agreement** — across many randomly generated `(M, N, K, num_SMs,
   candidates)` problems, the fraction of cases where your `best_idx` matches
-  the NumPy oracle's `np.argmin` over the same cost formula. Must be `1.0`.
+the Python oracle's `min` with `key` over the same cost formula. Must be `1.0`.
 * **cost_rel_err** — the relative L2 error between your full `costs` vector
   and the oracle's, concatenated across all cases. Must be `<= 1e-6`.

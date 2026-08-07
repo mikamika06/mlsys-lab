@@ -1,0 +1,40 @@
+{
+  "id": "m-top-5-hottest-ops-by-self-cpu-time-total-graded-by-o",
+  "title": "Top-5 hottest ops and aten::copy_ diagnosis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "torch-profiler-key-averages-tables",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "profops/parser.py",
+    "profops/rank.py",
+    "profops/diagnose.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse and aggregate key averages table",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "parsed_correctly", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Top-5 ranking by self CPU time with recall check",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "recall_at_k", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for aten::copy_ synchronization",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_sync", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

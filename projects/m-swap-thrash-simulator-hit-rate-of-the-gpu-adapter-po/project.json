@@ -1,0 +1,21 @@
+{
+  "id": "m-swap-thrash-simulator-hit-rate-of-the-gpu-adapter-po",
+  "title": "GPU adapter pool hit-rate simulator, validator, and LoRA delta validator",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "multi-lora-serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["multilora/simulator.py", "multilora/validator.py", "multilora/lora.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "GPU adapter pool hit rate under Zipf popularity", "check": "harness/m1.py",
+     "gates": [{"metric": "hit_rate_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Validate adapter set and minimal legal launch flags", "check": "harness/m2.py",
+     "gates": [{"metric": "flags_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Apply LoRA delta in numpy and match forward output", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad", "op": "==", "threshold": 1}]}
+  ]
+}

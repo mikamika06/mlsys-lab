@@ -1,26 +1,30 @@
-import triton.optimize as opt
+import sys
+import os
 
-def test_respects_throughput_floor():
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
+import triton_batcher.optimize as opt
+
+def test_optimizer_respects_throughput_floor():
     orig_sim = opt.simulate
-    orig_met = opt.calculate_metrics
+    orig_met = opt.measure_metrics
+
+    def fake_simulate(arr, mx, pref, delay, comp):
+        return [{"pref": pref, "delay": delay}]
+
+    def fake_metrics(arr, disps, comp):
+        cfg = disps[0]
+        if cfg["delay"] == 1000:
+            return {"throughput_req_sec": 10.0, "p99_queue_delay_us": 500.0}
+        return {"throughput_req_sec": 100.0, "p99_queue_delay_us": 5000.0}
+
+    opt.simulate = fake_simulate
+    opt.measure_metrics = fake_metrics
 
     try:
-        def fake_sim(arr, max_b, pref, delay, comp):
-            return [{"delay_used": delay}]
-
-        def fake_met(arr, batches, comp):
-            d = batches[0]["delay_used"]
-            if d == 10:
-                return {"throughput": 100, "p99_queue_delay": 10}
-            if d == 20:
-                return {"throughput": 200, "p99_queue_delay": 20}
-            return {"throughput": 0, "p99_queue_delay": 999}
-
-        opt.simulate = fake_sim
-        opt.calculate_metrics = fake_met
-
-        best = opt.optimize_delay([], 8, [4], [10, 20], 150.0, lambda b: 1)
-        assert best == 20, f"Expected 20 to meet throughput floor, got {best}"
+        res = opt.optimize_config([0], 8, [[4]], [1000, 5000], 50.0, lambda x: x)
+        assert res is not None, "Optimizer returned None"
+        assert res["delay_us"] == 5000, f"Expected config with delay 5000, got {res}"
     finally:
         opt.simulate = orig_sim
-        opt.calculate_metrics = orig_met
+        opt.measure_metrics = orig_met

@@ -1,0 +1,63 @@
+{
+  "id": "m-unfold-rewritten-as-reshape-gather",
+  "title": "Unfold rewrite, minimal trace, and escape hatch chooser",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Op coverage gaps and unsupported-op debugging",
+  "difficulty": 3,
+  "edits": [
+    "unfoldfix/rewrite.py",
+    "unfoldfix/trace.py",
+    "unfoldfix/escape.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Unfold rewritten as reshape and gather",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "unfold_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Traceback to minimal source fix",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "traces_matched",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Escape hatch chooser and regression safeguards",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_escape",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

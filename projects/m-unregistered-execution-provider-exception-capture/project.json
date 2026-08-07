@@ -1,0 +1,21 @@
+{
+  "id": "m-unregistered-execution-provider-exception-capture",
+  "title": "Unregistered execution provider exception capture and IOBinding optimization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "ONNX Runtime CPU execution provider",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ortprovider/exceptions.py", "ortprovider/inference.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Catch and handle unregistered execution provider exceptions", "check": "harness/m1.py",
+     "gates": [{"metric": "exceptions_handled", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "IOBinding vs plain run overhead comparison and execution", "check": "harness/m2.py",
+     "gates": [{"metric": "overhead_reduced", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for exception safety and binding correctness", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_behavior", "op": "==", "threshold": 1}]}
+  ]
+}

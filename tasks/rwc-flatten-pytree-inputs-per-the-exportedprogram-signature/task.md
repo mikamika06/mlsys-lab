@@ -21,7 +21,7 @@ def flatten_exported_inputs(tree, input_spec):
     ...
 ```
 
-`tree` is a nested Python structure containing dictionaries, lists, and NumPy arrays representing tensor leaves.
+`tree` is a nested Python structure containing dictionaries, lists, and list representing tensor leaves.
 
 `input_spec` is a list of dictionaries. Each entry describes one flat argument:
 
@@ -39,11 +39,10 @@ Return a Python list containing the leaves selected by `path` for every entry in
 ## Example
 
 ```python
-import numpy as np
 
 tree = {
-    "params": {"w": np.array([1, 2])},
-    "inputs": [np.array([3, 4])]
+    "params": {"w": [1, 2]},
+    "inputs": [[3, 4]]
 }
 
 spec = [
@@ -53,12 +52,12 @@ spec = [
 
 flat = flatten_exported_inputs(tree, spec)
 
-# flat[0] is np.array([1, 2])
-# flat[1] is np.array([3, 4])
+# flat[0] is [1, 2]
+# flat[1] is [3, 4]
 ```
 
 ## What the gate checks
 
-The gate builds several exported-signature-like examples and computes the reference result by applying the signature paths to the structured input directly. The returned list must have the same length, order, and NumPy tensor contents as the oracle result.
+The gate builds several exported-signature-like examples and computes the reference result by applying the signature paths to the structured input directly. The returned list must have the same length, order, and Python tensor contents as the oracle result.
 
 A solution that recursively walks the pytree without respecting `input_spec` ordering will fail when the signature order differs from traversal order.

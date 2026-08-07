@@ -37,9 +37,7 @@ $$
 Implement `fold_diag_scales(W, X, s)`:
 
 ```python
-def fold_diag_scales(
-    W: np.ndarray, X: np.ndarray, s: np.ndarray
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, float]:
+def fold_diag_scales(W, X, s):
     ...
 ```
 
@@ -56,16 +54,15 @@ Return four values:
 3. `Y_fold`, equal to `W_fold @ X_fold`.
 4. `range_reduction_ratio`, equal to $\max|X| / \max|X_{\mathrm{fold}}|$.
 
-Use NumPy operations. Do not explicitly build diagonal matrices.
+Use Python operations. Do not explicitly build diagonal matrices.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[2.0, 3.0], [4.0, 5.0]])
-X = np.array([[1.0, 2.0], [3.0, 4.0]])
-s = np.array([3.0, 0.5])
+W = [[2.0, 3.0], [4.0, 5.0]]
+X = [[1.0, 2.0], [3.0, 4.0]]
+s = [3.0, 0.5]
 
 W_fold, X_fold, Y_fold, ratio = fold_diag_scales(W, X, s)
 
@@ -74,4 +71,4 @@ W_fold, X_fold, Y_fold, ratio = fold_diag_scales(W, X, s)
 
 ## What the gate checks
 
-The gate builds NumPy oracle computations for the diagonal migration identity. It checks that the submitted folded product matches the oracle product within a small maximum absolute error and that the reported range-reduction statistic is computed from the folded activation matrix.
+The gate builds Python oracle computations for the diagonal migration identity. It checks that the submitted folded product matches the oracle product within a small maximum absolute error and that the reported range-reduction statistic is computed from the folded activation matrix.

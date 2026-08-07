@@ -1,0 +1,40 @@
+{
+  "id": "m-verify-exportedprogram-graph-signature-matches-the-m",
+  "title": "Verify ExportedProgram Graph Signature and Round-Trip Equivalence",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "torch.export capture & ExportedProgram",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["export_verify/verifier.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify ExportedProgram graph signature matches module state",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "signature_matches", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Round-trip save/load and strict vs non-strict verification",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "roundtrip_match", "op": "==", "threshold": 1.0},
+        {"metric": "strict_inspection_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches signature verification bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_signature_bug", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

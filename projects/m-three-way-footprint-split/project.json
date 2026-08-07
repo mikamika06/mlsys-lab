@@ -1,0 +1,45 @@
+{
+  "id": "m-three-way-footprint-split",
+  "title": "Three-way footprint split and selective build analyzer",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Binary size, memory footprint and selective builds",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "footprint/split.py",
+    "footprint/selective.py",
+    "footprint/predictor.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Three-way memory footprint breakdown",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "splits_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Selective op registration win and peak RSS prediction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "savings_matched", "op": "==", "threshold": 1},
+        {"metric": "rss_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for memory accounting invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_lifetimes", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

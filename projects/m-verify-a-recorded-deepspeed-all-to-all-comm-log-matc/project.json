@@ -1,0 +1,21 @@
+{
+  "id": "m-verify-a-recorded-deepspeed-all-to-all-comm-log-matc",
+  "title": "Sequence Parallelism: Communication and Memory Budget",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "sequence-context-parallelism",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["sp_comm/comm_log.py", "sp_comm/mem_budget.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Verify All-To-All communication log", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<", "threshold": 1e-5}]},
+    {"n": 2, "title": "Max sequence length under memory budget", "check": "harness/m2.py",
+     "gates": [{"metric": "matches", "op": "==", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: catch a broken memory budget calculator", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_budget", "op": "==", "threshold": 1}]}
+  ]
+}

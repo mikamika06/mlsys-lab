@@ -1,0 +1,63 @@
+{
+  "id": "m-why-does-the-model-reject-a-non-default-shape",
+  "title": "Why does the model reject a non-default shape",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Flexible input shapes (RangeDim vs EnumeratedShapes)",
+  "size": "M",
+  "edits": [
+    "edgeexport/shapes.py",
+    "edgeexport/checker.py",
+    "edgeexport/compiler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Symbolic dimension propagation check",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "checks_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compile-time growth vs enumerated shapes",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "compile_matches",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for shape validation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_lax_validation",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

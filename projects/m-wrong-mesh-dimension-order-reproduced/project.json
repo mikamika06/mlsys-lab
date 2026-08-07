@@ -1,0 +1,38 @@
+{
+  "id": "m-wrong-mesh-dimension-order-reproduced",
+  "title": "Wrong Mesh Dimension Order, Reproduced",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "3D/4D parallelism composition & device mesh",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["devmesh/mesh.py", "devmesh/hsdp.py", "devmesh/planner.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Mesh ordering and 2D index construction",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "meshes_matched", "op": ">=", "threshold": 5}]
+    },
+    {
+      "n": 2,
+      "title": "HSDP verification and fast-axis bandwidth assignment",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "hsdp_verified", "op": "==", "threshold": 1},
+        {"metric": "planner_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test suite catches wrong mesh order",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_inverted_mesh", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

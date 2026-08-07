@@ -1,12 +1,10 @@
-import numpy as np
+def compare_int4_quantizers(W: list[float]) -> tuple[float, float, str]:
+    if not W:
+        return 0.0, 0.0, "affine"
 
-
-def compare_int4_quantizers(W: np.ndarray) -> tuple[float, float, str]:
-    W = np.asarray(W, dtype=np.float64)
-
-    lo = W.flat[0]
-    hi = W.flat[0]
-    for x in W.flat:
+    lo = W[0]
+    hi = W[0]
+    for x in W:
         if x < lo:
             lo = x
         if x > hi:
@@ -15,7 +13,7 @@ def compare_int4_quantizers(W: np.ndarray) -> tuple[float, float, str]:
     if hi == lo:
         sum_sq_err = 0.0
         count = 0
-        for x in W.flat:
+        for x in W:
             diff = lo - x
             sum_sq_err += diff * diff
             count += 1
@@ -25,7 +23,7 @@ def compare_int4_quantizers(W: np.ndarray) -> tuple[float, float, str]:
         affine_zero = round(-lo / affine_scale)
         sum_sq_err = 0.0
         count = 0
-        for x in W.flat:
+        for x in W:
             val = round(x / affine_scale + affine_zero)
             if val < 0:
                 q = 0.0
@@ -40,7 +38,7 @@ def compare_int4_quantizers(W: np.ndarray) -> tuple[float, float, str]:
         affine_err = sum_sq_err / count
 
     max_abs = 0.0
-    for x in W.flat:
+    for x in W:
         abs_x = x if x >= 0 else -x
         if abs_x > max_abs:
             max_abs = abs_x
@@ -49,7 +47,7 @@ def compare_int4_quantizers(W: np.ndarray) -> tuple[float, float, str]:
     if sym_scale == 0:
         sum_sq_err = 0.0
         count = 0
-        for x in W.flat:
+        for x in W:
             diff = 0.0 - x
             sum_sq_err += diff * diff
             count += 1
@@ -57,7 +55,7 @@ def compare_int4_quantizers(W: np.ndarray) -> tuple[float, float, str]:
     else:
         sum_sq_err = 0.0
         count = 0
-        for x in W.flat:
+        for x in W:
             val = round(x / sym_scale)
             if val < -8:
                 q = -8.0

@@ -30,11 +30,11 @@ $\mathrm{d}Y$ into $\mathrm{d}X, \mathrm{d}W_1, \mathrm{d}W_2$.
 Implement `checkpointed_layer` in `solve.py`:
 
 ```python
-def checkpointed_layer(x, W1, W2, p, seed, n_pre, n_post, dY):
+def checkpointed_layer(x: list[list[float]], W1: list[list[float]], W2: list[list[float]], p: float, seed: int, n_pre: int, n_post: int, dY: list[list[float]]) -> tuple[list[list[float]], list[list[float]], list[list[float]], list[list[float]]]:
     ...
 ```
 
-Simulate a single shared random stream `rng = np.random.default_rng(seed)`
+Simulate a single shared random stream `rng = random.Random(seed)`
 threaded through a bigger network:
 
 1. Call `rng.random(3)` exactly `n_pre` times (earlier layers' own
@@ -70,13 +70,12 @@ generator exactly.
 ## Example
 
 ```python
-import numpy as np
 
 n, m, k, o = 4, 3, 5, 2
-x = np.random.default_rng(1).standard_normal((n, m))
-W1 = np.random.default_rng(1).standard_normal((m, k))
-W2 = np.random.default_rng(1).standard_normal((k, o))
-dY = np.random.default_rng(1).standard_normal((n, o))
+x = [[random.Random(1).gauss(0, 1) for _ in range(m)] for _ in range(n)]
+W1 = [[random.Random(1).gauss(0, 1) for _ in range(k)] for _ in range(m)]
+W2 = [[random.Random(1).gauss(0, 1) for _ in range(o)] for _ in range(k)]
+dY = [[random.Random(1).gauss(0, 1) for _ in range(o)] for _ in range(n)]
 
 Y, dX, dW1, dW2 = checkpointed_layer(x, W1, W2, 0.4, seed=42, n_pre=2, n_post=3, dY=dY)
 # dX, dW1, dW2 must equal the gradient you'd get if the SAME mask drawn

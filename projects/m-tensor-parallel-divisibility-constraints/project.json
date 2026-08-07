@@ -1,0 +1,22 @@
+{
+  "id": "m-tensor-parallel-divisibility-constraints",
+  "title": "Tensor-parallel divisibility constraints",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-quant-libs",
+  "track": "Kernel selection and backend dispatch",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tp_marlin/analyze.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Detect eligibility and measure the performance cliff", "check": "harness/m1.py",
+     "gates": [{"metric": "eligibility_match", "op": "==", "threshold": 1},
+               {"metric": "perf_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Pad dimensions to restore Marlin eligibility minimally", "check": "harness/m2.py",
+     "gates": [{"metric": "padding_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch excessive padding", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_excessive_padding", "op": "==", "threshold": 1}]}
+  ]
+}

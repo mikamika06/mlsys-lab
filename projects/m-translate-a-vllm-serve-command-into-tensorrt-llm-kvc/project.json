@@ -1,0 +1,64 @@
+{
+  "id": "m-translate-a-vllm-serve-command-into-tensorrt-llm-kvc",
+  "title": "Translate vLLM serve command to TensorRT-LLM KV Cache Config",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "engine-portability-and-attention-backends",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "trtllm_config/translator.py",
+    "trtllm_config/memory.py",
+    "trtllm_config/linter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Translate vLLM command to KvCacheConfig",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "configs_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Memory-fraction semantics: total vs free memory",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bytes_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: linter and regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_combo",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

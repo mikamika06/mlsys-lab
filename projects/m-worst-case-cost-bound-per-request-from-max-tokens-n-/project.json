@@ -1,0 +1,21 @@
+{
+  "id": "m-worst-case-cost-bound-per-request-from-max-tokens-n-",
+  "title": "Worst-case cost bound per request from max_tokens and n",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "security-multitenancy-and-api-hardening",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["hardening/cost.py", "hardening/admission.py", "hardening/logging.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Worst-case cost bound per request", "check": "harness/m1.py",
+     "gates": [{"metric": "cost_estimates_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Admission limits on GPU-seconds", "check": "harness/m2.py",
+     "gates": [{"metric": "admission_decisions_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches unredacted PII logging", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unredacted_logs", "op": "==", "threshold": 1}]}
+  ]
+}

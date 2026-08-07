@@ -1,0 +1,40 @@
+{
+  "id": "m-thread-count-sweep-for-minimum-p95",
+  "title": "Thread-count sweep, profile gaps, and SLA throughput",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "On-device latency measurement done right",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "threadsweep/sweep.py",
+    "threadsweep/profile.py",
+    "threadsweep/sla.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Thread-count sweep for minimum p95",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "argmin_index", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Per-op profile vs wall-clock gap",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "gap_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Throughput under a fixed latency SLA",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_sla", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

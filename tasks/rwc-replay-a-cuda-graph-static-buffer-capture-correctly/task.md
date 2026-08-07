@@ -17,11 +17,11 @@ The important semantic property is that the internal output buffer is reused acr
 Implement `static_buffer_replay(W)`.
 
 ```python
-def static_buffer_replay(W):
+def static_buffer_replay(W: list[list[float]]):
     ...
 ```
 
-The function receives a 2-D NumPy array `W` with shape $(m, d)$ and returns a callable:
+The function receives a list of lists of floats `W` with shape $(m, d)$ and returns a callable:
 
 ```python
 replay = static_buffer_replay(W)
@@ -43,13 +43,12 @@ The returned array may not alias the internal output buffer.
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[1., 2.], [3., 4.]])
+W = [[1., 2.], [3., 4.]]
 replay = static_buffer_replay(W)
 
-a = replay(np.array([[1., 0.]]))
-b = replay(np.array([[0., 1.]]))
+a = replay([[1., 0.]])
+b = replay([[0., 1.]])
 
 # a remains unchanged after the second replay:
 # a == [[1., 3.]]
@@ -58,7 +57,7 @@ b = replay(np.array([[0., 1.]]))
 
 ## What the gate checks
 
-The gate builds a NumPy oracle that models the captured graph behavior. It runs a sequence of replays and stores snapshots from the oracle before the next replay overwrites the static output buffer.
+The gate builds a Python oracle that models the captured graph behavior. It runs a sequence of replays and stores snapshots from the oracle before the next replay overwrites the static output buffer.
 
 The student's complete sequence of returned outputs is compared with the oracle using maximum absolute error:
 

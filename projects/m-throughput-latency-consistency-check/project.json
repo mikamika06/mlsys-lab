@@ -1,0 +1,23 @@
+{
+  "id": "m-throughput-latency-consistency-check",
+  "title": "Throughput/latency consistency check",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Benchmarking methodology: latency, throughput, percentiles, variance",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["perf/analyzer.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compute metrics from raw trace", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_match", "op": "==", "threshold": 3}]},
+    {"n": 2, "title": "Verify Little's Law consistency", "check": "harness/m2.py",
+     "gates": [{"metric": "error_match", "op": "==", "threshold": 3},
+               {"metric": "validate_good", "op": "==", "threshold": 1},
+               {"metric": "validate_bad", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch nosync measurements", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_nosync_bug", "op": "==", "threshold": 1}]}
+  ]
+}

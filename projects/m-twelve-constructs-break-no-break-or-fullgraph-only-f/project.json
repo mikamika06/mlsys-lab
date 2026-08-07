@@ -1,0 +1,64 @@
+{
+  "id": "m-twelve-constructs-break-no-break-or-fullgraph-only-f",
+  "title": "Graph break analysis, torch.cond replacement, and partition mapping",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Graph breaks: causes, detection, elimination",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "graphbreak/constructs.py",
+    "graphbreak/cond.py",
+    "graphbreak/partition.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify twelve constructs for graph break behavior",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "constructs_matched",
+          "op": ">=",
+          "threshold": 12
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Replace data-dependent branch with torch.cond",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cond_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Partition map from break logs and regression safeguards",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_partition",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

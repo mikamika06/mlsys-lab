@@ -22,11 +22,11 @@ For each tile of keys/values of block size $B$:
 Implement `flash_attention_forward(Q, K, V, block_size)`:
 
 ```python
-def flash_attention_forward(Q, K, V, block_size=32):
+def flash_attention_forward(Q: list[list[float]], K: list[list[float]], V: list[list[float]], block_size: int=32) -> list[list[float]]:
     ...
 ```
 
-- `Q`, `K`, `V`: 2-D float32 NumPy arrays of shape $(N, d)$.
+- `Q`, `K`, `V`: 2-D float32 list of shape $(N, d)$.
 - `block_size`: tile size for the key/value dimension.
 - Returns: float32 array of shape $(N, d)$ — the attention output.
 
@@ -35,12 +35,11 @@ The implementation must process K and V in tiles of `block_size` without ever co
 ## Example
 
 ```python
-import numpy as np
-np.random.seed(0)
+random.seed(0)
 N, d = 4, 8
-Q = np.random.randn(N, d).astype(np.float32)
-K = np.random.randn(N, d).astype(np.float32)
-V = np.random.randn(N, d).astype(np.float32)
+Q = [[random.gauss(0, 1) for _ in range(d)] for _ in range(N)]
+K = [[random.gauss(0, 1) for _ in range(d)] for _ in range(N)]
+V = [[random.gauss(0, 1) for _ in range(d)] for _ in range(N)]
 out = flash_attention_forward(Q, K, V, block_size=2)
 # out shape: (4, 8), matches naive softmax attention within 1e-5
 ```

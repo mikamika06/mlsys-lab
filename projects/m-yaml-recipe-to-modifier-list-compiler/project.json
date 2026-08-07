@@ -1,0 +1,22 @@
+{
+  "id": "m-yaml-recipe-to-modifier-list-compiler",
+  "title": "YAML recipe to modifier-list compiler",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "llm-compressor recipes and the oneshot entrypoint",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["compiler/recipe.py", "compiler/goals.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compile YAML recipe into modifier list", "check": "harness/m1.py",
+     "gates": [{"metric": "recipes_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Pick modifiers for the six stated goals", "check": "harness/m2.py",
+     "gates": [{"metric": "goals_matched", "op": "==", "threshold": 1},
+               {"metric": "zero_recipe_handled", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid modifier schemas", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_schema", "op": "==", "threshold": 1}]}
+  ]
+}

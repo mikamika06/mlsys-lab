@@ -1,0 +1,38 @@
+{
+  "id": "m-validate-tp-feasibility-head-intermediate-size-divis",
+  "title": "Validate TP feasibility and compute traffic",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "parallelism-tp-pp-dp-ep",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tpval/feasibility.py", "tpval/traffic.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Validate head and intermediate size divisibility for TP",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "feasibility_matches", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Compute TP communication traffic and PP bubble fraction",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "traffic_matches", "op": "==", "threshold": 1.0},
+        {"metric": "bubble_rel_err", "op": "<=", "threshold": 1e-5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catch non-divisible TP configurations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_invalid_tp", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "id": "m-token-dispatch-combine-from-scratch",
+  "title": "Token dispatch and combine in MoE parallelism",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Mixture-of-Experts parallelism (expert parallel, all-to-all)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moe/dispatch.py",
+    "moe/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Dispatch and combine with expert capacity dropping",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "dispatch_correctness",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "combine_correctness",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "MoE vs Dense FFN communication volume metrics",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "metrics_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for capacity limits and reconstruction",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_capacity_overflow",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-zero-1-vs-plain-dp-memory-table",
+  "title": "ZeRO Stage 1 Memory Table and Partitioning",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "ZeRO Stage 1 — optimizer state partitioning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["zeroproj/memory.py", "zeroproj/partition.py", "zeroproj/binpack.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "ZeRO-1 vs Plain DP Memory Table", "check": "harness/m1.py",
+     "gates": [{"metric": "table_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Fix the Broken Partition Assignment", "check": "harness/m2.py",
+     "gates": [{"metric": "partitions_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Reconstruct DeepSpeed's Real Bin-Packing Partition", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_packing", "op": "==", "threshold": 1}]}
+  ]
+}

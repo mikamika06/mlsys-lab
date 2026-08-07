@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def per_channel_fp8_quant(W: np.ndarray):
+def per_channel_fp8_quant(W: list[list[float]]) -> tuple[list[float], list[list[float]]]:
     """Per-row (per-output-channel) E4M3 quantize/dequantize of a weight
     matrix.
 

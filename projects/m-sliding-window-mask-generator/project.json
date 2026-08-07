@@ -1,0 +1,22 @@
+{
+  "id": "m-sliding-window-mask-generator",
+  "title": "Sliding-window mask and KV cache footprint",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "sliding-window-and-attention-sinks",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["swm/masking.py", "swm/attention.py", "swm/memory.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Generate sliding-window masks and apply them", "check": "harness/m1.py",
+     "gates": [{"metric": "mask_correct", "op": "==", "threshold": 1},
+               {"metric": "attn_correct", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Calculate hybrid KV cache footprint", "check": "harness/m2.py",
+     "gates": [{"metric": "mem_correct", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch a mask that ignores the window", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_mask", "op": "==", "threshold": 1}]}
+  ]
+}

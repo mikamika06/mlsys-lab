@@ -1,15 +1,13 @@
-import numpy as np
-
-def select_fp16_layers(errors: np.ndarray, k: int) -> list[int]:
+def select_fp16_layers(errors: list[float], k: int) -> list[int]:
     """
     Return the indices of the top‑k layers with largest FP8‑KV error.
 
     Parameters
     ----------
-    errors : np.ndarray
-        1‑D array of per‑layer errors.
+    errors : list[float]
+        1‑D list of per‑layer errors.
     k : int
-        Number of layers to keep in FP16 (0 ≤ k ≤ len(errors)).
+        Number of layers to keep in FP16 (0 ≤ k ≤ len(errors)).
 
     Returns
     -------
@@ -18,7 +16,6 @@ def select_fp16_layers(errors: np.ndarray, k: int) -> list[int]:
     """
     if k == 0:
         return []
-    # Stable tie‑break: lower index first when errors equal.
-    order = np.lexsort((np.arange(len(errors)), -errors))
-    topk = order[:k]
-    return list(topk)
+    indexed_errors = list(enumerate(errors))
+    indexed_errors.sort(key=lambda x: (-x[1], x[0]))
+    return [idx for idx, _ in indexed_errors[:k]]

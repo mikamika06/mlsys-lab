@@ -1,0 +1,21 @@
+{
+  "id": "m-toy-universal-checkpoint-consolidator",
+  "title": "Toy Universal-Checkpoint Consolidator",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Distributed checkpoint format conversion & universal checkpointing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["checkpoint/index.py", "checkpoint/merge.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Verify HF Sharded Checkpoint Index", "check": "harness/m1.py",
+     "gates": [{"metric": "indexes_matched", "op": ">=", "threshold": 2}]},
+    {"n": 2, "title": "Megatron TP Checkpoint Merge", "check": "harness/m2.py",
+     "gates": [{"metric": "byte_exact_fraction", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard: catching axis mismatches", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_axis", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,21 +1,17 @@
 import math
-import numpy as np
 
 
-def search_clip_ratio(W, ratios, bits):
-    W = np.asarray(W, dtype=np.float64)
-    ratios = np.asarray(ratios, dtype=np.float64)
-
+def search_clip_ratio(W: list[list[float]], ratios: list[float], bits: int) -> tuple[int, list[float]]:
     qmax = (1 << (bits - 1)) - 1
-    
-    nrows = W.shape[0]
-    ncols = W.shape[1]
+
+    nrows = len(W)
+    ncols = len(W[0]) if nrows > 0 else 0
 
     max_abs = [0.0] * nrows
     for i in range(nrows):
         m = 0.0
         for j in range(ncols):
-            val = W[i, j]
+            val = W[i][j]
             if val < 0.0:
                 val = -val
             if val > m:
@@ -35,7 +31,7 @@ def search_clip_ratio(W, ratios, bits):
             b = bounds[i]
             s = scales[i]
             for j in range(ncols):
-                val = W[i, j]
+                val = W[i][j]
                 if val < -b:
                     clipped = -b
                 elif val > b:
@@ -51,14 +47,12 @@ def search_clip_ratio(W, ratios, bits):
 
         mse_curve.append(total_sq_err / count)
 
-    mse_curve_arr = np.asarray(mse_curve, dtype=np.float64)
-
-    min_val = mse_curve_arr[0]
+    min_val = mse_curve[0]
     best_idx = 0
-    for idx in range(1, len(mse_curve_arr)):
-        val = mse_curve_arr[idx]
+    for idx in range(1, len(mse_curve)):
+        val = mse_curve[idx]
         if val < min_val:
             min_val = val
             best_idx = idx
 
-    return int(best_idx), mse_curve_arr
+    return int(best_idx), mse_curve

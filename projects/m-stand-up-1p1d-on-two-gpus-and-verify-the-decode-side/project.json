@@ -1,0 +1,73 @@
+{
+  "id": "m-stand-up-1p1d-on-two-gpus-and-verify-the-decode-side",
+  "title": "Stand up 1P1D on two GPUs and verify the decode side",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "disaggregated-prefill-decode-and-kv-connectors",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "disagg/p1d.py",
+    "disagg/verify.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Stand up 1P1D transfer pipeline",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "requests_handled",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "kv_transferred",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Verify decode instance skips prefill compute",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "decode_prefill_ratio",
+          "op": "<=",
+          "threshold": 0.05
+        },
+        {
+          "metric": "verification_passed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch redundant prefill on decode side",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_redundant_prefill",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

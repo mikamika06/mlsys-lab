@@ -1,84 +1,83 @@
 import numpy as np
 
-def generate_arrivals(n=1000, rate=5000):
+def generate_arrivals(n, rate_per_sec):
     np.random.seed(42)
-    intervals = np.random.exponential(1e6 / rate, n)
-    return np.cumsum(intervals).astype(int).tolist()
+    inter_arrival = np.random.exponential(1e6 / rate_per_sec, n)
+    return np.cumsum(inter_arrival).astype(int).tolist()
 
-ARRIVALS = generate_arrivals(1000, 4000)
+ARRIVALS = generate_arrivals(300, 200)
 
-def compute_fn(b):
-    return 1000 + 200 * b
+def dummy_compute_fn(batch_size):
+    return 10000 + (batch_size * 2000)
 
-def simulate(arrivals, max_batch_size, preferred_batch_sizes, max_queue_delay_us, compute_fn):
-    reqs = [(i, arr) for i, arr in enumerate(arrivals)]
-    reqs.sort(key=lambda x: x[1])
-
-    Q = []
+def simulate(arrivals: list[int], max_batch_size: int, preferred: list[int], max_delay_us: int, compute_us_fn) -> list[dict]:
+    time_us = 0
+    queue = []
     out = []
-    t = 0
-    model_ready = 0
+    next_req_idx = 0
+    model_ready_us = 0
 
-    preferred = sorted(list(set(preferred_batch_sizes + [max_batch_size])), reverse=True)
+    preferred_sizes = sorted([p for p in preferred if p <= max_batch_size] + [max_batch_size], reverse=True)
 
-    while reqs or Q:
-        while reqs and reqs[0][1] <= t:
-            Q.append(reqs.pop(0))
+    while next_req_idx < len(arrivals) or queue:
+        while next_req_idx < len(arrivals) and arrivals[next_req_idx] <= time_us:
+            queue.append(next_req_idx)
+            next_req_idx += 1
 
-        can_dispatch = False
-        if Q and model_ready <= t:
-            if t >= Q[0][1] + max_queue_delay_us:
-                can_dispatch = True
-            elif any(len(Q) >= p for p in preferred):
-                can_dispatch = True
+        dispatched = False
+        if model_ready_us <= time_us and queue:
+            max_delay_reached = (time_us >= arrivals[queue[0]] + max_delay_us)
+            chosen_batch_size = 0
 
-        if can_dispatch:
-            b = 0
-            if t >= Q[0][1] + max_queue_delay_us:
-                b = min(len(Q), max_batch_size)
+            if max_delay_reached:
+                chosen_batch_size = min(len(queue), max_batch_size)
             else:
-                for p in preferred:
-                    if len(Q) >= p:
-                        b = p
+                for p in preferred_sizes:
+                    if len(queue) >= p:
+                        chosen_batch_size = p
                         break
 
-            batch = Q[:b]
-            Q = Q[b:]
+            if chosen_batch_size > 0:
+                batch_reqs = queue[:chosen_batch_size]
+                queue = queue[chosen_batch_size:]
+                out.append({
+                    "start_us": time_us,
+                    "batch_size": chosen_batch_size,
+                    "request_ids": batch_reqs
+                })
+                model_ready_us = time_us + compute_us_fn(chosen_batch_size)
+                dispatched = True
 
-            out.append({
-                "start_time": t,
-                "batch_size": b,
-                "request_ids": [req[0] for req in batch]
-            })
-            model_ready = t + compute_fn(b)
-        else:
-            next_t = float('inf')
-            if reqs:
-                next_t = min(next_t, float(reqs[0][1]))
-            if model_ready > t:
-                next_t = min(next_t, float(model_ready))
-            if Q:
-                next_t = min(next_t, float(Q[0][1] + max_queue_delay_us))
+        if not dispatched:
+            candidates = []
+            if next_req_idx < len(arrivals):
+                candidates.append(arrivals[next_req_idx])
+            if model_ready_us > time_us:
+                candidates.append(model_ready_us)
+            if model_ready_us <= time_us and queue:
+                candidates.append(arrivals[queue[0]] + max_delay_us)
 
-            if next_t == float('inf'):
+            if candidates:
+                time_us = max(time_us, min(candidates))
+            else:
                 break
-            t = int(next_t)
 
     return out
 
-def calculate_metrics(arrivals, batches, compute_fn):
-    if not batches:
-        return {"throughput": 0.0, "p99_queue_delay": 0.0}
+def measure_metrics(arrivals: list[int], dispatches: list[dict], compute_us_fn) -> dict:
+    if not dispatches:
+        return {"throughput_req_sec": 0.0, "p99_queue_delay_us": 0.0}
+
+    delays = []
+    for d in dispatches:
+        for rid in d["request_ids"]:
+            delays.append(d["start_us"] - arrivals[rid])
+
+    p99 = float(np.percentile(delays, 99))
     start_t = min(arrivals)
-    end_t = max(b["start_time"] + compute_fn(b["batch_size"]) for b in batches)
+    end_t = max(d["start_us"] + compute_us_fn(d["batch_size"]) for d in dispatches)
 
-    req_queue_delays = []
-    for b in batches:
-        for rid in b["request_ids"]:
-            req_queue_delays.append(b["start_time"] - arrivals[rid])
+    dur_s = (end_t - start_t) / 1e6
+    throughput = len(arrivals) / dur_s if dur_s > 0 else 0.0
 
-    p99 = float(np.percentile(req_queue_delays, 99))
-    total_time_s = (end_t - start_t) / 1e6
-    throughput = len(arrivals) / total_time_s if total_time_s > 0 else 0.0
-
-    return {"throughput": throughput, "p99_queue_delay": p99}
+    return {"throughput_req_sec": throughput, "p99_queue_delay_us": p99}

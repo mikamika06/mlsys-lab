@@ -1,0 +1,68 @@
+{
+  "id": "m-symbolic-shape-propagation-by-hand",
+  "title": "Symbolic shape propagation by hand",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Shape inference, symbolic shapes and the checker",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "symshape/infer.py",
+    "symshape/coverage.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Propagate symbolic shapes across computational graphs",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "graphs_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Identify first failing node and compute shape coverage ratio",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "first_failures_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "coverage_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test suite detects incorrect symbolic broadcasting",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_broadcast",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

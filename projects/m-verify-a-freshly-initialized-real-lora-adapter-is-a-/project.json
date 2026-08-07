@@ -1,0 +1,21 @@
+{
+  "id": "m-verify-a-freshly-initialized-real-lora-adapter-is-a-numerical-no-op",
+  "title": "Verify a freshly initialized LoRA adapter is a numerical no-op",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "lora-mechanics",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["loraadapter/adapter.py", "loraadapter/verify.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "LoRA layer structure and zero-initialization of B", "check": "harness/m1.py",
+     "gates": [{"metric": "shapes_and_init_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Forward pass numerical no-op verification", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err_satisfied", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for adapter initialization", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_init", "op": "==", "threshold": 1}]}
+  ]
+}

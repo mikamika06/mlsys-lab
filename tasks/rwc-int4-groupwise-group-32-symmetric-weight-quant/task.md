@@ -25,7 +25,7 @@ storing more scale values.
 Implement `int4_groupwise_quant(W, group_size=32)`:
 
 ```python
-def int4_groupwise_quant(W: np.ndarray, group_size: int = 32):
+def int4_groupwise_quant(W: list[list[float]], group_size: int=32) -> tuple[list[list[int]], list[list[float]]]:
     ...
 ```
 
@@ -61,7 +61,7 @@ per-group magnitude deliberately varied so different groups in the same
 row land on very different scales (checking that grouping is genuinely
 independent per chunk, not a single row-wide scale), plus an explicit
 all-zero group to check the divide-by-zero fallback. For every case the
-reference computes `codes`/`scales` with NumPy exactly as described.
+reference computes `codes`/`scales` with Python exactly as described.
 
 Your `codes` must match the oracle's **exactly** (integer equality, and
 every value must lie in `[-8, 7]`), your `scales` must match within a

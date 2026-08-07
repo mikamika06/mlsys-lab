@@ -1,0 +1,6 @@
+Ticket: EX-992
+Title: Model export pipeline crashing on TensorRT 8.4 due to operator mismatches
+Description:
+We are experiencing frequent crashes in our model export pipeline when attempting to ingest our CNN architectures into TensorRT 8.4. The pipeline fails during the graph optimization phase. Looking at the error logs, the process immediately aborts with a fatal `Assertion failed: inputs.size() >= 2` targeting a `Squeeze` node. Additionally, when we bypass that error on other models, we hit subsequent shape mismatch errors downstream. The logs indicate that the network attempts to upsample a feature map, but the `Resize` layers produce unexpected output dimensions, leading to a tensor shape collision later in the network.
+
+Separately, our ingestion service silently accepts opset 14 models, but the backend simply drops nodes it doesn't recognize. We are seeing segfaults later in the execution because intermediate tensors are never produced. The model loader needs to properly validate against the backend's runtime opset table and explicitly report unsupported operators before graph execution begins. Furthermore, we need the loading code to standardize the operator semantics so these legacy attribute/input mismatches don't crash the engine. Please implement the report generation and the legacy semantic migrations for Squeeze and Resize.

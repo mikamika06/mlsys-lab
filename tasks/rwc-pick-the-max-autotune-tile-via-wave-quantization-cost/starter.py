@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates):
+def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates: list[tuple[int, int]]) -> tuple[int, list[float]]:
     """Pick the (BM, BN) tile that minimizes the wave-quantization cost.
 
     Parameters
@@ -15,7 +12,7 @@ def select_autotune_tile(M: int, N: int, K: int, num_SMs: int, candidates):
 
     Returns
     -------
-    (best_idx, costs) : tuple[int, np.ndarray]
+    (best_idx, costs) : tuple[int, list[float]]
         `costs` has shape (len(candidates),) — see task.md for the exact
         cost formula. `best_idx` is the index of the smallest cost.
     """

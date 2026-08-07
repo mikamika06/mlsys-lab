@@ -1,0 +1,68 @@
+{
+  "id": "m-swap-space-sizing-how-much-cpu-ram-for-n-swapped-seq",
+  "title": "Swap-space sizing: CPU RAM for swapped sequences",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "preemption-recompute-vs-swap",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "swapspace/sizing.py",
+    "swapspace/allocator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Exact CPU bytes required for N swapped sequences",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "sizing_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Swap allocation trajectory under preemption bursts",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "trajectory_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "peak_bytes_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catches underallocated CPU swap bounds",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_underallocation",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

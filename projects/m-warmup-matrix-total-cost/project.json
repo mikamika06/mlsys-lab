@@ -1,0 +1,24 @@
+{
+  "id": "m-warmup-matrix-total-cost",
+  "title": "Serving concerns: warmup, batching, tail latency",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Inference serving concerns: warmup, batching, tail latency",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["serving/models.py", "serving/queue.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Warmup matrix cost", "check": "harness/m1.py",
+     "gates": [{"metric": "lat_err", "op": "==", "threshold": 1},
+               {"metric": "warmup_err", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Simulate and tune batching for p99", "check": "harness/m2.py",
+     "gates": [{"metric": "sim_p50_err", "op": "==", "threshold": 1},
+               {"metric": "sim_p99_err", "op": "==", "threshold": 1},
+               {"metric": "tune_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safeguard invariant test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_min_seq_len_bug", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -49,11 +49,11 @@ For skewed weights, the asymmetric grid can use the available levels more effect
 Implement `compare_int4_quantizers(W)`:
 
 ```python
-def compare_int4_quantizers(W: np.ndarray) -> tuple[float, float, str]:
+def compare_int4_quantizers(W: list[float]) -> tuple[float, float, str]:
     ...
 ```
 
-The input is a NumPy array of floating point weights. Compute the mean squared reconstruction error for both int4 schemes:
+The input is a list of floating point weights. Compute the mean squared reconstruction error for both int4 schemes:
 
 1. affine asymmetric min/max quantization
 2. symmetric absmax quantization
@@ -64,14 +64,13 @@ Return:
 - the symmetric reconstruction MSE as a Python `float`
 - the name of the lower-error scheme, exactly `"affine"` or `"symmetric"`
 
-Use NumPy operations for the calculations.
+Use Python operations for the calculations.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([-1.0, -0.2, 0.1, 2.5], dtype=np.float64)
+W = [-1.0, -0.2, 0.1, 2.5]
 
 affine_err, symmetric_err, best = compare_int4_quantizers(W)
 
@@ -80,7 +79,7 @@ affine_err, symmetric_err, best = compare_int4_quantizers(W)
 
 ## What the gate checks
 
-The gate builds skewed weight arrays and computes the two int4 reconstructions with an independent NumPy oracle. The returned two errors must match the oracle errors with relative error
+The gate builds skewed weight arrays and computes the two int4 reconstructions with an independent Python oracle. The returned two errors must match the oracle errors with relative error
 
 $$
 \frac{\lVert e_{\text{student}}-e_{\text{oracle}}\rVert_2}

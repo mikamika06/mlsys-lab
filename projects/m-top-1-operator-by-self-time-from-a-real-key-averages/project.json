@@ -1,0 +1,21 @@
+{
+  "id": "m-top-1-operator-by-self-time-from-a-real-key-averages",
+  "title": "Top-1 operator and matmul share from profiler key averages",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "torch-profiler-key-averages-tables",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["profops/ops.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Top-1 operator by self time", "check": "harness/m1.py",
+     "gates": [{"metric": "top1_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Matmul-family share of total self time", "check": "harness/m2.py",
+     "gates": [{"metric": "share_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: row count delta across batch sizes", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_delta", "op": "==", "threshold": 1}]}
+  ]
+}

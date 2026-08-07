@@ -1,0 +1,21 @@
+{
+  "id": "m-top-5-slowest-op-ranking-from-ort-profile-json",
+  "title": "Top-5 slowest op ranking from ONNX Runtime profile JSON",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "ONNX Runtime CPU profiling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ortprof/ranking.py", "ortprof/overhead.py", "ortprof/category.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Top-5-slowest-op ranking from JSON", "check": "harness/m1.py",
+     "gates": [{"metric": "ranking_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Profiling overhead measurement", "check": "harness/m2.py",
+     "gates": [{"metric": "overhead_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Op-category time-share classification", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_category", "op": "==", "threshold": 1}]}
+  ]
+}

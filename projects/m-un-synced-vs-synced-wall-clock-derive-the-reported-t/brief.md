@@ -1,0 +1,11 @@
+# Ticket: Unexplained Timing Discrepancies and Asynchronous Execution Artifacts in Deep Learning Profiling Workloads
+
+Engineering teams across multiple projects have reported persistent, highly confusing discrepancies when attempting to profile deep learning model training and inference workloads on hardware accelerators, particularly NVIDIA CUDA GPUs and Apple Silicon devices utilizing Metal Performance Shaders (MPS).
+
+The primary symptom observed by developers is that standard host-side wall-clock measurements around intensive model execution loops report durations that are drastically shorter than expected, often inconsistent with actual hardware performance. When benchmarks are executed, host-side timers return immediately after work is dispatched, creating an illusion of extreme throughput that collapses when downstream validation or actual memory transfer occurs. Conversely, when explicit synchronization primitives are introduced to capture accurate execution intervals, developers experience unexpected execution stalls and severe latency inflation that obscures real performance bottlenecks.
+
+Furthermore, automated trace analysis pipelines processing Chrome tracing export JSON logs are struggling to correctly interpret empty GPU execution tracks. In many cases, prolonged idle periods appear on timeline visualizations without clear attribution. Engineers cannot automatically determine whether these empty intervals stem from host-side CPU starvation, asynchronous stream dependencies, or missing explicit synchronization calls that leave computational tasks uncollected and skew automated timeline reconstruction efforts.
+
+Finally, when benchmarking workloads on Apple Silicon using Metal Performance Shaders, developers notice that measuring synchronization overhead yields wildly erratic wall-clock numbers across different runs. The lack of standard profiling instrumentation makes it difficult to isolate driver-level waiting times from actual kernel execution times on macOS.
+
+Your objective is to implement the core timing and trace analysis utilities in the `timing` package to accurately model un-synced versus synced reported-time gaps, identify missing synchronization points from event traces, and evaluate synchronization overhead correctly according to our strict engineering standards.

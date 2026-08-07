@@ -1,0 +1,21 @@
+{
+  "id": "m-sort-15-ops-into-the-autocast-policy-lists",
+  "title": "AMP autocast semantics and policy lists",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "AMP autocast semantics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ampcheck/ops.py", "ampcheck/custom_op.py", "ampcheck/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Sort 15 ops into autocast policy lists", "check": "harness/m1.py",
+     "gates": [{"metric": "ops_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Make a custom autograd.Function AMP-safe", "check": "harness/m2.py",
+     "gates": [{"metric": "custom_op_correct", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches policy violations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_policy", "op": "==", "threshold": 1}]}
+  ]
+}

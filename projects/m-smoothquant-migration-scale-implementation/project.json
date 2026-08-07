@@ -1,0 +1,73 @@
+{
+  "id": "m-smoothquant-migration-scale-implementation",
+  "title": "SmoothQuant migration scale implementation and alpha autotuning",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "IPEX LLM quantization (SmoothQuant, weight-only)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "smoothquant/scale.py",
+    "smoothquant/autotune.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Migration scale computation and linear transformation",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "scale_matches",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "transform_exact",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-layer alpha sweep for minimum quantization MSE",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "best_alpha_matches",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "quant_mse_improved",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches fixed static alpha fallbacks",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_static_alpha",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

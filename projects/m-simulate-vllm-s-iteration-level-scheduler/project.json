@@ -1,6 +1,6 @@
 {
   "id": "m-simulate-vllm-s-iteration-level-scheduler",
-  "title": "vLLM Iteration-Level Scheduler Simulator",
+  "title": "vLLM Iteration-Level Scheduler and Policy Simulation",
   "kind": "project",
   "tier": "T1",
   "area": "rw3-batching-serving",
@@ -10,16 +10,19 @@
   "edits": [
     "vllmsched/scheduler.py",
     "vllmsched/metrics.py",
-    "vllmsched/policy.py",
     "tests/test_regression.py"
   ],
   "milestones": [
     {
       "n": 1,
-      "title": "Simulate vLLM iteration-level scheduler",
+      "title": "Simulate iteration-level scheduler steps",
       "check": "harness/m1.py",
       "gates": [
-        {"metric": "scheduler_match", "op": "==", "threshold": 1.0}
+        {
+          "metric": "schedule_matched",
+          "op": "==",
+          "threshold": 1
+        }
       ]
     },
     {
@@ -27,17 +30,33 @@
       "title": "Measure throughput vs concurrent request count",
       "check": "harness/m2.py",
       "gates": [
-        {"metric": "throughput_curve_valid", "op": "==", "threshold": 1.0}
+        {
+          "metric": "throughput_matched",
+          "op": "==",
+          "threshold": 1
+        }
       ]
     },
     {
       "n": 3,
-      "title": "Safety net: test that catches priority inversion",
+      "title": "Safety net: regression test for scheduler policy invariants",
       "check": "harness/m3.py",
       "gates": [
-        {"metric": "has_tests", "op": "==", "threshold": 1.0},
-        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
-        {"metric": "catches_priority_inversion", "op": "==", "threshold": 1.0}
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_policy",
+          "op": "==",
+          "threshold": 1
+        }
       ]
     }
   ]

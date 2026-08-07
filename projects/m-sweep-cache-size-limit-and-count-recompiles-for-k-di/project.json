@@ -1,0 +1,44 @@
+{
+  "id": "m-sweep-cache-size-limit-and-count-recompiles-for-k-di",
+  "title": "Sweep cache_size_limit and count recompiles for K distinct shapes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Guards, specialization & recompilation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "compiler_diag/sweep.py",
+    "compiler_diag/guards.py",
+    "compiler_diag/storm.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Sweep cache size limits and track recompiles",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "sweeps_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Extract shape-guard expressions and parse guard logs",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "guards_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch unhandled eager fallbacks under cache exhaustion",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_ignored_fallbacks", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

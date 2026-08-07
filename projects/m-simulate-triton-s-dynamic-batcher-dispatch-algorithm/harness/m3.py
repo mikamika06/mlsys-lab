@@ -1,22 +1,25 @@
-import os
 import importlib.util
-import ref
+import os
 import sys
 
-def _run(path):
-    spec = importlib.util.spec_from_file_location("learner_regression", path)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    fns = [getattr(mod, n) for n in dir(mod) if n.startswith("test_") and callable(getattr(mod, n))]
-    if not fns:
-        return None
-    for fn in fns:
-        fn()
-    return True
-
-def _survives(path):
+def _run(path, workdir):
+    sys.path.insert(0, workdir)
     try:
-        return _run(path) is True
+        spec = importlib.util.spec_from_file_location("learner_regression", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        fns = [getattr(mod, n) for n in dir(mod) if n.startswith("test_") and callable(getattr(mod, n))]
+        if not fns:
+            return None
+        for fn in fns:
+            fn()
+        return True
+    finally:
+        sys.path.pop(0)
+
+def _survives(path, workdir):
+    try:
+        return _run(path, workdir) is True
     except Exception:
         return False
 
@@ -27,41 +30,46 @@ def check(workdir):
         out["_note"] = "tests/test_regression.py is missing"
         return out
 
+    try:
+        first = _run(path, workdir)
+    except Exception as e:
+        out["has_tests"] = 1.0
+        out["_note"] = f"the tests fail on a correct optimizer: {type(e).__name__}: {str(e)[:120]}"
+        return out
+
+    if first is None:
+        out["_note"] = "no test_* functions found"
+        return out
+
+    out["has_tests"] = 1.0
+    out["passes_on_good"] = 1.0
+
     sys.path.insert(0, workdir)
     try:
-        try:
-            first = _run(path)
-        except Exception as e:
-            out["has_tests"] = 1.0
-            out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {str(e)[:120]}"
-            return out
+        import triton_batcher.optimize as opt
+        good = opt.optimize_config
 
-        if first is None:
-            out["_note"] = "no test_* functions found"
-            return out
-
-        out["has_tests"] = 1.0
-        out["passes_on_good"] = 1.0
-
-        import triton.optimize as opt
-        good = opt.optimize_delay
-
-        def broken_optimize(arrivals, max_batch_size, preferred_batch_sizes, delays_to_try, throughput_floor, compute_fn):
-            best_delay = None
+        def broken_optimize(arr, mx, pref_cands, delay_cands, floor, comp):
+            from triton_batcher.simulate import simulate
+            from triton_batcher.metrics import measure_metrics
             best_p99 = float('inf')
-            for delay in sorted(delays_to_try):
-                batches = opt.simulate(arrivals, max_batch_size, preferred_batch_sizes, delay, compute_fn)
-                metrics = opt.calculate_metrics(arrivals, batches, compute_fn)
-                if metrics["p99_queue_delay"] < best_p99:
-                    best_p99 = metrics["p99_queue_delay"]
-                    best_delay = delay
-            return best_delay
+            best_config = None
+            for p in pref_cands:
+                for d in delay_cands:
+                    ds = simulate(arr, mx, p, d, comp)
+                    m = measure_metrics(arr, ds, comp)
+                    # BUG: Ignores the throughput floor!
+                    if m["p99_queue_delay_us"] < best_p99:
+                        best_p99 = m["p99_queue_delay_us"]
+                        best_config = {"preferred": p, "delay_us": d}
+            return best_config
 
-        opt.optimize_delay = broken_optimize
+        opt.optimize_config = broken_optimize
         try:
-            out["catches_ignored_floor"] = 0.0 if _survives(path) else 1.0
+            out["catches_ignored_floor"] = 0.0 if _survives(path, workdir) else 1.0
         finally:
-            opt.optimize_delay = good
+            opt.optimize_config = good
     finally:
         sys.path.pop(0)
+
     return out

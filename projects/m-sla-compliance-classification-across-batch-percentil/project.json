@@ -1,0 +1,38 @@
+{
+  "id": "m-sla-compliance-classification-across-batch-percentil",
+  "title": "SLA compliance classification across batch/percentile measurements",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "Batching & latency/throughput tradeoff for CPU serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["sla/profiler.py", "sla/cost.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify SLA compliance across batch latency distributions",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "profiles_matched", "op": ">=", "threshold": 5.0}]
+    },
+    {
+      "n": 2,
+      "title": "Throughput and cost efficiency tradeoff analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "efficiency_matched", "op": "==", "threshold": 1.0},
+        {"metric": "optimal_batch_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test that catches optimistic P50-only classifiers",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_tail_ignoring_bug", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

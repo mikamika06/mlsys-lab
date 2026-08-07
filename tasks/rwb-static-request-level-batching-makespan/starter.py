@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def static_batching_makespan(output_lens: np.ndarray, batch_size: int):
+def static_batching_makespan(output_lens: list[int], batch_size: int):
     """
     Simulate STATIC (request-level) batching: batches of up to `batch_size`
     requests are formed FCFS from `output_lens` (in order); a batch runs

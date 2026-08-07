@@ -1,0 +1,21 @@
+{
+  "id": "m-validate-filenames-against-the-gguf-naming-conventio",
+  "title": "GGUF naming validation, round-trip, and metadata diffing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "ecosystem-interop",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["gguf_tool/validate.py", "gguf_tool/roundtrip.py", "gguf_tool/diff.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Validate GGUF filenames", "check": "harness/m1.py",
+     "gates": [{"metric": "filenames_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Round-trip GGUF to torch and back", "check": "harness/m2.py",
+     "gates": [{"metric": "roundtrip_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching corrupt metadata diffs", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_diff", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-streamingllm-selection-sinks-window-index-set",
+  "title": "StreamingLLM, H2O, and SnapKV cache selection algorithms",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-cache-compression-eviction",
+  "size": "M",
+  "edits": ["streamkv/selection.py", "streamkv/h2o.py", "streamkv/snapkv.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "StreamingLLM sinks and sliding window index set", "check": "harness/m1.py",
+     "gates": [{"metric": "sinks_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "H2O heavy-hitter selection and SnapKV pooled scoring", "check": "harness/m2.py",
+     "gates": [{"metric": "h2o_matched", "op": "==", "threshold": 1},
+               {"metric": "snapkv_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for eviction invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_eviction", "op": "==", "threshold": 1}]}
+  ]
+}

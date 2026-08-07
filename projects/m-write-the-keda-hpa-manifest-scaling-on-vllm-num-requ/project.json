@@ -1,0 +1,22 @@
+{
+  "id": "m-write-the-keda-hpa-manifest-scaling-on-vllm-num-requ",
+  "title": "KEDA ScaledObject manifest for vLLM num_requests_waiting",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "routing-autoscaling-and-multi-replica",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["keda/manifest.py", "keda/parser.py", "keda/validator.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Parse vLLM metrics and construct query", "check": "harness/m1.py",
+     "gates": [{"metric": "queries_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Generate valid KEDA ScaledObject manifest", "check": "harness/m2.py",
+     "gates": [{"metric": "manifest_match", "op": "==", "threshold": 1},
+               {"metric": "metadata_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches broken manifests", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_manifest", "op": "==", "threshold": 1}]}
+  ]
+}

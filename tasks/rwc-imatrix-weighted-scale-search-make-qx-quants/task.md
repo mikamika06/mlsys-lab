@@ -36,7 +36,7 @@ error on an important one.
 Implement `make_qx_quants`:
 
 ```python
-def make_qx_quants(x: np.ndarray, w: np.ndarray, nmax: int) -> tuple[int, np.ndarray]:
+def make_qx_quants(x: list[float], w: list[float], nmax: int) -> tuple[int, list[int]]:
     ...
 ```
 
@@ -56,10 +56,9 @@ that candidate's integer code array (shape `(n,)`).
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1.0, -2.0, 4.0, 0.5])
-w = np.array([0.1, 0.1, 10.0, 0.1])  # element 2 matters far more than the rest
+x = [1.0, -2.0, 4.0, 0.5]
+w = [0.1, 0.1, 10.0, 0.1]  # element 2 matters far more than the rest
 make_qx_quants(x, w, nmax=7)
 # d0 = max(|x|)/7 = 4/7. Plain round-to-nearest (k=0) may quantize the
 # heavily-weighted element 2 slightly off; the search should find a k
@@ -69,12 +68,12 @@ make_qx_quants(x, w, nmax=7)
 
 ## What the gate checks
 
-The grader builds several `(x, w, nmax)` blocks from a seeded NumPy
+The grader builds several `(x, w, nmax)` blocks from a seeded Python
 generator — uniform weights (search should mostly agree with plain
 rounding), sharply skewed weights concentrating importance on one or two
 elements, an all-zero block, and different `nmax` values (matching q4-
 and q8-style code ranges) — and computes the reference `(best_idx,
-best_codes)` independently in NumPy using the exact 31-candidate grid and
+best_codes)` independently in Python using the exact 31-candidate grid and
 error formula above, never calling your function or hardcoding an
 expected value.
 

@@ -1,0 +1,22 @@
+{
+  "id": "m-thread-sweep-argmin",
+  "title": "Thread sweep argmin and IOBinding performance optimization",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT runtime performance knobs: threads, arena, IOBinding, CUDA graph",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ortopt/sweep.py", "ortopt/iobind.py", "ortopt/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Thread sweep argmin selection", "check": "harness/m1.py",
+     "gates": [{"metric": "optimal_thread_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "run to run_with_iobinding conversion and copy share", "check": "harness/m2.py",
+     "gates": [{"metric": "iobinding_outputs_match", "op": "==", "threshold": 1},
+               {"metric": "copy_share_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches broken argmin", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_argmin", "op": "==", "threshold": 1}]}
+  ]
+}

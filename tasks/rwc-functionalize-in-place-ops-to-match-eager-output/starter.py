@@ -1,10 +1,2 @@
-import numpy as np
-
-def functional_add(a, b):
-    raise NotImplementedError('your code here')
-
-def functional_relu(x):
-    raise NotImplementedError('your code here')
-
-def functional_copy(a):
+def functional_add(a: list[list[float]], b: list[list[float]]) -> list[list[float]]:
     raise NotImplementedError('your code here')

@@ -1,0 +1,64 @@
+{
+  "id": "m-trace-vs-export-which-branch-got-baked",
+  "title": "Trace vs export: which branch got baked",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Graph capture: torch.export vs torch.jit.trace",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "gcapture/branch.py",
+    "gcapture/dynshape.py",
+    "gcapture/histogram.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Detect baked branches between trace and export",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "baked_branches_detected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Deduce dynamic shape specification from violation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "spec_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch branch loss and ATen op histogram mismatch",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_branches",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

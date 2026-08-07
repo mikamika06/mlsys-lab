@@ -1,0 +1,44 @@
+{
+  "id": "m-zero-2-memory-formula-table",
+  "title": "ZeRO Stage 2 Memory Formula Table and Reduce-Scatter Toy",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "ZeRO Stage 2 — gradient partitioning + communication volume",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "zeromem/formula.py",
+    "zeromem/reducescatter.py",
+    "zeromem/buckets.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "ZeRO-2 Memory Formula Table",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "formulas_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Toy ZeRO-2 via Real Reduce-Scatter",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "reduce_scatter_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Bucket-Count Formula from allgather_bucket_size",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_wrong_bucket_formula", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

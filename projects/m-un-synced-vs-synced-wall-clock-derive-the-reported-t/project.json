@@ -1,0 +1,21 @@
+{
+  "id": "m-un-synced-vs-synced-wall-clock-derive-the-reported-t",
+  "title": "Un-synced vs synced wall-clock timing and synchronization",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "cuda-sync-and-timing-correctness",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["timing/derive.py", "timing/trace.py", "timing/mps.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Derive the un-synced vs synced reported-time gap", "check": "harness/m1.py",
+     "gates": [{"metric": "rel_err", "op": "<", "threshold": 0.01}]},
+    {"n": 2, "title": "Identify missing synchronization from trace", "check": "harness/m2.py",
+     "gates": [{"metric": "accuracy", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: regression test for synchronization logic", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_fault", "op": "==", "threshold": 1.0}]}
+  ]
+}

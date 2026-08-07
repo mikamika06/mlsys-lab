@@ -1,42 +1,43 @@
 {
   "id": "m-sink-ablation-drop-token-0-and-measure-blowup",
-  "title": "Sink ablation, token 0 drop, and mask reconstruction",
+  "title": "Sink Ablation: Drop Token 0",
   "kind": "project",
   "tier": "T1",
   "area": "rw2-kv-cache-serving",
   "track": "kv-cache-compression-eviction",
   "part": 1,
-  "difficulty": 3,
+  "difficulty": 2,
   "edits": [
-    "kvcache/ablation.py",
-    "kvcache/mask.py",
+    "sink_ablate/mask.py",
+    "sink_ablate/ablation.py",
     "tests/test_regression.py"
   ],
   "milestones": [
     {
       "n": 1,
-      "title": "Sink ablation and relative error blowup measurement",
+      "title": "Reconstruct kept-token mask",
       "check": "harness/m1.py",
       "gates": [
-        {"metric": "ablation_matched", "op": ">=", "threshold": 3}
+        {"metric": "mask_match", "op": "==", "threshold": 1}
       ]
     },
     {
       "n": 2,
-      "title": "Reconstruct kept-token mask from a compressed cache dump",
+      "title": "Ablate token 0 and measure blowup",
       "check": "harness/m2.py",
       "gates": [
-        {"metric": "masks_matched", "op": ">=", "threshold": 3}
+        {"metric": "ablation_correct", "op": "==", "threshold": 1},
+        {"metric": "blowup_correct", "op": "==", "threshold": 1}
       ]
     },
     {
       "n": 3,
-      "title": "Safety net: regression test for sink ablation and mask validity",
+      "title": "Safety net: catch in-place mutation",
       "check": "harness/m3.py",
       "gates": [
         {"metric": "has_tests", "op": "==", "threshold": 1},
         {"metric": "passes_on_good", "op": "==", "threshold": 1},
-        {"metric": "catches_bad_mask", "op": "==", "threshold": 1}
+        {"metric": "catches_inplace", "op": "==", "threshold": 1}
       ]
     }
   ]

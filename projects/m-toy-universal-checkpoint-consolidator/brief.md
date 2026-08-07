@@ -1,0 +1,5 @@
+We are seeing model loading failures and missing weight alerts when attempting to consume our newly consolidated universal checkpoints.
+
+Our distributed training runs generate Megatron-style tensor-parallel (TP) checkpoints, where individual weights are sharded across multiple ranks. We have an initial script designed to merge these shards into a single HuggingFace-compatible model format, complete with a `pytorch_model.bin.index.json` map. However, downstream evaluation pipelines are throwing shape mismatch errors, indicating that some weights are malformed and not aligning with the expected architecture dimensions. Furthermore, the HuggingFace index file occasionally points to chunk `.bin` files that simply do not exist in the final artifact directory, causing fatal file-not-found crashes during the final load phase.
+
+We need to implement a rigid verification step for the HF index to ensure all referenced files are physically present, and properly implement the TP merging logic so that row-parallel and column-parallel layers are concatenated along the correct axis.

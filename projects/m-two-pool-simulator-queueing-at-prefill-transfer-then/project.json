@@ -1,0 +1,40 @@
+{
+  "id": "m-two-pool-simulator-queueing-at-prefill-transfer-then",
+  "title": "Two-pool prefill-decode simulator and NIXL fault analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "disaggregated-prefill-decode-and-kv-connectors",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvsim/simulator.py",
+    "kvsim/validator.py",
+    "kvsim/faults.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Two-pool queueing, transfer, and decode simulation",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "simulations_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "KV transfer config validation and rank consistency",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "configs_validated", "op": ">=", "threshold": 6}]
+    },
+    {
+      "n": 3,
+      "title": "NIXL metadata server fault analysis and safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_fault_scope", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

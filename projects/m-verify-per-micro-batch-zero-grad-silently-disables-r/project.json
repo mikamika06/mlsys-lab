@@ -1,0 +1,73 @@
+{
+  "id": "m-verify-per-micro-batch-zero-grad-silently-disables-r",
+  "title": "Verify per-micro-batch zero_grad silently disables real gradient accumulation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "gradient-accumulation",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "gradaccum/accumulator.py",
+    "gradaccum/tracer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Correct micro-batch gradient accumulation",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "accum_steps_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "grads_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Detect premature zero_grad and quantify effective batch loss",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bug_detected",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "effective_batch_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches per-micro-batch zeroing",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_premature_zeroing",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

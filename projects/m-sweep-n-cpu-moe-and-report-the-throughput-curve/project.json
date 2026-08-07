@@ -1,0 +1,41 @@
+{
+  "id": "m-sweep-n-cpu-moe-and-report-the-throughput-curve",
+  "title": "Throughput curve for MoE expert offloading",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-gguf-llamacpp",
+  "track": "moe-offload-tensor-overrides",
+  "size": "M",
+  "difficulty": 3,
+  "edits": ["moe_sim/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Activated fraction and VRAM cost",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "fraction_match", "op": "==", "threshold": 1},
+        {"metric": "vram_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Routing latency and throughput curve",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "latency_match", "op": "==", "threshold": 1},
+        {"metric": "throughput_ratio", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: verify probabilistic routing",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_latency", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

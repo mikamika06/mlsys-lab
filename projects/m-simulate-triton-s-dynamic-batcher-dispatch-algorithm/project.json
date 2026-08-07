@@ -8,31 +8,31 @@
   "part": 1,
   "difficulty": 3,
   "edits": [
-    "triton/simulate.py",
-    "triton/metrics.py",
-    "triton/optimize.py",
+    "triton_batcher/simulate.py",
+    "triton_batcher/metrics.py",
+    "triton_batcher/optimize.py",
     "tests/test_regression.py"
   ],
   "milestones": [
     {
       "n": 1,
-      "title": "Simulate the dispatch algorithm",
+      "title": "Simulate Triton's dispatch algorithm",
       "check": "harness/m1.py",
       "gates": [
-        {"metric": "matches_reference", "op": "==", "threshold": 2}
+        {"metric": "matches", "op": "==", "threshold": 2}
       ]
     },
     {
       "n": 2,
-      "title": "Calculate throughput and p99 queue delay",
+      "title": "Measure throughput and P99 queue delay",
       "check": "harness/m2.py",
       "gates": [
-        {"metric": "matches_reference", "op": "==", "threshold": 2}
+        {"metric": "matches", "op": "==", "threshold": 2}
       ]
     },
     {
       "n": 3,
-      "title": "Optimize delay floor",
+      "title": "Optimize latency at a throughput floor",
       "check": "harness/m3.py",
       "gates": [
         {"metric": "has_tests", "op": "==", "threshold": 1},

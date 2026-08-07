@@ -25,7 +25,7 @@ $$
 Implement `static_batching_makespan`:
 
 ```python
-def static_batching_makespan(output_lens: np.ndarray, batch_size: int):
+def static_batching_makespan(output_lens: list[int], batch_size: int):
     ...
 ```
 
@@ -45,9 +45,8 @@ in order (the last batch may be smaller). Return
 ## Example
 
 ```python
-import numpy as np
 
-output_lens = np.array([3, 10, 4, 2, 7])
+output_lens = [3, 10, 4, 2, 7]
 makespan, counts = static_batching_makespan(output_lens, batch_size=2)
 # batch 0: [3, 10]  -> 10 iterations (the 3-token request idles for 7 of them)
 # batch 1: [4, 2]   ->  4 iterations

@@ -1,0 +1,38 @@
+{
+  "id": "m-top-3-stall-reasons-by-average-cycles-per-instruction",
+  "title": "Top-3 stall reasons by average cycles-per-instruction",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "warp-stall-reasons-and-scheduler-stats",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["warpanalyze/stalls.py", "warpanalyze/classify.py", "warpanalyze/scheduler.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Top stall reasons by average cycles-per-instruction",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "top_stalls_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Classify kernels and compute issue slot utilization",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "classifications_matched", "op": "==", "threshold": 1.0},
+        {"metric": "scheduler_stats_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches invalid stall sorting",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_count_sorted_stalls", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

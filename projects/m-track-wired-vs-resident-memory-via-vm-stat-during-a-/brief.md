@@ -1,0 +1,7 @@
+# Incident Report: Memory Overhead and Copy Inflation in Edge LLM Deployment
+
+During high-throughput local generation runs on Apple Silicon unified memory architectures, operators have observed sudden memory spikes and unexpected latency degradation. Profiling sessions indicate that model weight loading and prompt ingestion are triggering redundant buffer allocations, causing resident memory pages to bloat far beyond the theoretical footprint of the active tensors.
+
+Specifically, telemetry gathered via system diagnostic tools such as `vm_stat` shows erratic fluctuations in wired and active memory pages during inference loops, suggesting that data buffers are being duplicated between host system memory and accelerator unified memory pools rather than leveraging zero-copy paradigms. Furthermore, naive tensor conversions using explicit device transfer methods (`.to(...)`) introduce severe performance penalties compared to direct memory-mapped or shared-buffer initialization strategies.
+
+Engineering needs a robust profiling and validation module (`memtrack`) that can deterministically parse memory statistics from diagnostic output, rigorously verify zero-copy roundtrips between standard numerical arrays and MLX-backed tensors, and accurately quantify the overhead differences between explicit copy operations and zero-copy bindings. This module will form the foundation of our edge memory governance pipeline, ensuring stable resource utilization under tight hardware constraints.

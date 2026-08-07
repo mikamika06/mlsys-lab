@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def int4_groupwise_quant(W: np.ndarray, group_size: int = 32):
+def int4_groupwise_quant(W: list[list[float]], group_size: int=32) -> tuple[list[list[int]], list[list[float]]]:
     """
     W: (rows, cols) weight matrix; `cols` must be a multiple of
         `group_size`.

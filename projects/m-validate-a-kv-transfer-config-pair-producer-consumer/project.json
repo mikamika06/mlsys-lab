@@ -1,0 +1,74 @@
+{
+  "id": "m-validate-a-kv-transfer-config-pair-producer-consumer",
+  "title": "Validate KV Transfer Pair and Triage Handshakes",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "disaggregated-prefill-and-kv-transfer",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvtransfer/config.py",
+    "kvtransfer/triage.py",
+    "kvtransfer/model.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Validate KV transfer config pairs",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "valid_configs_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "invalid_configs_caught",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Triage stuck handshakes and calculate layer-wise pipeline speedup",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "triage_accuracy",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "model_accuracy",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: test regression catching invalid transport matching",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_transport",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

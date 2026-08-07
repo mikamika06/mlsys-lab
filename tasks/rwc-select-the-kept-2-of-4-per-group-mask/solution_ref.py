@@ -1,17 +1,12 @@
-import numpy as np
-
-
-def select_top2_mask(weights: np.ndarray) -> np.ndarray:
+def select_top2_mask(weights: list[float]) -> list[bool]:
     """Select top 2 elements by absolute value in each group of 4."""
-    mask = np.zeros_like(weights, dtype=bool)
-    flat_weights = weights.reshape(-1)
-    flat_mask = mask.reshape(-1)
-    n = len(flat_weights)
+    mask = [False] * len(weights)
+    n = len(weights)
 
     for i in range(0, n, 4):
         vals = [0.0, 0.0, 0.0, 0.0]
         for j in range(4):
-            w = flat_weights[i + j]
+            w = weights[i + j]
             vals[j] = -w if w < 0 else w
 
         idxs = [0, 1, 2, 3]
@@ -24,7 +19,7 @@ def select_top2_mask(weights: np.ndarray) -> np.ndarray:
                 k -= 1
             idxs[k + 1] = key_idx
 
-        flat_mask[i + idxs[0]] = True
-        flat_mask[i + idxs[1]] = True
+        mask[i + idxs[0]] = True
+        mask[i + idxs[1]] = True
 
     return mask

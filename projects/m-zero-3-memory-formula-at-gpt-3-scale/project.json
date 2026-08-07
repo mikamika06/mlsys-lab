@@ -1,0 +1,45 @@
+{
+  "id": "m-zero-3-memory-formula-at-gpt-3-scale",
+  "title": "ZeRO Stage 3 Memory Formula and Communication Schedule",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "ZeRO Stage 3 — full parameter sharding + all-gather scheduling",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "zerothree/memory.py",
+    "zerothree/schedule.py",
+    "zerothree/volume.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "ZeRO-3 Memory Formula at GPT-3 Scale",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "memory_matches", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Real Just-In-Time All-Gather and Free Cycle",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "schedule_valid", "op": "==", "threshold": 1},
+        {"metric": "peak_memory_bounded", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "3Psi Communication Volume Verification",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_volume", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

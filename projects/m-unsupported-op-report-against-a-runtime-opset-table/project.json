@@ -1,0 +1,44 @@
+{
+  "id": "m-unsupported-op-report-against-a-runtime-opset-table",
+  "title": "Opset validation and semantics migration",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Opset versions, ir_version and operator semantics drift",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "opset/report.py",
+    "opset/drift.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Unsupported op report generation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "reports_matched", "op": "==", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Semantic migration for Squeeze and Resize",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "migrate_matched", "op": "==", "threshold": 3},
+        {"metric": "resize_matched", "op": "==", "threshold": 4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch topological order violations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_topo", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

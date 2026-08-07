@@ -1,0 +1,68 @@
+{
+  "id": "m-write-the-ot-regex-equivalent-to-cpu-moe",
+  "title": "Write the -ot regex equivalent to --cpu-moe",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-gguf-llamacpp",
+  "track": "moe-offload-tensor-overrides",
+  "difficulty": 3,
+  "edits": [
+    "ot/parser.py",
+    "ot/translator.py",
+    "ot/validator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse and translate legacy cpu-moe options",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "translations_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Validate safety and specificity of generated regex",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "specificity_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "coverage_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a regression test that catches overly broad regex",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broad_regex",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

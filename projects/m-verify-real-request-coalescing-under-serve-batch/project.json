@@ -1,0 +1,21 @@
+{
+  "id": "m-verify-real-request-coalescing-under-serve-batch",
+  "title": "Verify Real Request Coalescing Under @serve.batch",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Ray Serve @serve.batch Decorator",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["batching/coalesce.py", "batching/sweep.py", "batching/exceptions.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Verify real request coalescing under serve batch", "check": "harness/m1.py",
+     "gates": [{"metric": "coalesce_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Sweep parameters and record throughput and latency", "check": "harness/m2.py",
+     "gates": [{"metric": "sweep_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for sync function exceptions", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_behavior", "op": "==", "threshold": 1}]}
+  ]
+}

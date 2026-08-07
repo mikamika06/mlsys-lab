@@ -1,0 +1,24 @@
+{
+  "id": "m-sliding-window-alibi-via-mask-mod-score-mod",
+  "title": "Sliding window and ALiBi via FlexAttention mods",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "FlexAttention: score_mod, mask_mod, BlockMask",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flex/mods.py", "flex/block_mask.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Implement numpy score_mod and mask_mod for sliding ALiBi", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<", "threshold": 1e-4},
+               {"metric": "mask_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compute BlockMask indices and sparsity ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "sparsity_err", "op": "<", "threshold": 1e-4},
+               {"metric": "nums_match", "op": "==", "threshold": 1},
+               {"metric": "idxs_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: catch causality and window violations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_causality", "op": "==", "threshold": 1}]}
+  ]
+}

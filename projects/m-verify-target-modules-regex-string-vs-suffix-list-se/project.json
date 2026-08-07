@@ -1,0 +1,68 @@
+{
+  "id": "m-verify-target-modules-regex-string-vs-suffix-list-se",
+  "title": "Verify target_modules regex-string vs suffix-list semantics",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "lora-hyperparameters",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "loratarget/matcher.py",
+    "loratarget/stats.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Match submodules via regex and suffix lists",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "matched_configs",
+          "op": ">=",
+          "threshold": 4
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compare targeted parameter counts and equivalent coverage",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "param_counts_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "equivalence_checks_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against mismatched prefix targeting",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_prefix_mismatch",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

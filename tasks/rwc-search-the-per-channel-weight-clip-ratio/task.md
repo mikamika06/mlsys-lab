@@ -44,8 +44,8 @@ Implement `search_clip_ratio(W, ratios, bits)`.
 
 The function receives:
 
-- `W`: a 2-D NumPy array of floating point weights with shape `(channels, values_per_channel)`.
-- `ratios`: a 1-D NumPy array of candidate clipping ratios.
+- `W`: a list of lists of floats of floating point weights with shape `(channels, values_per_channel)`.
+- `ratios`: a list of floats of candidate clipping ratios.
 - `bits`: the number of quantization bits.
 
 Return:
@@ -56,19 +56,18 @@ Return:
 
 where `best_index` is the integer index of the ratio with the lowest MSE and `mse_curve` contains the MSE value for every ratio in the same order as `ratios`.
 
-Compute the quantization search using NumPy operations. The returned curve must contain `float64` values.
+Compute the quantization search using Python operations. The returned curve must contain `float64` values.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([
+W = [
     [1.0, -2.0, 0.5],
     [3.0, -1.0, 2.0],
-])
+]
 
-ratios = np.array([0.5, 0.75, 1.0])
+ratios = [0.5, 0.75, 1.0]
 
 index, curve = search_clip_ratio(W, ratios, 4)
 
@@ -78,7 +77,7 @@ index, curve = search_clip_ratio(W, ratios, 4)
 
 ## What the gate checks
 
-The gate computes an independent NumPy oracle that performs clipping, symmetric quantization, reconstruction, and MSE evaluation for every candidate ratio.
+The gate computes an independent Python oracle that performs clipping, symmetric quantization, reconstruction, and MSE evaluation for every candidate ratio.
 
 `argmin_index` checks that the selected index matches the oracle.
 

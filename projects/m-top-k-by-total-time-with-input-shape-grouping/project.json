@@ -1,0 +1,62 @@
+{
+  "id": "m-top-k-by-total-time-with-input-shape-grouping",
+  "title": "Top-k by total time with input-shape grouping",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-pytorch-applied",
+  "track": "Reading traces: key_averages and the Chrome trace JSON",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "analyzer/profiler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Aggregate operator durations by shape",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "match",
+          "op": "==",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Find top-k operators by total time",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "match",
+          "op": "==",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test against shape dropping",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_merged_shapes",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

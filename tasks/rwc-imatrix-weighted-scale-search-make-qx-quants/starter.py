@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def make_qx_quants(x, w, nmax):
+def make_qx_quants(x: list[float], w: list[float], nmax: int) -> tuple[int, list[int]]:
     """Importance-weighted candidate-scale search (ggml-style make_qx_quants).
 
     x: (n,) float64 block. w: (n,) float64 positive importance weights.

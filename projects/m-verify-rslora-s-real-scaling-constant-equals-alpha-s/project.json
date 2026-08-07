@@ -1,0 +1,39 @@
+{
+  "id": "m-verify-rslora-s-real-scaling-constant-equals-alpha-s",
+  "title": "Verify rsLoRA scaling constant and adapter comparisons",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "advanced-adapters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "adapters/verify.py",
+    "adapters/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify rsLoRA real scaling constant",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "scaling_verified", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Compare output magnitudes and parameter totals",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "outputs_compared", "op": "==", "threshold": 1}, {"metric": "params_compared", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches invalid scaling constants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_scaling", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "m-version-compatibility-resolver-for-the-vllm-stack",
+  "title": "vLLM stack version compatibility resolver and migration toolkit",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "Install, backends, and version pinning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "vllm_compat/resolver.py",
+    "vllm_compat/bnb.py",
+    "vllm_compat/transformers_rewriter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Version compatibility resolver for the vllm stack",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "versions_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Detect active bitsandbytes backend and feature set",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "backends_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 3,
+      "title": "Rewrite transformers v4 snippets for v5 and verify via regression tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_rewrite", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

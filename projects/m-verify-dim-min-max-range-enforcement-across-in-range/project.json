@@ -1,0 +1,44 @@
+{
+  "id": "m-verify-dim-min-max-range-enforcement-across-in-range",
+  "title": "Strict range enforcement for dynamic shapes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Dynamic shapes & export constraints",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["shapes/verifier.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Range enforcement and targeted error messages",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "in_range_match", "op": "==", "threshold": 1.0},
+        {"metric": "out_range_match", "op": "==", "threshold": 1.0},
+        {"metric": "fix_msg_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Resolve module signatures over ambiguous observations",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "auto_static_match", "op": "==", "threshold": 1.0},
+        {"metric": "auto_varying_match", "op": "==", "threshold": 1.0},
+        {"metric": "dynamic_match", "op": "==", "threshold": 1.0},
+        {"metric": "explicit_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for strict AUTO enforcement",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_auto_as_dynamic", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

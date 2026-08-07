@@ -1,0 +1,41 @@
+{
+  "id": "m-three-tier-cache-simulator-with-prefetch-latency",
+  "title": "Three-tier cache simulator with prefetch latency",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "hierarchical-cache-and-admission-policy",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["cachesim/simulator.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Basic hierarchical simulation with prefetch latency",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "latency_rel_err", "op": "<", "threshold": 0.01},
+        {"metric": "evictions_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Admission policies and write strategies",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "advanced_latency_rel_err", "op": "<", "threshold": 0.01},
+        {"metric": "advanced_penalty_rel_err", "op": "<", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: Catching dirty eviction accounting bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_dirty_accounting_bug", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

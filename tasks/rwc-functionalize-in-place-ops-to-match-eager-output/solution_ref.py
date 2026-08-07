@@ -1,26 +1,11 @@
-import numpy as np
-
-def functional_add(a, b):
+def functional_add(a: list[list[float]], b: list[list[float]]) -> list[list[float]]:
     """Return a new array equal to a + b."""
-    out = np.empty_like(a)
-    for idx in np.ndindex(a.shape):
-        out[idx] = a[idx] + b[idx]
-    return out
+    return [[a[i][j] + b[i][j] for j in range(len(a[i]))] for i in range(len(a))]
 
-def functional_relu(x):
+def functional_relu(x: list[list[float]]) -> list[list[float]]:
     """Return a new array with ReLU applied elementwise."""
-    out = np.empty_like(x)
-    for idx in np.ndindex(x.shape):
-        val = x[idx]
-        if val > 0:
-            out[idx] = val
-        else:
-            out[idx] = 0
-    return out
+    return [[x[i][j] if x[i][j] > 0 else 0.0 for j in range(len(x[i]))] for i in range(len(x))]
 
-def functional_copy(a):
+def functional_copy(a: list[list[float]]) -> list[list[float]]:
     """Return a copy of the input array."""
-    out = np.empty_like(a)
-    for idx in np.ndindex(a.shape):
-        out[idx] = a[idx]
-    return out
+    return [[a[i][j] for j in range(len(a[i]))] for i in range(len(a))]

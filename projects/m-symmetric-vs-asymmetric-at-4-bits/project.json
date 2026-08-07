@@ -1,0 +1,21 @@
+{
+  "id": "m-symmetric-vs-asymmetric-at-4-bits",
+  "title": "Symmetric vs asymmetric 4-bit quantization and dynamic overrides",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "GPTQModel API and quantization knobs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quant/config.py", "quant/engine.py", "quant/dynamic.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Symmetric and asymmetric 4-bit quantization behavior", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Group size allocation under fixed bit-per-parameter budgets", "check": "harness/m2.py",
+     "gates": [{"metric": "groups_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: regression test for dynamic regex overrides", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_regex", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "m-top-k-then-softmax-vs-softmax-then-top-k-gating-dive",
+  "title": "Top-k Gating Order Divergence and MoE Dispatch",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "moe-routing-fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "moegating/gating.py",
+    "moegating/dispatch.py",
+    "moegating/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Top-k gating sequence divergence",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "max_abs_err", "op": "<=", "threshold": 1e-5},
+        {"metric": "gating_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Exact Mixtral dispatch tensor and entropy analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "max_abs_err", "op": "<=", "threshold": 1e-5},
+        {"metric": "dispatch_matches", "op": "==", "threshold": 1},
+        {"metric": "entropy_matches", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches routing bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_dispatch", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

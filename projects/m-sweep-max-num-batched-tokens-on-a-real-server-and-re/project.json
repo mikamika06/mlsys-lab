@@ -1,0 +1,21 @@
+{
+  "id": "m-sweep-max-num-batched-tokens-on-a-real-server-and-re",
+  "title": "Sweep max-num-batched-tokens for TTFT-ITL Pareto front",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "chunked-prefill-and-token-budget",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["tokensweep/sweep.py", "tokensweep/pareto.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Sweep token budgets and simulate serving performance", "check": "harness/m1.py",
+     "gates": [{"metric": "sweep_matched", "op": ">=", "threshold": 1}]},
+    {"n": 2, "title": "Extract the Pareto front of TTFT versus ITL", "check": "harness/m2.py",
+     "gates": [{"metric": "pareto_matched", "op": ">=", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching incorrect Pareto fronts", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_pareto", "op": "==", "threshold": 1}]}
+  ]
+}

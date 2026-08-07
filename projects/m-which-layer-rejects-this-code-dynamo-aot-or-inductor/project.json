@@ -1,0 +1,45 @@
+{
+  "id": "m-which-layer-rejects-this-code-dynamo-aot-or-inductor",
+  "title": "Diagnosing PyTorch compile rejections across Dynamo, AOTAutograd, and Inductor",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "The torch.compile stack: Dynamo -> AOTAutograd -> Inductor",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "compilerdiag/diagnose.py",
+    "compilerdiag/repro.py",
+    "compilerdiag/decompositions.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Identify which compilation layer rejects the code",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "layers_identified", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Minimal repro extraction and AOT joint graph decomposition count",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "repro_extracted", "op": "==", "threshold": 1},
+        {"metric": "decomposition_count_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching incorrect layer attribution",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_attribution", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

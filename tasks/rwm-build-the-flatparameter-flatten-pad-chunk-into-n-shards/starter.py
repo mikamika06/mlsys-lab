@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def flatten_pad_shard(params: list[np.ndarray], world_size: int) -> list[np.ndarray]:
+def flatten_pad_shard(params, world_size):
     """FSDP-style FlatParameter: flatten, zero-pad, chunk into N shards.
 
     params: list of arrays of arbitrary shape (a module's parameters, in

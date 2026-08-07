@@ -1,0 +1,47 @@
+{
+  "id": "m-verify-vmap-output-matches-a-manual-per-example-pyth",
+  "title": "Verify vmap batching and SPMD all-reduce against reference",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "JAX vmap / pmap / shard_map batching & SPMD",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "batchspmd/vmap.py",
+    "batchspmd/benchmark.py",
+    "batchspmd/spmd.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify vmap output against manual per-example loop",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "max_abs_err", "op": "<=", "threshold": 1e-5},
+        {"metric": "correct_match_count", "op": "==", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Benchmark vmap speedup across batch sizes",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "speedup_measured", "op": "==", "threshold": 1},
+        {"metric": "ratio_accuracy", "op": "==", "threshold": 1},
+        {"metric": "num_batches_measured", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "SPMD all-reduce with simulated pmap and psum",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_psum", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

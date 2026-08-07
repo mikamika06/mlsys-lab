@@ -1,0 +1,21 @@
+{
+  "id": "m-workspace-sweep",
+  "title": "Workspace sweep",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Memory, workspace and OOM in build and runtime",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["sweep/engine.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Estimate engine device memory", "check": "harness/m1.py",
+     "gates": [{"metric": "matches", "op": "==", "threshold": 100}]},
+    {"n": 2, "title": "Workspace sweep", "check": "harness/m2.py",
+     "gates": [{"metric": "matches", "op": "==", "threshold": 20}]},
+    {"n": 3, "title": "Safety net: OOM only at max profile shape", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_opt_s_violation", "op": "==", "threshold": 1}]}
+  ]
+}

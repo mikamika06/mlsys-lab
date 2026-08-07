@@ -1,0 +1,40 @@
+{
+  "id": "m-structurally-diff-one-request-s-response-across-both",
+  "title": "Structurally diff one request's response across both servers",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "openai-compatible-surface-and-portability",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["shimdiff/diff.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Structurally diff native and shim streaming responses",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "diffs_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Recover per-phase timings and detect ignored parameters",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "timings_matched", "op": "==", "threshold": 1.0},
+        {"metric": "ignored_param_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for response diffing and ignored parameters",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_detector", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

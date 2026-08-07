@@ -1,0 +1,7 @@
+An internal model training job is hitting a roadblock inside the PyTorch 2 compile stack. When we attempt to run torch.compile on our customized architecture that blends dynamic control flow, custom autograd functions, and specialized tensor layouts, the compilation fails mid-stream with an obscure traceback.
+
+The issue starts right after we deploy the model. At first, tracing begins normally, but soon an internal component throws an exception or rejects the code pattern entirely. Because the stack consists of three major sequential layers—TorchDynamo tracing Python bytecode into FX graphs, AOTAutograd partitioning and creating joint forward-backward graphs with decomposition passes, and TorchInductor lowering those graphs into Triton kernels—it is currently unclear precisely which layer is responsible for rejecting our code.
+
+Furthermore, once a failure happens, manually isolating the offending snippet from a massive model spanning hundreds of layers is extremely tedious. We need a reliable procedure to perform minimal repro extraction from a failing compile. Additionally, we need to inspect the exact decomposition count in the AOT joint graph to verify whether excessive or missing core decompositions are triggering the rejection upstream or downstream in the pipeline.
+
+Your task is to build a diagnostic and analytical toolkit that identifies the exact compilation layer rejecting the code, extracts a minimal standalone reproduction script, and computes/checks the AOT joint graph decomposition count against known valid thresholds.

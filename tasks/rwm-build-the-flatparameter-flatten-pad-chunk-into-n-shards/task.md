@@ -24,7 +24,7 @@ $$
 Implement `flatten_pad_shard`:
 
 ```python
-def flatten_pad_shard(params: list[np.ndarray], world_size: int) -> list[np.ndarray]:
+def flatten_pad_shard(params, world_size):
     ...
 ```
 
@@ -45,9 +45,8 @@ Return a list of `world_size` 1-D `float64` arrays, all the same length.
 ## Example
 
 ```python
-import numpy as np
 
-params = [np.array([1.0, 2.0, 3.0]), np.array([[4.0, 5.0]])]
+params = [[1.0, 2.0, 3.0], [[4.0, 5.0]]]
 # flatten+concat: [1, 2, 3, 4, 5]  (T = 5)
 flatten_pad_shard(params, world_size=2)
 # pad = (2 - 5%2) % 2 = 1 -> padded = [1, 2, 3, 4, 5, 0]  (length 6)
@@ -61,7 +60,7 @@ The grader builds several seeded cases — module parameter lists of mixed
 shapes against different `world_size` values, including one case where
 the total element count already divides evenly (zero padding expected)
 and one single-parameter, `world_size=1` case — and computes the oracle
-flatten/pad/shard independently in NumPy for each, never calling your
+flatten/pad/shard independently in Python for each, never calling your
 function.
 
 `size_ok` requires your output to be exactly `world_size` arrays, each of

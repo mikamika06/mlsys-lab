@@ -1,0 +1,67 @@
+{
+  "id": "m-verify-rope-s-relative-position-dot-product-invarian",
+  "title": "Verify RoPE relative position invariance and position interpolation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "rope-fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "rope/core.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify RoPE relative position dot-product invariance",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Position Interpolation and perplexity measurement",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-5
+        },
+        {
+          "metric": "unscaled_ppl_ratio",
+          "op": ">=",
+          "threshold": 5.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard test for position interpolation scaling",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unscaled_rope",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

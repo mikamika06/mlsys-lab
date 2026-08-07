@@ -1,0 +1,22 @@
+{
+  "id": "m-timing-harness-with-warmup-and-percentiles",
+  "title": "Timing harness with warmup and percentiles",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Benchmarking methodology: latency, throughput, percentiles, variance",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["bench/harness.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Timing harness with warmup and percentiles", "check": "harness/m1.py",
+     "gates": [{"metric": "works", "op": "==", "threshold": 1},
+               {"metric": "rel_err", "op": "<", "threshold": 0.001}]},
+    {"n": 2, "title": "Runs needed for a stable estimate", "check": "harness/m2.py",
+     "gates": [{"metric": "iters_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catches missing warmup", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_no_warmup", "op": "==", "threshold": 1}]}
+  ]
+}

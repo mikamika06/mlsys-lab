@@ -1,0 +1,74 @@
+{
+  "id": "m-trace-convert-a-small-pytorch-model-to-mlpackage-ver",
+  "title": "Trace and convert a PyTorch model to .mlpackage with verification",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "Core ML conversion pipeline (coremltools)",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "coreml_exporter/converter.py",
+    "coreml_exporter/precision.py",
+    "coreml_exporter/diagnostics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Trace, convert, and measure maximum absolute numerical error",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "models_converted",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-4
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Evaluate float32 vs float16 precision and disk size reduction",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "precision_measured",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "size_ratio_fp16_fp32",
+          "op": "<=",
+          "threshold": 0.6
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Diagnose conversion errors and provide test regression suite",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_tolerance_violations",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}
