@@ -26,39 +26,38 @@ If step 1 (the rescaling) is omitted, the accumulator $S$ grows too large when
 Implement the function
 
 ```python
-def streaming_softmax(scores: np.ndarray, acc=None):
+def streaming_softmax(scores: list[float], acc=None):
     ...
 ```
 
-* `scores` – a 1‑D NumPy array of floats.
+* `scores` – a 1‑D list of floats.
 * `acc` – either `None` or a tuple `(m, S)` representing the current running maximum and sum.  
   If `None`, start from scratch.
 
 The function must return a tuple `(probs, (new_m, new_S))` where
 
-* `probs` is a NumPy array of shape `(len(scores),)` containing the softmax probabilities for this batch,
+* `probs` is a list of shape `(len(scores),)` containing the softmax probabilities for this batch,
 * `(new_m, new_S)` are the updated running maximum and sum that can be passed to a subsequent call.
 
-Use only NumPy; no external libraries.  The implementation must correctly perform the rescaling step described above.
+Use only Python; no external libraries.  The implementation must correctly perform the rescaling step described above.
 
 ## Example
 
 ```python
-import numpy as np
 
-scores = np.array([0.0, 1000.0])
+scores = [0.0, 1000.0]
 probs, acc = streaming_softmax(scores)
 print(probs)          # [0.0, 1.0] (within floating‑point limits)
 
 # Subsequent call with a new batch:
-more_scores = np.array([-500.0, 2000.0])
+more_scores = [-500.0, 2000.0]
 probs2, acc = streaming_softmax(more_scores, acc)
 ```
 
 ## What the gate checks
 
 The grader computes the reference softmax for each test array using
-`np.exp(scores) / np.sum(np.exp(scores))`.  
+`[math.exp(s) / sum(math.exp(x) for x in scores) for s in scores]`.
 It then evaluates the global relative L2 error
 $$\mathrm{rel\_err} = \frac{\|p_{\text{cand}}-p_{\text{ref}}\|}{\|p_{\text{ref}}\|}.$$
 The solution must achieve $\mathrm{rel\_err}\le 10^{-5}$ on a set of adversarial arrays with large score spreads.  
