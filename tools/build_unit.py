@@ -256,7 +256,16 @@ RULES A MACHINE CHECKS
     harness/ref.py from the same inputs. Never hard-code an expected answer.
   * Deterministic: fixed seed, integer arithmetic where possible, no network,
     no binary fixtures. Generate fixtures in harness/ref.py.
-  * Python and numpy only. Grading must finish in under 20 seconds.
+  * Python and numpy only. Nothing else is installed — not jax, not torch, not
+    onnx, not tvm. When the topic IS one of those, the unit works from data
+    recorded off it, which you generate deterministically in harness/ref.py:
+    a shape table, an op list, a timing trace. Importing the framework makes
+    the unit clear zero milestones on every machine.
+  * No multiprocessing, threading or subprocesses. Grading runs in-process, and
+    a worker defined inside a module cannot be pickled — that fails with
+    PicklingError rather than anything to do with the exercise. Concurrency as a
+    SUBJECT is fine: model it, do not spawn it.
+  * Grading must finish in under 20 seconds.
   * No comments in code. A short docstring is fine.
   * The LAST milestone is always a safeguard: the learner writes
     tests/test_regression.py, the checker monkeypatches something in their own code
