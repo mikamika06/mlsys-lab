@@ -1,0 +1,40 @@
+{
+  "id": "m-silent-fp32-fallback-diagnosis",
+  "title": "Silent FP32 fallback diagnosis and low-bit quantization sizing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "PT2E quantization (prepare_pt2e / convert_pt2e)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fallbackdiag/diagnosis.py",
+    "fallbackdiag/quant.py",
+    "fallbackdiag/bits.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Diagnose silent FP32 fallbacks in exported graphs",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "fallbacks_matched", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 2,
+      "title": "Select optimal int4 group size under error budget",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "group_size_matched", "op": "==", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching invalid effective bit calculations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_invalid_bits", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

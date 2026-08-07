@@ -1,5 +1,3 @@
-import numpy as np
-
-def blockwise_absmax(w, block_size=64):
+def blockwise_absmax(w: list[float], block_size: int=64) -> list[float]:
     """Return per-block maximum absolute value of w."""
-    raise NotImplementedError("your code here")
+    raise NotImplementedError('your code here')

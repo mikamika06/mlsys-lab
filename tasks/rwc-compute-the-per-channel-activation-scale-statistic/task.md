@@ -14,21 +14,20 @@ The vector $\mathbf{s} = (s_0,\dots,s_{C-1})^\top$ captures the average magnitud
 Implement `compute_activation_scale`:
 
 ```python
-def compute_activation_scale(X: np.ndarray) -> np.ndarray:
+def compute_activation_scale(X: list[list[list[float]]]) -> list[float]:
     ...
 ```
 
-The function receives a 3‑D NumPy array of shape `(batch, seq_len, channels)` and must return a 1‑D float64 array of length `channels`.  
-Use only vectorised NumPy operations; no explicit Python loops.
+The function receives a 3‑D list of shape `(batch, seq_len, channels)` and must return a 1‑D float64 array of length `channels`.  
+Use only vectorised Python operations; no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
-X = np.array([
+X = [
     [[-1.0, 2.0], [3.0, -4.0]],
     [[5.0, -6.0], [-7.0, 8.0]]
-])  # shape (2, 2, 2)
+]  # shape (2, 2, 2)
 s = compute_activation_scale(X)
 print(s)   # array([4., 5.])
 ```
@@ -40,7 +39,7 @@ Thus the output should be `[4.0, 5.0]`.
 
 ## What the gate checks
 
-The grader computes a reference statistic with NumPy and compares it to your result using the metric `max_abs_err`, which is the maximum absolute difference between corresponding elements. The solution must satisfy
+The grader computes a reference statistic with Python and compares it to your result using the metric `max_abs_err`, which is the maximum absolute difference between corresponding elements. The solution must satisfy
 
 $$
 \max_j |\, \hat{s}_j - s_j \,| \le 10^{-6}.

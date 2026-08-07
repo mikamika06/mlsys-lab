@@ -39,7 +39,7 @@ $$
 Implement `awq_apply_fixed_scale(W, s, X, group_size, bits=4)`:
 
 ```python
-def awq_apply_fixed_scale(W: np.ndarray, s: np.ndarray, X: np.ndarray, group_size: int, bits: int = 4) -> np.ndarray:
+def awq_apply_fixed_scale(W: list[list[float]], s: list[float], X: list[list[float]], group_size: int, bits: int=4) -> list[list[float]]:
     ...
 ```
 
@@ -68,7 +68,7 @@ The gate runs several `(W, s, X, group_size, bits)` combinations from
 seeded generators, including one where `s` is all ones (so the transform
 should reduce to plain grouped fake-quantization of `W` with no folding
 effect at all). For every case the reference computes `output` with the
-exact four-step pipeline above in NumPy. Your output is compared to it
+exact four-step pipeline above in Python. Your output is compared to it
 with `max_abs_err < 1e-9` — since both the reference and a correct
 solution run the *identical* deterministic pipeline (not an
 approximation of the unquantized layer), a correct implementation

@@ -1,4 +1,13 @@
-import numpy as np
+def _mul(a, b):
+    if isinstance(a, list) and isinstance(b, list):
+        return [_mul(x, y) for x, y in zip(a, b)]
+    return a * b
+
+
+def _add(a, b):
+    if isinstance(a, list) and isinstance(b, list):
+        return [_add(x, y) for x, y in zip(a, b)]
+    return a + b
 
 
 def fold_constants(nodes):
@@ -11,17 +20,17 @@ def fold_constants(nodes):
         op = node["op"]
 
         if op == "const":
-            values[name] = np.asarray(node["value"], dtype=np.float64)
+            values[name] = node["value"]
             known[name] = True
         elif op == "mul":
             a, b = node["inputs"]
-            values[name] = values[a] * values[b]
+            values[name] = _mul(values[a], values[b])
             known[name] = known[a] and known[b]
             if known[name]:
                 folded += 1
         elif op == "add":
             a, b = node["inputs"]
-            values[name] = values[a] + values[b]
+            values[name] = _add(values[a], values[b])
             known[name] = known[a] and known[b]
             if known[name]:
                 folded += 1

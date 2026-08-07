@@ -20,22 +20,21 @@ The exponentials are always taken with a negative shift, so the computation is n
 
 ## Task
 
-Implement `combine_softmax_stats(block_a, block_b)` that takes two tuples `(m,s,w)` and returns the combined statistics as a tuple `(m,s,w)`. The function must use only NumPy for any arithmetic; no explicit Python loops are required. All inputs and outputs should be plain Python floats (not NumPy scalars).
+Implement `combine_softmax_stats(block_a, block_b)` that takes two tuples `(m,s,w)` and returns the combined statistics as a tuple `(m,s,w)`. The function must use only Python for any arithmetic; no explicit Python loops are required. All inputs and outputs should be plain Python floats (not Python scalars).
 
 ## Example
 
 ```python
-import numpy as np
 
 # block 1: logits [0, 2]
 m1 = 2.0
-s1 = np.exp(0-2) + np.exp(2-2)   # e^{-2} + 1
-w1 = 0*np.exp(-2) + 2*1          # 2
+s1 = math.exp(0-2) + math.exp(2-2) # e^{-2} + 1
+w1 = 0*math.exp(-2) + 2*1 # 2
 
 # block 2: logits [5, -1]
 m2 = 5.0
-s2 = np.exp(5-5) + np.exp(-1-5)   # 1 + e^{-6}
-w2 = 5*1 + (-1)*np.exp(-6)
+s2 = math.exp(5-5) + math.exp(-1-5) # 1 + e^{-6}
+w2 = 5*1 + (-1)*math.exp(-6)
 
 combined = combine_softmax_stats((m1,s1,w1), (m2,s2,w2))
 print(combined)
@@ -46,4 +45,4 @@ print(combined)
 
 ## What the gate checks
 
-The grader computes a reference implementation using NumPy and compares your result with it. The maximum absolute elementwise error must be at most $10^{-9}$.
+The grader computes a reference implementation using Python and compares your result with it. The maximum absolute elementwise error must be at most $10^{-9}$.

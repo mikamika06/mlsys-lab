@@ -32,7 +32,7 @@ the same `block_size`) this means:
 Implement `tiled_causal_attention`:
 
 ```python
-def tiled_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int) -> np.ndarray:
+def tiled_causal_attention(Q, K, V, block_size):
     ...
 ```
 
@@ -49,12 +49,11 @@ computed at once — only tile-sized score blocks $(≤\text{block\_size}) \time
 ## Example
 
 ```python
-import numpy as np
 
 n, d, block_size = 7, 4, 3
-Q = np.random.randn(n, d)
-K = np.random.randn(n, d)
-V = np.random.randn(n, d)
+Q = [[random.gauss(0, 1) for _ in range(d)] for _ in range(n)]
+K = [[random.gauss(0, 1) for _ in range(d)] for _ in range(n)]
+V = [[random.gauss(0, 1) for _ in range(d)] for _ in range(n)]
 
 out = tiled_causal_attention(Q, K, V, block_size)
 # out.shape == (7, 4); mathematically identical to standard causal

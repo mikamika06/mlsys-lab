@@ -15,7 +15,7 @@ otherwise it is **decode‑bound**.
 Implement a function that classifies each request in a batch according to the rule above.
 
 ```python
-def classify_prefill_decode(requests: list[dict]) -> list[str]:
+def classify_prefill_decode(requests):
     """
     Parameters
     ----------
@@ -36,7 +36,6 @@ The function must be pure Python; no external libraries are required.
 ## Example
 
 ```python
-import numpy as np
 
 requests = [
     {"prompt_len": 10, "gen_len": 5},
@@ -50,5 +49,5 @@ print(labels)   # ['prefill', 'decode', 'decode']
 
 ## What the gate checks
 
-The grader computes the expected labels with the same rule using NumPy for numerical stability.  
+The grader computes the expected labels with the same rule using Python for numerical stability.  
 Your output must match exactly; otherwise the `exact_match` metric will be 0.0.

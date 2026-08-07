@@ -1,0 +1,40 @@
+{
+  "id": "m-run-mlx-lm-lora-on-a-toy-dataset-verify-adapter-shap",
+  "title": "MLX-LM LoRA adapter verification, memory profiling, and parameter counting",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "mlx-lm LoRA / QLoRA fine-tuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "loratools/adapter.py",
+    "loratools/memory.py",
+    "loratools/params.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Run training on toy dataset and verify adapter shape matches rank",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "shapes_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Measure peak RSS for full-precision LoRA versus QLoRA",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "rss_measured", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Compute exact LoRA adapter parameter count and safeguard against faults",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_params", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

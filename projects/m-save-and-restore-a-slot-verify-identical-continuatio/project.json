@@ -1,0 +1,40 @@
+{
+  "id": "m-save-and-restore-a-slot-verify-identical-continuatio",
+  "title": "Save/restore KV cache slots and evaluate multi-chat sizing",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "local-server-prompt-cache-reuse",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvslot/slot.py",
+    "kvslot/sizing.py",
+    "kvslot/unified.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Save and restore a slot, verify identical continuation",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "slot_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Slot sizing: -np vs context per slot within VRAM budget",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "sizing_matched", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Unified KV vs per-slot KV under 4 chats with regression test",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-run-a-perf-analyzer-equivalent-load-test-against-a-l",
+  "title": "perf_analyzer equivalent load test simulation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-batching-serving",
+  "track": "Triton perf_analyzer / genai-perf Benchmarking",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["loadtest/simulator.py", "loadtest/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Concurrency schedule and request arrivals", "check": "harness/m1.py",
+     "gates": [{"metric": "schedule_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Latency percentiles and throughput aggregation", "check": "harness/m2.py",
+     "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: regression test for metric calculation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_metrics", "op": "==", "threshold": 1}]}
+  ]
+}

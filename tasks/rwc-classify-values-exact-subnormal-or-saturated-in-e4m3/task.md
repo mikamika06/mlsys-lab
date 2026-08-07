@@ -26,26 +26,25 @@ are classified as **saturated**.
 Implement `classify_e4m3`:
 
 ```python
-def classify_e4m3(vals: np.ndarray) -> np.ndarray:
+def classify_e4m3(vals: list[float]) -> list[str]:
     ...
 ```
 
-It receives a NumPy array of floating point numbers (of any shape).  
+It receives a list of floating point numbers (of any shape).  
 Return a one‑dimensional string array where each element is either `"EXACT"`,
 `"SUBNORMAL"` or `"SATURATED"`, indicating the classification of the
 corresponding input value.
 
-The implementation must use only pure Python and NumPy.  It should not
+The implementation must use only pure Python and Python.  It should not
 hardcode the classification of individual numbers; instead, it should perform
 the conversion to e4m3 and compare against the original value.
 
 ## Example
 
 ```python
-import numpy as np
 from classify import classify_e4m3
 
-vals = np.array([0.0, 0.01, 1.0, 1000.0, float('nan')])
+vals = [0.0, 0.01, 1.0, 1000.0, float('nan')]
 print(classify_e4m3(vals))
 # ['EXACT' 'SUBNORMAL' 'EXACT' 'SATURATED' 'SATURATED']
 ```

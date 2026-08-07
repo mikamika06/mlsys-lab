@@ -1,0 +1,21 @@
+{
+  "id": "m-run-ms-tune-tir-on-a-small-matmul-with-a-tiny-trial-",
+  "title": "Tune TIR with MetaSchedule on a small matmul",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TVM MetaSchedule autotuning",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["tuntir/tune.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Run tune_tir and extract best latency", "check": "harness/m1.py",
+     "gates": [{"metric": "latency_extracted", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Compare default vs tuned schedule latency", "check": "harness/m2.py",
+     "gates": [{"metric": "speedup_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Parse tuning database and rank top-5 candidates", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_ranking", "op": "==", "threshold": 1}]}
+  ]
+}

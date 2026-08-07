@@ -1,0 +1,5 @@
+An internal inference benchmark suite for our serving deployment consistently produces fluctuating throughput and latency metrics across test runs, rendering performance regression reports unhelpful. Engineers attempting to validate low-level server optimizations cannot tell whether throughput changes stem from server efficiency or mismatched benchmark load parameters.
+
+Analysis of the benchmark suite indicates that request rate benchmarking is currently fragmented and lacks standardized harness metrics. The harness needs a structured benchmark runner that executes request sweeps across three target request arrival rates (e.g., low, medium, and high load) against a simulated serving engine. It must collect detailed per-request latency logs, calculate total throughput, enforce request rate tracking, and package all raw data into a structured, reproducible benchmark bundle.
+
+Your task is to build the serving benchmark engine and load generator, implement the multi-rate benchmark runner that packages reproducible JSON run bundles, and write regression tests that verify the harness detects load imbalance or lost request accounting in performance data.

@@ -31,7 +31,7 @@ this trade-off.
 Implement `compare_preferred_batch_sizes`:
 
 ```python
-def compare_preferred_batch_sizes(arrivals: np.ndarray, cap: int, max_queue_delay: float, batch_time: float, preferred_a: int, preferred_b: int):
+def compare_preferred_batch_sizes(arrivals: list[float], cap: int, max_queue_delay: float, batch_time: float, preferred_a: int, preferred_b: int) -> list[float]:
     ...
 ```
 
@@ -57,9 +57,8 @@ Return `(mean_latency_a, throughput_a, mean_latency_b, throughput_b)`.
 ## Example
 
 ```python
-import numpy as np
 
-arrivals = np.load("fixtures/arrivals.npy")  # ~2000 requests, ~400 req/s
+arrivals = list(map(float, ...)) # ~2000 requests, ~400 req/s
 cap, D, T = 32, 0.05, 0.01
 
 ml_a, tp_a, ml_b, tp_b = compare_preferred_batch_sizes(arrivals, cap, D, T, 4, 24)

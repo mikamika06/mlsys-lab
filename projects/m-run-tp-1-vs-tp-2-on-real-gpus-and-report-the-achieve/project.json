@@ -1,0 +1,22 @@
+{
+  "id": "m-run-tp-1-vs-tp-2-on-real-gpus-and-report-the-achieve",
+  "title": "TP=1 vs TP=2 scaling efficiency analysis",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "parallelism-tp-pp-dp-ep",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["tpscaling/benchmark.py", "tpscaling/analysis.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Benchmark runner for TP=1 and TP=2", "check": "harness/m1.py",
+     "gates": [{"metric": "benchmarks_matched", "op": ">=", "threshold": 6}]},
+    {"n": 2, "title": "Throughput ratio and scaling efficiency calculation", "check": "harness/m2.py",
+     "gates": [{"metric": "efficiency_match", "op": "==", "threshold": 1},
+               {"metric": "throughput_ratio_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for scaling metrics", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_scaling", "op": "==", "threshold": 1}]}
+  ]
+}

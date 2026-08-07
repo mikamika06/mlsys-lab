@@ -1,4 +1,2 @@
-import numpy as np
-
-def compute_activation_scale(X: np.ndarray) -> np.ndarray:
+def compute_activation_scale(X: list[list[list[float]]]) -> list[float]:
     raise NotImplementedError('your code here')

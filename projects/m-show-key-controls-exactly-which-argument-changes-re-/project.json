@@ -1,0 +1,21 @@
+{
+  "id": "m-show-key-controls-exactly-which-argument-changes-re-",
+  "title": "Triton autotuning key control and overhead analysis",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Autotuning (triton.autotune / Config / key)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["triton_tune/autokey.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Key controls cache invalidation and re-trigger", "check": "harness/m1.py",
+     "gates": [{"metric": "keys_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Find the true argmin config in a sweep", "check": "harness/m2.py",
+     "gates": [{"metric": "argmin_match", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches invalid config keys", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_key", "op": "==", "threshold": 1}]}
+  ]
+}

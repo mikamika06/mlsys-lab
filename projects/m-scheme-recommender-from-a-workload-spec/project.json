@@ -1,0 +1,40 @@
+{
+  "id": "m-scheme-recommender-from-a-workload-spec",
+  "title": "Quantization scheme recommender and crossover analyzer",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Quantization scheme taxonomy (WxAy)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantrec/bytes.py",
+    "quantrec/crossover.py",
+    "quantrec/recommend.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Bytes moved per decode token per scheme",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "bytes_rel_err", "op": "<=", "threshold": 0.0001}]
+    },
+    {
+      "n": 2,
+      "title": "Derive W8A8 vs W4A16 crossover batch size",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "crossover_rel_err", "op": "<=", "threshold": 0.0001}]
+    },
+    {
+      "n": 3,
+      "title": "Scheme recommender and test safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_spec", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

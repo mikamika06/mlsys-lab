@@ -1,0 +1,64 @@
+{
+  "id": "m-sample-count-at-which-hessian-statistics-converge",
+  "title": "Sample count at which Hessian statistics converge",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "Calibration dataset design",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/loader.py",
+    "quant/hessian.py",
+    "quant/convergence.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Deterministic calibration loader",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "loader_deterministic",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Domain-matched vs mismatched hessian statistics",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.05
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: sample count convergence test",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_convergence",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

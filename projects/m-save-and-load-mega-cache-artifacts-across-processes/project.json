@@ -1,0 +1,64 @@
+{
+  "id": "m-save-and-load-mega-cache-artifacts-across-processes",
+  "title": "Save and load mega-cache artifacts across processes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Compile-time caching and warm start",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "megacache/artifacts.py",
+    "megacache/timing.py",
+    "megacache/keys.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Save and load Mega-Cache artifacts across processes",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "artifacts_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Cold vs warm compile time",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "speedup_valid",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: which config field broke the cache key",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_key",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

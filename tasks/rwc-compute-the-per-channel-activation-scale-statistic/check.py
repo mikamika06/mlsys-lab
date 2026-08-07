@@ -9,15 +9,17 @@ def grade(sol, fx) -> dict:
     ]
     errors = []
     for shape in shapes:
-        X = np.random.randn(*shape).astype(np.float64)
+        X_np = np.random.randn(*shape).astype(np.float64)
+        X_list = X_np.tolist()
         try:
-            got = sol.compute_activation_scale(X)
+            got = sol.compute_activation_scale(X_list)
         except Exception as e:
             # If the function raises an exception, treat error as infinite
             return {"max_abs_err": float("inf")}
-        ref = np.mean(np.abs(X), axis=(0, 1))
-        if got.shape != ref.shape:
+        ref = np.mean(np.abs(X_np), axis=(0, 1))
+        if not isinstance(got, list) or len(got) != ref.shape[0]:
             return {"max_abs_err": float("inf")}
-        errors.append(float(np.max(np.abs(got - ref))))
+        got_arr = np.array(got, dtype=np.float64)
+        errors.append(float(np.max(np.abs(got_arr - ref))))
     # Return the worst error across all test cases
     return {"max_abs_err": max(errors)}

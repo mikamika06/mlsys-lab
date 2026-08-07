@@ -1,14 +1,13 @@
-import numpy as np
 import math
 
 def compute_shared_e8m0_scale(weights):
-    rows = weights.shape[0]
-    cols = weights.shape[1]
-    exponents = np.empty(rows, dtype=np.int32)
+    rows = len(weights)
+    cols = len(weights[0])
+    exponents = [0] * rows
     for i in range(rows):
         max_val = 0.0
         for j in range(cols):
-            v = weights[i, j]
+            v = weights[i][j]
             if v < 0.0:
                 v = -v
             if j == 0 or v > max_val:

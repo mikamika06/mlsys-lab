@@ -1,8 +1,5 @@
-import numpy as np
-
-
-def sgmv_apply(x: np.ndarray, adapter_id: np.ndarray,
-                A_bank: np.ndarray, B_bank: np.ndarray, scale: np.ndarray) -> np.ndarray:
+def sgmv_apply(x: list[list[float]], adapter_id: list[int],
+                A_bank: list[list[list[float]]], B_bank: list[list[list[float]]], scale: list[float]) -> list[list[float]]:
     """SGMV (Segmented Gather Matrix-Vector multiply): apply a PER-ROW
     LoRA adapter, selected from a shared bank, to a mixed batch (the
     core primitive behind multi-LoRA serving systems like S-LoRA /
@@ -20,43 +17,32 @@ def sgmv_apply(x: np.ndarray, adapter_id: np.ndarray,
 
     Returns (N, d_out).
     """
-    x = np.asarray(x, dtype=np.float64)
-    adapter_id = np.asarray(adapter_id, dtype=np.int64)
-    A_bank = np.asarray(A_bank, dtype=np.float64)
-    B_bank = np.asarray(B_bank, dtype=np.float64)
-    scale = np.asarray(scale, dtype=np.float64)
+    N = len(x)
+    d_in = len(x[0]) if N > 0 else 0
+    d_out = len(B_bank[0][0]) if len(B_bank) > 0 and len(B_bank[0]) > 0 else 0
+    r = len(A_bank[0][0]) if len(A_bank) > 0 and len(A_bank[0]) > 0 else 0
 
-    N = x.shape[0]
-    d_in = x.shape[1]
-    d_out = B_bank.shape[2]
-    r = A_bank.shape[2]
-
-    out = np.empty((N, d_out), dtype=np.float64)
+    out = [[0.0 for _ in range(d_out)] for _ in range(N)]
 
     for i in range(N):
         aid = int(adapter_id[i])
-        
-        intermediate = 0.0
-        # x[i] @ A_bank[aid]: shape (r,)
-        # x[i] is (d_in,), A_bank[aid] is (d_in, r)
-        inter_vec = np.empty((r,), dtype=np.float64)
+
+        inter_vec = [0.0] * r
         for k in range(r):
             acc = 0.0
             for j in range(d_in):
-                acc += x[i, j] * A_bank[aid, j, k]
+                acc += x[i][j] * A_bank[aid][j][k]
             inter_vec[k] = acc
 
-        # inter_vec @ B_bank[aid]: shape (d_out,)
-        # inter_vec is (r,), B_bank[aid] is (r, d_out)
-        delta = np.empty((d_out,), dtype=np.float64)
+        delta = [0.0] * d_out
         for k in range(d_out):
             acc = 0.0
             for j in range(r):
-                acc += inter_vec[j] * B_bank[aid, j, k]
+                acc += inter_vec[j] * B_bank[aid][j][k]
             delta[k] = acc
 
         s = scale[aid]
         for k in range(d_out):
-            out[i, k] = s * delta[k]
+            out[i][k] = s * delta[k]
 
     return out

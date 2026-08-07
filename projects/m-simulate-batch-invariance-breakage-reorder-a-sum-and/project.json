@@ -1,0 +1,21 @@
+{
+  "id": "m-simulate-batch-invariance-breakage-reorder-a-sum-and",
+  "title": "Simulate batch-invariance breakage and output drift",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-vllm-serving",
+  "track": "determinism-correctness-and-regression-testing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["batchsim/simulate.py", "batchsim/classify.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Simulating batch-invariance breakage via reordered sums", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Classifying output diff categories", "check": "harness/m2.py",
+     "gates": [{"metric": "accuracy", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Safeguard: regression test for batch invariance", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_broken_gate", "op": "==", "threshold": 1.0}]}
+  ]
+}

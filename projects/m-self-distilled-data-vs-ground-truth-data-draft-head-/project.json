@@ -1,0 +1,21 @@
+{
+  "id": "m-self-distilled-data-vs-ground-truth-data-draft-head",
+  "title": "Self-Distilled vs Ground-Truth Data for Draft Heads",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Draft model training & distillation",
+  "part": 1,
+  "difficulty": 4,
+  "edits": ["draftdistill/loss.py", "draftdistill/evaluation.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Acceptance rate calculation and delta evaluation", "check": "harness/m1.py",
+     "gates": [{"metric": "acceptance_delta_match", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Combined token-level and feature-level draft loss", "check": "harness/m2.py",
+     "gates": [{"metric": "loss_rel_err", "op": "<=", "threshold": 0.01}]},
+    {"n": 3, "title": "Safety net: regression tests for dataset size scaling and loss properties", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_loss", "op": "==", "threshold": 1}]}
+  ]
+}

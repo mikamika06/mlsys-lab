@@ -1,0 +1,64 @@
+{
+  "id": "m-saturation-fraction-and-the-mse-optimal-scale",
+  "title": "Saturation fraction, optimal scale, and scaling strategy in FP8 E4M3",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "FP8 quantization (E4M3 weights and activations)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantlib/saturation.py",
+    "quantlib/scaling.py",
+    "quantlib/detection.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Saturation fraction and the MSE-optimal scale",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "mse_scale_matched",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Dynamic vs static activation scaling decision",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "decision_matched",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches inverted scale application",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_inverted_scale",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

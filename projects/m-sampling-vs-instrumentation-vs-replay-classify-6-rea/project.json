@@ -1,0 +1,21 @@
+{
+  "id": "m-sampling-vs-instrumentation-vs-replay-classify-6-rea",
+  "title": "Sampling, instrumentation, and replay taxonomy for ML profilers",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "profiler-taxonomy-sampling-vs-instrumentation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["profiler/taxonomy.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Classify tool mechanisms", "check": "harness/m1.py",
+     "gates": [{"metric": "classification_matched", "op": "==", "threshold": 1.0}]},
+    {"n": 2, "title": "Calculate periodic sampling miss bound", "check": "harness/m2.py",
+     "gates": [{"metric": "bounds_matched", "op": ">=", "threshold": 3.0}]},
+    {"n": 3, "title": "Rank profilers and safeguard regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_broken", "op": "==", "threshold": 1.0}]}
+  ]
+}

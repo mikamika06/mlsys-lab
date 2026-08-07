@@ -1,0 +1,67 @@
+{
+  "id": "m-shard-index-writer-for-a-quantized-checkpoint",
+  "title": "Shard index writer for a quantized checkpoint",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Serialization, saving, and loading quantized models",
+  "difficulty": 3,
+  "edits": [
+    "qindex/writer.py",
+    "qindex/validation.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Shard index mapping and metadata generation",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "indices_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Byte offset calculation and serialization",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bytes_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "format_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test suite for index integrity",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_offsets",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

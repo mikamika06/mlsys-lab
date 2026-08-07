@@ -30,7 +30,7 @@ without ever needing the whole vector's true max in advance.
 Implement `streaming_softmax(scores, chunk_size)`:
 
 ```python
-def streaming_softmax(scores: np.ndarray, chunk_size: int) -> np.ndarray:
+def streaming_softmax(scores: list[float], chunk_size: int) -> list[float]:
     ...
 ```
 
@@ -47,9 +47,8 @@ above, then return the full softmax vector (`float64`, same shape as
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([1000.0, 1.0, 2.0, -1000.0], dtype=np.float32)
+x = [1000.0, 1.0, 2.0, -1000.0]
 streaming_softmax(x, chunk_size=2)
 # array([1., 0., 0., 0.])  -- matches a direct stable softmax over the
 # whole vector; a naive (non-online) softmax computed chunk-by-chunk

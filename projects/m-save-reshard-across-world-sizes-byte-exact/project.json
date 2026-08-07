@@ -1,0 +1,45 @@
+{
+  "id": "m-save-reshard-across-world-sizes-byte-exact",
+  "title": "Save and reshard across world sizes byte-exact",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP distributed checkpointing (DCP)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "dcp/shard.py",
+    "dcp/memory.py",
+    "dcp/reshard.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Per-rank checkpoint file size formula",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "sizes_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Full vs sharded checkpoint real memory and time",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "memory_match", "op": "==", "threshold": 1},
+        {"metric": "time_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Save and reshard across world sizes byte-exact",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_reshard", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

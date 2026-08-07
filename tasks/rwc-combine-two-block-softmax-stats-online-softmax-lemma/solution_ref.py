@@ -1,4 +1,3 @@
-import numpy as np
 import math
 
 def combine_softmax_stats(block_a, block_b):

@@ -33,13 +33,7 @@ $$
 Implement `fused_matmul_epilogue(A, B, bias, activation, out)`:
 
 ```python
-def fused_matmul_epilogue(
-    A: np.ndarray,
-    B: np.ndarray,
-    bias: np.ndarray,
-    activation: str,
-    out: np.ndarray,
-) -> np.ndarray:
+def fused_matmul_epilogue(A, B, bias, activation, out):
     ...
 ```
 
@@ -59,12 +53,11 @@ destination buffer receives the completed values.
 ## Example
 
 ```python
-import numpy as np
 
-A = np.array([[1.0, -2.0]])
-B = np.array([[3.0], [4.0]])
-bias = np.array([1.0])
-out = np.empty((1, 1))
+A = [[1.0, -2.0]]
+B = [[3.0], [4.0]]
+bias = [1.0]
+out = [[0]]
 
 result = fused_matmul_epilogue(A, B, bias, "relu", out)
 
@@ -75,7 +68,7 @@ result = fused_matmul_epilogue(A, B, bias, "relu", out)
 
 ## What the gate checks
 
-The gate computes the expected values using a NumPy oracle:
+The gate computes the expected values using a Python oracle:
 
 $$
 \mathrm{oracle} = \mathrm{activation}(A B + b).

@@ -1,0 +1,22 @@
+{
+  "id": "m-run-the-official-image-end-to-end-and-hit-health-and",
+  "title": "Run official serving image and query health and completions",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "docker-and-container-deployment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["vllm_runner/config.py", "vllm_runner/client.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Container command and configuration generation", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Endpoint probing and response parsing", "check": "harness/m2.py",
+     "gates": [{"metric": "health_matched", "op": "==", "threshold": 1},
+               {"metric": "completion_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for endpoint validation", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_parser", "op": "==", "threshold": 1}]}
+  ]
+}

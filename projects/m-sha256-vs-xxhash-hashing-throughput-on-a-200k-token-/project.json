@@ -1,0 +1,43 @@
+{
+  "id": "m-sha256-vs-xxhash-hashing-throughput-on-a-200k-token-",
+  "title": "SHA256 vs xxHash Hashing Throughput and Chat Template Drift",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "prefix-caching-block-hashing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "hashbench/hashing.py",
+    "hashbench/drift.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Measure hashing throughput ratio between sha256 and xxhash",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "latency_ratio", "op": ">=", "threshold": 2.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantify cache hit rate drop under chat-template drift",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "drift_penalty_matched", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches template drift and hash failures",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_drift", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

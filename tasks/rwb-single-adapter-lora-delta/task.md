@@ -22,30 +22,29 @@ matmuls directly against $x$.
 Implement `lora_delta_forward(x, base, A, B, scale)`:
 
 ```python
-def lora_delta_forward(x, base, A, B, scale):
+def lora_delta_forward(x: list[list[float]], base: list[list[float]], A: list[list[float]], B: list[list[float]], scale: float) -> list[list[float]]:
     ...
 ```
 
-- `x`: NumPy array of shape $(n, d)$ — the layer's input.
-- `base`: NumPy array of shape $(n, d)$ — the frozen base layer's output
+- `x`: list of shape $(n, d)$ — the layer's input.
+- `base`: list of shape $(n, d)$ — the frozen base layer's output
   for that same `x` (i.e. $xW_0$; you are not given $W_0$ itself, only
   its output).
-- `A`: NumPy array of shape $(d, r)$.
-- `B`: NumPy array of shape $(r, d)$.
+- `A`: list of shape $(d, r)$.
+- `B`: list of shape $(r, d)$.
 - `scale`: a Python float, $\gamma$.
 
-Return `base + scale * (x @ A) @ B` as a `float64` NumPy array of shape
+Return `base + scale * (x @ A) @ B` as a `float64` list of shape
 $(n, d)$.
 
 ## Example
 
 ```python
-import numpy as np
 
-x = np.array([[1.0, 2.0]])
-base = np.array([[0.5, -0.5]])
-A = np.array([[1.0], [0.0]])   # (2, 1)
-B = np.array([[0.0, 2.0]])     # (1, 2)
+x = [[1.0, 2.0]]
+base = [[0.5, -0.5]]
+A = [[1.0], [0.0]]   # (2, 1)
+B = [[0.0, 2.0]]     # (1, 2)
 scale = 3.0
 
 y = lora_delta_forward(x, base, A, B, scale)

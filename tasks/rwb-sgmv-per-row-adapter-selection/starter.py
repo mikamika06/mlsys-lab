@@ -1,8 +1,4 @@
-import numpy as np
-
-
-def sgmv_apply(x: np.ndarray, adapter_id: np.ndarray,
-                A_bank: np.ndarray, B_bank: np.ndarray, scale: np.ndarray) -> np.ndarray:
+def sgmv_apply(x: list[list[float]], adapter_id: list[int], A_bank: list[list[list[float]]], B_bank: list[list[list[float]]], scale: list[float]) -> list[list[float]]:
     """SGMV (Segmented Gather Matrix-Vector multiply): apply a PER-ROW
     LoRA adapter, selected from a shared bank, to a mixed batch (the
     core primitive behind multi-LoRA serving systems like S-LoRA /

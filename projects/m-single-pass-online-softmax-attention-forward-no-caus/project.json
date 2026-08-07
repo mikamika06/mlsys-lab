@@ -1,0 +1,74 @@
+{
+  "id": "m-single-pass-online-softmax-attention-forward-no-caus",
+  "title": "Single-pass online softmax attention and causal masking",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "Fused attention (FlashAttention-style online softmax)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fused_attn/online_softmax.py",
+    "fused_attn/causal.py",
+    "fused_attn/flops.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Online softmax attention forward without causal mask",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Block-split causal attention forward",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "rel_err",
+          "op": "<=",
+          "threshold": 0.001
+        },
+        {
+          "metric": "causal_tiles_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test catching unmasked causal blocks and FLOPs calculation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_unmasked_causal",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "flops_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

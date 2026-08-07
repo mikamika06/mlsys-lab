@@ -1,0 +1,22 @@
+{
+  "id": "m-run-oneshot-w4a16-on-a-tiny-model",
+  "title": "Run oneshot W4A16 on a tiny model",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-quant-libs",
+  "track": "llm-compressor recipes and the oneshot entrypoint",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantizer/oneshot.py", "quantizer/onloading.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Run oneshot W4A16 quantization", "check": "harness/m1.py",
+     "gates": [{"metric": "oneshot_matched", "op": ">=", "threshold": 2}]},
+    {"n": 2, "title": "Sequential onloading comparison", "check": "harness/m2.py",
+     "gates": [{"metric": "size_ratio", "op": "<=", "threshold": 0.6},
+               {"metric": "onloading_correct", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test regression for target modules", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_targets", "op": "==", "threshold": 1}]}
+  ]
+}

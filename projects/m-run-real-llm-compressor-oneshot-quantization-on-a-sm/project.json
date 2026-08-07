@@ -1,0 +1,45 @@
+{
+  "id": "m-run-real-llm-compressor-oneshot-quantization-on-a-sm",
+  "title": "Oneshot quantization and compression metrics using llm-compressor",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "llm-compressor applied workflow (oneshot API)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "compressor_workflow/quantize.py",
+    "compressor_workflow/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Oneshot quantization and sparsity deprecation handling",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "quantization_success", "op": "==", "threshold": 1},
+        {"metric": "deprecation_captured", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Measure compression ratio and perplexity",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ratio_matched", "op": "==", "threshold": 1},
+        {"metric": "perplexity_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for metrics",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_metrics", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

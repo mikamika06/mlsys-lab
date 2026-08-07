@@ -1,0 +1,40 @@
+{
+  "id": "m-run-torch-amp-gradscaler-on-a-real-cpu-loop-with-an-overflow-prone-loop",
+  "title": "GradScaler loop and scale evolution under overflow",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "gradscaler-loss-scaling",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "scaler_lab/run_loop.py",
+    "scaler_lab/skipped_step.py",
+    "scaler_lab/compare_scales.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "GradScaler training loop with injected inf gradients",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "inf_handled", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Skipped step verification and parameter invariance",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "params_unchanged", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Scale evolution comparison and regression safety",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_scaler", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

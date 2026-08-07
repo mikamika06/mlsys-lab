@@ -28,25 +28,24 @@ where $N$ is the total number of elements in all calibration batches.
 
 ## Task
 
-Implement a function that, given a list of NumPy arrays representing calibration batches, returns a tuple `(amax, mse)` where:
+Implement a function that, given a list of list representing calibration batches, returns a tuple `(amax, mse)` where:
 
 * `amax` is the maximum absolute value seen across all batches.
 * `mse` is the reconstruction MSE after quantizing with scale `s = amax / 127`.
 
 ```python
-def calibrate_max_and_error(batches: list[np.ndarray]) -> tuple[float, float]:
+def calibrate_max_and_error(batches):
     ...
 ```
 
-The implementation must use only NumPy operations; no explicit Python loops over individual elements. The returned values should be of type `float` (Python float).
+The implementation must use only Python operations; no explicit Python loops over individual elements. The returned values should be of type `float` (Python float).
 
 ## Example
 
 ```python
-import numpy as np
 
-b1 = np.array([[0.5, -1.2], [3.0, 0.0]])
-b2 = np.array([[-0.7, 2.4], [1.1, -3.3]])
+b1 = [[0.5, -1.2], [3.0, 0.0]]
+b2 = [[-0.7, 2.4], [1.1, -3.3]]
 
 amax, mse = calibrate_max_and_error([b1, b2])
 print(amax)   # 3.3
@@ -55,7 +54,7 @@ print(mse)    # ≈ 0.000... (depends on quantization)
 
 ## What the gate checks
 
-The grader recomputes the reference `amax` and `mse` from the same batches using a NumPy‑only oracle. It then compares your outputs to the oracle with a relative error metric:
+The grader recomputes the reference `amax` and `mse` from the same batches using a Python‑only oracle. It then compares your outputs to the oracle with a relative error metric:
 
 $$
 \mathrm{rel\_err} = \max\!\left(

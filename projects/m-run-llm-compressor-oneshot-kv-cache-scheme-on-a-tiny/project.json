@@ -1,0 +1,46 @@
+{
+  "id": "m-run-llm-compressor-oneshot-kv-cache-scheme-on-a-tiny",
+  "title": "Oneshot KV cache calibration and debugging with llm-compressor scheme",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-quant-calibration-with-llm-compressor",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "compressor_kv/oneshot.py",
+    "compressor_kv/debug.py",
+    "compressor_kv/evaluate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Run oneshot KV cache scheme and compute non-trivial scales",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "scales_computed", "op": ">=", "threshold": 1},
+        {"metric": "non_trivial_scales", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Debug and repair recipes with uniform 1.0 scales",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "recipe_repaired", "op": "==", "threshold": 1},
+        {"metric": "max_scale_valid", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test on calibrated vs uncalibrated error delta",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_calibration", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

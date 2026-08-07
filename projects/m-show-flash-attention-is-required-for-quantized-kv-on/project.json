@@ -1,0 +1,46 @@
+{
+  "id": "m-show-flash-attention-is-required-for-quantized-kv-on",
+  "title": "Show flash attention is required for quantized KV on this build",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "kv-cache-quantization-and-flash-attention",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvquant/quant.py",
+    "kvquant/attention.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Implement Q8_0 block quantization and error bounding",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "quant_matched", "op": "==", "threshold": 1.0},
+        {"metric": "dequant_matched", "op": "==", "threshold": 1.0},
+        {"metric": "error_bounded", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Select optimal context length under recall floor and show Flash Attention requirement",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "optimal_config_matched", "op": "==", "threshold": 1.0},
+        {"metric": "flash_required_proven", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests that catch materialization leaks",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_materialization_leaks", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -1,29 +1,42 @@
-import numpy as np
+import math
 
 
-def flash_attention_accumulate(q, K, V, block_size):
-    q = np.asarray(q, dtype=np.float64)
-    K = np.asarray(K, dtype=np.float64)
-    V = np.asarray(V, dtype=np.float64)
+def flash_attention_accumulate(
+    q: list[float], K: list[list[float]], V: list[list[float]], block_size: int
+) -> list[float]:
+    d = len(q)
+    n = len(K)
+    dv = len(V[0]) if n > 0 else 0
 
-    m = -np.inf
+    m = -math.inf
     s = 0.0
-    acc = np.zeros(V.shape[1], dtype=np.float64)
+    acc = [0.0] * dv
 
-    for start in range(0, K.shape[0], block_size):
-        end = min(start + block_size, K.shape[0])
-        scores = K[start:end] @ q
-        block_m = np.max(scores)
+    for start in range(0, n, block_size):
+        end = min(start + block_size, n)
+        scores = []
+        for i in range(start, end):
+            row = K[i]
+            dot = sum(row[k] * q[k] for k in range(d))
+            scores.append(dot)
+
+        block_m = max(scores) if scores else -math.inf
 
         if block_m > m:
-            if np.isfinite(m):
-                scale = np.exp(m - block_m)
+            if math.isfinite(m):
+                scale = math.exp(m - block_m)
                 s *= scale
-                acc *= scale
+                for j in range(dv):
+                    acc[j] *= scale
             m = block_m
 
-        weights = np.exp(scores - m)
-        s += np.sum(weights)
-        acc += weights @ V[start:end]
+        weights = [math.exp(score - m) for score in scores]
+        s += sum(weights)
 
-    return acc / s
+        for i_rel, weight in enumerate(weights):
+            i_abs = start + i_rel
+            v_row = V[i_abs]
+            for j in range(dv):
+                acc[j] += weight * v_row[j]
+
+    return [val / s for val in acc]

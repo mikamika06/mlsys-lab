@@ -1,21 +1,16 @@
 import math
-import numpy as np
 
 
 def merge_split_kv(partials):
-    ms_list = [np.asarray(p[0], dtype=np.float64) for p in partials]
-    ls_list = [np.asarray(p[1], dtype=np.float64) for p in partials]
-    accs_list = [np.asarray(p[2], dtype=np.float64) for p in partials]
-
     S = len(partials)
-    n = ms_list[0].shape[0]
-    d = accs_list[0].shape[1]
+    n = len(partials[0][0])
+    d = len(partials[0][2][0])
 
     m_global = [0.0] * n
     for j in range(n):
-        max_val = ms_list[0][j]
+        max_val = partials[0][0][j]
         for s in range(1, S):
-            val = ms_list[s][j]
+            val = partials[s][0][j]
             if val > max_val:
                 max_val = val
         m_global[j] = max_val
@@ -24,14 +19,14 @@ def merge_split_kv(partials):
     for s in range(S):
         corr_s = [0.0] * n
         for j in range(n):
-            corr_s[j] = math.exp(ms_list[s][j] - m_global[j])
+            corr_s[j] = math.exp(partials[s][0][j] - m_global[j])
         correction_list.append(corr_s)
 
     l_global = [0.0] * n
     for j in range(n):
         s_val = 0.0
         for s in range(S):
-            s_val += ls_list[s][j] * correction_list[s][j]
+            s_val += partials[s][1][j] * correction_list[s][j]
         l_global[j] = s_val
 
     acc_global = [[0.0] * d for _ in range(n)]
@@ -39,7 +34,7 @@ def merge_split_kv(partials):
         for k in range(d):
             s_val = 0.0
             for s in range(S):
-                s_val += accs_list[s][j, k] * correction_list[s][j]
+                s_val += partials[s][2][j][k] * correction_list[s][j]
             acc_global[j][k] = s_val
 
     result = [[0.0] * d for _ in range(n)]
@@ -48,4 +43,4 @@ def merge_split_kv(partials):
         for k in range(d):
             result[j][k] = acc_global[j][k] / l_val
 
-    return np.array(result, dtype=np.float64)
+    return result

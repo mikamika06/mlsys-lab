@@ -16,20 +16,19 @@ The goal of this task is to implement a function that computes \(S\).
 Implement `flops_saved_by_apc`:
 
 ```python
-def flops_saved_by_apc(reused_counts: np.ndarray, per_token_flop: float) -> float:
+def flops_saved_by_apc(*args, **kwargs):
     ...
 ```
 
-* `reused_counts` – a 1‑D NumPy array of non‑negative integers; each element is the number of times a particular token was reused.
+* `reused_counts` – a 1‑D list of non‑negative integers; each element is the number of times a particular token was reused.
 * `per_token_flop` – a scalar floating point value representing the FLOPs saved per reuse of a single token.
 
-The function must return the total FLOPs saved as a Python `float`.  Use only NumPy operations; no explicit Python loops are required but not forbidden.
+The function must return the total FLOPs saved as a Python `float`.  Use only Python operations; no explicit Python loops are required but not forbidden.
 
 ## Example
 
 ```python
-import numpy as np
-counts = np.array([3, 5, 2])          # three tokens reused 3, 5 and 2 times respectively
+counts = [3, 5, 2]          # three tokens reused 3, 5 and 2 times respectively
 f = 1000.0                            # each reuse saves 1000 FLOPs
 saved = flops_saved_by_apc(counts, f)
 print(saved)                          # 10000.0
@@ -37,7 +36,7 @@ print(saved)                          # 10000.0
 
 ## What the gate checks
 
-The grader evaluates the relative error of your result against a NumPy oracle:
+The grader evaluates the relative error of your result against a Python oracle:
 
 $$
 \mathrm{rel\_err} = \frac{\lvert \hat S - S_{\text{ref}} \rvert}

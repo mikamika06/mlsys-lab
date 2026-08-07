@@ -1,34 +1,33 @@
-import numpy as np
-import math
-
-def compute_activation_scale(X: np.ndarray) -> np.ndarray:
+def compute_activation_scale(X: list[list[list[float]]]) -> list[float]:
     """
     Compute per‑channel mean absolute activation.
 
     Parameters
     ----------
-    X : np.ndarray
-        3‑D array of shape (batch, seq_len, channels).
+    X : list[list[list[float]]]
+        3‑D list of shape (batch, seq_len, channels).
 
     Returns
     -------
-    np.ndarray
-        1‑D float64 array of length `channels` containing the statistic.
+    list[float]
+        1‑D list of length `channels` containing the statistic.
     """
-    batch_size, seq_len, channels = X.shape
+    batch_size = len(X)
+    seq_len = len(X[0])
+    channels = len(X[0][0])
     total_elements = batch_size * seq_len
-    
-    result = np.zeros(channels, dtype=np.float64)
-    
+
+    result = [0.0] * channels
+
     for c in range(channels):
         acc = 0.0
         for b in range(batch_size):
             for s in range(seq_len):
-                val = X[b, s, c]
+                val = X[b][s][c]
                 if val < 0.0:
                     acc -= val
                 else:
                     acc += val
         result[c] = acc / total_elements
-        
+
     return result

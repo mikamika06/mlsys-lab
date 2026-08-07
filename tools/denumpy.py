@@ -80,7 +80,10 @@ ALL_FILES = ("task.md", "starter.py", "solution_ref.py", "check.py")
 # the indentation of the first line of a function body often enough that a
 # two-line file fails every time. It is derivable anyway: the signature comes
 # from the rewritten reference and the docstring from the starter already there.
-MODEL_FILES = ("solution_ref.py", "check.py")
+# Only the reference is asked for. The grader is tried untouched first and wins
+# most of the time, so requesting it up front doubled the reply for nothing and
+# was the commonest way a reply came back missing the file that matters.
+MODEL_FILES = ("solution_ref.py",)
 
 _print_lock = threading.Lock()
 _log_lock = threading.Lock()
@@ -193,10 +196,10 @@ Rules, all of them load-bearing:
    block. The example has to be runnable and its stated result has to be what
    the new reference returns. Do not touch the explanation, the mathematics or
    the title.
-6. check.py: the grader calls the learner's function with plain lists and
-   compares against its own oracle. The oracle may keep numpy if that is what
-   keeps it correct, but everything crossing the boundary to the solution is a
-   list. The gate, its metric names and its tolerances stay exactly as they are.
+6. check.py is not yours to change and must not appear in the reply. The grader
+   keeps working: a reference written out by hand iterates its argument whether
+   that argument is a list or an array. If it turns out not to, you will be asked
+   for it separately.
 7. Numerical behaviour does not change. The same inputs give the same outputs to
    the last bit where that was true before.
 
@@ -842,6 +845,16 @@ def one(tid, turns):
         # either way — so it is tried first and the rewritten one only if that
         # fails.
         ok, line = verify(tid)
+        if not ok and "check.py" not in got:
+            # The grader really does need adjusting for this one. Ask for it now
+            # rather than carrying it in every reply.
+            history.append("%s:grader needs rewriting" % model)
+            prompt = ("With the solution on plain lists, the grader now reports:"
+                      "\n\n    " + line + "\n\nSend check.py, complete, as "
+                      "`FILE: check.py` followed by a fenced block. Keep the gate, "
+                      "its metric names and its tolerances exactly as they are; "
+                      "only what crosses the boundary to the solution changes.")
+            continue
         if not ok and "check.py" in got:
             with open(os.path.join(ROOT, "tasks", tid, "check.py"), "w",
                       encoding="utf-8") as f:

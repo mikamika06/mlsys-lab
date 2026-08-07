@@ -26,7 +26,7 @@ retired.
 Implement `simulate_active_set`:
 
 ```python
-def simulate_active_set(arrival_iters: np.ndarray, gen_lens: np.ndarray, max_num_seqs: int) -> list:
+def simulate_active_set(arrival_iters: list[int], gen_lens: list[int], max_num_seqs: int) -> list[list[int]]:
     ...
 ```
 
@@ -44,9 +44,8 @@ including) the one in which the last request retires.
 ## Example
 
 ```python
-import numpy as np
-arrival_iters = np.array([0, 0, 1])
-gen_lens      = np.array([2, 1, 3])
+arrival_iters = [0, 0, 1]
+gen_lens      = [2, 1, 3]
 simulate_active_set(arrival_iters, gen_lens, max_num_seqs=2)
 # -> [[0, 1], [0, 2], [2], [2]]
 ```

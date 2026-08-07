@@ -1,0 +1,43 @@
+{
+  "id": "m-show-empirically-that-seed-temperature-0-is-byte-det",
+  "title": "Seed temperature determinism and throughput profiling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "sampling-parameters-and-determinism",
+  "difficulty": 3,
+  "edits": [
+    "det/sampling.py",
+    "det/profiler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Byte-exact determinism under zero temperature and breaking it",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "byte_exact_fraction", "op": "==", "threshold": 1.0},
+        {"metric": "broken_fraction", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Recovering sampling settings from output distributions",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "recovered_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Quantifying temperature invariance on decode tok/s",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_throughput", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

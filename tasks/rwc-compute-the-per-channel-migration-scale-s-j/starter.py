@@ -1,5 +1,5 @@
-import numpy as np
+import math
 
-def compute_migration_scales(W: np.ndarray, X: np.ndarray, alpha: float) -> np.ndarray:
+def compute_migration_scales(W: list, X: list, alpha: float) -> list[float]:
     """WRONG IMPLEMENTATION – uses minima instead of maxima."""
     raise NotImplementedError('your code here')

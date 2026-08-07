@@ -1,0 +1,22 @@
+{
+  "id": "m-simulate-the-autotuner-s-exclude-on-outofresources-p",
+  "title": "Exclude-on-OutOfResources pruning logic",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Autotuning (triton.autotune / Config / key)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["autotune.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify dominated configurations", "check": "harness/m1.py",
+     "gates": [{"metric": "is_dominated_correct", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Autotuner loop with OOM pruning", "check": "harness/m2.py",
+     "gates": [{"metric": "argmin_matched", "op": "==", "threshold": 3},
+               {"metric": "evals_matched", "op": "==", "threshold": 3}]},
+    {"n": 3, "title": "Safety net: catch over-pruning", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_overpruning", "op": "==", "threshold": 1}]}
+  ]
+}

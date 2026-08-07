@@ -1,0 +1,7 @@
+We're hitting a wall with our Triton kernel autotuner script, which is currently taking upwards of an hour for a single kernel on our staging instances.
+
+I was watching the console output during a tuning run and noticed a glaring inefficiency in our search strategy. The script evaluates a long list of configuration dictionaries. It tries `{"BLOCK_M": 64, "BLOCK_N": 64, "num_warps": 8}`, and the GPU immediately throws an `OutOfResources` exception because the kernel demands too much shared memory. But then, the very next configuration it evaluates is `{"BLOCK_M": 128, "BLOCK_N": 64, "num_warps": 8}`. This naturally fails again with `OutOfResources`, wasting time compiling, launching the kernel, and waiting for the driver to trap the error.
+
+If a configuration fails due to hitting hardware resource limits, there is zero mathematical possibility that a configuration demanding *more* or *equal* amounts of those same resources will succeed. The official Triton codebase has a pruning strategy called `exclude-on-OutOfResources` that skips these guaranteed-to-fail configs, but our custom tuner loop omits it entirely.
+
+We need to add this pruning logic. First, write a function that checks if a configuration is "dominated" (all its resource keys are $\ge$ those of a known OOM configuration). Next, weave this into the autotune loop to remember OOMs and skip dominated configs. Finally, add a regression test so we don't accidentally over-prune configs when only *some* resource parameters are larger.

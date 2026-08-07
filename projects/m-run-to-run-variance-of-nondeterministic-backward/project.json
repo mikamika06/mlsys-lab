@@ -1,0 +1,23 @@
+{
+  "id": "m-run-to-run-variance-of-nondeterministic-backward",
+  "title": "Run-to-run variance of nondeterministic backward",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "numerical-correctness-and-tolerances",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["flashvar/variance.py", "flashvar/reducer.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Measure run-to-run variance and relative error", "check": "harness/m1.py",
+     "gates": [{"metric": "variance_measured", "op": "==", "threshold": 1},
+               {"metric": "rel_err_bounded", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Deterministic reduction strategy in backward pass", "check": "harness/m2.py",
+     "gates": [{"metric": "deterministic_match", "op": "==", "threshold": 1},
+               {"metric": "speedup_or_accuracy", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching variance regression", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_high_variance", "op": "==", "threshold": 1}]}
+  ]
+}

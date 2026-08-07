@@ -1,0 +1,7 @@
+# Ticket: Speculative Decoding Draft Head Performance Degradation and Data Mix Discrepancy
+
+We have observed a significant and persistent drop in speculative decoding throughput across our primary serving clusters when deploying draft heads trained exclusively on standard ground-truth training sets. Operators report that despite low validation perplexity during offline training, the online acceptance rate of the draft tokens falls short of expectations, occasionally resulting in lower effective tokens-per-second than single-model baseline execution.
+
+Initial investigations indicate that the distribution mismatch between standard target-model outputs and actual generations produced during autoregressive rollout heavily penalizes the draft head's predictive alignment. Furthermore, standard token-level cross-entropy objectives fail to capture the intermediate hidden-state geometry of the larger target network, leading to miscalibrated confidence scores during sequence generation.
+
+We need to systematically analyze the acceptance-rate delta between self-distilled rollouts and ground-truth datasets, implement a robust combined token-level and feature-level distillation loss function, and evaluate scaling behavior across various self-distilled dataset sizes (specifically 100, 500, and 2000 samples). A rigorous regression testing suite must be established to ensure continuous adherence to these constraints without regression in training stability.

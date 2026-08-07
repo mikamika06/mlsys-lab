@@ -32,9 +32,7 @@ the compute happens.
 Implement `merge_split_kv`:
 
 ```python
-def merge_split_kv(
-    partials: list[tuple[np.ndarray, np.ndarray, np.ndarray]],
-) -> np.ndarray:
+def merge_split_kv(partials):
     ...
 ```
 
@@ -50,13 +48,12 @@ Return the `(n, d)` merged attention output, per the formulas above.
 ## Example
 
 ```python
-import numpy as np
 
 # 2 chunks, n=3 query rows, d=4
-m1 = np.array([1.0, 2.0, 0.5]); l1 = np.array([3.0, 1.0, 2.0])
-acc1 = np.ones((3, 4))
-m2 = np.array([0.0, 3.0, 0.5]); l2 = np.array([2.0, 4.0, 1.0])
-acc2 = np.full((3, 4), 2.0)
+m1 = [1.0, 2.0, 0.5]; l1 = [3.0, 1.0, 2.0]
+acc1 = [[1.0] * 4 for _ in range(3)]
+m2 = [0.0, 3.0, 0.5]; l2 = [2.0, 4.0, 1.0]
+[[2.0, 2.0, 2.0, 2.0], [2.0, 2.0, 2.0, 2.0], [2.0, 2.0, 2.0, 2.0]]
 
 out = merge_split_kv([(m1, l1, acc1), (m2, l2, acc2)])
 # row 0: m* = max(1.0, 0.0) = 1.0
@@ -66,7 +63,7 @@ out = merge_split_kv([(m1, l1, acc1), (m2, l2, acc2)])
 
 ## What the gate checks
 
-The grader builds several `(q, k, v, S)` scenarios from a seeded NumPy
+The grader builds several `(q, k, v, S)` scenarios from a seeded Python
 generator (varying sequence length, head dim, and number of chunks `S`,
 including chunk counts that don't divide the sequence length evenly) and
 computes, independently in float64: the reference full attention output

@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def simulate_active_set(arrival_iters: np.ndarray, gen_lens: np.ndarray, max_num_seqs: int) -> list:
+def simulate_active_set(arrival_iters: list[int], gen_lens: list[int], max_num_seqs: int) -> list[list[int]]:
     """Discrete-event continuous-batching simulation: admit (FIFO, up to
     max_num_seqs) -> record the active set -> decode one token each ->
     retire anything that just reached its gen_len."""

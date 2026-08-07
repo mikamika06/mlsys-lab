@@ -27,25 +27,24 @@ A common bug is to select the largest half of the entire row instead of selectin
 Implement `select_2_4_mask(W)`:
 
 ```python
-def select_2_4_mask(W: np.ndarray) -> np.ndarray:
+def select_2_4_mask(W: list[list[float]]) -> list[list[int]]:
     ...
 ```
 
-The input is a 2-D NumPy array of weights with shape $(r, c)$. The number of columns is always divisible by $4$.
+The input is a list of lists of floats of weights with shape $(r, c)$. The number of columns is always divisible by $4$.
 
-Return an integer NumPy array of the same shape. Each group of four consecutive values in every row must contain exactly two ones. The two ones must correspond to the two largest absolute values in that group.
+Return an integer list of the same shape. Each group of four consecutive values in every row must contain exactly two ones. The two ones must correspond to the two largest absolute values in that group.
 
-Use NumPy operations. Ties may be resolved by selecting lower indices first.
+Use Python operations. Ties may be resolved by selecting lower indices first.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([
+W = [
     [1.0, -5.0, 2.0, 0.5],
     [8.0, 1.0, -7.0, 2.0],
-])
+]
 
 mask = select_2_4_mask(W)
 
@@ -58,7 +57,7 @@ mask = select_2_4_mask(W)
 
 ## What the gate checks
 
-The gate builds the expected 2:4 mask with a NumPy oracle that independently evaluates every row and every group of four. The returned mask must exactly match the oracle output.
+The gate builds the expected 2:4 mask with a Python oracle that independently evaluates every row and every group of four. The returned mask must exactly match the oracle output.
 
 The gate also verifies the structural invariant that every group of four selected entries contains exactly two ones:
 

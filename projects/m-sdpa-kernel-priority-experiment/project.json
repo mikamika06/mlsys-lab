@@ -1,0 +1,40 @@
+{
+  "id": "m-sdpa-kernel-priority-experiment",
+  "title": "SDPA kernel priority and memory blowup analysis",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-flashattention",
+  "track": "pytorch-sdpa-dispatch",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "sdpa_exp/kernels.py",
+    "sdpa_exp/memory.py",
+    "sdpa_exp/decoder.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "SDPA kernel priority configuration",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "priority_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "MATH versus FLASH memory blowup calculation",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "blowup_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: can_use_flash_attention debug decoder",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_dispatch", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

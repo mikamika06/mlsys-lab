@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def streaming_softmax(scores: np.ndarray, chunk_size: int) -> np.ndarray:
+def streaming_softmax(scores: list[float], chunk_size: int) -> list[float]:
     """Compute softmax(scores) by streaming through the vector in chunks.
 
     scores: 1-D array of raw scores (may be fp32, may contain large or

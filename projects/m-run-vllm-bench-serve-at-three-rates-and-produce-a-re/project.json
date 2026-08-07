@@ -1,0 +1,73 @@
+{
+  "id": "m-run-vllm-bench-serve-at-three-rates-and-produce-a-re",
+  "title": "Run vllm bench serve at three rates and produce a reproducible result bundle",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "benchmark-harness-and-methodology",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bench_serve/runner.py",
+    "bench_serve/bundle.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulated engine execution across target request arrival rates",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "throughput_ratio",
+          "op": ">=",
+          "threshold": 0.8
+        },
+        {
+          "metric": "rates_completed",
+          "op": "==",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reproducible result bundle generation with summary metrics",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "bundle_valid",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "summary_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests that catch missing or dropped request metrics",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_dropped_requests",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

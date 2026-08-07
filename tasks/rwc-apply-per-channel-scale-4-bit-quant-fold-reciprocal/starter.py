@@ -1,9 +1,6 @@
-import numpy as np
+import math
 
-
-def awq_apply_fixed_scale(
-    W: np.ndarray, s: np.ndarray, X: np.ndarray, group_size: int, bits: int = 4
-) -> np.ndarray:
+def awq_apply_fixed_scale(W: list[list[float]], s: list[float], X: list[list[float]], group_size: int, bits: int=4) -> list[list[float]]:
     """
     W: (out_features, in_features) weight matrix.
     s: (in_features,) positive per-input-channel AWQ smoothing scale

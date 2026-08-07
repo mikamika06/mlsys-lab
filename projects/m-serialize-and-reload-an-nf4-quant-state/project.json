@@ -1,0 +1,22 @@
+{
+  "id": "m-serialize-and-reload-an-nf4-quant-state",
+  "title": "Serialize and reload an NF4 quant state",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Serialization, saving, and loading quantized models",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quantutil/serialize.py", "quantutil/reload.py", "quantutil/config.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Serialize and reload an NF4 quant_state", "check": "harness/m1.py",
+     "gates": [{"metric": "states_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Stop re-quantizing an already-quantized checkpoint", "check": "harness/m2.py",
+     "gates": [{"metric": "quantization_prevented", "op": "==", "threshold": 1},
+               {"metric": "weights_preserved", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches missing state restoration", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_reload", "op": "==", "threshold": 1}]}
+  ]
+}

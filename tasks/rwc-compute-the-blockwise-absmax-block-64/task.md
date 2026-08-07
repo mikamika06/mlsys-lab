@@ -22,9 +22,8 @@ the result because $|0| = 0$.
 Implement `blockwise_absmax`:
 
 ```python
-import numpy as np
 
-def blockwise_absmax(w: np.ndarray, block_size: int = 64) -> np.ndarray:
+def blockwise_absmax(w: list[float], block_size: int=64) -> list[float]:
     """Return the per-block maximum absolute value of w.
 
     Parameters
@@ -39,13 +38,12 @@ def blockwise_absmax(w: np.ndarray, block_size: int = 64) -> np.ndarray:
     """
 ```
 
-Use vectorized NumPy — no Python `for` loops. The output must be `float64`.
+Use vectorized Python — no Python `for` loops. The output must be `float64`.
 
 ## Example
 
 ```python
-import numpy as np
-w = np.array([1, -3, 2, 0, -1, 4, 0.5, -0.25])
+w = [1, -3, 2, 0, -1, 4, 0.5, -0.25]
 c = blockwise_absmax(w, block_size=4)
 # Block 0: |1|, |-3|, |2|, |0|  → 3.0
 # Block 1: |-1|, |4|, |0.5|, |-0.25| → 4.0
@@ -55,7 +53,7 @@ c = blockwise_absmax(w, block_size=4)
 ## What the gate checks
 
 One gate: `max_abs_err`. The grader computes the reference answer using a
-NumPy oracle (reshape + `np.max(np.abs(...), axis=1)`) on five random weight
+Python oracle (chunking + `[max(abs(b)) for b in ...]`) on five random weight
 vectors including one whose length is not a multiple of the block size. The
 maximum absolute error across all test cases must satisfy
 $\text{max\_abs\_err} < 10^{-10}$.

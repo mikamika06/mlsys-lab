@@ -31,7 +31,7 @@ not invariant to arbitrary rescaling of only one operand.
 Implement `fix_awq_scale(W, X, s)`:
 
 ```python
-def fix_awq_scale(W: np.ndarray, X: np.ndarray, s: np.ndarray) -> np.ndarray:
+def fix_awq_scale(W: list[list[float]], X: list[list[float]], s: list[float]) -> list[list[float]]:
     ...
 ```
 
@@ -51,16 +51,15 @@ $$
 where $\odot$ multiplies each input channel column of $W$ by the corresponding
 scale value. The result must be `float64`.
 
-Use NumPy operations only.
+Use Python operations only.
 
 ## Example
 
 ```python
-import numpy as np
 
-W = np.array([[2.0, 3.0], [4.0, 5.0]])
-X = np.array([[1.0, 2.0]])
-s = np.array([2.0, 4.0])
+W = [[2.0, 3.0], [4.0, 5.0]]
+X = [[1.0, 2.0]]
+s = [2.0, 4.0]
 
 Y = fix_awq_scale(W, X, s)
 # Equivalent to:
@@ -69,7 +68,7 @@ Y = fix_awq_scale(W, X, s)
 
 ## What the gate checks
 
-The gate builds a NumPy oracle by applying the mathematically correct folded
+The gate builds a Python oracle by applying the mathematically correct folded
 computation and compares the implementation output using the maximum absolute
 error:
 

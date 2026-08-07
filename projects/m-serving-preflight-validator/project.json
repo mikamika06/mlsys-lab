@@ -1,0 +1,63 @@
+{
+  "id": "m-serving-preflight-validator",
+  "title": "Serving Preflight Validator",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-quant-libs",
+  "track": "Serving quantized models in production (vLLM)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "preflight/validator.py",
+    "preflight/profiler.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Preflight memory validation and GPU fitting",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "fits_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Throughput comparison against FP16 baseline",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "throughput_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard: regression test for invalid deployments",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_oom_approvals",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "m-simulate-gradscaler-s-scale-trajectory-over-20-steps",
+  "title": "Simulate GradScaler scale trajectory over 20 steps",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "gradscaler-loss-scaling",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "gradscaler/sim.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate the GradScaler step trajectory",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "trajectory_matched", "op": "==", "threshold": 6}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Identify skipped steps and predict the next doubling",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "skipped_matched", "op": "==", "threshold": 6},
+        {"metric": "doubling_matched", "op": "==", "threshold": 6}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches unreset success counts",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unreset_successes", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

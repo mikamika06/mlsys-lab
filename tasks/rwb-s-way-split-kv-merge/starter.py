@@ -1,5 +1,4 @@
-import numpy as np
-
+import math
 
 def merge_split_kv(partials):
     """Merge S independent split-KV attention partials into the final output.

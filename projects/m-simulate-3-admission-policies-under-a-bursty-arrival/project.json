@@ -1,0 +1,39 @@
+{
+  "id": "m-simulate-3-admission-policies-under-a-bursty-arrival",
+  "title": "Simulate admission policies",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Request Queue Admission Control",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["admission/sim.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate admission policies",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "traces_matched", "op": ">=", "threshold": 30}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Identify load-shedding trigger",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "triggers_matched", "op": ">=", "threshold": 10}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch invariant violations in time_limit",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_invariant", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

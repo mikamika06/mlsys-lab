@@ -1,0 +1,21 @@
+{
+  "id": "m-serve-4-adapters-concurrently-and-measure-throughput",
+  "title": "Serve 4 adapters concurrently and measure throughput",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "multi-lora-serving",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["loraserve/engine.py", "loraserve/metrics.py", "loraserve/schedule.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Run 4 adapters concurrently in a batch scheduler", "check": "harness/m1.py",
+     "gates": [{"metric": "adapters_active", "op": "==", "threshold": 4}]},
+    {"n": 2, "title": "Measure throughput ratio against base-only baseline", "check": "harness/m2.py",
+     "gates": [{"metric": "throughput_ratio", "op": ">=", "threshold": 0.8}]},
+    {"n": 3, "title": "Safety net: a test that catches single-adapter serialization", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_serialization", "op": "==", "threshold": 1}]}
+  ]
+}

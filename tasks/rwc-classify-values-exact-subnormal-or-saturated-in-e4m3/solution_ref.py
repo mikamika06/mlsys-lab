@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
 def _decode(bits: int) -> float:
     sign = -1.0 if (bits >> 7) & 1 else 1.0
@@ -12,7 +12,7 @@ def _decode(bits: int) -> float:
         # subnormal: value = sign * (mant/8) * 2^-6
         return sign * (mant_bits / 8.0) * (2.0 ** -6)
     elif exp_bits == 15:
-        return np.inf * sign
+        return float('inf') * sign
     else:
         return sign * (1 + mant_bits / 8.0) * (2.0 ** (exp_bits - bias))
 
@@ -27,25 +27,24 @@ def _nearest_e4m3(v: float) -> float:
             best = val
     return best
 
-def classify_e4m3(vals: np.ndarray) -> np.ndarray:
+def classify_e4m3(vals: list[float]) -> list[str]:
     """
     Classify each element of *vals* as 'EXACT', 'SUBNORMAL' or 'SATURATED'
     with respect to the 8‑bit e4m3 floating point format.
 
     Parameters
     ----------
-    vals : array_like
+    vals : list of float
         Input values to classify.
 
     Returns
     -------
-    numpy.ndarray
-        A one‑dimensional string array of the same length as *vals*.
+    list of str
+        A list of strings of the same length as *vals*.
     """
-    vals = np.asarray(vals, dtype=np.float64)
     out = []
     for v in vals:
-        if np.isnan(v) or np.isinf(v) or abs(v) > 448.0:
+        if math.isnan(v) or math.isinf(v) or abs(v) > 448.0:
             out.append('SATURATED')
             continue
         enc = _nearest_e4m3(v)
@@ -53,4 +52,4 @@ def classify_e4m3(vals: np.ndarray) -> np.ndarray:
             out.append('EXACT')
         else:
             out.append('SUBNORMAL')
-    return np.array(out, dtype='<U10')
+    return out

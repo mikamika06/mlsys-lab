@@ -1,0 +1,40 @@
+{
+  "id": "m-simulate-capacity-gap-loss-floor-with-synthetic-dist",
+  "title": "Simulate capacity gap loss floor with synthetic distributions",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Distillation failure modes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["distill/gap.py", "distill/diagnose.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute synthetic capacity gap loss floor",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Diagnose mode collapse and effective temperature shift",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "collapse_detected", "op": "==", "threshold": 1},
+        {"metric": "temp_shift_rel_err", "op": "<=", "threshold": 0.01}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catches temperature miscalibration",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_miscalibration", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

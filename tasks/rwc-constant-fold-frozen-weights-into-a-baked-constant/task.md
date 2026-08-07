@@ -44,7 +44,7 @@ Supported node formats:
 {"name": "out", "op": "identity", "inputs": ["y"]}
 ```
 
-A node can be folded when all of its inputs are already known constants. Evaluate `mul` using NumPy elementwise multiplication, evaluate `add` using NumPy addition, and evaluate `identity` by forwarding the value.
+A node can be folded when all of its inputs are already known constants. Evaluate `mul` using Python elementwise multiplication, evaluate `add` using Python addition, and evaluate `identity` by forwarding the value.
 
 Return a tuple:
 
@@ -57,13 +57,12 @@ where `folded_tensor` is the value of the last node after constant propagation a
 ## Example
 
 ```python
-import numpy as np
 
 nodes = [
-    {"name": "w", "op": "const", "value": np.array([2.0, 3.0])},
-    {"name": "scale", "op": "const", "value": np.array([4.0, 5.0])},
+    {"name": "w", "op": "const", "value": [2.0, 3.0]},
+    {"name": "scale", "op": "const", "value": [4.0, 5.0]},
     {"name": "m", "op": "mul", "inputs": ["w", "scale"]},
-    {"name": "bias", "op": "const", "value": np.array([1.0, 1.0])},
+    {"name": "bias", "op": "const", "value": [1.0, 1.0]},
     {"name": "out", "op": "add", "inputs": ["m", "bias"]},
 ]
 
@@ -75,7 +74,7 @@ tensor, count = fold_constants(nodes)
 
 ## What the gate checks
 
-The grader builds several frozen computation graphs and computes the expected folded tensor by evaluating the same graph with a NumPy oracle.
+The grader builds several frozen computation graphs and computes the expected folded tensor by evaluating the same graph with a Python oracle.
 
 The returned tensor must satisfy
 

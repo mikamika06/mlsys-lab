@@ -1,0 +1,64 @@
+{
+  "id": "m-same-kernel-two-gpus-find-which-one-flips-it-from-me",
+  "title": "Roofline classification across two GPUs and memory traffic correction",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "roofline-model-fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "roof/gpu.py",
+    "roof/formula.py",
+    "roof/rank.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Find which GPU flips the kernel",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "gpu_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Corrected memory traffic and reclassification",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "formula_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: ranking distance test",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_ranking",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

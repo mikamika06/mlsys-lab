@@ -1,0 +1,21 @@
+{
+  "id": "m-run-a-small-model-on-mps-vs-cpu-diff-outputs",
+  "title": "MPS vs CPU divergence, staging costs, and unsupported ops",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "PyTorch MPS backend fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mpscheck/compare.py", "mpscheck/cost.py", "mpscheck/unsupported.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Compare small model outputs on CPU vs MPS", "check": "harness/m1.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 1e-5}]},
+    {"n": 2, "title": "Measure staging cost vs tensor size", "check": "harness/m2.py",
+     "gates": [{"metric": "cost_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for unsupported MPS ops", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_extraction", "op": "==", "threshold": 1}]}
+  ]
+}

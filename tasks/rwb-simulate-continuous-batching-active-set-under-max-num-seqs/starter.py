@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def simulate_active_set(arrival_iters: np.ndarray, gen_lens: np.ndarray, max_num_seqs: int) -> list:
+def simulate_active_set(arrival_iters: list[int], gen_lens: list[int], max_num_seqs: int) -> list[list[int]]:
     """Discrete-event continuous-batching simulation: each iteration,
     admit waiting requests (FIFO, up to max_num_seqs free slots), record
     the active set, decode one token per active request, then retire any

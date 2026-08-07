@@ -701,3 +701,38 @@
 {"id": "rwb-per-tensor-kv-reconstruction-mse", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
 {"id": "rwb-prefill-chunk-count-for-a-fixed-budget", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1"]}
 {"id": "rwb-reset-rope-position-ids-at-boundaries", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwb-preferred-batch-size-a-vs-b", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:numpy still in task.md"]}
+{"id": "rwb-reconstruct-global-attention-weights-from-per-chunk-lse", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwb-prefill-flops-saved-by-apc", "ok": false, "why": "3-6-flash:no solution_ref.py in the reply; 3-1-pro:function renamed flops_saved_by_apc -> solve; 3-1-pro: pass gates | raised: TypeError: unsupported operand type(s) for -: 'NoneType' and 'float'"}
+{"id": "rwb-s-way-split-kv-merge", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwb-simulate-continuous-batching-active-set-under-max-num-seqs", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwb-streaming-softmax-running-max-sum", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwb-single-adapter-lora-delta", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwb-static-request-level-batching-makespan", "ok": false, "why": "3-6-flash:no files; 3-1-pro:reference does not define static_batching_makespan; 3-1-pro:TASK_FAIL: reference does not pass gates | exact_match=0 (gate ==1)  <-- FAILED"}
+{"id": "rwb-sgmv-per-row-adapter-selection", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["check.py", "solution_ref.py", "starter.py"], "history": ["3-6-flash:statement fence count changed"]}
+{"id": "rwb-two-chunk-split-kv-log-sum-exp-merge", "ok": false, "why": "3-6-flash:TASK_FAIL: reference does not pass gates | max_abs_err=Infinity (gate <1e-05)  <-- FAILED; 3-1-pro:no files; 3-1-pro:function renamed two_chunk_split_kv_merge -> log_sum_exp_merge"}
+{"id": "rwb-tiled-flash-attention-forward-no-nxn-matrix", "ok": false, "why": "3-6-flash:no solution_ref.py in the reply; 3-1-pro:function renamed tiled_flash_attention_forward -> solution; 3-1-pro:parameters changed ['Q', 'K', 'V', 'block_size'] -> ['Q', 'K', 'V', 'is_causal', 'scale']"}
+{"id": "rwc-apply-per-channel-scale-4-bit-quant-fold-reciprocal", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "rwc-classify-values-exact-subnormal-or-saturated-in-e4m3", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwc-2-4-magnitude-prune-reconstruction-mse", "ok": false, "why": "3-6-flash:numpy still in solution_ref.py; 3-1-pro:no files; 3-1-pro:no files"}
+{"id": "rwc-combine-two-block-softmax-stats-online-softmax-lemma", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "rwc-compute-the-blockwise-absmax-block-64", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwc-compute-the-max-calibration-amax-and-its-clipping-error", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwc-compare-dram-traffic-fused-vs-unfused-elementwise-chain", "ok": false, "why": "3-6-flash:no solution_ref.py in the reply; 3-1-pro:function renamed dram_traffic_fused -> solution; 3-1-pro:TASK_FAIL: reference does not pass gates | exact_match=0 (gate ==1)  <-- FAILED"}
+{"id": "rwc-compute-nf4-bits-param-with-and-without-double-quant", "ok": false, "why": "3-6-flash:no solution_ref.py in the reply; 3-1-pro:reference does not define compute_nf4_bits; 3-1-pro:statement fence count changed"}
+{"id": "rwc-compute-the-per-channel-migration-scale-s-j", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwc-compute-the-per-channel-activation-scale-statistic", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwc-compute-the-mxfp4-shared-e8m0-block-scale-block-32", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "rwc-constant-fold-frozen-weights-into-a-baked-constant", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "rwc-epilogue-fuse-bias-add-activation-into-a-matmul", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["check.py", "solution_ref.py", "starter.py"], "history": []}
+{"id": "rwc-fix-2-4-selection-done-per-row-instead-of-per-group-of-4", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1"]}
+{"id": "rwc-fix-a-flash-accumulator-missing-the-max-update-rescale", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 3"]}
+{"id": "rwc-fix-a-scale-folded-on-the-wrong-side", "ok": true, "model": "3-6-flash", "turn": 2, "files": ["solution_ref.py", "starter.py"], "history": ["3-6-flash:solution_ref.py: SyntaxError line 1"]}
+{"id": "llm-compare-penalty-before-vs-after-temperature-kl", "ok": false, "why": "3-1-pro:defaults changed {} -> {'temperature': '1.0'}; 3-1-pro:parameters changed ['logits', 'penalty_fn', 'temperature'] -> ['logits', 'penalties', 'temperature']; 3-1-pro:defaults changed {} -> {'temperature': '1.0'}"}
+{"id": "llm-causal-streaming-softmax-with-block-skipping", "ok": false, "why": "3-1-pro:statement shows numpy-printed output; 3-1-pro:output still numpy-shaped after regeneration; 3-1-pro:statement shows numpy-printed output"}
+{"id": "pyt-validated-property-round-trip-byte-identity", "ok": false, "why": "3-1-pro:defaults changed {} -> {'dtype': '\\'\"\\\\\\'float\\\\\\'\"\\''}; 3-1-pro:no files; 3-1-pro:reference does not define the task function"}
+{"id": "rwa-reconstruct-the-full-per-query-head-kv-view-from-packed-gqa", "ok": false, "why": "3-1-pro:defaults changed {} -> {'n_rep': '1'}; 3-1-pro:defaults changed {} -> {'n_rep': '1'}; 3-1-pro:grader needs rewriting"}
+{"id": "rwb-classify-each-request-prefill-vs-decode-bound", "ok": true, "model": "3-6-flash", "turn": 1, "files": ["solution_ref.py", "starter.py"], "history": []}
+{"id": "num-vjp-of-broadcasted-add-mul", "ok": false, "why": "3-1-pro:no files; 3-1-pro:function renamed add_vjp -> solve; 3-1-pro:no files"}
+{"id": "rwa-implement-flashattention-2-forward-via-tiled-online-softmax", "ok": false, "why": "3-1-pro:grader needs rewriting; 3-1-pro:no files; 3-1-pro:grader needs rewriting"}
+{"id": "rwb-naive-exp-sum-merge-vs-lse-merge-stability", "ok": false, "why": "3-1-pro:parameters changed ['chunk_scores', 'chunk_values'] -> ['data']; 3-1-pro:grader needs rewriting; 3-1-pro:no files"}

@@ -1,95 +1,45 @@
 import math
-import numpy as np
 
 
-def _group_quant_dequant(x: np.ndarray, bits: int) -> np.ndarray:
+def _group_quant_dequant(x: list[list[float]], bits: int) -> list[list[float]]:
     """Uniform affine min-max quantizer/dequantizer along the LAST axis:
     every group of `group_size` values along that axis shares one
     scale/zero-point."""
-    x = np.asarray(x, dtype=np.float64)
     qmax = (1 << bits) - 1
-    shape = x.shape
-    out = np.empty(shape, dtype=np.float64)
-    
-    if len(shape) == 3:
-        d0, d1, d2 = shape
-        for i in range(d0):
-            for j in range(d1):
-                xmin = x[i, j, 0]
-                xmax = x[i, j, 0]
-                for k in range(1, d2):
-                    val = x[i, j, k]
-                    if val < xmin:
-                        xmin = val
-                    if val > xmax:
-                        xmax = val
-                
-                scale = (xmax - xmin) / qmax
-                if scale == 0:
-                    scale = 1.0
-                
-                zero_point = round(-xmin / scale)
-                
-                for k in range(d2):
-                    q = round(x[i, j, k] / scale + zero_point)
-                    if q < 0:
-                        q = 0
-                    elif q > qmax:
-                        q = qmax
-                    out[i, j, k] = (q - zero_point) * scale
-    elif len(shape) == 2:
-        d0, d1 = shape
-        for i in range(d0):
-            xmin = x[i, 0]
-            xmax = x[i, 0]
-            for k in range(1, d1):
-                val = x[i, k]
-                if val < xmin:
-                    xmin = val
-                if val > xmax:
-                    xmax = val
-            
-            scale = (xmax - xmin) / qmax
-            if scale == 0:
-                scale = 1.0
-            
-            zero_point = round(-xmin / scale)
-            
-            for k in range(d1):
-                q = round(x[i, k] / scale + zero_point)
-                if q < 0:
-                    q = 0
-                elif q > qmax:
-                    q = qmax
-                out[i, k] = (q - zero_point) * scale
-    else:
-        xmin = x[0]
-        xmax = x[0]
-        d0 = shape[0]
-        for k in range(1, d0):
-            val = x[k]
+    d0 = len(x)
+    d1 = len(x[0])
+    out = [[0.0] * d1 for _ in range(d0)]
+
+    for i in range(d0):
+        xmin = x[i][0]
+        xmax = x[i][0]
+        for k in range(1, d1):
+            val = x[i][k]
             if val < xmin:
                 xmin = val
             if val > xmax:
                 xmax = val
+
         scale = (xmax - xmin) / qmax
         if scale == 0:
             scale = 1.0
+
         zero_point = round(-xmin / scale)
-        for k in range(d0):
-            q = round(x[k] / scale + zero_point)
+
+        for k in range(d1):
+            q = round(x[i][k] / scale + zero_point)
             if q < 0:
                 q = 0
             elif q > qmax:
                 q = qmax
-            out[k] = (q - zero_point) * scale
+            out[i][k] = (q - zero_point) * scale
 
     return out
 
 
 def awq_apply_fixed_scale(
-    W: np.ndarray, s: np.ndarray, X: np.ndarray, group_size: int, bits: int = 4
-) -> np.ndarray:
+    W: list[list[float]], s: list[float], X: list[list[float]], group_size: int, bits: int = 4
+) -> list[list[float]]:
     """
     W: (out_features, in_features) weight matrix.
     s: (in_features,) positive per-input-channel AWQ smoothing scale
@@ -115,33 +65,45 @@ def awq_apply_fixed_scale(
 
     Returns `output`, shape (batch, out_features).
     """
-    W = np.asarray(W, dtype=np.float64)
-    s = np.asarray(s, dtype=np.float64)
-    X = np.asarray(X, dtype=np.float64)
-    out_features, in_features = W.shape
+    out_features = len(W)
+    in_features = len(W[0])
 
-    Ws = np.empty((out_features, in_features), dtype=np.float64)
+    Ws = [[0.0] * in_features for _ in range(out_features)]
     for i in range(out_features):
         for j in range(in_features):
-            Ws[i, j] = W[i, j] * s[j]
+            Ws[i][j] = W[i][j] * s[j]
 
     num_groups = in_features // group_size
-    Ws_grouped = Ws.reshape(out_features, num_groups, group_size)
-    Wq_grouped = _group_quant_dequant(Ws_grouped, bits)
-    Wq = Wq_grouped.reshape(out_features, in_features)
+    Ws_flattened = []
+    for i in range(out_features):
+        for g in range(num_groups):
+            group = []
+            for j in range(group_size):
+                group.append(Ws[i][g * group_size + j])
+            Ws_flattened.append(group)
 
-    batch_size = X.shape[0]
-    Xs = np.empty((batch_size, in_features), dtype=np.float64)
+    Wq_flattened = _group_quant_dequant(Ws_flattened, bits)
+
+    Wq = [[0.0] * in_features for _ in range(out_features)]
+    flat_idx = 0
+    for i in range(out_features):
+        for g in range(num_groups):
+            for j in range(group_size):
+                Wq[i][g * group_size + j] = Wq_flattened[flat_idx][j]
+            flat_idx += 1
+
+    batch_size = len(X)
+    Xs = [[0.0] * in_features for _ in range(batch_size)]
     for i in range(batch_size):
         for j in range(in_features):
-            Xs[i, j] = X[i, j] / s[j]
+            Xs[i][j] = X[i][j] / s[j]
 
-    output = np.empty((batch_size, out_features), dtype=np.float64)
+    output = [[0.0] * out_features for _ in range(batch_size)]
     for i in range(batch_size):
         for j in range(out_features):
             acc = 0.0
             for k in range(in_features):
-                acc += Xs[i, k] * Wq[j, k]
-            output[i, j] = acc
+                acc += Xs[i][k] * Wq[j][k]
+            output[i][j] = acc
 
     return output

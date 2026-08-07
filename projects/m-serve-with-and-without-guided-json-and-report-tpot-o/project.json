@@ -1,0 +1,45 @@
+{
+  "id": "m-serve-with-and-without-guided-json-and-report-tpot-o",
+  "title": "Serve with and without guided_json and report TPOT overhead",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "structured-outputs-and-guided-decoding",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "servemetrics/engine.py",
+    "servemetrics/report.py",
+    "servemetrics/bench.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate generation metrics with and without guided JSON",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "simulation_match", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute TPOT overhead ratio and generate summary report",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "latency_ratio", "op": ">=", "threshold": 1.0},
+        {"metric": "report_valid", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching distorted TPOT ratios",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_bad_ratio", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

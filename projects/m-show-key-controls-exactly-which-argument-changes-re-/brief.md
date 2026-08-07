@@ -1,0 +1,7 @@
+We noticed some peculiar behavior in our Triton kernel autotuning pipelines during a large sweep of matrix multiplication configurations. When running our tuning harness across various input sizes and hardware configurations, we noticed that tweaking certain non-shape arguments or seemingly unrelated hyperparameters triggers a full re-evaluation and re-trigger of the autotune search, whereas changes to other parameters are completely ignored by the cache lookup.
+
+Looking closer at how Triton manages its `triton.autotune` configurations and the crucial role of the `key` parameter, something isn't quite right. Our tuning logs show redundant profiling passes when we vary hyperparameters that shouldn't invalidate the cached best configuration, while failing to adapt when inputs that change the optimal block size or num_stages are modified.
+
+Your task is to build a utility module in our Triton autotuning pipeline that explicitly demonstrates how the `key` argument in `triton.autotune` controls which function arguments trigger a re-trigger of the autotune search, extracts the true argmin configuration from recorded matmul sweep logs, and accurately measures autotune search overhead compared to using a hardcoded best configuration.
+
+You need to implement the core functions in `triton_tune/autokey.py`, handle the argmin extraction and overhead computation properly, and write a thorough regression test suite in `tests/test_regression.py` that fails if any invariant regarding key-based cache invalidation or optimal configuration selection is compromised.

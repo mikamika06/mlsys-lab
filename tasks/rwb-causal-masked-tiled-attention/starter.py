@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def tiled_causal_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, block_size: int) -> np.ndarray:
+def tiled_causal_attention(Q, K, V, block_size):
     """FlashAttention-style tiled causal self-attention with online softmax.
 
     Q, K, V: (n, d). block_size: tile edge length along the sequence axis.

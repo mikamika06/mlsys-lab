@@ -1,0 +1,44 @@
+{
+  "id": "m-simulate-triton-s-dynamic-batcher-dispatch-algorithm",
+  "title": "Triton Dynamic Batcher Dispatch Algorithm",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-batching-serving",
+  "track": "Triton Dynamic Batching Config",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "triton/simulate.py",
+    "triton/metrics.py",
+    "triton/optimize.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate the dispatch algorithm",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "matches_reference", "op": "==", "threshold": 2}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Calculate throughput and p99 queue delay",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "matches_reference", "op": "==", "threshold": 2}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Optimize delay floor",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_ignored_floor", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

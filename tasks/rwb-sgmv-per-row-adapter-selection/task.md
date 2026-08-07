@@ -31,8 +31,7 @@ adapter, batch the matmul per group), not a different numerical result.
 Implement `sgmv_apply`:
 
 ```python
-def sgmv_apply(x: np.ndarray, adapter_id: np.ndarray,
-                A_bank: np.ndarray, B_bank: np.ndarray, scale: np.ndarray) -> np.ndarray:
+def sgmv_apply(x: list[list[float]], adapter_id: list[int], A_bank: list[list[list[float]]], B_bank: list[list[list[float]]], scale: list[float]) -> list[list[float]]:
     ...
 ```
 
@@ -48,13 +47,12 @@ def sgmv_apply(x: np.ndarray, adapter_id: np.ndarray,
 ## Example
 
 ```python
-import numpy as np
 
-x = np.random.default_rng(0).standard_normal((5, 4))
-adapter_id = np.array([0, 1, 0, 1, 0])
-A_bank = np.random.default_rng(1).standard_normal((2, 4, 2))
-B_bank = np.random.default_rng(2).standard_normal((2, 2, 3))
-scale = np.array([1.0, 0.5])
+x = (lambda rng: [[rng.gauss(0, 1) for _ in range(4)] for _ in range(5)])(random.Random(0))
+adapter_id = [0, 1, 0, 1, 0]
+A_bank = (lambda rng: [[[rng.gauss(0, 1) for _ in range(2)] for _ in range(4)] for _ in range(2)])(random.Random(1))
+B_bank = (lambda rng: [[[rng.gauss(0, 1) for _ in range(3)] for _ in range(2)] for _ in range(2)])(random.Random(2))
+scale = [1.0, 0.5]
 
 out = sgmv_apply(x, adapter_id, A_bank, B_bank, scale)
 # out.shape == (5, 3)

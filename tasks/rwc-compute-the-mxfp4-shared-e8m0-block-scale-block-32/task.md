@@ -20,7 +20,7 @@ def compute_shared_e8m0_scale(weights):
     ...
 ```
 
-`weights` is a two‑dimensional NumPy array of shape $(B,\;32)$ where $B$ is the number of blocks.  
+`weights` is a list of lists of floats of shape $(B,\;32)$ where $B$ is the number of blocks.  
 The function must return a one‑dimensional integer array of length $B$, containing the exponent for each block.
 
 The implementation should be fully vectorised; no explicit Python loops over the blocks or elements are required.
@@ -28,11 +28,10 @@ The implementation should be fully vectorised; no explicit Python loops over the
 ## Example
 
 ```python
-import numpy as np
-weights = np.array([
+weights = [
     [0, 1.5, -2.3, 6.0] + [0]*28,
     [7.0, 0, 0, 0] + [0]*28
-])
+]
 exponents = compute_shared_e8m0_scale(weights)
 print(exponents)   # [0, 1]
 ```
@@ -43,6 +42,6 @@ For the second block $\max|w|=7>6$ and $\lceil\log_2(7/6)\rceil=1$.
 
 ## What the gate checks
 
-The grader computes a reference exponent for each block using NumPy’s `log2` and `ceil`.  
+The grader computes a reference exponent for each block using Python’s `log2` and `ceil`.  
 Your output must match this reference exactly (element‑wise equality).  No tolerance is allowed.  
 If any element differs, or if the shape/dtype is incorrect, the solution fails.

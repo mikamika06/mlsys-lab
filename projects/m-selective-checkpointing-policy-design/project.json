@@ -1,0 +1,44 @@
+{
+  "id": "m-selective-checkpointing-policy-design",
+  "title": "Selective checkpointing policy and dropout consistency",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "Activation checkpointing and memory/compute trade",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "checkpoint/policy.py",
+    "checkpoint/dropout.py",
+    "checkpoint/compile_bridge.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Optimal selective checkpointing policy selection",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "policies_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Dropout mask consistency under checkpointing recompute",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "dropout_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching invariant violations",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_policy", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

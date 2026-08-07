@@ -40,7 +40,7 @@ materialized $O(N)$ combined score array.
 Implement `reconstruct_global_weights(chunk_scores, chunk_lse, chunk_partial_out)`:
 
 ```python
-def reconstruct_global_weights(chunk_scores: np.ndarray, chunk_lse: np.ndarray, chunk_partial_out: np.ndarray) -> np.ndarray:
+def reconstruct_global_weights(chunk_scores: list[list[float]], chunk_lse: list[float], chunk_partial_out: list[list[float]]) -> list[float]:
     ...
 ```
 
@@ -61,12 +61,11 @@ $w_j = e^{s_j - \mathrm{LSE}_{\text{global}}}$, in the same
 ## Example
 
 ```python
-import numpy as np
 
-chunk_scores = np.array([[1.0, 2.0], [0.5, 3.0]])   # C=2, chunk_size=2
-chunk_lse = np.array([np.log(np.exp(1.0) + np.exp(2.0)),
-                       np.log(np.exp(0.5) + np.exp(3.0))])
-chunk_partial_out = np.zeros((2, 4))  # unused here
+chunk_scores = [[1.0, 2.0], [0.5, 3.0]]   # C=2, chunk_size=2
+chunk_lse = [math.log(math.exp(1.0) + math.exp(2.0)),
+math.log(math.exp(0.5) + math.exp(3.0))]
+chunk_partial_out = [[0.0] * 4 for _ in range(2)]  # unused here
 
 w = reconstruct_global_weights(chunk_scores, chunk_lse, chunk_partial_out)
 # w.shape == (4,), w.sum() == 1.0, and w matches a plain softmax over

@@ -1,5 +1,0 @@
-We are running a custom cache-aware routing layer for our LLM serving cluster, but our P99 latency tail has spiked dramatically under high concurrency. During traffic surges, requests are being dispatched to instances based purely on current queue lengths and simplistic replica health metrics, completely ignoring the location and validity of their pre-existing KV cache states.
-
-When a request arrives with a partially matching or stale cache state on a remote worker, the system either recomputes tokens unnecessarily or pays a heavy communication penalty to fetch and reconcile the cache blocks across nodes. This thrashing invalidates the cache-locality benefits we rely on, leading to severe cache misses and unpredictable performance degradation.
-
-Your task is to implement the routing quantification engine in `routing/penalty.py` and `routing/cost.py`. You need to ingest request history and worker cache states, calculate the exact token overlap and staleness penalty, and design a regression test suite in `tests/test_regression.py` that guarantees routing decisions properly penalize stale cache states without breaking valid locality optimizations.

@@ -1,0 +1,21 @@
+{
+  "id": "m-show-accept-reject-reduces-to-exact-match-at-tempera",
+  "title": "Accept/reject reduction and temperature effects in speculative sampling",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Sampling temperature & distribution matching",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["specsampling/core.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Accept/reject reduces to exact-match at temperature zero", "check": "harness/m1.py",
+     "gates": [{"metric": "reduction_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Real acceptance rate across temperature sweep", "check": "harness/m2.py",
+     "gates": [{"metric": "rates_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for temperature mismatch bug", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_mismatch", "op": "==", "threshold": 1}]}
+  ]
+}
