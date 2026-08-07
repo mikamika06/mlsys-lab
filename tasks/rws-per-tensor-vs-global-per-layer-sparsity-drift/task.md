@@ -33,13 +33,12 @@ and a target global prune ratio $r\in(0,1)$:
 Implement `global_threshold_layer_sparsity(weights, prune_ratio)`:
 
 ```python
-import numpy as np
 
-def global_threshold_layer_sparsity(weights: list[np.ndarray], prune_ratio: float) -> dict:
+def global_threshold_layer_sparsity(weights: list[list[float]], prune_ratio: float) -> dict:
     ...
 ```
 
-- `weights`: a Python list of `L` NumPy arrays (any shapes), the model's
+- `weights`: a Python list of `L` list (any shapes), the model's
   per-layer weight tensors, in a fixed order.
 - `prune_ratio`: float in `(0, 1)`, the target global prune fraction $r$.
 
@@ -54,9 +53,8 @@ Return a dict:
 ## Example
 
 ```python
-import numpy as np
-w_small = np.full(4, 0.01)   # tiny-magnitude layer
-w_big   = np.full(4, 2.0)    # large-magnitude layer
+w_small = [0.01] * 4   # tiny-magnitude layer
+w_big   = [2.0] * 4    # large-magnitude layer
 out = global_threshold_layer_sparsity([w_small, w_big], prune_ratio=0.5)
 # Pooled: [0.01]*4 + [2.0]*4, the 4 globally-smallest are all in w_small.
 # out["sparsity"]         -> array([1.0, 0.0])
@@ -69,7 +67,7 @@ The grader loads four committed fixture layers (`layer0.npy` .. `layer3.npy`,
 shapes `(40,40)`, `(30,50)`, `(64,20)`, `(48,48)`, with deliberately
 different per-layer magnitude scales spanning `0.01` to `2.0`) and a fixed
 `prune_ratio = 0.5`, then recomputes the pooled-threshold selection and
-per-layer sparsity independently in NumPy (stable ascending sort of the
+per-layer sparsity independently in Python (stable ascending sort of the
 pooled absolute values, `k = round(0.5 * N)`).
 
 - `sparsity_exact`: `1.0` if your `"sparsity"` array matches the oracle's

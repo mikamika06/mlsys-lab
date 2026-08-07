@@ -13,7 +13,7 @@ that sparsity level is acceptable.
 Implement `apply_wanda_mask`:
 
 ```python
-def apply_wanda_mask(W: np.ndarray, M: np.ndarray, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def apply_wanda_mask(W: list[list[float]], M: list[list[float]], X: list[list[float]]):
     ...
 ```
 
@@ -35,17 +35,16 @@ $$
 ## Example
 
 ```python
-import numpy as np
-W = np.array([[1.0, 2.0], [3.0, 4.0]])
-M = np.array([[1.0, 0.0], [0.0, 1.0]])
-X = np.array([[1.0, 0.0], [0.0, 1.0]])
+W = [[1.0, 2.0], [3.0, 4.0]]
+M = [[1.0, 0.0], [0.0, 1.0]]
+X = [[1.0, 0.0], [0.0, 1.0]]
 Y, R = apply_wanda_mask(W, M, X)
 # Y = [[1,0],[0,4]], R = (W@X) - Y = [[0,2],[3,0]]
 ```
 
 ## What the gate checks
 
-* **y_max_abs_err** — max-abs difference between your `Y` and a NumPy
+* **y_max_abs_err** — max-abs difference between your `Y` and a Python
   oracle computing `(W*M) @ X` on the fixed fixtures (`wanda_w.npy`,
   `wanda_m.npy`, `wanda_x.npy`).
 * **r_max_abs_err** — max-abs difference between your `R` and the

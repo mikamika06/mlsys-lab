@@ -1,7 +1,6 @@
-import numpy as np
+import math
 
-
-def nf4_vs_int4_mse(w: np.ndarray):
+def nf4_vs_int4_mse(w: list[float]) -> tuple[float, float]:
     """
     Return (mse_nf4, mse_int4): reconstruction MSE of w quantized with the
     fixed 16-level NF4 codebook (normalize by absmax, snap to nearest

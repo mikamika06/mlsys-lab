@@ -41,7 +41,7 @@ Both report reconstruction MSE: $\frac{1}{n}\sum_i (w_i - \widehat w_i)^2$.
 Implement:
 
 ```python
-def nf4_vs_int4_mse(w: np.ndarray) -> tuple[float, float]:
+def nf4_vs_int4_mse(w: list[float]) -> tuple[float, float]:
     ...
 ```
 
@@ -52,8 +52,7 @@ def nf4_vs_int4_mse(w: np.ndarray) -> tuple[float, float]:
 ## Example
 
 ```python
-import numpy as np
-rng = np.random.default_rng(1)
+rng = random.Random(1)
 w = rng.normal(size=256)
 mse_nf4, mse_int4 = nf4_vs_int4_mse(w)
 assert mse_nf4 < mse_int4   # NF4's quantile-spaced levels fit the Gaussian bulk better
@@ -61,7 +60,7 @@ assert mse_nf4 < mse_int4   # NF4's quantile-spaced levels fit the Gaussian bulk
 
 ## What the gate checks
 
-* **max_abs_err** — both `mse_nf4` and `mse_int4` must match a NumPy
+* **max_abs_err** — both `mse_nf4` and `mse_int4` must match a Python
   oracle implementing the exact formulas above (same codebook, same
   absmax/scale) to within $10^{-9}$ absolute error, on several random
   Gaussian-ish blocks of length 256 (fixed seed).

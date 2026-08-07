@@ -1,0 +1,21 @@
+{
+  "id": "m-woq-int4-group-wise-byte-layout-packing",
+  "title": "INT4 group-wise byte-layout packing and SmoothQuant error analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "IPEX LLM quantization (SmoothQuant, weight-only)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["woq/packing.py", "woq/quant.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Group-wise INT4 byte layout packing and unpacking", "check": "harness/m1.py",
+     "gates": [{"metric": "packing_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "SmoothQuant-smoothed vs raw outlier quantization error evaluation", "check": "harness/m2.py",
+     "gates": [{"metric": "error_ratio_valid", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests catching layout corruption", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_packing", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,7 +1,4 @@
-import numpy as np
+import math
 
-def _softmax(x):
-    raise NotImplementedError('your code here')
-
-def remove_attention_head(Wq, Wk, Wv, Wo, x, head, num_heads):
+def remove_attention_head(Wq: list[list[float]], Wk: list[list[float]], Wv: list[list[float]], Wo: list[list[float]], x: list[list[float]], head: int, num_heads: int):
     raise NotImplementedError('your code here')

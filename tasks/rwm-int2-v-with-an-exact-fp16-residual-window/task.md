@@ -35,7 +35,7 @@ Reconstruction: $\hat{x} = \text{code} \cdot \text{scale} + \text{lo}$.
 Implement:
 
 ```python
-def kv_int2_residual_window(V: np.ndarray, group_size: int = 32, residual_window: int = 16) -> np.ndarray:
+def kv_int2_residual_window(V: list[list[float]], group_size: int=32, residual_window: int=16) -> list[list[float]]:
     ...
 ```
 
@@ -49,17 +49,16 @@ def kv_int2_residual_window(V: np.ndarray, group_size: int = 32, residual_window
 * Leave the residual window rows **byte-for-byte unchanged**.
 * Return the full `(T, d)` reconstructed array: dequantized quantized-region
   rows followed by the untouched residual rows, in original row order.
-* Vectorised NumPy only; no explicit Python loops over elements.
+* Vectorised Python only; no explicit Python loops over elements.
 
 ## Example
 
 ```python
-import numpy as np
-V = np.random.default_rng(0).standard_normal((96, 64))
+import random; rng = random.Random(0); V = [[rng.gauss(0, 1) for _ in range(64)] for _ in range(96)]
 V_hat = kv_int2_residual_window(V, group_size=32, residual_window=16)
 assert V_hat.shape == V.shape
-assert np.array_equal(V_hat[-16:], V[-16:])       # residual window is exact
-assert not np.allclose(V_hat[:-16], V[:-16])       # older tokens are lossy
+assert V_hat[-16:] == V[-16:] # residual window is exact
+assert V_hat[:-16] != V[:-16] # older tokens are lossy
 ```
 
 ## What the gate checks
@@ -71,7 +70,7 @@ and calls your function with `group_size=32, residual_window=16`:
   output's last 16 rows and the input's last 16 rows must be exactly `0.0`
   (the residual window must never be touched by quantization).
 * **quant_max_abs_err** — the max absolute difference between your output's
-  first `T - 16` rows and an independent NumPy oracle implementing the exact
+  first `T - 16` rows and an independent Python oracle implementing the exact
   grouped int2 affine scheme above, on the same data, must be effectively
   zero (this is a deterministic table lookup — any correct implementation
   matches the oracle almost exactly).

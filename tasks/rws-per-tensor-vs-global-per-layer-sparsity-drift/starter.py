@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def global_threshold_layer_sparsity(weights, prune_ratio: float) -> dict:
+def global_threshold_layer_sparsity(weights: list[list[float]], prune_ratio: float) -> dict:
     """Pool |w| across ALL layers, k=round(prune_ratio*N), prune the k
     globally-smallest-magnitude elements (stable ascending sort, ties to
     lower index). Return {"sparsity": (L,) float64 fraction pruned per

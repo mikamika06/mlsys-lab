@@ -1,62 +1,90 @@
+import math
 import numpy as np
 
 
-def _softmax(x):
-    x = x - np.max(x, axis=-1, keepdims=True)
-    e = np.exp(x)
-    return e / np.sum(e, axis=-1, keepdims=True)
+def grade(sol, fx):
+    np.random.seed(1337)
+    d = 8
+    H = 4
+    head = 1
+    n = 2
 
+    Wq = np.random.randn(d, d).tolist()
+    Wk = np.random.randn(d, d).tolist()
+    Wv = np.random.randn(d, d).tolist()
+    Wo = np.random.randn(d, d).tolist()
+    x = np.random.randn(n, d).tolist()
 
-def _oracle(Wq, Wk, Wv, Wo, x, head, num_heads):
-    d = Wq.shape[1]
-    head_dim = d // num_heads
+    try:
+        res = sol.remove_attention_head(Wq, Wk, Wv, Wo, x, head, H)
+    except Exception as e:
+        return {"max_abs_err": float("inf"), "error": str(e)}
+
+    if not isinstance(res, tuple) or len(res) != 5:
+        return {"max_abs_err": float("inf"), "error": "Invalid return type or length"}
+
+    Wq_p_sol, Wk_p_sol, Wv_p_sol, Wo_p_sol, y_sol = res
+
+    # Oracle computation using numpy
+    Wq_np = np.array(Wq)
+    Wk_np = np.array(Wk)
+    Wv_np = np.array(Wv)
+    Wo_np = np.array(Wo)
+    x_np = np.array(x)
+
+    head_dim = d // H
     start = head * head_dim
     end = (head + 1) * head_dim
 
-    Wq_p = np.concatenate([Wq[:, :start], Wq[:, end:]], axis=1)
-    Wk_p = np.concatenate([Wk[:, :start], Wk[:, end:]], axis=1)
-    Wv_p = np.concatenate([Wv[:, :start], Wv[:, end:]], axis=1)
-    Wo_p = np.concatenate([Wo[:start, :], Wo[end:, :]], axis=0)
+    oracle_Wq_p = np.concatenate([Wq_np[:, :start], Wq_np[:, end:]], axis=1)
+    oracle_Wk_p = np.concatenate([Wk_np[:, :start], Wk_np[:, end:]], axis=1)
+    oracle_Wv_p = np.concatenate([Wv_np[:, :start], Wv_np[:, end:]], axis=1)
+    oracle_Wo_p = np.concatenate([Wo_np[:start], Wo_np[end:]], axis=0)
 
-    q = x @ Wq_p
-    k = x @ Wk_p
-    v = x @ Wv_p
+    q = x_np @ oracle_Wq_p
+    k = x_np @ oracle_Wk_p
+    v = x_np @ oracle_Wv_p
 
-    kept_heads = num_heads - 1
-    outputs = []
-    for i in range(kept_heads):
-        a = i * head_dim
-        b = (i + 1) * head_dim
-        scores = (q[:, a:b] @ k[:, a:b].T) / np.sqrt(head_dim)
-        probs = _softmax(scores)
-        outputs.append(probs @ v[:, a:b])
+    outputs_oracle = []
+    scale = math.sqrt(head_dim)
+    rem_idx = 0
+    for i in range(H):
+        if i == head:
+            continue
+        a = rem_idx * head_dim
+        b = (rem_idx + 1) * head_dim
+        rem_idx += 1
 
-    concat = np.concatenate(outputs, axis=1)
-    y = concat @ Wo_p
-    return y
+        qi = q[:, a:b]
+        ki = k[:, a:b]
+        vi = v[:, a:b]
 
+        scores = (qi @ ki.T) / scale
+        max_vals = np.max(scores, axis=1, keepdims=True)
+        exps = np.exp(scores - max_vals)
+        probs = exps / np.sum(exps, axis=1, keepdims=True)
+        head_out = probs @ vi
+        outputs_oracle.append(head_out)
 
-def grade(sol, fx) -> dict:
-    rng = np.random.default_rng(42)
-    d = 12
-    heads = 3
-    n = 5
-    Wq = rng.normal(size=(d, d))
-    Wk = rng.normal(size=(d, d))
-    Wv = rng.normal(size=(d, d))
-    Wo = rng.normal(size=(d, d))
-    x = rng.normal(size=(n, d))
-    head = 1
+    concat_oracle = np.concatenate(outputs_oracle, axis=1)
+    y_oracle = concat_oracle @ oracle_Wo_p
 
-    expected = _oracle(Wq, Wk, Wv, Wo, x, head, heads)
+    y_sol_np = np.array(y_sol)
 
-    try:
-        result = sol.remove_attention_head(
-            Wq, Wk, Wv, Wo, x, head, heads
-        )
-        got = np.asarray(result[-1], dtype=np.float64)
-        err = float(np.max(np.abs(got - expected)))
-    except Exception:
-        err = float("inf")
+    if y_sol_np.shape != y_oracle.shape:
+        return {
+            "max_abs_err": float("inf"),
+            "error": f"Shape mismatch: {y_sol_np.shape} vs {y_oracle.shape}",
+        }
 
-    return {"max_abs_err": err}
+    max_err = float(np.max(np.abs(y_sol_np - y_oracle)))
+
+    matrices_err = max(
+        float(np.max(np.abs(np.array(Wq_p_sol) - oracle_Wq_p))),
+        float(np.max(np.abs(np.array(Wk_p_sol) - oracle_Wk_p))),
+        float(np.max(np.abs(np.array(Wv_p_sol) - oracle_Wv_p))),
+        float(np.max(np.abs(np.array(Wo_p_sol) - oracle_Wo_p))),
+    )
+
+    total_err = max(max_err, matrices_err)
+    return {"max_abs_err": total_err}

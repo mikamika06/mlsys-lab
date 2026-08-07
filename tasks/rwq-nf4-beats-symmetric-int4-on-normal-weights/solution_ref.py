@@ -1,16 +1,15 @@
-import numpy as np
 import math
 
-_NF4 = np.array([
+_NF4 = [
     -1.0, -0.6961928009986877, -0.5250730514526367, -0.39491748809814453,
     -0.28444138169288635, -0.18477343022823334, -0.09105003625154495, 0.0,
     0.07958029955625534, 0.16093020141124725, 0.24611230194568634,
     0.33791524171829224, 0.44070982933044434, 0.5626170039176941,
     0.7229568362236023, 1.0,
-], dtype=np.float64)
+]
 
 
-def nf4_vs_int4_mse(w: np.ndarray):
+def nf4_vs_int4_mse(w: list[float]) -> tuple[float, float]:
     """
     Quantize a block of near-Gaussian weights two ways and return their
     reconstruction MSEs as (mse_nf4, mse_int4):
@@ -20,8 +19,7 @@ def nf4_vs_int4_mse(w: np.ndarray):
     - Symmetric INT4: scale = absmax / 7, round(w / scale) clipped to
       [-8, 7], dequantize by * scale.
     """
-    w = np.asarray(w, dtype=np.float64)
-    n = w.shape[0]
+    n = len(w)
 
     max_val = 0.0
     for i in range(n):

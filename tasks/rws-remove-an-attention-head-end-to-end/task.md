@@ -33,15 +33,7 @@ The head outputs are concatenated and passed through the pruned output projectio
 Implement `remove_attention_head`:
 
 ```python
-def remove_attention_head(
-    Wq: np.ndarray,
-    Wk: np.ndarray,
-    Wv: np.ndarray,
-    Wo: np.ndarray,
-    x: np.ndarray,
-    head: int,
-    num_heads: int,
-):
+def remove_attention_head(Wq: list[list[float]], Wk: list[list[float]], Wv: list[list[float]], Wo: list[list[float]], x: list[list[float]], head: int, num_heads: int):
     ...
 ```
 
@@ -57,20 +49,19 @@ Return:
 where the first four values are the sliced matrices and `output` is the attention block
 output after removing the selected head.
 
-Use NumPy operations only. The attention computation must use the remaining heads in
+Use Python operations only. The attention computation must use the remaining heads in
 their original order.
 
 ## Example
 
 ```python
-import numpy as np
 
 d = 8
 H = 4
-x = np.zeros((2, d))
+x = [[0.0] * d for _ in range(2)]
 
 Wq2, Wk2, Wv2, Wo2, y = remove_attention_head(
-    np.eye(d), np.eye(d), np.eye(d), np.eye(d), x, 1, H
+    [[1.0 if i == j else 0.0 for j in range(d)] for i in range(d)], [[1.0 if i == j else 0.0 for j in range(d)] for i in range(d)], [[1.0 if i == j else 0.0 for j in range(d)] for i in range(d)], [[1.0 if i == j else 0.0 for j in range(d)] for i in range(d)], x, 1, H
 )
 
 # The removed head has width 2, so the pruned projections use dimension 6.
@@ -79,7 +70,7 @@ Wq2, Wk2, Wv2, Wo2, y = remove_attention_head(
 
 ## What the gate checks
 
-The gate builds an independent NumPy oracle that slices the coupled projection
+The gate builds an independent Python oracle that slices the coupled projection
 matrices, recomputes the remaining multi-head attention, and compares the returned
 block output. The maximum absolute error must satisfy
 

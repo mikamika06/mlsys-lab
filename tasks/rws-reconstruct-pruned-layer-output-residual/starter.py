@@ -1,7 +1,4 @@
-import numpy as np
-
-
-def apply_wanda_mask(W: np.ndarray, M: np.ndarray, X: np.ndarray):
+def apply_wanda_mask(W: list[list[float]], M: list[list[float]], X: list[list[float]]):
     """
     Apply the (precomputed) binary pruning mask M to W and report both
     the pruned layer's output and the output residual it introduces:

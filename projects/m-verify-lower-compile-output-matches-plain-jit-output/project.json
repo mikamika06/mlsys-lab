@@ -1,0 +1,69 @@
+{
+  "id": "m-verify-lower-compile-output-matches-plain-jit-output",
+  "title": "Verify .lower().compile() output matches plain jit() output",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "JAX AOT staged compilation & StableHLO export",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "jaxinspect/verify.py",
+    "jaxinspect/ir.py",
+    "jaxinspect/export.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Verify .lower().compile() output matches plain jit() output",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "max_abs_err",
+          "op": "<=",
+          "threshold": 1e-5
+        },
+        {
+          "metric": "all_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Count stablehlo.* ops and list unique op names from .lower().as_text()",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "ir_parsed_correctly",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Serialize via jax.export.export, deserialize in a fresh process, verify numerics",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_ignored_errors",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}
