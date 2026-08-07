@@ -265,6 +265,12 @@ RULES A MACHINE CHECKS
     milestone that calls ref.something the oracle does not define fails with
     AttributeError and takes the unit with it, and that is the single most
     common way these come back broken.
+  * The harness directory itself is put on sys.path, so a milestone file writes
+    `import ref` — never `from harness import ref`, never `import harness.ref`.
+    There is no package called `harness` and no package called `reference`;
+    importing one raises ModuleNotFoundError and the whole unit clears zero
+    milestones. The learner's own modules are imported by their package name
+    inside check(), after workdir is on the path, exactly as the example does.
   * Before you answer, walk each milestone against the reference you just wrote
     and check the numbers it would produce. "reference clears 2 of 3" is the
     other common failure, and it is always visible from the files themselves.
