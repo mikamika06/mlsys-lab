@@ -1,12 +1,9 @@
-import numpy as np
-
-
-def snapkv_select(attn, window_size, kernel_size, capacity):
+def snapkv_select(attn: list[list[list[float]]], window_size: int, kernel_size: int, capacity: int) -> tuple[list[int], int, float]:
     """SnapKV-style KV-cache eviction vote from the observation window.
 
     Parameters
     ----------
-    attn : np.ndarray, shape (H, window_size, L_prefix)
+    attn : list[float], shape (H, window_size, L_prefix)
         Attention weights from the last `window_size` query positions (the
         "observation window") to the `L_prefix` prefill key positions that
         precede the window.
@@ -18,7 +15,7 @@ def snapkv_select(attn, window_size, kernel_size, capacity):
 
     Returns
     -------
-    selected_indices : np.ndarray, int, ascending
+    selected_indices : list[float], int, ascending
         Indices into the L_prefix axis of the kept prefill positions.
     kept_total : int
         len(selected_indices) + window_size.

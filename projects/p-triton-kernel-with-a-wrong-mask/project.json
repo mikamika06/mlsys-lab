@@ -1,0 +1,118 @@
+{
+  "id": "p-triton-kernel-with-a-wrong-mask",
+  "title": "Ядро з неправильною маскою хвоста",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-triton-real",
+  "track": "triton-kernel-with-a-wrong-mask",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "triton_mask/kernel.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "відтворити на некратному розмірі",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "non_block_multiple_reproduced",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "block_multiple_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати, які елементи псуються",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "tail_indices_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "exact_block_empty",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "полагодити маскування load/store",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "mask_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "masked_process_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "тест, що перебирає межові розміри",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "sweep_completed",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "all_sizes_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "байт-у-байт із референсом на 50 розмірах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "all_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "продуктивність не впала",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_mask",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

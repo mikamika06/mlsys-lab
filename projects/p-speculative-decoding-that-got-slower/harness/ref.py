@@ -1,35 +1,22 @@
-import numpy as np
-from specdec.tracker import AcceptanceTracker
-from specdec.model import SpeculativeModel
-from specdec.policy import AdaptivePolicy
+def cost_model(b, gamma):
+    tt = 10.0 + 1.0 * b
+    td = 3.0 + 0.5 * b
+    tv = 10.0 + 1.2 * b + 0.5 * b * gamma
+    return td, tt, tv
 
+def generate_trace():
+    return [
+        {"drafted": 4, "accepted": 2},
+        {"drafted": 4, "accepted": 4},
+        {"drafted": 4, "accepted": 0},
+        {"drafted": 4, "accepted": 1},
+    ]
 
-def generate_synthetic_traffic(n=100, seed=42):
-    rng = np.random.RandomState(seed)
-    domains = ["code", "chat", "summarization"]
-    traffic = []
-    for i in range(n):
-        dom = domains[rng.choice(len(domains))]
-        batch_size = int(rng.choice([1, 2, 4, 8, 16, 32]))
-        if dom == "code":
-            sim_acc = int(rng.binomial(5, 0.8))
-        elif dom == "chat":
-            sim_acc = int(rng.binomial(5, 0.5))
-        else:
-            sim_acc = int(rng.binomial(5, 0.2))
-
-        traffic.append({
-            "domain": dom,
-            "batch_size": batch_size,
-            "max_gamma": 5,
-            "sim_accepted": sim_acc,
-            "base_step_time": 10.0
-        })
-    return traffic
-
-
-def run_reference_pipeline(traffic):
-    tr = AcceptanceTracker(window_size=50)
-    mod = SpeculativeModel(target_step_cost=10.0, draft_step_cost=1.0, overhead_per_draft=0.1)
-    pol = AdaptivePolicy(mod, tr, min_speedup=1.02)
-    return pol.evaluate_p95_and_throughput(traffic)
+def generate_requests():
+    reqs = []
+    for i in range(100):
+        domain = "chat" if i % 2 == 0 else "code"
+        p_true = 0.8 if domain == "chat" else 0.2
+        b = (i % 16) + 1
+        reqs.append({"id": i, "b": b, "p_true": p_true, "domain": domain})
+    return reqs

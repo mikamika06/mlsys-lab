@@ -1,0 +1,98 @@
+{
+  "id": "p-varlen-packing-changes-results",
+  "title": "Пакування послідовностей змінює результат",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-flashattention",
+  "track": "varlen-packing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "pack/attention.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "показати, де межі послідовностей протікають",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "boundary_detected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "розібрати вирівнювання каузальної маски",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "mask_aligned",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "полагодити cu_seqlens і зміщення",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "cu_seqlens_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити еквівалентність із непакованим",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "equivalence_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "вихід збігається в межах толерансу",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "tolerance_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "виграш у пропускній здатності збережено",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

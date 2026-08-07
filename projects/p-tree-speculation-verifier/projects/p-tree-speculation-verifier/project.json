@@ -1,0 +1,104 @@
+{
+  "id": "p-tree-speculation-verifier",
+  "title": "A tree speculation verifier that holds the distribution",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "tree-speculation-verifier",
+  "part": 1,
+  "difficulty": 5,
+  "edits": [
+    "spec/tree.py",
+    "spec/verifier.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "побудувати дерево кандидатів",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "tree_structure_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "маска уваги для дерева",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "mask_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "правило прийняття по гілках",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "branch_acceptance_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "еквівалентність розподілу з базовим декодуванням",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "distribution_match",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "прийняття вище лінійного",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "acceptance_gain",
+          "op": ">",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "вартість верифікації врахована",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_verifier",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

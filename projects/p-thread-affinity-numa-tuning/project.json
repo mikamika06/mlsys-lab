@@ -1,0 +1,120 @@
+{
+  "id": "p-thread-affinity-numa-tuning",
+  "title": "Потоки, афінність і NUMA",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "p-thread-affinity-numa-tuning",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "numa_tuning/analyzer.py",
+    "numa_tuning/affinity.py",
+    "numa_tuning/allocator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти масштабування по потоках",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "scaling_measured",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "efficiency_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати трафік між вузлами",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "traffic_quantified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "закріпити потоки і пам'ять",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "pinned_correctly",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "numa_local",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "налаштувати число інстансів проти потоків на інстанс",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "ratio_optimized",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "масштабування вище порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "high_scaling_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "конфігурація відтворюється на другій машині",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_affinity",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_remote_alloc",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

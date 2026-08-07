@@ -1,0 +1,116 @@
+{
+  "id": "p-train-and-ship-a-draft-model",
+  "title": "Зробити і випустити чернеткову модель",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "rw3-speculative",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "spec/draft.py",
+    "spec/train.py",
+    "spec/eval.py",
+    "spec/quant.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "підбір архітектури чернетки",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "has_weights",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "valid_probs",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "дистиляція під цільову модель",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "loss_decreased",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "вимір acceptance по доменах",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "math_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "eval_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "квантизація чернетки і її вплив",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "is_int8",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "acc_maintained",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "сумарне прискорення вище порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "speedup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "чернетка вкладається в бюджет пам'яті",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_fake_quant",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

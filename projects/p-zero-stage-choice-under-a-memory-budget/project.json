@@ -1,0 +1,113 @@
+{
+  "id": "p-zero-stage-choice-under-a-memory-budget",
+  "title": "Вибрати стадію ZeRO під бюджет",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-distributed",
+  "track": "zero-stage-choice-under-a-memory-budget",
+  "difficulty": 3,
+  "edits": [
+    "zero_planner/planner.py",
+    "zero_planner/estimator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "формули пам'яті по стадіях",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "zero1_mem_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "zero2_mem_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "zero3_mem_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "обсяг комунікації на крок по стадіях",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "comm_volume_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "вплив offload на час кроку",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "offload_time_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "рекомендація з передбаченням ±15%",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "recommendation_optimal",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "mem_within_15_pct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "перевірка передбачення на записаній трасі",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "trace_verification_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "що зміниться при подвоєнні числа карт",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

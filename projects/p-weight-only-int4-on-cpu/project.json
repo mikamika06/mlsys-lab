@@ -1,0 +1,115 @@
+{
+  "id": "p-weight-only-int4-on-cpu",
+  "title": "Ваги в 4 біти на CPU",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "weight-only-int4-on-cpu",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "int4/quant.py",
+    "int4/packing.py",
+    "int4/eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "стиснути ваги і виміряти розмір",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "size_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "reconstruct_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "виміряти якість проти базлайну",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "perplexity_delta_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти швидкість декодування",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "decode_speedup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "підібрати групування масштабів",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "group_scale_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "розмір і якість у межах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "overall_limits_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "конфіг переноситься на другу модель",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_quant",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_scale",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

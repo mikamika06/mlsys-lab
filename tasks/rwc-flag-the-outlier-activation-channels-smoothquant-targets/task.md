@@ -18,23 +18,22 @@ Channels with $m_j > \text{threshold}$ are flagged as outliers.
 Implement `flag_outliers`:
 
 ```python
-def flag_outliers(X: np.ndarray, factor: float = 3.0) -> np.ndarray:
+def flag_outliers(X: list[list[float]], factor: float=3.0) -> list[bool]:
     ...
 ```
 
-The function receives a 2‑D NumPy array $X$ of shape $(n,c)$ and returns a boolean mask of length $c$.  
+The function receives a 2‑D list $X$ of shape $(n,c)$ and returns a boolean mask of length $c$.  
 A value `True` indicates that the corresponding channel is an outlier according to the rule above.  
-Use only vectorised NumPy operations; no explicit Python loops.
+Use only vectorised Python operations; no explicit Python loops.
 
 ## Example
 
 ```python
-import numpy as np
 from flag_outliers import flag_outliers
 
-X = np.array([[0, 1, 10],
+X = [[0, 1, 10],
               [2, 3, 12],
-              [4, 5, 13]])
+              [4, 5, 13]]
 
 mask = flag_outliers(X, factor=3.0)
 print(mask)          # [False False  True]
@@ -44,5 +43,5 @@ Here the third channel has $m_3 = 13$ while $\operatorname{median}(m)=2$, so $13
 
 ## What the gate checks
 
-The grader computes a reference mask using NumPy’s median and max functions on randomly generated tensors.  
+The grader computes a reference mask using Python’s median and max functions on randomly generated tensors.  
 Your implementation must return exactly the same boolean array for all test cases; otherwise the `exact_match` metric fails.

@@ -1,12 +1,12 @@
+def evaluate_policy(requests, policy_fn, cost_model, gamma):
+    raise NotImplementedError
+
 class AdaptivePolicy:
-    def __init__(self, model, tracker, min_speedup=1.02):
+    def __init__(self, cost_model, gamma, default_p=0.5):
         raise NotImplementedError
 
-    def decide(self, domain, batch_size, max_gamma=8):
+    def update(self, domain, drafted, accepted):
         raise NotImplementedError
 
-    def simulate_request(self, domain, batch_size, gamma, accepted_count, base_step_time=10.0):
-        raise NotImplementedError
-
-    def evaluate_p95_and_throughput(self, traffic_stream):
+    def decide(self, domain, b):
         raise NotImplementedError

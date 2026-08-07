@@ -1,23 +1,36 @@
-import numpy as np
-
-def gemm(A: np.ndarray,
-         B: np.ndarray,
-         C: np.ndarray | None = None,
+def gemm(A: list[list[float]],
+         B: list[list[float]],
+         C: list[list[float]] | list[float] | None = None,
          alpha: float = 1.0,
          beta: float = 1.0,
          transA: bool = False,
-         transB: bool = False) -> np.ndarray:
-    A_mat = np.asarray(A, dtype=np.float64)
-    B_mat = np.asarray(B, dtype=np.float64)
-    if transA:
-        A_mat = A_mat.T
-    if transB:
-        B_mat = B_mat.T
+         transB: bool = False) -> list[list[float]]:
+    m = len(A[0]) if transA else len(A)
+    k = len(A) if transA else len(A[0])
+    n = len(B) if transB else len(B[0])
 
-    Y = alpha * (A_mat @ B_mat)
+    result: list[list[float]] = []
+    for i in range(m):
+        row: list[float] = []
+        for j in range(n):
+            acc = 0.0
+            for p in range(k):
+                a_val = A[p][i] if transA else A[i][p]
+                b_val = B[j][p] if transB else B[p][j]
+                acc += float(a_val) * float(b_val)
 
-    if C is not None:
-        C_arr = np.asarray(C, dtype=np.float64)
-        Y += beta * np.broadcast_to(C_arr, Y.shape)
+            val = alpha * acc
+            if C is not None:
+                if isinstance(C, (int, float)):
+                    c_val = float(C)
+                elif not isinstance(C[0], list):
+                    c_val = float(C[0]) if len(C) == 1 else float(C[j])
+                else:
+                    r = 0 if len(C) == 1 else i
+                    c = 0 if len(C[0]) == 1 else j
+                    c_val = float(C[r][c])
+                val += beta * c_val
 
-    return Y
+            row.append(val)
+        result.append(row)
+    return result

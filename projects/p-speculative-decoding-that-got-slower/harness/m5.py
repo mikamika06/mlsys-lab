@@ -1,41 +1,36 @@
-import numpy as np
-
+import sys
+import ref
 
 def check(workdir):
-    from specdec.tracker import AcceptanceTracker
-    from specdec.model import SpeculativeModel
-    from specdec.policy import AdaptivePolicy
-    import ref
+    if workdir not in sys.path:
+        sys.path.insert(0, workdir)
+    try:
+        import specdec.policy as pol
+    except ImportError:
+        return {"p95_ok": 0.0}
 
-    out = {
-        "p95_latency_bounded": 0.0,
-        "throughput_maintained": 0.0
-    }
+    m = {"p95_ok": 0.0}
+    reqs = ref.generate_requests()
 
-    traffic = ref.generate_synthetic_traffic(n=120, seed=123)
+    try:
+        p95_always = pol.evaluate_policy(reqs, lambda d, b: True, ref.cost_model, 4)
+        p95_never = pol.evaluate_policy(reqs, lambda d, b: False, ref.cost_model, 4)
 
-    tracker = AcceptanceTracker(window_size=50)
-    model = SpeculativeModel(target_step_cost=10.0, draft_step_cost=1.0, overhead_per_draft=0.1)
-    policy = AdaptivePolicy(model, tracker, min_speedup=1.02)
+        tpts_always = []
+        for r in reqs:
+            td, tt, tv = ref.cost_model(r["b"], 4)
+            p = r["p_true"]
+            e = 1.0 + (p - p**5)/(1.0-p)
+            tpts_always.append((4*td + tv)/e)
+        tpts_always.sort()
+        expected_always = tpts_always[int(0.95 * len(tpts_always))]
 
-    res = policy.evaluate_p95_and_throughput(traffic)
+        tpts_base = sorted([ref.cost_model(r["b"], 4)[1] for r in reqs])
+        expected_never = tpts_base[int(0.95 * len(tpts_base))]
 
-    baseline_latencies = []
-    baseline_tokens = 0
-    baseline_time = 0.0
-    for req in traffic:
-        b_time = req.get("base_step_time", 10.0) * (1.0 + 0.05 * (req["batch_size"] - 1))
-        baseline_latencies.append(b_time)
-        baseline_tokens += 1
-        baseline_time += b_time
+        if abs(p95_always - expected_always) < 1e-4 and abs(p95_never - expected_never) < 1e-4:
+            m["p95_ok"] = 1.0
+    except Exception:
+        pass
 
-    base_p95 = float(np.percentile(baseline_latencies, 95))
-    base_throughput = float(baseline_tokens) / float(baseline_time)
-
-    if res["p95_latency"] <= base_p95 * 1.05:
-        out["p95_latency_bounded"] = 1.0
-
-    if res["throughput"] >= base_throughput * 1.05:
-        out["throughput_maintained"] = 1.0
-
-    return out
+    return m

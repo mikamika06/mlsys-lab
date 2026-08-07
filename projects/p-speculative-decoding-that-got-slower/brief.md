@@ -1,18 +1,11 @@
-# Ticket: Speculative Decoding Made Our Production Service Slower
+We turned on speculative decoding in production after a successful demo. In the demo, latency dropped by 2x. In production, our p95 latency actually spiked, and overall throughput fell.
 
-## Symptom
+The demo was mostly single-batch queries with highly predictable outputs (code snippets). Production sees highly variable batch sizes and a mix of tasks, some of which are very hard to draft (low acceptance rate). Speculative decoding drafts $\gamma$ tokens, taking $\gamma \times t_{draft}$ time, and then verifies them in one large model pass taking $t_{verify}$. If the model rejects most of the draft, we just paid for the draft and the heavy verification but got only 1 token out of it, which is slower than just running the standard generation step $t_{model}$.
 
-During initial local benchmark demos and controlled offline experiments, enabling speculative decoding with our small draft model provided a promising $1.6\times$ to $2.1\times$ speedup in end-to-end token generation latency. However, after deploying the speculative decoding pipeline to our production LLM inference clusters last week, the average service throughput actually dropped by ~18%, and high-concurrency $P95$ request latencies degraded significantly.
-
-Operations monitoring shows that under realistic production traffic—which features variable batch sizes, highly non-uniform prompt lengths, and shifting domain distributions—the draft model's acceptance rate fluctuates wildly. In high-concurrency regimes, the overhead of draft token generation and verification steps outweighs the savings from accepted tokens.
-
-## Goal
-
-We need to mathematically model and dynamically control speculative decoding in our serving system. You must write an adaptive speculative decoding scheduler and execution manager that:
-
-1. Measures online acceptance rates across streaming request contexts.
-2. Models the theoretical and real-world speedup bounds as a function of draft length $\gamma$, verification overhead $\alpha$, and acceptance rate $\tau$.
-3. Accounts for batching dynamics, recognizing when large batch sizes make draft execution compute-bound rather than memory-bound.
-4. Dynamically throttles or completely disables draft speculative steps when traffic conditions or acceptance drop below profitability thresholds.
-5. Guarantees that $P95$ request latency under speculative decoding is strictly no worse than baseline non-speculative execution across all batch regimes.
-6. Implements an adaptive policy with provable speedup gains across non-stationary traffic distributions.
+We need to understand exactly when speculative decoding is a net positive. Your task:
+1. Measure the real acceptance rate from traces.
+2. Build an analytical model of the speedup based on $\gamma$ and the acceptance rate $\alpha$.
+3. Extend the model to account for batch size $B$, since larger batches make $t_{verify}$ more expensive and dilute the benefits.
+4. Compute the threshold acceptance rate at which speculation becomes a net loss.
+5. Ensure our p95 latency does not degrade by selectively disabling speculation when it's predicted to be slower than the baseline.
+6. Implement an adaptive policy that tracks moving average $\alpha$ per request and turns off speculation dynamically to prove a consistent win.

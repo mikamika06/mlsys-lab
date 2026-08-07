@@ -1,170 +1,133 @@
 {
   "id": "p-sparsity-that-gave-no-speedup",
-  "title": "2:4 Sparsity That Gave No Speedup",
+  "title": "Розрідження без прискорення",
   "kind": "project",
   "tier": "T1",
   "area": "rw3-pruning-distill",
-  "track": "sparsity-no-speedup",
+  "track": "sparsity-that-gave-no-speedup",
   "part": 1,
   "difficulty": 3,
   "edits": [
-    "sparse_eval/pattern.py",
-    "sparse_eval/dispatch.py",
-    "sparse_eval/benchmark.py",
-    "sparse_eval/roofline.py",
-    "sparse_eval/checkpoint.py",
+    "sparsity/core.py",
+    "sparsity/engine.py",
+    "sparsity/checkpoint.py",
     "tests/test_regression.py"
   ],
   "milestones": [
     {
       "n": 1,
-      "title": "Verify that the pattern is truly 2:4",
+      "title": "перевірити, що патерн справді 2:4",
       "check": "harness/m1.py",
       "gates": [
         {
-          "metric": "valid_pattern_detected",
+          "metric": "api_ok",
           "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         },
         {
-          "metric": "invalid_pattern_rejected",
+          "metric": "true_positive",
           "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         },
         {
-          "metric": "compression_shape_ok",
+          "metric": "true_negative",
           "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         },
         {
-          "metric": "decompression_exact",
+          "metric": "shape_reject",
           "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         }
       ]
     },
     {
       "n": 2,
-      "title": "Show which execution path was chosen",
+      "title": "показати, який шлях виконання обрано",
       "check": "harness/m2.py",
       "gates": [
         {
-          "metric": "detects_unsupported_pattern",
+          "metric": "dense_fb",
           "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         },
         {
-          "metric": "detects_misaligned_shape",
+          "metric": "hw_fb",
           "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         },
         {
-          "metric": "detects_small_batch",
+          "metric": "sparse_ok",
           "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "selects_sparse_kernel",
-          "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         }
       ]
     },
     {
       "n": 3,
-      "title": "Measure on kernels that support the pattern",
+      "title": "виміряти на ядрах, що підтримують патерн",
       "check": "harness/m3.py",
       "gates": [
         {
-          "metric": "sparse_flops_halved",
+          "metric": "dense_time",
           "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         },
         {
-          "metric": "dense_flops_correct",
+          "metric": "sparse_time",
           "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "memory_bytes_accounted",
-          "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         }
       ]
     },
     {
       "n": 4,
-      "title": "Calculate where the break-even limit is",
+      "title": "порахувати, де межа виграшу",
       "check": "harness/m4.py",
       "gates": [
         {
-          "metric": "intensity_ratio_correct",
+          "metric": "correct_ratio",
           "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "roofline_bottleneck_identified",
-          "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "breakeven_m_computed",
-          "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         }
       ]
     },
     {
       "n": 5,
-      "title": "Speedup obtained or impossibility proven with numbers",
+      "title": "прискорення отримане або неможливість доведена числами",
       "check": "harness/m5.py",
       "gates": [
         {
-          "metric": "proves_no_speedup_for_small_batch",
+          "metric": "mem_bound_no_speedup",
           "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         },
         {
-          "metric": "demonstrates_speedup_for_large_batch",
+          "metric": "compute_bound_speedup",
           "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "proof_metrics_valid",
-          "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         }
       ]
     },
     {
       "n": 6,
-      "title": "Checkpoint size is actually smaller",
+      "title": "розмір чекпойнта справді менший",
       "check": "harness/m6.py",
       "gates": [
         {
           "metric": "has_tests",
           "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         },
         {
           "metric": "passes_on_good",
           "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "catches_uncompressed_save",
-          "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "catches_corrupted_metadata",
-          "op": "==",
-          "threshold": 1
+          "threshold": 1.0
         },
         {
           "metric": "faults_caught",
           "op": "==",
-          "threshold": 2
+          "threshold": 2.0
         }
       ]
     }

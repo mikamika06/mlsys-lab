@@ -1,29 +1,35 @@
+import sys
+import ref
+
+def expected_cutoff(p, gamma, max_b, cost_model):
+    best = 0
+    for b in range(1, max_b + 1):
+        td, tt, tv = cost_model(b, gamma)
+        if p >= 1.0: e = 1.0 + gamma
+        else: e = 1.0 + (p - p**(gamma+1))/(1.0-p)
+        if e * tt / (gamma*td + tv) > 1.0:
+            best = b
+        else:
+            break
+    return best
+
 def check(workdir):
-    from specdec.tracker import AcceptanceTracker
-    from specdec.model import SpeculativeModel
-    from specdec.policy import AdaptivePolicy
+    if workdir not in sys.path:
+        sys.path.insert(0, workdir)
+    try:
+        import specdec.analyzer as an
+    except ImportError:
+        return {"cutoff_ok": 0.0, "cutoff_zero_ok": 0.0}
 
-    out = {
-        "gate_decision_correct": 0.0,
-        "throttling_prevents_loss": 0.0
-    }
+    m = {"cutoff_ok": 0.0, "cutoff_zero_ok": 0.0}
+    try:
+        c1 = an.get_cutoff_batch_size(0.8, 4, 32, ref.cost_model)
+        if c1 == expected_cutoff(0.8, 4, 32, ref.cost_model):
+            m["cutoff_ok"] = 1.0
 
-    tracker = AcceptanceTracker(window_size=20)
-    model = SpeculativeModel(target_step_cost=10.0, draft_step_cost=1.0, overhead_per_draft=0.1)
-    policy = AdaptivePolicy(model, tracker, min_speedup=1.05)
-
-    for _ in range(10):
-        tracker.record("good_domain", 4, 5)
-        tracker.record("bad_domain", 0, 5)
-
-    g_good, act_good = policy.decide("good_domain", batch_size=1)
-    g_bad, act_bad = policy.decide("bad_domain", batch_size=1)
-
-    if act_good and g_good > 0 and not act_bad and g_bad == 0:
-        out["gate_decision_correct"] = 1.0
-
-    g_batch, act_batch = policy.decide("good_domain", batch_size=64)
-    if not act_batch and g_batch == 0:
-        out["throttling_prevents_loss"] = 1.0
-
-    return out
+        c2 = an.get_cutoff_batch_size(0.1, 4, 32, ref.cost_model)
+        if c2 == expected_cutoff(0.1, 4, 32, ref.cost_model):
+            m["cutoff_zero_ok"] = 1.0
+    except Exception:
+        pass
+    return m

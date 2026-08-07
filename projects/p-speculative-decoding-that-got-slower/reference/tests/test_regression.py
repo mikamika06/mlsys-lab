@@ -1,36 +1,45 @@
 import sys
-
 sys.path.insert(0, ".")
-from specdec.tracker import AcceptanceTracker
-from specdec.model import SpeculativeModel
-from specdec.policy import AdaptivePolicy
+from specdec.policy import AdaptivePolicy, evaluate_policy
 
+def cost_model(b, gamma):
+    tt = 10.0 + 1.0 * b
+    td = 3.0 + 0.5 * b
+    tv = 10.0 + 1.2 * b + 0.5 * b * gamma
+    return td, tt, tv
 
-def test_fallback_when_acceptance_drops():
-    tr = AcceptanceTracker(window_size=10)
-    mod = SpeculativeModel(target_step_cost=10.0, draft_step_cost=1.5, overhead_per_draft=0.2)
-    pol = AdaptivePolicy(mod, tr, min_speedup=1.05)
+def test_p95_never_degrades():
+    gamma = 4
+    reqs = [{"id": i, "b": 32, "p_true": 0.5, "domain": "mix"} for i in range(100)]
 
-    for _ in range(10):
-        tr.record("code", 1, 5)
+    base_p95 = evaluate_policy(reqs, lambda d, b: False, cost_model, gamma)
 
-    gamma, active = pol.decide("code", batch_size=1)
-    assert not active or gamma == 0, "Policy should disable speculation when acceptance rate is low"
+    pol = AdaptivePolicy(cost_model, gamma, default_p=0.5)
+    for r in reqs:
+        pol.update(r["domain"], gamma, int(gamma * r["p_true"]))
 
+    spec_p95 = evaluate_policy(reqs, pol.decide, cost_model, gamma)
 
-def test_p95_never_exceeds_baseline_threshold():
-    tr = AcceptanceTracker(window_size=20)
-    mod = SpeculativeModel(target_step_cost=10.0, draft_step_cost=1.0, overhead_per_draft=0.1)
-    pol = AdaptivePolicy(mod, tr, min_speedup=1.02)
+    assert spec_p95 <= base_p95 + 1e-5, f"P95 degraded: {spec_p95} > {base_p95}"
 
-    traffic = []
-    for i in range(50):
-        traffic.append({
-            "domain": "chat" if i % 2 == 0 else "code",
-            "batch_size": 1 if i < 30 else 32,
-            "sim_accepted": 4 if i % 2 == 0 else 0,
-            "base_step_time": 10.0
-        })
+def test_speedup_on_good_traffic():
+    gamma = 4
+    reqs = [{"id": i, "b": 2, "p_true": 0.9, "domain": "easy"} for i in range(100)]
 
-    res = pol.evaluate_p95_and_throughput(traffic)
-    assert res["p95_latency"] <= 10.5, f"P95 latency exceeded bound: {res['p95_latency']}"
+    base_mean = sum([cost_model(r["b"], gamma)[1] for r in reqs]) / len(reqs)
+
+    pol = AdaptivePolicy(cost_model, gamma, default_p=0.9)
+    for r in reqs:
+        pol.update(r["domain"], gamma, int(gamma * r["p_true"]))
+
+    tpts = []
+    for r in reqs:
+        if pol.decide(r["domain"], r["b"]):
+            td, tt, tv = cost_model(r["b"], gamma)
+            e_toks = 1.0 + (0.9 - 0.9**5) / 0.1
+            tpts.append((gamma * td + tv) / e_toks)
+        else:
+            tpts.append(cost_model(r["b"], gamma)[1])
+
+    spec_mean = sum(tpts) / len(tpts)
+    assert spec_mean < base_mean * 0.9, "No significant speedup on good traffic"

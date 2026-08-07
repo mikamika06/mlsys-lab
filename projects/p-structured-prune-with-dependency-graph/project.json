@@ -1,0 +1,106 @@
+{
+  "id": "p-structured-prune-with-dependency-graph",
+  "title": "Структурне обрізання із залежностями",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "structured-prune-with-dependency-graph",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "prune/graph.py",
+    "prune/group.py",
+    "prune/pruner.py",
+    "prune/eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "побудувати граф залежностей",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "nodes_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "edges_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти групи, які можна різати разом",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "groups_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виконати обрізання без поламаних форм",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "shapes_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти якість і швидкість",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "metrics_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "модель біжить, розмір менший",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "runs_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "процедура переноситься на іншу архітектуру",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

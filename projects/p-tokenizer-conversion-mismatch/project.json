@@ -1,0 +1,90 @@
+{
+  "id": "p-tokenizer-conversion-mismatch",
+  "title": "Tokenizer mismatch after GGUF conversion",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "tokenizer/converter.py",
+    "tokenizer/vocab.py",
+    "tokenizer/engine.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "порівняти токенізацію на корпусі",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "corpus_match_rate",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти класи розбіжностей",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "classes_identified",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "полагодити конвертацію словника і мерджів",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "vocab_merges_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перевірити спецтокени й межі",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "special_tokens_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "байт-у-байт round-trip на 10k рядків",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "roundtrip_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "тест токенізації в CI",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

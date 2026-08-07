@@ -31,7 +31,7 @@ cache, SnapKV:
 Implement `snapkv_select` in `solve.py`:
 
 ```python
-def snapkv_select(attn, window_size, kernel_size, capacity):
+def snapkv_select(attn: list[list[list[float]]], window_size: int, kernel_size: int, capacity: int) -> tuple[list[int], int, float]:
     ...
 ```
 
@@ -54,10 +54,9 @@ Return a tuple `(selected_indices, kept_total, compression_ratio)`:
 ## Example
 
 ```python
-import numpy as np
 
 H, W, L = 2, 4, 10
-attn = np.full((H, W, L), 1.0 / L)   # uniform attention
+attn = [[[1.0 / L for _ in range(L)] for _ in range(W)] for _ in range(H)] # uniform attention
 attn[:, :, 3] += 0.5                  # position 3 is clearly the most attended
 
 selected, kept_total, ratio = snapkv_select(attn, W, kernel_size=3, capacity=2)
@@ -66,7 +65,7 @@ selected, kept_total, ratio = snapkv_select(attn, W, kernel_size=3, capacity=2)
 
 ## What the gate checks
 
-The grader builds its own NumPy oracle implementing the same
+The grader builds its own Python oracle implementing the same
 sum-over-heads-and-window vote, average pool, and top-`capacity` selection
 (tie-broken by lower index). It runs both on several random attention
 tensors (rows normalized to sum to 1, like real softmax attention) covering

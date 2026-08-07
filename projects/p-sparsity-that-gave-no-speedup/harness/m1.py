@@ -1,32 +1,20 @@
+import numpy as np
+
 def check(workdir):
-    import sys
-    sys.path.insert(0, workdir)
-    import numpy as np
-    import ref
-    from sparse_eval.pattern import compress_24_matrix, decompress_24_matrix, verify_24_pattern
+    from sparsity.core import is_2_4
+    m = {"api_ok": 0.0, "true_positive": 0.0, "true_negative": 0.0, "shape_reject": 0.0}
 
-    res = {
-        "valid_pattern_detected": 0.0,
-        "invalid_pattern_rejected": 0.0,
-        "compression_shape_ok": 0.0,
-        "decompression_exact": 0.0,
-    }
+    try:
+        a = np.array([[1, 0, 0, 1], [0, 2, 0, 3]])
+        b = is_2_4(a)
+        m["api_ok"] = 1.0
+    except Exception:
+        return m
 
-    sp_mat = ref.generate_24_sparse_matrix(32, 64)
-    dn_mat = ref.generate_dense_matrix(32, 64)
+    m["true_positive"] = 1.0 if is_2_4(np.array([[0, 0, 1, 1], [1, 0, 0, 0], [0, 1, 0, 1]])) else 0.0
+    m["true_negative"] = 1.0 if not is_2_4(np.array([[1, 1, 1, 0]])) else 0.0
 
-    if verify_24_pattern(sp_mat):
-        res["valid_pattern_detected"] = 1.0
+    if not is_2_4(np.array([[1, 0, 0]])):
+        m["shape_reject"] = 1.0
 
-    if not verify_24_pattern(dn_mat):
-        res["invalid_pattern_rejected"] = 1.0
-
-    cw, meta = compress_24_matrix(sp_mat)
-    if cw.shape == (32, 32) and meta.shape == (32, 16):
-        res["compression_shape_ok"] = 1.0
-
-    rec = decompress_24_matrix(cw, meta, 64)
-    if float(np.max(np.abs(sp_mat - rec))) < 1e-5:
-        res["decompression_exact"] = 1.0
-
-    return res
+    return m

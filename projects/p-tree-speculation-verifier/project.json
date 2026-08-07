@@ -1,0 +1,112 @@
+{
+  "id": "p-tree-speculation-verifier",
+  "title": "Верифікація дерева чернеток",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "rw3-speculative",
+  "size": "L",
+  "edits": [
+    "speculation/tree.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "побудувати дерево кандидатів",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "merges_prefix",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "handles_branching",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "маска уваги для дерева",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "mask_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "правило прийняття по гілках",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "accepts_correct_branch",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "stops_on_reject",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "еквівалентність розподілу з базовим декодуванням",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "exact_distribution",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "прийняття вище лінійного",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "calculates_expected_length",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "tree_beats_linear",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "вартість верифікації врахована",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_expectation",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_leaky_mask",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

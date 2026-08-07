@@ -1,15 +1,12 @@
-import numpy as np
-
-
-def _pool1d(scores, kernel_size):
+def _pool1d(scores: list[float], kernel_size: int) -> list[float]:
     """1D average pool, stride 1, zero-padded to the same output length
     (count_include_pad=True, matching torch.nn.functional.avg_pool1d)."""
     pad = kernel_size // 2
     L_prefix = len(scores)
-    padded = np.zeros(L_prefix + 2 * pad)
+    padded = [0.0] * (L_prefix + 2 * pad)
     for i in range(L_prefix):
         padded[pad + i] = scores[i]
-    out = np.zeros(L_prefix)
+    out = [0.0] * L_prefix
     for i in range(L_prefix):
         acc = 0.0
         for j in range(kernel_size):
@@ -18,15 +15,20 @@ def _pool1d(scores, kernel_size):
     return out
 
 
-def snapkv_select(attn, window_size, kernel_size, capacity):
+def snapkv_select(
+    attn: list[list[list[float]]],
+    window_size: int,
+    kernel_size: int,
+    capacity: int,
+) -> tuple[list[int], int, float]:
     """SnapKV-style KV-cache eviction vote from the observation window.
 
     Parameters
     ----------
-    attn : np.ndarray, shape (H, window_size, L_prefix)
-        Attention weights from the last `window_size` query positions (the
-        "observation window") to the `L_prefix` prefill key positions that
-        precede the window.
+    attn : list[list[list[float]]]
+        Attention weights of shape (H, window_size, L_prefix) from the last
+        `window_size` query positions (the "observation window") to the
+        `L_prefix` prefill key positions that precede the window.
     window_size : int
     kernel_size : int
         Odd 1D average-pool kernel used to smooth the per-position vote.
@@ -35,27 +37,28 @@ def snapkv_select(attn, window_size, kernel_size, capacity):
 
     Returns
     -------
-    selected_indices : np.ndarray, int, ascending
-        Indices into the L_prefix axis of the kept prefill positions.
+    selected_indices : list[int]
+        Indices into the L_prefix axis of the kept prefill positions, ascending sorted.
     kept_total : int
         len(selected_indices) + window_size.
     compression_ratio : float
         kept_total / (L_prefix + window_size).
     """
-    attn = np.asarray(attn, dtype=np.float64)
-    H, W, L_prefix = attn.shape
+    H = len(attn)
+    W = len(attn[0])
+    L_prefix = len(attn[0][0])
 
-    scores = np.zeros(L_prefix)
+    scores = [0.0] * L_prefix
     for h in range(H):
         for w in range(W):
             for l in range(L_prefix):
-                scores[l] += attn[h, w, l]
+                scores[l] += attn[h][w][l]
 
     pooled = _pool1d(scores, kernel_size)
 
     k = min(int(capacity), L_prefix)
     order = sorted(range(L_prefix), key=lambda i: (-pooled[i], i))
-    selected = np.array(sorted(order[:k]), dtype=np.int64)
+    selected = sorted(order[:k])
 
     kept_total = k + window_size
     compression_ratio = kept_total / (L_prefix + window_size)

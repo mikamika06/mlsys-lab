@@ -1,12 +1,5 @@
-# 2:4 Sparsity That Gave No Speedup
+We recently attempted to accelerate our inference service by applying 2:4 structured sparsity to our main model. We diligently pruned the weights so that exactly two out of every four elements are zero, confirming that half of our weights are indeed zeroed out. However, when we deployed the sparse model to our production servers, the end-to-end inference latency and the measured throughput remained completely identical to the dense baseline!
 
-We recently applied 2:4 fine-grained structured sparsity to our Transformer linear layers, pruning two out of every four contiguous weight elements along the inner K-dimension. Although exactly 50% of the weight parameters are now zero in our model checkpoint, our end-to-end inference benchmark shows zero latency reduction. The wall-clock execution speed is identical (1.0x) compared to the original unpruned dense baseline.
+This makes no sense to us. We literally removed half of the compute workload. Why is the speed exactly the same? Is it possible that our hardware simply doesn't support the 2:4 sparse pattern and falls back to dense execution? Or are we hitting a memory bandwidth bottleneck where the time taken to load the data eclipses any gains in math processing speed?
 
-The performance team needs an engineering diagnostic suite to investigate why structured sparsity fails to accelerate this workload:
-
-1. Validate whether the weight matrices strictly conform to the 2:4 fine-grained sparsity pattern required by hardware sparse Tensor Cores.
-2. Trace the runtime GEMM dispatcher to identify which execution path was selected and diagnose any fallback triggers (e.g., misaligned matrix dimensions or small batch sizes).
-3. Measure operational metrics (FLOPs and memory access) on native 2:4 sparse Tensor Core kernels versus dense fallbacks.
-4. Construct a roofline performance model to calculate the arithmetic intensity break-even threshold where 2:4 structured sparsity transitions from memory-bound to compute-bound speedups.
-5. Produce a quantitative performance report proving whether speedup is physically possible for the target shape and hardware configuration, or demonstrate speedup above the break-even limit.
-6. Confirm that the 2:4 compressed sparse checkpoint achieves a smaller storage footprint on disk compared to the uncompressed dense model.
+We need you to investigate this issue. Build a set of utilities to formally verify our 2:4 sparsity pattern. Then, model the execution paths to determine whether the hardware supports sparse operations. Finally, write a roofline-based simulator that computes the execution time for both dense and sparse paths given a device's memory bandwidth and compute FLOPs, and calculate the actual speedup. If we cannot achieve a speedup, we need mathematical proof of why. Even if there is no speedup, we should at least verify that the compressed checkpoint takes less space on disk.

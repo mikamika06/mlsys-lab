@@ -3,7 +3,7 @@ def simulate_kernel_metrics(shape: tuple, path: str, dtype_bytes: int = 2) -> di
     dense_flops = 2 * M * N * K
     if path == "sparse_24_tensor_core":
         flops = M * N * K
-        weight_bytes = int(0.5 * M * K * dtype_bytes + M * K * 0.25)
+        weight_bytes = int(0.5 * M * K * dtype_bytes + M * (K // 4))
     else:
         flops = dense_flops
         weight_bytes = M * K * dtype_bytes

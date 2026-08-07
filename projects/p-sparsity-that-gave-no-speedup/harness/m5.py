@@ -1,26 +1,16 @@
 def check(workdir):
-    import sys
-    sys.path.insert(0, workdir)
-    import ref
-    from sparse_eval.roofline import evaluate_workload_performance
+    from sparsity.engine import Device, check_if_speedup_possible
+    m = {"mem_bound_no_speedup": 0.0, "compute_bound_speedup": 0.0}
+    d_compute = Device("mock1", True, 1e9, 10.0)
+    d_mem = Device("mock2", True, 10.0, 1e9)
 
-    res = {
-        "proves_no_speedup_for_small_batch": 0.0,
-        "demonstrates_speedup_for_large_batch": 0.0,
-        "proof_metrics_valid": 0.0,
-    }
+    try:
+        if check_if_speedup_possible(100, 100, 100, d_compute):
+            m["compute_bound_speedup"] = 1.0
 
-    hw = ref.hw_config()
-    workloads = ref.workloads()
+        if not check_if_speedup_possible(10000, 10, 10, d_mem):
+            m["mem_bound_no_speedup"] = 1.0
+    except Exception:
+        pass
 
-    for wl in workloads:
-        ev = evaluate_workload_performance(wl["shape"], wl["is_24"], hw["peak_tflops"], hw["bandwidth_gbps"])
-        if not wl["expected_speedup"] and not ev["has_speedup"] and ev["effective_speedup"] <= 1.05:
-            res["proves_no_speedup_for_small_batch"] = 1.0
-        elif wl["expected_speedup"] and ev["has_speedup"] and ev["effective_speedup"] >= 1.3:
-            res["demonstrates_speedup_for_large_batch"] = 1.0
-
-        if "reason" in ev and "effective_speedup" in ev:
-            res["proof_metrics_valid"] = 1.0
-
-    return res
+    return m

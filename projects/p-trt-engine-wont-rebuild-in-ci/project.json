@@ -1,0 +1,106 @@
+{
+  "id": "p-trt-engine-wont-rebuild-in-ci",
+  "title": "Двигун не збирається відтворювано в CI",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw2-tensorrt-onnx",
+  "track": "rw2-tensorrt-onnx",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "trt_builder/compatibility.py",
+    "trt_builder/cache.py",
+    "trt_builder/profiles.py",
+    "trt_builder/inspector.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "розібрати, що входить у сумісність двигуна",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "compatibility_check_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "увімкнути timing cache і виміряти виграш",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "cache_speedup_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "зафіксувати профілі оптимізації",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "profiles_fixed",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "показати, що змінюється між збірками",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "diff_detected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "дві збірки дають однакові шари й тактики",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "tactics_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "матриця переносимості задокументована",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_compatibility",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

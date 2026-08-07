@@ -1,0 +1,100 @@
+{
+  "id": "p-unified-memory-oom-guard",
+  "title": "Захист від падіння машини по пам'яті",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "unified-memory-oom-guard",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "guard/memory.py",
+    "guard/predictor.py",
+    "guard/limiter.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти реальний слід від конфігурації",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "measured_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "вивести передбачення піку",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "predicted_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "поставити ліміти рантайму",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "limited_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "деградувати замість падіння",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "degraded_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "машина не падає на 3 навмисно завеликих конфігах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "survived_large",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "передбачення ±10% від виміру",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}
