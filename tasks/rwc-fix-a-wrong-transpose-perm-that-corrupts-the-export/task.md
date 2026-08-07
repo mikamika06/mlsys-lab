@@ -16,7 +16,7 @@ For a small tensor with $n$ dimensions there are $n!$ possible permutations. A p
 
 Implement `fix_transpose_perm(input_tensor, exported_output, torch_reference)`.
 
-The function receives three NumPy arrays:
+The function receives three list:
 
 - `input_tensor`: the tensor before the exported `Transpose`.
 - `exported_output`: the output produced by the corrupted exported transpose.
@@ -27,7 +27,7 @@ Return a tuple containing the corrected transpose permutation as a tuple of inte
 The returned permutation must satisfy:
 
 ```python
-np.transpose(input_tensor, returned_perm)
+[input_tensor[i] for i in returned_perm]
 ```
 
 being equal to `torch_reference`.
@@ -37,22 +37,21 @@ The input tensors will have between 2 and 5 dimensions. You may assume that exac
 ## Example
 
 ```python
-import numpy as np
 
-x = np.arange(24).reshape(2, 3, 4)
+x = list(range(24)).reshape(2, 3, 4)
 
-corrupt = np.transpose(x, (2, 1, 0))
-reference = np.transpose(x, (1, 2, 0))
+corrupt = [x[k] for k in (2, 1, 0)]
+reference = [x[k] for k in (1, 2, 0)]
 
 perm = fix_transpose_perm(x, corrupt, reference)
 
 # perm == (1, 2, 0)
-# np.transpose(x, perm) matches reference
+# transpose(x, perm) matches reference
 ```
 
 ## What the gate checks
 
-The gate computes the oracle permutation by independently enumerating all valid transpose permutations and selecting the one whose NumPy transpose matches the trusted reference.
+The gate computes the oracle permutation by independently enumerating all valid transpose permutations and selecting the one whose Python transpose matches the trusted reference.
 
 The `perm_exact` score requires the returned permutation to exactly match the oracle tuple. The `max_abs_err` score re-runs the repaired transpose and checks
 

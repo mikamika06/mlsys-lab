@@ -1,15 +1,13 @@
 import sys
+import numpy as np
+
 sys.path.insert(0, ".")
-from loss_spike.detector import SpikeDetector
+from system import distributed, analysis
 
-def test_detector_normal():
-    det = SpikeDetector(threshold=3.0)
-    losses = [1.0, 1.1, 1.05, 1.08, 1.1]
-    for l in losses:
-        assert not det.update(l)
+def test_reduction_is_deterministic():
+    tensors = [np.array([10000.0], dtype=np.float32)]
+    for _ in range(30):
+        tensors.append(np.array([1.0], dtype=np.float32))
 
-def test_detector_spike():
-    det = SpikeDetector(threshold=3.0)
-    losses = [1.0, 1.0, 1.0, 1.0, 10.0]
-    results = [det.update(l) for l in losses]
-    assert results[-1] == True
+    diff = analysis.check_determinism(distributed.safe_all_reduce_sum, tensors)
+    assert diff == 0.0, f"Reduction is not deterministic, diff is {diff}"

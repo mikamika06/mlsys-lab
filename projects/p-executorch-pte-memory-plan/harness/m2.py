@@ -1,18 +1,16 @@
-import ref
-
 def check(workdir):
-    m = {"peak_match": 0.0, "source_match": 0.0}
+    from pte import plan
+    import ref
+
+    m = {"peak_val": 0.0, "peak_src": 0.0}
+    raw = ref.get_raw_data()
     try:
-        from pte_plan.parser import parse_pte
-        from pte_plan.analyzer import get_peak_memory
-        data = ref.generate_pte_artifact()
-        parsed = parse_pte(data)
-        peak, source = get_peak_memory(parsed)
-        ref_peak, ref_source = ref.expected_peak_and_source(parsed)
-        if peak == ref_peak:
-            m["peak_match"] = 1.0
-        if source == ref_source:
-            m["source_match"] = 1.0
+        tensors = plan.parse_artifact(raw)
+        peak, src = plan.find_peak(tensors)
+        if peak == 2048:
+            m["peak_val"] = 1.0
+        if set(src) == {1, 2, 3}:
+            m["peak_src"] = 1.0
     except Exception:
         pass
     return m

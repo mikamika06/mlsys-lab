@@ -1,16 +1,16 @@
 {
   "id": "p-loss-spike-at-scale",
-  "title": "Loss spikes at large scale",
+  "title": "Стрибки втрат на великому масштабі",
   "kind": "project",
   "tier": "T2",
   "area": "rw3-distributed",
-  "track": "loss-spike-at-scale",
+  "track": "",
   "part": 1,
   "difficulty": 4,
   "edits": [
-    "loss_spike/model.py",
-    "loss_spike/reducer.py",
-    "loss_spike/detector.py",
+    "system/analysis.py",
+    "system/distributed.py",
+    "system/train.py",
     "tests/test_regression.py"
   ],
   "milestones": [
@@ -20,7 +20,12 @@
       "check": "harness/m1.py",
       "gates": [
         {
-          "metric": "replayed_ok",
+          "metric": "detected_64",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "detected_8",
           "op": "==",
           "threshold": 1
         }
@@ -32,7 +37,7 @@
       "check": "harness/m2.py",
       "gates": [
         {
-          "metric": "isolated_ok",
+          "metric": "invariant_holds",
           "op": "==",
           "threshold": 1
         }
@@ -44,7 +49,12 @@
       "check": "harness/m3.py",
       "gates": [
         {
-          "metric": "deterministic_ok",
+          "metric": "buggy_fails",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "stable_passes",
           "op": "==",
           "threshold": 1
         }
@@ -56,7 +66,12 @@
       "check": "harness/m4.py",
       "gates": [
         {
-          "metric": "op_found",
+          "metric": "safe_is_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "safe_is_stable",
           "op": "==",
           "threshold": 1
         }
@@ -68,7 +83,7 @@
       "check": "harness/m5.py",
       "gates": [
         {
-          "metric": "converged_ok",
+          "metric": "train_matches",
           "op": "==",
           "threshold": 1
         }
@@ -90,13 +105,8 @@
           "threshold": 1
         },
         {
-          "metric": "catches_fault",
+          "metric": "catches_bug",
           "op": "==",
-          "threshold": 1
-        },
-        {
-          "metric": "faults_caught",
-          "op": ">=",
           "threshold": 1
         }
       ]

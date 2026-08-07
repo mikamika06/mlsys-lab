@@ -1,0 +1,94 @@
+{
+  "id": "p-order-effects-prune-vs-quant",
+  "title": "Порядок: спочатку різати чи стискати",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "order-effects-prune-vs-quant",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "compression/ops.py",
+    "compression/pipeline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти обидва порядки в однакових умовах",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "m1_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати, де взаємодія псує",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "m2_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "підібрати спільний рецепт",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "m3_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти реальний виграш у розмірі й швидкості",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "m4_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "кращий порядок обґрунтований числами",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "m5_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "рецепт переноситься",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": "==",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

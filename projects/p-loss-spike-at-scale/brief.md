@@ -1,7 +1,15 @@
-# Ticket: Loss spikes at large scale
+# Ticket: Loss spikes at 64 GPUs
 
-We are encountering a critical training stability issue when scaling our large model training job to 64 nodes, while the exact same model configuration runs smoothly and stably on 8 nodes. The problem manifests as sudden, intermittent loss spikes during training, occasionally leading to complete divergence of the model weights and training collapse.
+We are experiencing severe instability when scaling our distributed training job. When running on 8 workers, the model training converges beautifully and the loss decreases monotonically. However, when we scale the cluster out to 64 workers, the loss periodically spikes to massive values or goes completely to NaN, completely ruining the optimizer state.
 
-We have conducted initial data integrity audits and confirmed that input data batches are distributed identically across both setups. Preliminary diagnostics suggest that the root cause stems from numerical precision effects and accumulation errors under massive distributed scaling, rather than dataset anomalies or hardware memory faults.
+The spikes typically appear right around step 45 on our test benchmark. We initially suspected bad data or a corrupted batch, but we've thoroughly verified our dataloaders. Running the exact same batch of data globally doesn't cause this anomalous behavior, which strongly points to a subtle numerical issue rather than a data pipeline issue.
 
-We need a systematic suite of diagnostics, simulation tools, and regression tests to isolate the source of numerical error, verify reduction determinism, locate the specific operation accumulating error, ensure convergence without spikes, and implement a robust detector to catch these anomalies early.
+Our core suspicion is that something in our distributed aggregation mechanism—likely a global sum or a gradient norm computation—is accumulating floating-point errors as the number of active workers increases in the cluster. At 64 workers, the accumulated precision error seems to overflow or lose significant digits catastrophically.
+
+Your task is to investigate this systematically and isolate the fault:
+1. Build a log analyzer to programmatically find exactly when the spike happens.
+2. Prove that the data sharding itself mathematically preserves the invariant.
+3. Write a test to check if our reduction operations are order-independent (commutative).
+4. Implement a safe, numerically stable version of our all-reduce operation.
+5. Validate that a training step using your new reduction matches the expected exact math and stays stable.
+6. Finally, write a regression test that fails if someone accidentally reverts to a precision-lossy reduction.

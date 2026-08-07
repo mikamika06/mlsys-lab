@@ -1,21 +1,22 @@
 import sys
 sys.path.insert(0, ".")
+from eagle.sampler import DraftSampler
 from eagle.head import DraftHead
-from eagle.integration import EagleEngine
+import numpy as np
 
 
-def test_temperature_scaling_affects_sampling():
-    head = DraftHead(64, 100)
-    engine = EagleEngine(64, 100, head)
-    hidden, logits = engine.forward_target([1, 2, 3])
-    t_low = engine.verify([10, 20], logits, temperature=0.1)
-    t_high = engine.verify([10, 20], logits, temperature=2.0)
-    assert isinstance(t_low, list)
-    assert isinstance(t_high, list)
+def test_temperature_scaling():
+    sampler_cold = DraftSampler(temperature=0.1)
+    sampler_hot = DraftSampler(temperature=2.0)
+    logits = np.array([1.0, 3.0, 2.0], dtype=np.float32)
+    s_cold = sampler_cold.sample(logits)
+    s_hot = sampler_hot.sample(logits)
+    assert s_cold == 1
+    assert isinstance(s_hot, int)
 
 
-def test_memory_savings_positive():
-    head = DraftHead(64, 100)
-    engine = EagleEngine(64, 100, head)
-    mem = engine.memory_usage_bytes()
-    assert mem["head_bytes"] < mem["separate_model_bytes"]
+def test_head_forward():
+    head = DraftHead(hidden_dim=4, vocab_size=10)
+    hs = [1.0, 0.0, -1.0, 0.5]
+    out = head.forward(hs)
+    assert out.shape == (10,)

@@ -1,0 +1,103 @@
+{
+  "id": "p-mfu-accounting-that-adds-up",
+  "title": "Порахувати MFU так, щоб сходилось",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw2-flashattention",
+  "track": "mfu-accounting",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "mfu/calculator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "вивести FLOPs моделі покроково",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "flops_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "врахувати каузальність і GQA",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "attention_flops_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "звірити з виміряним часом",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "time_alignment_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "розділити prefill і decode",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "phase_split_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "розбіжність із виміром нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "tolerance_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "калькулятор приймає конфіг і видає число",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_flops",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

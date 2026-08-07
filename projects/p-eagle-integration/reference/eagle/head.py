@@ -2,10 +2,12 @@ import numpy as np
 
 
 class DraftHead:
-    def __init__(self, hidden_dim, vocab_size, seed=42):
-        rng = np.random.default_rng(seed)
-        self.w = rng.normal(0, 0.02, (hidden_dim, vocab_size))
-        self.b = np.zeros(vocab_size)
+    def __init__(self, hidden_dim, vocab_size):
+        self.hidden_dim = hidden_dim
+        self.vocab_size = vocab_size
+        self.weight = np.zeros((hidden_dim, vocab_size), dtype=np.float32)
 
     def forward(self, hidden_states):
-        return np.dot(hidden_states, self.w) + self.b
+        if isinstance(hidden_states, list):
+            hidden_states = np.array(hidden_states, dtype=np.float32)
+        return np.dot(hidden_states, self.weight)

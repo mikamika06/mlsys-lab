@@ -1,12 +1,20 @@
-import ref
-
 def check(workdir):
-    from loss_spike import AllReduceSimulator
-    m = {"deterministic_ok": 0.0}
-    r = AllReduceSimulator(64)
-    vals = [1.0, 2.0, 3.0, 4.0]
-    res1 = r.reduce(vals)
-    res2 = r.reduce(vals)
-    if res1 == res2:
-        m["deterministic_ok"] = 1.0
+    import ref
+    m = {"buggy_fails": 0.0, "stable_passes": 0.0}
+    try:
+        from system import analysis
+        tensors = ref.get_test_tensors()
+
+        diff_buggy = analysis.check_determinism(ref.buggy_reduce, tensors)
+        if diff_buggy > 0.0:
+            m["buggy_fails"] = 1.0
+
+        def perfect_reduce(ts):
+            return sum(ts)
+
+        diff_perfect = analysis.check_determinism(perfect_reduce, tensors)
+        if diff_perfect == 0.0:
+            m["stable_passes"] = 1.0
+    except Exception:
+        pass
     return m

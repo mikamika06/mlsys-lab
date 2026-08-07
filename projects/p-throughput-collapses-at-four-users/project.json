@@ -1,0 +1,136 @@
+{
+  "id": "p-throughput-collapses-at-four-users",
+  "title": "Throughput collapses at four users",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "rw3-local-runners",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "runner/engine.py",
+    "runner/bench.py",
+    "runner/profiler.py",
+    "runner/queue_model.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Build load benchmark with proper warmup",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "warmup_ok",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "metrics_ok",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "steady_state_clean",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Construct tok/s vs slots curve and identify knee",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "curve_ok",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "knee_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Decompose timing into queue, prefill, and decode",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "timing_decomposed",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "percentages_valid",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "queue_detected",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Identify limiting bottleneck: memory, slots, or batch size",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "slots_bottleneck_correct",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "batch_bottleneck_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Shift knee by at least +1 user at same p95",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "knee_shifted",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "p95_improved",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Queueing model predicting p95 at 8 users within +-15%",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "prediction_accurate",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

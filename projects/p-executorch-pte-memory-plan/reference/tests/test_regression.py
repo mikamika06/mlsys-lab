@@ -1,18 +1,16 @@
 import sys
+
 sys.path.insert(0, ".")
-from pte_plan.parser import parse_pte
-from pte_plan.analyzer import get_peak_memory, separate_program_and_data
-from pte_plan.planner import plan_buffers
-import ref
+from pte.plan import replan_buffers
 
-def test_parser_works():
-    data = ref.generate_pte_artifact()
-    parsed = parse_pte(data)
-    assert parsed is not None
 
-def test_peak_memory_under_budget():
-    data = ref.generate_pte_artifact()
-    parsed = parse_pte(data)
-    peak, _ = plan_buffers(parsed)
-    budget = ref.get_device_budget(parsed)
-    assert peak <= budget
+def test_replan_no_overlap():
+    activations = [
+        {"id": 1, "size": 100, "constant": False, "start": 0, "end": 2},
+        {"id": 2, "size": 100, "constant": False, "start": 1, "end": 3},
+    ]
+    allocs = replan_buffers(activations)
+    o1 = allocs[1]
+    o2 = allocs[2]
+    overlap = not (o1 + 100 <= o2 or o2 + 100 <= o1)
+    assert not overlap

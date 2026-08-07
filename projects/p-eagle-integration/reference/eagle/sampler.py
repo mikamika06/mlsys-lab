@@ -1,13 +1,14 @@
 import numpy as np
 
 
-class EagleSampler:
-    def __init__(self, topk=4):
-        self.topk = topk
+class DraftSampler:
+    def __init__(self, temperature=1.0):
+        self.temperature = max(temperature, 1e-5)
 
-    def sample_tree(self, logits, temperature=1.0):
-        scaled = logits / max(temperature, 1e-5)
-        exp_logits = np.exp(scaled - np.max(scaled, axis=-1, keepdims=True))
-        probs = exp_logits / np.sum(exp_logits, axis=-1, keepdims=True)
-        top_indices = np.argsort(probs, axis=-1)[..., -self.topk:]
-        return top_indices
+    def sample(self, logits):
+        if isinstance(logits, list):
+            logits = np.array(logits, dtype=np.float32)
+        scaled = logits / self.temperature
+        exps = np.exp(scaled - np.max(scaled, axis=-1, keepdims=True))
+        probs = exps / np.sum(exps, axis=-1, keepdims=True)
+        return int(np.argmax(probs))

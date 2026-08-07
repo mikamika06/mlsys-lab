@@ -1,0 +1,138 @@
+{
+  "id": "p-memory-budget-planner",
+  "title": "Планувальник бюджету пам'яті тренування",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "memory-budget-planner",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "planner/calculator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "формули: ваги, градієнти, стани, активації",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "formulas_weights",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "formulas_grads",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "formulas_states",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "formulas_activations",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "вплив checkpointing і accumulation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "checkpointing_reduces",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "micro_batch_scales",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "вплив ZeRO-стадій і offload",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "zero1_states",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "zero2_grads",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "zero3_weights",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "offload_states",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "передбачення проти реальних вимірів ±10%",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "accurate_total",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "порада, що саме змінити, щоб влізло",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "advise_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "три реальні конфіги передбачені правильно",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_zero",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

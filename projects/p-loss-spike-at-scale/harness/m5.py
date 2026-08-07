@@ -1,11 +1,15 @@
-import ref
-
 def check(workdir):
-    from loss_spike import LossModel
-    m = {"converged_ok": 0.0}
-    model = LossModel({"world_size": 64, "scale_factor": 0.0})
-    logs = ref.generate_replay_logs()
-    losses = [model.step(b) for b in logs]
-    if all(l < 10.0 for l in losses):
-        m["converged_ok"] = 1.0
+    import ref
+    import numpy as np
+    m = {"train_matches": 0.0}
+    try:
+        from system import train, distributed
+        tensors = ref.get_test_tensors()
+        norm = train.train_step(tensors, distributed.safe_all_reduce_sum)
+        expected = float(np.sum(sum(tensors)**2))
+
+        if abs(norm - expected) < 1e-3:
+            m["train_matches"] = 1.0
+    except Exception:
+        pass
     return m

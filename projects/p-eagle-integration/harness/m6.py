@@ -6,8 +6,7 @@ def _run(path):
     spec = importlib.util.spec_from_file_location("learner_regression", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    fns = [getattr(mod, n) for n in dir(mod)
-           if n.startswith("test_") and callable(getattr(mod, n))]
+    fns = [getattr(mod, n) for n in dir(mod) if n.startswith("test_") and callable(getattr(mod, n))]
     if not fns:
         return None
     for fn in fns:
@@ -24,19 +23,26 @@ def _survives(path):
 
 def check(workdir):
     path = os.path.join(workdir, "tests", "test_regression.py")
-    out = {"has_tests": 0.0, "passes_on_good": 0.0,
-           "catches_broken_verification": 0.0, "faults_caught": 0.0}
+    out = {
+        "has_tests": 0.0,
+        "passes_on_good": 0.0,
+        "catches_bad_temperature": 0.0,
+        "catches_broken_head": 0.0,
+        "faults_caught": 0.0
+    }
     if not os.path.isfile(path):
         out["_note"] = "tests/test_regression.py is missing"
         return out
+
+    import eagle.sampler as smp
+    import eagle.head as hdz
 
     try:
         first = _run(path)
     except Exception as e:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests failed on correct implementation: {type(e).__name__}: {e}"
+        out["_note"] = f"tests fail on correct implementation: {type(e).__name__}: {e}"
         return out
-
     if first is None:
         out["_note"] = "no test_* functions found"
         return out
@@ -44,17 +50,24 @@ def check(workdir):
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    import eagle.integration as integ
-    good_verify = integ.EagleEngine.verify
-
-    def broken_verify(self, draft_tokens, target_logits, temperature=1.0):
-        return []
-
-    integ.EagleEngine.verify = broken_verify
+    good_sample = smp.DraftSampler.sample
+    def bad_sample(self, logits):
+        return 0
+    smp.DraftSampler.sample = bad_sample
     try:
-        out["catches_broken_verification"] = 0.0 if _survives(path) else 1.0
+        out["catches_bad_temperature"] = 0.0 if _survives(path) else 1.0
     finally:
-        integ.EagleEngine.verify = good_verify
+        smp.DraftSampler.sample = good_sample
 
-    out["faults_caught"] = out["catches_broken_verification"]
+    good_forward = hdz.DraftHead.forward
+    def bad_forward(self, hs):
+        import numpy as np
+        return np.zeros((1, 1), dtype=np.float32)
+    hdz.DraftHead.forward = bad_forward
+    try:
+        out["catches_broken_head"] = 0.0 if _survives(path) else 1.0
+    finally:
+        hdz.DraftHead.forward = good_forward
+
+    out["faults_caught"] = out["catches_bad_temperature"] + out["catches_broken_head"]
     return out

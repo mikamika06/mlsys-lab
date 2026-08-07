@@ -35,7 +35,7 @@ def _transpose_tensor(tensor, perm):
     return recursive_build([], 0)
 
 
-def fix_transpose_perm(input_tensor, exported_output, torch_reference):
+def fix_transpose_perm(input_tensor: list, exported_output: list, torch_reference: list) -> tuple[int, ...]:
     shape = _get_shape(input_tensor)
     ndim = len(shape)
     dims = tuple(range(ndim))

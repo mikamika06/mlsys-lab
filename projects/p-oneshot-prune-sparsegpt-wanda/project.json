@@ -1,0 +1,125 @@
+{
+  "id": "p-oneshot-prune-sparsegpt-wanda",
+  "title": "Одноразове обрізання без донавчання",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "prune/importance.py",
+    "prune/layer.py",
+    "prune/eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "реалізувати оцінку важливості",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "mag_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "wanda_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "обрізати пошарово з корекцією",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "prune_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "bias_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти якість на своєму eval",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "eval_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "порівняти два методи в однакових умовах",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "compare_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "wanda_better",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "втрата в межах при 50%",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "loss_bounded_50",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт відтворюється",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_sparsity",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_bias",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": "==",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

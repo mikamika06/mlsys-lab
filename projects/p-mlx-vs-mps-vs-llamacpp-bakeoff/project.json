@@ -1,0 +1,108 @@
+{
+  "id": "p-mlx-vs-mps-vs-llamacpp-bakeoff",
+  "title": "Порівняти три шляхи на Apple Silicon",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-edge-mlx",
+  "track": "mlx-vs-mps-vs-llamacpp-bakeoff",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "bakeoff/benchmark.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "єдиний стенд для трьох рушіїв",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "run_basic_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "однакові умови: контекст, батч, квантизація",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "setup_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "виміряти prefill і decode окремо",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "prefill_time_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "decode_time_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти пам'ять і енергію",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "memory_peak_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "energy_used_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "три прогони дають стабільні інтервали",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "stable_median_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "рекомендація з умовами застосовності",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_median",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

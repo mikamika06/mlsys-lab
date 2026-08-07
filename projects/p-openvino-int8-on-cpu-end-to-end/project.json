@@ -1,0 +1,102 @@
+{
+  "id": "p-openvino-int8-on-cpu-end-to-end",
+  "title": "Model on CPU under Latency Budget",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-cpu-inference",
+  "track": "cpu-inference-optimization",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "cpuopt/converter.py",
+    "cpuopt/profiler.py",
+    "cpuopt/quantizer.py",
+    "cpuopt/runtime.py",
+    "cpuopt/optimizer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "конвертація у формат рантайму",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "converted_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "базовий вимір і профіль по операціях",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "profile_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "INT8 з калібруванням і виміряна втрата",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "accuracy_loss_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "налаштування потоків і hint'ів",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "threading_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "затримка під 80 мс, точність у межах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "latency_budget_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт: що дало який внесок",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

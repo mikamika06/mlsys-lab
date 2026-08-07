@@ -1,0 +1,98 @@
+{
+  "id": "p-moe-all-to-all-bottleneck",
+  "title": "All-to-all з'їдає крок у MoE",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw3-distributed",
+  "track": "moe-all-to-all",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "moe_opt/model.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти обсяг обміну на крок",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "measure_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати вплив дисбалансу експертів",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "imbalance_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "згрупувати токени перед обміном",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "group_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "перекрити обмін з обчисленням",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "overlap_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "частка обміну нижче порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "threshold_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "якість маршрутизації не постраждала",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

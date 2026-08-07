@@ -1,0 +1,99 @@
+{
+  "id": "p-oom-triage-caching-allocator",
+  "title": "OOM при вільній пам'яті",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "p-oom-triage-caching-allocator",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "oom_triage/analyzer.py",
+    "oom_triage/config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зняти memory snapshot і прочитати його",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "snapshot_loaded",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "відрізнити витік від фрагментації",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "metrics_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "знайти алокації, що не звільняються між кроками",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "leak_found",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "підібрати конфіг алокатора з обґрунтуванням",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "config_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "24 години без падіння на тому ж навантаженні",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "endurance_passed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт, що показує причину числами",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": "==",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

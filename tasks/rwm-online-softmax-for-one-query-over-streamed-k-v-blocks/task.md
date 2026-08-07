@@ -45,9 +45,9 @@ Implement `online_attention(q, K_blocks, V_blocks)`.
 
 The function receives:
 
-- `q`: a 1-D NumPy array of shape $(d,)$.
-- `K_blocks`: a list of 2-D NumPy arrays. Each block has shape $(b_i, d)$.
-- `V_blocks`: a list of 2-D NumPy arrays. Each block has shape $(b_i, d_v)$.
+- `q`: a list of floats of shape $(d,)$.
+- `K_blocks`: a list of list of lists of floats. Each block has shape $(b_i, d)$.
+- `V_blocks`: a list of list of lists of floats. Each block has shape $(b_i, d_v)$.
 
 The function must process blocks in order and return the single attention output vector of shape $(d_v,)$.
 
@@ -56,16 +56,15 @@ Use the online softmax algorithm. Do not concatenate all key or value blocks int
 ## Example
 
 ```python
-import numpy as np
 
-q = np.array([1.0, 0.0])
+q = [1.0, 0.0]
 K_blocks = [
-    np.array([[1.0, 0.0], [0.0, 1.0]]),
-    np.array([[1.0, 1.0]])
+    [[1.0, 0.0], [0.0, 1.0]],
+    [[1.0, 1.0]]
 ]
 V_blocks = [
-    np.array([[10.0], [20.0]]),
-    np.array([[30.0]])
+    [[10.0], [20.0]],
+    [[30.0]]
 ]
 
 out = online_attention(q, K_blocks, V_blocks)
@@ -74,7 +73,7 @@ out = online_attention(q, K_blocks, V_blocks)
 
 ## What the gate checks
 
-The gate computes a NumPy reference by materializing the complete attention calculation:
+The gate computes a Python reference by materializing the complete attention calculation:
 
 $$
 \frac{\sum_i \exp(s_i-\max(s))V_i}

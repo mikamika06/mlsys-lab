@@ -1,51 +1,110 @@
-import numpy as np
+import math
 
 
-def _oracle(q, K_blocks, V_blocks):
-    K = np.concatenate(K_blocks, axis=0).astype(np.float64)
-    V = np.concatenate(V_blocks, axis=0).astype(np.float64)
-    q = np.asarray(q, dtype=np.float64)
-    scores = K @ q / np.sqrt(float(q.shape[0]))
-    scores = scores - np.max(scores)
-    weights = np.exp(scores)
-    weights = weights / np.sum(weights)
-    return weights @ V
+def ref_attention(q: list[float], K_blocks: list[list[list[float]]], V_blocks: list[list[list[float]]]) -> list[float]:
+    d = len(q)
+    scale = math.sqrt(float(d))
+
+    all_k = []
+    all_v = []
+    for Kb, Vb in zip(K_blocks, V_blocks):
+        for k_row in Kb:
+            all_k.append(k_row)
+        for v_row in Vb:
+            all_v.append(v_row)
+
+    if not all_k:
+        return []
+
+    dv = len(all_v[0])
+    scores = []
+    for k_row in all_k:
+        dot = sum(q[j] * k_row[j] for j in range(d))
+        scores.append(dot / scale)
+
+    max_s = max(scores)
+    weights = [math.exp(s - max_s) for s in scores]
+    sum_w = sum(weights)
+
+    out = [0.0] * dv
+    for c in range(dv):
+        out[c] = sum(weights[i] * all_v[i][c] for i in range(len(all_k))) / sum_w
+    return out
 
 
-def grade(sol, fx) -> dict:
-    cases = [
+def grade(sol, fx=None) -> dict:
+    test_cases = [
         (
-            np.array([1.0, -0.5, 2.0]),
+            [1.0, 0.0],
             [
-                np.array([[0.2, 1.0, -0.3], [1.5, -0.2, 0.7]]),
-                np.array([[0.1, 0.4, 2.0]]),
+                [[1.0, 0.0], [0.0, 1.0]],
+                [[1.0, 1.0]],
             ],
             [
-                np.array([[1.0, 2.0], [3.0, -1.0]]),
-                np.array([[4.0, 0.5]]),
+                [[10.0], [20.0]],
+                [[30.0]],
             ],
         ),
         (
-            np.array([3.0, 2.0]),
+            [2.0, -1.0, 0.5],
             [
-                np.array([[10.0, 0.0]]),
-                np.array([[0.0, 10.0], [5.0, 5.0]]),
-                np.array([[1.0, -1.0]]),
+                [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
             ],
             [
-                np.array([[5.0]]),
-                np.array([[7.0], [9.0]]),
-                np.array([[2.0]]),
+                [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]],
+            ],
+        ),
+        (
+            [0.5, -0.5, 1.5, 2.0],
+            [
+                [[1.0, 2.0, -1.0, 0.0], [0.0, 1.0, 1.0, -2.0]],
+                [[-1.0, 0.0, 2.0, 1.0]],
+                [[0.5, -1.0, 0.0, 0.5], [1.5, 0.5, -0.5, 1.0]],
+            ],
+            [
+                [[1.0, 0.0, 2.0], [0.0, 1.0, -1.0]],
+                [[2.0, 2.0, 0.0]],
+                [[-1.0, 0.5, 1.5], [1.0, 1.0, 1.0]],
+            ],
+        ),
+        (
+            [1.0, 2.0],
+            [
+                [[0.5, 0.5]],
+                [[1.0, -1.0]],
+                [[-0.5, 2.0]],
+            ],
+            [
+                [[5.0]],
+                [[15.0]],
+                [[25.0]],
             ],
         ),
     ]
 
-    worst = 0.0
-    for q, kb, vb in cases:
+    max_abs_err = 0.0
+
+    for q, K_blocks, V_blocks in test_cases:
+        expected = ref_attention(q, K_blocks, V_blocks)
         try:
-            got = np.asarray(sol.online_attention(q, kb, vb), dtype=np.float64)
+            actual = sol.online_attention(q, K_blocks, V_blocks)
         except Exception:
-            return {"max_abs_err": float("inf")}
-        ref = _oracle(q, kb, vb)
-        worst = max(worst, float(np.max(np.abs(got - ref))))
-    return {"max_abs_err": worst}
+            return {"pass": False, "max_abs_err": float('inf')}
+
+        if not isinstance(actual, (list, tuple)) or len(actual) != len(expected):
+            return {"pass": False, "max_abs_err": float('inf')}
+
+        for a, e in zip(actual, expected):
+            try:
+                err = abs(float(a) - float(e))
+                if math.isnan(err):
+                    return {"pass": False, "max_abs_err": float('inf')}
+                if err > max_abs_err:
+                    max_abs_err = err
+            except (ValueError, TypeError):
+                return {"pass": False, "max_abs_err": float('inf')}
+
+    return {
+        "pass": max_abs_err <= 1e-6,
+        "max_abs_err": max_abs_err,
+    }

@@ -1,0 +1,99 @@
+{
+  "id": "p-model-eats-all-ram-on-second-request",
+  "title": "Другий одночасний запит кладе машину",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "local-runners",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "runner/memory.py",
+    "runner/config.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти реальний слід: ваги + KV + накладні",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "footprint_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "вивести формулу KV від num_ctx і числа слотів",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "formula_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "знайти, що перезавантажує модель і чому в пам'яті опиняються дві копії",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "no_duplicates",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "підібрати num_ctx/keep_alive/слоти під бюджет машини",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "budget_fit",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "два паралельні запити тримаються без swap",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "parallel_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "звіт: скільки коштує кожні +1k контексту",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

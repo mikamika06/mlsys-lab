@@ -1,9 +1,11 @@
 import numpy as np
 from eagle.head import DraftHead
-from eagle.integration import EagleEngine
+from eagle.sampler import DraftSampler
+from eagle.integration import EagleIntegration
 
 
-def get_reference_engine():
-    head = DraftHead(64, 200, seed=123)
-    engine = EagleEngine(64, 200, head)
-    return engine
+def get_reference_objects():
+    head = DraftHead(4, 10)
+    sampler = DraftSampler(1.0)
+    integration = EagleIntegration(None, head)
+    return head, sampler, integration

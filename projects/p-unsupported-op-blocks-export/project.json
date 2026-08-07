@@ -1,0 +1,99 @@
+{
+  "id": "p-unsupported-op-blocks-export",
+  "title": "Непідтримана операція блокує експорт",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "unsupported-op-blocks-export",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "exporter/model.py",
+    "exporter/replacements.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "локалізувати операцію і причину",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "localized",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти еквівалентну підтриману форму",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "equivalent_found",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірити числову еквівалентність заміни",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "numerical_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "провести експорт цілком",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "exported_fully",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "паритет виходу в межах толерансу",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "tolerance_ok",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "каталог замін для наступних моделей",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

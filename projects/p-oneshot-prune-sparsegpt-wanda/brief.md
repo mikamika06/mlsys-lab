@@ -1,0 +1,7 @@
+# Single-Shot Post-Training Pruning (Wanda / SparseGPT)
+
+We are dealing with resource constraints where fine-tuning a massive Large Language Model is simply out of the question due to severe limits in compute, memory, and training data availability. When full fine-tuning or even parameter-efficient adaptation is infeasible, post-training pruning methods offer a pragmatic path forward. These one-shot pruning approaches promise to achieve up to 50% sparsity on large models while maintaining performance close to the dense baseline, completely avoiding the heavy cost of gradient-based training loops.
+
+However, theory and paper benchmarks do not always translate smoothly to our specific production models, exact token distributions, and target hardware constraints. We need to implement, evaluate, and verify single-shot unstructured pruning techniques on our own model weights and calibration data to ensure the performance drop stays within acceptable boundaries.
+
+Your task is to build a self-contained module that implements one-shot importance estimation, layer-wise weight pruning with output mean correction, and evaluation pipelines. You must measure the quality on a local calibration set, perform rigorous comparisons between standard magnitude pruning and activation-aware pruning (Wanda) under identical conditions, verify that the 50% sparsity target is strictly met without catastrophic quality degradation, and provide a reproducible verification report with regression tests to guard against regressions in invariants.

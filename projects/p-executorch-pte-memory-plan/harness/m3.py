@@ -1,16 +1,14 @@
-import ref
-
 def check(workdir):
-    m = {"separation_ok": 0.0}
+    from pte import plan
+    import ref
+
+    m = {"separated": 0.0}
+    raw = ref.get_raw_data()
     try:
-        from pte_plan.parser import parse_pte
-        from pte_plan.analyzer import separate_program_and_data
-        data = ref.generate_pte_artifact()
-        parsed = parse_pte(data)
-        w_size, a_size = separate_program_and_data(parsed)
-        ref_w, ref_a = ref.expected_separation(parsed)
-        if w_size == ref_w and a_size == ref_a:
-            m["separation_ok"] = 1.0
+        tensors = plan.parse_artifact(raw)
+        c, a = plan.split_program_data(tensors)
+        if len(c) == 1 and c[0]["constant"] and len(a) == 4 and not a[0]["constant"]:
+            m["separated"] = 1.0
     except Exception:
         pass
     return m

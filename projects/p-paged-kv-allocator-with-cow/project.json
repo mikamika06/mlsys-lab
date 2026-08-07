@@ -1,0 +1,128 @@
+{
+  "id": "p-paged-kv-allocator-with-cow",
+  "title": "Пейджований KV-алокатор з copy-on-write",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "paged-kv-allocator-with-cow",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "kv/allocator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "блоки, таблиці блоків, вільний список",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "api_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "allocates",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "frees",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "ref-count і спільні префікси",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "fork_shares",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "refcount_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "CoW при записі у спільний блок",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "cow_on_append",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "cow_preserves_old",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "звільнення без витоків на 10k операцій",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "no_crash",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "no_leaks",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "фрагментація нижче порога на записаній трасі",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "memory_saved",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "below_threshold",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "інваріант: жоден блок не має ref-count 0 у таблиці",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_fork",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

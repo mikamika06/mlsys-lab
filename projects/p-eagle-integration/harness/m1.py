@@ -1,14 +1,17 @@
 import ref
+import numpy as np
 
 
 def check(workdir):
-    m = {"head_connected": 0.0}
+    from eagle.head import DraftHead
+    m = {"shape_ok": 0.0, "forward_ok": 0.0}
     try:
-        engine = ref.get_reference_engine()
-        hidden, _ = engine.forward_target([10, 20])
-        logits = engine.head.forward(hidden)
-        if logits.shape == (2, 200):
-            m["head_connected"] = 1.0
+        head = DraftHead(8, 32)
+        hs = np.ones((1, 8), dtype=np.float32)
+        out = head.forward(hs)
+        if out.shape[-1] == 32:
+            m["shape_ok"] = 1.0
+            m["forward_ok"] = 1.0
     except Exception:
         pass
     return m

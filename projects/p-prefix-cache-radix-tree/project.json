@@ -1,0 +1,69 @@
+{
+  "id": "p-prefix-cache-radix-tree",
+  "title": "Префіксний кеш на radix-дереві",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "prefix-cache-radix-tree",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "prefix_cache/cache.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "ланцюжкове хешування блоків",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "chain_ok", "op": "==", "threshold": 1},
+        {"metric": "tenant_hashed", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "radix-дерево з вставкою і пошуком найдовшого префікса",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "insert_ok", "op": "==", "threshold": 1},
+        {"metric": "match_longest", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "витіснення LRU з урахуванням ref-count",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "lru_ok", "op": "==", "threshold": 1},
+        {"metric": "ref_count_respected", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 4,
+      "title": "hit rate на записаній трасі вище порога",
+      "check": "harness/m4.py",
+      "gates": [
+        {"metric": "hit_rate_ok", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 5,
+      "title": "ізоляція між орендарями: чужий префікс не матчиться",
+      "check": "harness/m5.py",
+      "gates": [
+        {"metric": "isolation_ok", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 6,
+      "title": "економія prefill у токенах, а не у відсотках",
+      "check": "harness/m6.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_token_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

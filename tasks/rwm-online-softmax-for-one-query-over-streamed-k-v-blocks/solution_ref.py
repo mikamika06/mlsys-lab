@@ -1,27 +1,25 @@
 import math
-import numpy as np
 
 
-def online_attention(q, K_blocks, V_blocks):
-    q = np.asarray(q, dtype=np.float64)
-
+def online_attention(
+    q: list[float],
+    K_blocks: list[list[list[float]]],
+    V_blocks: list[list[list[float]]],
+) -> list[float]:
     m = -float('inf')
     l = 0.0
     acc = None
 
-    dim = q.shape[0]
+    dim = len(q)
     scale = math.sqrt(float(dim))
 
     for K, V in zip(K_blocks, V_blocks):
-        K = np.asarray(K, dtype=np.float64)
-        V = np.asarray(V, dtype=np.float64)
-
-        num_rows = K.shape[0]
+        num_rows = len(K)
         scores = [0.0] * num_rows
         for i in range(num_rows):
             dot = 0.0
             for j in range(dim):
-                dot += K[i, j] * q[j]
+                dot += K[i][j] * q[j]
             scores[i] = dot / scale
 
         block_max = -float('inf')
@@ -45,19 +43,19 @@ def online_attention(q, K_blocks, V_blocks):
 
         new_l = old_scale * l + sum_weights
 
-        v_cols = V.shape[1]
+        v_cols = len(V[0]) if V and V[0] else 0
         if acc is None:
-            acc = np.zeros(v_cols, dtype=np.float64)
+            acc = [0.0] * v_cols
 
         weighted_v = [0.0] * v_cols
         for c in range(v_cols):
             col_sum = 0.0
             for i in range(num_rows):
-                col_sum += weights[i] * V[i, c]
+                col_sum += weights[i] * V[i][c]
             weighted_v[c] = col_sum
 
         if new_l == 0.0:
-            acc = np.zeros(v_cols, dtype=np.float64)
+            acc = [0.0] * v_cols
         else:
             term1 = old_scale * l
             for c in range(v_cols):
@@ -66,4 +64,4 @@ def online_attention(q, K_blocks, V_blocks):
         l = new_l
         m = new_m
 
-    return acc
+    return acc if acc is not None else []

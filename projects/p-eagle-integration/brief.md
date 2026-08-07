@@ -1,14 +1,9 @@
-# Ticket: Eagle Draft Head Integration
+# Ticket: Інтеграція чернеткової голови
 
-Separate draft models used in speculative decoding introduce significant memory overhead because they duplicate large embedding tables, attention layers, and transformer block parameters alongside the primary target model. This leads to high VRAM consumption and non-trivial inter-model communication or orchestration complexity during generation.
+Окрема чернеткова модель з'їдає пам'ять. Голова поверх цільової моделі дешевша. Треба інтеграцію й виміряти.
 
-A more efficient alternative is to attach a lightweight draft head directly onto the intermediate hidden states or final layers of the target model. This design reuses the target model's massive feature extraction backbone, requiring only a tiny fraction of additional parameters and memory.
+У сучасних архітектурах прискорення генерації тексту за допомогою спекулятивного декодування зазвичай вимагає використання двох повноцінних моделей: великої цільової моделі (target model) та меншої чернеткової моделі (draft model). Проте запуск другої окремої моделі створює суттєве навантаження на оперативну пам'ять та кеш ключових значень (KV cache), що є критичним для обмежених ресурсів при сервінгу великих мовних моделей.
 
-However, integrating a draft head introduces specific systems challenges:
-1. **Hidden State Alignment**: Correctly extracting and passing the target model hidden representations into the draft head without breaking forward passes or KV-cache management.
-2. **Speculative Sampling & Verification**: Ensuring that tree-based or sequential draft token generation matches the target distribution semantics during verification rounds.
-3. **Acceptance Rate & Speedup**: Measuring effective token acceptance ratios to confirm that the overhead reduction translates into genuine computational efficiency.
-4. **Memory Footprint Verification**: Quantifying the VRAM savings compared to running a standalone separate draft model.
-5. **Temperature Robustness**: Maintaining stable speculative generation and acceptance behavior under varying sampling temperatures.
+Альтернативним підходом є використання так званої чернеткової голови (draft head) або кількох додаткових вихідних голів, що розміщуються безпосередньо поверх базової цільової моделі. Це дозволяє уникнути дублювання шарів трансформера, значно економити пам'ять та прискорювати процес генерації кандидатів токенів для подальшої верифікації.
 
-Your task is to implement the draft head modules, wire them into the inference engine, verify correctness across workloads, ensure substantial memory savings, validate speedup thresholds, and protect the system against regression under temperature changes.
+Ваше завдання полягає в тому, щоб реалізувати інтеграцію чернеткової голови у складі проекту `p-eagle-integration`. Необхідно під'єднати голову до базової моделі, перевірити коректність вибірки кандидатів, виміряти показник прийняття токенів, порівняти споживання пам'яті з окремою чернетковою моделлю, досягти сумарного прискорення вище заданого порога та дослідити поведінку системи при зміні температури семплювання. Успішна реалізація повинна проходити всі етапи автоматизованої перевірки, включаючи надійний регресійний тест.

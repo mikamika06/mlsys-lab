@@ -1,0 +1,145 @@
+{
+  "id": "p-trt-ep-partitioning-audit",
+  "title": "Аудит розбиття на підграфи",
+  "kind": "project",
+  "tier": "T2",
+  "area": "rw2-tensorrt-onnx",
+  "track": "tensorrt-ep-partitioning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "trtep/audit.py",
+    "trtep/rewriter.py",
+    "trtep/cache.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "показати фактичні підграфи",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "partition_api_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "subgraph_count_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "all_nodes_assigned",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти операції, що ламають підграф",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "breakers_api_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "breakers_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перебудувати граф, щоб зменшити число розривів",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "rewrite_api_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "partitions_reduced",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "увімкнути кеш двигунів",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "cache_miss_cold",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "cache_hit_warm",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "hash_consistency",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "частка графа на провайдері вище порога",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "coverage_ratio_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "cpu_fallback_minimized",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "час першого запуску скорочено",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_disabled_cache",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_rewriter",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}

@@ -1,16 +1,15 @@
-import ref
-
 def check(workdir):
-    m = {"under_budget": 0.0}
+    from pte import plan
+    import ref
+
+    m = {"budget_checked": 0.0}
+    raw = ref.get_large_data()
     try:
-        from pte_plan.parser import parse_pte
-        from pte_plan.planner import plan_buffers
-        data = ref.generate_pte_artifact()
-        parsed = parse_pte(data)
-        planned_peak, _ = plan_buffers(parsed)
-        budget = ref.get_device_budget(parsed)
-        if planned_peak <= budget:
-            m["under_budget"] = 1.0
+        tensors = plan.parse_artifact(raw)
+        ok1 = plan.check_budget(tensors, 600)
+        ok2 = plan.check_budget(tensors, 599)
+        if ok1 and not ok2:
+            m["budget_checked"] = 1.0
     except Exception:
         pass
     return m

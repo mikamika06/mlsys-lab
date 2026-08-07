@@ -1,2 +1,2 @@
-def test_placeholder():
+def test_temperature_scaling():
     raise NotImplementedError

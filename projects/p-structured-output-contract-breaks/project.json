@@ -1,0 +1,75 @@
+{
+  "id": "p-structured-output-contract-breaks",
+  "title": "Структурований вивід ламає контракт",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "structured-output-contract-breaks",
+  "difficulty": 4,
+  "edits": [
+    "app/analyzer.py",
+    "app/decoder.py",
+    "app/pipeline.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "зібрати корпус реальних відмов і класифікувати їх",
+      "check": "harness/m1.py",
+      "gates": [
+        { "metric": "valid_ok", "op": "==", "threshold": 1 },
+        { "metric": "extra_ok", "op": "==", "threshold": 1 },
+        { "metric": "trunc_ok", "op": "==", "threshold": 1 },
+        { "metric": "type_ok", "op": "==", "threshold": 1 }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "увімкнути схемо-кероване декодування і виміряти ефект",
+      "check": "harness/m2.py",
+      "gates": [
+        { "metric": "generates_valid", "op": "==", "threshold": 1 },
+        { "metric": "stops_at_max", "op": "==", "threshold": 1 }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "показати, що робить граматика з розподілом токенів",
+      "check": "harness/m3.py",
+      "gates": [
+        { "metric": "mask_ok", "op": "==", "threshold": 1 }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "обробити випадок обрізки по num_predict",
+      "check": "harness/m4.py",
+      "gates": [
+        { "metric": "normal_ok", "op": "==", "threshold": 1 },
+        { "metric": "truncation_handled", "op": "==", "threshold": 1 },
+        { "metric": "exact_budget_ok", "op": "==", "threshold": 1 }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "1000 прогонів без жодного невалідного JSON",
+      "check": "harness/m5.py",
+      "gates": [
+        { "metric": "count_ok", "op": "==", "threshold": 1 },
+        { "metric": "all_valid", "op": "==", "threshold": 1 }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "валідатор у репо, який ловить регрес схеми",
+      "check": "harness/m6.py",
+      "gates": [
+        { "metric": "has_tests", "op": "==", "threshold": 1 },
+        { "metric": "passes_on_good", "op": "==", "threshold": 1 },
+        { "metric": "catches_broken_mask", "op": "==", "threshold": 1 },
+        { "metric": "catches_broken_budget", "op": "==", "threshold": 1 }
+      ]
+    }
+  ]
+}

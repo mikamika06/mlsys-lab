@@ -1,5 +1,5 @@
-def get_peak_memory(pte_data):
+def analyze_peak(pte_structure):
     raise NotImplementedError
 
-def separate_program_and_data(pte_data):
+def split_program_data(pte_structure):
     raise NotImplementedError

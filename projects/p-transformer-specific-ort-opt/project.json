@@ -1,0 +1,135 @@
+{
+  "id": "p-transformer-specific-ort-opt",
+  "title": "Спеціалізовані оптимізації для трансформера",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "transformer-specific-ort-opt",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "opt/transformer_fusion.py",
+    "opt/analyzer.py",
+    "opt/validator.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "застосувати спеціалізований прохід",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "pass_applied",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "nodes_fused_count",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "показати, які вузли злилися",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "matched_patterns",
+          "op": ">=",
+          "threshold": 1
+        },
+        {
+          "metric": "node_mapping_valid",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірити паритет після злиття",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "max_diff",
+          "op": "<=",
+          "threshold": 0.001
+        },
+        {
+          "metric": "cosine_sim",
+          "op": ">=",
+          "threshold": 0.999
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти виграш по фазах",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "prefill_speedup",
+          "op": ">",
+          "threshold": 1.0
+        },
+        {
+          "metric": "decode_speedup",
+          "op": ">",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "виграш вище порога, паритет збережено",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "overall_speedup",
+          "op": ">=",
+          "threshold": 1.15
+        },
+        {
+          "metric": "parity_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "обмеження задокументовані",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_broken_fusion",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_parity",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    }
+  ]
+}
