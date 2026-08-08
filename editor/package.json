@@ -2,7 +2,7 @@
   "name": "mlsys-lab",
   "displayName": "mlsys-lab — ML systems exercises in Python, C++ and CUDA, auto-graded",
   "description": "Auto-graded exercises in low-level ML systems: quantization, KV cache and attention, batching and serving, numerics, CPU performance, CPython internals. Most tasks are Python. C++ tasks are compiled by the local clang++; CUDA tasks are real CUDA-C, run on a software GPU that counts warps, coalescing transactions, shared-memory bank conflicts and divergence, with no NVIDIA hardware. Deterministic gates, identical score on any machine.",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "publisher": "mikamika06",
   "engines": {
     "vscode": "^1.85.0"

@@ -273,6 +273,19 @@
   .console .ok{color:var(--pass);} .console .bad{color:var(--fail);}
 
   @media (max-width:960px){ .work{grid-template-columns:var(--lw) 6px 1fr;} .right,.work .rz+.rz{display:none;} }
+  /* In a narrow window the right column is dropped to leave room for the code.
+     For a project that column carries the file list and the milestones — the
+     parts you act on — so the ticket folds away instead, and it is still one
+     click away on the roadmap. */
+  @media (max-width:960px){
+    .app.is-proj .work{grid-template-columns:minmax(0,1fr) 6px var(--rw);}
+    .app.is-proj .left,.app.is-proj .work .rz:first-of-type{display:none;}
+    .app.is-proj .right{display:flex;}
+    /* The amber Start is the widest thing in the toolbar and it was crowding
+       out the crumb and the counters once the sidebar took half the window. */
+    .pstart{padding:6px 10px;font-size:11.5px;gap:5px;}
+    .app.is-proj .crumb{min-width:0;overflow:hidden;text-overflow:ellipsis;}
+  }
 </style>
 </head>
 <body>
@@ -1093,6 +1106,9 @@
     }
     else if(m.type==='pfile'){
       curFile=m.file; pOpen=m.file; pDirty=false;
+      curLang=langOf(curFile); MASTER=LEX[curLang];
+      $('fname').textContent=curFile;
+      $('ficon').textContent={py:'py',cpp:'C++',cu:'CUDA'}[curLang]||'txt';
       ta.value=m.code||''; paint();
       $('crumb').innerHTML=`<b>Part 2</b> › ${esc(curProject?curProject.id:'')} › ${esc(m.file)}`;
       renderFiles();
