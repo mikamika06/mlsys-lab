@@ -1,0 +1,21 @@
+{
+  "id": "m-count-aten-ops-and-identify-decompositions-in-an-exp",
+  "title": "Count aten ops and identify decompositions in an exported graph",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "torch.export capture & ExportedProgram",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["exportops/counter.py", "exportops/mutations.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Count aten operators and verify decompositions", "check": "harness/m1.py",
+     "gates": [{"metric": "ops_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Capture export-time error for global-state mutation", "check": "harness/m2.py",
+     "gates": [{"metric": "errors_captured", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for export invariants", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken", "op": "==", "threshold": 1}]}
+  ]
+}

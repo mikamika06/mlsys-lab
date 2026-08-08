@@ -1,0 +1,5 @@
+We are observing abnormal numerical degradation and unexpected storage bloat when exporting and quantizing large language models to 4-bit precision via coremltools. Specifically, when converting weights using blockwise formats, engineers report that different block configurations produce widely divergent relative errors against full-precision reference activations.
+
+Furthermore, naive implementations fail to account for how scale and zero-point parameters are derived under symmetric versus affine quantization regimes, leading to clipping or wasted dynamic range. When evaluating different block-size sweeps, the error curves exhibit unpredictable local minima that cannot be resolved without a principled derivation of the quantization parameters and an accurate accounting of the compressed memory footprint.
+
+Your task is to build a module for `coremltools.optimize.coreml` workflows that implements symmetric and affine scale/zero-point derivation, calculates blockwise int4 size ratios for real model dimensions, and generates accurate block-size sweep error curves.

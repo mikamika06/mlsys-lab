@@ -1,0 +1,69 @@
+{
+  "id": "m-derive-per-rank-parameter-shard-size-under-full-shar",
+  "title": "FSDP Shard Sizes, Communication Volume, and Transient Memory Engine",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "fsdp-distributed-finetuning",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fsdp_analyzer/sharding.py",
+    "fsdp_analyzer/communication.py",
+    "fsdp_analyzer/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Per-rank parameter sharding layout under FULL_SHARD",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "shards_matched",
+          "op": ">=",
+          "threshold": 3
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-step communication volume and transient peak memory",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "comm_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "peak_memory_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for sharding and comm bounds",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_unequal_remainder_distribution",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

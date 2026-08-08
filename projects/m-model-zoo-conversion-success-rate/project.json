@@ -1,0 +1,40 @@
+{
+  "id": "m-model-zoo-conversion-success-rate",
+  "title": "LiteRT model zoo conversion analytics and parser",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "LiteRT/TFLite conversion pipeline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "exportcheck/sigdef.py",
+    "exportcheck/classifier.py",
+    "exportcheck/success.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse signature definitions without TensorFlow",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "sigdefs_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Classify converter error logs into root causes",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "classification_accuracy", "op": ">=", "threshold": 1.0}]
+    },
+    {
+      "n": 3,
+      "title": "Model-zoo success rate and regression safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_classifier", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

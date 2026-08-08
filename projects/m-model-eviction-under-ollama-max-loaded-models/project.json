@@ -1,0 +1,23 @@
+{
+  "id": "m-model-eviction-under-ollama-max-loaded-models",
+  "title": "Model eviction under OLLAMA_MAX_LOADED_MODELS",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-local-runners",
+  "track": "concurrency-parallel-slots-and-queue",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ollama_evict/tracker.py", "ollama_evict/policy.py", "ollama_evict/engine.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Model state tracking and capacity checks", "check": "harness/m1.py",
+     "gates": [{"metric": "states_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Eviction candidate selection and memory balancing", "check": "harness/m2.py",
+     "gates": [{"metric": "evictions_correct", "op": "==", "threshold": 1},
+               {"metric": "capacity_respected", "op": "==", "threshold": 1},
+               {"metric": "timestamps_ordered", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test suite catching flawed eviction policies", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_eviction", "op": "==", "threshold": 1}]}
+  ]
+}

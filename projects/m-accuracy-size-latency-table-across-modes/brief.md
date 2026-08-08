@@ -1,0 +1,5 @@
+When deploying machine learning models to resource-constrained edge devices via LiteRT and TFLite, engineers must carefully evaluate different post-training quantization (PTQ) modes—such as standard FP32, FP16, dynamic range INT8, and full integer INT8 quantization. Each mode introduces distinct tradeoffs impacting artifact size, inference latency on hardware accelerators, and predictive accuracy.
+
+Currently, our deployment pipeline lacks a unified analysis module to ingest raw profiling records, construct comprehensive performance tables across all quantization modes, compute normalized size ratios relative to the baseline FP32 model, and validate hardware constraint compliance. Without automated validation, suboptimal quantization modes may be selected, leading to excessive memory footprints or unacceptable accuracy degradation.
+
+Your task is to implement the `modetbl` package to parse quantization performance data, compute relative size ratios and trade-off metrics, format summary reports, and write regression tests that safeguard against invalid quantization metrics.

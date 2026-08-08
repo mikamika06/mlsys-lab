@@ -1,0 +1,64 @@
+{
+  "id": "m-e4m3-encode-decode-with-subnormals",
+  "title": "FP8 E4M3 codec, scaling, and format comparison",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "FP8 quantization (E4M3 weights and activations)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantlib/codec.py",
+    "quantlib/scale.py",
+    "quantlib/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "E4M3 encode and decode with subnormals",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "byte_exact_fraction",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-tensor FP8 scale derivation",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "scale_error",
+          "op": "<=",
+          "threshold": 0.01
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for format comparison",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken_compare",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

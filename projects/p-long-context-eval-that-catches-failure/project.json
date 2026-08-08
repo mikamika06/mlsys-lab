@@ -1,0 +1,110 @@
+{
+  "id": "p-long-context-eval-that-catches-failure",
+  "title": "An evaluation suite that catches long-context failure",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-moe-longctx",
+  "track": "long-context-eval",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "longctx/generator.py",
+    "longctx/evaluator.py",
+    "longctx/analyzer.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "assemble tasks with facts in different positions",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "tasks_generated",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "positions_covered",
+          "op": ">=",
+          "threshold": 5
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "measure quality curve by position",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "curve_computed",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "dip_detected",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "separate attention failure from tokenization failure",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "disentangled",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "test on two extension methods",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "methods_compared",
+          "op": ">=",
+          "threshold": 2
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "eval catches known failure",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "failure_caught",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "suite reproduces on another model",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

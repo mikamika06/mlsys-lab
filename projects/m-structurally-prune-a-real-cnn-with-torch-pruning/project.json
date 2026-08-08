@@ -1,0 +1,44 @@
+{
+  "id": "m-structurally-prune-a-real-cnn-with-torch-pruning",
+  "title": "Structurally prune a real CNN with Torch-Pruning",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Structured pruning mechanics & dependency graphs (Torch-Pruning)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "prune_net/toy_dep.py",
+    "prune_net/cnn_pruner.py",
+    "prune_net/speedup.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Manually reconstruct DepGraph dependency propagation on a toy net",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "toy_propagated_correctly", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Structurally prune a real CNN using recorded dependency state",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "cnn_pruned_correctly", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching broken dependency propagation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_propagation", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+We are tracing a custom neural network module under JAX with both grad and jit enabled, capturing the underlying jaxpr representation to inspect its structure for static analysis tooling.
+
+The primary symptom appears when inspecting the generated jaxpr equations and their unique primitives. In our current implementation, when we extract the jaxpr and attempt to count the number of equations or aggregate the distinct primitive names, the metrics frequently return inconsistent results or zero out entirely on certain composed transformations. Furthermore, when writing helper functions that collect these primitives across multiple traced function calls or closure scopes, our logging system occasionally reports stale primitives from previous traces or crashes with unexpected tracer leakage errors.
+
+We need to properly parse and analyze the equations and unique primitives from a grad+jit-composed jaxpr without triggering tracer pollution, and implement a robust regression test suite that catches any regressions in how closed-over mutable structures interact with the tracer environment.

@@ -1,0 +1,103 @@
+{
+  "id": "p-lora-merge-changes-outputs",
+  "title": "Після злиття адаптера модель відповідає інакше",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "p-lora-merge-changes-outputs",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "lora_merge/merger.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "виміряти розбіжність пошарово",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "layers_measured",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "знайти шари, де dtype злиття псує числа",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "dtype_fixed",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "перевірити масштаб alpha/rank при злитті",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "scaling_correct",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "зробити злиття, що зберігає вихід у межах толерансу",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "merge_safe",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "max_abs_err нижче порога на 200 промптах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "error_below_threshold",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "перевірка в CI, що ловить розбіжність злиття",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_merge",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

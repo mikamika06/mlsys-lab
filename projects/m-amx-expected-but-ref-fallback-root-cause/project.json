@@ -1,0 +1,64 @@
+{
+  "id": "m-amx-expected-but-ref-fallback-root-cause",
+  "title": "oneDNN verbose log analysis for AMX fallback and kernel selection",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "oneDNN verbose log & JIT kernel selection",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "amxlog/parser.py",
+    "amxlog/sweep.py",
+    "amxlog/profile.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse oneDNN verbose logs and identify fallback root causes",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "parsed_match",
+          "op": ">=",
+          "threshold": 3.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Analyze kernel selection across parameter K-sweeps",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "sweep_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Profile primitive time dominance and regression safeguards",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_broken",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

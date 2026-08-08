@@ -1,0 +1,21 @@
+{
+  "id": "m-derive-per-layer-activation-memory-formula-for-given",
+  "title": "Derive per-layer activation memory formula for given transformer configs",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-finetune-efficiency",
+  "track": "activation-memory-accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["actmem/formula.py", "actmem/crossover.py", "actmem/accounting.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Per-layer activation memory calculation", "check": "harness/m1.py",
+     "gates": [{"metric": "formulas_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Critical sequence length where attention overtakes MLP", "check": "harness/m2.py",
+     "gates": [{"metric": "crossovers_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: total un-checkpointed memory and regression test", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_formula", "op": "==", "threshold": 1}]}
+  ]
+}

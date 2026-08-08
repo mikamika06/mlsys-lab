@@ -1,0 +1,69 @@
+{
+  "id": "m-same-family-vs-cross-family-acceptance-rate-measured",
+  "title": "Same-family vs cross-family acceptance rate measurement",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Draft/target model pairing",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "speculative/metrics.py",
+    "speculative/eval.py",
+    "speculative/pairing.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute local token acceptance rates from traces",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "acceptance_rate_match",
+          "op": ">=",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify and compare same-family vs cross-family profiles",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "comparison_match",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "threshold_match",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for acceptance rate invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_rates",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "m-extract-a-subgraph-between-two-tensors",
+  "title": "ONNX Subgraph Extraction, GELU Fusion, and Constant Folding",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ONNX graph surgery & simplification (graphsurgeon, onnxsim/onnxslim)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["surgery/extract.py", "surgery/fuse.py", "surgery/fold.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Extract a subgraph between two tensors", "check": "harness/m1.py",
+     "gates": [{"metric": "subgraphs_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Fuse Mul-Erf-Add-Mul into Gelu", "check": "harness/m2.py",
+     "gates": [{"metric": "fusions_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Initializer-only constant folder and regression tests", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_fold", "op": "==", "threshold": 1}]}
+  ]
+}

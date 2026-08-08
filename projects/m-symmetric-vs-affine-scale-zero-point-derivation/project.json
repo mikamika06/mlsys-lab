@@ -1,0 +1,44 @@
+{
+  "id": "m-symmetric-vs-affine-scale-zero-point-derivation",
+  "title": "Symmetric vs Affine Quantization and Blockwise Sweep",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Core ML weight quantization (coremltools.optimize.coreml)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/derive.py",
+    "quant/analysis.py",
+    "quant/sweep.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Deriving symmetric and affine scale and zero-point",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "params_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Blockwise int4 size ratio on a real model shape",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "size_ratio_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Block-size sweep error curve and regression safeguard",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_sweep", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

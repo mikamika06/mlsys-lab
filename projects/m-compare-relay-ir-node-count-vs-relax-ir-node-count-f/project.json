@@ -1,0 +1,21 @@
+{
+  "id": "m-compare-relay-ir-node-count-vs-relax-ir-node-count-f",
+  "title": "Relay vs Relax IR node count and constant-folding discrepancy",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "TVM Relay legacy vs Relax migration & deployment",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ir_compare/counts.py", "ir_compare/discrepancy.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Relay vs Relax IR node counts for 3-op models", "check": "harness/m1.py",
+     "gates": [{"metric": "counts_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Reproduce constant-folding discrepancy", "check": "harness/m2.py",
+     "gates": [{"metric": "discrepancy_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test suite", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_counts", "op": "==", "threshold": 1}]}
+  ]
+}

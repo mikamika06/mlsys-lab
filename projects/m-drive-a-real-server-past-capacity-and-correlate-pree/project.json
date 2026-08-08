@@ -1,0 +1,40 @@
+{
+  "id": "m-drive-a-real-server-past-capacity-and-correlate-pree",
+  "title": "Drive server past capacity and correlate preemption with p99 latency",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-vllm-serving",
+  "track": "preemption-swapping-and-scheduling-policy",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "serverload/load.py",
+    "serverload/metrics.py",
+    "serverload/correlate.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate request load past capacity",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "loads_matched", "op": ">=", "threshold": 3}]
+    },
+    {
+      "n": 2,
+      "title": "Correlate preemption with p99 latency",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "rel_err", "op": "<=", "threshold": 0.05}]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for latency correlation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_correlation", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

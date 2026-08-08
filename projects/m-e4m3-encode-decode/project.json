@@ -1,0 +1,74 @@
+{
+  "id": "m-e4m3-encode-decode",
+  "title": "FP8 E4M3 encoding, descaling, and scale optimization",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-flashattention",
+  "track": "fp8-and-low-precision-attention",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "fp8/e4m3.py",
+    "fp8/descale.py",
+    "fp8/optimize.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Bit-level E4M3 encoding and decoding",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "encode_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "decode_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-tensor quantization, descale, and optimal scale search",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "descale_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "scale_search_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catching altered max float scaling in search",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_invalid_e4m3_max",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

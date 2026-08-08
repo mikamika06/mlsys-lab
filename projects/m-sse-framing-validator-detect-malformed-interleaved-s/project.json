@@ -1,0 +1,21 @@
+{
+  "id": "m-sse-framing-validator-detect-malformed-interleaved-s",
+  "title": "SSE framing validator and OpenAI request adapter",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-vllm-serving",
+  "track": "openai-compatible-api-surface",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ssevall/validator.py", "ssevall/mapper.py", "ssevall/divergence.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "SSE framing validation and stream sanity", "check": "harness/m1.py",
+     "gates": [{"metric": "streams_checked", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "OpenAI request JSON to vLLM SamplingParams mapping", "check": "harness/m2.py",
+     "gates": [{"metric": "params_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: test catching prefix token divergence", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_divergence", "op": "==", "threshold": 1}]}
+  ]
+}

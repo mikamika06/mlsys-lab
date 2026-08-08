@@ -1,0 +1,21 @@
+{
+  "id": "m-compare-torch-compile-graph-break-vs-torch-export-ha",
+  "title": "Torch compile graph breaks vs export hard-stop and torch.cond",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Control flow: graph breaks vs export hard-stop, torch.cond",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["graphops/branch.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Analyze compile graph breaks and export errors", "check": "harness/m1.py",
+     "gates": [{"metric": "metrics_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Rewrite branchy function using torch.cond equivalent", "check": "harness/m2.py",
+     "gates": [{"metric": "cond_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catching shape mismatch", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_shape_mismatch", "op": "==", "threshold": 1}]}
+  ]
+}

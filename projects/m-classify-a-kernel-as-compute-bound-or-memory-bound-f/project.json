@@ -1,0 +1,63 @@
+{
+  "id": "m-classify-a-kernel-as-compute-bound-or-memory-bound-f",
+  "title": "Classify a kernel as compute-bound or memory-bound",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Benchmarking methodology (do_bench, roofline)",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "kernelstats/analyzer.py",
+    "kernelstats/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute arithmetic intensity from kernel trace records",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "intensities_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify kernel bounds against hardware ridge point",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "classifications_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for boundary conditions",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_inverted_bounds",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

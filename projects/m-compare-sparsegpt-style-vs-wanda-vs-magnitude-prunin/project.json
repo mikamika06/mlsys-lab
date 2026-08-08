@@ -1,0 +1,43 @@
+{
+  "id": "m-compare-sparsegpt-style-vs-wanda-vs-magnitude-prunin",
+  "title": "Compare SparseGPT-style vs Wanda vs magnitude pruning",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "LLM one-shot post-training pruning (SparseGPT, Wanda)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "prune/methods.py",
+    "prune/debug.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compare pruning quality across methods",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "methods_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Debug Wanda pruning quality under mismatched calibration domain",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "domain_debug_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches invalid pruning masks",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_mask", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

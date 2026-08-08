@@ -1,0 +1,21 @@
+{
+  "id": "m-diagnose-a-zeroed-router-row",
+  "title": "Diagnose a zeroed router row and compute MoE parameters",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-moe-longctx",
+  "track": "moe-routing-fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["moediag/router.py", "moediag/params.py", "moediag/diagnose.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Identify zeroed router rows", "check": "harness/m1.py",
+     "gates": [{"metric": "rows_diagnosed", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Derive active vs total parameter count", "check": "harness/m2.py",
+     "gates": [{"metric": "params_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for zeroed router rows", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_zeroed_row", "op": "==", "threshold": 1}]}
+  ]
+}

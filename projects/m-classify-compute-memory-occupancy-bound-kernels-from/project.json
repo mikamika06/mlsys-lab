@@ -1,0 +1,45 @@
+{
+  "id": "m-classify-compute-memory-occupancy-bound-kernels-from",
+  "title": "Kernel Profiling from Traces",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Profiling real kernels",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "trace_parser/ncu.py",
+    "trace_parser/proton.py",
+    "trace_parser/torch_trace.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "NCU classification and Proton exclusive time",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "ncu_match", "op": "==", "threshold": 1},
+        {"metric": "proton_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "PyTorch trace TFLOPS estimation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "torch_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch exclusive vs inclusive time bug",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_inclusive_bug", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

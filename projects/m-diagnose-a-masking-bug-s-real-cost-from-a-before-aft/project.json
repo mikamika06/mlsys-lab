@@ -1,0 +1,45 @@
+{
+  "id": "m-diagnose-a-masking-bug-s-real-cost-from-a-before-aft",
+  "title": "Diagnose a masking bug's real cost from a before/after Nsight Compute diff",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Profiling real kernels (Nsight Compute / Proton / torch.profiler)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "diagnose/metrics.py",
+    "diagnose/diff.py",
+    "diagnose/cost.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse and compute baseline vs masked metric ratios",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "metrics_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantize stall cycles and register allocation cost",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "cost_match", "op": "==", "threshold": 1},
+        {"metric": "regression_detected", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching silent mask overhead injection",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_mask", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Ticket: Memory OOM and Rank Sharding Discrepancies in Distributed Fine-Tuning
+
+## Symptom
+During attempts to scale up large model fine-tuning across multiple nodes using FSDP configurations, jobs consistently terminate with CUDA out-of-memory errors on rank zero during initialization, even when the aggregate parameter count suggests the model should comfortably fit within the total available pooled VRAM. Furthermore, when inspecting the parameter distribution across ranks post-initialization, the reported sharded parameter sizes do not align with expected flat-buffer sizes or local slice boundaries, causing weight reconstruction mismatches during subsequent all-gather validation checks. Engineers are currently unable to reliably compute the minimum required world size for a given memory budget or verify that restored weights maintain mathematical equivalence with the un-sharded baseline.
+
+## Context
+We need a robust, pure-Python utility layer within our fine-tuning infrastructure that can analytically determine the exact minimum world size required under a strict per-rank memory ceiling, simulate the sharded parameter layout across ranks without requiring live GPU clusters or heavy distributed runtimes, and verify weight integrity through exact reconstruction checks. This tooling must operate deterministically on CPU using standard numerical libraries to support rapid CI/CD validation and automated gating.

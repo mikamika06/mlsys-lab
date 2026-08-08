@@ -1,0 +1,22 @@
+{
+  "id": "m-compare-hidden-state-mse-vs-cosine-loss-training-sta",
+  "title": "Compare hidden-state MSE vs cosine loss training stability",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Feature / intermediate-layer distillation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["distill/loss.py", "distill/mapping.py", "distill/sim.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Hidden-state MSE and cosine loss computation", "check": "harness/m1.py",
+     "gates": [{"metric": "loss_match", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Layer mapping impact on feature-loss magnitude", "check": "harness/m2.py",
+     "gates": [{"metric": "mapping_match", "op": ">=", "threshold": 4},
+               {"metric": "rel_err", "op": "<=", "threshold": 0.05}]},
+    {"n": 3, "title": "Safety net: regression test catching bad loss scaling", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_scaling", "op": "==", "threshold": 1}]}
+  ]
+}

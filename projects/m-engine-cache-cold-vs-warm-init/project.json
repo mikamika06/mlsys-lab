@@ -1,0 +1,45 @@
+{
+  "id": "m-engine-cache-cold-vs-warm-init",
+  "title": "Engine cache cold vs warm init and TRT coverage",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "ORT TensorRT EP: subgraph partitioning, engine & timing caches",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "trtcache/engine.py",
+    "trtcache/partition.py",
+    "trtcache/monitor.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Engine cache hit identification and cold vs warm classification",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "states_matched", "op": ">=", "threshold": 4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Subgraphs node coverage and invalidation ratio analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "latency_ratio", "op": "<=", "threshold": 1.25},
+        {"metric": "coverage_met", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching broken cache validation",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_cache", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

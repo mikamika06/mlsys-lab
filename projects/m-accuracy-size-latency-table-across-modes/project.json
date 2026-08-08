@@ -1,0 +1,69 @@
+{
+  "id": "m-accuracy-size-latency-table-across-modes",
+  "title": "Accuracy, size, and latency table across quantization modes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "TFLite/LiteRT post-training quantization modes",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "modetbl/analyzer.py",
+    "modetbl/metrics.py",
+    "modetbl/summary.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Build mode profiles table",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "profiles_matched",
+          "op": ">=",
+          "threshold": 4
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute size ratios and trade-offs",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "size_ratio_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "valid_tradeoffs",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_invalid_ratios",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

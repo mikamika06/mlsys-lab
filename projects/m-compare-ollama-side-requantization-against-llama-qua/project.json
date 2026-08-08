@@ -1,0 +1,40 @@
+{
+  "id": "m-compare-ollama-side-requantization-against-llama-qua",
+  "title": "Ollama Requantization, Safetensors Import, and Remote Blob Creation",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-local-runners",
+  "track": "importing-gguf-safetensors-and-adapters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "ollamabridge/quant.py",
+    "ollamabridge/import_model.py",
+    "ollamabridge/api.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compare Ollama-side requantization against llama-quantize",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "quant_matched", "op": ">=", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "Import safetensors directory and verify architecture support",
+      "check": "harness/m2.py",
+      "gates": [{"metric": "arch_matched", "op": ">=", "threshold": 1}]
+    },
+    {
+      "n": 3,
+      "title": "Upload blob via API and create model remotely with regression safety net",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_blob_logic", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

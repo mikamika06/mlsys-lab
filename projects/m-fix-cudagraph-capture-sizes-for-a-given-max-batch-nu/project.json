@@ -1,0 +1,21 @@
+{
+  "id": "m-fix-cudagraph-capture-sizes-for-a-given-max-batch-nu",
+  "title": "CUDA graph capture sizes, EAGLE optimal config, and TRT-LLM log parser",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-speculative",
+  "track": "Serving-engine integration (vLLM/SGLang/TensorRT-LLM)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["specengine/cudagraph.py", "specengine/eagle.py", "specengine/parser.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Fix cudagraph capture sizes", "check": "harness/m1.py",
+     "gates": [{"metric": "sizes_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Throughput-optimal SGLang EAGLE config", "check": "harness/m2.py",
+     "gates": [{"metric": "config_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_parser", "op": "==", "threshold": 1}]}
+  ]
+}

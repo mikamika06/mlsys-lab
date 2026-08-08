@@ -1,0 +1,21 @@
+{
+  "id": "m-diagnose-a-data-loader-i-o-bottleneck-from-a-real-os",
+  "title": "Diagnose data-loader I/O bottleneck from OS traces",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "nsys-stats-reports-and-sqlite",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["dataloader/parser.py", "dataloader/diagnose.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Reconstruct NVTX range nesting depth", "check": "harness/m1.py",
+     "gates": [{"metric": "depths_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Identify I/O bottleneck from osrt_sum", "check": "harness/m2.py",
+     "gates": [{"metric": "bottleneck_identified", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches unbalanced NVTX events", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_unbalanced", "op": "==", "threshold": 1}]}
+  ]
+}

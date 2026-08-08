@@ -1,0 +1,45 @@
+{
+  "id": "m-derive-the-fp16-cancellation-error-of-e-x-2-e-x-2-vs",
+  "title": "Catastrophic cancellation and memory bandwidth in reductions",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Reduction kernels: fused softmax & LayerNorm",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "reduction/variance.py",
+    "reduction/bandwidth.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Simulate float16 catastrophic cancellation",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "one_pass_fails", "op": "==", "threshold": 1},
+        {"metric": "two_pass_succeeds", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Fused Softmax memory traffic",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "traffic_match", "op": "==", "threshold": 1},
+        {"metric": "bw_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Regression test for variance stability",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_unstable", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

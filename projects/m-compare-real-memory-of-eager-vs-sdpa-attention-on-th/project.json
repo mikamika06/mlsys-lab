@@ -1,0 +1,73 @@
+{
+  "id": "m-compare-real-memory-of-eager-vs-sdpa-attention-on-th",
+  "title": "Compare Real Memory of Eager vs SDPA Attention",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-finetune-efficiency",
+  "track": "activation-memory-accounting",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "memacc/accounting.py",
+    "memacc/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Account for single-layer Eager and SDPA activation memory",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "eager_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "sdpa_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Model-wide comparison and size ratio analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "model_bytes_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "size_ratio",
+          "op": ">=",
+          "threshold": 2.5
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catching linear vs quadratic scaling errors",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_quadratic_sdpa_bug",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

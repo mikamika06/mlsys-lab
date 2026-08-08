@@ -1,0 +1,69 @@
+{
+  "id": "m-artifact-matrix-size",
+  "title": "Artifact matrix sizing and version compatibility for TensorRT engines",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-tensorrt-onnx",
+  "track": "Engine portability: version, hardware and runtime-platform compatibility",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "trtmatrix/matrix.py",
+    "trtmatrix/patch_fix.py",
+    "trtmatrix/vc_cost.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Artifact matrix size calculation across fleet deployments",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "matrix_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Container patch mismatch detection and cost tradeoff analysis",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "patch_fixes_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "cost_analysis_matched",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching version compatibility overhead underestimation",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_ignored_vc_overhead",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

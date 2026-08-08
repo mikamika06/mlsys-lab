@@ -1,0 +1,25 @@
+{
+  "id": "m-compare-export-s-flat-latency-vs-torch-compile-s-rec",
+  "title": "Export flat latency vs compile recompile spikes",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "Production concerns: compile-time/runtime tradeoffs, portability, memory donation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["compilebench/bench.py", "compilebench/artifact.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Analyze compile spikes vs export flat latencies", "check": "harness/m1.py",
+     "gates": [{"metric": "configs_matched", "op": ">=", "threshold": 3},
+               {"metric": "latency_ratio_correct", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Validate and parse export binary artifacts", "check": "harness/m2.py",
+     "gates": [{"metric": "deserializes_valid", "op": "==", "threshold": 1},
+               {"metric": "catches_truncation", "op": "==", "threshold": 1},
+               {"metric": "catches_corruption", "op": "==", "threshold": 1},
+               {"metric": "catches_invalid_magic", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for corrupted artifact leakage", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_corrupted_artifact_leak", "op": "==", "threshold": 1}]}
+  ]
+}

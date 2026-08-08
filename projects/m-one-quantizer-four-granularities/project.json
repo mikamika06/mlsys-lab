@@ -1,0 +1,43 @@
+{
+  "id": "m-one-quantizer-four-granularities",
+  "title": "One quantizer, four granularities",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Granularity, symmetry, and quantization parameters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["quant/core.py", "quant/ladder.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Unified views and quantization parameters",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "view_shapes", "op": "==", "threshold": 1},
+        {"metric": "qparams_match", "op": "==", "threshold": 1},
+        {"metric": "dequant_err_bounded", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "The granularity ladder: error vs metadata bytes",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "ladder_keys", "op": "==", "threshold": 1},
+        {"metric": "ladder_bytes", "op": "==", "threshold": 1},
+        {"metric": "ladder_errs", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catching broken symmetry overrides",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_forced_symmetric", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

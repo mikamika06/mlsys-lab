@@ -1,0 +1,22 @@
+{
+  "id": "m-nested-autocast-and-enabled-false-regions",
+  "title": "Nested autocast and enabled=False regions",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-pytorch-applied",
+  "track": "AMP autocast semantics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["autocast/engine.py", "autocast/analyzer.py", "autocast/policy.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Autocast stack simulation and state resolution", "check": "harness/m1.py",
+     "gates": [{"metric": "states_matched", "op": ">=", "threshold": 5}]},
+    {"n": 2, "title": "Detecting violations in disabled regions", "check": "harness/m2.py",
+     "gates": [{"metric": "violations_match", "op": "==", "threshold": 1},
+               {"metric": "precision_correct", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test catches state leakage", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_leaked_state", "op": "==", "threshold": 1}]}
+  ]
+}

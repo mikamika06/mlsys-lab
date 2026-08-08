@@ -1,0 +1,44 @@
+{
+  "id": "m-analytically-compare-prune-then-quantize-vs-quantize",
+  "title": "Analytically compare prune-then-quantize vs quantize-then-prune",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-pruning-distill",
+  "track": "Combining pruning with quantization (order effects)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "pqutils/analysis.py",
+    "pqutils/pipeline.py",
+    "pqutils/eval.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Analytical error bounds for pruning and quantization order",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "bound_matches", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Simulated joint SparseGPT and quantization pipeline execution",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "pipeline_matches", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catching order logic faults",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_order_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

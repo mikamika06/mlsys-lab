@@ -1,0 +1,44 @@
+{
+  "id": "m-classify-slo-violations-into-queueing-long-prefill-l",
+  "title": "Classify SLO violations into queueing, long-prefill, and long-output causes",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "latency-metrics-slo-and-goodput",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "sloclassify/parser.py",
+    "sloclassify/classify.py",
+    "sloclassify/report.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse request traces and compute request timings",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "timings_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify individual SLO violations into specific causes",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "classification_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches misclassified causes",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_bad_classification", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

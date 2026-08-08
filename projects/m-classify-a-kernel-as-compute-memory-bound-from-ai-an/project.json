@@ -1,0 +1,73 @@
+{
+  "id": "m-classify-a-kernel-as-compute-memory-bound-from-ai-an",
+  "title": "Classify a kernel as compute or memory bound from AI and device ridge point",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-profiling",
+  "track": "roofline-model-fundamentals",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "roofline/classify.py",
+    "roofline/intensity.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Classify kernel bounds and compute max achievable GFLOP/s",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "classifications_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "performance_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Calculate AI for 6 kernel shapes and rank memory to compute bound",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "intensity_matched",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "rankings_matched",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite that catches flipped bottleneck bounds",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_flipped_bound",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "m-count-eqns-and-list-unique-primitives-in-a-grad-jit-",
+  "title": "Count equations and list unique primitives in a grad-jit jaxpr",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-compilers",
+  "track": "JAX jit & jaxpr tracing semantics",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["jaxpr_utils/analyzer.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Count equations in a jaxpr", "check": "harness/m1.py",
+     "gates": [{"metric": "eqn_counts_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "List unique primitives safely", "check": "harness/m2.py",
+     "gates": [{"metric": "primitives_matched", "op": "==", "threshold": 1},
+               {"metric": "no_leaked_tracer", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression test for mutable closure leaks", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_leaked_tracer", "op": "==", "threshold": 1}]}
+  ]
+}

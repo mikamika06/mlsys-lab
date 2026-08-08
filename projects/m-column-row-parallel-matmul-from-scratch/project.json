@@ -1,0 +1,43 @@
+{
+  "id": "m-column-row-parallel-matmul-from-scratch",
+  "title": "Column and Row Parallel Matmul From Scratch",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "Tensor parallelism mechanics (column/row parallel, f/g operators)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "tpp/parallel.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Column and row parallel matrix multiplication primitives",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "matmul_matched", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Per-layer TP communication volume and MLP simulation",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "volume_match", "op": "==", "threshold": 1},
+        {"metric": "mlp_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test suite for tensor parallelism",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_parallel", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

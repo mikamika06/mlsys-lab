@@ -1,0 +1,43 @@
+{
+  "id": "m-gptq-int32-pack-unpack-for-2-3-4-8-bits",
+  "title": "GPTQ int32 pack, unpack, and AWQ conversion for 2/3/4/8 bits",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Bit packing and kernel-specific weight layouts",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quantpack/packing.py",
+    "quantpack/convert.py",
+    "quantpack/shapes.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "GPTQ int32 pack and unpack for 2, 3, 4, and 8 bits",
+      "check": "harness/m1.py",
+      "gates": [{"metric": "pack_unpack_match", "op": "==", "threshold": 1}]
+    },
+    {
+      "n": 2,
+      "title": "AWQ to GPTQ order conversion and packed strides",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "convert_match", "op": "==", "threshold": 1},
+        {"metric": "stride_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catching broken unpacking",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_unpack", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

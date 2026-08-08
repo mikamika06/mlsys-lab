@@ -1,0 +1,136 @@
+{
+  "id": "p-kv-offload-to-cpu-tiering",
+  "title": "Винести KV на другий рівень",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-kv-cache-serving",
+  "track": "kv-offload-to-cpu-tiering",
+  "part": 1,
+  "difficulty": 4,
+  "edits": [
+    "kvtier/cost.py",
+    "kvtier/policy.py",
+    "kvtier/prefetch.py",
+    "kvtier/tier.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "модель вартості переносу",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "cost_monotonic",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "transfer_time_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "політика, які сесії виносити",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "eviction_order_ok",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "retains_hot",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "передвибірка перед поверненням",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "prefetch_triggered",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "latency_reduced",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "виміряти вплив на p95",
+      "check": "harness/m4.py",
+      "gates": [
+        {
+          "metric": "p95_measured",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "p95_bounds_ok",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "число сесій зросло, p95 у межах",
+      "check": "harness/m5.py",
+      "gates": [
+        {
+          "metric": "session_capacity_increased",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "p95_stable",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "поведінка при заповненому другому рівні",
+      "check": "harness/m6.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_overflow_bypass",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_cost_inversion",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "faults_caught",
+          "op": ">=",
+          "threshold": 2.0
+        }
+      ]
+    }
+  ]
+}

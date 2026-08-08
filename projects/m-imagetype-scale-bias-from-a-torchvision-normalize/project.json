@@ -1,0 +1,22 @@
+{
+  "id": "m-imagetype-scale-bias-from-a-torchvision-normalize",
+  "title": "ImageType scale and bias from torchvision Normalize",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "coremltools ct.convert: the conversion contract",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["core_image/normalize.py", "core_image/export.py", "core_image/metrics.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "ImageType scale and bias mapping", "check": "harness/m1.py",
+     "gates": [{"metric": "mappings_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Precision drift and fp16 package size ratio", "check": "harness/m2.py",
+     "gates": [{"metric": "drift_verified", "op": "==", "threshold": 1},
+               {"metric": "ratio_matched", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: regression tests for input transformations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_inverted_scale", "op": "==", "threshold": 1}]}
+  ]
+}

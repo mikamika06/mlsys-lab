@@ -1,0 +1,63 @@
+{
+  "id": "m-compare-fused-vs-unfused-wall-time-from-a-recorded-d",
+  "title": "Compare fused vs unfused wall time from a recorded Triton bench",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-triton-real",
+  "track": "Elementwise & fused pointwise kernels",
+  "part": 1,
+  "difficulty": 2,
+  "edits": [
+    "triton_bench/analysis.py",
+    "triton_bench/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse and compute baseline metrics",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "parsed_correctly",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Compute wall-time ratio and throughput check",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "throughput_ratio",
+          "op": ">=",
+          "threshold": 1.2
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test for performance invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_bad_ratio",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

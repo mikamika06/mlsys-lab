@@ -1,0 +1,26 @@
+{
+  "id": "m-hybrid-shard-traffic-pattern-on-a-2x2-mesh",
+  "title": "Hybrid shard traffic patterns and strategy selection on a 2x2 mesh",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-distributed",
+  "track": "FSDP sharding strategies & wrap-policy granularity",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "meshshard/traffic.py",
+    "meshshard/policy.py",
+    "meshshard/strategy.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {"n": 1, "title": "2x2 mesh hybrid shard traffic routing", "check": "harness/m1.py",
+     "gates": [{"metric": "traffic_matched", "op": ">=", "threshold": 3}]},
+    {"n": 2, "title": "Wrap policy granularity diagnosis", "check": "harness/m2.py",
+     "gates": [{"metric": "policy_matched", "op": ">=", "threshold": 3}]},
+    {"n": 3, "title": "Strategy selection under memory budget with regression tests", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_bad_policy", "op": "==", "threshold": 1}]}
+  ]
+}
