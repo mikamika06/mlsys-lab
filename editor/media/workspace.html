@@ -1087,6 +1087,20 @@
     b.innerHTML=html+MARK+'<div class="bhead">files</div>'+body+
       (pFiles.length?'':'<div class="bnote">press Start to copy them into your work directory</div>')+
       '</div>';
+    bindFiles();
+  }
+  // Delegation was the only thing opening a file, and when it did not fire there
+  // was no second path. Every rendered row gets its own handler as well, which
+  // costs nothing at this size and cannot be swallowed on the way up.
+  function bindFiles(){
+    ['briefFiles','tree','leftFiles','pfilesList'].forEach(id=>{
+      const host=$(id); if(!host||!host.querySelectorAll)return;
+      host.querySelectorAll('[data-pf]').forEach(el=>{
+        if(el.__bound)return; el.__bound=1;
+        el.addEventListener('click',ev=>{ev.stopPropagation();
+          loadProjectFile(el.getAttribute('data-pf'));});
+      });
+    });
   }
   function showLeft(which){
     const b=$('brief'), lf=$('leftFiles'), tt=$('tabTask'), tf=$('tabFiles');
@@ -1099,7 +1113,14 @@
   function loadProjectFile(f){
     if(!curProject)return;
     if(pOpen&&pDirty)saveProjectFile();
-    pOpen=f; renderFiles();
+    pOpen=f;
+    // The tab names the file as soon as it is chosen. Waiting for the reply made
+    // a click look like nothing had happened whenever the read was slow or the
+    // file was not on disk yet.
+    curFile=f; curLang=langOf(f); MASTER=LEX[curLang];
+    $('fname').textContent=f;
+    $('ficon').textContent={py:'py',cpp:'C++',cu:'CUDA'}[curLang]||'txt';
+    renderFiles();
     vscode.postMessage({type:'readProjectFile',id:curProject.id,file:f});
   }
   function markDirty(){ if(curProject&&pOpen)pDirty=true; }

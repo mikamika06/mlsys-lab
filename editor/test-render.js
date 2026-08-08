@@ -25,7 +25,7 @@ const check = (name, fn) => {
 
 let api = null;
 check("the panel script runs without throwing", () => {
-  const factory = new Function(script + "\n;return {renderMap, paintMap, drawMap, filterMap, openTask, openProject, gradeMilestone, renderFiles, showLeft};");
+  const factory = new Function(script + "\n;return {renderMap, paintMap, drawMap, filterMap, openTask, openProject, gradeMilestone, renderFiles, showLeft, loadProjectFile};");
   api = factory();
   if (typeof api.renderMap !== "function") throw new Error("renderMap is not exported");
   return "loaded";
@@ -183,6 +183,20 @@ check("the ticket carries a directory you can click, not a list of paths", () =>
   }
   if (/Files you edit/.test(html)) throw new Error("the dead prose list is still there");
   return `${clickable} files, grouped by folder`;
+});
+
+check("choosing a file names it on the tab and asks for it", () => {
+  api.openProject(PROJ);
+  sent.length = 0;
+  api.loadProjectFile("tests/test_regression.py");
+  if (ids.fname.textContent !== "tests/test_regression.py") {
+    throw new Error(`the tab says "${ids.fname.textContent}"`);
+  }
+  const last = sent[sent.length - 1] || {};
+  if (last.type !== "readProjectFile" || last.file !== "tests/test_regression.py") {
+    throw new Error("no read was requested: " + JSON.stringify(last));
+  }
+  return "tab follows the click, read requested";
 });
 
 check("the grade button keeps its word after it is pressed", () => {
