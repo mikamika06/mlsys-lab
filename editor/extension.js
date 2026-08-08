@@ -47,11 +47,13 @@ function solvePath(id, srcfile) {
 function probeInstalled() {
   try {
     const r = cp.execFileSync(pythonPath(),
-      ["-c", "from mlsys import bank; print(bank.bank_root()); print(bank.curriculum_file() or ''); print(bank.projects_root() or '')"],
+      ["-c", "from mlsys import bank; print(bank.bank_root()); print(bank.curriculum_file() or ''); "
+             + "print(bank.projects_root() or ''); "
+             + "import importlib.metadata as m; print(m.version('mlsys-lab'))"],
       { encoding: "utf8", timeout: 20000, stdio: ["ignore", "pipe", "pipe"] });
-    const [tasksDir, listFile, projDir] = r.trim().split("\n");
+    const [tasksDir, listFile, projDir, version] = r.trim().split("\n");
     if (!tasksDir || !fs.existsSync(tasksDir)) return null;
-    return { mode: "installed", tasksDir,
+    return { mode: "installed", tasksDir, version: (version || "").trim(),
              listFile: listFile && fs.existsSync(listFile) ? listFile : null,
              projectsDir: projDir && fs.existsSync(projDir) ? projDir : null, pyEnv: {} };
   } catch (e) {
@@ -73,12 +75,75 @@ function labFromCheckout() {
   };
 }
 
+// "0.4.0" < "0.10.0": comparing these as strings puts 0.4.0 last, so the numbers
+// are compared as numbers.
+function olderThan(a, b) {
+  const pa = String(a || "0").split(".").map((n) => parseInt(n, 10) || 0);
+  const pb = String(b || "0").split(".").map((n) => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const x = pa[i] || 0, y = pb[i] || 0;
+    if (x !== y) return x < y;
+  }
+  return false;
+}
+
+function pipUpgrade() {
+  return new Promise((resolve) => {
+    const p = cp.spawn(pythonPath(), ["-m", "pip", "install", "--upgrade", "mlsys-lab"]);
+    let err = "";
+    p.stderr.on("data", (d) => { err += d.toString(); log(d.toString().trimEnd()); });
+    p.stdout.on("data", (d) => log(d.toString().trimEnd()));
+    p.on("error", (e) => resolve({ ok: false, err: e.message }));
+    p.on("close", (c) => resolve({ ok: c === 0, err }));
+  });
+}
+
+// The bank ships in the pip package and the panel ships in the extension, so a
+// learner who updates one is left reading the other's content — an editor that
+// knows about projects, over a bank from three releases ago that has none. The
+// editor now notices and offers to catch the bank up.
+let _bankChecked = false;
+async function offerBankUpgrade(installed) {
+  if (_bankChecked) return installed;
+  _bankChecked = true;
+  const mine = (vscode.extensions.getExtension("mikamika06.mlsys-lab") || {})
+    .packageJSON;
+  const want = (mine && mine.version) || "0";
+  if (!installed.version || !olderThan(installed.version, want)) return installed;
+  const cfg = vscode.workspace.getConfiguration("mlsys");
+  const auto = cfg.get("autoUpdateBank", true);
+  if (!auto) {
+    log(`bank ${installed.version} is older than the editor ${want}; auto-update is off`);
+    return installed;
+  }
+  const res = await vscode.window.withProgress(
+    { location: vscode.ProgressLocation.Notification,
+      title: `Updating the task bank (${installed.version} → ${want})…` },
+    () => pipUpgrade());
+  if (!res.ok) {
+    vscode.window.showWarningMessage(
+      `mlsys-lab: the task bank is ${installed.version} and this editor is ${want}. `
+      + `Run: ${pythonPath()} -m pip install -U mlsys-lab`);
+    return installed;
+  }
+  const after = probeInstalled();
+  if (after) {
+    vscode.window.showInformationMessage(`mlsys-lab: task bank updated to ${after.version}.`);
+    return after;
+  }
+  return installed;
+}
+
 async function ensureLab() {
   const checkout = labFromCheckout();
   if (checkout) { log("bank: checkout at " + checkout.tasksDir); return checkout; }
 
-  const installed = probeInstalled();
-  if (installed) { log("bank: installed at " + installed.tasksDir); return installed; }
+  let installed = probeInstalled();
+  if (installed) {
+    log("bank: installed " + (installed.version || "?") + " at " + installed.tasksDir);
+    installed = await offerBankUpgrade(installed);
+    return installed;
+  }
 
   const pick = await vscode.window.showInformationMessage(
     "mlsys-lab needs its task bank. Install the mlsys-lab package (about 11 MB) with pip?",

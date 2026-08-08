@@ -492,16 +492,23 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     posted.length = 0;
     panel._onMsg({ type: "ready" });
     await wait(600);
-    // The roadmap is a map of the task bank. A tier of multi-file projects at the
-    // top of it pushed two thousand tasks below the fold for something a learner
-    // reaches on purpose, so projects are opened by id and live behind the CLI.
-    check("the roadmap is tasks only", () => {
+    // Projects belong on the roadmap — a thousand of them shipped that the panel
+    // never mentioned — but never in front of the tasks: a tier of multi-file
+    // work at the top pushed two thousand tasks below the fold.
+    check("projects are on the roadmap, and never before the tasks", () => {
       const m = posted.find((x) => x.type === "map" || x.type === "mapdata");
-      const tier = (m ? m.payload.tiers : []).find((t) => t.key === "projects");
-      if (tier) throw new Error("a projects tier is back on the roadmap");
-      const names = (m ? m.payload.tiers : []).map((t) => t.name);
-      if (!names.length) throw new Error("no tiers at all");
-      return `${names.length} areas, first is "${names[0]}"`;
+      const tiers = m ? m.payload.tiers : [];
+      if (!tiers.length) throw new Error("no tiers at all");
+      const first = tiers.findIndex((t) => t.key === "projects");
+      const lastTask = tiers.map((t) => t.key).lastIndexOf(
+        tiers.map((t) => t.key).filter((k) => k !== "projects").slice(-1)[0]);
+      if (first === 0) throw new Error("a projects tier is first on the roadmap");
+      if (first >= 0 && first < lastTask) {
+        throw new Error("a projects tier sits above a task area");
+      }
+      return first < 0
+        ? `${tiers.length} areas, no projects in this fixture`
+        : `${tiers.length} areas, projects start at ${first}`;
     });
 
     // The product is English throughout — README, 2053 task statements, the
