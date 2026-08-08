@@ -230,11 +230,38 @@ function homeData(lab, context) {
     tiers.push({ roman: "", key: area, name: AREA_TITLE[area] || area,
                  planned: n, builtCount: n, tracks });
   }
-  // Projects are not on the roadmap. It is a map of the task bank, and a tier of
-  // multi-file work at the top of it pushed two thousand tasks below the fold for
-  // something a learner reaches deliberately. They live behind `mlsys project`.
+  // Projects go after the task areas, never before them: a tier of multi-file
+  // work at the top pushed two thousand tasks below the fold. Leaving them off
+  // the map entirely was worse — a thousand units shipped that nothing in the
+  // panel ever mentioned.
+  const projs = {};
+  for (const { spec } of scanProjects(lab)) {
+    const area = spec.area || "projects";
+    const track = spec.track || AREA_TITLE[area] || area;
+    ((projs[area] = projs[area] || {})[track] = projs[area][track] || []).push({
+      id: PROJECT_PREFIX + spec.id,
+      title: spec.title || spec.id,
+      difficulty: spec.difficulty,
+      solved: (context.globalState.get("mlsys.milestones." + spec.id, []) || []).length
+              >= (spec.milestones || []).length && (spec.milestones || []).length > 0,
+      milestones: (spec.milestones || []).length,
+    });
+  }
+  let projectCount = 0;
+  for (const area of Object.keys(projs).sort()) {
+    const tracks = [];
+    let n = 0;
+    for (const track of Object.keys(projs[area]).sort()) {
+      const ps = projs[area][track].sort((a, b) => a.id.localeCompare(b.id));
+      tracks.push({ num: "", name: track, planned: ps.length, tasks: ps });
+      n += ps.length;
+    }
+    projectCount += n;
+    tiers.push({ roman: "", key: "projects", name: "Projects · " + (AREA_TITLE[area] || area),
+                 planned: n, builtCount: n, tracks });
+  }
   return { totals: { solved: built.filter((b) => solved.has(b.id)).length,
-                     built: total, planned: total }, tiers };
+                     built: total + projectCount, planned: total + projectCount }, tiers };
 }
 
 
