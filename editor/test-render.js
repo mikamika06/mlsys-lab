@@ -25,7 +25,7 @@ const check = (name, fn) => {
 
 let api = null;
 check("the panel script runs without throwing", () => {
-  const factory = new Function(script + "\n;return {renderMap, paintMap, drawMap, filterMap, openTask, openProject, gradeMilestone, renderFiles, showLeft, loadProjectFile};");
+  const factory = new Function(script + "\n;return {renderMap, paintMap, drawMap, filterMap, openTask, openProject, gradeMilestone, renderFiles, showLeft, loadProjectFile, applyFiles};");
   api = factory();
   if (typeof api.renderMap !== "function") throw new Error("renderMap is not exported");
   return "loaded";
@@ -156,21 +156,25 @@ const PROJ = { type: "project", md: "# brief", work: "/tmp/w", started: false,
     milestones: [{ n: 1, title: "one", gates: [], done: false },
                  { n: 2, title: "two", gates: [], done: false }] } };
 
-check("a project offers the Task / Files switch before Start", () => {
+check("the directory fills in when the files arrive", () => {
   api.openProject(PROJ);
+  api.applyFiles({ files: ["aot_tools/graph_labeler.py", "brief.md",
+                           "tests/test_regression.py"],
+                   edits: PROJ.project.edits });
   if (ids.tabFiles.style.display === "none") throw new Error("the Files tab is hidden");
-  const html = ids.leftFiles.innerHTML;
-  if (!html.includes("graph_labeler.py")) throw new Error("the declared files are not listed");
-  if (!/press Start/.test(html)) throw new Error("no hint that Start copies them");
-  return "switch present, 2 files declared";
+  for (const host of [ids.leftFiles, ids.tree, ids.brief]) {
+    if (!host.innerHTML.includes("graph_labeler")) {
+      throw new Error("a list is missing the files");
+    }
+  }
+  return "left column, tree and ticket all list them";
 });
 
-check("the code column carries the directory", () => {
+check("nothing is shown before the files exist", () => {
   api.openProject(PROJ);
-  const tree = ids.tree.innerHTML;
-  if (!tree) throw new Error("the tree beside the editor is empty");
-  if (!tree.includes("graph_labeler.py")) throw new Error("the declared files are not in it");
-  return "tree rendered before Start";
+  if (ids.tree.innerHTML.trim()) throw new Error("the tree shows a placeholder");
+  if (/press Start/i.test(ids.leftFiles.innerHTML)) throw new Error("a press-Start note is back");
+  return "empty until the copy exists";
 });
 
 check("the ticket carries a directory you can click, not a list of paths", () => {

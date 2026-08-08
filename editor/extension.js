@@ -395,6 +395,18 @@ function sendProject(context, lab, id) {
   const found = scanProjects(lab).find((p) => p.spec.id === id);
   if (!found) { postWS({ type: "error", message: "no project " + id }); return; }
   const { dir, spec } = found;
+  // Opening a project used to leave it in a state where the files it is about
+  // did not exist yet, so the directory could only show greyed names and
+  // clicking one did nothing. Copying the skeleton is cheap and is what the
+  // learner was going to do first anyway, so it happens on open.
+  if (!fs.existsSync(projectWorkDir(id))) {
+    try {
+      const env = Object.assign({}, process.env, lab.pyEnv || {});
+      cp.spawnSync(pythonPath(), ["-c",
+        "import sys;from mlsys.runners import project as p;print(p.start(sys.argv[1], sys.argv[2]))",
+        dir, workDir()], { encoding: "utf8", env });
+    } catch (e) { log("auto-start failed: " + e.message); }
+  }
   let md = "";
   try { md = fs.readFileSync(path.join(dir, "brief.md"), "utf8"); } catch (_) {}
   const done = new Set(context.globalState.get("mlsys.milestones." + spec.id, []));

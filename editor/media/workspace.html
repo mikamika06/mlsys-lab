@@ -1036,9 +1036,7 @@
         lf.innerHTML=pFiles.map(f=>
           `<div class="lfile${pEdits.includes(f)?' edit':''}${f===pOpen?' on':''}" data-pf="${esc(f)}">${esc(f)}</div>`).join('');
       }else{
-        const declared=(curProject&&curProject.edits)||[];
-        lf.innerHTML='<div class="pfh" style="padding:10px 14px">press Start — these are copied into your work directory</div>'+
-          declared.map(f=>`<div class="lfile edit" style="opacity:.55">${esc(f)}</div>`).join('');
+        lf.innerHTML='';
       }
     }
     // The tab used to appear only once files existed on disk, which is after
@@ -1053,9 +1051,7 @@
     const tr=$('tree');
     if(tr){
       if(!pFiles.length){
-        const declared=(curProject&&curProject.edits)||[];
-        tr.innerHTML='<div class="tdir">press Start</div>'+declared.map(f=>
-          `<div class="tnode edit" style="opacity:.5">${esc(f)}</div>`).join('');
+        tr.innerHTML='';
       }else{
         const dirs={};
         pFiles.forEach(f=>{const i=f.lastIndexOf('/');
@@ -1085,7 +1081,6 @@
     const cut=html.indexOf(MARK);
     if(cut>=0)html=html.slice(0,cut);
     b.innerHTML=html+MARK+'<div class="bhead">files</div>'+body+
-      (pFiles.length?'':'<div class="bnote">press Start to copy them into your work directory</div>')+
       '</div>';
     bindFiles();
   }
@@ -1101,6 +1096,15 @@
           loadProjectFile(el.getAttribute('data-pf'));});
       });
     });
+  }
+  function applyFiles(m){
+    pFiles=m.files||[]; pEdits=m.edits||[];
+    renderFiles();
+    if(!pOpen&&pFiles.length){
+      // Open the file the ticket names first, not whatever sorts first on disk.
+      const first=pEdits.find(f=>pFiles.includes(f))||pFiles[0];
+      loadProjectFile(first);
+    }
   }
   function showLeft(which){
     const b=$('brief'), lf=$('leftFiles'), tt=$('tabTask'), tf=$('tabFiles');
@@ -1244,16 +1248,7 @@
     else if(m.type==='mapdata'){mapData=m.payload;syncRandom();if($('app').classList.contains('is-home'))renderMap(m.payload);}
     else if(m.type==='task'){openTask(m);}
     else if(m.type==='project'){openProject(m);}
-    else if(m.type==='pfiles'){
-      pFiles=m.files||[]; pEdits=m.edits||[];
-      renderFiles();
-      if(!pOpen&&pFiles.length){
-        // Open the first file the ticket names to be edited, not the first file
-        // on disk — which is a brief or a harness the learner does not touch.
-        const first=pEdits.find(f=>pFiles.includes(f))||pFiles[0];
-        loadProjectFile(first);
-      }
-    }
+    else if(m.type==='pfiles'){applyFiles(m);}
     else if(m.type==='pfile'){
       curFile=m.file; pOpen=m.file; pDirty=false;
       curLang=langOf(curFile); MASTER=LEX[curLang];
