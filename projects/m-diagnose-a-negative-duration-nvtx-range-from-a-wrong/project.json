@@ -1,0 +1,45 @@
+{
+  "id": "m-diagnose-a-negative-duration-nvtx-range-from-a-wrong",
+  "title": "Diagnose NVTX thread corruption and rank profile phases",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-profiling",
+  "track": "nvtx-annotation-and-correlation",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "nvtxprof/nvtx.py",
+    "nvtxprof/mac.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Diagnose negative-duration NVTX ranges from wrong-thread pops",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "mismatches_diagnosed", "op": "==", "threshold": 1},
+        {"metric": "ranges_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Rank record_function phases by self time on Mac traces",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "rankings_correct", "op": "==", "threshold": 1},
+        {"metric": "metrics_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test suite catching thread mixups and self-time bugs",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_invalid_analysis", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

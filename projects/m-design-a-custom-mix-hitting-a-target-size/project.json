@@ -1,0 +1,23 @@
+{
+  "id": "m-design-a-custom-mix-hitting-a-target-size",
+  "title": "Design a custom mix hitting a target size",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "ftype-recipes-mixed-precision",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["mixplan/recipe.py", "mixplan/verify.py", "mixplan/solver.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Design a custom mix hitting a target size", "check": "harness/m1.py",
+     "gates": [{"metric": "size_ratio", "op": "<=", "threshold": 1.0},
+               {"metric": "valid_recipes", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Verify 1D tensors stay F32 under every ftype", "check": "harness/m2.py",
+     "gates": [{"metric": "invariants_verified", "op": "==", "threshold": 1},
+               {"metric": "caught_violations", "op": "==", "threshold": 1}]},
+    {"n": 3, "title": "Safety net: a test that catches improper 1D quantizations", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_downcast_1d", "op": "==", "threshold": 1}]}
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "m-nf4-quantize-dequantize-from-scratch",
+  "title": "NF4 blockwise quantization from scratch",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "bitsandbytes 4-bit NF4/FP4 blockwise format",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "nf4/codebooks.py",
+    "nf4/quantize.py",
+    "nf4/compare.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Derive the NF4 codebook from normal quantiles",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "codebook_match", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantize and dequantize blockwise",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "byte_exact_fraction", "op": ">=", "threshold": 0.99},
+        {"metric": "dequantize_match", "op": "==", "threshold": 1},
+        {"metric": "compare_runs", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: catch a broken unscaled dequantization",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_broken_dequantize", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

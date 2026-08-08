@@ -1,0 +1,68 @@
+{
+  "id": "m-group-wise-int4-quantization-reconstruction-error",
+  "title": "Group-wise int4 quantization reconstruction error",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw3-cpu-inference",
+  "track": "int8/int4 quantization numerics (scale, zero-point, requantization)",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant/group_quant.py",
+    "quant/metrics.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Group-wise int4 quantization and dequantization",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "quantization_matches",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Reconstruction error and saturation classification",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "metrics_matched",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "mse_matches",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression test catches buggy saturation logic",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "catches_buggy_saturation",
+          "op": "==",
+          "threshold": 1
+        }
+      ]
+    }
+  ]
+}

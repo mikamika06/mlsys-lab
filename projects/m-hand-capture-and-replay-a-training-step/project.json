@@ -1,0 +1,64 @@
+{
+  "id": "m-hand-capture-and-replay-a-training-step",
+  "title": "Capture and replay a training step with CUDA Graphs",
+  "kind": "project",
+  "tier": "T3",
+  "area": "rw2-pytorch-applied",
+  "track": "CUDA Graphs and mode='reduce-overhead'",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "cudagraphs/capture.py",
+    "cudagraphs/safety.py",
+    "cudagraphs/memory.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Capture and replay trace execution",
+      "check": "harness/m1.py",
+      "gates": [
+        {
+          "metric": "traces_matched",
+          "op": ">=",
+          "threshold": 10.0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Classify capture safety and error modes",
+      "check": "harness/m2.py",
+      "gates": [
+        {
+          "metric": "classifications_correct",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safeguard against overwriting static output buffers",
+      "check": "harness/m3.py",
+      "gates": [
+        {
+          "metric": "has_tests",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "passes_on_good",
+          "op": "==",
+          "threshold": 1.0
+        },
+        {
+          "metric": "catches_buffer_overwrites",
+          "op": "==",
+          "threshold": 1.0
+        }
+      ]
+    }
+  ]
+}

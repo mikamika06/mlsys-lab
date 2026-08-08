@@ -1,0 +1,40 @@
+{
+  "id": "m-e2m1-value-set-enumeration",
+  "title": "E2M1 Value-Set Enumeration",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "FP4 microscaling: NVFP4 vs MXFP4",
+  "part": 1,
+  "difficulty": 2,
+  "edits": ["microscale/e2m1.py", "tests/test_regression.py"],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Decode parameterizable E2M1 values",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "matched_decodes", "op": "==", "threshold": 1.0},
+        {"metric": "matched_enumerates", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Quantization mapping and tie-breaking",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "matched_quantize", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: protect the zero and subnormal bins",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_no_subnormal", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

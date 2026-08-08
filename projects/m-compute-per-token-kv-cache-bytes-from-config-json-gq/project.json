@@ -1,0 +1,45 @@
+{
+  "id": "m-compute-per-token-kv-cache-bytes-from-config-json-gq",
+  "title": "KV Cache Memory Budget Solver",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "kv-cache-memory-budget",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "kvmem/config.py",
+    "kvmem/solver.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute KV cache bytes per token and block",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "token_bytes_match", "op": "==", "threshold": 1.0},
+        {"metric": "block_bytes_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Predict GPU blocks and max model length",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "blocks_match", "op": "==", "threshold": 1.0},
+        {"metric": "len_match", "op": "==", "threshold": 1.0}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: test for block alignment",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_unaligned_len", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

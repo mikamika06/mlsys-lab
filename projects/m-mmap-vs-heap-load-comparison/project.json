@@ -1,0 +1,48 @@
+{
+  "id": "m-mmap-vs-heap-load-comparison",
+  "title": "Mmap vs heap load comparison and size attribution",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-edge-export",
+  "track": "Binary size, memory footprint and selective builds",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "memload/loader.py",
+    "memload/attribution.py",
+    "memload/dedup.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Memory footprint of mmap vs heap weight loading",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "footprint_rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "cases_passed", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Size regression attribution and weight dedup savings",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "attribution_rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "dedup_rel_err", "op": "<=", "threshold": 0.001},
+        {"metric": "cases_passed", "op": ">=", "threshold": 5}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests for weight footprint and dedup invariants",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_page_alignment_fault", "op": "==", "threshold": 1},
+        {"metric": "catches_dedup_overflow_fault", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

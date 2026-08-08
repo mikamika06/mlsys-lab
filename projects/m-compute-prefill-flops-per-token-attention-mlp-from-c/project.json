@@ -1,0 +1,45 @@
+{
+  "id": "m-compute-prefill-flops-per-token-attention-mlp-from-c",
+  "title": "Prefill FLOPs and Decode Roofline Analysis",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-vllm-serving",
+  "track": "prefill-decode-roofline",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "roofline/flops.py",
+    "roofline/memory.py",
+    "roofline/predictor.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Compute prefill FLOPs per token from model config",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "configs_matched", "op": ">=", "threshold": 3}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Decode memory traffic and hardware roofline throughput",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "memory_matched", "op": "==", "threshold": 1},
+        {"metric": "roofline_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: regression tests catch faulty arithmetic",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_missing_kv_flops", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

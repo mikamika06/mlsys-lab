@@ -1,0 +1,44 @@
+{
+  "id": "m-find-the-draft-size-below-which-int8-quantization-st",
+  "title": "Int8 Quantization Cutoff for Draft Models",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw3-speculative",
+  "track": "Quantized draft models",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "speculative_quant/throughput.py",
+    "speculative_quant/cutoff.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Calculate step throughput",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "et_matched", "op": "==", "threshold": 1},
+        {"metric": "tp_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Find the quantization cutoff",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "cutoffs_matched", "op": "==", "threshold": 1}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: a test that catches a throughput-ignorant cutoff",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1},
+        {"metric": "catches_ignorant_cutoff", "op": "==", "threshold": 1}
+      ]
+    }
+  ]
+}

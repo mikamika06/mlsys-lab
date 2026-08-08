@@ -1,0 +1,21 @@
+{
+  "id": "m-emit-a-gguf-with-ggufwriter-matching-a-reference",
+  "title": "Emit a GGUF with GGUFWriter matching a reference",
+  "kind": "project",
+  "tier": "T1",
+  "area": "rw2-gguf-llamacpp",
+  "track": "gguf-py-library",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["ggftool/writer.py", "ggftool/dump.py", "ggftool/patch.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Emit GGUF binary matching reference output", "check": "harness/m1.py",
+     "gates": [{"metric": "byte_exact_fraction", "op": "==", "threshold": 1.0}]},
+    {"n": 2, "title": "Reproduce gguf_dump --json metadata and tensor info", "check": "harness/m2.py",
+     "gates": [{"metric": "dumps_matched", "op": "==", "threshold": 1.0}]},
+    {"n": 3, "title": "Safety net: regression test catches metadata corruption", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1.0},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+               {"metric": "catches_corrupted_metadata", "op": "==", "threshold": 1.0}]}
+  ]
+}

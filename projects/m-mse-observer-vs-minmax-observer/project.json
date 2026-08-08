@@ -1,0 +1,46 @@
+{
+  "id": "m-mse-observer-vs-minmax-observer",
+  "title": "MSE vs MinMax Observers",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-quant-libs",
+  "track": "Granularity, symmetry, and quantization parameters",
+  "part": 1,
+  "difficulty": 3,
+  "edits": [
+    "quant_observe/scheme.py",
+    "quant_observe/observer.py",
+    "quant_observe/bias.py",
+    "tests/test_regression.py"
+  ],
+  "milestones": [
+    {
+      "n": 1,
+      "title": "Parse schemes and MinMax observer",
+      "check": "harness/m1.py",
+      "gates": [
+        {"metric": "parse_ok", "op": "==", "threshold": 1.0},
+        {"metric": "minmax_rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 2,
+      "title": "MSE scale search",
+      "check": "harness/m2.py",
+      "gates": [
+        {"metric": "mse_rel_err", "op": "<=", "threshold": 1e-4}
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Safety net: invariants of quantization",
+      "check": "harness/m3.py",
+      "gates": [
+        {"metric": "has_tests", "op": "==", "threshold": 1.0},
+        {"metric": "passes_on_good", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_mse", "op": "==", "threshold": 1.0},
+        {"metric": "catches_broken_bias", "op": "==", "threshold": 1.0}
+      ]
+    }
+  ]
+}

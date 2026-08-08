@@ -1,0 +1,23 @@
+{
+  "id": "m-simulate-q4-0-block-quantization-of-a-k-tensor",
+  "title": "Simulate q4_0 block quantization of a K tensor",
+  "kind": "project",
+  "tier": "T0",
+  "area": "rw2-kv-cache-serving",
+  "track": "llamacpp-and-local-kv-quantization",
+  "part": 1,
+  "difficulty": 3,
+  "edits": ["q4_0/quant.py", "tests/test_regression.py"],
+  "milestones": [
+    {"n": 1, "title": "Block quantization and pack", "check": "harness/m1.py",
+     "gates": [{"metric": "shapes_matched", "op": "==", "threshold": 1},
+               {"metric": "scales_matched", "op": "==", "threshold": 1},
+               {"metric": "bytes_matched", "op": "==", "threshold": 1}]},
+    {"n": 2, "title": "Dequantization and max absolute error", "check": "harness/m2.py",
+     "gates": [{"metric": "max_abs_err", "op": "<=", "threshold": 0.25}]},
+    {"n": 3, "title": "Safety net: regression test catches faults", "check": "harness/m3.py",
+     "gates": [{"metric": "has_tests", "op": "==", "threshold": 1},
+               {"metric": "passes_on_good", "op": "==", "threshold": 1},
+               {"metric": "catches_broken_scale", "op": "==", "threshold": 1}]}
+  ]
+}
