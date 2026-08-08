@@ -88,6 +88,16 @@
      is-proj, so this rule carries the display itself. */
   .app.is-proj .work{display:grid;}
   .app.is-proj .right{display:flex;flex-direction:column;min-width:0;}
+  #briefFiles{margin:18px 0 4px;border-top:1px solid var(--line);padding-top:10px;}
+  .bhead{font:10px var(--sans);letter-spacing:.08em;text-transform:uppercase;
+         color:var(--ink-faint);padding:0 0 6px;}
+  .bdir{font:10.5px var(--mono);color:var(--ink-faint);padding:6px 0 2px;}
+  .bfile{font:12px var(--mono);color:var(--ink-dim);padding:3px 0 3px 12px;cursor:pointer;
+         border-radius:4px;}
+  .bfile:hover{background:var(--hover);color:var(--ink);}
+  .bfile.on{background:var(--sel);color:var(--ink);}
+  .bfile.edit::before{content:"✎ ";opacity:.55;}
+  .bnote{font:11px var(--sans);color:var(--ink-faint);padding:8px 0 0;}
   .ltab{cursor:pointer;padding:0 8px;color:var(--ink-faint);}
   .ltab.on{color:var(--ink);text-decoration:underline;text-underline-offset:4px;}
   .lfile{padding:5px 14px;cursor:pointer;font:12px var(--mono);color:var(--ink-dim);
@@ -120,6 +130,16 @@
   .ms-g{display:none;padding:0 12px 10px;} .ms.open .ms-g{display:block;}
   .ms-row{display:flex;gap:8px;font-family:var(--mono);font-size:11px;padding:3px 0;color:var(--ink-mut);}
   .ms-row b{color:var(--ink-dim);font-weight:500;flex:1;}
+  #briefFiles{margin:18px 0 4px;border-top:1px solid var(--line);padding-top:10px;}
+  .bhead{font:10px var(--sans);letter-spacing:.08em;text-transform:uppercase;
+         color:var(--ink-faint);padding:0 0 6px;}
+  .bdir{font:10.5px var(--mono);color:var(--ink-faint);padding:6px 0 2px;}
+  .bfile{font:12px var(--mono);color:var(--ink-dim);padding:3px 0 3px 12px;cursor:pointer;
+         border-radius:4px;}
+  .bfile:hover{background:var(--hover);color:var(--ink);}
+  .bfile.on{background:var(--sel);color:var(--ink);}
+  .bfile.edit::before{content:"✎ ";opacity:.55;}
+  .bnote{font:11px var(--sans);color:var(--ink-faint);padding:8px 0 0;}
   .ltab{cursor:pointer;padding:0 8px;color:var(--ink-faint);}
   .ltab.on{color:var(--ink);text-decoration:underline;text-underline-offset:4px;}
   .lfile{padding:5px 14px;cursor:pointer;font:12px var(--mono);color:var(--ink-dim);
@@ -1029,6 +1049,7 @@
     if(tf) tf.style.display=curProject?'':'none';
     // The same list beside the code, which is where a project is actually
     // worked on. Grouped by directory so a dozen files stay readable.
+    renderBriefFiles();
     const tr=$('tree');
     if(tr){
       if(!pFiles.length){
@@ -1045,6 +1066,27 @@
             `${esc(f.slice(d?d.length+1:0))}</div>`).join('')).join('');
       }
     }
+  }
+  function renderBriefFiles(){
+    const b=$('brief'); if(!b||!curProject)return;
+    const have=pFiles.length?pFiles:((curProject.edits)||[]);
+    const dirs={};
+    have.forEach(f=>{const i=f.lastIndexOf('/');const d=i<0?'.':f.slice(0,i);
+      (dirs[d]=dirs[d]||[]).push(f);});
+    const body=Object.keys(dirs).sort().map(d=>
+      `<div class="bdir">${esc(d==='.'?'':d)}</div>`+dirs[d].map(f=>
+        `<div class="bfile${pEdits.includes(f)||(curProject.edits||[]).includes(f)?' edit':''}`+
+        `${f===pOpen?' on':''}" data-pf="${esc(f)}">${esc(f.slice(d==='.'?0:d.length+1))}</div>`
+      ).join('')).join('');
+    // Plain string work rather than DOM surgery: the panel runs in a webview and
+    // in a stub, and the stub is the thing that catches these mistakes.
+    const MARK='<div id="briefFiles">';
+    let html=b.innerHTML;
+    const cut=html.indexOf(MARK);
+    if(cut>=0)html=html.slice(0,cut);
+    b.innerHTML=html+MARK+'<div class="bhead">files</div>'+body+
+      (pFiles.length?'':'<div class="bnote">press Start to copy them into your work directory</div>')+
+      '</div>';
   }
   function showLeft(which){
     const b=$('brief'), lf=$('leftFiles'), tt=$('tabTask'), tf=$('tabFiles');
@@ -1071,9 +1113,12 @@
     curTask={id:m.project.id,title:m.project.title}; curTags=[m.project.tier||'T0'];
     if(m.project.difficulty!=null)curTags.push('d'+m.project.difficulty);
     if(m.project.area)curTags.push(m.project.area);
-    curMd=(m.md||'')+(m.project.edits&&m.project.edits.length?
-      '\n\n## Files you edit\n\n'+m.project.edits.map(f=>'- `'+f+'`').join('\n')+'\n':'');
+    curMd=(m.md||'');
     renderBrief();
+    // The ticket used to end with a list of paths as prose, which read like a
+    // directory and did nothing when clicked. The directory itself goes here
+    // instead, under the ticket, and opens files in the editor.
+    renderBriefFiles();
     $('crumb').innerHTML=`<b>Part 2</b> › ${esc(m.project.id)}`;
     $('pstartLabel').textContent=m.started?'Reopen':'Start';
     $('metrics').innerHTML=m.started?'':

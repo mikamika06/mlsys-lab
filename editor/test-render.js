@@ -173,6 +173,18 @@ check("the code column carries the directory", () => {
   return "tree rendered before Start";
 });
 
+check("the ticket carries a directory you can click, not a list of paths", () => {
+  api.openProject(PROJ);
+  const html = ids.brief.innerHTML;
+  if (!html.includes("briefFiles")) throw new Error("no directory under the ticket");
+  const clickable = (html.match(/data-pf=/g) || []).length;
+  if (clickable !== PROJ.project.edits.length) {
+    throw new Error(`${clickable} clickable of ${PROJ.project.edits.length}`);
+  }
+  if (/Files you edit/.test(html)) throw new Error("the dead prose list is still there");
+  return `${clickable} files, grouped by folder`;
+});
+
 check("the grade button keeps its word after it is pressed", () => {
   api.openProject(PROJ);
   const before = ids.msList.innerHTML.match(/data-msgrade="1">([^<]*)</)[1];
