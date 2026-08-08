@@ -1,33 +1,25 @@
-import os
 import numpy as np
 import ref
 
+
 def check(workdir):
-    m = {"loss_matches": 0.0}
-    tmp_dir = os.path.join(workdir, "tmp_m5_ckpt")
-    orig_t = ref.generate_dummy_checkpoint(tmp_dir)
-    out_path = os.path.join(tmp_dir, "combined.npy")
+    import fsdp_ckpt.loss as loss_mod
 
-    try:
-        import fsdp_ckpt.converter as conv
-        import fsdp_ckpt.loader as loader
-        conv.convert_to_portable(tmp_dir, out_path)
+    m = {"loss_matches": 0.0, "loss_invariant": 0.0}
+    consolidated = ref.get_consolidated()
+    meta = ref.get_metadata()
+    inputs = {k: np.ones_like(consolidated[k]) * 0.1 for k in consolidated}
 
-        restored_chunks = []
-        target_ws = 4
-        for r in range(target_ws):
-            restored_chunks.append(conv.restore_from_portable(out_path, target_ws, r)["model.weight"])
-        full_restored = np.concatenate(restored_chunks, axis=0)
+    ckpt4 = ref.shard_checkpoint(consolidated, 4)
+    ckpt7 = ref.shard_checkpoint(consolidated, 7)
 
-        orig_state = {"model.weight": orig_t}
-        rest_state = {"model.weight": full_restored}
+    val4 = loss_mod.compute_sharded_loss(ckpt4, meta, inputs)
+    val7 = loss_mod.compute_sharded_loss(ckpt7, meta, inputs)
+    expected = ref.compute_sharded_loss(ckpt4, meta, inputs)
 
-        if loader.verify_loss(orig_state, rest_state):
-            m["loss_matches"] = 1.0
-    except Exception:
-        pass
+    if abs(val4 - expected) < 1e-5:
+        m["loss_matches"] = 1.0
+    if abs(val4 - val7) < 1e-5:
+        m["loss_invariant"] = 1.0
 
-    for f in os.listdir(tmp_dir):
-        os.remove(os.path.join(tmp_dir, f))
-    os.rmdir(tmp_dir)
     return m

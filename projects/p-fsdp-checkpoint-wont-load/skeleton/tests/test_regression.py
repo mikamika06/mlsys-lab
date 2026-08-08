@@ -1,2 +1,2 @@
-def test_checkpoint_roundtrip():
+def test_regression():
     raise NotImplementedError

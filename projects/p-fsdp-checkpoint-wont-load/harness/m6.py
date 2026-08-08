@@ -1,6 +1,7 @@
 import importlib.util
 import os
 
+
 def _run(path):
     spec = importlib.util.spec_from_file_location("learner_regression", path)
     mod = importlib.util.module_from_spec(spec)
@@ -12,47 +13,53 @@ def _run(path):
         fn()
     return True
 
+
 def _survives(path):
     try:
         return _run(path) is True
     except Exception:
         return False
 
+
 def check(workdir):
     path = os.path.join(workdir, "tests", "test_regression.py")
-    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_restore": 0.0, "faults_caught": 0.0}
+    out = {"has_tests": 0.0, "passes_on_good": 0.0, "catches_broken_padding": 0.0}
+
     if not os.path.isfile(path):
-        out["_note"] = "tests/test_regression.py is missing"
         return out
 
-    import fsdp_ckpt.converter as conv
+    import fsdp_ckpt.converter as converter
 
     try:
         first = _run(path)
-    except Exception as e:
+    except Exception:
         out["has_tests"] = 1.0
-        out["_note"] = f"tests fail: {e}"
         return out
 
     if first is None:
-        out["_note"] = "no test functions found"
         return out
 
     out["has_tests"] = 1.0
     out["passes_on_good"] = 1.0
 
-    good_restore = conv.restore_from_portable
-    def broken_restore(path, target_world_size, rank):
-        res = good_restore(path, target_world_size, rank)
-        for k in res:
-            res[k] = res[k] * 0.0
-        return res
+    good_shard = converter.shard_checkpoint
 
-    conv.restore_from_portable = broken_restore
+    def bad_shard(consolidated, num_ranks):
+        import numpy as np
+        ranks = [{} for _ in range(num_ranks)]
+        for k, tensor in consolidated.items():
+            flat = tensor.flatten()
+            chunk_size = len(flat) // num_ranks
+            flat = flat[:chunk_size * num_ranks]
+            for i in range(num_ranks):
+                ranks[i][k] = flat[i * chunk_size : (i + 1) * chunk_size]
+        return ranks
+
+    converter.shard_checkpoint = bad_shard
     try:
-        out["catches_broken_restore"] = 0.0 if _survives(path) else 1.0
+        if not _survives(path):
+            out["catches_broken_padding"] = 1.0
     finally:
-        conv.restore_from_portable = good_restore
+        converter.shard_checkpoint = good_shard
 
-    out["faults_caught"] = out["catches_broken_restore"]
     return out

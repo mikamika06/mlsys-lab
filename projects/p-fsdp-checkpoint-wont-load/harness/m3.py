@@ -1,24 +1,26 @@
-import os
 import numpy as np
 import ref
 
+
 def check(workdir):
-    m = {"converted_ok": 0.0}
-    tmp_dir = os.path.join(workdir, "tmp_m3_ckpt")
-    ref.generate_dummy_checkpoint(tmp_dir)
-    out_path = os.path.join(tmp_dir, "combined.npy")
+    import fsdp_ckpt.converter as converter
 
-    try:
-        import fsdp_ckpt.converter as conv
-        conv.convert_to_portable(tmp_dir, out_path)
-        if os.path.exists(out_path):
-            data = np.load(out_path, allow_pickle=True).item()
-            if "model.weight" in data and data["model.weight"].shape[0] == 8:
-                m["converted_ok"] = 1.0
-    except Exception:
-        pass
+    m = {"consolidated_match": 0.0, "shape_match": 0.0}
+    ckpt = ref.get_fixture_ckpt(3)
+    chunks = ref.extract_chunks(ckpt)
+    metadata = ref.get_metadata()
+    aligned = ref.align_shapes(chunks, metadata)
 
-    for f in os.listdir(tmp_dir):
-        os.remove(os.path.join(tmp_dir, f))
-    os.rmdir(tmp_dir)
+    out = converter.consolidate(aligned, metadata)
+    expected = ref.consolidate(aligned, metadata)
+
+    if out.keys() == expected.keys():
+        shapes_ok = all(out[k].shape == expected[k].shape for k in out)
+        if shapes_ok:
+            m["shape_match"] = 1.0
+
+        vals_ok = all(np.array_equal(out[k], expected[k]) for k in out)
+        if vals_ok:
+            m["consolidated_match"] = 1.0
+
     return m

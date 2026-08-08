@@ -1,23 +1,29 @@
-import os
 import numpy as np
 import ref
 
+
 def check(workdir):
-    m = {"restored_different_ranks": 0.0}
-    tmp_dir = os.path.join(workdir, "tmp_m4_ckpt")
-    ref.generate_dummy_checkpoint(tmp_dir)
-    out_path = os.path.join(tmp_dir, "combined.npy")
+    import fsdp_ckpt.converter as converter
 
-    try:
-        import fsdp_ckpt.converter as conv
-        conv.convert_to_portable(tmp_dir, out_path)
-        r0 = conv.restore_from_portable(out_path, 4, 0)
-        if "model.weight" in r0 and r0["model.weight"].shape[0] == 2:
-            m["restored_different_ranks"] = 1.0
-    except Exception:
-        pass
+    m = {"sharded_len_correct": 0.0, "padding_correct": 0.0, "num_ranks_handled": 0.0}
+    consolidated = ref.get_consolidated()
 
-    for f in os.listdir(tmp_dir):
-        os.remove(os.path.join(tmp_dir, f))
-    os.rmdir(tmp_dir)
+    out = converter.shard_checkpoint(consolidated, 5)
+    expected = ref.shard_checkpoint(consolidated, 5)
+
+    if len(out) == 5:
+        m["num_ranks_handled"] = 1.0
+        lens_ok = True
+        pads_ok = True
+        for r in range(5):
+            for k in expected[r]:
+                if out[r][k].shape != expected[r][k].shape:
+                    lens_ok = False
+                if not np.array_equal(out[r][k], expected[r][k]):
+                    pads_ok = False
+        if lens_ok:
+            m["sharded_len_correct"] = 1.0
+        if pads_ok:
+            m["padding_correct"] = 1.0
+
     return m

@@ -1,20 +1,28 @@
-import os
+import numpy as np
 import ref
 
+
 def check(workdir):
-    m = {"structure_parsed": 0.0}
-    tmp_dir = os.path.join(workdir, "tmp_m1_ckpt")
-    ref.generate_dummy_checkpoint(tmp_dir)
+    import fsdp_ckpt.parser as parser
 
-    try:
-        import fsdp_ckpt.converter as conv
-        res = conv.parse_structure(tmp_dir)
-        if isinstance(res, dict) and "shards" in res and len(res["shards"]) == 2:
-            m["structure_parsed"] = 1.0
-    except Exception:
-        pass
+    m = {"extracted": 0.0, "handles_empty": 0.0}
+    ckpt = ref.get_fixture_ckpt(4)
 
-    for f in os.listdir(tmp_dir):
-        os.remove(os.path.join(tmp_dir, f))
-    os.rmdir(tmp_dir)
+    out = parser.extract_chunks(ckpt)
+    expected = ref.extract_chunks(ckpt)
+
+    if out.keys() == expected.keys():
+        match = True
+        for k in out:
+            if len(out[k]) != 4:
+                match = False
+            for i in range(4):
+                if not np.array_equal(out[k][i], expected[k][i]):
+                    match = False
+        if match:
+            m["extracted"] = 1.0
+
+    if parser.extract_chunks([]) == {}:
+        m["handles_empty"] = 1.0
+
     return m

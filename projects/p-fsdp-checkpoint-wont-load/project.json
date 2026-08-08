@@ -8,8 +8,9 @@
   "part": 1,
   "difficulty": 4,
   "edits": [
+    "fsdp_ckpt/parser.py",
     "fsdp_ckpt/converter.py",
-    "fsdp_ckpt/loader.py",
+    "fsdp_ckpt/loss.py",
     "tests/test_regression.py"
   ],
   "milestones": [
@@ -19,7 +20,12 @@
       "check": "harness/m1.py",
       "gates": [
         {
-          "metric": "structure_parsed",
+          "metric": "extracted",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "handles_empty",
           "op": "==",
           "threshold": 1
         }
@@ -31,7 +37,12 @@
       "check": "harness/m2.py",
       "gates": [
         {
-          "metric": "sharding_mapped",
+          "metric": "aligned",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "correct_unpadded_len",
           "op": "==",
           "threshold": 1
         }
@@ -43,7 +54,12 @@
       "check": "harness/m3.py",
       "gates": [
         {
-          "metric": "converted_ok",
+          "metric": "consolidated_match",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "shape_match",
           "op": "==",
           "threshold": 1
         }
@@ -55,7 +71,17 @@
       "check": "harness/m4.py",
       "gates": [
         {
-          "metric": "restored_different_ranks",
+          "metric": "sharded_len_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "padding_correct",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "num_ranks_handled",
           "op": "==",
           "threshold": 1
         }
@@ -68,6 +94,11 @@
       "gates": [
         {
           "metric": "loss_matches",
+          "op": "==",
+          "threshold": 1
+        },
+        {
+          "metric": "loss_invariant",
           "op": "==",
           "threshold": 1
         }
@@ -89,8 +120,8 @@
           "threshold": 1
         },
         {
-          "metric": "faults_caught",
-          "op": ">=",
+          "metric": "catches_broken_padding",
+          "op": "==",
           "threshold": 1
         }
       ]

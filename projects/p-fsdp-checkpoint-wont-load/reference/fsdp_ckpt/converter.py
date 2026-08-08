@@ -1,50 +1,26 @@
-import os
-import json
 import numpy as np
 
-def parse_structure(checkpoint_dir):
-    files = os.listdir(checkpoint_dir)
-    metadata = {}
-    shards = []
-    for f in sorted(files):
-        if f.endswith(".json"):
-            with open(os.path.join(checkpoint_dir, f), "r") as mf:
-                metadata = json.load(mf)
-        elif f.endswith(".npy") or f.endswith(".bin"):
-            shards.append(f)
-    return {"metadata": metadata, "shards": shards}
 
-def map_sharding(state_dict, world_size):
-    mapped = {}
-    for k, v in state_dict.items():
-        mapped[k] = {"shape": list(v.shape), "world_size": world_size}
-    return mapped
+def consolidate(aligned, metadata):
+    """Reconstruct the full parameter arrays."""
+    out = {}
+    for k, (chunk_list, unpadded_len) in aligned.items():
+        flat = np.concatenate(chunk_list)
+        flat = flat[:unpadded_len]
+        out[k] = flat.reshape(metadata[k])
+    return out
 
-def convert_to_portable(checkpoint_dir, output_path):
-    struct = parse_structure(checkpoint_dir)
-    combined = {}
-    for shard in struct["shards"]:
-        path = os.path.join(checkpoint_dir, shard)
-        data = np.load(path, allow_pickle=True).item()
-        for k, v in data.items():
-            if k not in combined:
-                combined[k] = []
-            combined[k].append(v)
 
-    final_state = {}
-    for k, chunks in combined.items():
-        final_state[k] = np.concatenate(chunks, axis=0)
-
-    np.save(output_path, final_state)
-    return output_path
-
-def restore_from_portable(portable_path, target_world_size, rank):
-    data = np.load(portable_path, allow_pickle=True).item()
-    restored = {}
-    for k, v in data.items():
-        dim_size = v.shape[0]
-        chunk_size = dim_size // target_world_size
-        start = rank * chunk_size
-        end = start + chunk_size
-        restored[k] = v[start:end].copy()
-    return restored
+def shard_checkpoint(consolidated, num_ranks):
+    """Split parameters for a specific number of ranks."""
+    ranks = [{} for _ in range(num_ranks)]
+    for k, tensor in consolidated.items():
+        flat = tensor.flatten()
+        unpadded_len = len(flat)
+        pad_len = (num_ranks - (unpadded_len % num_ranks)) % num_ranks
+        if pad_len > 0:
+            flat = np.concatenate([flat, np.zeros(pad_len, dtype=flat.dtype)])
+        chunk_size = len(flat) // num_ranks
+        for i in range(num_ranks):
+            ranks[i][k] = flat[i * chunk_size : (i + 1) * chunk_size]
+    return ranks
