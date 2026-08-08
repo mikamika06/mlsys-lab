@@ -103,45 +103,56 @@ function pipUpgrade() {
 // knows about projects, over a bank from three releases ago that has none. The
 // editor now notices and offers to catch the bank up.
 let _bankChecked = false;
-async function offerBankUpgrade(installed) {
+async function offerBankUpgrade(context, installed) {
   if (_bankChecked) return installed;
   _bankChecked = true;
+  // The bank and the editor are separate artifacts with separate version lines,
+  // so comparing one against the other declared the bank stale for ever: pip ran
+  // on every window, downloaded nothing, and announced an update that had not
+  // happened. package.json names the bank version this editor needs instead.
   const mine = (vscode.extensions.getExtension("mikamika06.mlsys-lab") || {})
-    .packageJSON;
-  const want = (mine && mine.version) || "0";
-  if (!installed.version || !olderThan(installed.version, want)) return installed;
-  const cfg = vscode.workspace.getConfiguration("mlsys");
-  const auto = cfg.get("autoUpdateBank", true);
-  if (!auto) {
-    log(`bank ${installed.version} is older than the editor ${want}; auto-update is off`);
+    .packageJSON || {};
+  const want = mine.bankVersion || "0";
+  if (want === "0" || !installed.version) return installed;
+  if (!olderThan(installed.version, want)) return installed;
+  // One attempt per target version. A pip that cannot reach the index, or an
+  // index that does not have it yet, must not turn into a download on every
+  // window for the rest of the week.
+  const tried = context.globalState.get("mlsys.bankTried", "");
+  if (tried === want) {
+    log(`bank ${installed.version} < ${want}, already tried once`);
     return installed;
   }
+  if (!vscode.workspace.getConfiguration("mlsys").get("autoUpdateBank", true)) {
+    log(`bank ${installed.version} is older than ${want}; auto-update is off`);
+    return installed;
+  }
+  await context.globalState.update("mlsys.bankTried", want);
   const res = await vscode.window.withProgress(
     { location: vscode.ProgressLocation.Notification,
-      title: `Updating the task bank (${installed.version} → ${want})…` },
+      title: `mlsys-lab: updating the task bank (${installed.version} → ${want})…` },
     () => pipUpgrade());
-  if (!res.ok) {
-    vscode.window.showWarningMessage(
-      `mlsys-lab: the task bank is ${installed.version} and this editor is ${want}. `
-      + `Run: ${pythonPath()} -m pip install -U mlsys-lab`);
-    return installed;
-  }
-  const after = probeInstalled();
-  if (after) {
-    vscode.window.showInformationMessage(`mlsys-lab: task bank updated to ${after.version}.`);
+  const after = res.ok ? probeInstalled() : null;
+  if (after && after.version && after.version !== installed.version) {
+    log(`bank updated ${installed.version} -> ${after.version}`);
     return after;
   }
-  return installed;
+  if (!res.ok) {
+    vscode.window.showWarningMessage(
+      `mlsys-lab: the task bank is ${installed.version}, this editor needs ${want}. `
+      + `Run: ${pythonPath()} -m pip install -U mlsys-lab`);
+  }
+  return after || installed;
 }
 
-async function ensureLab() {
+async function ensureLab(context) {
   const checkout = labFromCheckout();
   if (checkout) { log("bank: checkout at " + checkout.tasksDir); return checkout; }
 
   let installed = probeInstalled();
   if (installed) {
     log("bank: installed " + (installed.version || "?") + " at " + installed.tasksDir);
-    installed = await offerBankUpgrade(installed);
+    installed = await offerBankUpgrade(context, installed);
     return installed;
   }
 
@@ -253,7 +264,15 @@ function placeOf(lab, id) {
   return [area, AREA_TITLE[area] || area];
 }
 
+// Reading 2,053 meta.json and 1,256 project.json takes about 285 ms, and the
+// roadmap is redrawn on every search keystroke, every return from a task and
+// every refresh. The bank does not change while the editor is open, so it is
+// read once and the cache is dropped by the Refresh command.
+const _scan = { tasks: null, projects: null };
+function dropScanCache() { _scan.tasks = null; _scan.projects = null; }
+
 function scanBuilt(lab) {
+  if (_scan.tasks) return _scan.tasks;
   const dir = lab && lab.tasksDir;
   const arr = [];
   if (!dir || !fs.existsSync(dir)) return arr;
@@ -265,6 +284,7 @@ function scanBuilt(lab) {
     arr.push({ id: meta.id || d, title: meta.title || d, difficulty: meta.difficulty,
                native: meta.native || "" });
   }
+  _scan.tasks = arr;
   return arr;
 }
 
@@ -340,6 +360,7 @@ function postWS(msg) { try { panel && panel.webview.postMessage(msg); } catch (_
 const PROJECT_PREFIX = "project:";
 
 function scanProjects(lab) {
+  if (_scan.projects) return _scan.projects;
   const dir = lab && lab.projectsDir;
   const out = [];
   if (!dir || !fs.existsSync(dir)) return out;
@@ -351,6 +372,7 @@ function scanProjects(lab) {
       out.push({ dir: path.join(dir, d), spec });
     } catch (_) { /* a malformed project is skipped, not fatal */ }
   }
+  _scan.projects = out;
   return out;
 }
 
@@ -403,6 +425,7 @@ function startProject(context, lab, id) {
   // findable — "there is no folder anywhere" was the first thing anyone said.
   revealProject(dest, found.spec);
   sendProject(context, lab, id);
+  sendProjectFiles(lab, id);
 }
 
 function revealProject(dest, spec) {
@@ -844,7 +867,7 @@ function activate(context) {
   });
 
   const open = async () => {
-    const lab = await ensureLab();
+    const lab = await ensureLab(context);
     if (!lab) { log("no bank — panel not opened"); return null; }
     tree.refresh(lab);
     openPanel(context, lab);
@@ -853,7 +876,7 @@ function activate(context) {
 
   context.subscriptions.push(out, status, view,
     vscode.commands.registerCommand("mlsys.open", open),
-    vscode.commands.registerCommand("mlsys.refresh", () => tree.refresh()),
+    vscode.commands.registerCommand("mlsys.refresh", () => { dropScanCache(); tree.refresh(); }),
     vscode.commands.registerCommand("mlsys.openTask", async (id) => {
       const lab = tree.lab || (await open());
       if (!lab) return;
