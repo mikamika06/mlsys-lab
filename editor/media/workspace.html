@@ -88,6 +88,13 @@
      is-proj, so this rule carries the display itself. */
   .app.is-proj .work{display:grid;}
   .app.is-proj .right{display:flex;flex-direction:column;min-width:0;}
+  .ltab{cursor:pointer;padding:0 8px;color:var(--ink-faint);}
+  .ltab.on{color:var(--ink);text-decoration:underline;text-underline-offset:4px;}
+  .lfile{padding:5px 14px;cursor:pointer;font:12px var(--mono);color:var(--ink-dim);
+         white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .lfile:hover{background:var(--hover);color:var(--ink);}
+  .lfile.on{background:var(--sel);color:var(--ink);}
+  .lfile.edit::before{content:"✎ ";opacity:.6;}
   .pfiles{border-bottom:1px solid var(--line);max-height:38%;overflow:auto;padding:6px 0;}
   .pfile{padding:3px 12px;cursor:pointer;font:11px var(--mono);color:var(--ink-dim);
          white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -113,6 +120,13 @@
   .ms-g{display:none;padding:0 12px 10px;} .ms.open .ms-g{display:block;}
   .ms-row{display:flex;gap:8px;font-family:var(--mono);font-size:11px;padding:3px 0;color:var(--ink-mut);}
   .ms-row b{color:var(--ink-dim);font-weight:500;flex:1;}
+  .ltab{cursor:pointer;padding:0 8px;color:var(--ink-faint);}
+  .ltab.on{color:var(--ink);text-decoration:underline;text-underline-offset:4px;}
+  .lfile{padding:5px 14px;cursor:pointer;font:12px var(--mono);color:var(--ink-dim);
+         white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .lfile:hover{background:var(--hover);color:var(--ink);}
+  .lfile.on{background:var(--sel);color:var(--ink);}
+  .lfile.edit::before{content:"✎ ";opacity:.6;}
   .pfiles{font-family:var(--mono);font-size:11.5px;color:var(--steel);cursor:pointer;padding:2px 0;}
   .pfiles:hover{text-decoration:underline;}
 
@@ -326,7 +340,11 @@
 
     <!-- WORK -->
     <div class="work" id="work">
-      <div class="col left"><div class="col-h"><span class="gd"></span><span data-t="task">Task</span></div><div class="scroll"><div class="brief" id="brief"></div></div></div>
+      <div class="col left"><div class="col-h"><span class="gd"></span>
+          <span class="ltab on" id="tabTask" data-t="task">Task</span>
+          <span class="ltab" id="tabFiles" style="display:none">Files</span></div>
+        <div class="scroll"><div class="brief" id="brief"></div>
+          <div id="leftFiles" style="display:none"></div></div></div>
       <div class="rz" id="rzL"></div>
       <div class="col center">
         <div class="tabbar"><div class="ftab"><span class="ic" id="ficon">py</span><span id="fname">solve.py</span></div></div>
@@ -950,7 +968,10 @@
     if(!curProject)return;
     $('msList').innerHTML=curProject.milestones.map(m=>{
       const st=msState[m.n]||(m.done?'done':'');
-      const badge=st==='run'?'…':st==='done'||m.done?'✓':st==='bad'?'✗':'grade';
+      // The word used to be replaced by a tick, so the button a learner had just
+      // pressed looked as though it had gone. The state is a mark beside it.
+      const mark=st==='run'?'…':(st==='done'||m.done)?'✓':st==='bad'?'✗':'';
+      const badge=(mark?mark+' ':'')+'grade';
       const gates=(msState['g'+m.n]||m.gates||[]).map(g=>
         `<div class="ms-row"><b>${esc(g.metric)}</b>`+
         (('value' in g)?`<span>${esc(fmt(num(g.value)))}</span>`:'')+
@@ -966,11 +987,25 @@
   }
   let pFiles=[], pEdits=[], pOpen=null, pDirty=false;
   function renderFiles(){
-    const box=$('pfilesBox'), list=$('pfilesList');
-    if(!box||!list)return;
-    box.style.display=pFiles.length?'':'none';
-    list.innerHTML=pFiles.map(f=>
+    const rows=pFiles.map(f=>
       `<div class="pfile${pEdits.includes(f)?' edit':''}${f===pOpen?' on':''}" data-pf="${esc(f)}">${esc(f)}</div>`).join('');
+    const box=$('pfilesBox'), list=$('pfilesList');
+    if(box&&list){ box.style.display=pFiles.length?'':'none'; list.innerHTML=rows; }
+    // The same list also lives in the left column, where it is reachable by the
+    // Task / Files switch instead of by making the window wide enough.
+    const lf=$('leftFiles');
+    if(lf) lf.innerHTML=pFiles.map(f=>
+      `<div class="lfile${pEdits.includes(f)?' edit':''}${f===pOpen?' on':''}" data-pf="${esc(f)}">${esc(f)}</div>`).join('');
+    const tf=$('tabFiles');
+    if(tf) tf.style.display=pFiles.length?'':'none';
+  }
+  function showLeft(which){
+    const b=$('brief'), lf=$('leftFiles'), tt=$('tabTask'), tf=$('tabFiles');
+    if(!b||!lf)return;
+    const files=which==='files';
+    b.style.display=files?'none':''; lf.style.display=files?'':'none';
+    if(tt)tt.classList.toggle('on',!files);
+    if(tf)tf.classList.toggle('on',files);
   }
   function loadProjectFile(f){
     if(!curProject)return;
@@ -1003,7 +1038,7 @@
     const done=m.project.milestones.filter(x=>x.done).length;
     if(done&&done===m.project.milestones.length)setVerdict('pass','PASS','every milestone cleared');
     renderMilestones(); goProject();
-    pFiles=[]; pEdits=[]; pOpen=null; renderFiles();
+    pFiles=[]; pEdits=[]; pOpen=null; renderFiles(); showLeft('task');
     if(m.started)vscode.postMessage({type:'projectFiles',id:m.project.id});
   }
   function gradeMilestone(n){
@@ -1022,6 +1057,8 @@
     const f=e.target.closest('[data-pf]');
     if(f&&curProject){loadProjectFile(f.getAttribute('data-pf'));}
   });
+  if($('tabTask'))$('tabTask').addEventListener('click',()=>showLeft('task'));
+  if($('tabFiles'))$('tabFiles').addEventListener('click',()=>showLeft('files'));
   if($('pfolder'))$('pfolder').addEventListener('click',()=>{
     if(!curProject)return; vscode.postMessage({type:'openProjectFolder',id:curProject.id});});
   document.addEventListener('click',e=>{
