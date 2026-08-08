@@ -165,6 +165,14 @@ check("a project offers the Task / Files switch before Start", () => {
   return "switch present, 2 files declared";
 });
 
+check("the code column carries the directory", () => {
+  api.openProject(PROJ);
+  const tree = ids.tree.innerHTML;
+  if (!tree) throw new Error("the tree beside the editor is empty");
+  if (!tree.includes("graph_labeler.py")) throw new Error("the declared files are not in it");
+  return "tree rendered before Start";
+});
+
 check("the grade button keeps its word after it is pressed", () => {
   api.openProject(PROJ);
   const before = ids.msList.innerHTML.match(/data-msgrade="1">([^<]*)</)[1];

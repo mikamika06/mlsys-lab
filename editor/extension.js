@@ -423,7 +423,9 @@ function startProject(context, lab, id) {
   // they have already read in the panel. The first file they are meant to edit
   // is opened, and the copy is revealed in the file tree so the rest of it is
   // findable — "there is no folder anywhere" was the first thing anyone said.
-  revealProject(dest, found.spec);
+  // The panel edits the copy itself, so Start no longer opens a VS Code tab
+  // that then has to be closed. The Files button still reveals the folder for
+  // anyone who wants the real editor.
   sendProject(context, lab, id);
   sendProjectFiles(lab, id);
 }

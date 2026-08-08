@@ -213,7 +213,21 @@
   .app.is-work .work{display:grid;}
   .col{min-height:0;display:flex;flex-direction:column;overflow:hidden;}
   .left{border-right:1px solid var(--line);background:var(--canvas);}
-  .center{background:var(--editor-bg);}
+  .center{background:var(--editor-bg);display:flex;flex-direction:column;min-width:0;}
+  .edwrap{flex:1 1 auto;min-height:0;display:flex;}
+  /* The directory lives beside the code, inside the panel — a project is edited
+     here, not in a VS Code tab that has to be closed afterwards. */
+  .tree{display:none;flex:0 0 210px;border-right:1px solid var(--line);
+        background:var(--panel);overflow:auto;padding:6px 0;}
+  .app.is-proj .tree{display:block;}
+  .tnode{padding:4px 10px;cursor:pointer;font:11.5px var(--mono);color:var(--ink-dim);
+         white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tnode:hover{background:var(--hover);color:var(--ink);}
+  .tnode.on{background:var(--sel);color:var(--ink);}
+  .tnode.edit::before{content:"✎ ";opacity:.55;}
+  .tdir{padding:6px 10px 2px;font:10px var(--sans);letter-spacing:.06em;
+        text-transform:uppercase;color:var(--ink-faint);}
+  @media (max-width:960px){ .tree{flex:0 0 150px;} }
   .right{border-left:1px solid var(--line);background:var(--panel);}
   .rz{background:var(--line);cursor:col-resize;position:relative;} .rz:hover,.rz.drag{background:var(--amber-dim);}
   .rz::after{content:"";position:absolute;inset:0 -3px;}
@@ -348,9 +362,12 @@
       <div class="rz" id="rzL"></div>
       <div class="col center">
         <div class="tabbar"><div class="ftab"><span class="ic" id="ficon">py</span><span id="fname">solve.py</span></div></div>
+        <div class="edwrap">
+        <div class="tree" id="tree"></div>
         <div class="ed">
           <div class="gutter" id="gutter"></div>
           <div class="cwrap" id="cwrap"><div class="cinner"><div class="aline" id="aline"></div><pre class="hl" id="hl" aria-hidden="true"></pre><textarea class="ta" id="ta" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off"></textarea></div></div>
+        </div>
         </div>
       </div>
       <div class="rz" id="rzR"></div>
@@ -1010,6 +1027,24 @@
     // says will be copied.
     const tf=$('tabFiles');
     if(tf) tf.style.display=curProject?'':'none';
+    // The same list beside the code, which is where a project is actually
+    // worked on. Grouped by directory so a dozen files stay readable.
+    const tr=$('tree');
+    if(tr){
+      if(!pFiles.length){
+        const declared=(curProject&&curProject.edits)||[];
+        tr.innerHTML='<div class="tdir">press Start</div>'+declared.map(f=>
+          `<div class="tnode edit" style="opacity:.5">${esc(f)}</div>`).join('');
+      }else{
+        const dirs={};
+        pFiles.forEach(f=>{const i=f.lastIndexOf('/');
+          const d=i<0?'':f.slice(0,i); (dirs[d]=dirs[d]||[]).push(f);});
+        tr.innerHTML=Object.keys(dirs).sort().map(d=>
+          (d?`<div class="tdir">${esc(d)}</div>`:'')+dirs[d].map(f=>
+            `<div class="tnode${pEdits.includes(f)?' edit':''}${f===pOpen?' on':''}" data-pf="${esc(f)}">`+
+            `${esc(f.slice(d?d.length+1:0))}</div>`).join('')).join('');
+      }
+    }
   }
   function showLeft(which){
     const b=$('brief'), lf=$('leftFiles'), tt=$('tabTask'), tf=$('tabFiles');
