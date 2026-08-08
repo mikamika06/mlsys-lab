@@ -82,19 +82,22 @@
   .app.is-home .crumb{display:none;}
   /* A project is edited in VS Code itself, so the panel drops the code column and
      gives the brief the room. */
-  .app.is-proj .center,.app.is-proj .rz{display:none;}
-  /* The work area is a five-column grid: brief, resizer, editor, resizer,
-     milestones. A project has no single file to edit, so the editor and the
-     resizers go — but switching the grid to flex to do that left the milestone
-     column with no width of its own, and the brief, which grows, took the whole
-     window. Two columns, still a grid. */
-  /* is-work is what makes the work area visible at all; project mode replaces
-     that class, so this rule has to carry the display itself. Dropping it left
-     the panel black. */
-  .app.is-proj .work{display:grid;grid-template-columns:minmax(0,1fr) var(--rw);}
-  .app.is-proj .left{max-width:none;overflow:auto;}
+  /* A project keeps all three panes: the ticket, an editor for whichever file is
+     open, and the milestones. Hiding the editor left nowhere to write code, and
+     is-work — the class that makes the work area visible — is replaced by
+     is-proj, so this rule carries the display itself. */
+  .app.is-proj .work{display:grid;}
   .app.is-proj .right{display:flex;flex-direction:column;min-width:0;}
-  .app.is-proj .grade,.app.is-proj .run,.app.is-proj .rnd{display:none;}
+  .pfiles{border-bottom:1px solid var(--line);max-height:38%;overflow:auto;padding:6px 0;}
+  .pfile{padding:3px 12px;cursor:pointer;font:11px var(--mono);color:var(--ink-dim);
+         white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pfile:hover{background:var(--hover);color:var(--ink);}
+  .pfile.on{background:var(--sel);color:var(--ink);}
+  .pfile.edit{color:var(--ink);}
+  .pfile.edit::before{content:"✎ ";opacity:.6;}
+  .pfh{padding:6px 12px 2px;font:10px var(--sans);letter-spacing:.08em;
+       text-transform:uppercase;color:var(--ink-faint);}
+  .app.is-proj .rnd{display:none;}
   .app.is-proj .back{display:flex;}
   .pstart{display:none;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:12.5px;color:#17130a;flex:0 0 auto;
     border:1px solid #b8862f;border-radius:8px;padding:7px 15px;background:linear-gradient(180deg,var(--amber-2),var(--amber));}
@@ -325,6 +328,7 @@
           <div class="verdict" id="verdict"><span class="reticle tl"></span><span class="reticle tr"></span><span class="reticle bl"></span><span class="reticle br"></span><span class="sweep"></span>
             <div class="vst"><span class="bdg" id="vbadge">·</span><span id="vlabel">AWAITING</span></div><div class="vsub" id="vsub"></div></div>
           <div class="metrics" id="metrics"></div>
+          <div class="pfiles" id="pfilesBox" style="display:none"><div class="pfh">files</div><div id="pfilesList"></div></div>
           <div id="msList"></div>
           <div class="console"><div class="ch">[ <span data-t="output">output</span> ] <span id="chcmd">mlsys grade</span></div><div class="cb" id="cons">—</div></div>
         </div>
@@ -681,7 +685,7 @@
     for(let i=1;i<=n;i++)g+='<span class="ln'+(i===cur?' cur':'')+'">'+i+'</span>';
     gutter.innerHTML=g; aline.style.top=(12+(cur-1)*20-cwrap.scrollTop)+'px'; aline.style.left=cwrap.scrollLeft+'px';
   }
-  ta.addEventListener('input',()=>{paint();});
+  ta.addEventListener('input',()=>{paint();markDirty();});
   ta.addEventListener('keyup',paint); ta.addEventListener('click',paint);
   ta.addEventListener('scroll',()=>{hl.scrollTop=ta.scrollTop;hl.scrollLeft=ta.scrollLeft;gutter.scrollTop=ta.scrollTop;cwrap.scrollTop=ta.scrollTop;cwrap.scrollLeft=ta.scrollLeft;});
   /* ---------- typing aids ----------
@@ -861,7 +865,16 @@
     let log=`> mlsys grade ${curId}\n`;(d.gates||[]).forEach(g=>log+=`  ${g.ok?'✓':'✗'} ${g.metric} = ${fmt(g.value)}   gate ${g.op} ${fmt(g.threshold)}\n`);log+=`  ${d.verdict}`;
     $('cons').innerHTML=esc(log).replace(/✓/g,'<span class="ok">✓</span>').replace(/✗/g,'<span class="bad">✗</span>');
   }
-  function doGrade(){if(busy||running||!curId)return;busy=true;$('gradeBtn').classList.add('running');$('gradeBtn').setAttribute('disabled','');$('runBtn').setAttribute('disabled','');$('chcmd').textContent='mlsys grade';setVerdict('measuring',t('measuring'),t('running'));$('cons').textContent='> spawning grader …';vscode.postMessage({type:'grade',id:curId,file:curFile,code:ta.value});}
+  function doGrade(){
+    if(curProject){
+      // In a project the Grade button runs the first milestone that is not
+      // already green, so the toolbar keeps working instead of going dead.
+      const next=curProject.milestones.find(x=>msState[x.n]!=='done'&&!x.done)
+                 ||curProject.milestones[curProject.milestones.length-1];
+      if(next)gradeMilestone(next.n);
+      return;
+    }
+    if(busy||running||!curId)return;busy=true;$('gradeBtn').classList.add('running');$('gradeBtn').setAttribute('disabled','');$('runBtn').setAttribute('disabled','');$('chcmd').textContent='mlsys grade';setVerdict('measuring',t('measuring'),t('running'));$('cons').textContent='> spawning grader …';vscode.postMessage({type:'grade',id:curId,file:curFile,code:ta.value});}
   function gradeDone(){busy=false;$('gradeBtn').classList.remove('running');$('gradeBtn').removeAttribute('disabled');if(curId&&runnable)$('runBtn').removeAttribute('disabled');}
   $('gradeBtn').addEventListener('click',doGrade);
 
@@ -938,6 +951,26 @@
     const done=curProject.milestones.filter(m=>m.done).length;
     $('instSt').textContent=`${done}/${curProject.milestones.length}`;
   }
+  let pFiles=[], pEdits=[], pOpen=null, pDirty=false;
+  function renderFiles(){
+    const box=$('pfilesBox'), list=$('pfilesList');
+    if(!box||!list)return;
+    box.style.display=pFiles.length?'':'none';
+    list.innerHTML=pFiles.map(f=>
+      `<div class="pfile${pEdits.includes(f)?' edit':''}${f===pOpen?' on':''}" data-pf="${esc(f)}">${esc(f)}</div>`).join('');
+  }
+  function loadProjectFile(f){
+    if(!curProject)return;
+    if(pOpen&&pDirty)saveProjectFile();
+    pOpen=f; renderFiles();
+    vscode.postMessage({type:'readProjectFile',id:curProject.id,file:f});
+  }
+  function markDirty(){ if(curProject&&pOpen)pDirty=true; }
+  function saveProjectFile(){
+    if(!curProject||!pOpen)return;
+    vscode.postMessage({type:'saveProjectFile',id:curProject.id,file:pOpen,code:ta.value});
+    pDirty=false;
+  }
   function openProject(m){
     curProject=m.project; curId=null; msState={};
     curTask={id:m.project.id,title:m.project.title}; curTags=[m.project.tier||'T0'];
@@ -957,9 +990,12 @@
     const done=m.project.milestones.filter(x=>x.done).length;
     if(done&&done===m.project.milestones.length)setVerdict('pass','PASS','every milestone cleared');
     renderMilestones(); goProject();
+    pFiles=[]; pEdits=[]; pOpen=null; renderFiles();
+    if(m.started)vscode.postMessage({type:'projectFiles',id:m.project.id});
   }
   function gradeMilestone(n){
     if(!curProject)return;
+    if(pOpen&&pDirty)saveProjectFile();
     msState[n]='run'; delete msState['g'+n]; delete msState['n'+n];
     msOpen.add(n); renderMilestones();
     setVerdict('measuring',t('measuring'),'milestone '+n);
@@ -969,6 +1005,10 @@
     if(!curProject)return; vscode.postMessage({type:'startProject',id:curProject.id});});
   // A missing element must not take the whole script down with it — that is how
   // the roadmap went blank once already.
+  document.addEventListener('click',e=>{
+    const f=e.target.closest('[data-pf]');
+    if(f&&curProject){loadProjectFile(f.getAttribute('data-pf'));}
+  });
   if($('pfolder'))$('pfolder').addEventListener('click',()=>{
     if(!curProject)return; vscode.postMessage({type:'openProjectFolder',id:curProject.id});});
   document.addEventListener('click',e=>{
@@ -1041,6 +1081,23 @@
     else if(m.type==='mapdata'){mapData=m.payload;syncRandom();if($('app').classList.contains('is-home'))renderMap(m.payload);}
     else if(m.type==='task'){openTask(m);}
     else if(m.type==='project'){openProject(m);}
+    else if(m.type==='pfiles'){
+      pFiles=m.files||[]; pEdits=m.edits||[];
+      renderFiles();
+      if(!pOpen&&pFiles.length){
+        // Open the first file the ticket names to be edited, not the first file
+        // on disk — which is a brief or a harness the learner does not touch.
+        const first=pEdits.find(f=>pFiles.includes(f))||pFiles[0];
+        loadProjectFile(first);
+      }
+    }
+    else if(m.type==='pfile'){
+      curFile=m.file; pOpen=m.file; pDirty=false;
+      ta.value=m.code||''; paint();
+      $('crumb').innerHTML=`<b>Part 2</b> › ${esc(curProject?curProject.id:'')} › ${esc(m.file)}`;
+      renderFiles();
+    }
+    else if(m.type==='psaved'){ if(!m.ok)$('cons').textContent='could not save '+(m.file||''); }
     else if(m.type==='projectResult'){
       const d=m.data, n=m.milestone||d.milestone;
       if(n){msState[n]=d.passed?'done':'bad'; msState['g'+n]=d.gates||[];

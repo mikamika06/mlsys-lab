@@ -139,8 +139,10 @@ check("project mode keeps the work area visible", () => {
   if (!/display\s*:\s*(grid|flex)/.test(m[1])) {
     throw new Error("project mode sets no display on .work: " + m[1]);
   }
-  if (!/grid-template-columns/.test(m[1])) {
-    throw new Error("project mode gives the milestone column no width");
+  // The column widths come from the default .work grid; project mode only has
+  // to make it visible, because is-work — the class that does that — is gone.
+  if (!/\.app\.is-proj \.right\{[^}]*display/.test(css)) {
+    throw new Error("the milestone column has no display of its own");
   }
   return m[1].slice(0, 60);
 });

@@ -416,6 +416,57 @@ function revealProject(dest, spec) {
   } catch (_) { /* an editor that will not open one file is not a reason to stop */ }
 }
 
+// The panel edits the copy in the work directory, so it needs to see what is in
+// there and read and write it. A project is several files; listing only the ones
+// the ticket names would hide the tests and the harness the learner is allowed
+// to read.
+function projectFileList(id) {
+  const root = projectWorkDir(id);
+  const out = [];
+  if (!fs.existsSync(root)) return out;
+  const walk = (dir, prefix) => {
+    for (const name of fs.readdirSync(dir).sort()) {
+      if (name === "__pycache__" || name === ".pytest_cache") continue;
+      const full = path.join(dir, name);
+      const rel = prefix ? prefix + "/" + name : name;
+      let st;
+      try { st = fs.statSync(full); } catch (_) { continue; }
+      if (st.isDirectory()) walk(full, rel);
+      else if (!name.endsWith(".pyc") && st.size < 512 * 1024) out.push(rel);
+    }
+  };
+  walk(root, "");
+  return out;
+}
+
+function sendProjectFiles(lab, id) {
+  const found = scanProjects(lab).find((p) => p.spec.id === id);
+  const edits = (found && found.spec.edits) || [];
+  postWS({ type: "pfiles", id, work: projectWorkDir(id),
+           files: projectFileList(id), edits });
+}
+
+function readProjectFile(id, rel) {
+  const full = path.join(projectWorkDir(id), rel);
+  if (!full.startsWith(projectWorkDir(id))) return;
+  let code = "";
+  try { code = fs.readFileSync(full, "utf8"); } catch (e) { code = ""; }
+  postWS({ type: "pfile", id, file: rel, code });
+}
+
+function writeProjectFile(id, rel, code) {
+  const root = projectWorkDir(id);
+  const full = path.join(root, rel);
+  // A path that climbs out of the work directory is not a file the panel may
+  // write, whatever the message says.
+  if (!full.startsWith(root)) return false;
+  try {
+    fs.mkdirSync(path.dirname(full), { recursive: true });
+    fs.writeFileSync(full, code);
+    return true;
+  } catch (e) { log("write failed: " + e.message); return false; }
+}
+
 function gradeProject(context, lab, id, milestone) {
   const found = scanProjects(lab).find((p) => p.spec.id === id);
   if (!found) return;
@@ -654,6 +705,11 @@ function openPanel(context, lab) {
       else sendTask(context, lab, m.id);
     }
     else if (m.type === "startProject" && m.id) startProject(context, lab, m.id);
+    else if (m.type === "projectFiles" && m.id) sendProjectFiles(lab, m.id);
+    else if (m.type === "readProjectFile" && m.id) readProjectFile(m.id, m.file);
+    else if (m.type === "saveProjectFile" && m.id) {
+      postWS({ type: "psaved", ok: writeProjectFile(m.id, m.file, m.code || ""), file: m.file });
+    }
     else if (m.type === "openProjectFolder" && m.id) {
       const f = scanProjects(lab).find((p) => p.spec.id === m.id);
       const dest = projectWorkDir(m.id);

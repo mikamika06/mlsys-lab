@@ -572,13 +572,17 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
       return keys.filter((k) => k.startsWith("mlsys.milestones.")).length + " project keys synced";
     });
 
-    check("the panel has a project view, not a code editor", () => {
-      const h = panel.webview.html;
-      for (const marker of ["is-proj", "pstartBtn", "msList", "gradeProject", "startProject"])
-        if (!h.includes(marker)) throw new Error("missing " + marker);
-      if (!/\.app\.is-proj \.center,\.app\.is-proj \.rz\{display:none;\}/.test(h))
-        throw new Error("the code column is not hidden for projects");
-      return "brief + milestones, editor hidden";
+    check("a project gets the editor and a file pane, not just the ticket", () => {
+      const css = fs.readFileSync(
+        path.join(__dirname, "media", "workspace.html"), "utf8");
+      if (/\.app\.is-proj [^{]*\.center[^{]*\{[^}]*display\s*:\s*none/.test(css)) {
+        throw new Error("the code column is still hidden for projects");
+      }
+      if (!/id="pfilesList"/.test(css)) throw new Error("no file pane in the panel");
+      if (/\.app\.is-proj \.grade\{[^}]*display\s*:\s*none/.test(css)) {
+        throw new Error("the Grade button is hidden for projects");
+      }
+      return "editor, files and Grade all present";
     });
   }
 
