@@ -994,10 +994,22 @@
     // The same list also lives in the left column, where it is reachable by the
     // Task / Files switch instead of by making the window wide enough.
     const lf=$('leftFiles');
-    if(lf) lf.innerHTML=pFiles.map(f=>
-      `<div class="lfile${pEdits.includes(f)?' edit':''}${f===pOpen?' on':''}" data-pf="${esc(f)}">${esc(f)}</div>`).join('');
+    if(lf){
+      if(pFiles.length){
+        lf.innerHTML=pFiles.map(f=>
+          `<div class="lfile${pEdits.includes(f)?' edit':''}${f===pOpen?' on':''}" data-pf="${esc(f)}">${esc(f)}</div>`).join('');
+      }else{
+        const declared=(curProject&&curProject.edits)||[];
+        lf.innerHTML='<div class="pfh" style="padding:10px 14px">press Start — these are copied into your work directory</div>'+
+          declared.map(f=>`<div class="lfile edit" style="opacity:.55">${esc(f)}</div>`).join('');
+      }
+    }
+    // The tab used to appear only once files existed on disk, which is after
+    // Start — so a learner opening a project saw no switch at all and concluded
+    // there was none. It is always there; before Start it shows what the ticket
+    // says will be copied.
     const tf=$('tabFiles');
-    if(tf) tf.style.display=pFiles.length?'':'none';
+    if(tf) tf.style.display=curProject?'':'none';
   }
   function showLeft(which){
     const b=$('brief'), lf=$('leftFiles'), tt=$('tabTask'), tf=$('tabFiles');
@@ -1162,7 +1174,11 @@
     }
     else if(m.type==='measuring'){setVerdict('measuring',t('measuring'),t('running'));}
     else if(m.type==='result'){gradeDone();renderResult(m.data);}
-    else if(m.type==='error'){gradeDone();setVerdict('error',t('error'),'grader failed');$('cons').textContent=(m.message||'').slice(0,2000);}
+    else if(m.type==='error'){
+      // A milestone left on "…" reads as a button that stopped working.
+      Object.keys(msState).forEach(k=>{ if(msState[k]==='run')delete msState[k]; });
+      if(curProject)renderMilestones();
+      gradeDone();setVerdict('error',t('error'),'grader failed');$('cons').textContent=(m.message||'').slice(0,2000);}
     else if(m.type==='runout'){consAppend(m.chunk||'');}
     else if(m.type==='runend'){
       setRunUI(false);

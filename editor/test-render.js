@@ -25,7 +25,7 @@ const check = (name, fn) => {
 
 let api = null;
 check("the panel script runs without throwing", () => {
-  const factory = new Function(script + "\n;return {renderMap, paintMap, drawMap, filterMap, openTask};");
+  const factory = new Function(script + "\n;return {renderMap, paintMap, drawMap, filterMap, openTask, openProject, gradeMilestone, renderFiles, showLeft};");
   api = factory();
   if (typeof api.renderMap !== "function") throw new Error("renderMap is not exported");
   return "loaded";
@@ -145,6 +145,34 @@ check("project mode keeps the work area visible", () => {
     throw new Error("the milestone column has no display of its own");
   }
   return m[1].slice(0, 60);
+});
+
+// The project view, driven rather than grepped. The Files switch used to appear
+// only once files existed on disk — that is after Start — so opening a project
+// showed no switch and the conclusion was that there was none.
+const PROJ = { type: "project", md: "# brief", work: "/tmp/w", started: false,
+  project: { id: "p-x", title: "P", area: "a", tier: "T0", difficulty: 3,
+    edits: ["aot_tools/graph_labeler.py", "tests/test_regression.py"],
+    milestones: [{ n: 1, title: "one", gates: [], done: false },
+                 { n: 2, title: "two", gates: [], done: false }] } };
+
+check("a project offers the Task / Files switch before Start", () => {
+  api.openProject(PROJ);
+  if (ids.tabFiles.style.display === "none") throw new Error("the Files tab is hidden");
+  const html = ids.leftFiles.innerHTML;
+  if (!html.includes("graph_labeler.py")) throw new Error("the declared files are not listed");
+  if (!/press Start/.test(html)) throw new Error("no hint that Start copies them");
+  return "switch present, 2 files declared";
+});
+
+check("the grade button keeps its word after it is pressed", () => {
+  api.openProject(PROJ);
+  const before = ids.msList.innerHTML.match(/data-msgrade="1">([^<]*)</)[1];
+  if (before.trim() !== "grade") throw new Error(`badge starts as "${before}"`);
+  api.gradeMilestone(1);
+  const after = ids.msList.innerHTML.match(/data-msgrade="1">([^<]*)</)[1];
+  if (!/grade/.test(after)) throw new Error(`badge became "${after}"`);
+  return `"${before}" -> "${after}"`;
 });
 
 const bad = results.filter((r) => r[0] === "FAIL");

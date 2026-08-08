@@ -45,7 +45,12 @@ const el = (id, cls) => (ids[id] = ids[id] || new El(id, cls));
  "findWrap", "gradeBtn", "runBtn", "rndBtn", "pstartBtn", "pstartLabel", "runLabel",
  "ta", "hl", "gutter", "aline", "cwrap", "brief", "metrics", "msList", "cons",
  "chcmd", "verdict", "vbadge", "vlabel", "vsub", "instSt", "fname", "ficon",
- "rzL", "rzR"].forEach((i) => el(i));
+ "rzL", "rzR",
+ // The project view: a switch between the ticket and the files, the file lists
+ // themselves, and the Files button. Leaving them out of the stub meant every
+ // test passed while the switch did not exist on the page.
+ "tabTask", "tabFiles", "leftFiles", "pfilesBox", "pfilesList", "pfolder"]
+  .forEach((i) => el(i));
 el("app").className = "app is-home";
 
 global.document = {
