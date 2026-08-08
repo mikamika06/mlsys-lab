@@ -83,7 +83,14 @@
   /* A project is edited in VS Code itself, so the panel drops the code column and
      gives the brief the room. */
   .app.is-proj .center,.app.is-proj .rz{display:none;}
-  .app.is-proj .work{display:flex;} .app.is-proj .left{flex:1 1 auto;max-width:none;}
+  /* The work area is a five-column grid: brief, resizer, editor, resizer,
+     milestones. A project has no single file to edit, so the editor and the
+     resizers go — but switching the grid to flex to do that left the milestone
+     column with no width of its own, and the brief, which grows, took the whole
+     window. Two columns, still a grid. */
+  .app.is-proj .work{grid-template-columns:minmax(0,1fr) var(--rw);}
+  .app.is-proj .left{max-width:none;overflow:auto;}
+  .app.is-proj .right{display:flex;flex-direction:column;min-width:0;}
   .app.is-proj .grade,.app.is-proj .run,.app.is-proj .rnd{display:none;}
   .app.is-proj .back{display:flex;}
   .pstart{display:none;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:12.5px;color:#17130a;flex:0 0 auto;
@@ -276,6 +283,7 @@
       <span class="prog" id="prog"></span>
       <span class="lang"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
         </span>
+      <div class="pstart" id="pfolder" style="display:none" title="open the files that were copied"><span class="gl">▤</span> <span>Files</span></div>
       <div class="pstart" id="pstartBtn"><span class="gl">▣</span> <span id="pstartLabel">Start</span></div>
       <div class="rnd" id="rndBtn"><span class="gl">⚄</span> <span data-t="random">Random</span></div>
       <div class="run" id="runBtn" disabled><span class="spin"></span><span class="gl">▶</span> <span id="runLabel" data-t="run">Run</span> <kbd>⇧⌘↵</kbd></div>
@@ -941,6 +949,7 @@
       '<div class="ms-row" style="padding:8px 0">press Start — the skeleton is copied into your work directory</div>';
     setVerdict('', m.started?'READY':'NOT STARTED','');
     $('cons').textContent=m.work?('workdir: '+m.work):'—';
+    if($('pfolder'))$('pfolder').style.display=m.started?'':'none';
     $('chcmd').textContent='mlsys project grade';
     const done=m.project.milestones.filter(x=>x.done).length;
     if(done&&done===m.project.milestones.length)setVerdict('pass','PASS','every milestone cleared');
@@ -955,6 +964,10 @@
   }
   $('pstartBtn').addEventListener('click',()=>{
     if(!curProject)return; vscode.postMessage({type:'startProject',id:curProject.id});});
+  // A missing element must not take the whole script down with it — that is how
+  // the roadmap went blank once already.
+  if($('pfolder'))$('pfolder').addEventListener('click',()=>{
+    if(!curProject)return; vscode.postMessage({type:'openProjectFolder',id:curProject.id});});
   document.addEventListener('click',e=>{
     const g=e.target.closest('[data-msgrade]');
     if(g){e.stopPropagation();gradeMilestone(+g.getAttribute('data-msgrade'));return;}

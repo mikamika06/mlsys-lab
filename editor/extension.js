@@ -397,11 +397,23 @@ function startProject(context, lab, id) {
   const r = cp.spawnSync(py, args, { encoding: "utf8", env });
   const dest = (r.stdout || "").trim() || projectWorkDir(id);
   log("project start -> " + dest + (r.stderr ? " :: " + r.stderr.slice(0, 200) : ""));
-  try {
-    const uri = vscode.Uri.file(path.join(dest, "brief.md"));
-    vscode.window.showTextDocument(uri, { preview: false, viewColumn: vscode.ViewColumn.Beside });
-  } catch (_) {}
+  // A learner who presses Start needs to end up in the code, not in the ticket
+  // they have already read in the panel. The first file they are meant to edit
+  // is opened, and the copy is revealed in the file tree so the rest of it is
+  // findable — "there is no folder anywhere" was the first thing anyone said.
+  revealProject(dest, found.spec);
   sendProject(context, lab, id);
+}
+
+function revealProject(dest, spec) {
+  const first = (spec && spec.edits && spec.edits[0]) || "brief.md";
+  const target = fs.existsSync(path.join(dest, first))
+    ? path.join(dest, first) : path.join(dest, "brief.md");
+  try {
+    const uri = vscode.Uri.file(target);
+    vscode.window.showTextDocument(uri, { preview: false, viewColumn: vscode.ViewColumn.Beside });
+    vscode.commands.executeCommand("revealInExplorer", uri);
+  } catch (_) { /* an editor that will not open one file is not a reason to stop */ }
 }
 
 function gradeProject(context, lab, id, milestone) {
@@ -642,6 +654,12 @@ function openPanel(context, lab) {
       else sendTask(context, lab, m.id);
     }
     else if (m.type === "startProject" && m.id) startProject(context, lab, m.id);
+    else if (m.type === "openProjectFolder" && m.id) {
+      const f = scanProjects(lab).find((p) => p.spec.id === m.id);
+      const dest = projectWorkDir(m.id);
+      if (!fs.existsSync(dest)) { postWS({ type: "error", message: "start the project first" }); }
+      else revealProject(dest, f && f.spec);
+    }
     else if (m.type === "gradeProject" && m.id) gradeProject(context, lab, m.id, m.milestone);
     else if (m.type === "openFile" && m.path) {
       try { vscode.window.showTextDocument(vscode.Uri.file(m.path), { preview: false }); } catch (_) {}
