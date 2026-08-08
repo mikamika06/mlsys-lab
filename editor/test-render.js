@@ -130,9 +130,25 @@ check("an unrecognised chip label never throws", () => {
   return "unknown and missing labels both survive";
 });
 
+// A black panel: project mode replaces the class that makes the work area
+// visible, so its own rule has to set display. It did not, and nothing rendered.
+check("project mode keeps the work area visible", () => {
+  const css = HTML;
+  const m = css.match(/\.app\.is-proj \.work\{([^}]*)\}/);
+  if (!m) throw new Error("no .app.is-proj .work rule at all");
+  if (!/display\s*:\s*(grid|flex)/.test(m[1])) {
+    throw new Error("project mode sets no display on .work: " + m[1]);
+  }
+  if (!/grid-template-columns/.test(m[1])) {
+    throw new Error("project mode gives the milestone column no width");
+  }
+  return m[1].slice(0, 60);
+});
+
 const bad = results.filter((r) => r[0] === "FAIL");
 for (const [st, name, info] of results) {
   console.log(`  ${st === "ok" ? "ok  " : "FAIL"} ${name.padEnd(46)} ${info}`);
 }
+
 console.log(`\n${results.length - bad.length}/${results.length} passed`);
 process.exit(bad.length ? 1 : 0);

@@ -88,7 +88,10 @@
      resizers go — but switching the grid to flex to do that left the milestone
      column with no width of its own, and the brief, which grows, took the whole
      window. Two columns, still a grid. */
-  .app.is-proj .work{grid-template-columns:minmax(0,1fr) var(--rw);}
+  /* is-work is what makes the work area visible at all; project mode replaces
+     that class, so this rule has to carry the display itself. Dropping it left
+     the panel black. */
+  .app.is-proj .work{display:grid;grid-template-columns:minmax(0,1fr) var(--rw);}
   .app.is-proj .left{max-width:none;overflow:auto;}
   .app.is-proj .right{display:flex;flex-direction:column;min-width:0;}
   .app.is-proj .grade,.app.is-proj .run,.app.is-proj .rnd{display:none;}
